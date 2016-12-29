@@ -1,5 +1,8 @@
 function p=joy_run(p, state)
 % main trial function for the joystick training. 
+%
+% wolf zinke, Dec. 2016
+
 
 % if(nargin < 3)
 %     task='joy_train'; % this will be used to create a sub-structur in the trial structure
@@ -14,6 +17,11 @@ if(nargin == 1)
     
     % initialize the random number generator (verify how this affects pldaps)
     rng('shuffle', 'twister');
+
+    % The frame allocation can only be set once the pldaps is run,
+    % otherwise p.trial.display.frate will not be available because it is
+    % defined in the openscreen call.
+    p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate;
 
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -60,7 +68,7 @@ if(nargin == 1)
         BLKlst(Blk:Blk+maxTrials_per_Block-1) = cblk;
     end
     
-    p.conditions = CNDlst;
+    p.conditions = conditions(CNDlst);
     p.blocks     = BLKlst; % added this to pldaps, seems that they do not use blocks
         
     p.defaultParameters.pldaps.finish = maxTrials; 
@@ -83,7 +91,10 @@ else
         % and all other more time demanding stuff.
         
         p = joy_train_taskdef(p, task);  % brute force: read in task parameters every time to allow for online modifications
-        InitTrial(p);
+        
+        ND_StartUpTrial(p);
+        
+        InitTask(p);
         
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
@@ -144,6 +155,8 @@ else
                 p.trial.pldaps.finish = p.trial.pldaps.iTrial;
             end
             
+            ND_TrialCleanUpandSave(p);
+            
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
 
@@ -153,8 +166,24 @@ end  %/  if(nargin == 1) [...] else [...]
 % could be called from other paradigms as well. Right now, to have
 % something up and running, all functions are included below.
 
+
+
 % ------------------------------------------------------------------------%
-function InitTrial(p)
+function InitTask(p)
+% prepare everything prior to starting the main trial loop, i.e. allocate
+% stimuli and set parameter.
+
+    %ensure background color is correct
+    Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor);
+    p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
+
+    vblTime = Screen('Flip', p.trial.display.ptr,0); 
+    p.trial.trstart = vblTime;
+    p.trial.stimulus.timeLastFrame = vblTime - p.trial.trstart;
+
+    p.trial.ttime  = GetSecs - p.trial.trstart;
+    p.trial.timing.syncTimeDuration = p.trial.ttime;
+
 
 
 

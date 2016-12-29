@@ -11,11 +11,12 @@ function SS = ND_Rig_Defaults(SS)
 %
 % Relevant parameters are indicated by '!!!'.
 %
-% wolfZ
+% wolf zinke, Oct. 2016
+
 
 % ------------------------------------------------------------------------%
 %% behavior settings: behavioral control parameters
-SS.behavior.reward.defaultAmount                = 0.05;   % Default amount of reward.=0;
+SS.behavior.reward.defaultAmount                = 0.05;   % Default amount of reward.=0; [in seconds]
 
 % ------------------------------------------------------------------------%
 %% datapixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
@@ -38,7 +39,7 @@ SS.datapixx.GetPreciseTime.syncmode             = [];     % syncmode: accepted v
 % adc: Continuously collect and store adc data from Datapixx.
 SS.datapixx.adc.bufferAddress                   = [];     % typically left empty.
 SS.datapixx.adc.channelGains                    = 1;      % Apply a gain to collected data.
-SS.datapixx.adc.channels                        = [0, 1, 2, 4, 5]; % List of channels to collect data from. Channel 3 is default reward channel.               !!!
+SS.datapixx.adc.channels                        = [0, 1, 2, 4, 5]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
 SS.datapixx.adc.channelMapping                  = {'eye.X', 'eye.Y', 'eye.PD', 'joystick.X', 'joystick.Y'};   % Specify where to store the collected data.
 SS.datapixx.adc.channelModes                    = 0;      % Defines the referencing of the channel.
 SS.datapixx.adc.channelOffsets                  = 0;      % Apply an offset to collected data.
@@ -63,7 +64,7 @@ SS.display.colorclamp                           = 1;      % clamp colors to [0-1
 SS.display.normalizeColor                       = 0;      % use colors in [0-1] range. Often implied by other setting anyway
 SS.display.switchOverlayCLUTs                   = false;  % switch overlay colors between experimentor and subject view
 
-SS.display.colorclamp                           = 0;      % clampt colors to [0-1] range. Typically not necessary
+SS.display.colorclamp                           = 0;      % clamp colors to [0-1] range. Typically not necessary
 SS.display.destinationFactorNew                 = 'GL_ONE_MINUS_SRC_ALPHA';  % Blending mode used for psychtoolblox screen BlendFunction (http://docs.psychtoolbox.org/BlendFunction)
 SS.display.displayName                          = 'defaultScreenParameters'; % a name for your screen
 SS.display.forceLinearGamma                     = false;  % force a linear gamma table at the end of screen initiation.
@@ -82,7 +83,7 @@ SS.display.movie.options                        = ':CodecType=x264enc :EncodingQ
 
 % ------------------------------------------------------------------------%
 %% eyelink settings: Eyelink specific parameters
-SS.eyelink.use                                  = 0;     % use the eyelink module
+SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
 
 SS.eyelink.buffereventlength                    = 30;    % don't change.
 SS.eyelink.buffersamplelength                   = 31;    % don't change.

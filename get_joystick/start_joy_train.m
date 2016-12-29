@@ -1,5 +1,8 @@
 % use this script to define a default configuration in order to create a
 % pldaps object and run it with the joy_train trial function.
+%
+% wolf zinke, Dec. 2016
+
 
 % ------------------------------------------------------------------------%
 %% Set default variables
@@ -11,36 +14,34 @@ trial_fun = @joy_task;
 % specofying a trial sub-struct just does not work, try  to use a global
 % definition here to cope with it.
 
+if(exist('task','var'))
+    clear task
+end
+
 global task
 task = 'joy_train';  % this will be used to create a sub-structur in the trial structure
 
 % ------------------------------------------------------------------------%
 %% load default settings into a struct
-settingsStruct = ND_Rig_Defaults;    % load default settings according to the current rig setup
+SS = ND_Rig_Defaults;    % load default settings according to the current rig setup
 
 % make modifications of default settings
-settingsStruct.display.screenSize = [100, 100, 900, 700]; % do not use full screen
-settingsStruct.sound.use = 0;  % no sound for now
+SS.display.screenSize = [100, 100, 900, 700]; % do not use full screen
+SS.sound.use = 0;  % no sound for now
 
 % prepare for eye tracking and joystick monitoring
-settingsStruct.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
-settingsStruct.mouse.useAsEyepos  = 1;
+SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
+SS.mouse.useAsEyepos  = 1;
 
 % SS.datapixx.adc.channels          = [4, 5]; % List of channels to collect data from.        ### ignore eye position for now, so need to acquire the first three channels       
 % SS.datapixx.adc.channelMapping    = {'joystick.X', 'joystick.Y'};   % label data channels
 
 % ------------------------------------------------------------------------%
 %% create the pldaps class
-p = pldaps(trial_fun, subjname, settingsStruct);
+p = pldaps(trial_fun, subjname, SS);
 
 % ------------------------------------------------------------------------%
 %% adjust pldaps class settings
-
-% maxTrialLength is used to pre-allocate memory at several initialisation
-% steps. It specifes a duration in seconds.
-
-p.trial.pldaps.maxTrialLength = 60;   % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
-p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate;
 
 % ------------------------------------------------------------------------%
 %% task dependent default settings

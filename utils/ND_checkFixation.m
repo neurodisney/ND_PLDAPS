@@ -53,5 +53,9 @@ function p = ND_checkFixation(p)
            
             end
         end
-                
-    end
+        
+% TODO: Think about an option to store eye traces for later recall        
+%         %store the eye position that was used during each frame, good
+%        %for replay of the stimulus
+%        p.trial.stimulus.eyeXYs(1:2,p.trial.iFrame)= [p.trial.eyeX-p.trial.display.pWidth/2; p.trial.eyeY-p.trial.display.pHeight/2];
+

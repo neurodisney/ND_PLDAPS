@@ -8,6 +8,9 @@ function p = joy_train_taskdef(p, task)
 %         that there is sone log when changes happened
 %       - read in only changes in order to allow quicker manipulations via the
 %         keyboard without overwriting it every time by calling this routine
+%
+% wolf zinke, Dec. 2016
+
 
 % if(nargin < 2)
 %     task='joy_train'; % this will be used to create a sub-structur in the trial structure
@@ -59,4 +62,10 @@ p.trial.(task).Joy.Time    =   25;  % minimum time required to be considered as 
 % ------------------------------------------------------------------------%
 %% Saccade parameters
 
+
+
+% maxTrialLength is used to pre-allocate memory at several initialisation
+% steps. It specifes a duration in seconds.
+
+p.trial.pldaps.maxTrialLength = 60;   % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
