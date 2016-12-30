@@ -52,7 +52,7 @@ SS.datapixx.adc.YEyeposChannel                  = 2;      % if datapixx.useAsEye
 
 % ------------------------------------------------------------------------%
 %% display settings: pecify options for the screen.
-SS.display.bgColor                              = [0.5, 0.5, 0.5];   % background color. Can be changed during trial
+SS.display.bgColor                              = [0, 0, 0];  % background color. Can be changed during trial
 SS.display.scrnNum                              = 1;      % screen number for full screen display
 SS.display.viewdist                             = 57;     % screen distance to the observer                            !!!
 SS.display.heightcm                             = 29.8;   % height of the visible screen in cm                         !!!

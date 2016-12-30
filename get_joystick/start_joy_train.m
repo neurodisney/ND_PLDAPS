@@ -1,6 +1,7 @@
 % use this script to define a default configuration in order to create a
 % pldaps object and run it with the joy_train trial function.
 %
+%
 % wolf zinke, Dec. 2016
 
 
@@ -13,7 +14,6 @@ trial_fun = @joy_task;
 % not sure how the pldaps wanted to solve this, their task concept for
 % specofying a trial sub-struct just does not work, try  to use a global
 % definition here to cope with it.
-
 if(exist('task','var'))
     clear task
 end
@@ -42,6 +42,7 @@ p = pldaps(trial_fun, subjname, SS);
 
 % ------------------------------------------------------------------------%
 %% adjust pldaps class settings
+
 
 % ------------------------------------------------------------------------%
 %% task dependent default settings

@@ -11,8 +11,13 @@ function p = ND_TrialCleanUpandSave(p)
     [p.trial.timing.flipTimes(:,p.trial.iFrame)] = deal(Screen('Flip', p.trial.display.ptr));
 
     %-------------------------------------------------------------------------%
-    %% determine trial duration
-    p.trial.trialend = GetSecs - p.trial.trstart;
+    %% Ensure correct background color and determine trial end and duration
+    Screen('FillRect', p.trial.display.ptr,p.trial.display.bgColor);
+    p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
+    vblTime = Screen('Flip', p.trial.display.ptr,0);
+
+    p.trial.trialend      = vblTime;
+    p.trial.trialduration = vblTime - p.trial.trstart;
     
     %-------------------------------------------------------------------------%
     %% end DataPixx

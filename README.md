@@ -8,6 +8,12 @@ This repository contains helper tools and experiments to use in combination with
 
 A set of function modules that will be used for various task and therefore are kept as stand-alone functions here instead of replicating the code inside each task file.
 
+* __ND_StartUpTrial__ 
+
+* __ND_TrialPrepare__ 
+
+* __ND_TrialCleanUpandSave__ 
+
 * __ ND_checkFixation__ 
 
 * __ ND_CheckKeyMouse__ 
@@ -17,6 +23,7 @@ A set of function modules that will be used for various task and therefore are k
 * __ ND_DrawControlScreen__ 
 
 * __ ND_Rig_Defaults__ 
+
 
 
 ***
