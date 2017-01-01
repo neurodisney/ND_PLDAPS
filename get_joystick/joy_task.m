@@ -37,7 +37,17 @@ if(nargin == 1)
         
     % initialize the random number generator (verify how this affects pldaps)
     rng('shuffle', 'twister');
-
+    
+    % ensure that the data directory exists (TODO: use the entry from the trial struct)
+    if(~exist(p.trial.pldaps.dirs.data,'dir'))
+        mkdir(p.trial.pldaps.dirs.data);
+    end
+    
+    % define ascii output file
+    
+    Trial2Ascii(p, 'init');
+    
+    
     % The frame allocation can only be set once the pldaps is run,
     % otherwise p.trial.display.frate will not be available because it is
     % defined in the openscreen call.
@@ -134,17 +144,17 @@ else
         %% trial end
           
             FinishTask(p);
+                        
+            ND_CheckCondRepeat(p);     % ensure all conditions were performed correctly equal often
             
-            % ------------------------------------------------------------%
-            % ensure all conditions were performed correctly equal often
-            ND_CheckCondRepeat(p);
+            ND_TrialCleanUpandSave(p); % end all trial related processes           
+            
+            Trial2Ascii(p, 'save');
             
             % just as fail safe, make sure to finish when done
             if(p.trial.pldaps.iTrial == length(p.conditions))
                 p.trial.pldaps.finish = p.trial.pldaps.iTrial;
             end
-            
-            ND_TrialCleanUpandSave(p);
             
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
@@ -155,19 +165,46 @@ end  %/  if(nargin == 1) [...] else [...]
 % could be called from other paradigms as well. Right now, to have
 % something up and running, all functions are included below.
 
+% ------------------------------------------------------------------------%
+function Trial2Ascii(p, state)
+%% Save trial progress in an ASCII table
+% 'init' creats the file with a header defining all columns
+% 'save' adds a line with the information for the current trial
+%
+% make sure that number of header names is the same as the number of entries
+% to write, also that the position matches.
 
+    switch state
+        case 'init'
+            p.trial.session.asciitbl = [datestr(now,'yyyy_mm_dd_HHMM'),'.dat'];
+            tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.pldaps.save.asciitbl) , 'w');
+            
+            fprintf(tblptr, 'Date  Subject  Experiment  Tcnt  Tstart');
+            
+        case 'save'
+            tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'w');
+            fprintf(tblptr, '%s  %s  %s  %d  %s \n' , ...
+                            datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.session.subject, task, ...
+                            p.trial.pldaps.iTrial, p.trial.TrialStart);  
+    end
+
+    fclose(tblptr);
+    
+    
 % ------------------------------------------------------------------------%
 function InitTask(p)
-% prepare everything prior to starting the main trial loop, i.e. allocate
+%% prepare everything prior to starting the main trial loop, i.e. allocate
 % stimuli and set parameter.
 
     % ensure background color is correct
 
-
+    
 
 % ------------------------------------------------------------------------%
 function StartTrial(p)
-% this defines the start of the trial
+%% this defines the start of the trial
+
+    % TODO: Make sure not to start a trial without the joystick being in rest state (i.e. lever released).
 
     % for now, change the background to indicate trial is active
     % change this in the future to a frame (i.e. two overlayd rects?)
@@ -183,23 +220,26 @@ function StartTrial(p)
     p.trial.ttime  = GetSecs - p.trial.trstart;
     p.trial.timing.syncTimeDuration = p.trial.ttime;
     
+    p.trial.TrialStart = datestr(now,'HH:MM:SS:FFF');  % WZ: added absolute time as string
     
+    
+    p.trial.(task).CurrEpoch = p.trial.(task).epoch.WaitPress;
 % ------------------------------------------------------------------------%
 function PrepStim(p)
 
-switch p.trial.(task).CurrEpoch
+    switch p.trial.(task).CurrEpoch
 
 
-end
+    end
 
 % ------------------------------------------------------------------------%
 function DrawStim(p)
 
 
-switch p.trial.(task).CurrEpoch
+    switch p.trial.(task).CurrEpoch
 
 
-end
+    end
 
 
 function FinishTask(p)

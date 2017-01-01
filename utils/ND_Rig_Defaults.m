@@ -20,7 +20,7 @@ SS.behavior.reward.defaultAmount                = 0.05;   % Default amount of re
 
 % ------------------------------------------------------------------------%
 %% datapixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
-SS.datapixx.use                                 = 0;      % enable control of VPixx devices
+SS.datapixx.use                                 = 1;      % enable control of VPixx devices
 
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
@@ -47,8 +47,8 @@ SS.datapixx.adc.maxSamples                      = 0;      % maximum number of sa
 SS.datapixx.adc.numBufferFrames                 = 600000; % maximum number of samples to store in datapixx memory.
 SS.datapixx.adc.srate                           = 1000;   % samples rate in Hz
 SS.datapixx.adc.startDelay                      = 0;      % delay until beginning of recording.
-SS.datapixx.adc.XEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeX    !!!
-SS.datapixx.adc.YEyeposChannel                  = 2;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
+SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel set eyeX    !!!
+SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
 
 % ------------------------------------------------------------------------%
 %% display settings: pecify options for the screen.
@@ -169,7 +169,7 @@ SS.pldaps.pause.type                            = 1;     % Only type 1 is curren
 
 % save: control how pldaps saves data
 SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial parameters
-SS.pldaps.save.mergedData                       = 0;     % Save merged data
+SS.pldaps.save.mergedData                       = 1;     % Save merged data. By default pldaps only saves changes to the trial struct in .data. When mergedData is enabled, the complete content of p.trial is saved to p.data. This can cause significantly larger files
 SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with the data from each trial?
 SS.pldaps.save.v73                              = 0;     % save as matlab version v73?
 
@@ -189,4 +189,37 @@ SS.pldaps.save.v73                              = 0;     % save as matlab versio
 % SS.pldaps.trialStates.trialCleanUpandSave       = -3;    % called at the end of the trial.
 % SS.pldaps.trialStates.trialPrepare              = -2;    % called before each trial for synchronization
 % SS.pldaps.trialStates.trialSetup                = -1;    % called before each trial for data allocation.
+
+
+% ------------------------------------------------------------------------%
+%% Define task epoch flags
+p.pldaps.CurrEpoch = NaN;   % Indicator for the current task epoch
+
+% Assign numbers to task epochs in order to identify the current task epoch
+% in the trial function like that:
+%  switch p.pldaps.CurrEpoch
+%       case p.pldaps.epoch.WaitPress
+%       case p.pldaps.epoch.WaitTarget
+%  end
+
+p.pldaps.epoch.WaitPress     = 1;  % Wait for a joystick press to indicate readiness to work on a trial
+p.pldaps.epoch.WaitResponse  = 2;  % Wait for a task response
+p.pldaps.epoch.WaitRelease   = 3;  % Wait for joystick release
+p.pldaps.epoch.WaitTarget    = 4;  % wait for target onset 
+p.pldaps.epoch.WaitGo        = 6; 
+p.pldaps.epoch.WaitReward    = 7; 
+p.pldaps.epoch.WaitNextTrial = 8; 
+
+
+% ------------------------------------------------------------------------%
+%% define task outcomes
+p.pldaps.outcome.Correct     = 0;  % correct performance, no error occurred
+p.pldaps.outcome.NoPress     = 1;  % No joystick press occurred to initialise trial
+p.pldaps.outcome.Abort       = 2;  % early joystick release prior stimulus onset
+p.pldaps.outcome.Early       = 3;  % release prior to response window
+p.pldaps.outcome.False       = 4;  % wrong response within response window
+p.pldaps.outcome.Late        = 5;  % response occurred after response window
+p.pldaps.outcome.Miss        = 6;  % no response at a reasonable time
+
+
 

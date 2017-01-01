@@ -24,6 +24,12 @@ A set of function modules that will be used for various task and therefore are k
 
 * __ ND_Rig_Defaults__ 
 
+* __ ND_CheckCondRepeat__ 
+
+* __ND_GetConditionList__ 
+
+
+
 
 
 ***

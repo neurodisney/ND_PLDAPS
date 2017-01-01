@@ -62,7 +62,7 @@ function ND_StartUpTrial(p)
     %% framerate history
     %%% prepare to plot framerate history on screen
     % TODO: what exactly is this doing? Is it needed? 
-    if p.trial.pldaps.draw.framerate.use           
+    if(p.trial.pldaps.draw.framerate.use)           
         p.trial.pldaps.draw.framerate.nFrames = round(p.trial.pldaps.draw.framerate.nSeconds / p.trial.display.ifi);
         p.trial.pldaps.draw.framerate.data    = zeros(p.trial.pldaps.draw.framerate.nFrames, 1); %holds the data
         sf.startPos  = round(p.trial.display.w2px' .* p.trial.pldaps.draw.framerate.location + [p.trial.display.pWidth/2, p.trial.display.pHeight/2]);
@@ -73,4 +73,8 @@ function ND_StartUpTrial(p)
         sf.linetype='-';
         p.trial.pldaps.draw.framerate.sf = sf;
     end
+    
+    % --------------------------------------------------------------------%
+    %% Set task epoch to nan
+    p.trial.CurrEpoch = NaN; 
    
