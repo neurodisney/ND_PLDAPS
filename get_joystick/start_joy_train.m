@@ -8,7 +8,8 @@
 %% Set default variables
 subjname = 'test';
 
-trial_fun = @joy_task;
+% trial_fun = @joy_task;
+trial_fun = 'joy_task';
 
 % not sure how the pldaps wanted to solve this, their task concept for
 % specofying a trial sub-struct just does not work, try  to use a global
@@ -25,8 +26,9 @@ task = 'joy_train';  % this will be used to create a sub-structur in the trial s
 SS = ND_Rig_Defaults;    % load default settings according to the current rig setup
 
 % make modifications of default settings
-SS.display.screenSize = [100, 100, 900, 700]; % do not use full screen
-SS.sound.use = 0;  % no sound for now
+SS.display.screenSize = [100, 100, 1280, 1000]; % do not use full screen
+SS.sound.use          = 0;  % no sound for now
+SS.display.bgColor    = [50, 50, 50] / 255;
 
 % prepare for eye tracking and joystick monitoring
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
@@ -41,7 +43,7 @@ SS.pldaps.nosave = 1;  % For now do not bother with the pldaps file format, use 
 
 % ------------------------------------------------------------------------%
 %% create the pldaps class
-p = pldaps(trial_fun, subjname, SS);
+p = pldaps(subjname, SS, trial_fun);
 
 % ------------------------------------------------------------------------%
 %% adjust pldaps class settings
@@ -49,8 +51,24 @@ p = pldaps(trial_fun, subjname, SS);
 
 
 
-
+% ------------------------------------------------------------------------%
+%% Ensure DataPixx is initialized
+if(~Datapixx('IsReady'))
+    dpx = Datapixx('Open');
+    
+    if(dpx~=1)
+        error('Problem when initializeng DataPixx!');
+    end
+end
 
 % ------------------------------------------------------------------------%
 %% run the experiment
 p.run
+
+% ------------------------------------------------------------------------%
+%% Ensure DataPixx is closed
+if(Datapixx('IsReady'))
+    dpx = Datapixx('Close');
+end
+
+

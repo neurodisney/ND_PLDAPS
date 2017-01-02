@@ -20,10 +20,11 @@ function ND_StartUpTrial(p)
     pds.datapixx.adc.trialSetup(p); % setup analogData collection from Datapixx
     
     % call PsychDataPixx('GetPreciseTime') to make sure the clocks stay synced
-    if(p.trial.datapixx.use)
-        [getsecs, boxsecs, confidence] = PsychDataPixx('GetPreciseTime');
+    %if(p.trial.datapixx.use)
+        [getsecs, boxsecs, confidence]          = PsychDataPixx('GetPreciseTime');
         p.trial.timing.datapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
-    end
+        p.trial.timing.datapixxTrialStart       = getsecs;
+    %end
     
     % --------------------------------------------------------------------%
     %% Keyboard
@@ -41,11 +42,11 @@ function ND_StartUpTrial(p)
     %% Mouse
     % setup a fields for the mouse data
     if(p.trial.mouse.use)
-        [~,~,isMouseButtonDown] = GetMouse(); 
+        [~,~,isMouseButtonDown]          = GetMouse(); 
         p.trial.mouse.cursorSamples      = zeros(2, round(round(p.trial.pldaps.maxFrames*1.1)));
         p.trial.mouse.buttonPressSamples = zeros(length(isMouseButtonDown), round(round(p.trial.pldaps.maxFrames*1.1)));
         p.trial.mouse.samplesTimes       = zeros(1, round(round(p.trial.pldaps.maxFrames*1.1)));
-        p.trial.mouse.samples = 0;
+        p.trial.mouse.samples            = 0;
     end
 
     % --------------------------------------------------------------------%

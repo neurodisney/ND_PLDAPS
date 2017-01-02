@@ -52,7 +52,7 @@ SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEye
 
 % ------------------------------------------------------------------------%
 %% display settings: pecify options for the screen.
-SS.display.bgColor                              = [0, 0, 0];  % background color. Can be changed during trial
+SS.display.bgColor                              = [0, 0, 0] / 255;  % background color. Can be changed during trial
 SS.display.scrnNum                              = 1;      % screen number for full screen display
 SS.display.viewdist                             = 57;     % screen distance to the observer                            !!!
 SS.display.heightcm                             = 29.8;   % height of the visible screen in cm                         !!!
@@ -139,7 +139,7 @@ SS.pldaps.eyeposMovAv                           = 1;     % average the eye posit
 SS.pldaps.useModularStateFunctions              = 0;     % use modular state functions, see pldaps.runModularTrial, pldaps.getModules, pldaps.runStateforModules
 
 % dirs: configure pldaps' built-in drawing options
-SS.pldaps.dirs.data                             = '~/Data';   % data directory.
+SS.pldaps.dirs.data                             = '~/Data/DataPixx';   % data directory.
 SS.pldaps.dirs.wavfiles                         = '/usr/local/PLDAPS/beepsounds';  % directory for sound files
 
 % cursor: control drawing of the mouse cursor
@@ -164,7 +164,7 @@ SS.pldaps.draw.photodiode.everyXFrames          = 10;    % will be shown every n
 SS.pldaps.draw.photodiode.location              = 1;     % location of the square as an index: 1-4 for the different corners of the screen
 
 % pause: control pausing behavior of pldaps
-SS.pldaps.pause.preExperiment                   = 1;     % pause before experiment starts
+SS.pldaps.pause.preExperiment                   = 0;     % pause before experiment starts: 0=don't; 1 = debugger; 2 = pause loop
 SS.pldaps.pause.type                            = 1;     % Only type 1 is currently tested.
 
 % save: control how pldaps saves data
@@ -178,48 +178,59 @@ SS.pldaps.save.v73                              = 0;     % save as matlab versio
 % SS.pldaps.trialStates.experimentCleanUp         = -6;    % called at the end of the experiment.
 % SS.pldaps.trialStates.experimentPostOpenScreen  = -4;    % called after the screen was opened.
 % SS.pldaps.trialStates.experimentPreOpenScreen   = -5;    % called before the screen is opened.
-% SS.pldaps.trialStates.frameDraw                 = 3;     % called every frame for drawing command.
-% SS.pldaps.trialStates.frameDrawingFinished      = 6;     % called every frame after drawing.
+% SS.pldaps.trialStates.frameDraw                 =  3;    % called every frame for drawing command.
+% SS.pldaps.trialStates.frameDrawingFinished      =  6;    % called every frame after drawing.
 % SS.pldaps.trialStates.frameDrawTimecritica      = -Inf;  % disabled
-% SS.pldaps.trialStates.frameFlip                 = 8;     % called every frame to flip the buffers.
+% SS.pldaps.trialStates.frameFlip                 =  8;    % called every frame to flip the buffers.
 % SS.pldaps.trialStates.frameIdlePostDraw         = -Inf;  % disabled
 % SS.pldaps.trialStates.frameIdlePreLastDraw      = -Inf;  % disabled
-% SS.pldaps.trialStates.framePrepareDrawing       = 2;     % called every frame to prepare drawing.
-% SS.pldaps.trialStates.frameUpdate               = 1;     % called every frame to update input.
+% SS.pldaps.trialStates.framePrepareDrawing       =  2;    % called every frame to prepare drawing.
+% SS.pldaps.trialStates.frameUpdate               =  1;    % called every frame to update input.
 % SS.pldaps.trialStates.trialCleanUpandSave       = -3;    % called at the end of the trial.
 % SS.pldaps.trialStates.trialPrepare              = -2;    % called before each trial for synchronization
 % SS.pldaps.trialStates.trialSetup                = -1;    % called before each trial for data allocation.
 
+% ####################################################################### %        
+%% Below follow definitions for task stages as used in the Disney Lab
+% This is currently work in progress and we need to find an efficient set
+% of definitions that work most reliable accross several tasks.
 
 % ------------------------------------------------------------------------%
 %% Define task epoch flags
-p.pldaps.CurrEpoch = NaN;   % Indicator for the current task epoch
+p.pldaps.CurrEpoch            = NaN;  % Indicator for the current task epoch
 
-% Assign numbers to task epochs in order to identify the current task epoch
-% in the trial function like that:
-%  switch p.pldaps.CurrEpoch
-%       case p.pldaps.epoch.WaitPress
-%       case p.pldaps.epoch.WaitTarget
-%  end
-
-p.pldaps.epoch.WaitPress     = 1;  % Wait for a joystick press to indicate readiness to work on a trial
-p.pldaps.epoch.WaitResponse  = 2;  % Wait for a task response
-p.pldaps.epoch.WaitRelease   = 3;  % Wait for joystick release
-p.pldaps.epoch.WaitTarget    = 4;  % wait for target onset 
-p.pldaps.epoch.WaitGo        = 6; 
-p.pldaps.epoch.WaitReward    = 7; 
-p.pldaps.epoch.WaitNextTrial = 8; 
+p.pldaps.epoch.WaitPress      = 1;    % Wait for a joystick press to indicate readiness to work on a trial
+p.pldaps.epoch.WaitResponse   = 2;    % Wait for a task response
+p.pldaps.epoch.WaitRelease    = 3;    % Wait for joystick release
+p.pldaps.epoch.WaitTarget     = 4;    % wait for target onset 
+p.pldaps.epoch.WaitGo         = 6; 
+p.pldaps.epoch.WaitReward     = 7; 
+p.pldaps.epoch.WaitNextTrial  = 8; 
 
 
 % ------------------------------------------------------------------------%
-%% define task outcomes
-p.pldaps.outcome.Correct     = 0;  % correct performance, no error occurred
-p.pldaps.outcome.NoPress     = 1;  % No joystick press occurred to initialise trial
-p.pldaps.outcome.Abort       = 2;  % early joystick release prior stimulus onset
-p.pldaps.outcome.Early       = 3;  % release prior to response window
-p.pldaps.outcome.False       = 4;  % wrong response within response window
-p.pldaps.outcome.Late        = 5;  % response occurred after response window
-p.pldaps.outcome.Miss        = 6;  % no response at a reasonable time
+%% Define joystick states
+p.pldaps.CurrJoyState         = NaN;  % Indicator for the current task epoch
+
+% ------------------------------------------------------------------------%
+%% Define fixation states (not needed for joystick training)
+p.pldaps.CurrFixState         = NaN;  % Indicator for the current task epoch
+
+p.pldaps.FixState.WaitFix     = 1;    % Target not acquired yet, wait for fixation  
+p.pldaps.FixState.Hold        = 1;    % Gaze at target
+p.pldaps.FixState.OutOfBounds = 1;    % Gaze left fixation window
+p.pldaps.FixState.FixBreak    = 1;    % Gaze out of fixation window long enough to be considered as fixation break
+
+
+% ------------------------------------------------------------------------%
+%% Define task outcomes
+p.pldaps.outcome.Correct      = 0;  % correct performance, no error occurred
+p.pldaps.outcome.NoPress      = 1;  % No joystick press occurred to initialise trial
+p.pldaps.outcome.Abort        = 2;  % early joystick release prior stimulus onset
+p.pldaps.outcome.Early        = 3;  % release prior to response window
+p.pldaps.outcome.False        = 4;  % wrong response within response window
+p.pldaps.outcome.Late         = 5;  % response occurred after response window
+p.pldaps.outcome.Miss         = 6;  % no response at a reasonable time
 
 
 

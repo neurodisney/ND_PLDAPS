@@ -15,8 +15,8 @@ if(p.trial.(task).EqualCorrect && ~p.trial.pldaps.goodtrial) % need to check if 
 
     InsPos = cpos(randi(length(cpos))); % determine random position in the current block for repetition
 
-    p.conditions = [p.conditions(1:InsPos-1) curCND p.conditions(InsPos:end)];
-    p.blocks     = [    p.blocks(1:InsPos-1) curBLK     p.blocks(InsPos:end)];
+    p.conditions   = [p.conditions(  1:InsPos-1), curCND,  p.conditions(  InsPos:end)];
+    p.trial.blocks = [p.trial.blocks(1:InsPos-1), curBLK,  p.trial.blocks(InsPos:end)];
 
     p.trial.pldaps.finish = p.trial.pldaps.finish + 1; % added a required trial
 end

@@ -28,31 +28,24 @@ function p=joy_task(p, state)
 % Here, default parameters of the pldaps class could be adjusted if needed
 if(nargin == 1)
     
-    % not sure how the pldaps wanted to solve this, their task concept for
-    % specofying a trial sub-struct just does not work, try  to use a global
-    % definition here to cope with it.
-    if(exist('task','var'))
-        clear task
-    end
-        
-    % initialize the random number generator (verify how this affects pldaps)
-    rng('shuffle', 'twister');
+%     % not sure how the pldaps wanted to solve this, their task concept for
+%     % specofying a trial sub-struct just does not work, try  to use a global
+%     % definition here to cope with it.
+%     if(exist('task','var'))
+%         clear task
+%     end
+            
+    % --------------------------------------------------------------------%
+    %% Initialise session
+    ND_InitSession(p);
     
-    % ensure that the data directory exists (TODO: use the entry from the trial struct)
-    if(~exist(p.trial.pldaps.dirs.data,'dir'))
-        mkdir(p.trial.pldaps.dirs.data);
-    end
+    p = joy_train_taskdef(p);
     
-    % define ascii output file
-    
+    % --------------------------------------------------------------------%
+    %% define ascii output file 
+    % call this after ND_InitSession to be sure that output directory exists!
     Trial2Ascii(p, 'init');
     
-    
-    % The frame allocation can only be set once the pldaps is run,
-    % otherwise p.trial.display.frate will not be available because it is
-    % defined in the openscreen call.
-    p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate;
-
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
     % define conditions (conditions could pe passed to the pldaps call as
@@ -99,7 +92,7 @@ else
         % prepare everything for the trial, including allocation of stimuli
         % and all other more time demanding stuff.
         
-        p = joy_train_taskdef(p, task);  % brute force: read in task parameters every time to allow for online modifications
+        p = joy_train_taskdef(p);  % brute force: read in task parameters every time to allow for online modifications
         
         ND_StartUpTrial(p);
         
@@ -112,6 +105,8 @@ else
         % preparations;
         
         StartTrial(p); % this defines the actual trial start time
+        
+        ND_CtrlMsg(p, 'TRIAL Start');
 
 % ####################################################################### %        
 % DONE DURING THE MAIN TRIAL LOOP:
@@ -156,6 +151,8 @@ else
                 p.trial.pldaps.finish = p.trial.pldaps.iTrial;
             end
             
+            ND_CtrlMsg(p, 'TRIAL END');
+            
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
 
@@ -166,7 +163,7 @@ end  %/  if(nargin == 1) [...] else [...]
 % something up and running, all functions are included below.
 
 % ------------------------------------------------------------------------%
-function Trial2Ascii(p, state)
+function Trial2Ascii(p, act)
 %% Save trial progress in an ASCII table
 % 'init' creats the file with a header defining all columns
 % 'save' adds a line with the information for the current trial
@@ -174,18 +171,21 @@ function Trial2Ascii(p, state)
 % make sure that number of header names is the same as the number of entries
 % to write, also that the position matches.
 
-    switch state
+    switch act
         case 'init'
             p.trial.session.asciitbl = [datestr(now,'yyyy_mm_dd_HHMM'),'.dat'];
-            tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.pldaps.save.asciitbl) , 'w');
+            tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'w');
             
             fprintf(tblptr, 'Date  Subject  Experiment  Tcnt  Tstart');
             
         case 'save'
+            trltm = p.trial.timing.datapixxTrialStart - p.trial.timing.datapixxSessionStart;
+            
             tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'w');
-            fprintf(tblptr, '%s  %s  %s  %d  %s \n' , ...
-                            datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.session.subject, task, ...
-                            p.trial.pldaps.iTrial, p.trial.TrialStart);  
+            fprintf(tblptr, '%s  %s  %s  %d  %.5f \n' , ...
+                            datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.session.subject, ...
+                            p.trial.session.experimentSetupFile, ...
+                            p.trial.pldaps.iTrial, trltm);  
     end
 
     fclose(tblptr);
@@ -226,6 +226,8 @@ function StartTrial(p)
     p.trial.(task).CurrEpoch = p.trial.(task).epoch.WaitPress;
 % ------------------------------------------------------------------------%
 function PrepStim(p)
+
+
 
     switch p.trial.(task).CurrEpoch
 

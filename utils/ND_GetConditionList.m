@@ -21,6 +21,6 @@ function ND_GetConditionList(p, cnd, maxTrials_per_BlockCond, maxBlocks)
     end
     
     p.conditions = cnd(CNDlst);
-    p.blocks     = BLKlst; % WZ: added this to pldaps, seems that they do not use the concept of blocks
+    p.trial.blocks     = BLKlst; % WZ: added this to pldaps, seems that they do not use the concept of blocks
         
     p.defaultParameters.pldaps.finish = maxTrials; 

@@ -17,21 +17,25 @@ function p = ND_TrialCleanUpandSave(p)
     vblTime = Screen('Flip', p.trial.display.ptr,0);
 
     p.trial.trialend      = vblTime;
+    
     p.trial.trialduration = vblTime - p.trial.trstart;
     
+    p.trial.timing.datapixxTrialEnd = PsychDataPixx('GetPreciseTime');
+    
     %-------------------------------------------------------------------------%
-    %% end DataPixx
-    if(p.trial.datapixx.use)
+    %% end DataPixx ( since we use it no if querry needed
+    %if(p.trial.datapixx.use)
         p.trial.datapixx.datapixxstoptime = Datapixx('GetTime'); % WZ: Does this need to be called first or could it be combined with the following if block?
-    end
+    %end
 
     % might be moved to pds.datapixx.cleanUpandSave
     % clean up analog data collection from Datapixx
     pds.datapixx.adc.cleanUpandSave(p);
     
-    if(p.trial.datapixx.use)
-        p.trial.timing.datapixxTRIALEND = pds.datapixx.flipBit(p.trial.event.TRIALEND,p.trial.pldaps.iTrial);  % start of trial (Plexon)
-    end
+    % WZ: Is this just plexon related?
+%     if(p.trial.datapixx.use)
+%         p.trial.timing.datapixxTRIALEND = pds.datapixx.flipBit(p.trial.event.TRIALEND,p.trial.pldaps.iTrial);  % start of trial (Plexon)
+%     end
 
     %-------------------------------------------------------------------------%
     %% End Photo Diode
