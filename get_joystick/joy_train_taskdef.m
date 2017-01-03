@@ -12,9 +12,13 @@ function p = joy_train_taskdef(p, task)
 % wolf zinke, Dec. 2016
 
 
-% if(nargin < 2)
-%     task='joy_train'; % this will be used to create a sub-structur in the trial structure
-% end
+if(nargin < 2)
+    if(isfield(p.defaultParameters.session, 'TaskName'))
+        task = p.defaultParameters.session.TaskName;
+    else
+        task='joy_train'; % this will be used to create a sub-structur in the trial structure
+    end
+end
 
 
 % ------------------------------------------------------------------------%
@@ -35,7 +39,7 @@ p.trial.(task).Reward.ManDur = 500;            % reward duration [s] for reward 
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.(task).Timing.WaitStart   =  100;      % maximal time period to press the lever in order to start a trial.
+p.trial.(task).Timing.WaitStart   =   30;      % maximal time period in seconds to press the lever in order to start a trial.
 p.trial.(task).Timing.WaitResp    =  100;      % Only response times after this wait period will be considered stimulus driven responses
 p.trial.(task).Timing.MaxResp     = 2500;      % maximum release time considered as stimulus driven response
 
@@ -63,11 +67,10 @@ p.trial.(task).Joy.PullThr =  0.5;  % threshold to detect a joystick press
 p.trial.(task).Joy.RelThr  =  0.5;  % threshold to detect a joystick release
 p.trial.(task).Joy.ActTime =   25;  % minimum time [ms] required to be considered as joystick change
 
-
 % ------------------------------------------------------------------------%
 %% Saccade parameters
 p.trial.(task).Sacc.BreakTime = 25; % minimum time [ms] to identify a fixation break
-p.trial.(task).Sacc.BreakTime = 25; % minimum time [ms] to identify a fixation break
+p.trial.(task).Sacc.FixWin    =  4; % diameter of fixation window
 
 % ------------------------------------------------------------------------%
 %% Trial duration

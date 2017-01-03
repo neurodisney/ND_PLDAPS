@@ -2,6 +2,10 @@ function qp = ND_CheckKeyMouse(p)
 %% read in keyboard and mouse information
 % code based on pldap's default trial function.
 % check for key presses and mouse actions and act accordingly.
+%
+% Be careful, in the pldaps run function is also a routine (pauseLoop) to read out key
+% presses with hard coded keys (noticed too late), we need to ensure that our key layout 
+% matches the one defined in there.
 
     [p.trial.keyboard.pressedQ, p.trial.keyboard.firstPressQ, firstRelease, lastPress, lastRelease] = KbQueueCheck(); % fast
 

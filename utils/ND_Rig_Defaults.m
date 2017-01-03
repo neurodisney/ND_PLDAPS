@@ -26,15 +26,18 @@ SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeili
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
 
 SS.datapixx.useAsEyepos                         = 1;      % use Datapixx adc inputs as eye position                    !!!
-SS.datapixx.useForReward                        = 1;      % use Datapixx to set for a given duration. Default channel used is chan 3, needs hard coding in pldaps code to change                 !!!
+SS.datapixx.useForReward                        = 1;      % use Datapixx to set for a given duration. WZ: Default channel used is chan 3, needs hard coding in pldaps code to change                 !!!
 
 SS.datapixx.LogOnsetTimestampLevel              = 2;      % Get and Store a the time each frame arrived at the VPixx device.
 
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
-SS.datapixx.GetPreciseTime.maxDuration          = [];     % maximum duration in seconds to wait for a good estimate
-SS.datapixx.GetPreciseTime.optMinwinThreshold   = [];     % Minimum Threshold that defines a good estimate to end before maxDuration
-SS.datapixx.GetPreciseTime.syncmode             = [];     % syncmode: accepted values are 1,2,3
+% WZ: Also for more clarification check the PsychDataPixx function in Psychtoolbox-3/Psychtoolbox/PsychHardware/DatapixxToolbox/DatapixxBasic
+% Currently values are set as specified as default in pds.datapixx.init,
+% leaving all fields empty should result in the same parameters.
+SS.datapixx.GetPreciseTime.maxDuration          = 0.02;   % maximum duration in seconds to wait for a good estimate
+SS.datapixx.GetPreciseTime.optMinwinThreshold   = 6.5e-5; % Minimum Threshold that defines a good estimate to end before maxDuration
+SS.datapixx.GetPreciseTime.syncmode             = 2;      % syncmode: accepted values are 1,2,3
 
 % adc: Continuously collect and store adc data from Datapixx.
 SS.datapixx.adc.bufferAddress                   = [];     % typically left empty.
@@ -100,16 +103,6 @@ SS.eyelink.useRawData                           = 0;     % toggle use of raw (un
 SS.mouse.use                                    = 1;     % collect and store mouse positions
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
 
-% ------------------------------------------------------------------------%
-%% Keyboard assignments
-% added by WZ
-% assign keys to specific functions here and utilize these in the
-% ND_CheckKeyMouse function to trigger defined actions.
-
-SS.key.reward = 'space';    % trigger reward
-SS.key.pause  = 'p';
-SS.key.quit   = 'ESCAPE';
-SS.key.debug  = 'd';
 
 % ------------------------------------------------------------------------%
 %% sound: contol sound playback
@@ -133,6 +126,7 @@ SS.pldaps.nosave                                = 0;     % disables saving of da
 SS.pldaps.pass                                  = 0;     % indicator of behavior (i.e. fixations) should always be assumed to be good.
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
 % SS.pldaps.trialMasterFunction                   = 'runTrial';   % function to be called to run a single Trial.
+% SS.pldaps.trialFunction                   = [];   % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
 SS.pldaps.eyeposMovAv                           = 1;     % average the eye position (.eyeX and .eyeY) over this many samples.
@@ -191,46 +185,52 @@ SS.pldaps.save.v73                              = 0;     % save as matlab versio
 % SS.pldaps.trialStates.trialSetup                = -1;    % called before each trial for data allocation.
 
 % ####################################################################### %        
-%% Below follow definitions for task stages as used in the Disney Lab
+%% Below follow definitions used in the Disney Lab
 % This is currently work in progress and we need to find an efficient set
 % of definitions that work most reliable accross several tasks.
 
 % ------------------------------------------------------------------------%
+%% Keyboard assignments
+% added by WZ
+% assign keys to specific functions here and utilize these in the
+% ND_CheckKeyMouse function to trigger defined actions.
+
+SS.key.reward = 'space';    % trigger reward
+SS.key.pause  = 'p';
+SS.key.quit   = 'ESCAPE';
+SS.key.debug  = 'd';
+
+% ------------------------------------------------------------------------%
 %% Define task epoch flags
-p.pldaps.CurrEpoch            = NaN;  % Indicator for the current task epoch
-
-p.pldaps.epoch.WaitPress      = 1;    % Wait for a joystick press to indicate readiness to work on a trial
-p.pldaps.epoch.WaitResponse   = 2;    % Wait for a task response
-p.pldaps.epoch.WaitRelease    = 3;    % Wait for joystick release
-p.pldaps.epoch.WaitTarget     = 4;    % wait for target onset 
-p.pldaps.epoch.WaitGo         = 6; 
-p.pldaps.epoch.WaitReward     = 7; 
-p.pldaps.epoch.WaitNextTrial  = 8; 
-
+p.pldaps.epoch.WaitStart      =   0;  % Wait to initialize task
+p.pldaps.epoch.WaitPress      =   1;  % Wait for a joystick press to indicate readiness to work on a trial
+p.pldaps.epoch.WaitRelease    =   2;  % Wait for joystick release
+p.pldaps.epoch.WaitFix        =   3;  % Target not acquired yet, wait for fixation  
+p.pldaps.epoch.WaitTarget     =   4;  % wait for target onset 
+p.pldaps.epoch.WaitGo         =   5; 
+p.pldaps.epoch.WaitReward     =   6; 
+p.pldaps.epoch.WaitNextTrial  =   7; 
 
 % ------------------------------------------------------------------------%
 %% Define joystick states
-p.pldaps.CurrJoyState         = NaN;  % Indicator for the current task epoch
+p.pldaps.JoyState.JoyHold     =   1;  % joystick pressed
+p.pldaps.JoyState.JoyRest     =   0;  % joystick released
 
 % ------------------------------------------------------------------------%
 %% Define fixation states (not needed for joystick training)
-p.pldaps.CurrFixState         = NaN;  % Indicator for the current task epoch
-
-p.pldaps.FixState.WaitFix     = 1;    % Target not acquired yet, wait for fixation  
-p.pldaps.FixState.Hold        = 1;    % Gaze at target
-p.pldaps.FixState.OutOfBounds = 1;    % Gaze left fixation window
-p.pldaps.FixState.FixBreak    = 1;    % Gaze out of fixation window long enough to be considered as fixation break
-
+p.pldaps.FixState.EyeHold     =   1;  % Gaze at target
+p.pldaps.FixState.OutOfBounds =   0;  % Gaze left fixation window
+p.pldaps.FixState.FixBreak    =   2;  % Gaze out of fixation window long enough to be considered as fixation break
 
 % ------------------------------------------------------------------------%
 %% Define task outcomes
-p.pldaps.outcome.Correct      = 0;  % correct performance, no error occurred
-p.pldaps.outcome.NoPress      = 1;  % No joystick press occurred to initialise trial
-p.pldaps.outcome.Abort        = 2;  % early joystick release prior stimulus onset
-p.pldaps.outcome.Early        = 3;  % release prior to response window
-p.pldaps.outcome.False        = 4;  % wrong response within response window
-p.pldaps.outcome.Late         = 5;  % response occurred after response window
-p.pldaps.outcome.Miss         = 6;  % no response at a reasonable time
+p.pldaps.outcome.Correct      =   0;  % correct performance, no error occurred
+p.pldaps.outcome.NoPress      =   1;  % No joystick press occurred to initialise trial
+p.pldaps.outcome.Abort        =   2;  % early joystick release prior stimulus onset
+p.pldaps.outcome.Early        =   3;  % release prior to response window
+p.pldaps.outcome.False        =   4;  % wrong response within response window
+p.pldaps.outcome.Late         =   5;  % response occurred after response window
+p.pldaps.outcome.Miss         =   6;  % no response at a reasonable time
 
 
 

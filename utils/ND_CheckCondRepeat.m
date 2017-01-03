@@ -1,4 +1,4 @@
-function ND_CheckCondRepeat(p)
+function p = ND_CheckCondRepeat(p)
 % Check if a condition needs to be repeated in order to ensure the same
 % number of correct trials for each condition.
 %

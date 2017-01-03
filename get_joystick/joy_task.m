@@ -1,4 +1,4 @@
-function p=joy_task(p, state)
+function p=joy_task(p, state, task)
 % Main trial function for initial joystick training. 
 % 
 % The animal needs to learn how to operate a joystick (i.e. lever) in order
@@ -18,33 +18,32 @@ function p=joy_task(p, state)
 % wolf zinke, Dec. 2016
 
 
-% if(nargin < 3)
-%     task='joy_train'; % this will be used to create a sub-structur in the trial structure
-% end
+
+if(nargin < 3)
+    if(isfield(p.defaultParameters.session, 'TaskName'))
+        task = p.defaultParameters.session.TaskName;
+    else
+        task='joy_train'; % this will be used to create a sub-structur in the trial structure
+    end
+end
+
 
 
 % ####################################################################### %        
-%% Initial call of this function. Use this to define general layout.
+%% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed
 if(nargin == 1)
     
-%     % not sure how the pldaps wanted to solve this, their task concept for
-%     % specofying a trial sub-struct just does not work, try  to use a global
-%     % definition here to cope with it.
-%     if(exist('task','var'))
-%         clear task
-%     end
-            
     % --------------------------------------------------------------------%
     %% Initialise session
-    ND_InitSession(p);
+    p = ND_InitSession(p);
     
-    p = joy_train_taskdef(p);
+    p = joy_train_taskdef(p, task);  % WZ: could it be removed here and just run in trialSetup?
     
     % --------------------------------------------------------------------%
     %% define ascii output file 
     % call this after ND_InitSession to be sure that output directory exists!
-    Trial2Ascii(p, 'init');
+    Trial2Ascii(p, task, 'init');
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -72,7 +71,7 @@ if(nargin == 1)
     % create a cell array containing all conditions
     conditions = {c1, c2, c3, c4};
     
-    ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
+    p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
     
     
 else
@@ -92,11 +91,11 @@ else
         % prepare everything for the trial, including allocation of stimuli
         % and all other more time demanding stuff.
         
-        p = joy_train_taskdef(p);  % brute force: read in task parameters every time to allow for online modifications
+        p = joy_train_taskdef(p, task);  % brute force: read in task parameters every time to allow for online modifications
         
-        ND_StartUpTrial(p);
+        p = ND_TrialSetup(p);
         
-        InitTask(p);
+        % InitTask(p);
         
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
@@ -104,7 +103,9 @@ else
         % just prior to actual trial start, use it for time sensitive
         % preparations;
         
-        StartTrial(p); % this defines the actual trial start time
+        p = ND_TrialPrepare(p); % this defines the actual trial start time
+        
+        StartTrial;
         
         ND_CtrlMsg(p, 'TRIAL Start');
 
@@ -130,6 +131,7 @@ else
         % Just call graphic routines, avoid any computations
                
         ND_DrawControlScreen(p);
+        
         DrawStim(p);
         
 % ####################################################################### %        
@@ -140,11 +142,11 @@ else
           
             FinishTask(p);
                         
-            ND_CheckCondRepeat(p);     % ensure all conditions were performed correctly equal often
+            p = ND_CheckCondRepeat(p);     % ensure all conditions were performed correctly equal often
             
-            ND_TrialCleanUpandSave(p); % end all trial related processes           
+            p = ND_TrialCleanUpandSave(p); % end all trial related processes           
             
-            Trial2Ascii(p, 'save');
+            Trial2Ascii(p, task, 'save');
             
             % just as fail safe, make sure to finish when done
             if(p.trial.pldaps.iTrial == length(p.conditions))
@@ -158,12 +160,12 @@ end  %/  if(nargin == 1) [...] else [...]
 
 % ------------------------------------------------------------------------%
 %% Task related functions
-% TODO: SOme of tyhese functions should become stand alone functions that
+% TODO: Some of these functions should become stand alone functions that
 % could be called from other paradigms as well. Right now, to have
 % something up and running, all functions are included below.
 
 % ------------------------------------------------------------------------%
-function Trial2Ascii(p, act)
+function Trial2Ascii(p, task, act)
 %% Save trial progress in an ASCII table
 % 'init' creats the file with a header defining all columns
 % 'save' adds a line with the information for the current trial
@@ -192,16 +194,16 @@ function Trial2Ascii(p, act)
     
     
 % ------------------------------------------------------------------------%
-function InitTask(p)
-%% prepare everything prior to starting the main trial loop, i.e. allocate
-% stimuli and set parameter.
-
-    % ensure background color is correct
+% function InitTask(p)
+% %% prepare everything prior to starting the main trial loop, i.e. allocate
+% % stimuli and set parameter.
+% 
+%     % ensure background color is correct
 
     
 
 % ------------------------------------------------------------------------%
-function StartTrial(p)
+function StartTrial(p, task)
 %% this defines the start of the trial
 
     % TODO: Make sure not to start a trial without the joystick being in rest state (i.e. lever released).
@@ -214,6 +216,8 @@ function StartTrial(p)
 
     vblTime = Screen('Flip', p.trial.display.ptr, 0); 
     
+    
+    
     p.trial.trstart = vblTime;
     p.trial.stimulus.timeLastFrame = vblTime - p.trial.trstart;
 
@@ -222,11 +226,49 @@ function StartTrial(p)
     
     p.trial.TrialStart = datestr(now,'HH:MM:SS:FFF');  % WZ: added absolute time as string
     
-    
     p.trial.(task).CurrEpoch = p.trial.(task).epoch.WaitPress;
+    p.trial.(task).CurrOutcome  = NaN;
+    p.trial.(task).CurrJoyState = NaN;
+    % p.trial.(task).CurrFixState = NaN;
+    
 % ------------------------------------------------------------------------%
-function PrepStim(p)
+function PrepStim(p, task)
+    epoch   = p.defaultParameters.epoch;
+    outcome = p.defaultParameters.outcome;
 
+    switch p.trial.(task).CurrEpoch
+
+        case epoch.WaitPress
+        %% Wait trial start    
+            ctm = GetSecs - p.trial.trstart;            
+            
+           
+            if(ctm > p.trial.(task).Timing.WaitStart) 
+            % no trial initiated in the given time window
+                ND_CtrlMsg(p, 'No trial start');
+                p.trial.(task).CurrOutcome = outcome.NoPress;
+                
+            elseif(p.trial.(task).CurrJoyState == p.pldaps.FixState.JoyHold)
+            % we just got a press in time
+                ND_CtrlMsg(p, 'Trial started');
+            end
+        
+        case epoch.WaitRelease
+        %% Wait release     
+            
+        
+            ctm = 
+             % we just got a release
+           
+            if(p.trial.(task).CurrJoyState == p.pldaps.FixState.JoyRest)
+        
+            end
+            
+            
+    end
+
+% ------------------------------------------------------------------------%
+function DrawStim(p, task)
 
 
     switch p.trial.(task).CurrEpoch
@@ -234,14 +276,5 @@ function PrepStim(p)
 
     end
 
-% ------------------------------------------------------------------------%
-function DrawStim(p)
 
-
-    switch p.trial.(task).CurrEpoch
-
-
-    end
-
-
-function FinishTask(p)
+function FinishTask(p, task)

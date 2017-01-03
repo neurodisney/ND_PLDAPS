@@ -1,4 +1,4 @@
-function ND_InitSession(p)
+function p = ND_InitSession(p)
 %% Initialise session
 % perform default steps to start a session
 %
@@ -7,8 +7,13 @@ function ND_InitSession(p)
 
 % --------------------------------------------------------------------%
 % Define Trial function
-% This is ridiculous
-p.defaultParameters.pldaps.trialFunction = p.trial.session.experimentSetupFile;
+% The runTrial function requires trialFunction to be
+% defined, but burried in their tutorial they show that this needs to be
+% defined when initialising the trial function (i.e. the experimentSetupFile),
+% otherwise there will be an error running runTrial.
+if(~isfield(p.defaultParameters.pldaps, 'trialFunction'))
+    p.defaultParameters.pldaps.trialFunction = p.trial.session.experimentSetupFile;
+end
 
 % --------------------------------------------------------------------%
 % initialize the random number generator (verify how this affects pldaps)
@@ -34,7 +39,14 @@ p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate
 % issue, i.e. start and end of trials, whereas within the trial GetSecs
 % should be much faster. PsychDataPixx('GetPreciseTime') and GetSecs seem
 % to output the time with a comparable reference.
-p.trial.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: inserted this entry for follow up timings
 
-% WZ, 17/01/02: Why does this take now so long? Any hardware issues?
-    
+% potential ad hoc hack? :
+% global dpx
+% dpx.syncmode=2; %1,2,3
+% dpx.maxDuration=0.02;
+% dpx.optMinwinThreshold=6.5e-5;
+
+p.trial.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: inserted this entry for follow up timings
+% WZ, 17/01/02: Why does this take now so long? Any hardware issues? My tests before showed a time ~1/2s before...
+
+% this call happens before datapix gets initialized in pldaps.run!

@@ -1,9 +1,8 @@
-function ND_StartUpTrial(p)
+function ND_TrialSetup(p)
 % prepare data collection and initialise everything needed
 % in part taken from trialSetup in the PLDAPS pldapsDefaultTrialFunction
 %
 % wolf zinke, Dec. 2016
-
 
     p.trial.timing.flipTimes           = zeros(4,p.trial.pldaps.maxFrames);
     p.trial.timing.frameStateChangeTimes = nan(9,p.trial.pldaps.maxFrames);

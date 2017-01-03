@@ -8,7 +8,9 @@ This repository contains helper tools and experiments to use in combination with
 
 A set of function modules that will be used for various task and therefore are kept as stand-alone functions here instead of replicating the code inside each task file.
 
-* __ND_StartUpTrial__ 
+* __ND_InitSession__
+
+* __ND_TrialSetup__ 
 
 * __ND_TrialPrepare__ 
 
@@ -28,6 +30,7 @@ A set of function modules that will be used for various task and therefore are k
 
 * __ND_GetConditionList__ 
 
+* __ND_CtrlMsg__ 
 
 
 

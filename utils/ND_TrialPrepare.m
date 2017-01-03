@@ -1,4 +1,4 @@
-function ND_TrialPrepare(p)     
+function p = ND_TrialPrepare(p)     
 % get everything ready for starting the main trial loop.
 % in part taken from trialPrepare in the PLDAPS pldapsDefaultTrialFunction
 %
