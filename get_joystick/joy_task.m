@@ -257,7 +257,7 @@ function PrepStim(p, task)
         %% Wait release     
             
         
-            ctm = 
+            ctm = 1;
              % we just got a release
            
             if(p.trial.(task).CurrJoyState == p.pldaps.FixState.JoyRest)
