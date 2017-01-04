@@ -19,13 +19,6 @@ function p=joy_task(p, state, task)
 
 
 
-if(nargin < 3)
-    if(isfield(p.defaultParameters.session, 'TaskName'))
-        task = p.defaultParameters.session.TaskName;
-    else
-        task='joy_train'; % this will be used to create a sub-structur in the trial structure
-    end
-end
 
 
 
@@ -34,6 +27,17 @@ end
 % Here, default parameters of the pldaps class could be adjusted if needed
 if(nargin == 1)
     
+    
+    if(nargin < 3)
+        if(isfield(p.defaultParameters.session, 'TaskName'))
+            task = p.defaultParameters.session.TaskName;
+        else
+            task='joy_train'; % this will be used to create a sub-structur in the trial structure
+        end
+    end
+    
+    p.trial.pldaps.TaskName = task;
+
     % --------------------------------------------------------------------%
     %% Initialise session
     p = ND_InitSession(p);
@@ -79,6 +83,8 @@ else
 %% Subsequent calls during actual trials
 % execute trial specific commands here.
 
+    task = p.trial.pldaps.TaskName;
+    
     switch state
         % TODO: find out what trialstates are used and check for reliability
         % in their timings by  executing triggers in this switch command.
