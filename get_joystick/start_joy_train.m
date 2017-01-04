@@ -52,7 +52,6 @@ SS.pldaps.trialFunction = exp_fun; % This function is both, set-up for the exper
 % ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);
-
 % ------------------------------------------------------------------------%
 %% adjust pldaps class settings
 p.defaultParameters.session.TaskName = task;
