@@ -16,7 +16,7 @@ if(~isfield(p.defaultParameters.pldaps, 'trialFunction'))
 end
 
 % --------------------------------------------------------------------%
-% initialize the random number generator (verify how this affects pldaps)
+%% initialize the random number generator (verify how this affects pldaps)
 rng('shuffle', 'twister');
 
 % --------------------------------------------------------------------%
@@ -26,13 +26,27 @@ if(~exist(fullfile(p.trial.pldaps.dirs.data,'TEMP'),'dir'))
 end
 
 % --------------------------------------------------------------------%
+%% Set some defaults
+% Setup default color lookup tables for huklab experiments. You can modify
+% these later as long as it's done before pdsDatapixxInit
+p = ND_defaultColors(p);
+
+% Bits
+% defaultBitNames adds .events.NAME to dv
+% The MAP server can only take 7 unique bits. 
+% TODO: WZ - this refers to handling with the plexon MAP, needs to be
+%            adapted for use with Tucker Davis
+p = ND_defaultBitNames(p);
+
+% --------------------------------------------------------------------%
+%% pre-allocate frame data
 % The frame allocation can only be set once the pldaps is run,
 % otherwise p.trial.display.frate will not be available because it is
 % defined in the openscreen call.
 p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate;
 
 % --------------------------------------------------------------------%
-% Define session start time    
+%% Define session start time    
 % PsychDataPixx('GetPreciseTime') is very slow. However, in order to keep
 % various timings in synch it seems to be recommended to call this more
 % often, hence it might be good to use it whenever timing is not a big

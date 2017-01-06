@@ -20,13 +20,10 @@ function p=joy_task(p, state, task)
 
 
 
-
-
 % ####################################################################### %        
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed
 if(nargin == 1)
-    
     
     if(nargin < 3)
         if(isfield(p.defaultParameters.session, 'TaskName'))
@@ -49,6 +46,8 @@ if(nargin == 1)
     % call this after ND_InitSession to be sure that output directory exists!
     Trial2Ascii(p, task, 'init');
     
+    p.defaultParameters.(task).randomNumberGenerater = 'mt19937ar'; % WZ: just copied from the pldaps plain function, can not find an instance where it is used...
+
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
     % define conditions (conditions could pe passed to the pldaps call as
@@ -97,7 +96,7 @@ else
         % prepare everything for the trial, including allocation of stimuli
         % and all other more time demanding stuff.
         
-        p = joy_train_taskdef(p, task);  % brute force: read in task parameters every time to allow for online modifications
+        p = joy_train_taskdef(p, task);  % brute force: read in task parameters every time to allow for online modifications. TODO: make it robust and let it work with parameter changes via keyboard, see e.g. monkeylogic editable concept.
         
         p = ND_TrialSetup(p);
         
@@ -106,8 +105,7 @@ else
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
         %% trial preparation            
-        % just prior to actual trial start, use it for time sensitive
-        % preparations;
+        % just prior to actual trial start, use it for time sensitive preparations;
         
         p = ND_TrialPrepare(p); % this defines the actual trial start time
         
@@ -236,6 +234,8 @@ function StartTrial(p, task)
     p.trial.(task).CurrOutcome  = NaN;
     p.trial.(task).CurrJoyState = NaN;
     % p.trial.(task).CurrFixState = NaN;
+    
+    
     
 % ------------------------------------------------------------------------%
 function PrepStim(p, task)

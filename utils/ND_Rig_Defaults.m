@@ -35,15 +35,16 @@ SS.datapixx.LogOnsetTimestampLevel              = 2;      % Get and Store a the 
 % WZ: Also for more clarification check the PsychDataPixx function in Psychtoolbox-3/Psychtoolbox/PsychHardware/DatapixxToolbox/DatapixxBasic
 % Currently values are set as specified as default in pds.datapixx.init,
 % leaving all fields empty should result in the same parameters.
-SS.datapixx.GetPreciseTime.maxDuration          = 0.02;   % maximum duration in seconds to wait for a good estimate
-SS.datapixx.GetPreciseTime.optMinwinThreshold   = 6.5e-5; % Minimum Threshold that defines a good estimate to end before maxDuration
-SS.datapixx.GetPreciseTime.syncmode             = 2;      % syncmode: accepted values are 1,2,3
+% SS.datapixx.GetPreciseTime.maxDuration          = 0.02;   % maximum duration in seconds to wait for a good estimate
+% SS.datapixx.GetPreciseTime.optMinwinThreshold   = 6.5e-5; % Minimum Threshold that defines a good estimate to end before maxDuration
+% SS.datapixx.GetPreciseTime.syncmode             = 2;      % syncmode: accepted values are 1,2,3
+SS.datapixx.GetPreciseTime.maxDuration          = [];   % maximum duration in seconds to wait for a good estimate
+SS.datapixx.GetPreciseTime.optMinwinThreshold   = []; % Minimum Threshold that defines a good estimate to end before maxDuration
+SS.datapixx.GetPreciseTime.syncmode             = [];      % syncmode: accepted values are 1,2,3
 
 % adc: Continuously collect and store adc data from Datapixx.
 SS.datapixx.adc.bufferAddress                   = [];     % typically left empty.
 SS.datapixx.adc.channelGains                    = 1;      % Apply a gain to collected data.
-SS.datapixx.adc.channels                        = [0, 1, 2, 4, 5]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
-SS.datapixx.adc.channelMapping                  = {'eye.X', 'eye.Y', 'eye.PD', 'joystick.X', 'joystick.Y'};   % Specify where to store the collected data.
 SS.datapixx.adc.channelModes                    = 0;      % Defines the referencing of the channel.
 SS.datapixx.adc.channelOffsets                  = 0;      % Apply an offset to collected data.
 SS.datapixx.adc.maxSamples                      = 0;      % maximum number of samples to collect
@@ -52,11 +53,13 @@ SS.datapixx.adc.srate                           = 1000;   % samples rate in Hz
 SS.datapixx.adc.startDelay                      = 0;      % delay until beginning of recording.
 SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel set eyeX    !!!
 SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
+SS.datapixx.adc.channels                        = [2, 4, 5]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
+SS.datapixx.adc.channelMapping = {'datapixx.eye.PD', 'datapixx.joy.X', 'datapixx.joy.Y'}; % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
 
 % ------------------------------------------------------------------------%
 %% display settings: pecify options for the screen.
 SS.display.bgColor                              = [0, 0, 0] / 255;  % background color. Can be changed during trial
-SS.display.scrnNum                              = 1;      % screen number for full screen display
+SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 57;     % screen distance to the observer                            !!!
 SS.display.heightcm                             = 29.8;   % height of the visible screen in cm                         !!!
 SS.display.widthcm                              = 53.1;   % width  of the visible screen in cm                         !!!
@@ -64,16 +67,16 @@ SS.display.screenSize                           = [];     % size of the window t
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
 SS.display.colorclamp                           = 1;      % clamp colors to [0-1] range. Typically not necessary
-SS.display.normalizeColor                       = 0;      % use colors in [0-1] range. Often implied by other setting anyway
+SS.display.normalizeColor                       = 1;      % use colors in [0-1] normalized color range on PTB screen. Often implied by other setting anyway
 SS.display.switchOverlayCLUTs                   = false;  % switch overlay colors between experimentor and subject view
 
 SS.display.colorclamp                           = 0;      % clamp colors to [0-1] range. Typically not necessary
-SS.display.destinationFactorNew                 = 'GL_ONE_MINUS_SRC_ALPHA';  % Blending mode used for psychtoolblox screen BlendFunction (http://docs.psychtoolbox.org/BlendFunction)
-SS.display.displayName                          = 'defaultScreenParameters'; % a name for your screen
 SS.display.forceLinearGamma                     = false;  % force a linear gamma table at the end of screen initiation.
-SS.display.sourceFactorNew                      = 'GL_SRC_ALPHA'; % Blending mode used for psychtoolblox screen BlendFunction (http://docs.psychtoolbox.org/BlendFunction)
 SS.display.stereoFlip                           = [];     % check before use if supported
 SS.display.stereoMode                           = 0;      % check before use if supported
+SS.display.sourceFactorNew      = 'GL_SRC_ALPHA';            % Blending mode used for psychtoolblox screen BlendFunction (http://docs.psychtoolbox.org/BlendFunction)
+SS.display.destinationFactorNew = 'GL_ONE_MINUS_SRC_ALPHA';  % Blending mode used for psychtoolblox screen BlendFunction (http://docs.psychtoolbox.org/BlendFunction)
+SS.display.displayName          = 'defaultScreenParameters'; % a name for your screen
 
 % movie: optinal create of videos, typically used during replay
 SS.display.movie.create                         = false; % toggle movie creation
@@ -82,7 +85,7 @@ SS.display.movie.file                           = [];    % file name. Leave empt
 SS.display.movie.frameRate                      = [];    % frame rate of the movie.
 SS.display.movie.height                         = [];    % height of the movie.
 SS.display.movie.width                          = [];    % width of the movie.
-SS.display.movie.options                        = ':CodecType=x264enc :EncodingQuality=1.0'; % encoding parameters
+SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encoding parameters
 
 % ------------------------------------------------------------------------%
 %% eyelink settings: Eyelink specific parameters
@@ -103,12 +106,11 @@ SS.eyelink.useRawData                           = 0;     % toggle use of raw (un
 SS.mouse.use                                    = 1;     % collect and store mouse positions
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
 
-
 % ------------------------------------------------------------------------%
 %% sound: contol sound playback
-SS.sound.use                                    = 1;     % toggle use of sound
+SS.sound.use                                    = 0;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
-SS.sound.useForReward                           = 1;     % toggle playing a sound for reward
+SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
 
 % ------------------------------------------------------------------------%
 %% plexon settings: interact with plexon MAP or Omniplex
@@ -117,7 +119,7 @@ SS.plexon.spikeserver.use	                    = 0;     % toggle use of our plexo
 
 % ------------------------------------------------------------------------%
 %% pldaps settings: pldaps core parameters
-SS.pldaps.finish                                = Inf;   % Number of trials to run. can be changed dynamically
+SS.pldaps.finish                                = inf;   % Number of trials to run. Can be changed dynamically
 SS.pldaps.goodtrial                             = 0;     % indicator whether the trial was good. Not used by pldaps itself
 SS.pldaps.iTrial                                = 1;     % trial number. cannot be changed by the user
 SS.pldaps.maxPriority                           = 1;     % Switch to PTB to maxpriority during the trial? See MaxPriority('?')
@@ -125,8 +127,8 @@ SS.pldaps.maxTrialLength                        = 25;    % Maximum duration of a
 SS.pldaps.nosave                                = 0;     % disables saving of data when true. see .pldaps.save for more control
 SS.pldaps.pass                                  = 0;     % indicator of behavior (i.e. fixations) should always be assumed to be good.
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
-% SS.pldaps.trialMasterFunction                   = 'runTrial';   % function to be called to run a single Trial.
-% SS.pldaps.trialFunction                   = [];   % function to be called to run a single Trial.
+% SS.pldaps.trialMasterFunction          = 'runTrial';   % function to be called to run a single Trial.
+% SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
 SS.pldaps.eyeposMovAv                           = 1;     % average the eye position (.eyeX and .eyeY) over this many samples.
@@ -147,10 +149,10 @@ SS.pldaps.draw.framerate.location               = [-30, -10]; % location (XY) of
 SS.pldaps.draw.framerate.nSecond                = 5;          % number of seconds to show the history for
 SS.pldaps.draw.framerate.show                   = 0;          % draw the frame rate. need use to be enabled as well
 SS.pldaps.draw.framerate.size                   = [10, 5];    % size (XY) of the plot in degrees of visual angle.
-SS.pldaps.draw.framerate.use                    = 0;          % set to true to collect data needed to show frame rate.
+SS.pldaps.draw.framerate.use                    = 1;          % set to true to collect data needed to show frame rate.
 
 % grid: control drawing of a grid
-SS.pldaps.draw.grid.use                         = 1;     % enable drawing of the grid
+SS.pldaps.draw.grid.use                         = 0;     % enable drawing of the grid
 
 % photo diode: control drawing of a flashing photo diode square.
 SS.pldaps.draw.photodiode.use                   = 0;     % enable drawing the photo diode square
@@ -210,6 +212,7 @@ p.pldaps.epoch.WaitTarget     =   4;  % wait for target onset
 p.pldaps.epoch.WaitGo         =   5; 
 p.pldaps.epoch.WaitReward     =   6; 
 p.pldaps.epoch.WaitNextTrial  =   7; 
+p.pldaps.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
 
 % ------------------------------------------------------------------------%
 %% Define joystick states
