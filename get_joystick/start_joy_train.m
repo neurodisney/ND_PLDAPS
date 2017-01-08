@@ -65,16 +65,16 @@ p.defaultParameters.session.TaskName = task;
 %     end
 % end
 
-Datapixx('Close')
-dpx = Datapixx('Open');
-
-if(dpx~=1)
-    error('Problem when initializeng DataPixx!');
-else
-    % WZ: this is also done in pds.datapixx.init, just testing if it makes a difference
-    Datapixx('StopAllSchedules');     % Stops any I/O schedules that were running before
-    Datapixx('EnableAdcFreeRunning'); % Start up free-running sampling of voltages at ADCs
-end
+%  Datapixx('Close')
+%  dpx = Datapixx('Open');
+%
+%  if(dpx~=1)
+%      error('Problem when initializeng DataPixx!');
+%  else
+%      % WZ: this is also done in pds.datapixx.init, just testing if it makes a difference
+%      Datapixx('StopAllSchedules');     % Stops any I/O schedules that were running before
+%      Datapixx('EnableAdcFreeRunning'); % Start up free-running sampling of voltages at ADCs
+%  end
 
 % ------------------------------------------------------------------------%
 %% run the experiment
@@ -82,8 +82,8 @@ p.run
 
 % ------------------------------------------------------------------------%
 %% Ensure DataPixx is closed
-if(Datapixx('IsReady'))
-    dpx = Datapixx('Close');
-end
+%  if(Datapixx('IsReady'))
+%      dpx = Datapixx('Close');
+%  end
 
 
