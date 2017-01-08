@@ -109,7 +109,7 @@ else
         
         p = ND_TrialPrepare(p); % this defines the actual trial start time
         
-        StartTrial;
+        % StartTrial(p,task);
         
         ND_CtrlMsg(p, 'TRIAL Start');
 
@@ -119,7 +119,7 @@ else
         case p.trial.pldaps.trialStates.frameUpdate
         %% collect data (i.e. a hardware module) and store it
         
-        ND_CheckKeyMouse(p);         % check for key hits, read mouse, use mouse for eye position if needed
+        ND_CheckKeyMouse(p, task);         % check for key hits, read mouse, use mouse for eye position if needed
         pds.datapixx.adc.getData(p); % get analogData from Datapixx, including eye position and joystick
         
         % ----------------------------------------------------------------%
@@ -127,14 +127,14 @@ else
         %% Get ready to display
         % prepare the stimuli that should be shown, do some required calculations
         
-        PrepStim(p);
+        PrepStim(p, task);
         
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
                
-        ND_DrawControlScreen(p);
+        ND_DrawControlScreen(p, task);
         
         DrawStim(p);
         
@@ -223,7 +223,7 @@ function StartTrial(p, task)
     
     
     p.trial.trstart = vblTime;
-    p.trial.stimulus.timeLastFrame = vblTime - p.trial.trstart;
+    p.trial.(task).timeLastFrame = vblTime - p.trial.trstart;
 
     p.trial.ttime  = GetSecs - p.trial.trstart;
     p.trial.timing.syncTimeDuration = p.trial.ttime;
