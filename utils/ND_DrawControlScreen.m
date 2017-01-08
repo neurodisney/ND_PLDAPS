@@ -1,4 +1,4 @@
-function ND_DrawControlScreen(p)
+function ND_DrawControlScreen(p, task)
 % right now taken from the pldapsDefaultTrialFunction, modify it according
 % to our needs.
 %
@@ -30,11 +30,11 @@ end
 
 if p.trial.pldaps.draw.eyepos.use
     Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX p.trial.eyeY]', ...
-    p.trial.stimulus.eyeW, p.trial.display.clut.eyepos, [0 0],0);
+    p.trial.(task).eyeW, p.trial.display.clut.eyepos, [0 0],0);
 end
 if p.trial.mouse.use && p.trial.pldaps.draw.cursor.use
     Screen('Drawdots',  p.trial.display.overlayptr,  p.trial.mouse.cursorSamples(1:2,p.trial.mouse.samples), ...
-    p.trial.stimulus.eyeW, p.trial.display.clut.cursor, [0 0],0);
+    p.trial.(task).eyeW, p.trial.display.clut.cursor, [0 0],0);
 end
 
 if p.trial.pldaps.draw.photodiode.use && mod(p.trial.iFrame, p.trial.pldaps.draw.photodiode.everyXFrames) == 0

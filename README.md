@@ -40,6 +40,12 @@ A set of function modules that will be used for various task and therefore are k
 
 
 ***
+## sync_tests
+
+General routines used for timing tests, calibration and related.
+
+
+***
 ## Experiments
 
 ### get_joystick

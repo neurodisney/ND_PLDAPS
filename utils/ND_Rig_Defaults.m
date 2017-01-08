@@ -35,10 +35,10 @@ SS.datapixx.LogOnsetTimestampLevel              = 2;      % Get and Store a the 
 % WZ: Also for more clarification check the PsychDataPixx function in Psychtoolbox-3/Psychtoolbox/PsychHardware/DatapixxToolbox/DatapixxBasic
 % Currently values are set as specified as default in pds.datapixx.init,
 % leaving all fields empty should result in the same parameters.
-% SS.datapixx.GetPreciseTime.maxDuration          = 0.02;   % maximum duration in seconds to wait for a good estimate
-% SS.datapixx.GetPreciseTime.optMinwinThreshold   = 6.5e-5; % Minimum Threshold that defines a good estimate to end before maxDuration
+% SS.datapixx.GetPreciseTime.maxDuration          = 0.015;  % maximum duration in seconds to wait for a good estimate
+% SS.datapixx.GetPreciseTime.optMinwinThreshold   = 1.2e-4; % Minimum Threshold that defines a good estimate to end before maxDuration
 % SS.datapixx.GetPreciseTime.syncmode             = 2;      % syncmode: accepted values are 1,2,3
-SS.datapixx.GetPreciseTime.maxDuration          = [];   % maximum duration in seconds to wait for a good estimate
+SS.datapixx.GetPreciseTime.maxDuration          = [];  % maximum duration in seconds to wait for a good estimate
 SS.datapixx.GetPreciseTime.optMinwinThreshold   = []; % Minimum Threshold that defines a good estimate to end before maxDuration
 SS.datapixx.GetPreciseTime.syncmode             = [];      % syncmode: accepted values are 1,2,3
 
