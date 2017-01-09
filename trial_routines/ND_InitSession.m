@@ -1,5 +1,5 @@
 function p = ND_InitSession(p)
-%% Initialise session
+%% Initialize session
 % perform default steps to start a session
 %
 %
@@ -8,8 +8,8 @@ function p = ND_InitSession(p)
 % --------------------------------------------------------------------%
 % Define Trial function
 % The runTrial function requires trialFunction to be
-% defined, but burried in their tutorial they show that this needs to be
-% defined when initialising the trial function (i.e. the experimentSetupFile),
+% defined, but buried in their tutorial they show that this needs to be
+% defined when initializing the trial function (i.e. the experimentSetupFile),
 % otherwise there will be an error running runTrial.
 if(~isfield(p.defaultParameters.pldaps, 'trialFunction'))
     p.defaultParameters.pldaps.trialFunction = p.trial.session.experimentSetupFile;
@@ -48,7 +48,7 @@ p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate
 % --------------------------------------------------------------------%
 %% Define session start time    
 % PsychDataPixx('GetPreciseTime') is very slow. However, in order to keep
-% various timings in synch it seems to be recommended to call this more
+% various timings in sync it seems to be recommended to call this more
 % often, hence it might be good to use it whenever timing is not a big
 % issue, i.e. start and end of trials, whereas within the trial GetSecs
 % should be much faster. PsychDataPixx('GetPreciseTime') and GetSecs seem
@@ -63,4 +63,4 @@ p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate
 p.trial.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: inserted this entry for follow up timings
 % WZ, 17/01/02: Why does this take now so long? Any hardware issues? My tests before showed a time ~1/2s before...
 
-% this call happens before datapix gets initialized in pldaps.run!
+% this call happens before datapixx gets initialized in pldaps.run!

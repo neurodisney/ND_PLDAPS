@@ -1,4 +1,4 @@
-function qp = ND_CheckKeyMouse(p)
+function qp = ND_CheckKeyMouse(p, task)
 %% read in keyboard and mouse information
 % code based on pldap's default trial function.
 % check for key presses and mouse actions and act accordingly.

@@ -6,9 +6,11 @@ This repository contains helper tools and experiments to use in combination with
 ***
 ## Tools and utilities
 
-### utils
+### trial_routines
+This are mainly stand-alone functions that were exctracted from pldapsDefaultTrialFunction in the PLDAPS package and adapted if needed. These functions execute standard routines for hard ware interaction that should use in the same way for all tasks.
 
-A set of function modules that will be used for various task and therefore are kept as stand-alone functions here instead of replicating the code inside each task file.
+* __ND_Rig_Defaults__ 
+Generate a settings struct with default parameters for the Disney-Lab that will be used to initialize the pldaps class.
 
 * __ND_InitSession__
 
@@ -16,7 +18,16 @@ A set of function modules that will be used for various task and therefore are k
 
 * __ND_TrialPrepare__ 
 
+* __ND_FrameDraw__
+
+* __ND_FrameFlip__
+
 * __ND_TrialCleanUpandSave__ 
+
+
+### utils
+
+A set of function modules that will be used for various task and therefore are kept as stand-alone functions here instead of replicating the code inside each task file.
 
 * __ND_checkFixation__ 
 
@@ -25,8 +36,6 @@ A set of function modules that will be used for various task and therefore are k
 * __ND_checkTrialState__ 
 
 * __ND_DrawControlScreen__ 
-
-* __ND_Rig_Defaults__ 
 
 * __ND_CheckCondRepeat__ 
 
@@ -37,12 +46,6 @@ A set of function modules that will be used for various task and therefore are k
 * __ND_defaultColors__ 
 
 * __ND_defaultBitNames__ 
-
-
-***
-## sync_tests
-
-General routines used for timing tests, calibration and related.
 
 
 ***

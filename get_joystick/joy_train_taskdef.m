@@ -5,20 +5,12 @@ function p = joy_train_taskdef(p, task)
 % modifications of the task. 
 %
 % TODO: - Make sure that changed parameters are kept in the data file, i.e.
-%         that there is sone log when changes happened
+%         that there is some log when changes happened
 %       - read in only changes in order to allow quicker manipulations via the
 %         keyboard without overwriting it every time by calling this routine
 %
+%
 % wolf zinke, Dec. 2016
-
-
-if(nargin < 2)
-    if(isfield(p.defaultParameters.session, 'TaskName'))
-        task = p.defaultParameters.session.TaskName;
-    else
-        task='joy_train'; % this will be used to create a sub-structur in the trial structure
-    end
-end
 
 
 % ------------------------------------------------------------------------%
@@ -31,11 +23,10 @@ p.trial.(task).Reward.Pull = 0;                % If 1 then give reward for pulli
 
 p.trial.(task).Reward.IncrConsecutive = 1;     % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
 p.trial.(task).Reward.Dur  = [0.1, 0.25, 0.5]; % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.(task).Reward.Step = [2, 4, 6];        % define the number of trials when to increse reward. CVector length can not be longer than p.trial.(task).Reward.RewDur  
+p.trial.(task).Reward.Step = [2, 4, 6];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.(task).Reward.RewDur  
 
 p.trial.(task).Reward.Lag    = 50;             % Delay between response and reward onset
-
-p.trial.(task).Reward.ManDur = 500;            % reward duration [s] for reward given by keybard presses
+p.trial.(task).Reward.ManDur = 500;            % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
@@ -61,6 +52,7 @@ p.trial.(task).TargetDimmCol = [200, 200, 200] ./ 255;  % dimmed target color as
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters
+p.trial.(task).Joy.use     =    1;  % does this task require a joystick
 p.trial.(task).Joy.pos0x   = -0.5;  % zero position X
 p.trial.(task).Joy.pos0y   =  0.5;  % zero position Y
 p.trial.(task).Joy.PullThr =  0.5;  % threshold to detect a joystick press
@@ -69,14 +61,15 @@ p.trial.(task).Joy.ActTime =   25;  % minimum time [ms] required to be considere
 
 % ------------------------------------------------------------------------%
 %% Saccade parameters
+p.trial.(task).Sacc.use       =  1;  % does this task require control of eye position
 p.trial.(task).Sacc.BreakTime = 25; % minimum time [ms] to identify a fixation break
 p.trial.(task).Sacc.FixWin    =  4; % diameter of fixation window
 
 % ------------------------------------------------------------------------%
 %% Trial duration
-% maxTrialLength is used to pre-allocate memory at several initialisation
-% steps. It specifes a duration in seconds.
+% maxTrialLength is used to pre-allocate memory at several initialization
+% steps. It specifies a duration in seconds.
 
-p.trial.pldaps.maxTrialLength = 60;   % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+p.trial.pldaps.maxTrialLength = 60; % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
 

@@ -11,6 +11,7 @@ function SS = ND_Rig_Defaults(SS)
 %
 % Relevant parameters are indicated by '!!!'.
 %
+%
 % wolf zinke, Oct. 2016
 
 
@@ -68,7 +69,7 @@ SS.display.screenSize                           = [];     % size of the window t
 SS.display.useOverlay                           = 1;      % create an overlay pointer
 SS.display.colorclamp                           = 1;      % clamp colors to [0-1] range. Typically not necessary
 SS.display.normalizeColor                       = 1;      % use colors in [0-1] normalized color range on PTB screen. Often implied by other setting anyway
-SS.display.switchOverlayCLUTs                   = false;  % switch overlay colors between experimentor and subject view
+SS.display.switchOverlayCLUTs                   = false;  % switch overlay colors between experimenter and subject view
 
 SS.display.colorclamp                           = 0;      % clamp colors to [0-1] range. Typically not necessary
 SS.display.forceLinearGamma                     = false;  % force a linear gamma table at the end of screen initiation.
@@ -189,7 +190,7 @@ SS.pldaps.save.v73                              = 0;     % save as matlab versio
 % ####################################################################### %        
 %% Below follow definitions used in the Disney Lab
 % This is currently work in progress and we need to find an efficient set
-% of definitions that work most reliable accross several tasks.
+% of definitions that work most reliable across several tasks.
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
@@ -228,7 +229,7 @@ p.pldaps.FixState.FixBreak    =   2;  % Gaze out of fixation window long enough 
 % ------------------------------------------------------------------------%
 %% Define task outcomes
 p.pldaps.outcome.Correct      =   0;  % correct performance, no error occurred
-p.pldaps.outcome.NoPress      =   1;  % No joystick press occurred to initialise trial
+p.pldaps.outcome.NoPress      =   1;  % No joystick press occurred to initialize trial
 p.pldaps.outcome.Abort        =   2;  % early joystick release prior stimulus onset
 p.pldaps.outcome.Early        =   3;  % release prior to response window
 p.pldaps.outcome.False        =   4;  % wrong response within response window
