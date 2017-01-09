@@ -70,7 +70,7 @@ p.defaultParameters.TaskName = task;
 
 %  Datapixx('Close')
 %  dpx = Datapixx('Open');
-%  
+
 %  if(dpx~=1)
 %      error('Problem when initializeng DataPixx!');
 %  else
@@ -88,5 +88,4 @@ p.run
 if(Datapixx('IsReady'))
     Datapixx('Close');
 end
-
 
