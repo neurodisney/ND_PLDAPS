@@ -29,14 +29,14 @@ end
 %% Set some defaults
 % Setup default color lookup tables for huklab experiments. You can modify
 % these later as long as it's done before pdsDatapixxInit
-p = ND_defaultColors(p);
+p = ND_DefaultColors(p);
 
 % Bits
 % defaultBitNames adds .events.NAME to dv
 % The MAP server can only take 7 unique bits. 
 % TODO: WZ - this refers to handling with the plexon MAP, needs to be
 %            adapted for use with Tucker Davis
-p = ND_defaultBitNames(p);
+p = ND_DefaultBitNames(p);
 
 % --------------------------------------------------------------------%
 %% pre-allocate frame data

@@ -1,3 +1,4 @@
+
 function p = ND_TrialSetup(p)
 % prepare data collection and initialise everything needed
 % in part taken from trialSetup in the PLDAPS pldapsDefaultTrialFunction

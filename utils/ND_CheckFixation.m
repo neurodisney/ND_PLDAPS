@@ -1,5 +1,5 @@
 % !!! right now just a placeholder !!!
-function p = ND_checkFixation(p, task)
+function p = ND_CheckFixation(p, task)
 % based on an inline function provided in: https://github.com/HukLab/PLDAPSDemos
 %
 % TODO: get this working !

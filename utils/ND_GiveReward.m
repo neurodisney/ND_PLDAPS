@@ -1,5 +1,8 @@
+
+
+
 function p = ND_GiveReward(p, amount, chan, TTLamp)
-% Function to deliver reward via analogue DataPixx output.
+% Function to deliver reward via analog DataPixx output.
 % This function is a modification of the pds.behavior.reward.give function
 %
 %

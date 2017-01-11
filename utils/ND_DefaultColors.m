@@ -1,4 +1,4 @@
-function p = ND_defaultColors(p)
+function p = ND_DefaultColors(p)
 % Setup default color lookup tables
 %
 %

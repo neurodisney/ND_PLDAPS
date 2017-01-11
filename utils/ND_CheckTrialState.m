@@ -1,4 +1,4 @@
-function p = ND_checkTrialState(p, task)
+function p = ND_CheckTrialState(p, task)
 % based on an inline function provided in: https://github.com/HukLab/PLDAPSDemos
 
 

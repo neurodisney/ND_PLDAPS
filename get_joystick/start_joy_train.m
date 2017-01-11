@@ -25,7 +25,7 @@ exp_fun = 'joy_task';
 
 % ------------------------------------------------------------------------%
 %% load default settings into a struct
-SS = ND_Rig_Defaults;    % load default settings according to the current rig setup
+SS = ND_RigDefaults;    % load default settings according to the current rig setup
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun; % This function is both, set-up for the experiment session as well as the trial function

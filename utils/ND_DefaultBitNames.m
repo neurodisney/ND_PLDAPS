@@ -1,4 +1,4 @@
-function dv = ND_defaultBitNames(dv)
+function dv = ND_DefaultBitNames(dv)
 % Sets values for event codes%
 %
 %

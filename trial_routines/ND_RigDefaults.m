@@ -1,4 +1,4 @@
-function SS = ND_Rig_Defaults(SS)
+function SS = ND_RigDefaults(SS)
 % This file summarizes gives an overview of parameters that could be set for
 % the pldaps class and provides the default settings for an actual rig that
 % is used for experiments.
