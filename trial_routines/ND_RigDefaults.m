@@ -53,7 +53,7 @@ SS.datapixx.adc.numBufferFrames                 = 600000; % maximum number of sa
 SS.datapixx.adc.srate                           = 1000;   % samples rate in Hz
 SS.datapixx.adc.startDelay                      = 0;      % delay until beginning of recording.
 SS.datapixx.adc.channels                        = [0, 1, 2, 3, 4]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
-SS.datapixx.adc.channelMapping                  = {'AIdata'}; % Specify where to store the collected data. 
+SS.datapixx.adc.channelMapping = {'AI.Eye.X', 'AI.Eye.Y', 'AI.Eye.PD', 'AI.Joy.X', 'AI.Joy.Y'}; % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
 
 SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel set eyeX    !!!
 SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
@@ -133,7 +133,7 @@ SS.pldaps.quit                                  = 0;     % control experiment du
 % SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
-SS.pldaps.eyeposMovAv                           = 1;     % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples.
+SS.pldaps.eyeposMovAv                           = 25;     % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples.
 SS.pldaps.useModularStateFunctions              = 0;     % use modular state functions, see pldaps.runModularTrial, pldaps.getModules, pldaps.runStateforModules
 
 % dirs: configure pldaps' built-in drawing options
@@ -204,6 +204,7 @@ SS.datapixx.adc.XJoyChannel  = 3;         % if datapixx.useJoystick=true, use th
 SS.datapixx.adc.YJoyChannel  = 4;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
 
 SS.datapixx.adc.JoyZero     = [2.6, 2.6]; % joystick signal at resting state (released)
+SS.datapixx.adc.JoySample   = 25;         % how many data points to use for determining joystick state.
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
@@ -229,11 +230,13 @@ p.pldaps.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add 
 
 % ------------------------------------------------------------------------%
 %% Define joystick states
+p.pldaps.JoyState.Current     = NaN;
 p.pldaps.JoyState.JoyHold     =   1;  % joystick pressed
 p.pldaps.JoyState.JoyRest     =   0;  % joystick released
 
 % ------------------------------------------------------------------------%
 %% Define fixation states (not needed for joystick training)
+p.pldaps.FixState.Current     = NaN;
 p.pldaps.FixState.EyeHold     =   1;  % Gaze at target
 p.pldaps.FixState.OutOfBounds =   0;  % Gaze left fixation window
 p.pldaps.FixState.FixBreak    =   2;  % Gaze out of fixation window long enough to be considered as fixation break

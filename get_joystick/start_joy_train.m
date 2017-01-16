@@ -39,6 +39,7 @@ SS.display.bgColor    = [50, 50, 50] / 255;
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 SS.mouse.useAsEyepos  = 0;
 
+
 % determine the path to store data files
 SS.pldaps.dirs.data = fullfile(SS.pldaps.dirs.data, subjname, task, datestr(now,'yyyy_mm_dd'));
 

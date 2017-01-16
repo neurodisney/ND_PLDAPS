@@ -5,6 +5,12 @@ function p = ND_CheckFixation(p, task)
 % TODO: get this working !
 
 
+
+
+
+
+
+
         % WAITING FOR SUBJECT FIXATION (fp1)
         fixating=fixationHeld(p);
         if  p.trial.state == p.trial.(task).states.START

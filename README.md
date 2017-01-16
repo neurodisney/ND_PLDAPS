@@ -43,6 +43,9 @@ A set of function modules that will be used for various task and therefore are k
 * __ND_CheckKeyMouse__ 
 Check keyboard presses and mouse actions and trigger actions accordingly. ==WIP: check carefully to avoid interference with PLDAPS standard routines==
 
+* __ND_CheckJoystick__ 
+==WIP:== Check current joystick signal and adjust states accordingly.
+
 * __ND_CheckTrialState__ 
 
 * __ND_GetConditionList__ 
