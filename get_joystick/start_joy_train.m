@@ -21,7 +21,7 @@ task = 'joy_train';  % this will be used to create a sub-struct in the trial str
 subjname = 'test';
 
 % function to set up experiment (and maybe also including trial function)
-exp_fun = 'joy_task'; 
+exp_fun = 'joy_task';
 
 % ------------------------------------------------------------------------%
 %% load default settings into a struct
@@ -38,12 +38,6 @@ SS.display.bgColor    = [50, 50, 50] / 255;
 % prepare for eye tracking and joystick monitoring
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 SS.mouse.useAsEyepos  = 0;
-
-% SS.datapixx.adc.channels       = [4, 5]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
-% SS.datapixx.adc.channelMapping = {'datapixx.joy.X', 'datapixx.joy.Y'}; % Specify where to store the collected data.
-SS.datapixx.adc.channels       = []; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
-SS.datapixx.adc.channelMapping = {}; % Specify where to store the collected data.
-SS.datapixx.useAsEyepos                         = 0;      % use Datapixx adc inputs as eye position                    !!!
 
 % determine the path to store data files
 SS.pldaps.dirs.data = fullfile(SS.pldaps.dirs.data, subjname, task, datestr(now,'yyyy_mm_dd'));

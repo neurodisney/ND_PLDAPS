@@ -7,22 +7,38 @@ function p = ND_InitSession(p)
 
 % --------------------------------------------------------------------%
 % Define Trial function
-% The runTrial function requires trialFunction to be
-% defined, but buried in their tutorial they show that this needs to be
-% defined when initializing the trial function (i.e. the experimentSetupFile),
-% otherwise there will be an error running runTrial.
+% The runTrial function requires trialFunction to be defined, but buried in
+% their tutorial they show that this needs to be defined when initializing 
+% the trial function (i.e. the experimentSetupFile), otherwise there will be
+% an error running runTrial.
 if(~isfield(p.defaultParameters.pldaps, 'trialFunction'))
     p.defaultParameters.pldaps.trialFunction = p.trial.session.experimentSetupFile;
 end
 
 % --------------------------------------------------------------------%
-%% initialize the random number generator (verify how this affects pldaps)
+%% initialize the random number generator 
+% verify how this affects pldaps
 rng('shuffle', 'twister');
 
 % --------------------------------------------------------------------%
-%% ensure that the data directory exists (TODO: use the entry from the trial struct)
+%% ensure that the data directory exists 
+% TODO: use the entry from the trial struct
 if(~exist(fullfile(p.trial.pldaps.dirs.data,'TEMP'),'dir'))
     mkdir(fullfile(p.trial.pldaps.dirs.data,'TEMP'));
+end
+
+% --------------------------------------------------------------------%
+%% ensure channel mapping
+% test if the channels needed are specified 
+if (p.defaultParameters.datapixx.useAsEyepos == 1)
+    p = CheckChannelExists(p, 'XEyeposChannel', 1);
+    p = CheckChannelExists(p, 'YEyeposChannel', 1);
+    p = CheckChannelExists(p, 'PupilChannel',   0);
+end
+
+if (p.defaultParameters.datapixx.useJoystick == 1)
+    p = CheckChannelExists(p, 'XJoyChannel', 1);
+    p = CheckChannelExists(p, 'YJoyChannel', 1);
 end
 
 % --------------------------------------------------------------------%
@@ -40,9 +56,8 @@ p = ND_DefaultBitNames(p);
 
 % --------------------------------------------------------------------%
 %% pre-allocate frame data
-% The frame allocation can only be set once the pldaps is run,
-% otherwise p.trial.display.frate will not be available because it is
-% defined in the openscreen call.
+% The frame allocation can only be set once the pldaps is run, otherwise
+% p.trial.display.frate will not be available because it is defined in the openscreen call.
 p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate;
 
 % --------------------------------------------------------------------%
@@ -54,13 +69,25 @@ p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate
 % should be much faster. PsychDataPixx('GetPreciseTime') and GetSecs seem
 % to output the time with a comparable reference.
 
-% potential ad hoc hack? :
-% global dpx
-% dpx.syncmode=2; %1,2,3
-% dpx.maxDuration=0.02;
-% dpx.optMinwinThreshold=6.5e-5;
-
 p.trial.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: inserted this entry for follow up timings
-% WZ, 17/01/02: Why does this take now so long? Any hardware issues? My tests before showed a time ~1/2s before...
-
 % this call happens before datapixx gets initialized in pldaps.run!
+
+
+% --------------------------------------------------------------------%
+%% helper functions
+
+function p = CheckChannelExists(p, channm, chk)
+   
+    if(isempty(p.defaultParameters.datapixx.adc.(channm)) || isnan(p.defaultParameters.datapixx.adc.(channm)) )
+        if(chk == 1)
+            error([channm , ' has no value assigned!']);
+        end
+    else
+        if(~any(p.defaultParameters.datapixx.adc.channels == p.defaultParameters.datapixx.adc.(channm)))
+            p.defaultParameters.datapixx.adc.channels = ... 
+                sort([p.defaultParameters.datapixx.adc.channels, p.defaultParameters.datapixx.adc.(channm)]);
+        end        
+    end
+
+
+

@@ -152,9 +152,9 @@ nd.stimulus.eyeW=nd.fixTrain.stimSizeXYPx(1);
 
 p=pldaps(@plainAMBHack1,'test',nd);
 
-p.defaultParameters.datapixx.adc.channels                        = [0, 1, 2, 4, 5];
+p.defaultParameters.datapixx.adc.channels                        = [3, 4];
 %p.defaultParameters.datapixx.adc.channelMapping                  = {'datapixx.adcdata'};   % Specify where to store the collected data.
-p.defaultParameters.datapixx.adc.channelMapping                  = {'eye.X', 'eye.Y', 'eye.PD', 'joystick.X', 'joystick.Y'};   % Specify where to store the collected data.
+p.defaultParameters.datapixx.adc.channelMapping                  = { 'datapixx.joystick.X', 'datapixx.joystick.Y'};   % Specify where to store the collected data.
 p.defaultParameters.datapixx.useForReward                        = 1; 
 p.defaultParameters.datapixx.useAsEyepos                         = 1;   
 

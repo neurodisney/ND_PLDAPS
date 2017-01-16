@@ -47,6 +47,7 @@ else
         ND_CheckKeyMouse(p, task);   % check for key hits, read mouse, use mouse for eye position if needed
         pds.datapixx.adc.getData(p); % get analogData from Datapixx, including eye position and joystick
               ListenChar(0);  keyboard
+              
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen

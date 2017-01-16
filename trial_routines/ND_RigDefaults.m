@@ -52,10 +52,11 @@ SS.datapixx.adc.maxSamples                      = 0;      % maximum number of sa
 SS.datapixx.adc.numBufferFrames                 = 600000; % maximum number of samples to store in datapixx memory.
 SS.datapixx.adc.srate                           = 1000;   % samples rate in Hz
 SS.datapixx.adc.startDelay                      = 0;      % delay until beginning of recording.
+SS.datapixx.adc.channels                        = [0, 1, 2, 3, 4]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
+SS.datapixx.adc.channelMapping                  = {'AIdata'}; % Specify where to store the collected data. 
+
 SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel set eyeX    !!!
 SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
-SS.datapixx.adc.channels                        = [2, 4, 5]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
-SS.datapixx.adc.channelMapping = {'datapixx.eye.PD', 'datapixx.joy.X', 'datapixx.joy.Y'}; % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
 
 % ------------------------------------------------------------------------%
 %% display settings: pecify options for the screen.
@@ -75,7 +76,7 @@ SS.display.colorclamp                           = 0;      % clamp colors to [0-1
 SS.display.forceLinearGamma                     = false;  % force a linear gamma table at the end of screen initiation.
 SS.display.stereoFlip                           = [];     % check before use if supported
 SS.display.stereoMode                           = 0;      % check before use if supported
-SS.display.sourceFactorNew      = 'GL_SRC_ALPHA';            % Blending mode used for psychtoolblox screen BlendFunction (http://docs.psychtoolbox.org/BlendFunction)
+SS.display.sourceFactorNew      = 'GL_SRC_ALPHA';         % Blending mode used for psychtoolblox screen BlendFunction (http://docs.psychtoolbox.org/BlendFunction)
 SS.display.destinationFactorNew = 'GL_ONE_MINUS_SRC_ALPHA';  % Blending mode used for psychtoolblox screen BlendFunction (http://docs.psychtoolbox.org/BlendFunction)
 SS.display.displayName          = 'defaultScreenParameters'; % a name for your screen
 
@@ -132,7 +133,7 @@ SS.pldaps.quit                                  = 0;     % control experiment du
 % SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
-SS.pldaps.eyeposMovAv                           = 1;     % average the eye position (.eyeX and .eyeY) over this many samples.
+SS.pldaps.eyeposMovAv                           = 1;     % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples.
 SS.pldaps.useModularStateFunctions              = 0;     % use modular state functions, see pldaps.runModularTrial, pldaps.getModules, pldaps.runStateforModules
 
 % dirs: configure pldaps' built-in drawing options
@@ -193,8 +194,19 @@ SS.pldaps.save.v73                              = 0;     % save as matlab versio
 % of definitions that work most reliable across several tasks.
 
 % ------------------------------------------------------------------------%
+%% Analog input channels
+% specify channel assignments and the use of joystick input
+SS.datapixx.adc.PupilChannel = 2;         % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
+
+SS.datapixx.useJoystick      = 1;         % acquire data about joystick state                                           !!!
+
+SS.datapixx.adc.XJoyChannel  = 3;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
+SS.datapixx.adc.YJoyChannel  = 4;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
+
+SS.datapixx.adc.JoyZero     = [2.6, 2.6]; % joystick signal at resting state (released)
+
+% ------------------------------------------------------------------------%
 %% Keyboard assignments
-% added by WZ
 % assign keys to specific functions here and utilize these in the
 % ND_CheckKeyMouse function to trigger defined actions.
 
