@@ -203,8 +203,8 @@ SS.datapixx.useJoystick      = 1;         % acquire data about joystick state   
 SS.datapixx.adc.XJoyChannel  = 3;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
 SS.datapixx.adc.YJoyChannel  = 4;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
 
-SS.datapixx.adc.JoyZero     = [2.6, 2.6]; % joystick signal at resting state (released)
-SS.datapixx.adc.JoySample   = 25;         % how many data points to use for determining joystick state.
+
+
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
@@ -218,38 +218,56 @@ SS.key.debug  = 'd';
 
 % ------------------------------------------------------------------------%
 %% Define task epoch flags
-p.pldaps.epoch.WaitStart      =   0;  % Wait to initialize task
-p.pldaps.epoch.WaitPress      =   1;  % Wait for a joystick press to indicate readiness to work on a trial
-p.pldaps.epoch.WaitRelease    =   2;  % Wait for joystick release
-p.pldaps.epoch.WaitFix        =   3;  % Target not acquired yet, wait for fixation  
-p.pldaps.epoch.WaitTarget     =   4;  % wait for target onset 
-p.pldaps.epoch.WaitGo         =   5; 
-p.pldaps.epoch.WaitReward     =   6; 
-p.pldaps.epoch.WaitNextTrial  =   7; 
-p.pldaps.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
+SS.pldaps.epoch.WaitStart      =   0;  % Wait to initialize task
+SS.pldaps.epoch.WaitPress      =   1;  % Wait for a joystick press to indicate readiness to work on a trial
+SS.pldaps.epoch.WaitRelease    =   2;  % Wait for joystick release
+SS.pldaps.epoch.WaitFix        =   3;  % Target not acquired yet, wait for fixation
+SS.pldaps.epoch.WaitTarget     =   4;  % wait for target onset
+SS.pldaps.epoch.WaitGo         =   5;
+SS.pldaps.epoch.WaitReward     =   6;
+SS.pldaps.epoch.WaitNextTrial  =   7;
+SS.pldaps.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
+
+% ------------------------------------------------------------------------%
+%% joystick parameters
+SS.behavior.joystick.use      =  1;         % does this task require control of joystick state
+SS.behavior.joystick.Zero     = [2.6, 2.6]; % joystick signal at resting state (released)
+SS.behavior.joystick.Sample   = 20;         % how many data points to use for determining joystick state.
+SS.behavior.joystick.PullThr  = 0.5;        % threshold to detect a joystick press
+SS.behavior.joystick.RelThr   = 0.5;        % threshold to detect a joystick release
+
+SS.pldaps.draw.joystick.use   = 1;
 
 % ------------------------------------------------------------------------%
 %% Define joystick states
-p.pldaps.JoyState.Current     = NaN;
-p.pldaps.JoyState.JoyHold     =   1;  % joystick pressed
-p.pldaps.JoyState.JoyRest     =   0;  % joystick released
+SS.pldaps.JoyState.Current     = NaN;
+SS.pldaps.JoyState.JoyHold     =   1;  % joystick pressed
+SS.pldaps.JoyState.JoyRest     =   0;  % joystick released
+
 
 % ------------------------------------------------------------------------%
-%% Define fixation states (not needed for joystick training)
-p.pldaps.FixState.Current     = NaN;
-p.pldaps.FixState.EyeHold     =   1;  % Gaze at target
-p.pldaps.FixState.OutOfBounds =   0;  % Gaze left fixation window
-p.pldaps.FixState.FixBreak    =   2;  % Gaze out of fixation window long enough to be considered as fixation break
+%% Saccade parameters
+SS.behavior.fixation.use       =  1;      % does this task require control of eye position
+SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
+SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window
+SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window
+
+% ------------------------------------------------------------------------%
+%% Define fixation states
+SS.pldaps.FixState.Current     = NaN;
+SS.pldaps.FixState.EyeHold     =   1;  % Gaze at target
+SS.pldaps.FixState.OutOfBounds =   0;  % Gaze left fixation window
+SS.pldaps.FixState.FixBreak    =   2;  % Gaze out of fixation window long enough to be considered as fixation break
 
 % ------------------------------------------------------------------------%
 %% Define task outcomes
-p.pldaps.outcome.Correct      =   0;  % correct performance, no error occurred
-p.pldaps.outcome.NoPress      =   1;  % No joystick press occurred to initialize trial
-p.pldaps.outcome.Abort        =   2;  % early joystick release prior stimulus onset
-p.pldaps.outcome.Early        =   3;  % release prior to response window
-p.pldaps.outcome.False        =   4;  % wrong response within response window
-p.pldaps.outcome.Late         =   5;  % response occurred after response window
-p.pldaps.outcome.Miss         =   6;  % no response at a reasonable time
+SS.pldaps.outcome.Correct      =   0;  % correct performance, no error occurred
+SS.pldaps.outcome.NoPress      =   1;  % No joystick press occurred to initialize trial
+SS.pldaps.outcome.Abort        =   2;  % early joystick release prior stimulus onset
+SS.pldaps.outcome.Early        =   3;  % release prior to response window
+SS.pldaps.outcome.False        =   4;  % wrong response within response window
+SS.pldaps.outcome.Late         =   5;  % response occurred after response window
+SS.pldaps.outcome.Miss         =   6;  % no response at a reasonable time
 
 
 

@@ -51,18 +51,7 @@ p.trial.(task).TargetDimmCol = [200, 200, 200] ./ 255;  % dimmed target color as
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters
-p.trial.(task).Joy.use     =    1;       % does this task require a joystick
-p.trial.(task).Joy.pos0y   =  0.5;       % zero position Y
-p.trial.(task).Joy.PullThr =  0.5;       % threshold to detect a joystick press
-p.trial.(task).Joy.RelThr  =  0.5;       % threshold to detect a joystick release
 p.trial.(task).Joy.ActTime =   25;       % minimum time [ms] required to be considered as joystick change
-
-% ------------------------------------------------------------------------%
-%% Saccade parameters
-p.trial.(task).Sacc.use       =  1;      % does this task require control of eye position
-p.trial.(task).Sacc.BreakTime = 25;      % minimum time [ms] to identify a fixation break
-p.trial.(task).Sacc.FixWin    =  4;      % diameter of fixation window
-p.trial.(task).Sacc.FixPos    = [0 ,0];  % center position of fixation window
 
 % ------------------------------------------------------------------------%
 %% Trial duration

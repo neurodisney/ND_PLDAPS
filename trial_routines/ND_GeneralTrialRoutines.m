@@ -46,7 +46,10 @@ else
         %% collect data (i.e. a hardware module) and store it
         ND_CheckKeyMouse(p, task);   % check for key hits, read mouse, use mouse for eye position if needed
         pds.datapixx.adc.getData(p); % get analogData from Datapixx, including eye position and joystick
-              ListenChar(0);  keyboard
+        ND_CheckJoystick(p);         % needs to be called after pds.datapixx.adc.getData
+        %ND_CheckFixation(p,task);    % needs to be called after pds.datapixx.adc.getData
+
+ListenChar(0);  keyboard
               
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw

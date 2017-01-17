@@ -58,14 +58,21 @@ end
 % --------------------------------------------------------------------%
 %% draw eye position
 if(p.trial.pldaps.draw.eyepos.use)
-    Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX p.trial.eyeY]', ...
+    Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX, p.trial.eyeY]', ...
                         p.trial.(task).eyeW, p.trial.display.clut.eyepos, [0 0],0);
 end
 
 % --------------------------------------------------------------------%
 %% draw joystick state
 % WZ: This is clearly a ToDo!
+if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick
+% Todo: define location and size of joystick representation
+% Todo: draw threshold circles depending on current state
 
+    Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX, p.trial.eyeY]', ...
+                        p.trial.(task).eyeW, p.trial.display.clut.eyepos, [0 0],0);  % ToDo add joystick colors
+
+end
 
 % --------------------------------------------------------------------%
 %% draw mouse state
