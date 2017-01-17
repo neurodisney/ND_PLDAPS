@@ -61,3 +61,4 @@ if(p.trial.datapixx.useJoystick)
         end % switch p.pldaps.JoyState.Current
    end  % if(p.trial.behavior.joystick.use)
 end  % if(p.trial.datapixx.useJoystick)
+
