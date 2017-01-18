@@ -19,7 +19,7 @@ function ND_DefineCol(p, colname, pos, hCol, mCol)
 p.defaultParameters.display.humanCLUT( pos+1,:) = hCol;
 p.defaultParameters.display.monkeyCLUT(pos+1,:) = mCol;
 
-if(p.defaultParameters.display.useOverlay)
+if(p.defaultParameters.display.useOverlay) % apparewntly, both, datapixx and software overlays use indexed colors
     p.defaultParameters.display.clut.(colname) = pos * ones(3,1);  % use color lookup table indices
 else
     p.defaultParameters.display.clut.(colname) = p.defaultParameters.display.monkeyCLUT(pos+1,:)'; % just copy colors defined for monkey screen, no overlay
