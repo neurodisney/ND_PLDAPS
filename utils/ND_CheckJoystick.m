@@ -50,8 +50,12 @@ if(p.trial.datapixx.useJoystick)
                 if(isnan(p.trial.pldaps.JoyState.Current))
                     if(cAmp(end) >= p.trial.behavior.joystick.PullThr)
                         p.trial.pldaps.JoyState.Current = p.trial.pldaps.JoyState.JoyHold;
+
+                        % ToDo: define rect for threshold representation
+
                     elseif(cAmp(end) <= p.trial.behavior.joystick.RelThr)
                         p.trial.pldaps.JoyState.Current = p.trial.pldaps.JoyState.JoyRest;
+                        % ToDo: define rect for threshold representation
                     else
                         p.trial.pldaps.JoyState.Current = NaN;
                     end

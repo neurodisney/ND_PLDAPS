@@ -63,6 +63,15 @@ if(isempty(state))
     % control of trials, especially the use of blocks, i.e. the repetition
     % of a defined number of trials per condition, needs to be clarified.
     % Right now, it is a placeholder).
+
+    % --------------------------------------------------------------------%
+    %% Color definitions
+    % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init,
+    % hence this is a good place to do so. To avoid conflicts with future changes in the set of
+    % default colors, use entries late in the lookup table for the definition of task related
+    % colors.
+    ND_DefineCol(p, 'white',    9, [1.00, 1.00, 1.00], [1.00, 1.00, 1.00]);
+
     
     maxTrials_per_BlockCond = 10;  
     maxBlocks = 100;

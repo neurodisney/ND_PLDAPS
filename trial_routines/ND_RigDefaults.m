@@ -230,13 +230,16 @@ SS.pldaps.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add
 
 % ------------------------------------------------------------------------%
 %% joystick parameters
-SS.behavior.joystick.use      =  1;         % does this task require control of joystick state
-SS.behavior.joystick.Zero     = [2.6, 2.6]; % joystick signal at resting state (released)
-SS.behavior.joystick.Sample   = 20;         % how many data points to use for determining joystick state.
-SS.behavior.joystick.PullThr  = 0.5;        % threshold to detect a joystick press
-SS.behavior.joystick.RelThr   = 0.5;        % threshold to detect a joystick release
+SS.behavior.joystick.use       =  1;         % does this task require control of joystick state
+SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state (released)
+SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
+SS.behavior.joystick.PullThr   = 0.5;        % threshold to detect a joystick press
+SS.behavior.joystick.RelThr    = 0.5;        % threshold to detect a joystick release
 
-SS.pldaps.draw.joystick.use   = 1;
+SS.pldaps.draw.joystick.use    = 1;          % draw joystick states on control screen
+SS.pldaps.draw.joystick.pos    = 1;          % where to draw the joystick
+SS.pldaps.draw.joystick.size   = 100;        % what area to occupy with joystick representation (pixel)
+SS.pldaps.draw.joystick.sclfac = 1/5 * SS.pldaps.draw.joystick.size; % scaling factor to get joystick signal within the range of the representation area.
 
 % ------------------------------------------------------------------------%
 %% Define joystick states

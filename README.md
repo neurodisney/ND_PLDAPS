@@ -1,7 +1,7 @@
 ND_PLDAPS
 ==========
 
-This repository contains helper tools and experiments to use in combination with the PLDAPS software (https://github.com/HukLab/PLDAPS).
+This repository contains helper tools and experiments to be used in combination with the PLDAPS software (https://github.com/HukLab/PLDAPS).
 
 ***
 ## Tools and utilities
@@ -51,11 +51,16 @@ Check keyboard presses and mouse actions and trigger actions accordingly. ==WIP:
 * __ND_GetConditionList__ 
 
 * __ND_CheckCondRepeat__ 
+Checks if a trials counts as completed trial for the current condition, if not, repeat this condition
 
 * __ND_CtrlMsg__ 
 Write tesxt messages with a formated time stamp to the command window.
 
 * __ND_DefaultColors__ 
+Create lookup table for monkey and experimenter screen and define default colors for standard features.
+
+*__ND_DefineCol__
+Wrapper to determine color lookup table entries and to created associated handles.
 
 * __ND_DefaultBitNames__ 
 

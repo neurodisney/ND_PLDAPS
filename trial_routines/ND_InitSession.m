@@ -58,7 +58,22 @@ p = ND_DefaultBitNames(p);
 %% pre-allocate frame data
 % The frame allocation can only be set once the pldaps is run, otherwise
 % p.trial.display.frate will not be available because it is defined in the openscreen call.
-p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate;
+p.defaultParameters.pldaps.maxFrames = p.defaultParameters.pldaps.maxTrialLength * p.defaultParameters.display.frate;
+
+% --------------------------------------------------------------------%
+%% define drawing area for joystick representation
+if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.useJoystick)
+
+    rect = [p.defaultParameters.display.winRect(1) p.defaultParameters.display.winRect(4)-p.defaultParameters.display.ppd ...
+    p.defaultParameters.display.winRect(1)+p.defaultParameters.display.ppd p.defaultParameters.display.winRect(4)];
+
+    p.defaultParameters.pldaps.draw.joystick.Orect  = rect; % outter boundary of joystick range
+    p.defaultParameters.pldaps.draw.joystick.Irect  = rect; % current threshold boundary (needs to be done in the joystick state function)
+     
+
+
+
+end
 
 % --------------------------------------------------------------------%
 %% Define session start time    
@@ -69,7 +84,7 @@ p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate
 % should be much faster. PsychDataPixx('GetPreciseTime') and GetSecs seem
 % to output the time with a comparable reference.
 
-p.trial.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: inserted this entry for follow up timings
+p.defaultParameters.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: inserted this entry for follow up timings
 % this call happens before datapixx gets initialized in pldaps.run!
 
 
