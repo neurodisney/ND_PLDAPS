@@ -71,6 +71,8 @@ if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
 
     Screen('FrameOval', p.trial.display.overlayptr , p.trial.display.clut.joylines [,rect] [,penWidth] [,penHeight] [,penMode]);
 
+    % use a bar representation with line for single axis lever
+
     Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX, p.trial.eyeY]', ...
                         p.trial.(task).eyeW, p.trial.display.clut.joypos, [0 0],0);  % ToDo add joystick colors
 

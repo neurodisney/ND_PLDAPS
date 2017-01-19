@@ -17,6 +17,10 @@ function p = ND_DefaultColors(p)
 bgcol = p.defaultParameters.display.bgColor;
 
 
+% TODO: check what color names are defined in p.defaultParameters.display.clut and delete them to avoid conflicts (or re-use all names here)
+colnms = fieldnames(p.defaultParameters.display.clut);
+
+
 % pre-allocate lookup table
 p.defaultParameters.display.humanCLUT  = zeros(256,3); 
 p.defaultParameters.display.monkeyCLUT = zeros(256,3);

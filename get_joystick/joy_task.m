@@ -37,7 +37,6 @@ end
 %% Call standard routines before executing task related code
 % This carries out standard routines, mainly in respect to hardware interfacing.
 % Be aware that this is done first for each trial state!
-
 p = ND_GeneralTrialRoutines(p, state, task); 
 
 % ####################################################################### %        
@@ -55,7 +54,18 @@ if(isempty(state))
     %% define ascii output file 
     % call this after ND_InitSession to be sure that output directory exists!
     Trial2Ascii(p, task, 'init');
-    
+
+    % --------------------------------------------------------------------%
+    %% Color definitions of stuff shown during the trial
+    % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init,
+    % hence this is a good place to do so. To avoid conflicts with future changes in the set of
+    % default colors, use entries late in the lookup table for the definition of task related
+    % colors.
+    ND_DefineCol(p, 'bg',         200, [0.25, 0.25, 0.25], [0.25, 0.25, 0.25]);
+    ND_DefineCol(p, 'TrialStart', 201, [0.45, 0.45, 0.45], [0.45, 0.45, 0.45]);
+    ND_DefineCol(p, 'TargetOn',   201, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
+    ND_DefineCol(p, 'TargetDimm', 203, [0.00, 1.00, 0.00], [0.00, 1.00, 0.00]);
+
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
     % define conditions (conditions could be passed to the pldaps call as
@@ -64,15 +74,6 @@ if(isempty(state))
     % of a defined number of trials per condition, needs to be clarified.
     % Right now, it is a placeholder).
 
-    % --------------------------------------------------------------------%
-    %% Color definitions
-    % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init,
-    % hence this is a good place to do so. To avoid conflicts with future changes in the set of
-    % default colors, use entries late in the lookup table for the definition of task related
-    % colors.
-    ND_DefineCol(p, 'white',    9, [1.00, 1.00, 1.00], [1.00, 1.00, 1.00]);
-
-    
     maxTrials_per_BlockCond = 10;  
     maxBlocks = 100;
     
@@ -92,7 +93,6 @@ if(isempty(state))
     conditions = {c1, c2, c3, c4};
     
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
-    
     
 else
 % ####################################################################### %        
@@ -193,7 +193,6 @@ function Trial2Ascii(p, task, act)
     end
 
     fclose(tblptr);
-    
     
 % ------------------------------------------------------------------------%
 function InitTask(p, task)

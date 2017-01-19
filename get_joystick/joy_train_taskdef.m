@@ -23,7 +23,7 @@ p.trial.(task).Reward.Pull = 0;                % If 1 then give reward for pulli
 
 p.trial.(task).Reward.IncrConsecutive = 1;     % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
 p.trial.(task).Reward.Dur  = [0.1, 0.25, 0.5]; % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.(task).Reward.Step = [2, 4, 6];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.(task).Reward.RewDur  
+p.trial.(task).Reward.Step = [2, 4, 6];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.(task).Reward.Dur
 
 p.trial.(task).Reward.Lag    = 50;             % Delay between response and reward onset
 p.trial.(task).Reward.ManDur = 500;            % reward duration [s] for reward given by keyboard presses
