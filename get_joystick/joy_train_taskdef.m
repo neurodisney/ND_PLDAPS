@@ -41,6 +41,12 @@ p.trial.(task).Timing.MaxITI      = 1000;      % maximum time period between sub
 p.trial.(task).Timing.TimeOut     = 50;        % Time out for incorrect responses
 p.trial.(task).Timing.PullTimeOut = 1000;      % this is the minimum time passed before a trial starts after random lever presses
 
+% ------------------------------------------------------------------------%
+%% Stimulus parameters
+p.trial.(task).TargetSz_dva       = 2;         % Stimulus diameter in dva
+p.trial.(task).TargetSz_pxl       = ND_dva2pxl(p.trial.(task).TargetSz_dva, p); % Stimulus diameter in dva
+
+
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters
@@ -52,5 +58,8 @@ p.trial.(task).Joy.ActTime =   25;       % minimum time [ms] required to be cons
 % steps. It specifies a duration in seconds.
 
 p.trial.pldaps.maxTrialLength = 60; % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+
+
+
 
 

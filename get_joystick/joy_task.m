@@ -194,6 +194,34 @@ function Trial2Ascii(p, task, act)
 
     fclose(tblptr);
     
+    
+function TargetOn(p)
+%  ShowBaitedCue
+%
+%  This function should draw a blinking rectangle as the cue to engage the
+%  joystick.
+%
+%  In PLDAPS the pointer to the stimulus window is p.trial.display.ptr
+
+width = p.trial.stimulus.features.baited.cue_width;
+baseRect = [0 0 width width];
+centeredRect = CenterRectOnPointd(baseRect, p.trial.display.ctr(1), p.trial.display.ctr(2));
+
+display_time = p.trial.stimulus.features.baited.cue_period*p.trial.stimulus.features.baited.cue_duty_cycle;
+cue_period = p.trial.stimulus.features.baited.cue_period;
+if(isnan(p.trial.stimulus.timing.baited_cue_start_time))
+    p.trial.stimulus.timing.baited_cue_start_time = GetSecs;
+    Screen('FrameRect',p.trial.display.ptr,p.trial.stimulus.features.baited.cue_color,centeredRect,p.trial.stimulus.features.baited.cue_linewidth);
+else
+    if(p.trial.stimulus.timing.baited_cue_start_time > GetSecs-display_time)
+        Screen('FrameRect',p.trial.display.ptr,p.trial.stimulus.features.baited.cue_color,centeredRect,p.trial.stimulus.features.baited.cue_linewidth);
+    elseif(p.trial.stimulus.timing.baited_cue_start_time <= GetSecs-cue_period)
+        p.trial.stimulus.timing.baited_cue_start_time = NaN;
+    end
+end
+end
+    
+    
 % ------------------------------------------------------------------------%
 function InitTask(p, task)
 % %% prepare everything prior to starting the main trial loop, i.e. allocate
@@ -203,7 +231,11 @@ function InitTask(p, task)
 
     % for now, change the background to indicate trial is active
     % change this in the future to a frame (i.e. two overlaid rects?)
-    Screen('FillRect', p.trial.display.ptr, p.trial.(task).TrialStartCol);
+    
+    % here, p.trial.display.ptr is used for drawing, i.e. it will be greyscales
+    Screen('FillRect', p.trial.display.ptr, p.trial.(task).TrialStartCol); % fill complete screen
+    
+    
     p.trial.pldaps.lastBgColor = p.trial.display.bgColor;  % WZ: check what this is doing.
     
 %     p.trial.(task).CurrEpoch    = p.trial.(task).epoch.WaitPress;

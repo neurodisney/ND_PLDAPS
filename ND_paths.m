@@ -6,6 +6,7 @@ loadPLDAPS;  % make sure file exists, otherwise modify from PLDAPS template and 
 
 %% general paths required to run the code
 addpath('~/Experiments/ND_PLDAPS/utils');
+addpath('~/Experiments/ND_PLDAPS/grfx');
 addpath('~/Experiments/ND_PLDAPS/trial_routines');
 
 

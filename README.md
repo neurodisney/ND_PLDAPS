@@ -59,11 +59,20 @@ Write tesxt messages with a formated time stamp to the command window.
 * __ND_DefaultColors__ 
 Create lookup table for monkey and experimenter screen and define default colors for standard features.
 
-*__ND_DefineCol__
+* __ND_DefineCol__
 Wrapper to determine color lookup table entries and to created associated handles.
 
 * __ND_DefaultBitNames__ 
 
+
+### utils
+utilities to facilitate the drawing process.
+
+* __ND_GetRect__ 
+Determine the rect to draw stuff.
+
+* __ND_dva2pxl__ 
+Convert dva to pixel based on the pldaps specifications.
 
 ***
 ## Experiments
