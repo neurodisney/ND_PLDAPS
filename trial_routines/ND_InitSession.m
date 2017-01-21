@@ -64,15 +64,17 @@ p.defaultParameters.pldaps.maxFrames = p.defaultParameters.pldaps.maxTrialLength
 %% define drawing area for joystick representation
 if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.useJoystick)
 
-    rect = [p.defaultParameters.display.winRect(1) p.defaultParameters.display.winRect(4)-p.defaultParameters.display.ppd ...
-    p.defaultParameters.display.winRect(1)+p.defaultParameters.display.ppd p.defaultParameters.display.winRect(4)];
-
-    p.defaultParameters.pldaps.draw.joystick.Orect  = rect; % outter boundary of joystick range
-    p.defaultParameters.pldaps.draw.joystick.Irect  = rect; % current threshold boundary (needs to be done in the joystick state function)
-     
-
-
-
+    % hardcode right now location and size of joystick representation   
+    p.trial.pldaps.draw.joystick.size   = [60 400];        % what area to occupy with joystick representation (pixel)
+    p.trial.pldaps.draw.joystick.pos    = [round(p.trial.display.pWidth/10 - 1.5*p.trial.pldaps.draw.joystick.size(1)), ...
+                                           round(p.trial.display.pHeight/2)]; % where to center joystick representation
+                                       
+    p.trial.pldaps.draw.joystick.sclfac = p.trial.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
+    
+    p.trial.pldaps.draw.joystick.rect = ND_GetRect(p.trial.pldaps.draw.joystick.pos, ...
+                                                   p.trial.pldaps.draw.joystick.size);
+                                               
+    p.trial.pldaps.draw.joystick.levelsz =  p.trial.pldaps.draw.joystick.size .* [1.1, 0.05];                                           
 end
 
 % --------------------------------------------------------------------%
@@ -84,7 +86,7 @@ end
 % should be much faster. PsychDataPixx('GetPreciseTime') and GetSecs seem
 % to output the time with a comparable reference.
 
-p.defaultParameters.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: inserted this entry for follow up timings
+p.trial.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: inserted this entry for follow up timings
 % this call happens before datapixx gets initialized in pldaps.run!
 
 

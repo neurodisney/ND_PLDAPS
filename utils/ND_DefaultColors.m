@@ -29,17 +29,18 @@ p.defaultParameters.display.humanCLUT  = zeros(256,3);
 p.defaultParameters.display.monkeyCLUT = zeros(256,3);
 
 %% some colors are used by pldaps, need to check what really is needed
-ND_DefineCol(p, 'bg',       1, bgcol,   bgcol);
-ND_DefineCol(p, 'eyepos',   2, [0.00, 1.00, 1.00], bgcol);
-ND_DefineCol(p, 'joypos',   3, [0.85, 0.00, 1.00], bgcol);
-ND_DefineCol(p, 'joylines', 4, [1.00, 0.75, 0.00], bgcol);
-ND_DefineCol(p, 'cursor',   5, [0.80, 0.00, 0.50], bgcol);
-ND_DefineCol(p, 'window',   6, [0.80, 0.80, 0.80], bgcol);
-ND_DefineCol(p, 'black',    7, [0.00, 0.00, 0.00], [0.00, 0.00, 0.00]);
-ND_DefineCol(p, 'blackbg',  8, [0.00, 0.00, 0.00], bgcol);
-ND_DefineCol(p, 'white',    9, [1.00, 1.00, 1.00], [1.00, 1.00, 1.00]);
-ND_DefineCol(p, 'red',     10, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
-ND_DefineCol(p, 'redbg',   11, [1.00, 0.00, 0.00], bgcol);
-ND_DefineCol(p, 'blue',    12, [0.00, 0.00, 1.00], [0.00, 0.00, 1.00]);
-ND_DefineCol(p, 'green',   13, [0.00, 1.00, 0.00], [0.00, 1.00, 0.00]);
+ND_DefineCol(p, 'bg',       1, bgcol,              bgcol);  % background color
+ND_DefineCol(p, 'eyepos',   2, [0.00, 1.00, 1.00], bgcol);  % eye positions
+ND_DefineCol(p, 'joypos',   3, [0.40, 0.60, 0.00], bgcol);  % current joystick position
+ND_DefineCol(p, 'joybox',   4, [0.35, 0.15, 0.00], bgcol);  % color representing released state
+ND_DefineCol(p, 'joythr',   5, [0.65, 0.25, 0.00], bgcol);  % color representing pressed state
+ND_DefineCol(p, 'cursor',   6, [0.80, 0.00, 0.50], bgcol);
+ND_DefineCol(p, 'window',   7, [0.80, 0.80, 0.80], bgcol);
+ND_DefineCol(p, 'black',    8, [0.00, 0.00, 0.00], [0.00, 0.00, 0.00]);
+ND_DefineCol(p, 'blackbg',  9, [0.00, 0.00, 0.00], bgcol);
+ND_DefineCol(p, 'white',   10, [1.00, 1.00, 1.00], [1.00, 1.00, 1.00]);
+ND_DefineCol(p, 'red',     11, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
+ND_DefineCol(p, 'redbg',   12, [1.00, 0.00, 0.00], bgcol);
+ND_DefineCol(p, 'blue',    13, [0.00, 0.00, 1.00], [0.00, 0.00, 1.00]);
+ND_DefineCol(p, 'green',   14, [0.00, 1.00, 0.00], [0.00, 1.00, 0.00]);
 

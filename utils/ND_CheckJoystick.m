@@ -10,26 +10,26 @@ function p = ND_CheckJoystick(p)
 %
 % wolf zinke, Jan. 2017
 
-
 if(p.trial.datapixx.useJoystick)
     
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.joystick.Sample) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
+    % calculate amplitude for each time point in the current sample
+    p.trial.AI.Joy.Amp = sqrt((p.trial.AI.Joy.X(sIdx) - p.trial.behavior.joystick.Zero(1))^2 + ...
+                              (p.trial.AI.Joy.Y(sIdx) - p.trial.behavior.joystick.Zero(2)).^2);
+    
     % calculate a moving average of the joystick position for display reasons
-    p.trial.joyX = mean((p.trial.AI.Joy.X(sIdx) - p.trial.behavior.joystick.Zero(1)));
-    p.trial.joyY = mean((p.trial.AI.Joy.Y(sIdx) - p.trial.behavior.joystick.Zero(2)));
+    p.trial.joyX   = mean(p.trial.AI.Joy.X(sIdx) - p.trial.behavior.joystick.Zero(1));
+    p.trial.joyY   = mean(p.trial.AI.Joy.Y(sIdx) - p.trial.behavior.joystick.Zero(2));
+    p.trial.joyAmp = mean(p.trial.AI.Joy.Amp(sIdx));
 
     % if relevant for task determine joystick state
     if(p.trial.behavior.joystick.use)
 
-        % calculate amplitude for each time point in the current sample
-        cAmp = sqrt((p.trial.AI.Joy.X(sIdx) - p.trial.behavior.joystick.Zero(1))^2 + ...
-                    (p.trial.AI.Joy.Y(sIdx) - p.trial.behavior.joystick.Zero(2)).^2);
-
         switch p.trial.pldaps.JoyState.Current
             %% wait for release
             case p.trial.pldaps.JoyState.JoyHold
-                jchk = cAmp > p.trial.behavior.joystick.RelThr; % invert selection to just use 'any'
+                jchk = p.trial.AI.Joy.Amp > p.trial.behavior.joystick.RelThr; % invert selection to just use 'any'
 
                 % all below threshold?
                 if(~any(jchk))
@@ -38,7 +38,7 @@ if(p.trial.datapixx.useJoystick)
 
             %% wait for press
             case p.trial.pldaps.JoyState.JoyRest
-                jchk = cAmp < p.trial.behavior.joystick.PullThr; % invert selection to just use 'any'
+                jchk = p.trial.AI.Joy.Amp < p.trial.behavior.joystick.PullThr; % invert selection to just use 'any'
 
                 % all above threshold?
                 if(~any(jchk))
@@ -48,21 +48,43 @@ if(p.trial.datapixx.useJoystick)
             %% if it is nan, so just get the current state
             otherwise
                 if(isnan(p.trial.pldaps.JoyState.Current))
-                    if(cAmp(end) >= p.trial.behavior.joystick.PullThr)
+                    if(p.trial.AI.Joy.Amp(end) >= p.trial.behavior.joystick.PullThr)
                         p.trial.pldaps.JoyState.Current = p.trial.pldaps.JoyState.JoyHold;
 
-                        % ToDo: define rect for threshold representation
-
-                    elseif(cAmp(end) <= p.trial.behavior.joystick.RelThr)
+                    elseif(p.trial.AI.Joy.Amp(end) <= p.trial.behavior.joystick.RelThr)
                         p.trial.pldaps.JoyState.Current = p.trial.pldaps.JoyState.JoyRest;
-                        % ToDo: define rect for threshold representation
+                        
                     else
                         p.trial.pldaps.JoyState.Current = NaN;
                     end
                 else
                     error('Unknown joystick state!');
                 end
-        end % switch p.pldaps.JoyState.Current
+        end  % switch p.pldaps.JoyState.Current
    end  % if(p.trial.behavior.joystick.use)
+   
+   if(p.trial.pldaps.draw.joystick.use)
+       %% update joystick representation
+       cjpos = [p.trial.pldaps.draw.joystick.pos(1), ...
+                p.trial.pldaps.draw.joystick.rect(2) + p.trial.joyAmp * p.trial.pldaps.draw.joystick.sclfac];
+
+        p.trial.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.trial.pldaps.draw.joystick.levelsz);
+
+        p.trial.pldaps.draw.joystick.threct = p.trial.pldaps.draw.joystick.rect;
+
+        switch p.trial.pldaps.JoyState.Current
+
+            % wait for press
+            case p.trial.pldaps.JoyState.JoyRest
+                p.trial.pldaps.draw.joystick.threct(4) = p.trial.pldaps.draw.joystick.threct(4) - ...
+                                                        (p.trial.pldaps.draw.joystick.size(2)   - ...
+                                                         p.trial.behavior.joystick.PullThr * p.trial.pldaps.draw.joystick.sclfac);
+            % wait for release
+            case p.trial.pldaps.JoyState.JoyHold
+                p.trial.pldaps.draw.joystick.threct(4) = p.trial.pldaps.draw.joystick.threct(4) - ...
+                                                        (p.trial.pldaps.draw.joystick.size(2)   - ...
+                                                         p.trial.behavior.joystick.RelThr * p.trial.pldaps.draw.joystick.sclfac);
+        end       
+   end
 end  % if(p.trial.datapixx.useJoystick)
 
