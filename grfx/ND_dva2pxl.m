@@ -11,5 +11,5 @@ else
 end
 
 pxl     = floor(dva .* ppdva + 0.5);
-realdva = numpxl ./ ppdva;  % what size is actually achieved (i.e. coping with rounding issues in raster grafics)
+realdva = pxl ./ ppdva;  % what size is actually achieved (i.e. coping with rounding issues in raster grafics)
 

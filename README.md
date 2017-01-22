@@ -24,8 +24,8 @@ What needs to be done during *p.trial.pldaps.trialStates.trialSetup*: General in
 * __ND_TrialPrepare__ 
 What needs to be done during *p.trial.pldaps.trialStates.trialPrepare*: Do things that are time sensitive relative to the actual trial start. This call ends with a screen flip that starts the trial (and determines time 0).
 
-* __ND_DrawControlScreen__
-What needs to be done during *p.trial.pldaps.trialStates.frameDraw*: Update experimenter control showing eye position and additional information.
+* __ND_FrameDraw__
+What needs to be done during *p.trial.pldaps.trialStates.frameDraw*: Display base elements and update experimenter control showing eye position and additional information. 
 
 * __ND_FrameFlip__
 What needs to be done during *p.trial.pldaps.trialStates.frameFlip*: Flip the screen and determine related frame timings.
@@ -64,8 +64,11 @@ Wrapper to determine color lookup table entries and to created associated handle
 
 * __ND_DefaultBitNames__ 
 
+* __ND_GetITI__
+Determine inter-trial interval within a given range based on various distributions.
 
-### utils
+
+### grfcs ###
 utilities to facilitate the drawing process.
 
 * __ND_GetRect__ 
@@ -73,6 +76,9 @@ Determine the rect to draw stuff.
 
 * __ND_dva2pxl__ 
 Convert dva to pixel based on the pldaps specifications.
+
+* __ND_TrialOn__
+Show Cue for active trial.
 
 ***
 ## Experiments

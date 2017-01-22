@@ -36,12 +36,12 @@ SS.datapixx.LogOnsetTimestampLevel              = 2;      % Get and Store a the 
 % WZ: Also for more clarification check the PsychDataPixx function in Psychtoolbox-3/Psychtoolbox/PsychHardware/DatapixxToolbox/DatapixxBasic
 % Currently values are set as specified as default in pds.datapixx.init,
 % leaving all fields empty should result in the same parameters.
-% SS.datapixx.GetPreciseTime.maxDuration          = 0.015;  % maximum duration in seconds to wait for a good estimate
-% SS.datapixx.GetPreciseTime.optMinwinThreshold   = 1.2e-4; % Minimum Threshold that defines a good estimate to end before maxDuration
-% SS.datapixx.GetPreciseTime.syncmode             = 2;      % syncmode: accepted values are 1,2,3
-SS.datapixx.GetPreciseTime.maxDuration          = [];  % maximum duration in seconds to wait for a good estimate
-SS.datapixx.GetPreciseTime.optMinwinThreshold   = []; % Minimum Threshold that defines a good estimate to end before maxDuration
-SS.datapixx.GetPreciseTime.syncmode             = [];      % syncmode: accepted values are 1,2,3
+SS.datapixx.GetPreciseTime.maxDuration          = 0.015;  % maximum duration in seconds to wait for a good estimate
+SS.datapixx.GetPreciseTime.optMinwinThreshold   = 1.2e-4; % Minimum Threshold that defines a good estimate to end before maxDuration
+SS.datapixx.GetPreciseTime.syncmode             = 2;      % syncmode: accepted values are 1,2,3
+%SS.datapixx.GetPreciseTime.maxDuration          = [];  % maximum duration in seconds to wait for a good estimate
+%SS.datapixx.GetPreciseTime.optMinwinThreshold   = []; % Minimum Threshold that defines a good estimate to end before maxDuration
+%SS.datapixx.GetPreciseTime.syncmode             = [];    % syncmode: accepted values are 1,2,3
 
 % adc: Continuously collect and store adc data from Datapixx.
 SS.datapixx.adc.bufferAddress                   = [];     % typically left empty.
@@ -60,11 +60,11 @@ SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEye
 
 % ------------------------------------------------------------------------%
 %% display settings: pecify options for the screen.
-SS.display.bgColor                              = [0, 0, 0] / 255;  % background color. Can be changed during trial
+SS.display.bgColor                              = [0.25, 0.25, 0.25] / 255;  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 57;     % screen distance to the observer                            !!!
-SS.display.heightcm                             = 29.8;   % height of the visible screen in cm                         !!!
-SS.display.widthcm                              = 53.1;   % width  of the visible screen in cm                         !!!
+SS.display.heightcm                             = 29.5;   % height of the visible screen in cm                         !!!
+SS.display.widthcm                              = 52.0;   % width  of the visible screen in cm                         !!!
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -171,23 +171,6 @@ SS.pldaps.save.mergedData                       = 1;     % Save merged data. By 
 SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with the data from each trial?
 SS.pldaps.save.v73                              = 0;     % save as matlab version v73?
 
-% trialStates: The states that an experiment runs through
-% SS.pldaps.trialStates.experimentAfterTrials     = -7;    % called after each trial.
-% SS.pldaps.trialStates.experimentCleanUp         = -6;    % called at the end of the experiment.
-% SS.pldaps.trialStates.experimentPostOpenScreen  = -4;    % called after the screen was opened.
-% SS.pldaps.trialStates.experimentPreOpenScreen   = -5;    % called before the screen is opened.
-% SS.pldaps.trialStates.frameDraw                 =  3;    % called every frame for drawing command.
-% SS.pldaps.trialStates.frameDrawingFinished      =  6;    % called every frame after drawing.
-% SS.pldaps.trialStates.frameDrawTimecritica      = -Inf;  % disabled
-% SS.pldaps.trialStates.frameFlip                 =  8;    % called every frame to flip the buffers.
-% SS.pldaps.trialStates.frameIdlePostDraw         = -Inf;  % disabled
-% SS.pldaps.trialStates.frameIdlePreLastDraw      = -Inf;  % disabled
-% SS.pldaps.trialStates.framePrepareDrawing       =  2;    % called every frame to prepare drawing.
-% SS.pldaps.trialStates.frameUpdate               =  1;    % called every frame to update input.
-% SS.pldaps.trialStates.trialCleanUpandSave       = -3;    % called at the end of the trial.
-% SS.pldaps.trialStates.trialPrepare              = -2;    % called before each trial for synchronization
-% SS.pldaps.trialStates.trialSetup                = -1;    % called before each trial for data allocation.
-
 % ####################################################################### %        
 %% Below follow definitions used in the Disney Lab
 % This is currently work in progress and we need to find an efficient set
@@ -203,9 +186,6 @@ SS.datapixx.useJoystick      = 1;         % acquire data about joystick state   
 SS.datapixx.adc.XJoyChannel  = 3;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
 SS.datapixx.adc.YJoyChannel  = 4;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
 
-
-
-
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
 % assign keys to specific functions here and utilize these in the
@@ -218,14 +198,18 @@ SS.key.debug  = 'd';
 
 % ------------------------------------------------------------------------%
 %% Define task epoch flags
-SS.pldaps.epoch.WaitStart      =   0;  % Wait to initialize task
-SS.pldaps.epoch.WaitPress      =   1;  % Wait for a joystick press to indicate readiness to work on a trial
-SS.pldaps.epoch.WaitRelease    =   2;  % Wait for joystick release
-SS.pldaps.epoch.WaitFix        =   3;  % Target not acquired yet, wait for fixation
-SS.pldaps.epoch.WaitTarget     =   4;  % wait for target onset
-SS.pldaps.epoch.WaitGo         =   5;
-SS.pldaps.epoch.WaitReward     =   6;
-SS.pldaps.epoch.WaitNextTrial  =   7;
+% TODO: Get a set of required task epochs with a clear naming convention
+SS.pldaps.epoch.GetReady       =   0;  % Wait to initialize task
+SS.pldaps.epoch.WaitStart      =   1;  % Wait for a joystick press to indicate readiness to work on a trial
+SS.pldaps.epoch.WaitResponse   =   2;  % Wait for joystick release
+SS.pldaps.epoch.WaitPress      =   3;  % Target not acquired yet, wait for fixation
+SS.pldaps.epoch.WaitRelease    =   4;  % Target not acquired yet, wait for fixation
+SS.pldaps.epoch.WaitFix        =   5;  % Target not acquired yet, wait for fixation
+SS.pldaps.epoch.WaitTarget     =   6;  % wait for target onset
+SS.pldaps.epoch.WaitGo         =   7;  % delay period before response is required
+SS.pldaps.epoch.WaitReward     =   8;  % delay before reward delivery
+SS.pldaps.epoch.TaskEnd        =   9;  % trial completed
+SS.pldaps.epoch.ITI            =  10;  % inter-trial interval: wait before next trial to start   
 SS.pldaps.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
 
 % ------------------------------------------------------------------------%
@@ -235,6 +219,7 @@ SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state 
 SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
 SS.behavior.joystick.PullThr   = 0.5;        % threshold to detect a joystick press
 SS.behavior.joystick.RelThr    = 0.5;        % threshold to detect a joystick release
+SS.behavior.joystick.ActTime   =  25;        % minimum time [ms] required to be considered as joystick action
 
 SS.pldaps.draw.joystick.use    = 1;          % draw joystick states on control screen
 
@@ -243,7 +228,6 @@ SS.pldaps.draw.joystick.use    = 1;          % draw joystick states on control s
 SS.pldaps.JoyState.Current     = NaN;
 SS.pldaps.JoyState.JoyHold     =   1;  % joystick pressed
 SS.pldaps.JoyState.JoyRest     =   0;  % joystick released
-
 
 % ------------------------------------------------------------------------%
 %% Saccade parameters
@@ -261,13 +245,20 @@ SS.pldaps.FixState.FixBreak    =   2;  % Gaze out of fixation window long enough
 
 % ------------------------------------------------------------------------%
 %% Define task outcomes
-SS.pldaps.outcome.Correct      =   0;  % correct performance, no error occurred
-SS.pldaps.outcome.NoPress      =   1;  % No joystick press occurred to initialize trial
-SS.pldaps.outcome.Abort        =   2;  % early joystick release prior stimulus onset
-SS.pldaps.outcome.Early        =   3;  % release prior to response window
-SS.pldaps.outcome.False        =   4;  % wrong response within response window
-SS.pldaps.outcome.Late         =   5;  % response occurred after response window
-SS.pldaps.outcome.Miss         =   6;  % no response at a reasonable time
+SS.outcome.Correct      =   0;  % correct performance, no error occurred
+SS.outcome.NoPress      =   1;  % No joystick press occurred to initialize trial
+SS.outcome.Abort        =   2;  % early joystick release prior stimulus onset
+SS.outcome.Early        =   3;  % release prior to response window
+SS.outcome.False        =   4;  % wrong response within response window
+SS.outcome.Late         =   5;  % response occurred after response window
+SS.outcome.Miss         =   6;  % no response at a reasonable time
 
+% get a string representation of the outcome
+SS.outcome.codenames = fieldnames(SS.outcome);
+noc = length(SS.outcome.codenames);
+SS.outcome.codes = nan(1,noc);
+for(i=1:noc)
+    SS.outcome.codes(i) = SS.outcome.(SS.outcome.codenames{i});
+end
 
 

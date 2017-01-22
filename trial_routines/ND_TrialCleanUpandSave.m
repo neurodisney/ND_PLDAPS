@@ -14,10 +14,12 @@ function p = ND_TrialCleanUpandSave(p)
 %% Ensure correct background color and determine trial end and duration
 Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor);
 p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
+
 vblTime = Screen('Flip', p.trial.display.ptr,0);
 
 p.trial.trialend                = vblTime;
 p.trial.trialduration           = vblTime - p.trial.trstart;
+
 p.trial.timing.datapixxTrialEnd = PsychDataPixx('GetPreciseTime');
 
 %-------------------------------------------------------------------------%
@@ -67,6 +69,11 @@ p.trial.trialnumber   = p.trial.pldaps.iTrial;
 % system timing
 p.trial.timing.flipTimes             = p.trial.timing.flipTimes(:, 1:p.trial.iFrame);  % WZ: Why here again? Was defined at the function start...
 p.trial.timing.frameStateChangeTimes = p.trial.timing.frameStateChangeTimes(:, 1:p.trial.iFrame - 1);
+
+%-------------------------------------------------------------------------%
+%%  clean up data
+% TODO: remove entries in the trial struct that need not to be written but
+% might occupy a lot of disk space.
 
 %-------------------------------------------------------------------------%
 %%  reward system

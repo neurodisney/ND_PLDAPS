@@ -5,13 +5,13 @@ function p=joy_task(p, state, task)
 % to receive a juice reward.
 % 
 % 1) The trial starts with a change of background color (maybe changed to a
-% appearance of a frame). 
+%    appearance of a frame). 
 % 2) The animal has to press a lever and a large square is shown together
-% with a juice reward (this first reward will be disabled once the main 
-% principle is understood).
+%    with a juice reward (this first reward will be disabled once the main 
+%    principle is understood).
 % 3) If the animal keeps the lever pressed for a minimum hold time and then
-% releases it, the square changes its contrast and another reward will be
-% delivered.
+%    releases it, the square changes its contrast and another reward will be
+%    delivered.
 % 
 % TODO: add accoustic feedback
 %
@@ -41,7 +41,10 @@ p = ND_GeneralTrialRoutines(p, state, task);
 
 % ####################################################################### %        
 %% Initial call of this function. Use this to define general settings of the experiment/session.
-% Here, default parameters of the pldaps class could be adjusted if needed
+% Here, default parameters of the pldaps class could be adjusted if needed.
+% This part corresponds to the experimental setup file and could be a separate
+% file. In this case p.defaultParameters.pldaps.trialFunction needs to be defined
+% here to refer to the file with the actual trial 
 if(isempty(state))
 
     p.trial.pldaps.TaskName = task;
@@ -57,12 +60,10 @@ if(isempty(state))
 
     % --------------------------------------------------------------------%
     %% Color definitions of stuff shown during the trial
-    % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init,
-    % hence this is a good place to do so. To avoid conflicts with future changes in the set of
-    % default colors, use entries late in the lookup table for the definition of task related
-    % colors.
+    % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
+    % this is a good place to do so. To avoid conflicts with future changes in the set of default
+    % colors, use entries late in the lookup table (>200) for the definition of task related colors.
     ND_DefineCol(p, 'bg',         200, [0.25, 0.25, 0.25], [0.25, 0.25, 0.25]);
-    ND_DefineCol(p, 'TrialStart', 201, [0.45, 0.45, 0.45], [0.45, 0.45, 0.45]);
     ND_DefineCol(p, 'TargetOn',   201, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
     ND_DefineCol(p, 'TargetDimm', 203, [0.00, 1.00, 0.00], [0.00, 1.00, 0.00]);
 
@@ -110,16 +111,14 @@ else
         % prepare everything for the trial, including allocation of stimuli
         % and all other more time demanding stuff.
         
-        p = joy_train_taskdef(p, task);  % brute force: read in task parameters every time to allow for online modifications. TODO: make it robust and let it work with parameter changes via keyboard, see e.g. monkeylogic editable concept.
-                
-        InitTask(p, task);
+        TaskSetUp(p, task);
         
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
         %% trial preparation            
         % just prior to actual trial start, use it for time sensitive preparations;
                 
-        % StartTrial(p,task);
+        
         
         ND_CtrlMsg(p, 'TRIAL Start');
 
@@ -130,15 +129,15 @@ else
         %% Get ready to display
         % prepare the stimuli that should be shown, do some required calculations
         
-        PrepStim(p, task);
+        TaskDesign(p, task);
         
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
         
-        DrawStim(p);
-        
+        TaskDraw(p, task)
+
 % ####################################################################### %        
 % DONE AFTER THE MAIN TRIAL LOOP:
         % ----------------------------------------------------------------%
@@ -165,6 +164,168 @@ end  %/  if(nargin == 1) [...] else [...]
 %% Task related functions
 % TODO: Some of these functions should become stand alone functions that
 % could be called from other paradigms as well. 
+  
+% ------------------------------------------------------------------------%
+function TaskSetUp(p, task)
+%% main task outline
+% 
+    p = joy_train_taskdef(p, task);  % brute force: read in task parameters every time to allow for online modifications. TODO: make it robust and let it work with parameter changes via keyboard, see e.g. monkeylogic editable concept.
+
+    p.trial.(task).Timing.ITI = ND_GetITI(p.trial.(task).Timing.MinITI, p.trial.(task).Timing.MaxITI);
+
+    p.trial.(task).TaskStart   = NaN;
+    p.trial.(task).CurrOutcome = NaN;
+
+    p.trial.CurrEpoch = p.trial.epoch.GetReady;
+
+% ------------------------------------------------------------------------%
+function TaskDesign(p, task)
+%% main task outline
+% The different task stages (i.e. 'epochs') are defined here.
+
+    switch p.trial.(task).CurrEpoch
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.GetReady
+        %% before the trial can start joystick needs to be in a released state
+            if(p.trial.pldaps.JoyState.Current == p.trial.pldaps.JoyState.JoyRest)
+            % joystick in a released state, let's start the trial    
+                p.trial.CurrEpoch = p.trial.epoch.WaitStart;
+                p.trial.(task).EV.TaskStart = GetSecs;
+                
+                ND_CtrlMsg(p, 'Trial started');
+                
+                p.trial.(task).Timing.WaitTimer = p.trial.(task).EV.TaskStart + p.trial.(task).Timing.WaitStart;
+            end
+            
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitStart
+        %% Wait for joystick press   
+            ctm = GetSecs;
+            if(ctm > p.trial.(task).Timing.WaitTimer) 
+            % no trial initiated in the given time window
+                ND_CtrlMsg(p, 'No joystick press');
+                p.trial.(task).CurrOutcome = p.trial.outcome.NoPress;
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                
+            elseif(p.trial.(task).CurrJoyState == p.pldaps.FixState.JoyHold)
+            % we just got a press in time
+                ND_CtrlMsg(p, 'Joystick press');
+                p.trial.CurrEpoch = p.trial.epoch.WaitGo;
+                
+                p.trial.(task).EV.JoyPress      = ctm;
+                p.trial.(task).Timing.WaitTimer = ctm + p.trial.(task).Timing.HoldTime;
+            end
+        
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitGo
+        %% delay before response is needed     
+            ctm = GetSecs;
+            if(p.trial.(task).CurrJoyState == p.pldaps.FixState.JoyRest) % early release
+                ND_CtrlMsg(p, 'Early releases');
+                p.trial.(task).CurrOutcome = p.trial.outcome.Early;
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                p.trial.(task).EV.JoyRelease = ctm;
+                
+            elseif(ctm > p.trial.(task).Timing.WaitTimer) 
+                ND_CtrlMsg(p, 'Wait response');
+                p.trial.CurrEpoch = p.trial.epoch.WaitResponse;
+                p.trial.(task).EV.GoCue         = ctm;
+                p.trial.(task).Timing.WaitTimer = ctm + p.trial.(task).Timing.WaitResp;
+            end
+            
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitResponse
+        %% Wait for joystick release     
+            ctm = GetSecs;
+            if(ctm > p.trial.(task).Timing.WaitTimer) 
+                ND_CtrlMsg(p, 'No Response');
+                p.trial.(task).CurrOutcome = p.trial.outcome.Miss;
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;             
+           
+            elseif(p.trial.(task).CurrJoyState == p.pldaps.FixState.JoyRest)
+            % we just got a release
+                ND_CtrlMsg(p, 'Correct Response');
+                p.trial.(task).CurrOutcome = p.trial.outcome.Correct;
+                p.trial.(task).EV.JoyRelease    = ctm;
+                p.trial.(task).Timing.WaitTimer = ctm + p.trial.(task).Reward.Lag;
+                p.trial.CurrEpoch = p.trial.epoch.WaitReward;
+            end
+            
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitReward
+        %% Wait for for reward   
+        % add error condition for new press
+            ctm = GetSecs;
+            if(ctm > p.trial.(task).Timing.WaitTimer) 
+                p.trial.(task).EV.Reward = ctm;
+                % TODO: add function to select current reward amount based on time or
+                %       number of consecutive correct trials preceding the current one.
+                
+                pds.behavior.reward.give(p, p.trial.(task).Reward.Dur);
+                ND_CtrlMsg(p, 'Reward');
+                
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+            end
+            
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitRelease
+        %% Wait for joystick release after missed response    
+            if(p.trial.(task).CurrJoyState == p.pldaps.FixState.JoyRest)
+                p.trial.(task).EV.JoyRelease = GetSecs;
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+            end
+        
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.TaskEnd
+        %% finish trial and error handling
+            if(p.trial.(task).CurrOutcome == p.trial.outcome.Correct)
+                p.trial.(task).Timing.WaitTimer = GetSecs + p.trial.(task).Timing.ITI;
+                ND_CtrlMsg(p, ['Next trial in ', num2str(p.trial.(task).Timing.ITI, '%.4f'), 'seconds.']);
+            else
+                p.trial.(task).Timing.WaitTimer = GetSecs + p.trial.(task).Timing.ITI + p.trial.(task).Timing.TimeOut;
+            end
+
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.ITI
+        %% inter-trial interval: wait before next trial to start   
+            if(GetSecs > p.trial.(task).Timing.WaitTimer) 
+                p.trial.flagNextTrial = 1;
+            end
+    end
+
+
+% ------------------------------------------------------------------------%
+function TaskDraw(p, task)
+%% show epoch dependent stimuli
+% go through the task epochs as defined in TaskDesign and draw the stimulus
+% content that needs to be shown during this epoch.
+    switch p.trial.(task).CurrEpoch             
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitStart
+        %% Wait for joystick press   
+            ND_TrialOn(p);    
+        
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitGo
+        %% delay before response is needed     
+            ND_TrialOn(p);
+            Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.TargetOn, p.trial.(task).TargetRect);
+
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitResponse
+        %% Wait for joystick release     
+            ND_TrialOn(p);
+            Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.TargetOn, p.trial.(task).TargetRect);
+        
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitReward
+        %% Wait for for reward   
+            ND_TrialOn(p);
+            Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.TargetDimm, p.trial.(task).TargetRect);
+                       
+    end
+
+    
 
 % ------------------------------------------------------------------------%
 function Trial2Ascii(p, task, act)
@@ -195,121 +356,39 @@ function Trial2Ascii(p, task, act)
     fclose(tblptr);
     
     
+    
+% ------------------------------------------------------------------------%
 function TargetOn(p)
-%  ShowBaitedCue
+%%  Joystick pressed, target comes on
 %
 %  This function should draw a blinking rectangle as the cue to engage the
 %  joystick.
 %
 %  In PLDAPS the pointer to the stimulus window is p.trial.display.ptr
 
-width = p.trial.stimulus.features.baited.cue_width;
-baseRect = [0 0 width width];
-centeredRect = CenterRectOnPointd(baseRect, p.trial.display.ctr(1), p.trial.display.ctr(2));
+    width = p.trial.stimulus.features.baited.cue_width;
+    baseRect = [0 0 width width];
+    centeredRect = CenterRectOnPointd(baseRect, p.trial.display.ctr(1), p.trial.display.ctr(2));
 
-display_time = p.trial.stimulus.features.baited.cue_period*p.trial.stimulus.features.baited.cue_duty_cycle;
-cue_period = p.trial.stimulus.features.baited.cue_period;
-if(isnan(p.trial.stimulus.timing.baited_cue_start_time))
-    p.trial.stimulus.timing.baited_cue_start_time = GetSecs;
-    Screen('FrameRect',p.trial.display.ptr,p.trial.stimulus.features.baited.cue_color,centeredRect,p.trial.stimulus.features.baited.cue_linewidth);
-else
-    if(p.trial.stimulus.timing.baited_cue_start_time > GetSecs-display_time)
+    display_time = p.trial.stimulus.features.baited.cue_period*p.trial.stimulus.features.baited.cue_duty_cycle;
+    cue_period = p.trial.stimulus.features.baited.cue_period;
+    if(isnan(p.trial.stimulus.timing.baited_cue_start_time))
+        p.trial.stimulus.timing.baited_cue_start_time = GetSecs;
         Screen('FrameRect',p.trial.display.ptr,p.trial.stimulus.features.baited.cue_color,centeredRect,p.trial.stimulus.features.baited.cue_linewidth);
-    elseif(p.trial.stimulus.timing.baited_cue_start_time <= GetSecs-cue_period)
-        p.trial.stimulus.timing.baited_cue_start_time = NaN;
-    end
-end
-end
-    
-    
-% ------------------------------------------------------------------------%
-function InitTask(p, task)
-% %% prepare everything prior to starting the main trial loop, i.e. allocate
-% % stimuli and set parameter.
-% 
-    % ensure background color is correct
-
-    % for now, change the background to indicate trial is active
-    % change this in the future to a frame (i.e. two overlaid rects?)
-    
-    % here, p.trial.display.ptr is used for drawing, i.e. it will be greyscales
-    Screen('FillRect', p.trial.display.ptr, p.trial.(task).TrialStartCol); % fill complete screen
-    
-    
-    p.trial.pldaps.lastBgColor = p.trial.display.bgColor;  % WZ: check what this is doing.
-    
-%     p.trial.(task).CurrEpoch    = p.trial.(task).epoch.WaitPress;
-%     p.trial.(task).CurrOutcome  = NaN;
-%     p.trial.(task).CurrJoyState = NaN;
-    % p.trial.(task).CurrFixState = NaN;    
-
-% ------------------------------------------------------------------------%
-% function StartTrial(p, task)
-% %% this defines the start of the trial
-% 
-%     % TODO: Make sure not to start a trial without the joystick being in rest state (i.e. lever released).
-% 
-%     
-    
-    
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-% ------------------------------------------------------------------------%
-function PrepStim(p, task)
-    epoch   = p.defaultParameters.epoch;
-    outcome = p.defaultParameters.outcome;
-
-    switch p.trial.(task).CurrEpoch
-
-        case epoch.WaitPress
-        %% Wait trial start    
-            ctm = GetSecs - p.trial.trstart;            
-            
-           
-            if(ctm > p.trial.(task).Timing.WaitStart) 
-            % no trial initiated in the given time window
-                ND_CtrlMsg(p, 'No trial start');
-                p.trial.(task).CurrOutcome = outcome.NoPress;
-                
-            elseif(p.trial.(task).CurrJoyState == p.pldaps.FixState.JoyHold)
-            % we just got a press in time
-                ND_CtrlMsg(p, 'Trial started');
-            end
-        
-        case epoch.WaitRelease
-        %% Wait release     
-            
-        
-            ctm = 1;
-             % we just got a release
-           
-            if(p.trial.(task).CurrJoyState == p.pldaps.FixState.JoyRest)
-        
-            end
-            
-            
-    end
-
-% ------------------------------------------------------------------------%
-function DrawStim(p, task)
-
-
-    switch p.trial.(task).CurrEpoch
-
-
+    else
+        if(p.trial.stimulus.timing.baited_cue_start_time > GetSecs-display_time)
+            Screen('FrameRect',p.trial.display.ptr,p.trial.stimulus.features.baited.cue_color,centeredRect,p.trial.stimulus.features.baited.cue_linewidth);
+        elseif(p.trial.stimulus.timing.baited_cue_start_time <= GetSecs-cue_period)
+            p.trial.stimulus.timing.baited_cue_start_time = NaN;
+        end
     end
 
 
-function FinishTask(p, task)
+    
+    
+    
+    
 
-
-
+    
+    
+  

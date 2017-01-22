@@ -6,11 +6,11 @@ function ND_DefineCol(p, colname, pos, hCol, mCol)
 % RGB values are specified in the range from 0 to 1.
 %
 % Arguments:
-%      - p:     pldaps object
-%      - name:  string that defines a handle for this color, i.e. p.defaultParameters.display.clut.(colname)
-%      - pos:   position in the lookup table
-%      - hCol:  color used for the experimenter (human) screen
-%      - mCol:  color used for the monkey screen
+%      - p:       pldaps object
+%      - colname: string that defines a handle for this color, i.e. p.defaultParameters.display.clut.(colname)
+%      - pos:     position in the lookup table
+%      - hCol:    color used for the experimenter (human) screen
+%      - mCol:    color used for the monkey screen
 %
 %
 % wolf zinke, Jan. 2017
@@ -19,8 +19,8 @@ function ND_DefineCol(p, colname, pos, hCol, mCol)
 p.defaultParameters.display.humanCLUT( pos+1,:) = hCol;
 p.defaultParameters.display.monkeyCLUT(pos+1,:) = mCol;
 
-if(p.defaultParameters.display.useOverlay) % apparewntly, both, datapixx and software overlays use indexed colors
-    p.defaultParameters.display.clut.(colname) = pos * ones(3,1);  % use color lookup table indices
+if(p.defaultParameters.display.useOverlay) % apparently, both, datapixx and software overlays use indexed colors
+    p.defaultParameters.display.clut.(colname) = pos; % for some reason pldaps defines the indices as triplets. Lets see if it works with single index values. * ones(3,1);  % use color lookup table indices (WZ: why define an index as triplett?)
 else
     p.defaultParameters.display.clut.(colname) = p.defaultParameters.display.monkeyCLUT(pos+1,:)'; % just copy colors defined for monkey screen, no overlay
 end

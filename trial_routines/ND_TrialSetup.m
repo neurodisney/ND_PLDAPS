@@ -56,7 +56,7 @@ end
 % --------------------------------------------------------------------%
 %% Reward    
 %%% prepare reward system
-% TODO: This might not be needed for ND
+% TODO: This might not be needed for ND, needs to be checked
 pds.behavior.reward.trialSetup(p);
 
 % --------------------------------------------------------------------%
