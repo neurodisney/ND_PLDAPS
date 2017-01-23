@@ -34,13 +34,17 @@ if(~exist('step','var') || isempty(step))
     step = 0;
 end
 
-if (mu <= minval)
-    error('Minimum ISI tme can not exceed mean ISI time!');
+%% check arguments
+if (mu > maxval)
+    error('Maximum ITI tme can not exceed mean ITI time!');
+end
+
+if (mu < minval)
+    error('Minimum ITI tme can not exceed mean ITI time!');
 end
 mu = mu - minval;
 
-% get values
-
+%% get values
 if(minval == maxval)
     R = maxval;
     return;
@@ -48,6 +52,7 @@ end
 
 switch lower(rndmeth)
     % --------------------------------------------------------------------%
+    %% exponential
     case 'exp'
         max_range = exp(-(minval/mu));
         min_range = exp(-(maxval/mu));
@@ -55,6 +60,7 @@ switch lower(rndmeth)
         R = -mu*reallog((max_range-min_range)*rand(size(n))+minval);
 
     % --------------------------------------------------------------------%
+    %% chi-sqiuare
     case 'chi' % See Hagberg et al, NeuroImage 2001
 
         R = pptb_randChi2(mu, size(n)) + minval;
@@ -67,6 +73,7 @@ switch lower(rndmeth)
         end
 
     % --------------------------------------------------------------------%
+    %% gamma
     case 'gamma'
        R = randg(mu,size(n)) + minval;
        pos = find(R > maxval);
@@ -78,6 +85,7 @@ switch lower(rndmeth)
         end
 
     % --------------------------------------------------------------------%
+    %% poisson
     case  'poisson'
         if(step==0)
             rfac = 1;
@@ -97,6 +105,7 @@ switch lower(rndmeth)
         R = R./rfac + minval;
 
     % --------------------------------------------------------------------%
+    %% uniform
     case 'uni'
         if(step==0)
             rfac = 1;

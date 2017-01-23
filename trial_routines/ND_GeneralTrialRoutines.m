@@ -48,14 +48,12 @@ else
         pds.datapixx.adc.getData(p); % get analogData from Datapixx, including eye position and joystick
         ND_CheckJoystick(p);         % needs to be called after pds.datapixx.adc.getData
         %ND_CheckFixation(p,task);    % needs to be called after pds.datapixx.adc.getData
-
-ListenChar(0);  keyboard
               
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
-        ND_DrawControlScreen(p, task);
+        ND_FrameDraw(p);
         
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameFlip; 

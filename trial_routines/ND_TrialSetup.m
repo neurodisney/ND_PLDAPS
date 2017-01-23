@@ -59,6 +59,7 @@ end
 % TODO: This might not be needed for ND, needs to be checked
 pds.behavior.reward.trialSetup(p);
 
+
 % --------------------------------------------------------------------%
 %% framerate history
 %%% prepare to plot framerate history on screen

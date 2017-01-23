@@ -60,7 +60,12 @@ p.trial.unique_number = clocktime;    % trial identifier
 
 % TODO: WZ - use photo diode rect as marker for trial start as well (needs to be switched off again)
 
-vblTime = Screen('Flip', p.trial.display.ptr, 0);  % this is the last screen flip before trial time
+% ensure background color is correct
+Screen('FillRect', p.trial.display.ptr,p.trial.display.bgColor);
+p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
+
+% this is the last screen flip before trial time
+vblTime = Screen('Flip', p.trial.display.ptr, 0);  
 
 p.trial.trstart = vblTime;
 p.trial.stimulus.timeLastFrame = vblTime - p.trial.trstart; % WZ: This has to be the stimulus sub-struct for now because it is hard coded that way in RunTrial.
@@ -69,4 +74,6 @@ p.trial.ttime  =        GetSecs - p.trial.trstart;
 p.trial.timing.syncTimeDuration = p.trial.ttime;
 
 p.trial.TrialStart = datestr(now,'HH:MM:SS:FFF');  % WZ: added absolute time as string
+
+p.trial.EV.TrialStart = p.trial.trstart; % WZ: added for convenience/consistency
 

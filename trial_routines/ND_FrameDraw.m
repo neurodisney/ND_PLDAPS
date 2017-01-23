@@ -1,4 +1,4 @@
-function ND_FrameDraw(p, task)
+function ND_FrameDraw(p)
 % Prepare an update of the the displays. Draw basic elements to the screen,
 % update information shown on the experimenter screen
 %
@@ -15,8 +15,9 @@ function ND_FrameDraw(p, task)
 % color can only be gray scale which also makes it possible to change it at
 % any time (colors, in contrast, need to be defined before initializing datapixx
 % and can not be changed during the experiment at the moment.
-if( any(p.trial.pldaps.lastBgColor~=p.trial.display.bgColor) )
+if( any(p.trial.pldaps.lastBgColor ~= p.trial.display.bgColor) )
     Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor);
+    Screen('FillRect', p.trial.display.overlayptr, p.trial.display.bgColor);
     p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
 end
 
@@ -63,7 +64,7 @@ end
 if(p.trial.pldaps.draw.eyepos.use)
 % TODO: keep history of several frames, use alpha blending to fade out old locations
     Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX, p.trial.eyeY]', ...
-                        p.trial.(task).eyeW, p.trial.display.clut.eyepos, [0 0],0);
+                        p.trial.stimulus.eyeW, p.trial.display.clut.eyepos, [0 0],0);
 end
 
 % ------------------------------------------------------------------------%
@@ -72,18 +73,18 @@ end
 if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
 % TODO: keep history of several frames, use alpha blending to fade out old locations
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joythr , ...
-                       p.trial.pldaps.draw.joystick.rect);    % draw joystick area above threshold (i.e. pressed)
+                       p.trial.pldaps.draw.joystick.rect);      % draw joystick area above threshold (i.e. pressed)
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joybox , ...
-                       p.trial.pldaps.draw.joystick.threct);  % draw joystick area below threshold
+                       p.trial.pldaps.draw.joystick.threct);    % draw joystick area below threshold
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joypos , ...
-                       p.trial.pldaps.draw.joystick.rect);    % draw current joystick level
+                       p.trial.pldaps.draw.joystick.levelrect); % draw current joystick level
 end
 
 % % ------------------------------------------------------------------------%
 % %% draw mouse state
 % if(p.trial.mouse.use && p.trial.pldaps.draw.cursor.use)
 %     Screen('Drawdots',  p.trial.display.overlayptr,  p.trial.mouse.cursorSamples(1:2,p.trial.mouse.samples), ...
-%                         p.trial.(task).eyeW, p.trial.display.clut.cursor, [0 0],0);
+%                         p.trial.stimulus.eyeW, p.trial.display.clut.cursor, [0 0],0);
 % end
 
 % ------------------------------------------------------------------------%

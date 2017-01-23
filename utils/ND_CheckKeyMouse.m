@@ -26,21 +26,21 @@ function qp = ND_CheckKeyMouse(p, task)
         
         switch qp
             
-            case KbName(SS.key.reward)
+            case KbName(p.trial.key.reward)
             % check for manual reward delivery via keyboard
                 pds.behavior.reward.give(p, p.trial.(task).Reward.ManDur);  % per default, output will be channel three.
                 
-            case KbName(SS.key.pause)    
+            case KbName(p.trial.key.pause)    
             % pause trial    
                 p.trial.pldaps.quit = 1;
                 ShowCursor;
                 
-            case KbName(SS.key.quit)    
+            case KbName(p.trial.key.quit)    
             % quit experiment
                 p.trial.pldaps.quit = 2;
                 ShowCursor;
                 
-            case KbName(SS.key.quit)    
+            case KbName(p.trial.key.quit)    
             %  go into debug mode
                 disp('stepped into debugger. Type return to start first trial...')
                 keyboard %#ok<MCKBD>

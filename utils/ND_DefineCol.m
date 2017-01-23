@@ -13,6 +13,12 @@ function ND_DefineCol(p, colname, pos, hCol, mCol)
 %      - mCol:    color used for the monkey screen
 %
 %
+% TODO: Right now, based on PLDAPS defaults, several CLUT positions contain
+% the same color values. To use the CLUT more efficient, these color entry
+% should refer to the same CLUT location...
+%
+%
+%
 % wolf zinke, Jan. 2017
 
 % index for the CLUT is 0 based, in matlab it is 1 based, thus shift position by 1

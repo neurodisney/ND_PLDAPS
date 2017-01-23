@@ -60,7 +60,7 @@ SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEye
 
 % ------------------------------------------------------------------------%
 %% display settings: pecify options for the screen.
-SS.display.bgColor                              = [0.25, 0.25, 0.25] / 255;  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
+SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 57;     % screen distance to the observer                            !!!
 SS.display.heightcm                             = 29.5;   % height of the visible screen in cm                         !!!
@@ -105,7 +105,7 @@ SS.eyelink.useRawData                           = 0;     % toggle use of raw (un
 
 % ------------------------------------------------------------------------%
 %% mouse settings: configure how mouse data should be handled
-SS.mouse.use                                    = 1;     % collect and store mouse positions
+SS.mouse.use                                    = 0;     % collect and store mouse positions
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
 
 % ------------------------------------------------------------------------%
@@ -171,6 +171,16 @@ SS.pldaps.save.mergedData                       = 1;     % Save merged data. By 
 SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with the data from each trial?
 SS.pldaps.save.v73                              = 0;     % save as matlab version v73?
 
+% ------------------------------------------------------------------------%
+%% Screen/Display parameters
+% dot sizes for drawing (Taken from pdsDefaultTrialStructure)
+% corresponding colors are defined in ND_DefaultColors.
+SS.stimulus.eyeW      = 8;    % eye indicator width in pixels
+SS.stimulus.fixdotW   = 8;    % width of the fixation dot
+SS.stimulus.targdotW  = 8;    % width of the target dot
+SS.stimulus.cursorW   = 8;    % cursor width in pixels
+
+
 % ####################################################################### %        
 %% Below follow definitions used in the Disney Lab
 % This is currently work in progress and we need to find an efficient set
@@ -199,35 +209,35 @@ SS.key.debug  = 'd';
 % ------------------------------------------------------------------------%
 %% Define task epoch flags
 % TODO: Get a set of required task epochs with a clear naming convention
-SS.pldaps.epoch.GetReady       =   0;  % Wait to initialize task
-SS.pldaps.epoch.WaitStart      =   1;  % Wait for a joystick press to indicate readiness to work on a trial
-SS.pldaps.epoch.WaitResponse   =   2;  % Wait for joystick release
-SS.pldaps.epoch.WaitPress      =   3;  % Target not acquired yet, wait for fixation
-SS.pldaps.epoch.WaitRelease    =   4;  % Target not acquired yet, wait for fixation
-SS.pldaps.epoch.WaitFix        =   5;  % Target not acquired yet, wait for fixation
-SS.pldaps.epoch.WaitTarget     =   6;  % wait for target onset
-SS.pldaps.epoch.WaitGo         =   7;  % delay period before response is required
-SS.pldaps.epoch.WaitReward     =   8;  % delay before reward delivery
-SS.pldaps.epoch.TaskEnd        =   9;  % trial completed
-SS.pldaps.epoch.ITI            =  10;  % inter-trial interval: wait before next trial to start   
-SS.pldaps.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
+SS.epoch.GetReady       =   0;  % Wait to initialize task
+SS.epoch.WaitStart      =   1;  % Wait for a joystick press to indicate readiness to work on a trial
+SS.epoch.WaitResponse   =   2;  % Wait for joystick release
+SS.epoch.WaitPress      =   3;  % Target not acquired yet, wait for fixation
+SS.epoch.WaitRelease    =   4;  % Target not acquired yet, wait for fixation
+SS.epoch.WaitFix        =   5;  % Target not acquired yet, wait for fixation
+SS.epoch.WaitTarget     =   6;  % wait for target onset
+SS.epoch.WaitGo         =   7;  % delay period before response is required
+SS.epoch.WaitReward     =   8;  % delay before reward delivery
+SS.epoch.TaskEnd        =   9;  % trial completed
+SS.epoch.ITI            =  10;  % inter-trial interval: wait before next trial to start   
+SS.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
 
 % ------------------------------------------------------------------------%
 %% joystick parameters
 SS.behavior.joystick.use       =  1;         % does this task require control of joystick state
 SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state (released)
 SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
-SS.behavior.joystick.PullThr   = 0.5;        % threshold to detect a joystick press
-SS.behavior.joystick.RelThr    = 0.5;        % threshold to detect a joystick release
-SS.behavior.joystick.ActTime   =  25;        % minimum time [ms] required to be considered as joystick action
+SS.behavior.joystick.PullThr   = 1.5;        % threshold to detect a joystick press
+SS.behavior.joystick.RelThr    = 1.0;        % threshold to detect a joystick release
+SS.behavior.joystick.ActTime   =  20;        % minimum time [ms] required to be considered as joystick action
 
 SS.pldaps.draw.joystick.use    = 1;          % draw joystick states on control screen
 
 % ------------------------------------------------------------------------%
 %% Define joystick states
-SS.pldaps.JoyState.Current     = NaN;
-SS.pldaps.JoyState.JoyHold     =   1;  % joystick pressed
-SS.pldaps.JoyState.JoyRest     =   0;  % joystick released
+SS.JoyState.Current     = NaN;
+SS.JoyState.JoyHold     =   1;  % joystick pressed
+SS.JoyState.JoyRest     =   0;  % joystick released
 
 % ------------------------------------------------------------------------%
 %% Saccade parameters
@@ -238,10 +248,10 @@ SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window
 
 % ------------------------------------------------------------------------%
 %% Define fixation states
-SS.pldaps.FixState.Current     = NaN;
-SS.pldaps.FixState.EyeHold     =   1;  % Gaze at target
-SS.pldaps.FixState.OutOfBounds =   0;  % Gaze left fixation window
-SS.pldaps.FixState.FixBreak    =   2;  % Gaze out of fixation window long enough to be considered as fixation break
+SS.FixState.Current     = NaN;
+SS.FixState.EyeHold     =   1;  % Gaze at target
+SS.FixState.OutOfBounds =   0;  % Gaze left fixation window
+SS.FixState.FixBreak    =   2;  % Gaze out of fixation window long enough to be considered as fixation break
 
 % ------------------------------------------------------------------------%
 %% Define task outcomes

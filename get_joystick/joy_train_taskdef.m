@@ -31,34 +31,40 @@ p.trial.(task).Reward.ManDur = 0.500;          % reward duration [s] for reward 
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.(task).Timing.WaitStart   =  0.05;    % maximal time period [s] in seconds to press the lever in order to start a trial.
+p.trial.(task).Timing.WaitStart   = 25.00;    % maximal time period [s] in seconds to press the lever in order to start a trial.
 p.trial.(task).Timing.HoldTime    =  0.10;    % Minimum time before response is expected
-p.trial.(task).Timing.WaitResp    =  0.10;    % Only response times [s] after this wait period will be considered stimulus driven responses
-p.trial.(task).Timing.MaxResp     = 10.00;    % maximum release time [s] considered as stimulus driven response
+p.trial.(task).Timing.WaitResp    = 25.00;    % Only response times [s] after this wait period will be considered stimulus driven responses
 
 % inter-trial interval
-p.trial.(task).Timing.MinITI      = 0.1;      % minimum time period [s] between subsequent trials
-p.trial.(task).Timing.MaxITI      = 0.1;      % maximum time period [s] between subsequent trials
+p.trial.(task).Timing.MinITI      = 0.5;      % minimum time period [s] between subsequent trials
+p.trial.(task).Timing.MaxITI      = 0.5;      % maximum time period [s] between subsequent trials
 
-p.trial.(task).Timing.TimeOut     =    1;      % Time [s] out for incorrect responses
-p.trial.(task).Timing.PullTimeOut =    2;      % Minimum time [s] passed before a trial starts after random lever presses
+p.trial.(task).Timing.TimeOut     =    1;     % Time [s] out for incorrect responses
+p.trial.(task).Timing.PullTimeOut =    2;     % Minimum time [s] passed before a trial starts after random lever presses
 
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
-p.trial.(task).TargetSz_dva       = 2;         % Stimulus diameter in dva
-p.trial.(task).TargetSz_pxl       = ND_dva2pxl(p.trial.(task).TargetSz_dva, p); % Stimulus diameter in dva
-p.trial.(task).TargetPos_dva      = [0, 0];    % Stimulus diameter in dva
-p.trial.(task).TargetPos_pxl      = pds.deg2px(p.trial.(task).TargetPos_dva);
+p.trial.(task).TargetSz_dva  = 6;         % Stimulus diameter in dva
+p.trial.(task).TargetSz_pxl  = ND_dva2pxl(p.trial.(task).TargetSz_dva, p); % Stimulus diameter in dva
+p.trial.(task).TargetPos_dva = [0, 0];    % Stimulus diameter in dva
+p.trial.(task).TargetPos_pxl = ND_cart2ptb(p, p.trial.(task).TargetPos_dva);
 
-p.trial.(task).TargetRect = ND_GetRect(p.trial.(task).TargetPos_pxl, p.trial.(task).TargetSz_pxl);
+p.trial.(task).TargetRect    = ND_GetRect(p.trial.(task).TargetPos_pxl, p.trial.(task).TargetSz_pxl);
 
 % ------------------------------------------------------------------------%
 %% initialize event times as NaN
+p.trial.(task).EV.TrialStart  = NaN; % Trial start time 
 p.trial.(task).EV.TaskStart   = NaN; % actual task start after animal got ready (i.e. joystick is released)
 p.trial.(task).EV.JoyPress    = NaN; % Press time to start task
 p.trial.(task).EV.GoCue       = NaN; % Onset of Go-signal
 p.trial.(task).EV.JoyRelease  = NaN; % time of joystick release
 p.trial.(task).EV.Reward      = NaN; % time of reward delivery
+
+% ------------------------------------------------------------------------%
+%% Joystick parameters
+p.trial.behavior.joystick.PullThr   = 1.5;  % threshold to detect a joystick press
+p.trial.behavior.joystick.RelThr    = 1.0;  % threshold to detect a joystick release
+p.trial.behavior.joystick.ActTime   =  20;  % minimum time [ms] required to be considered as joystick action
 
 % ------------------------------------------------------------------------%
 %% Trial duration

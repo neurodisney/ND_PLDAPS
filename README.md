@@ -38,7 +38,7 @@ What needs to be done during *p.trial.pldaps.trialStates.trialCleanUpandSave*: F
 A set of function modules that will be used for various task and therefore are kept as stand-alone functions here instead of replicating the code inside each task file.
 
 * __ND_CheckFixation__ 
-==WIP:== Core routine to check current fixation and adjust states accordingly.
+==WIP: Just a placeholder at the moment, use ND_CheckJoystick as example to get a very simplistic fixation control.== Core routine to check current fixation and adjust states accordingly.
 
 * __ND_CheckKeyMouse__ 
 Check keyboard presses and mouse actions and trigger actions accordingly. ==WIP: check carefully to avoid interference with PLDAPS standard routines==
@@ -46,9 +46,8 @@ Check keyboard presses and mouse actions and trigger actions accordingly. ==WIP:
 * __ND_CheckJoystick__ 
 ==WIP:== Check current joystick signal and adjust states accordingly.
 
-* __ND_CheckTrialState__ 
-
 * __ND_GetConditionList__ 
+Create a vector of conditions and blocks that are used during the experiment.
 
 * __ND_CheckCondRepeat__ 
 Checks if a trials counts as completed trial for the current condition, if not, repeat this condition
@@ -63,13 +62,18 @@ Create lookup table for monkey and experimenter screen and define default colors
 Wrapper to determine color lookup table entries and to created associated handles.
 
 * __ND_DefaultBitNames__ 
+==WIP: Placeholder at the moment, we need to work on this and define a common set when working on the communication between PLDAPS and TDT.==
 
 * __ND_GetITI__
 Determine inter-trial interval within a given range based on various distributions.
 
 
 ### grfcs ###
-utilities to facilitate the drawing process.
+Utilities to facilitate the drawing process.
+==WIP: Some of these routines might already be implemented in a better way pldaps, try to identify, and if not then make it OOP to potentially speed up processing.==
+
+==WIP: Here we should provide more basic grafic routines, e.g. for displaying fixation spots, specific items and so on to allow for an easier, user-friendly usage.==
+
 
 * __ND_GetRect__ 
 Determine the rect to draw stuff.
