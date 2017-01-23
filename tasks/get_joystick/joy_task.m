@@ -324,21 +324,21 @@ function TaskDraw(p, task)
         %% delay before response is needed     
             ND_TrialOn(p);
 %             Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.TargetOn, p.trial.(task).TargetRect);
-            Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.red, p.trial.(task).TargetRect);
+            Screen('FillOval', p.trial.display.overlayptr, p.trial.display.clut.red, p.trial.(task).TargetRect);
 
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitResponse
         %% Wait for joystick release     
             ND_TrialOn(p);
 %             Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.TargetOn, p.trial.(task).TargetRect);
-            Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.red, p.trial.(task).TargetRect);
+            Screen('FillOval', p.trial.display.overlayptr, p.trial.display.clut.red, p.trial.(task).TargetRect);
         
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitReward
         %% Wait for for reward   
             ND_TrialOn(p);
 %             Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.TargetDimm, p.trial.(task).TargetRect);
-            Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.green, p.trial.(task).TargetRect);
+            Screen('FillOval', p.trial.display.overlayptr, p.trial.display.clut.green, p.trial.(task).TargetRect);
                        
     end
 
@@ -356,7 +356,7 @@ function Trial2Ascii(p, task, act)
             p.trial.session.asciitbl = [datestr(now,'yyyy_mm_dd_HHMM'),'.dat'];
             tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'w');
             
-            fprintf(tblptr, 'Date  Subject  Experiment  Cond Tcnt  Tstart JPress GoCue JRelease Reward RewDur Result Outcome \n');
+            fprintf(tblptr, 'Date  Subject  Experiment  Tcnt  Cond  Tstart  JPress  GoCue  JRelease  Reward  RewDur  Result  Outcome \n');
             fclose(tblptr);
             
         case 'save'
@@ -367,10 +367,10 @@ function Trial2Ascii(p, task, act)
 
                 tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'a');
                 
-                fprintf(tblptr, '%s  %s  %s  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s \n' , ...
+                fprintf(tblptr, '%s  %s  %s  %d  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s \n' , ...
                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.session.subject, ...
-                                p.trial.session.experimentSetupFile, p.trial.Nr, ...
-                                p.trial.pldaps.iTrial, trltm, p.trial.(task).EV.JoyPress, ...
+                                p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
+                                trltm, p.trial.(task).EV.JoyPress, ...
                                 p.trial.(task).EV.GoCue, p.trial.(task).EV.JoyRelease, p.trial.(task).EV.Reward, ...
                                 p.trial.(task).Reward.Dur, p.trial.(task).CurrOutcome, cOutCome);  
                fclose(tblptr);             

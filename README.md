@@ -87,6 +87,8 @@ Show Cue for active trial.
 ***
 ## Experiments
 
+Files to run specific experiments are found int the `tasks` subdirectory.
+
 ### get_joystick
 
 Task code for initial training step with the purpose to use a joystick (i.e. lever) in order to receive juice rewards.

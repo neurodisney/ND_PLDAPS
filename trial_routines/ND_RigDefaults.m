@@ -137,7 +137,7 @@ SS.pldaps.eyeposMovAv                           = 25;     % if > 1 it defines a 
 SS.pldaps.useModularStateFunctions              = 0;     % use modular state functions, see pldaps.runModularTrial, pldaps.getModules, pldaps.runStateforModules
 
 % dirs: configure pldaps' built-in drawing options
-SS.pldaps.dirs.data                             = '~/Data/DataPixx';   % data directory.
+SS.pldaps.dirs.data                             = '~/Data/ExpData';   % data directory.
 SS.pldaps.dirs.wavfiles                         = '/usr/local/PLDAPS/beepsounds';  % directory for sound files
 
 % cursor: control drawing of the mouse cursor
