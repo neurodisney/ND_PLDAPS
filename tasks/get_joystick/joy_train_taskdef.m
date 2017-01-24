@@ -65,7 +65,6 @@ p.trial.(task).EV.Reward      = NaN; % time of reward delivery
 %% Joystick parameters
 p.trial.behavior.joystick.PullThr   = 1.5;  % threshold to detect a joystick press
 p.trial.behavior.joystick.RelThr    = 1.0;  % threshold to detect a joystick release
-p.trial.behavior.joystick.ActTime   =  50;  % minimum time [ms] required to be considered as joystick action
 
 % ------------------------------------------------------------------------%
 %% Trial duration

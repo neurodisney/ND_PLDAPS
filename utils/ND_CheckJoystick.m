@@ -1,5 +1,6 @@
 function p = ND_CheckJoystick(p)
-% Read in the joystick signal, calculate the 
+% Read in the joystick signal, calculate the elevation level and compare to
+% thresolds defining Pull/Release state of the joystick.
 %
 % The current implementation checks the general amplitude of the joystick deflection
 % irrespective of direction. Future ToDo might be to add an option to identify and
@@ -12,7 +13,7 @@ function p = ND_CheckJoystick(p)
 
 if(p.trial.datapixx.useJoystick)
     
-    sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.joystick.Sample) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
+    sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.joystick.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
     % calculate amplitude for each time point in the current sample
     p.trial.AI.Joy.Amp(sIdx) = sqrt((p.trial.AI.Joy.X(sIdx) - p.trial.behavior.joystick.Zero(1)).^2 + ...

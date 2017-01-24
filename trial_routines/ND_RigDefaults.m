@@ -229,7 +229,7 @@ SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state 
 SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
 SS.behavior.joystick.PullThr   = 1.5;        % threshold to detect a joystick press
 SS.behavior.joystick.RelThr    = 1.0;        % threshold to detect a joystick release
-SS.behavior.joystick.ActTime   =  20;        % minimum time [ms] required to be considered as joystick action
+% SS.behavior.joystick.ActTime   =  20;        % minimum time [ms] required to be considered as joystick action
 
 SS.pldaps.draw.joystick.use    = 1;          % draw joystick states on control screen
 
@@ -243,15 +243,15 @@ SS.JoyState.JoyRest     =   0;  % joystick released
 %% Saccade parameters
 SS.behavior.fixation.use       =  1;      % does this task require control of eye position
 SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
-SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window
+SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
 SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window
+SS.behavior.joystick.Sample    = 20;      % how many data points to use for determining fixation state.
 
 % ------------------------------------------------------------------------%
 %% Define fixation states
 SS.FixState.Current     = NaN;
-SS.FixState.EyeHold     =   1;  % Gaze at target
-SS.FixState.OutOfBounds =   0;  % Gaze left fixation window
-SS.FixState.FixBreak    =   2;  % Gaze out of fixation window long enough to be considered as fixation break
+SS.FixState.GazeIn      =   1;  % Gaze at target
+SS.FixState.GazeOut     =   0;  % Gaze left fixation window
 
 % ------------------------------------------------------------------------%
 %% Define task outcomes
