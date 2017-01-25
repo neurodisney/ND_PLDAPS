@@ -107,16 +107,8 @@ switch lower(rndmeth)
     % --------------------------------------------------------------------%
     %% uniform
     case 'uni'
-        if(step==0)
-            rfac = 1;
-        else
-            rfac = 1/step;
-            step = 0;
-        end
-        diffval = (maxval - minval) * rfac;
-        R = randi([0 diffval],size(n));
+        R = randrng(size(n), minval, maxval);
 
-        R= R./rfac + minval;
 
     % --------------------------------------------------------------------%
     otherwise
@@ -126,4 +118,12 @@ end
 if(step > 0)
     R = round(R./step).*step;
 end
+
+
+
+function r = randrng(n,m, x)
+
+rng = x-m;
+
+r = m + (rand(n) .* rng);
 

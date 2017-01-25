@@ -43,15 +43,16 @@ ND_DefineCol(p, 'cursor',      8, [0.90, 0.90, 0.90], bgcol);
 ND_DefineCol(p, 'black',       9, [0.00, 0.00, 0.00], [0.00, 0.00, 0.00]);
 ND_DefineCol(p, 'blackbg',    10, [0.00, 0.00, 0.00], bgcol);
 ND_DefineCol(p, 'white',      11, [1.00, 1.00, 1.00], [1.00, 1.00, 1.00]);
-ND_DefineCol(p, 'red',        12, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
-ND_DefineCol(p, 'redbg',      13, [1.00, 0.00, 0.00], bgcol);
-ND_DefineCol(p, 'blue',       14, [0.00, 0.00, 1.00], [0.00, 0.00, 1.00]);
-ND_DefineCol(p, 'green',      15, [0.00, 1.00, 0.00], [0.00, 1.00, 0.00]);
-ND_DefineCol(p, 'greenbg',    16, [0.00, 1.00, 0.00], bgcol);
+ND_DefineCol(p, 'whitebg',    12, [1.00, 1.00, 1.00], bgcol);
+ND_DefineCol(p, 'red',        13, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
+ND_DefineCol(p, 'redbg',      14, [1.00, 0.00, 0.00], bgcol);
+ND_DefineCol(p, 'blue',       15, [0.00, 0.00, 1.00], [0.00, 0.00, 1.00]);
+ND_DefineCol(p, 'green',      16, [0.00, 1.00, 0.00], [0.00, 1.00, 0.00]);
+ND_DefineCol(p, 'greenbg',    17, [0.00, 1.00, 0.00], bgcol);
 
-ND_DefineCol(p, 'targetgood', 17, [0.00, 1.00, 0.00], [1.00, 0.00, 0.00]);
-ND_DefineCol(p, 'targetnull', 18, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
-ND_DefineCol(p, 'fixation',   19, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
+ND_DefineCol(p, 'targetgood', 18, [0.00, 1.00, 0.00], [1.00, 0.00, 0.00]);
+ND_DefineCol(p, 'targetnull', 19, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
+ND_DefineCol(p, 'fixation',   20, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
 
 
     

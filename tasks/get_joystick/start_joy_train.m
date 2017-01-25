@@ -1,3 +1,5 @@
+function start_joy_train(subjname)
+
 % use this script to define a default configuration in order to create a
 % pldaps object and run it with the joy_train trial function.
 %
@@ -11,6 +13,7 @@ if(exist('task','var'))
     clear task
 end
 
+
 % global task
 task = 'joy_train';  % this will be used to create a sub-struct in the trial structure
 
@@ -18,7 +21,9 @@ task = 'joy_train';  % this will be used to create a sub-struct in the trial str
 %% Set default variables
 
 % name of subject. This will be used to create a subdirectory with this name.
-subjname = 'test';
+if(~exist('subjname','var') || isempty(subjname))
+    subjname = 'tst';
+end
 
 % function to set up experiment (and maybe also including trial function)
 exp_fun = 'joy_task';
@@ -39,7 +44,6 @@ SS.display.bgColor    = [50, 50, 50] / 255;
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 SS.mouse.useAsEyepos  = 0;
 
-
 % determine the path to store data files
 SS.pldaps.dirs.data = fullfile(SS.pldaps.dirs.data, subjname, task, datestr(now,'yyyy_mm_dd'));
 
@@ -52,27 +56,6 @@ p = pldaps(subjname, SS, exp_fun);
 % ------------------------------------------------------------------------%
 %% adjust pldaps class settings
 p.defaultParameters.TaskName = task;
-
-% ------------------------------------------------------------------------%
-%% Ensure DataPixx is initialized
-% if(~Datapixx('IsReady'))
-%     dpx = Datapixx('Open');
-%     
-%     if(dpx~=1)
-%         error('Problem when initializeng DataPixx!');
-%     end
-% end
-
-%  Datapixx('Close')
-%  dpx = Datapixx('Open');
-
-%  if(dpx~=1)
-%      error('Problem when initializeng DataPixx!');
-%  else
-%      % WZ: this is also done in pds.datapixx.init, just testing if it makes a difference
-%      Datapixx('StopAllSchedules');     % Stops any I/O schedules that were running before
-%      Datapixx('EnableAdcFreeRunning'); % Start up free-running sampling of voltages at ADCs
-%  end
 
 % ------------------------------------------------------------------------%
 %% run the experiment

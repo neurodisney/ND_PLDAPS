@@ -53,6 +53,9 @@ if(isempty(state))
     %% get task parameters
     p = joy_train_taskdef(p, task);  % WZ: could it be removed here and just run in trialSetup?
     
+    p.trial.LastHits = 0;
+    p.trial.NHits    = 0;
+    ND_CtrlMsg(p, 'Experimental SETUP');
     % --------------------------------------------------------------------%
     %% define ascii output file 
     % call this after ND_InitSession to be sure that output directory exists!
@@ -63,10 +66,8 @@ if(isempty(state))
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries late in the lookup table (>200) for the definition of task related colors.
-    % ND_DefineCol(p, 'bg',         200, [0.25, 0.25, 0.25], [0.25, 0.25, 0.25]);
-    %ND_DefineCol(p, 'TargetOn',   201, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
-    ND_DefineCol(p, 'TargetDimm', 203, [0.00, 1.00, 0.00], [0.00, 1.00, 0.00]);
-    ND_DefineCol(p, 'TargetOn',   202, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
+    ND_DefineCol(p, 'TargetDimm', 22, [0.00, 1.00, 0.00], [0.00, 1.00, 0.00]);
+    ND_DefineCol(p, 'TargetOn',   23, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
 
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -76,24 +77,32 @@ if(isempty(state))
     % of a defined number of trials per condition, needs to be clarified.
     % Right now, it is a placeholder).
 
-    maxTrials_per_BlockCond = 10;  
-    maxBlocks = 100;
+    maxTrials_per_BlockCond = 5;  
+    maxBlocks = 500;
     
     % condition 1
     c1.Nr = 1; 
-      
+    c1.(task).Timing.MinHoldTime = 0.2;
+    c1.(task).Timing.MaxHoldTime = 0.4;
+    
     % condition 2
     c2.Nr = 2; 
+    c2.(task).Timing.MinHoldTime = 0.4;
+    c2.(task).Timing.MaxHoldTime = 0.6;
     
-    % condition 3
-    c3.Nr = 3; 
-      
-    % condition 4
-    c4.Nr = 4; 
-    
+% %     % condition 3
+% %     c3.Nr = 3; 
+% %     c3.(task).Timing.MinHoldTime = 0.6;
+% %     c3.(task).Timing.MaxHoldTime = 0.8;
+% %     
+% %     % condition 4
+% %     c4.Nr = 4; 
+% %     c4.(task).Timing.MinHoldTime = 0.8;
+% %     c4.(task).Timing.MaxHoldTime = 1.0;
+% %     
     % create a cell array containing all conditions
-    conditions = {c1, c2, c3, c4};
-    
+%     conditions = {c1, c2, c3, c4};
+    conditions = {c1, c2};
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
     
 else
@@ -113,7 +122,7 @@ else
         % and all other more time demanding stuff.
         
         TaskSetUp(p, task);
-        ND_CtrlMsg(p, 'TRIAL SETUP');
+        %ND_CtrlMsg(p, 'TRIAL SETUP');
 
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
@@ -155,7 +164,7 @@ else
                 p.trial.pldaps.finish = p.trial.pldaps.iTrial;
             end
             
-            ND_CtrlMsg(p, 'TRIAL END');
+            %ND_CtrlMsg(p, 'TRIAL END');
             
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
@@ -177,7 +186,10 @@ function TaskSetUp(p, task)
     p.trial.(task).CurrOutcome = NaN;
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
+    
+    p.trial.(task).Timing.HoldTime =  ND_GetITI(p.trial.(task).Timing.MinHoldTime, p.trial.(task).Timing.MaxHoldTime, [], [], [], 0.25);   % Minimum time before response is expected
 
+    p.trial.(task).Reward.Curr = p.trial.(task).Reward.Dur(1);
 % ------------------------------------------------------------------------%
 function TaskDesign(p, task)
 %% main task outline
@@ -191,7 +203,7 @@ function TaskDesign(p, task)
             % joystick in a released state, let's start the trial    
                 p.trial.(task).EV.TaskStart = GetSecs;
                 
-                ND_CtrlMsg(p, 'Trial started');
+                %ND_CtrlMsg(p, 'Trial started');
                 
                 p.trial.(task).Timing.WaitTimer = p.trial.(task).EV.TaskStart + p.trial.(task).Timing.WaitStart;
                 
@@ -210,13 +222,30 @@ function TaskDesign(p, task)
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
-            % we just got a press in time
-                ND_CtrlMsg(p, 'Joystick press');
                 
-                p.trial.(task).EV.JoyPress      = ctm - p.trial.(task).EV.TaskStart;
-                p.trial.(task).Timing.WaitTimer = ctm + p.trial.(task).Timing.HoldTime;
+                p.trial.(task).EV.StartRT = ctm - p.trial.(task).EV.TaskStart;
                 
-                p.trial.CurrEpoch = p.trial.epoch.WaitGo;
+                if(p.trial.(task).EV.StartRT <  p.trial.behavior.joystick.minRT)
+                % too quick to be a true response
+                     ND_CtrlMsg(p, 'premature start'); 
+                     p.trial.(task).CurrOutcome = p.trial.outcome.FalseStart;
+                
+                     p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                
+                else
+                % we just got a press in time
+                    ND_CtrlMsg(p, 'Joystick press');
+
+                    p.trial.(task).EV.JoyPress      = ctm - p.trial.(task).EV.TaskStart;
+                    p.trial.(task).Timing.WaitTimer = ctm + p.trial.(task).Timing.HoldTime;
+
+                    p.trial.CurrEpoch = p.trial.epoch.WaitGo;
+                    
+                    if(p.trial.(task).Reward.Pull)
+                        pds.behavior.reward.give(p, p.trial.(task).Reward.Dur(1));
+                        ND_CtrlMsg(p, 'Reward');
+                    end
+                end
             end
         
         % ----------------------------------------------------------------%
@@ -243,19 +272,31 @@ function TaskDesign(p, task)
         %% Wait for joystick release     
             ctm = GetSecs;
             if(ctm > p.trial.(task).Timing.WaitTimer) 
-                ND_CtrlMsg(p, 'No Response');
+                %ND_CtrlMsg(p, 'No Response');
                 p.trial.(task).CurrOutcome = p.trial.outcome.Miss;
                 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;             
            
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-            % we just got a release
-                ND_CtrlMsg(p, 'Correct Response');
-                p.trial.(task).CurrOutcome = p.trial.outcome.Correct;
-                p.trial.(task).EV.JoyRelease    = ctm - p.trial.(task).EV.TaskStart;
-                p.trial.(task).Timing.WaitTimer = ctm + p.trial.(task).Reward.Lag;
                 
-                p.trial.CurrEpoch = p.trial.epoch.WaitReward;
+                p.trial.(task).EV.RespRT = ctm - p.trial.(task).EV.TaskStart;
+                
+                if(p.trial.(task).EV.RespRT <  p.trial.behavior.joystick.minRT)
+                % premature response - too early to be a true response
+                     %ND_CtrlMsg(p, 'premature response'); 
+                     p.trial.(task).CurrOutcome = outcome.Early;
+                
+                     p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                                
+                else
+                % correct response
+                    %ND_CtrlMsg(p, 'Correct Response');
+                    p.trial.(task).CurrOutcome = p.trial.outcome.Correct;
+                    p.trial.(task).EV.JoyRelease    = ctm - p.trial.(task).EV.TaskStart;
+                    p.trial.(task).Timing.WaitTimer = ctm + p.trial.(task).Reward.Lag;
+
+                    p.trial.CurrEpoch = p.trial.epoch.WaitReward;
+                end
             end
             
         % ----------------------------------------------------------------%
@@ -268,18 +309,20 @@ function TaskDesign(p, task)
                 % TODO: add function to select current reward amount based on time or
                 %       number of consecutive correct trials preceding the current one.
                 
-                pds.behavior.reward.give(p, p.trial.(task).Reward.Dur);
-                ND_CtrlMsg(p, 'Reward');
+                ND_GetRewDur(p, task); % determine reward amount based on number of previous correct trials
+                
+                pds.behavior.reward.give(p, p.trial.(task).Reward.Curr);
+                %ND_CtrlMsg(p, ['Reward: ', num2str(p.trial.(task).Reward.Curr), ' seconds']);
                 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitRelease
-        %% Wait for joystick release after missed response    
+        %% Wait for joystick release after missed response    FalseStart
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 p.trial.(task).EV.JoyRelease = GetSecs;
-                ND_CtrlMsg(p, 'Late Release');
+                %ND_CtrlMsg(p, 'Late Release');
                 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
@@ -289,13 +332,18 @@ function TaskDesign(p, task)
         %% finish trial and error handling
             if(p.trial.(task).CurrOutcome == p.trial.outcome.Correct)
                 p.trial.(task).Timing.WaitTimer = GetSecs + p.trial.(task).Timing.ITI;
-                ND_CtrlMsg(p, ['Correct: next trial in ', num2str(p.trial.(task).Timing.ITI, '%.4f'), 'seconds.']);
+                %ND_CtrlMsg(p, ['Correct: next trial in ', num2str(p.trial.(task).Timing.ITI, '%.4f'), 'seconds.']);
                 
+                p.trial.LastHits = p.trial.LastHits + 1;
+                p.trial.NHits    = p.trial.NHits    + 1;
+               
                 p.trial.CurrEpoch = p.trial.epoch.ITI;
 
             else
                 p.trial.(task).Timing.WaitTimer = GetSecs + p.trial.(task).Timing.ITI + p.trial.(task).Timing.TimeOut;
                 ND_CtrlMsg(p, ['Error: next trial in ', num2str(p.trial.(task).Timing.ITI, '%.4f'), 'seconds.']);
+                
+                p.trial.LastHits = 0;
                 
                 p.trial.CurrEpoch = p.trial.epoch.ITI;
             end
@@ -313,34 +361,35 @@ function TaskDraw(p, task)
 %% show epoch dependent stimuli
 % go through the task epochs as defined in TaskDesign and draw the stimulus
 % content that needs to be shown during this epoch.
+
     switch p.trial.CurrEpoch             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitStart
         %% Wait for joystick press   
-            ND_TrialOn(p);    
+           Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.TrialStart, p.trial.(task).FrameRect , p.trial.(task).FrameWdth);
+
         
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitGo
         %% delay before response is needed     
-            ND_TrialOn(p);
-%             Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.TargetOn, p.trial.(task).TargetRect);
-            Screen('FillOval', p.trial.display.overlayptr, p.trial.display.clut.red, p.trial.(task).TargetRect);
+            Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.TrialStart, p.trial.(task).FrameRect , p.trial.(task).FrameWdth);
+            Screen('FillOval', p.trial.display.overlayptr, p.trial.display.clut.TargetOn, p.trial.(task).TargetRect);
 
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitResponse
         %% Wait for joystick release     
-            ND_TrialOn(p);
-%             Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.TargetOn, p.trial.(task).TargetRect);
-            Screen('FillOval', p.trial.display.overlayptr, p.trial.display.clut.red, p.trial.(task).TargetRect);
+            Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.TrialStart, p.trial.(task).FrameRect , p.trial.(task).FrameWdth);
+            Screen('FillOval', p.trial.display.overlayptr, p.trial.display.clut.TargetDimm, p.trial.(task).TargetRect);
         
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitReward
         %% Wait for for reward   
-            ND_TrialOn(p);
-%             Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.TargetDimm, p.trial.(task).TargetRect);
-            Screen('FillOval', p.trial.display.overlayptr, p.trial.display.clut.green, p.trial.(task).TargetRect);
-                       
+            Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.TrialStart, p.trial.(task).FrameRect , p.trial.(task).FrameWdth);
+            Screen('FillOval', p.trial.display.overlayptr, p.trial.display.clut.TargetDimm, p.trial.(task).TargetRect);   
     end
+    
+    txtmsg = sprintf('%d/%d correct trials (%.2f)', p.trial.NHits, p.trial.pldaps.iTrial, p.trial.NHits/p.trial.pldaps.iTrial*100);
+    Screen('DrawText', p.trial.display.overlayptr, txtmsg , 80, 1000, p.trial.display.clut.whitebg);
 
 % ------------------------------------------------------------------------%
 function Trial2Ascii(p, task, act)
@@ -356,7 +405,8 @@ function Trial2Ascii(p, task, act)
             p.trial.session.asciitbl = [datestr(now,'yyyy_mm_dd_HHMM'),'.dat'];
             tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'w');
             
-            fprintf(tblptr, 'Date  Subject  Experiment  Tcnt  Cond  Tstart  JPress  GoCue  JRelease  Reward  RewDur  Result  Outcome \n');
+            fprintf(tblptr, ['Date  Subject  Experiment  Tcnt  Cond  Tstart  JPress  GoCue  JRelease  Reward  RewDur  ',...
+                             'Result  Outcome  StartRT  RT  ChangeTime \n']);
             fclose(tblptr);
             
         case 'save'
@@ -367,12 +417,13 @@ function Trial2Ascii(p, task, act)
 
                 tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'a');
                 
-                fprintf(tblptr, '%s  %s  %s  %d  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s \n' , ...
+                fprintf(tblptr, '%s  %s  %s  %d  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s  %.5f  %.5f  %.5f\n' , ...
                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.session.subject, ...
                                 p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
                                 trltm, p.trial.(task).EV.JoyPress, ...
                                 p.trial.(task).EV.GoCue, p.trial.(task).EV.JoyRelease, p.trial.(task).EV.Reward, ...
-                                p.trial.(task).Reward.Dur, p.trial.(task).CurrOutcome, cOutCome);  
+                                p.trial.(task).Reward.Curr, p.trial.(task).CurrOutcome, cOutCome, ...
+                                p.trial.(task).EV.StartRT, p.trial.(task).EV.RespRT, p.trial.(task).Timing.HoldTime);  
                fclose(tblptr);             
             end
     end

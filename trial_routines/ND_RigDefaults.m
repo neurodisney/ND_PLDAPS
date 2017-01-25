@@ -262,6 +262,7 @@ SS.outcome.Early        =   3;  % release prior to response window
 SS.outcome.False        =   4;  % wrong response within response window
 SS.outcome.Late         =   5;  % response occurred after response window
 SS.outcome.Miss         =   6;  % no response at a reasonable time
+SS.outcome.FalseStart   =   7;  % no response at a reasonable time
 
 % get a string representation of the outcome
 SS.outcome.codenames = fieldnames(SS.outcome);

@@ -19,38 +19,56 @@ p.trial.(task).EqualCorrect = 0; % if set to one, trials within a block are repe
 
 % ------------------------------------------------------------------------%
 %% Reward
-p.trial.(task).Reward.Pull = 0;                % If 1 then give reward for pulling the joystick
+p.trial.(task).Reward.Pull = 1;                % If 1 then give reward for pulling the joystick
 
 p.trial.(task).Reward.IncrConsecutive = 1;     % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-%p.trial.(task).Reward.Dur  = [0.1, 0.25, 0.5]; % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.(task).Reward.Dur  = 0.500; % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.(task).Reward.Dur  = [0.25, 0.5, 0.75]; % reward duration [s], user vector to specify values used for incremental reward scheme
 p.trial.(task).Reward.Step = [2, 4, 6];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.(task).Reward.Dur
 
-p.trial.(task).Reward.Lag    = 0.150;          % Delay between response and reward onset
+p.trial.(task).Reward.Lag    = 0.100;          % Delay between response and reward onset
 p.trial.(task).Reward.ManDur = 0.500;          % reward duration [s] for reward given by keyboard presses
 p.trial.(task).Reward.ManDur = 60;          % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.(task).Timing.WaitStart   = 25.00;    % maximal time period [s] in seconds to press the lever in order to start a trial.
-p.trial.(task).Timing.HoldTime    =  0.50;    % Minimum time before response is expected
-p.trial.(task).Timing.WaitResp    = 25.00;    % Only response times [s] after this wait period will be considered stimulus driven responses
+p.trial.(task).Timing.WaitStart   = 5.00;    % maximal time period [s] in seconds to press the lever in order to start a trial.
+p.trial.(task).Timing.WaitResp    = 5.00;    % Only response times [s] after this wait period will be considered stimulus driven responses
 
 % inter-trial interval
-p.trial.(task).Timing.MinITI      = 0.5;      % minimum time period [s] between subsequent trials
-p.trial.(task).Timing.MaxITI      = 1.5;      % maximum time period [s] between subsequent trials
+p.trial.(task).Timing.MinITI      = 1.5;      % minimum time period [s] between subsequent trials
+p.trial.(task).Timing.MaxITI      = 2.5;      % maximum time period [s] between subsequent trials
 
 p.trial.(task).Timing.TimeOut     =    1;     % Time [s] out for incorrect responses
 p.trial.(task).Timing.PullTimeOut =    2;     % Minimum time [s] passed before a trial starts after random lever presses
 
+p.trial.behavior.joystick.minRT   =  0.10;     % If a response occurs prior this time it is considered an early response
+
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
-p.trial.(task).TargetSz_dva  = 12;         % Stimulus diameter in dva
-p.trial.(task).TargetSz_pxl  = ND_dva2pxl(p.trial.(task).TargetSz_dva, p); % Stimulus diameter in dva
-p.trial.(task).TargetPos_dva = [0, 0];    % Stimulus diameter in dva
-p.trial.(task).TargetPos_pxl = ND_cart2ptb(p, p.trial.(task).TargetPos_dva);
+% target item
+p.trial.(task).TargetSz_dva   = 4;   % Stimulus diameter in dva
+p.trial.(task).TargetPos_dva  = [0, 0];    % Stimulus diameter in dva25seconds
 
-p.trial.(task).TargetRect    = ND_GetRect(p.trial.(task).TargetPos_pxl, p.trial.(task).TargetSz_pxl);
+p.trial.(task).TargetSz_pxl   = ND_dva2pxl(p.trial.(task).TargetSz_dva, p); % Stimulus diameter in dva
+p.trial.(task).TargetPos_pxl  = ND_cart2ptb(p, p.trial.(task).TargetPos_dva);
+p.trial.(task).TargetRect     = ND_GetRect(p.trial.(task).TargetPos_pxl, p.trial.(task).TargetSz_pxl);
+
+% Frame indicating active trial
+p.trial.(task).FrameWdth  = 15; % hard-coded for now, make it more flexible
+p.trial.(task).FrameSize  = ND_dva2pxl([15 15], p); % hard-coded for now, make it more flexible
+p.trial.(task).FrameRect  = ND_GetRect(p.trial.display.ctr(1:2), p.trial.(task).FrameSize);
+
+% ------------------------------------------------------------------------%
+%% Joystick parameters
+p.trial.behavior.joystick.PullThr = 1.5;  % threshold to detect a joystick press
+p.trial.behavior.joystick.RelThr  = 1.0;  % threshold to detect a joystick release
+
+% ------------------------------------------------------------------------%
+%% Trial duration
+% maxTrialLength is used to pre-allocate memory at several initialization
+% steps. It specifies a duration in seconds.
+
+p.trial.pldaps.maxTrialLength = 60; % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
 % ------------------------------------------------------------------------%
 %% initialize event times as NaN
@@ -60,20 +78,8 @@ p.trial.(task).EV.JoyPress    = NaN; % Press time to start task
 p.trial.(task).EV.GoCue       = NaN; % Onset of Go-signal
 p.trial.(task).EV.JoyRelease  = NaN; % time of joystick release
 p.trial.(task).EV.Reward      = NaN; % time of reward delivery
-
-% ------------------------------------------------------------------------%
-%% Joystick parameters
-p.trial.behavior.joystick.PullThr   = 1.5;  % threshold to detect a joystick press
-p.trial.behavior.joystick.RelThr    = 1.0;  % threshold to detect a joystick release
-
-% ------------------------------------------------------------------------%
-%% Trial duration
-% maxTrialLength is used to pre-allocate memory at several initialization
-% steps. It specifies a duration in seconds.
-
-p.trial.pldaps.maxTrialLength = 60; % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
-
-
+p.trial.(task).EV.StartRT     = NaN; % response time to start trial after active cue
+p.trial.(task).EV.RespRT      = NaN; % reaction time
 
 
 
