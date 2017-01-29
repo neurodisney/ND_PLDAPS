@@ -22,26 +22,25 @@ p.trial.(task).EqualCorrect = 0; % if set to one, trials within a block are repe
 p.trial.(task).Reward.Pull = 1;                % If 1 then give reward for pulling the joystick
 
 p.trial.(task).Reward.IncrConsecutive = 1;     % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.(task).Reward.Dur  = [0.25, 0.5, 0.75]; % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.(task).Reward.Dur  = [0.5, 0.5, 0.75]; % reward duration [s], user vector to specify values used for incremental reward scheme
 p.trial.(task).Reward.Step = [2, 4, 6];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.(task).Reward.Dur
 
-p.trial.(task).Reward.Lag    = 0.100;          % Delay between response and reward onset
-p.trial.(task).Reward.ManDur = 0.500;          % reward duration [s] for reward given by keyboard presses
-p.trial.(task).Reward.ManDur = 60;          % reward duration [s] for reward given by keyboard presses
+p.trial.(task).Reward.Lag    = 0.10;          % Delay between response and reward onset
+p.trial.(task).Reward.ManDur = 120;          % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
 p.trial.(task).Timing.WaitStart   = 5.00;    % maximal time period [s] in seconds to press the lever in order to start a trial.
-p.trial.(task).Timing.WaitResp    = 5.00;    % Only response times [s] after this wait period will be considered stimulus driven responses
+p.trial.(task).Timing.WaitResp    = 1.50;    % Only response times [s] after this wait period will be considered stimulus driven responses
 
 % inter-trial interval
-p.trial.(task).Timing.MinITI      = 1.5;      % minimum time period [s] between subsequent trials
-p.trial.(task).Timing.MaxITI      = 2.5;      % maximum time period [s] between subsequent trials
+p.trial.(task).Timing.MinITI      = 0.5;      % minimum time period [s] between subsequent trials
+p.trial.(task).Timing.MaxITI      = 1.5;      % maximum time period [s] between subsequent trials
 
-p.trial.(task).Timing.TimeOut     =    1;     % Time [s] out for incorrect responses
-p.trial.(task).Timing.PullTimeOut =    2;     % Minimum time [s] passed before a trial starts after random lever presses
+p.trial.(task).Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
+p.trial.(task).Timing.PullTimeOut =    0;     % Minimum time [s] passed before a trial starts after random lever presses
 
-p.trial.behavior.joystick.minRT   =  0.10;     % If a response occurs prior this time it is considered an early response
+p.trial.behavior.joystick.minRT   =  0.20;     % If a response occurs prior this time it is considered an early response
 
 % ------------------------------------------------------------------------%
 %% Stimulus parameters

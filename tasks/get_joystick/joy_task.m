@@ -77,32 +77,61 @@ if(isempty(state))
     % of a defined number of trials per condition, needs to be clarified.
     % Right now, it is a placeholder).
 
-    maxTrials_per_BlockCond = 5;  
-    maxBlocks = 500;
+    maxTrials_per_BlockCond = 4;  
+    maxBlocks = 1000;
     
     % condition 1
     c1.Nr = 1; 
-    c1.(task).Timing.MinHoldTime = 0.2;
-    c1.(task).Timing.MaxHoldTime = 0.4;
+    c1.(task).Timing.MinHoldTime = 0.1;
+    c1.(task).Timing.MaxHoldTime = 0.1;
     
     % condition 2
     c2.Nr = 2; 
-    c2.(task).Timing.MinHoldTime = 0.4;
-    c2.(task).Timing.MaxHoldTime = 0.6;
+    c2.(task).Timing.MinHoldTime = 0.2;
+    c2.(task).Timing.MaxHoldTime = 0.2;
     
-% %     % condition 3
-% %     c3.Nr = 3; 
-% %     c3.(task).Timing.MinHoldTime = 0.6;
-% %     c3.(task).Timing.MaxHoldTime = 0.8;
-% %     
-% %     % condition 4
-% %     c4.Nr = 4; 
-% %     c4.(task).Timing.MinHoldTime = 0.8;
-% %     c4.(task).Timing.MaxHoldTime = 1.0;
-% %     
-    % create a cell array containing all conditions
-%     conditions = {c1, c2, c3, c4};
-    conditions = {c1, c2};
+    % condition 3
+    c3.Nr = 3; 
+    c3.(task).Timing.MinHoldTime = 0.3;
+    c3.(task).Timing.MaxHoldTime = 0.3;
+    
+    % condition 4
+    c4.Nr = 4; 
+    c4.(task).Timing.MinHoldTime = 0.4;
+    c4.(task).Timing.MaxHoldTime = 0.4;
+  
+    % condition 5
+    c5.Nr = 5; 
+    c5.(task).Timing.MinHoldTime = 0.5;
+    c5.(task).Timing.MaxHoldTime = 0.5;
+    
+    % condition 6
+    c6.Nr = 6; 
+    c6.(task).Timing.MinHoldTime = 0.6;
+    c6.(task).Timing.MaxHoldTime = 0.6;
+    
+    % condition 7
+    c7.Nr = 7; 
+    c7.(task).Timing.MinHoldTime = 0.7;
+    c7.(task).Timing.MaxHoldTime = 0.7;
+    
+    % condition 8
+    c8.Nr = 8; 
+    c8.(task).Timing.MinHoldTime = 0.8;
+    c8.(task).Timing.MaxHoldTime = 0.8;
+    
+    % condition 9
+    c9.Nr = 9; 
+    c9.(task).Timing.MinHoldTime = 0.9;
+    c9.(task).Timing.MaxHoldTime = 0.9;
+    
+    % condition 10
+    c10.Nr = 10; 
+    c10.(task).Timing.MinHoldTime = 1.0;
+    c10.(task).Timing.MaxHoldTime = 1.0;
+    
+      % create a cell array containing all conditions
+    conditions = {c1, c2, c3, c4, c5, c6, c7, c8, c9, c10};
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
     
 else
@@ -190,6 +219,7 @@ function TaskSetUp(p, task)
     p.trial.(task).Timing.HoldTime =  ND_GetITI(p.trial.(task).Timing.MinHoldTime, p.trial.(task).Timing.MaxHoldTime, [], [], [], 0.25);   % Minimum time before response is expected
 
     p.trial.(task).Reward.Curr = p.trial.(task).Reward.Dur(1);
+    
 % ------------------------------------------------------------------------%
 function TaskDesign(p, task)
 %% main task outline
@@ -279,7 +309,7 @@ function TaskDesign(p, task)
            
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 
-                p.trial.(task).EV.RespRT = ctm - p.trial.(task).EV.TaskStart;
+                p.trial.(task).EV.RespRT = ctm - p.trial.(task).EV.GoCue;
                 
                 if(p.trial.(task).EV.RespRT <  p.trial.behavior.joystick.minRT)
                 % premature response - too early to be a true response
