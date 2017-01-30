@@ -56,8 +56,8 @@ if(isempty(state))
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.
-    ND_DefineCol(p, 'TargetDimm', 30, [0.00, 1.00, 0.00], [0.00, 1.00, 0.00]);
-    ND_DefineCol(p, 'TargetOn',   31, [1.00, 0.00, 0.00], [1.00, 0.00, 0.00]);
+    ND_DefineCol(p, 'TargetDimm', 30, [0.00, 1.00, 0.00]);
+    ND_DefineCol(p, 'TargetOn',   31, [1.00, 0.00, 0.00]);
 
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence

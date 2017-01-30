@@ -21,6 +21,10 @@ function ND_DefineCol(p, colname, pos, hCol, mCol)
 %
 % wolf zinke, Jan. 2017
 
+if(nargin < 5)
+    mCol = hCol;
+end
+
 % index for the CLUT is 0 based, in matlab it is 1 based, thus shift position by 1
 p.defaultParameters.display.humanCLUT( pos+1,:) = hCol;
 p.defaultParameters.display.monkeyCLUT(pos+1,:) = mCol;
