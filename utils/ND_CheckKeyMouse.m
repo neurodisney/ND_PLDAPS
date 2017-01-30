@@ -1,4 +1,4 @@
-function qp = ND_CheckKeyMouse(p, task)
+function qp = ND_CheckKeyMouse(p)
 %% read in keyboard and mouse information
 % code based on pldap's default trial function.
 % check for key presses and mouse actions and act accordingly.
@@ -28,7 +28,7 @@ function qp = ND_CheckKeyMouse(p, task)
             
             case KbName(p.trial.key.reward)
             % check for manual reward delivery via keyboard
-                pds.behavior.reward.give(p, p.trial.(task).Reward.ManDur);  % per default, output will be channel three.
+                pds.behavior.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
                 
             case KbName(p.trial.key.pause)    
             % pause trial    

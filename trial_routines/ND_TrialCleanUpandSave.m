@@ -13,6 +13,7 @@ function p = ND_TrialCleanUpandSave(p)
 %-------------------------------------------------------------------------%
 %% Ensure correct background color and determine trial end and duration
 Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor);
+
 p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
 
 vblTime = Screen('Flip', p.trial.display.ptr,0);

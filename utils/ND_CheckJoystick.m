@@ -36,7 +36,7 @@ if(p.trial.datapixx.useJoystick)
                 % all below threshold?
                 if(~any(jchk))
                     p.trial.JoyState.Current = p.trial.JoyState.JoyRest;
-                    ND_CtrlMsg(p, 'Joystick Released...');
+                    %ND_CtrlMsg(p, 'Joystick Released...');
                 end
 
             %% wait for press
@@ -46,7 +46,7 @@ if(p.trial.datapixx.useJoystick)
                 % all above threshold?
                 if(~any(jchk))
                     p.trial.JoyState.Current = p.trial.JoyState.JoyHold;
-                    ND_CtrlMsg(p, 'Joystick Pressed...');
+                    %ND_CtrlMsg(p, 'Joystick Pressed...');
                 end
 
             %% if it is nan, so just get the current state

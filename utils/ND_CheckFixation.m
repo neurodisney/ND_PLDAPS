@@ -1,5 +1,5 @@
 % !!! right now just a placeholder !!!
-function p = ND_CheckFixation(p, task)
+function p = ND_CheckFixation(p)
 % Read in the eye position signal and check how much it deviates from a
 % defined position.
 %
@@ -19,9 +19,9 @@ if(p.trial.datapixx.useAsEyepos)
                                     (p.trial.AI.Eye.Y(sIdx) - p.trial.behavior.fixation.FixPos(2)).^2);
     
     % calculate a moving average of the joystick position for display reasons
-    p.trial.joyX   = mean(p.trial.AI.Eye.X(sIdx) - p.trial.behavior.fixation.FixPos(1));
-    p.trial.joyY   = mean(p.trial.AI.Eye.Y(sIdx) - p.trial.behavior.fixation.FixPos(2));
-    p.trial.joyAmp = mean(p.trial.AI.Eye.Amp(sIdx));
+    p.trial.eyeX   = mean(p.trial.AI.Eye.X(sIdx) - p.trial.behavior.fixation.FixPos(1));
+    p.trial.eyeY   = mean(p.trial.AI.Eye.Y(sIdx) - p.trial.behavior.fixation.FixPos(2));
+    p.trial.eyeAmp = mean(p.trial.AI.Eye.Amp(sIdx));
     
     % if relevant for task determine joystick state
     if(p.trial.behavior.fixation.use)
@@ -35,7 +35,6 @@ if(p.trial.datapixx.useAsEyepos)
                 % all below threshold?
                 if(~any(jchk))
                     p.trial.FixState.Current = p.trial.FixState.GazeIn;
-                    ND_CtrlMsg(p, 'Joystick Released...');
                 end
 
             %% wait for press
@@ -45,7 +44,6 @@ if(p.trial.datapixx.useAsEyepos)
                 % all above threshold?
                 if(~any(jchk))
                     p.trial.FixState.Current = p.trial.FixState.GazeOut;
-                    ND_CtrlMsg(p, 'Joystick Pressed...');
                 end
 
             %% if it is nan, so just get the current state

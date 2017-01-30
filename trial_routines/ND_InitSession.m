@@ -6,13 +6,30 @@ function p = ND_InitSession(p)
 % wolf zinke, Jan. 2017
 
 % --------------------------------------------------------------------%
-% Define Trial function
+%% set output directory
+p.defaultParameters.pldaps.dirs.data = fullfile(p.defaultParameters.pldaps.dirs.data, ...
+                                                p.defaultParameters.session.subject, ...
+                                                p.defaultParameters.session.experimentSetupFile, datestr(now,'yyyy_mm_dd'));
+
+% --------------------------------------------------------------------%
+%% Define Trial function
 % The runTrial function requires trialFunction to be defined, but buried in
 % their tutorial they show that this needs to be defined when initializing 
 % the trial function (i.e. the experimentSetupFile), otherwise there will be
 % an error running runTrial.
 if(~isfield(p.defaultParameters.pldaps, 'trialFunction'))
     p.defaultParameters.pldaps.trialFunction = p.trial.session.experimentSetupFile;
+end
+
+% --------------------------------------------------------------------%
+%% After Trial function
+% Define function that is executed after trial completion when the lock of defaultParameters is released
+% This function allows to pass variable content between trials. Otherwise,
+% the variables that are changed within a trial will not be updated and
+% reset to the initial value for the subsequent trial.
+if(~isfield(p.defaultParameters.pldaps, 'experimentAfterTrialsFunction') || ...
+    isempty(p.defaultParameters.pldaps.experimentAfterTrialsFunction) )
+    p.defaultParameters.pldaps.experimentAfterTrialsFunction = 'ND_AfterTrial';  % a function to be called after each trial.
 end
 
 % --------------------------------------------------------------------%
@@ -82,6 +99,13 @@ if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.
     p.trial.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.trial.pldaps.draw.joystick.levelsz);
     
 end
+
+% --------------------------------------------------------------------%
+%% set variables that will be used in ND_AfterTrial
+p.trial.LastHits         = 0;      % how many correct trials since last error
+p.trial.NHits            = 0;      % how many correct trials in total
+p.trial.task.CurrOutcome = NaN;    % just initialize, no start no outcome
+
 
 % --------------------------------------------------------------------%
 %% Define session start time    

@@ -1,4 +1,4 @@
-function p = ND_GeneralTrialRoutines(p, state, task)
+function p = ND_GeneralTrialRoutines(p, state)
 % This function provides general routines for each trial state that likely
 % will be needed in a comparable form in all trials. By keeping these routines
 % in a separate file it is possible to separate them from the actual task code.
@@ -44,7 +44,7 @@ else
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameUpdate
         %% collect data (i.e. a hardware module) and store it
-        ND_CheckKeyMouse(p, task);   % check for key hits, read mouse, use mouse for eye position if needed
+        ND_CheckKeyMouse(p);   % check for key hits, read mouse, use mouse for eye position if needed
         pds.datapixx.adc.getData(p); % get analogData from Datapixx, including eye position and joystick
         ND_CheckJoystick(p);         % needs to be called after pds.datapixx.adc.getData
         %ND_CheckFixation(p,task);    % needs to be called after pds.datapixx.adc.getData
@@ -67,6 +67,15 @@ else
         %% trial end
            
             p = ND_TrialCleanUpandSave(p); % end all trial related processes           
-                       
+
+% ####################################################################### %        
+% DONE BETWEEN SUBSEQUENT TRIALS:
+        % ----------------------------------------------------------------%
+        case p.trial.pldaps.trialStates.experimentAfterTrials
+        %% AfterTrial
+        % pass on information between trials
+            p = ND_AfterTrial(p);
+            ND_CtrlMsg(p, 'AfterTrial'); 
+
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]

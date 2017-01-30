@@ -7,7 +7,9 @@ This repository contains helper tools and experiments to be used in combination 
 ## Tools and utilities
 
 ### trial_routines
-This are mainly stand-alone functions that were extracted from pldapsDefaultTrialFunction in the PLDAPS package and adapted if needed. These functions execute standard routines for hardware interaction that should use in the same way for all tasks.
+Please do not change these files for task development! 
+
+This are mainly stand-alone functions that were extracted from pldapsDefaultTrialFunction in the PLDAPS package and adapted if needed. These functions execute standard routines for hardware interaction that should be used in the same way for all tasks.
 
 * __ND_RigDefaults__ 
 Generate a settings struct with default parameters for the Disney-Lab that will be used to initialize the pldaps class.
@@ -32,6 +34,9 @@ What needs to be done during *p.trial.pldaps.trialStates.frameFlip*: Flip the sc
 
 * __ND_TrialCleanUpandSave__ 
 What needs to be done during *p.trial.pldaps.trialStates.trialCleanUpandSave*: Finish the trial, flush buffer and adjust size of pre-allocated data to the actual acquired data.
+
+* __ND_AfterTrial__
+Make sure changed variable values will be passed on to the next trial. DO everything here that requires the lock on defaultParameters to be removed. 
 
 ### utils
 

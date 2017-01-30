@@ -6,16 +6,6 @@ function start_joy_train(subjname)
 %
 % wolf zinke, Dec. 2016
 
-% not sure how the pldaps wanted to solve this, their task concept for
-% specifying a trial sub-struct just does not work, try  to use a global
-% definition here to cope with it.
-if(exist('task','var'))
-    clear task
-end
-
-
-% global task
-task = 'joy_train';  % this will be used to create a sub-struct in the trial structure
 
 % ------------------------------------------------------------------------%
 %% Set default variables
@@ -44,18 +34,12 @@ SS.display.bgColor    = [50, 50, 50] / 255;
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 SS.mouse.useAsEyepos  = 0;
 
-% determine the path to store data files
-SS.pldaps.dirs.data = fullfile(SS.pldaps.dirs.data, subjname, task, datestr(now,'yyyy_mm_dd'));
-
 SS.pldaps.nosave = 1;  % For now do not bother with the pldaps file format, use plain text file instead.
 
 % ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);
 
-% ------------------------------------------------------------------------%
-%% adjust pldaps class settings
-p.defaultParameters.TaskName = task;
 
 % ------------------------------------------------------------------------%
 %% run the experiment

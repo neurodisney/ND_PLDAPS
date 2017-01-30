@@ -1,9 +1,9 @@
-function p = ND_GetRewDur(p, task) 
+function p = ND_GetRewDur(p) 
 %
 %
 % wolf zinke, Jan. 2017
 
-if(~p.trial.(task).Reward.IncrConsecutive)
+if(~p.trial.task.Reward.IncrConsecutive)
 % increase rewards after a defined number of trials was achieved
     cNumHit = p.trial.NHits;
 else
@@ -11,11 +11,11 @@ else
     cNumHit = p.trial.LastHits;
 end
 
-s = find(~(p.trial.(task).Reward.Step>cNumHit),1,'last');
+s = find(~(p.trial.task.Reward.Step>cNumHit),1,'last');
 
 if(isempty(s))
     s = 1;
 end
 
-p.trial.(task).Reward.Curr = p.trial.(task).Reward.Dur(s);
+p.trial.task.Reward.Curr = p.trial.task.Reward.Dur(s);
 

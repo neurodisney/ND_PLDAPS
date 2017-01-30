@@ -1,4 +1,4 @@
-function p = ND_CheckCondRepeat(p, task)
+function p = ND_CheckCondRepeat(p)
 % Check if a condition needs to be repeated in order to ensure the same
 % number of correct trials for each condition.
 %
@@ -6,7 +6,7 @@ function p = ND_CheckCondRepeat(p, task)
 % wolf zinke, Dec. 2016
 
 
-if(p.trial.(task).EqualCorrect && ~p.trial.pldaps.goodtrial) % need to check if success, repeat if not    
+if(p.trial.task.EqualCorrect && ~p.trial.pldaps.goodtrial) % need to check if success, repeat if not    
     curCND = p.conditions{p.trial.pldaps.iTrial};
     curBLK = p.blocks{p.trial.pldaps.iTrial};
 
