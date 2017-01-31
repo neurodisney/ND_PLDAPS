@@ -1,4 +1,4 @@
-function p = joy_train_taskdef(p)
+% function p = joy_train_taskdef(p)
 % define task parameters for the joystick training task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
@@ -23,7 +23,7 @@ p.trial.task.Reward.Pull    = 1;             % If 1 then give reward for pulling
 p.trial.task.Reward.PullRew = 0.2;           % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
 
 p.trial.task.Reward.IncrConsecutive = 1;     % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.5, 0.5, 0.75]; % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Dur  = [0.25, 0.50, 0.75]; % reward duration [s], user vector to specify values used for incremental reward scheme
 p.trial.task.Reward.Step = [2, 4, 6];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
 
 p.trial.task.Reward.Lag    = 0.10;           % Delay between response and reward onset
@@ -35,11 +35,11 @@ p.trial.task.Timing.WaitStart   = 2.50;    % maximal time period [s] in seconds 
 p.trial.task.Timing.WaitResp    = 1.50;    % Only response times [s] after this wait period will be considered stimulus driven responses
 
 % inter-trial interval
-p.trial.task.Timing.MinITI      = 1.0;    % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI      = 1.0;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI      = 0.5;    % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subsequent trials
 
-p.trial.task.Timing.TimeOut     =  3;     % Time [s] out for incorrect responses
-p.trial.task.Timing.PullTimeOut =  3;     % Minimum time [s] passed before a trial starts after random lever presses
+p.trial.task.Timing.TimeOut     =  2;     % Time [s] out for incorrect responses
+p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a trial starts after random lever presses
 
 p.trial.behavior.joystick.minRT =  0.20;     % If a response occurs prior this time it is considered an early response
 

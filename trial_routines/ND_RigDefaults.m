@@ -255,6 +255,8 @@ SS.FixState.GazeOut     =   0;  % Gaze left fixation window
 
 % ------------------------------------------------------------------------%
 %% Define task outcomes
+SS.outcome.CurrOutcome  = NaN;  % just initialize, no start no outcome
+
 SS.outcome.Correct      =   0;  % correct performance, no error occurred
 SS.outcome.NoPress      =   1;  % No joystick press occurred to initialize trial
 SS.outcome.Abort        =   2;  % early joystick release prior stimulus onset

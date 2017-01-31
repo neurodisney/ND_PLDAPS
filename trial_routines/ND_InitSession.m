@@ -101,10 +101,10 @@ if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.
 end
 
 % --------------------------------------------------------------------%
-%% set variables that will be used in ND_AfterTrial
+%% set variables that contain summary information across trials
 p.trial.LastHits         = 0;      % how many correct trials since last error
 p.trial.NHits            = 0;      % how many correct trials in total
-p.trial.task.CurrOutcome = NaN;    % just initialize, no start no outcome
+
 
 
 % --------------------------------------------------------------------%

@@ -72,13 +72,14 @@ Wrapper to determine color lookup table entries and to created associated handle
 * __ND_GetITI__
 Determine inter-trial interval within a given range based on various distributions.
 
+* __ND_GetRewDur__
+Select current reward amount depending on a scheme that increases reward at defined total correct trial numbers, or within blocks of subsequent correct trials.
 
 ### grfcs ###
 Utilities to facilitate the drawing process.
 ==WIP: Some of these routines might already be implemented in a better way pldaps, try to identify, and if not then make it OOP to potentially speed up processing.==
 
 ==WIP: Here we should provide more basic grafic routines, e.g. for displaying fixation spots, specific items and so on to allow for an easier, user-friendly usage.==
-
 
 * __ND_GetRect__ 
 Determine the rect to draw stuff.

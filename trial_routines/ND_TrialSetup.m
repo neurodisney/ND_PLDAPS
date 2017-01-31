@@ -8,14 +8,14 @@ function p = ND_TrialSetup(p)
 p.trial.timing.flipTimes           = zeros(4,p.trial.pldaps.maxFrames);
 p.trial.timing.frameStateChangeTimes = nan(9,p.trial.pldaps.maxFrames);
 
-% --------------------------------------------------------------------%
+% ------------------------------------------------------------------------%
 %% Photo Diode
 if(p.trial.pldaps.draw.photodiode.use)
     p.trial.timing.photodiodeTimes         = nan(2,p.trial.pldaps.maxFrames);
     p.trial.pldaps.draw.photodiode.dataEnd = 1;
 end
 
-% --------------------------------------------------------------------%
+% ------------------------------------------------------------------------%
 %% DataPixx
 pds.datapixx.adc.trialSetup(p); % setup analogData collection from Datapixx
 
@@ -26,7 +26,7 @@ if(p.trial.datapixx.use)
     p.trial.timing.datapixxTrialStart       = getsecs;
 end
 
-% --------------------------------------------------------------------%
+% ------------------------------------------------------------------------%
 %% Keyboard
 % setup a fields for the keyboard data
 p.trial.keyboard.samples             = 0;
@@ -38,7 +38,7 @@ p.trial.keyboard.firstReleaseSamples = zeros(p.trial.keyboard.nCodes, round(p.tr
 p.trial.keyboard.lastPressSamples    = zeros(p.trial.keyboard.nCodes, round(p.trial.pldaps.maxFrames*1.1));
 p.trial.keyboard.lastReleaseSamples  = zeros(p.trial.keyboard.nCodes, round(p.trial.pldaps.maxFrames*1.1));
 
-% --------------------------------------------------------------------%
+% ------------------------------------------------------------------------%
 %% Mouse
 % setup a fields for the mouse data
 if(p.trial.mouse.use)
@@ -49,18 +49,37 @@ if(p.trial.mouse.use)
     p.trial.mouse.samples            = 0;
 end
 
-% --------------------------------------------------------------------%
+% ------------------------------------------------------------------------%
 %% Spike Server
 % TODO: integrate Tucker Davis system 
 
-% --------------------------------------------------------------------%
+% ------------------------------------------------------------------------%
 %% Reward    
 %%% prepare reward system
 % TODO: This might not be needed for ND, needs to be checked
 pds.behavior.reward.trialSetup(p);
 
+% ------------------------------------------------------------------------%
+%% Update trial summary information
+LastOut = cellfun(@(x) x.outcome.CurrOutcome, p.data);
 
-% --------------------------------------------------------------------%
+if(~isempty(LastOut))
+    if(LastOut(end) == p.trial.outcome.Correct)
+        p.trial.LastHits = find(flip(LastOut) ~= p.trial.outcome.Correct, 1, 'first') - 1;
+        if(isempty(p.trial.LastHits))
+            p.trial.LastHits = length(LastOut);
+        end
+    else
+        p.trial.LastHits = 0;
+    end
+    
+    p.trial.NHits    = sum(LastOut == p.trial.outcome.Correct);
+else
+    p.trial.LastHits = 0;
+    p.trial.NHits    = 0;
+end
+
+% ------------------------------------------------------------------------%
 %% framerate history
 %%% prepare to plot framerate history on screen
 % TODO: what exactly is this doing? Is it needed? 
@@ -76,7 +95,7 @@ if(p.trial.pldaps.draw.framerate.use)
     p.trial.pldaps.draw.framerate.sf = sf;
 end
 
-% --------------------------------------------------------------------%
+% ------------------------------------------------------------------------%
 %% Set task epoch to nan
 p.trial.CurrEpoch = NaN; 
 

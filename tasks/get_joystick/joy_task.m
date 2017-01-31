@@ -43,7 +43,8 @@ if(isempty(state))
 
     % --------------------------------------------------------------------%
     %% get task parameters
-    p = joy_train_taskdef(p);  % WZ: could it be removed here and just run in trialSetup?
+    %p = joy_train_taskdef(p);  % WZ: could it be removed here and just run in trialSetup?
+    joy_train_taskdef;  % WZ: could it be removed here and just run in trialSetup?
     
     %ND_CtrlMsg(p, 'Experimental SETUP');
     % --------------------------------------------------------------------%
@@ -177,7 +178,8 @@ end  %/  if(nargin == 1) [...] else [...]
 function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
-    p = joy_train_taskdef(p);  % brute force: read in task parameters every time to allow for online modifications. TODO: make it robust and let it work with parameter changes via keyboard, see e.g. monkeylogic editable concept.
+    %p = joy_train_taskdef(p);  % brute force: read in task parameters every time to allow for online modifications. TODO: make it robust and let it work with parameter changes via keyboard, see e.g. monkeylogic editable concept.
+    joy_train_taskdef;
 
     p.trial.task.Timing.ITI      = ND_GetITI(p.trial.task.Timing.MinITI,      ...
                                              p.trial.task.Timing.MaxITI,      [], [], 1, 0.10);
@@ -216,7 +218,7 @@ function TaskDesign(p)
             if(ctm > p.trial.task.Timing.WaitTimer) 
             % no trial initiated in the given time window
                 %ND_CtrlMsg(p, 'No joystick press');
-                p.trial.task.CurrOutcome = p.trial.outcome.NoPress;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.NoPress;
                 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                 
@@ -227,7 +229,7 @@ function TaskDesign(p)
                 if(p.trial.task.EV.StartRT <  p.trial.behavior.joystick.minRT)
                 % too quick to be a true response
                      %ND_CtrlMsg(p, 'premature start'); 
-                     p.trial.task.CurrOutcome = p.trial.outcome.FalseStart;
+                     p.trial.outcome.CurrOutcome = p.trial.outcome.FalseStart;
                 
                      p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                 
@@ -253,7 +255,7 @@ function TaskDesign(p)
             ctm = GetSecs;
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
                 %ND_CtrlMsg(p, 'Early release');
-                p.trial.task.CurrOutcome = p.trial.outcome.Early;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
                 p.trial.task.EV.JoyRelease = ctm - p.trial.task.EV.TaskStart;
                 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
@@ -272,7 +274,7 @@ function TaskDesign(p)
             ctm = GetSecs;
             if(ctm > p.trial.task.Timing.WaitTimer) 
                 %ND_CtrlMsg(p, 'No Response');
-                p.trial.task.CurrOutcome = p.trial.outcome.Miss;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
                 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;             
            
@@ -283,14 +285,18 @@ function TaskDesign(p)
                 if(p.trial.task.EV.RespRT <  p.trial.behavior.joystick.minRT)
                 % premature response - too early to be a true response
                      %ND_CtrlMsg(p, 'premature response'); 
-                     p.trial.task.CurrOutcome = outcome.Early;
+                     p.trial.outcome.CurrOutcome = outcome.Early;
                 
                      p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                                 
                 else
                 % correct response
                     %ND_CtrlMsg(p, 'Correct Response');
-                    p.trial.task.CurrOutcome = p.trial.outcome.Correct;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
+                    
+                    p.trial.LastHits = p.trial.LastHits + 1;
+                    p.trial.NHits    = p.trial.NHits    + 1;
+
                     p.trial.task.EV.JoyRelease    = ctm - p.trial.task.EV.TaskStart;
                     p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Reward.Lag;
 
@@ -308,10 +314,10 @@ function TaskDesign(p)
                 % TODO: add function to select current reward amount based on time or
                 %       number of consecutive correct trials preceding the current one.
                 
-                ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
+                p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
                 
                 pds.behavior.reward.give(p, p.trial.task.Reward.Curr);
-                %ND_CtrlMsg(p, ['Reward: ', num2str(p.trial.task.Reward.Curr), ' seconds']);
+                ND_CtrlMsg(p, ['Reward: ', num2str(p.trial.task.Reward.Curr), ' seconds']);
                 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
@@ -329,7 +335,7 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
-            if(p.trial.task.CurrOutcome == p.trial.outcome.Correct)
+            if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
                 p.trial.task.Timing.WaitTimer = GetSecs + p.trial.task.Timing.ITI;
                 %ND_CtrlMsg(p, ['Correct: next trial in ', num2str(p.trial.task.Timing.ITI, '%.4f'), 'seconds.']);
                                
@@ -381,8 +387,11 @@ function TaskDraw(p)
             Target(p, 'TargetDimm');
     end
     
-    txtmsg = sprintf('%d/%d correct trials (%.2f)', p.trial.NHits, p.trial.pldaps.iTrial, ...
-                                                    p.trial.NHits/p.trial.pldaps.iTrial*100);
+    LastOut = cellfun(@(x) x.outcome.CurrOutcome, p.data);
+    cNumHit = sum(LastOut == p.trial.outcome.Correct);
+    
+    txtmsg = sprintf('%d/%d correct trials (%.2f)', cNumHit, p.trial.pldaps.iTrial, ...
+                                                    cNumHit/p.trial.pldaps.iTrial*100);
     Screen('DrawText', p.trial.display.overlayptr, txtmsg , 80, 1000, p.trial.display.clut.whitebg);
 
     
@@ -420,7 +429,7 @@ function Trial2Ascii(p, act)
             if(p.trial.pldaps.quit == 0)  % we might loose the last trial when pressing esc.
                 trltm = p.trial.task.EV.TaskStart - p.trial.timing.datapixxSessionStart;
                     
-                cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.task.CurrOutcome};
+                cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
 
                 tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'a');
                 
@@ -430,7 +439,7 @@ function Trial2Ascii(p, act)
                                 p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
                                 trltm, p.trial.task.EV.JoyPress, ...
                                 p.trial.task.EV.GoCue, p.trial.task.EV.JoyRelease, p.trial.task.EV.Reward, ...
-                                p.trial.task.Reward.Curr, p.trial.task.CurrOutcome, cOutCome, ...
+                                p.trial.task.Reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.task.EV.StartRT, p.trial.task.EV.RespRT, p.trial.task.Timing.HoldTime);  
                fclose(tblptr);             
             end
