@@ -39,9 +39,6 @@ SS.datapixx.LogOnsetTimestampLevel              = 2;      % Get and Store a the 
 SS.datapixx.GetPreciseTime.maxDuration          = 0.015;  % maximum duration in seconds to wait for a good estimate
 SS.datapixx.GetPreciseTime.optMinwinThreshold   = 1.2e-4; % Minimum Threshold that defines a good estimate to end before maxDuration
 SS.datapixx.GetPreciseTime.syncmode             = 2;      % syncmode: accepted values are 1,2,3
-%SS.datapixx.GetPreciseTime.maxDuration          = [];  % maximum duration in seconds to wait for a good estimate
-%SS.datapixx.GetPreciseTime.optMinwinThreshold   = []; % Minimum Threshold that defines a good estimate to end before maxDuration
-%SS.datapixx.GetPreciseTime.syncmode             = [];    % syncmode: accepted values are 1,2,3
 
 % adc: Continuously collect and store adc data from Datapixx.
 SS.datapixx.adc.bufferAddress                   = [];     % typically left empty.
@@ -181,7 +178,7 @@ SS.stimulus.targdotW  = 8;    % width of the target dot
 SS.stimulus.cursorW   = 8;    % cursor width in pixels
 
 
-% ####################################################################### %        
+% ####################################################################### %
 %% Below follow definitions used in the Disney Lab
 % This is currently work in progress and we need to find an efficient set
 % of definitions that work most reliable across several tasks.
@@ -189,12 +186,12 @@ SS.stimulus.cursorW   = 8;    % cursor width in pixels
 % ------------------------------------------------------------------------%
 %% Analog input channels
 % specify channel assignments and the use of joystick input
-SS.datapixx.adc.PupilChannel = 2;         % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
+SS.datapixx.adc.PupilChannel = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
 
-SS.datapixx.useJoystick      = 1;         % acquire data about joystick state                                           !!!
+SS.datapixx.useJoystick      = 1;  % acquire data about joystick state                                           !!!
 
-SS.datapixx.adc.XJoyChannel  = 3;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
-SS.datapixx.adc.YJoyChannel  = 4;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
+SS.datapixx.adc.XJoyChannel  = 3;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
+SS.datapixx.adc.YJoyChannel  = 4;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
@@ -219,7 +216,7 @@ SS.epoch.WaitTarget     =   6;  % wait for target onset
 SS.epoch.WaitGo         =   7;  % delay period before response is required
 SS.epoch.WaitReward     =   8;  % delay before reward delivery
 SS.epoch.TaskEnd        =   9;  % trial completed
-SS.epoch.ITI            =  10;  % inter-trial interval: wait before next trial to start   
+SS.epoch.ITI            =  10;  % inter-trial interval: wait before next trial to start
 SS.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
 
 % ------------------------------------------------------------------------%
@@ -273,5 +270,3 @@ SS.outcome.codes = nan(1,noc);
 for(i=1:noc)
     SS.outcome.codes(i) = SS.outcome.(SS.outcome.codenames{i});
 end
-
-

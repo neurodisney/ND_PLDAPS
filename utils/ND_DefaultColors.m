@@ -23,7 +23,7 @@ bgcol = p.defaultParameters.display.bgColor;
 %% remove PLDAPS default colors
 % this ensures that there is not interference with the PLDAPS definitions,
 % but make sure that required colors will be re-defined to not break pldaps.
-p_disp = p.defaultParameters.display;    
+p_disp = p.defaultParameters.display;
 p_disp = rmfield(p_disp, {'clut', 'humanCLUT', 'monkeyCLUT'});
 p.defaultParameters.display = p_disp; % hope this does not cause trouble...
 
@@ -31,9 +31,10 @@ p.defaultParameters.display = p_disp; % hope this does not cause trouble...
 p.defaultParameters.display.humanCLUT  = zeros(256,3); 
 p.defaultParameters.display.monkeyCLUT = zeros(256,3);
 
-%% some colors are used by pldaps, need to check what really is needed
+%% define default set of colors
+% some color names are used by pldaps and should not be changed
 ND_DefineCol(p, 'bg',          1, bgcol);  % background color
-ND_DefineCol(p, 'TrialStart',  2, [0.65, 0.65, 0.65]); % indicate that a trial started 
+ND_DefineCol(p, 'TrialStart',  2, [0.65, 0.65, 0.65]); % indicate that a trial started
 ND_DefineCol(p, 'joypos',      3, [1.00, 0.80, 0.20], bgcol);  % current joystick position
 ND_DefineCol(p, 'joybox',      4, [0.45, 0.20, 0.00], bgcol);  % color representing released state
 ND_DefineCol(p, 'joythr',      5, [0.65, 0.25, 0.00], bgcol);  % color representing pressed state
@@ -54,7 +55,3 @@ ND_DefineCol(p, 'greenbg',    18, [0.00, 1.00, 0.00], bgcol);
 ND_DefineCol(p, 'targetgood', 19, [0.00, 1.00, 0.00]);
 ND_DefineCol(p, 'targetnull', 20, [1.00, 0.00, 0.00]);
 ND_DefineCol(p, 'fixation',   21, [1.00, 0.00, 0.00]);
-
-
-    
-    

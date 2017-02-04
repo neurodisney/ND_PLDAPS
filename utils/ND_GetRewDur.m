@@ -1,4 +1,4 @@
-function [cRew, p] = ND_GetRewDur(p) 
+function [cRew, p] = ND_GetRewDur(p)
 % Select current reward amount depending on a scheme that increases reward
 % at defined total correct trial numbers, or within blocks of subsequent
 % correct trials.
@@ -27,7 +27,4 @@ cRew = p.trial.task.Reward.Dur(s);
 
 p.trial.task.Reward.Curr = cRew;
 
-ND_CtrlMsg(p, ['Correct Trials: ',int2str(cNumHit),' ;  Reward: ', num2str(cRew, '%.3f'), ' s']); 
-
-
-
+% ND_CtrlMsg(p, ['Correct Trials: ',int2str(cNumHit),' ;  Reward: ', num2str(cRew, '%.3f'), ' s']); 
