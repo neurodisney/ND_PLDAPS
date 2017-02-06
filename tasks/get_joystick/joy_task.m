@@ -241,7 +241,7 @@ function TaskDesign(p)
                     p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
                     p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.HoldTime;
 
-                    p.trial.CurrEpoch = p.trial.epoch.WaitGo;
+                    p.trial.CurrEpoch = p.trial.epoch.WaitGo;[0.4, 0.60, 0.8];
                     
                     if(p.trial.task.Reward.Pull)
                         pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
