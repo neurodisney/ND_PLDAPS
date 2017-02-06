@@ -96,7 +96,8 @@ if(isempty(state))
     c5.task.Timing.MaxHoldTime = 1.0;
     
     % create a cell array containing all conditions
-    conditions = {c1, c2, c3, c4, c5};
+    % conditions = {c1, c2, c3, c4, c5};
+    conditions = {c1, c2};
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
 
