@@ -47,8 +47,11 @@ A set of function modules that will be used for various task and therefore are k
 * __ND_CheckFixation__
 ==WIP: Just a placeholder at the moment, use ND_CheckJoystick as example to get a very simplistic fixation control.== Core routine to check current fixation and adjust states accordingly.
 
-* __ND_CheckKeyMouse__
+* __ND_CheckKey__
 Check keyboard presses and mouse actions and trigger actions accordingly. ==WIP: check carefully to avoid interference with PLDAPS standard routines==
+
+* __ND_CheckMouse__
+Read the mouse position and check for button presses
 
 * __ND_CheckJoystick__
 ==WIP:== Check current joystick signal and adjust states accordingly.

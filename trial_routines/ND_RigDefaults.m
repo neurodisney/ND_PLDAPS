@@ -130,7 +130,7 @@ SS.pldaps.trialMasterFunction            = 'runTrial';   % function to be called
 % SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
-SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples.
+SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
 SS.pldaps.useModularStateFunctions              = 0;     % use modular state functions, see pldaps.runModularTrial, pldaps.getModules, pldaps.runStateforModules
 
 % dirs: configure pldaps' built-in drawing options
