@@ -49,8 +49,8 @@ SS.datapixx.adc.maxSamples                      = 0;      % maximum number of sa
 SS.datapixx.adc.numBufferFrames                 = 600000; % maximum number of samples to store in datapixx memory.
 SS.datapixx.adc.srate                           = 1000;   % samples rate in Hz
 SS.datapixx.adc.startDelay                      = 0;      % delay until beginning of recording.
-SS.datapixx.adc.channels                        = [0, 1, 2, 3, 4]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
-SS.datapixx.adc.channelMapping = {'AI.Eye.X', 'AI.Eye.Y', 'AI.Eye.PD', 'AI.Joy.X', 'AI.Joy.Y'}; % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
+SS.datapixx.adc.channels                        = [0, 1, 2, 3, 4, 5]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
+SS.datapixx.adc.channelMapping = {'AI.Eye.X', 'AI.Eye.Y', 'AI.Eye.PDx', 'AI.Eye.PDy', 'AI.Joy.X', 'AI.Joy.Y'}; % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
 
 SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel set eyeX    !!!
 SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
