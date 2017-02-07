@@ -27,7 +27,7 @@ p.trial.task.Reward.Dur  = [0.25, 0.50, 0.75]; % reward duration [s], user vecto
 p.trial.task.Reward.Step = [2, 4, 6];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
 
 p.trial.task.Reward.Lag    = 0.10;           % Delay between response and reward onset
-p.trial.task.Reward.ManDur = 0.2;            % reward duration [s] for reward given by keyboard presses
+p.trial.task.Reward.ManDur = 25;            % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
