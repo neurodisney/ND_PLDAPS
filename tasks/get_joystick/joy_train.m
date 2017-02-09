@@ -1,4 +1,4 @@
-function p=joy_task(p, state)
+function p = joy_train(p, state)
 % Main trial function for initial joystick training. 
 % 
 % The animal needs to learn how to operate a joystick (i.e. lever) in order
@@ -207,6 +207,8 @@ function TaskDesign(p)
                 p.trial.task.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
                 %ND_CtrlMsg(p, 'Trial started');
                 
+                pds.datapixx.analogOut(0.005, 0, 4.5); % send TTL pulse to signal trial start 
+
                 p.trial.task.Timing.WaitTimer = p.trial.task.EV.TaskStart + p.trial.task.Timing.WaitStart;
                 
                 p.trial.CurrEpoch = p.trial.epoch.WaitStart;
@@ -336,6 +338,9 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
+        
+            pds.datapixx.analogOut(0.005, 1, 4.5); % send TTL pulse to signal trial end 
+
             if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
                 p.trial.task.Timing.WaitTimer = GetSecs + p.trial.task.Timing.ITI;
                 %ND_CtrlMsg(p, ['Correct: next trial in ', num2str(p.trial.task.Timing.ITI, '%.4f'), 'seconds.']);

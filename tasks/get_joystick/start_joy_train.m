@@ -16,7 +16,7 @@ if(~exist('subjname','var') || isempty(subjname))
 end
 
 % function to set up experiment (and maybe also including trial function)
-exp_fun = 'joy_task';
+exp_fun = 'joy_train';
 
 % ------------------------------------------------------------------------%
 %% load default settings into a struct
