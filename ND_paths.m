@@ -8,6 +8,7 @@ loadPLDAPS;  % make sure file exists, otherwise modify from PLDAPS template and 
 addpath('~/Experiments/ND_PLDAPS/utils');
 addpath('~/Experiments/ND_PLDAPS/grfx');
 addpath('~/Experiments/ND_PLDAPS/trial_routines');
+addpath('~/Experiments/ND_PLDAPS/misc');
 
 
 %% task specific sub-directories

@@ -90,15 +90,15 @@ SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encodin
 %% eyelink settings: Eyelink specific parameters
 SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
 
-SS.eyelink.buffereventlength                    = 30;    % don't change.
-SS.eyelink.buffersamplelength                   = 31;    % don't change.
-SS.eyelink.calibration_matrix                   = [];    % calibration matrix when using raw (uncalibrated) Data
-SS.eyelink.collectQueue                         = 1;     % collect and store each sample recorded during trials
-SS.eyelink.custom_calibration                   = 0;     % don't use.
-SS.eyelink.custom_calibrationScale              = 0.25;  % don't use.
-SS.eyelink.saveEDF                              = 0;     % toggle downloading of the EDF file directly after the experiment.
-SS.eyelink.useAsEyepos                          = 1;     % toggle use of eyelink to set eyeX and eyeY
-SS.eyelink.useRawData                           = 0;     % toggle use of raw (uncalibrated) Data.
+% SS.eyelink.buffereventlength                    = 30;    % don't change.
+% SS.eyelink.buffersamplelength                   = 31;    % don't change.
+% SS.eyelink.calibration_matrix                   = [];    % calibration matrix when using raw (uncalibrated) Data
+% SS.eyelink.collectQueue                         = 1;     % collect and store each sample recorded during trials
+% SS.eyelink.custom_calibration                   = 0;     % don't use.
+% SS.eyelink.custom_calibrationScale              = 0.25;  % don't use.
+% SS.eyelink.saveEDF                              = 0;     % toggle downloading of the EDF file directly after the experiment.
+% SS.eyelink.useAsEyepos                          = 1;     % toggle use of eyelink to set eyeX and eyeY
+% SS.eyelink.useRawData                           = 0;     % toggle use of raw (uncalibrated) Data.
 
 % ------------------------------------------------------------------------%
 %% mouse settings: configure how mouse data should be handled
@@ -154,7 +154,7 @@ SS.pldaps.draw.framerate.use                    = 1;          % set to true to c
 SS.pldaps.draw.grid.use                         = 0;     % enable drawing of the grid
 
 % photo diode: control drawing of a flashing photo diode square.
-SS.pldaps.draw.photodiode.use                   = 0;     % enable drawing the photo diode square
+SS.pldaps.draw.photodiode.use                   = 1;     % enable drawing the photo diode square
 SS.pldaps.draw.photodiode.everyXFrames          = 10;    % will be shown every nth frame
 SS.pldaps.draw.photodiode.location              = 1;     % location of the square as an index: 1-4 for the different corners of the screen
 
@@ -187,7 +187,7 @@ SS.stimulus.cursorW   = 8;    % cursor width in pixels
 %% Analog input channels
 % specify channel assignments and the use of joystick input
 SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initia mapping of eye position. 
-SS.datapixx.adc.PupilChannel = [2,  3];  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
+SS.datapixx.adc.PupilChannel = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
 
 SS.datapixx.useJoystick      = 1;  % acquire data about joystick state                                           !!!
 

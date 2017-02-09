@@ -96,7 +96,8 @@ Convert dva to pixel based on the pldaps specifications.
 Show Cue for active trial.
 
 ***
-## Experiments
+
+## tasks
 
 Files to run specific experiments are found int the `tasks` subdirectory.
 
@@ -112,3 +113,16 @@ Task code for initial training step with the purpose to use a joystick (i.e. lev
 
 
 ***
+
+=======
+## misc
+
+A set of functions that support running/processing experiments but are functional outside PLDAPS.
+
+
+* __ND_FlushReward__ 
+
+Send a longer opening time to the reward system to allow flushing and cleaning.
+
+***
+
