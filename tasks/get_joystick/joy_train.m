@@ -1,4 +1,4 @@
-function p=joy_task(p, state)
+function p = joy_train(p, state)
 % Main trial function for initial joystick training. 
 % 
 % The animal needs to learn how to operate a joystick (i.e. lever) in order
@@ -96,7 +96,8 @@ if(isempty(state))
     c5.task.Timing.MaxHoldTime = 1.0;
     
     % create a cell array containing all conditions
-    conditions = {c1, c2, c3, c4, c5};
+    % conditions = {c1, c2, c3, c4, c5};
+    conditions = {c1, c2};
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
 
@@ -206,6 +207,8 @@ function TaskDesign(p)
                 p.trial.task.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
                 %ND_CtrlMsg(p, 'Trial started');
                 
+                pds.datapixx.analogOut(0.01, 0); % send TTL pulse to signal trial end 
+                
                 p.trial.task.Timing.WaitTimer = p.trial.task.EV.TaskStart + p.trial.task.Timing.WaitStart;
                 
                 p.trial.CurrEpoch = p.trial.epoch.WaitStart;
@@ -240,7 +243,7 @@ function TaskDesign(p)
                     p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
                     p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.HoldTime;
 
-                    p.trial.CurrEpoch = p.trial.epoch.WaitGo;
+                    p.trial.CurrEpoch = p.trial.epoch.WaitGo;[0.4, 0.60, 0.8];
                     
                     if(p.trial.task.Reward.Pull)
                         pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
@@ -335,6 +338,9 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
+        
+            %pds.datapixx.analogOut(0.01, 1); % send TTL pulse to signal trial end 
+
             if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
                 p.trial.task.Timing.WaitTimer = GetSecs + p.trial.task.Timing.ITI;
                 %ND_CtrlMsg(p, ['Correct: next trial in ', num2str(p.trial.task.Timing.ITI, '%.4f'), 'seconds.']);
