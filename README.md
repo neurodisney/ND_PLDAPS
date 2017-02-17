@@ -80,6 +80,12 @@ Determine inter-trial interval within a given range based on various distributio
 * __ND_GetRewDur__
 Select current reward amount depending on a scheme that increases reward at defined total correct trial numbers, or within blocks of subsequent correct trials.
 
+* __ND_TDTstrobe__
+Strobes 16 bit integer event marker to the Tucker Davis RZ5.
+
+* __ND_TTLout__
+Send a TTL pulse over one of the last 8 bits of the digital output
+
 ### grfcs ###
 Utilities to facilitate the drawing process.
 ==WIP: Some of these routines might already be implemented in a better way pldaps, try to identify, and if not then make it OOP to potentially speed up processing.==
