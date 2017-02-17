@@ -35,8 +35,8 @@ p.trial.task.Timing.WaitStart   = 3.00;   % maximal time period [s] in seconds t
 p.trial.task.Timing.WaitResp    = 2.50;   % Only response times [s] after this wait period will be considered stimulus driven responses
 
 % inter-trial interval
-p.trial.task.Timing.MinITI      = 1;    % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI      = 1;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI      = 0.75;    % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subsequent trials
 
 p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
 p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a trial starts after random lever presses
