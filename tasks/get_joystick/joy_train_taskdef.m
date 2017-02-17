@@ -19,16 +19,15 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % ------------------------------------------------------------------------%
 %% Reward
-p.trial.task.Reward.Pull    = 0;             % If 1 then give reward for pulling the joystick
-p.trial.task.Reward.PullRew = 0.1;           % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
+p.trial.task.Reward.Pull    = 0;              % If 1 then give reward for pulling the joystick
+p.trial.task.Reward.PullRew = 0.1;            % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
 
-p.trial.task.Reward.IncrConsecutive = 1;     % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.25, 0.50, 0.75]; % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step = [1, 3, 5];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
+p.trial.task.Reward.IncrConsecutive = 1;      % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
+p.trial.task.Reward.Dur  = [0.4, 0.60, 0.75]; % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Step = [1, 2, 4];         % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
 
-p.trial.task.Reward.Lag    = 0.10;           % Delay between response and reward onset
-p.trial.task.Reward.ManDur = 25;            % reward duration [s] for reward given by keyboard presses
-p.trial.task.Reward.ManDur = 0.2;        % reward duration [s] for reward given by keyboard presses
+p.trial.task.Reward.Lag    = 0.10;            % Delay between response and reward onset
+p.trial.task.Reward.ManDur = 0.2;             % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
@@ -36,8 +35,8 @@ p.trial.task.Timing.WaitStart   = 3.00;   % maximal time period [s] in seconds t
 p.trial.task.Timing.WaitResp    = 2.50;   % Only response times [s] after this wait period will be considered stimulus driven responses
 
 % inter-trial interval
-p.trial.task.Timing.MinITI      = 1;    % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI      = 1;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI      = 0.75;    % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subsequent trials
 
 p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
 p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a trial starts after random lever presses

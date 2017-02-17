@@ -97,7 +97,7 @@ if(isempty(state))
     
     % create a cell array containing all conditions
     % conditions = {c1, c2, c3, c4, c5};
-    conditions = {c1, c2};
+    conditions = {c2, c3, c4};
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
 
@@ -207,8 +207,8 @@ function TaskDesign(p)
                 p.trial.task.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
                 %ND_CtrlMsg(p, 'Trial started');
                 
-                pds.datapixx.analogOut(0.005, 0, 4.5); % send TTL pulse to signal trial start 
-
+                pds.datapixx.analogOut(0.01, 0); % send TTL pulse to signal trial end 
+                
                 p.trial.task.Timing.WaitTimer = p.trial.task.EV.TaskStart + p.trial.task.Timing.WaitStart;
                 
                 p.trial.CurrEpoch = p.trial.epoch.WaitStart;
@@ -339,7 +339,7 @@ function TaskDesign(p)
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
         
-            pds.datapixx.analogOut(0.005, 1, 4.5); % send TTL pulse to signal trial end 
+            %pds.datapixx.analogOut(0.01, 1); % send TTL pulse to signal trial end 
 
             if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
                 p.trial.task.Timing.WaitTimer = GetSecs + p.trial.task.Timing.ITI;
