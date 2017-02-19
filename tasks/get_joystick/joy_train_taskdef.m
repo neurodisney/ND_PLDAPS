@@ -31,14 +31,14 @@ p.trial.task.Reward.ManDur = 0.2;             % reward duration [s] for reward g
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.task.Timing.WaitStart   = 3.00;   % maximal time period [s] in seconds to press the lever in order to start a trial.
-p.trial.task.Timing.WaitResp    = 2.50;   % Only response times [s] after this wait period will be considered stimulus driven responses
+p.trial.task.Timing.WaitStart   = 4.00;   % maximal time period [s] in seconds to press the lever in order to start a trial.
+p.trial.task.Timing.WaitResp    = 4.00;   % Only response times [s] after this wait period will be considered stimulus driven responses
 
 % inter-trial interval
 p.trial.task.Timing.MinITI      = 0.75;    % minimum time period [s] between subsequent trials
 p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subsequent trials
 
-p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
+p.trial.task.Timing.TimeOut     =  1.5;     % Time [s] out for incorrect responses
 p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a trial starts after random lever presses
 
 p.trial.behavior.joystick.minRT =  0.20;  % If a response occurs prior this time it is considered an early response
