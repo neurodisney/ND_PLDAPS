@@ -21,16 +21,26 @@ function ND_DefineCol(p, colname, pos, hCol, mCol)
 %
 % wolf zinke, Jan. 2017
 
+% if only one color is specified, use it for both, experimenter and animal screen
 if(nargin < 5)
     mCol = hCol;
+end
+
+% assume grey defined by equal RGB values if color is defiend by only one number
+if(length(hCol) == 1)
+   hCol = [hCol, hCol, hCol];
+end
+
+if(length(mCol) == 1)
+   mCol = [mCol, mCol, mCol];
 end
 
 % index for the CLUT is 0 based, in matlab it is 1 based, thus shift position by 1
 p.defaultParameters.display.humanCLUT( pos+1,:) = hCol;
 p.defaultParameters.display.monkeyCLUT(pos+1,:) = mCol;
 
-if(p.defaultParameters.display.useOverlay) % apparently, both, datapixx and software overlays use indexed colors
-    p.defaultParameters.display.clut.(colname) = pos; % for some reason pldaps defines the indices as triplets. Lets see if it works with single index values. * ones(3,1);  % use color lookup table indices (WZ: why define an index as triplett?)
+if(p.defaultParameters.display.useOverlay)  % apparently, both, datapixx and software overlays use indexed colors
+    p.defaultParameters.display.clut.(colname) = pos; % use color lookup table indices
 else
     p.defaultParameters.display.clut.(colname) = p.defaultParameters.display.monkeyCLUT(pos+1,:)'; % just copy colors defined for monkey screen, no overlay
 end

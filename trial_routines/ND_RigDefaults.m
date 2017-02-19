@@ -1,7 +1,10 @@
 function SS = ND_RigDefaults(SS)
+% set default parameters for a rig in the disney lab.
+%
 % This file summarizes gives an overview of parameters that could be set for
 % the pldaps class and provides the default settings for an actual rig that
-% is used for experiments.
+% is used for experiments. It will overide the class paramters defined by
+% the function @pldaps/pldapsClassDefaultParameters.m
 %
 % This function takes a struct with default rig settings as input (optional)
 % and sets values for most existing fields. The output struct could then be
@@ -39,9 +42,6 @@ SS.datapixx.LogOnsetTimestampLevel              = 2;      % Get and Store a the 
 SS.datapixx.GetPreciseTime.maxDuration          = 0.015;  % maximum duration in seconds to wait for a good estimate
 SS.datapixx.GetPreciseTime.optMinwinThreshold   = 1.2e-4; % Minimum Threshold that defines a good estimate to end before maxDuration
 SS.datapixx.GetPreciseTime.syncmode             = 2;      % syncmode: accepted values are 1,2,3
-%SS.datapixx.GetPreciseTime.maxDuration          = [];  % maximum duration in seconds to wait for a good estimate
-%SS.datapixx.GetPreciseTime.optMinwinThreshold   = []; % Minimum Threshold that defines a good estimate to end before maxDuration
-%SS.datapixx.GetPreciseTime.syncmode             = [];    % syncmode: accepted values are 1,2,3
 
 % adc: Continuously collect and store adc data from Datapixx.
 SS.datapixx.adc.bufferAddress                   = [];     % typically left empty.
@@ -52,14 +52,14 @@ SS.datapixx.adc.maxSamples                      = 0;      % maximum number of sa
 SS.datapixx.adc.numBufferFrames                 = 600000; % maximum number of samples to store in datapixx memory.
 SS.datapixx.adc.srate                           = 1000;   % samples rate in Hz
 SS.datapixx.adc.startDelay                      = 0;      % delay until beginning of recording.
-SS.datapixx.adc.channels                        = [0, 1, 2, 3, 4]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
-SS.datapixx.adc.channelMapping = {'AI.Eye.X', 'AI.Eye.Y', 'AI.Eye.PD', 'AI.Joy.X', 'AI.Joy.Y'}; % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
+SS.datapixx.adc.channels                        = [0, 1, 2, 3, 4, 5]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
+SS.datapixx.adc.channelMapping = {'AI.Eye.X', 'AI.Eye.Y', 'AI.Eye.PDx', 'AI.Eye.PDy', 'AI.Joy.X', 'AI.Joy.Y'}; % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
 
 SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel set eyeX    !!!
 SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
 
 % ------------------------------------------------------------------------%
-%% display settings: pecify options for the screen.
+%% display settings: specify options for the screen.
 SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 57;     % screen distance to the observer                            !!!
@@ -93,15 +93,15 @@ SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encodin
 %% eyelink settings: Eyelink specific parameters
 SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
 
-SS.eyelink.buffereventlength                    = 30;    % don't change.
-SS.eyelink.buffersamplelength                   = 31;    % don't change.
-SS.eyelink.calibration_matrix                   = [];    % calibration matrix when using raw (uncalibrated) Data
-SS.eyelink.collectQueue                         = 1;     % collect and store each sample recorded during trials
-SS.eyelink.custom_calibration                   = 0;     % don't use.
-SS.eyelink.custom_calibrationScale              = 0.25;  % don't use.
-SS.eyelink.saveEDF                              = 0;     % toggle downloading of the EDF file directly after the experiment.
-SS.eyelink.useAsEyepos                          = 1;     % toggle use of eyelink to set eyeX and eyeY
-SS.eyelink.useRawData                           = 0;     % toggle use of raw (uncalibrated) Data.
+% SS.eyelink.buffereventlength                    = 30;    % don't change.
+% SS.eyelink.buffersamplelength                   = 31;    % don't change.
+% SS.eyelink.calibration_matrix                   = [];    % calibration matrix when using raw (uncalibrated) Data
+% SS.eyelink.collectQueue                         = 1;     % collect and store each sample recorded during trials
+% SS.eyelink.custom_calibration                   = 0;     % don't use.
+% SS.eyelink.custom_calibrationScale              = 0.25;  % don't use.
+% SS.eyelink.saveEDF                              = 0;     % toggle downloading of the EDF file directly after the experiment.
+% SS.eyelink.useAsEyepos                          = 1;     % toggle use of eyelink to set eyeX and eyeY
+% SS.eyelink.useRawData                           = 0;     % toggle use of raw (uncalibrated) Data.
 
 % ------------------------------------------------------------------------%
 %% mouse settings: configure how mouse data should be handled
@@ -133,7 +133,7 @@ SS.pldaps.trialMasterFunction            = 'runTrial';   % function to be called
 % SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
-SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples.
+SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
 SS.pldaps.useModularStateFunctions              = 0;     % use modular state functions, see pldaps.runModularTrial, pldaps.getModules, pldaps.runStateforModules
 
 % dirs: configure pldaps' built-in drawing options
@@ -157,7 +157,7 @@ SS.pldaps.draw.framerate.use                    = 1;          % set to true to c
 SS.pldaps.draw.grid.use                         = 0;     % enable drawing of the grid
 
 % photo diode: control drawing of a flashing photo diode square.
-SS.pldaps.draw.photodiode.use                   = 0;     % enable drawing the photo diode square
+SS.pldaps.draw.photodiode.use                   = 1;     % enable drawing the photo diode square
 SS.pldaps.draw.photodiode.everyXFrames          = 10;    % will be shown every nth frame
 SS.pldaps.draw.photodiode.location              = 1;     % location of the square as an index: 1-4 for the different corners of the screen
 
@@ -181,20 +181,29 @@ SS.stimulus.targdotW  = 8;    % width of the target dot
 SS.stimulus.cursorW   = 8;    % cursor width in pixels
 
 
-% ####################################################################### %        
+% ####################################################################### %
 %% Below follow definitions used in the Disney Lab
 % This is currently work in progress and we need to find an efficient set
 % of definitions that work most reliable across several tasks.
 
 % ------------------------------------------------------------------------%
-%% Analog input channels
+%% Analog/digital input/output channels
 % specify channel assignments and the use of joystick input
-SS.datapixx.adc.PupilChannel = 2;         % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
+SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initia mapping of eye position. 
+SS.datapixx.adc.PupilChannel  = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
 
-SS.datapixx.useJoystick      = 1;         % acquire data about joystick state                                           !!!
+SS.datapixx.useJoystick       = 1;  % acquire data about joystick state                                           !!!
 
-SS.datapixx.adc.XJoyChannel  = 3;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
-SS.datapixx.adc.YJoyChannel  = 4;         % if datapixx.useJoystick=true, use this channel to determine x               !!!
+SS.datapixx.adc.XJoyChannel   = 4;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
+SS.datapixx.adc.YJoyChannel   = 5;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
+
+SS.datapixx.adc.RewardChannel = 3;  % if SS.datapixx.useForReward then this digital output channel will be used
+SS.datapixx.adc.TTLamp        = 3;  % amplitude of TTL pulses via adc
+
+% ------------------------------------------------------------------------%
+%% Tucker Davis control
+SS.datapixx.daq = 'tdt';           % what system is used for data acquisition? tdt, plexon?
+SS.tdt.use  = 1;                   % set use of tdt system instead of plexon; will disable all plexon functionality
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
@@ -219,7 +228,7 @@ SS.epoch.WaitTarget     =   6;  % wait for target onset
 SS.epoch.WaitGo         =   7;  % delay period before response is required
 SS.epoch.WaitReward     =   8;  % delay before reward delivery
 SS.epoch.TaskEnd        =   9;  % trial completed
-SS.epoch.ITI            =  10;  % inter-trial interval: wait before next trial to start   
+SS.epoch.ITI            =  10;  % inter-trial interval: wait before next trial to start
 SS.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
 
 % ------------------------------------------------------------------------%
@@ -273,5 +282,3 @@ SS.outcome.codes = nan(1,noc);
 for(i=1:noc)
     SS.outcome.codes(i) = SS.outcome.(SS.outcome.codenames{i});
 end
-
-
