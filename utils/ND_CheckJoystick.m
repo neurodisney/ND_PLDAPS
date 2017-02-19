@@ -34,6 +34,7 @@ if(p.trial.behavior.joystick.use)
 
             % all below threshold?
             if(~any(jchk))
+                pds.datapixx.flipBit(p.trial.event.JOYRELEASE);
                 p.trial.JoyState.Current = p.trial.JoyState.JoyRest;
                 %ND_CtrlMsg(p, 'Joystick Released...');
             end
@@ -44,6 +45,7 @@ if(p.trial.behavior.joystick.use)
 
             % all above threshold?
             if(~any(jchk))
+                pds.datapixx.flipBit(p.trial.event.JOYPRESS);
                 p.trial.JoyState.Current = p.trial.JoyState.JoyHold;
                 %ND_CtrlMsg(p, 'Joystick Pressed...');
             end

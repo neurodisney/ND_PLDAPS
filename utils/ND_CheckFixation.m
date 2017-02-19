@@ -48,6 +48,7 @@ if(p.trial.behavior.fixation.use)
 
             % all below threshold?
             if(~any(fixchk))
+                pds.datapixx.flipBit(p.trial.event.FIXATION);
                 p.trial.FixState.Current = p.trial.FixState.GazeIn;
             end
 
@@ -57,6 +58,7 @@ if(p.trial.behavior.fixation.use)
 
             % all above threshold?
             if(~any(fixchk))
+                pds.datapixx.flipBit(p.trial.event.FIXBREAK);
                 p.trial.FixState.Current = p.trial.FixState.GazeOut;
             end
 

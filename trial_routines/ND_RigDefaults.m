@@ -1,7 +1,10 @@
 function SS = ND_RigDefaults(SS)
+% set default parameters for a rig in the disney lab.
+%
 % This file summarizes gives an overview of parameters that could be set for
 % the pldaps class and provides the default settings for an actual rig that
-% is used for experiments.
+% is used for experiments. It will overide the class paramters defined by
+% the function @pldaps/pldapsClassDefaultParameters.m
 %
 % This function takes a struct with default rig settings as input (optional)
 % and sets values for most existing fields. The output struct could then be
@@ -56,7 +59,7 @@ SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEye
 SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
 
 % ------------------------------------------------------------------------%
-%% display settings: pecify options for the screen.
+%% display settings: specify options for the screen.
 SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 57;     % screen distance to the observer                            !!!
@@ -184,19 +187,23 @@ SS.stimulus.cursorW   = 8;    % cursor width in pixels
 % of definitions that work most reliable across several tasks.
 
 % ------------------------------------------------------------------------%
-%% Analog input channels
+%% Analog/digital input/output channels
 % specify channel assignments and the use of joystick input
 SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initia mapping of eye position. 
-SS.datapixx.adc.PupilChannel = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
+SS.datapixx.adc.PupilChannel  = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
 
-SS.datapixx.useJoystick      = 1;  % acquire data about joystick state                                           !!!
+SS.datapixx.useJoystick       = 1;  % acquire data about joystick state                                           !!!
 
-SS.datapixx.adc.XJoyChannel  = 4;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
-SS.datapixx.adc.YJoyChannel  = 5;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
+SS.datapixx.adc.XJoyChannel   = 4;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
+SS.datapixx.adc.YJoyChannel   = 5;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
+
+SS.datapixx.adc.RewardChannel = 3;  % if SS.datapixx.useForReward then this digital output channel will be used
+SS.datapixx.adc.TTLamp        = 3;  % amplitude of TTL pulses via adc
 
 % ------------------------------------------------------------------------%
 %% Tucker Davis control
-SS.tdt.use	= 1;     % set use of tdt system instead of plexon; will disable all plexon functionality
+SS.datapixx.daq = 'tdt';           % what system is used for data acquisition? tdt, plexon?
+SS.tdt.use  = 1;                   % set use of tdt system instead of plexon; will disable all plexon functionality
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
