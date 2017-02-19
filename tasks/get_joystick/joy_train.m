@@ -393,12 +393,6 @@ function TaskDraw(p)
             Target(p, 'TargetDimm');
     end
     
-    LastOut = cellfun(@(x) x.outcome.CurrOutcome, p.data);
-    cNumHit = sum(LastOut == p.trial.outcome.Correct);
-    
-    txtmsg = sprintf('%d/%d correct trials (%.2f)', cNumHit, p.trial.pldaps.iTrial, ...
-                                                    cNumHit/p.trial.pldaps.iTrial*100);
-    Screen('DrawText', p.trial.display.overlayptr, txtmsg , 80, 1000, p.trial.display.clut.whitebg);
 
     
 function TrialOn(p)
