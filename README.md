@@ -71,8 +71,8 @@ Create lookup table for monkey and experimenter screen and define default colors
 * __ND_DefineCol__
 Wrapper to determine color lookup table entries and to created associated handles.
 
-* __ND_DefaultBitNames__
-==WIP: Placeholder at the moment, we need to work on this and define a common set when working on the communication between PLDAPS and TDT.==
+* __ND_EventDef__
+Defines numeric values for 16 bit codes of trial events.
 
 * __ND_GetITI__
 Determine inter-trial interval within a given range based on various distributions.
@@ -84,7 +84,7 @@ Select current reward amount depending on a scheme that increases reward at defi
 Strobes 16 bit integer event marker to the Tucker Davis RZ5.
 
 * __ND_TTLout__
-Send a TTL pulse over one of the last 8 bits of the digital output
+Send a TTL pulse over one of the last 8 bits of the digital output.
 
 ### grfcs ###
 Utilities to facilitate the drawing process.

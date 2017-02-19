@@ -195,6 +195,10 @@ SS.datapixx.adc.XJoyChannel  = 4;  % if datapixx.useJoystick=true, use this chan
 SS.datapixx.adc.YJoyChannel  = 5;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
 
 % ------------------------------------------------------------------------%
+%% Tucker Davis control
+SS.tdt.use	= 1;     % set use of tdt system instead of plexon; will disable all plexon functionality
+
+% ------------------------------------------------------------------------%
 %% Keyboard assignments
 % assign keys to specific functions here and utilize these in the
 % ND_CheckKeyMouse function to trigger defined actions.

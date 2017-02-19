@@ -1,4 +1,4 @@
-function timings = ND_TTLout(chan, duration)
+function ND_TTLout(chan)
 % sends a TTL pulse over one of the last 8 bits of the digital output
 % of the DataPixx DB25 connector.
 %
@@ -15,19 +15,17 @@ function timings = ND_TTLout(chan, duration)
 %
 % wolf zinke & Kia Banaie, Feb 2017
 
-chanmask = hex2dec('000FFFF'); % mask first 16 bits, do not address the the remaining 8 bits
+chan = chan + 16; % First 16 bits are used for the strobe, thus shift the output channel accordingly
+chanmask = (2^chan)-2^(chan-1); % set the mask for only the selected channel in order to not affect the other digital output
 
-% mask only the single channel
+Datapixx('SetDoutValues', 1, chanmask);
+Datapixx('RegWr');
+Datapixx('SetDoutValues', 0, chanmask);
+Datapixx('RegWr');
 
-if(nargin ==1)
-    Datapixx('SetDoutValues', 1, chanmask);
-    Datapixx('RegWr');
-    Datapixx('SetDoutValues', 0, chanmask);
-    Datapixx('RegWr');
-else
-    %  Datapixx('SetDoutSchedule', scheduleOnset, scheduleRate, maxScheduleFrames [, bufferBaseAddress=8e6] [, numBufferFrames=maxScheduleFrames]);
 
-end
+%  Datapixx('SetDoutSchedule', scheduleOnset, scheduleRate, maxScheduleFrames [, bufferBaseAddress=8e6] [, numBufferFrames=maxScheduleFrames]);
+%% TODO: is it feasible to define a duration without affecting other channels?
 
 
 

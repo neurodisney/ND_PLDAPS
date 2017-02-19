@@ -12,7 +12,6 @@
 %
 % wolf zinke, Dec. 2016
 
-
 % ------------------------------------------------------------------------%
 %% Condition/Block design
 p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
@@ -46,12 +45,12 @@ p.trial.behavior.joystick.minRT =  0.20;  % If a response occurs prior this time
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
 % target item
-p.trial.task.TargetSz_dva   = 4;   % Stimulus diameter in dva
-p.trial.task.TargetPos_dva  = [0, 0];    % Stimulus diameter in dva25seconds
+p.trial.task.TargetSz_dva  = 4;   % Stimulus diameter in dva
+p.trial.task.TargetPos_dva = [0, 0];    % Stimulus diameter in dva25seconds
 
-p.trial.task.TargetSz_pxl   = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
-p.trial.task.TargetPos_pxl  = ND_cart2ptb(p, p.trial.task.TargetPos_dva);
-p.trial.task.TargetRect     = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
+p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
+p.trial.task.TargetPos_pxl = ND_cart2ptb(p, p.trial.task.TargetPos_dva);
+p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
 
 % Frame indicating active trial
 p.trial.task.FrameWdth  = 20; % hard-coded for now, make it more flexible
@@ -72,14 +71,14 @@ p.trial.pldaps.maxTrialLength = 60; % this parameter is used to pre-allocate mem
 
 % ------------------------------------------------------------------------%
 %% initialize event times as NaN
-p.trial.task.EV.TrialStart  = NaN; % Trial start time 
-p.trial.task.EV.TaskStart   = NaN; % actual task start after animal got ready (i.e. joystick is released)
-p.trial.task.EV.JoyPress    = NaN; % Press time to start task
-p.trial.task.EV.GoCue       = NaN; % Onset of Go-signal
-p.trial.task.EV.JoyRelease  = NaN; % time of joystick release
-p.trial.task.EV.Reward      = NaN; % time of reward delivery
-p.trial.task.EV.StartRT     = NaN; % response time to start trial after active cue
-p.trial.task.EV.RespRT      = NaN; % reaction time
+p.trial.task.EV.TrialStart = NaN; % Trial start time 
+p.trial.task.EV.TaskStart  = NaN; % actual task start after animal got ready (i.e. joystick is released)
+p.trial.task.EV.JoyPress   = NaN; % Press time to start task
+p.trial.task.EV.GoCue      = NaN; % Onset of Go-signal
+p.trial.task.EV.JoyRelease = NaN; % time of joystick release
+p.trial.task.EV.Reward     = NaN; % time of reward delivery
+p.trial.task.EV.StartRT    = NaN; % response time to start trial after active cue
+p.trial.task.EV.RespRT     = NaN; % reaction time
 
 
 
