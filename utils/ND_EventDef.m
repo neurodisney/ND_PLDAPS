@@ -23,4 +23,12 @@ p.defaultParameters.event.JOYRELEASE = 2;
 
 p.defaultParameters.event.PDFLASH    = 2;
 
+p.defaultParameters.event.DIO_TTL1   = 2;
+p.defaultParameters.event.DIO_TTL2   = 2;
+p.defaultParameters.event.DIO_TTL3   = 2;
+p.defaultParameters.event.DIO_TTL4   = 2;
+p.defaultParameters.event.DIO_TTL5   = 2;
+p.defaultParameters.event.DIO_TTL6   = 2;
+p.defaultParameters.event.DIO_TTL7   = 2;
+p.defaultParameters.event.DIO_TTL8   = 2;
 
