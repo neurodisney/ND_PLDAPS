@@ -24,8 +24,11 @@ bgcol = p.defaultParameters.display.bgColor;
 % this ensures that there is not interference with the PLDAPS definitions,
 % but make sure that required colors will be re-defined to not break pldaps.
 p_disp = p.defaultParameters.display;
-p_disp = rmfield(p_disp, {'clut', 'humanCLUT', 'monkeyCLUT'});
-p.defaultParameters.display = p_disp; % hope this does not cause trouble...
+
+if(isfield(p_disp, 'clut'))
+    p_disp = rmfield(p_disp, {'clut', 'humanCLUT', 'monkeyCLUT'});
+    p.defaultParameters.display = p_disp; % hope this does not cause trouble...
+end
 
 %% pre-allocate lookup table
 p.defaultParameters.display.humanCLUT  = zeros(256,3); 

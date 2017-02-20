@@ -57,7 +57,7 @@ else
             end
 
             if(p.trial.datapixx.useAsEyepos ||  p.trial.mouse.useAsEyepos)    
-                %ND_CheckFixation(p,task);   % needs to be called after pds.datapixx.adc.getData
+                ND_CheckFixation(p,task);   % needs to be called after pds.datapixx.adc.getData
             end
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw

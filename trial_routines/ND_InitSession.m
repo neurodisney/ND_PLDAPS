@@ -102,6 +102,13 @@ end
 p.trial.LastHits         = 0;      % how many correct trials since last error
 p.trial.NHits            = 0;      % how many correct trials in total
 
+% --------------------------------------------------------------------%
+%% sanity checks for variable consistency
+
+% there is no point of drawing eye position if it is not recorded
+if(~p.trial.mouse.useAsEyepos && ~p.trial.datapixx.useAsEyepos && ~p.trial.eyelink.use)
+    p.trial.pldaps.draw.eyepos.use = 0;
+end
 
 
 % --------------------------------------------------------------------%
