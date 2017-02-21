@@ -37,9 +37,7 @@ chanmask = bin2dec([chanmask, evntmask]); % use full 24 bits
 if(nargout == 0)
     % just send TTL pulse and event code for efficiency 
     Datapixx('SetDoutValues', chanmask);
-    Datapixx('RegWrRd');
-    %pause(1);
-    
+    Datapixx('RegWrRd');   
 else
     % get time stamp back, might impair performance
     t = nan(2,1);
