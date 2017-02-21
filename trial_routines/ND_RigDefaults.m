@@ -214,6 +214,7 @@ SS.key.reward = 'space';    % trigger reward
 SS.key.pause  = 'p';
 SS.key.quit   = 'ESCAPE';
 SS.key.debug  = 'd';
+SS.key.exe    = 'x';
 
 % ------------------------------------------------------------------------%
 %% Define task epoch flags
