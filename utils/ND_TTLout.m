@@ -31,7 +31,7 @@ chanmask = zeros(1,8);
 chanmask(9-chan) = 1; % add 16 to skip the first 16 bits used for event codes (reverse order)
 
 % needs to be a string
-chanmask = sprintf('%d',flip(chanmask));
+chanmask = sprintf('%d',chanmask);
 chanmask = bin2dec([chanmask, evntmask]); % use full 24 bits
 
 if(nargout == 0)
@@ -64,6 +64,7 @@ else
     timings = [mean(t), dpTime, diff(t)];
 end
 
+pause(0.1);
 % reset channels to low again
 Datapixx('SetDoutValues', 0, chanmask);
 Datapixx('RegWr');

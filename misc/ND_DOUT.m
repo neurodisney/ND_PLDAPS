@@ -3,7 +3,7 @@ function ND_DOUT(chan)
 chanmask = zeros(1, 24);
 chanmask(chan) = 1;
 
-chanmask = bin2dec(sprintf('%d',flip(chanmask)));
+chanmask = bin2dec(sprintf('%d',flip(chanmask)))
 
 
 AssertOpenGL;   % We use PTB-3

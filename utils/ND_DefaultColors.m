@@ -54,7 +54,10 @@ ND_DefineCol(p, 'redbg',      15, [1.00, 0.00, 0.00], bgcol);
 ND_DefineCol(p, 'blue',       16, [0.00, 0.00, 1.00]);
 ND_DefineCol(p, 'green',      17, [0.00, 1.00, 0.00]);
 ND_DefineCol(p, 'greenbg',    18, [0.00, 1.00, 0.00], bgcol);
+ND_DefineCol(p, 'text',       19, [1.00, 1.00, 1.00], bgcol);
 
-ND_DefineCol(p, 'targetgood', 19, [0.00, 1.00, 0.00]);
-ND_DefineCol(p, 'targetnull', 20, [1.00, 0.00, 0.00]);
-ND_DefineCol(p, 'fixation',   21, [1.00, 0.00, 0.00]);
+
+
+ND_DefineCol(p, 'targetgood', 50, [0.00, 1.00, 0.00]);
+ND_DefineCol(p, 'targetnull', 51, [1.00, 0.00, 0.00]);
+ND_DefineCol(p, 'fixation',   52, [1.00, 0.00, 0.00]);
