@@ -31,9 +31,9 @@ end
 
 pds.datapixx.adc.cleanUpandSave(p);
 
-% WZ: Is this just plexon related?
+% send event code for trial end
 if(p.trial.datapixx.use)
-    p.trial.timing.datapixxTRIALEND = pds.datapixx.flipBit(p.trial.event.TRIALEND,p.trial.pldaps.iTrial);  % start of trial (Plexon)
+    p.trial.timing.datapixxTRIALEND = pds.datapixx.flipBit(p.trial.event.TRIALEND);  % end of trial
 end
 
 %-------------------------------------------------------------------------%

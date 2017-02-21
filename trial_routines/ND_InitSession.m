@@ -65,11 +65,8 @@ end
 p = ND_DefaultColors(p);
 
 % Bits
-% defaultBitNames adds .events.NAME to dv
-% The MAP server can only take 7 unique bits. 
-% TODO: WZ - this refers to handling with the plexon MAP, needs to be
-%            adapted for use with Tucker Davis
-p = ND_DefaultBitNames(p);
+% define standard event codes for trial events (16 bit)
+p = ND_EventDef(p);
 
 % --------------------------------------------------------------------%
 %% pre-allocate frame data
@@ -105,6 +102,13 @@ end
 p.trial.LastHits         = 0;      % how many correct trials since last error
 p.trial.NHits            = 0;      % how many correct trials in total
 
+% --------------------------------------------------------------------%
+%% sanity checks for variable consistency
+
+% there is no point of drawing eye position if it is not recorded
+if(~p.trial.mouse.useAsEyepos && ~p.trial.datapixx.useAsEyepos && ~p.trial.eyelink.use)
+    p.trial.pldaps.draw.eyepos.use = 0;
+end
 
 
 % --------------------------------------------------------------------%

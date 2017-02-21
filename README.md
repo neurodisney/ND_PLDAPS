@@ -1,7 +1,7 @@
 ND_PLDAPS
 ==========
 
-This repository contains helper tools and experiments to be used in combination with the PLDAPS software (https://github.com/HukLab/PLDAPS), using their openreception branch.
+This repository contains helper tools and experiments to be used in combination with the PLDAPS software (https://github.com/HukLab/PLDAPS), using a modified fork with the 'neurodisney' branch (https://github.com/neurodisney/PLDAPS).
 
 Currently, this repository contains the 'master' branch, a developmental branch ('dev'), and a branch with stable code used for training and experiments in one rig ('rig1').
 
@@ -47,8 +47,11 @@ A set of function modules that will be used for various task and therefore are k
 * __ND_CheckFixation__
 ==WIP: Just a placeholder at the moment, use ND_CheckJoystick as example to get a very simplistic fixation control.== Core routine to check current fixation and adjust states accordingly.
 
-* __ND_CheckKeyMouse__
+* __ND_CheckKey__
 Check keyboard presses and mouse actions and trigger actions accordingly. ==WIP: check carefully to avoid interference with PLDAPS standard routines==
+
+* __ND_CheckMouse__
+Read the mouse position and check for button presses
 
 * __ND_CheckJoystick__
 ==WIP:== Check current joystick signal and adjust states accordingly.
@@ -68,14 +71,20 @@ Create lookup table for monkey and experimenter screen and define default colors
 * __ND_DefineCol__
 Wrapper to determine color lookup table entries and to created associated handles.
 
-* __ND_DefaultBitNames__
-==WIP: Placeholder at the moment, we need to work on this and define a common set when working on the communication between PLDAPS and TDT.==
+* __ND_EventDef__
+Defines numeric values for 16 bit codes of trial events.
 
 * __ND_GetITI__
 Determine inter-trial interval within a given range based on various distributions.
 
 * __ND_GetRewDur__
 Select current reward amount depending on a scheme that increases reward at defined total correct trial numbers, or within blocks of subsequent correct trials.
+
+* __ND_TDTstrobe__
+Strobes 16 bit integer event marker to the Tucker Davis RZ5.
+
+* __ND_TTLout__
+Send a TTL pulse over one of the last 8 bits of the digital output.
 
 ### grfcs ###
 Utilities to facilitate the drawing process.
@@ -111,7 +120,7 @@ Task code for initial training step with the purpose to use a joystick (i.e. lev
 
 ***
 
-=======
+
 ## misc
 
 A set of functions that support running/processing experiments but are functional outside PLDAPS.
@@ -122,6 +131,4 @@ A set of functions that support running/processing experiments but are functiona
 Send a longer opening time to the reward system to allow flushing and cleaning.
 
 ***
-
-
 

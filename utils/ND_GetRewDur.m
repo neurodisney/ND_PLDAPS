@@ -17,7 +17,7 @@ if(isempty(cNumHit) || cNumHit < 0)
     cNumHit = 1;
 end
 
-s = find(~(p.trial.task.Reward.Step > cNumHit), 1, 'last');
+s = find(~(p.trial.task.Reward.Step >= cNumHit), 1, 'last');
 
 if(isempty(s))
     s = 1;

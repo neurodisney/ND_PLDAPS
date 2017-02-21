@@ -1,7 +1,10 @@
 function SS = ND_RigDefaults(SS)
+% set default parameters for a rig in the disney lab.
+%
 % This file summarizes gives an overview of parameters that could be set for
 % the pldaps class and provides the default settings for an actual rig that
-% is used for experiments.
+% is used for experiments. It will overide the class paramters defined by
+% the function @pldaps/pldapsClassDefaultParameters.m
 %
 % This function takes a struct with default rig settings as input (optional)
 % and sets values for most existing fields. The output struct could then be
@@ -56,7 +59,7 @@ SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEye
 SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
 
 % ------------------------------------------------------------------------%
-%% display settings: pecify options for the screen.
+%% display settings: specify options for the screen.
 SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 57;     % screen distance to the observer                            !!!
@@ -90,15 +93,15 @@ SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encodin
 %% eyelink settings: Eyelink specific parameters
 SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
 
-SS.eyelink.buffereventlength                    = 30;    % don't change.
-SS.eyelink.buffersamplelength                   = 31;    % don't change.
-SS.eyelink.calibration_matrix                   = [];    % calibration matrix when using raw (uncalibrated) Data
-SS.eyelink.collectQueue                         = 1;     % collect and store each sample recorded during trials
-SS.eyelink.custom_calibration                   = 0;     % don't use.
-SS.eyelink.custom_calibrationScale              = 0.25;  % don't use.
-SS.eyelink.saveEDF                              = 0;     % toggle downloading of the EDF file directly after the experiment.
-SS.eyelink.useAsEyepos                          = 1;     % toggle use of eyelink to set eyeX and eyeY
-SS.eyelink.useRawData                           = 0;     % toggle use of raw (uncalibrated) Data.
+% SS.eyelink.buffereventlength                    = 30;    % don't change.
+% SS.eyelink.buffersamplelength                   = 31;    % don't change.
+% SS.eyelink.calibration_matrix                   = [];    % calibration matrix when using raw (uncalibrated) Data
+% SS.eyelink.collectQueue                         = 1;     % collect and store each sample recorded during trials
+% SS.eyelink.custom_calibration                   = 0;     % don't use.
+% SS.eyelink.custom_calibrationScale              = 0.25;  % don't use.
+% SS.eyelink.saveEDF                              = 0;     % toggle downloading of the EDF file directly after the experiment.
+% SS.eyelink.useAsEyepos                          = 1;     % toggle use of eyelink to set eyeX and eyeY
+% SS.eyelink.useRawData                           = 0;     % toggle use of raw (uncalibrated) Data.
 
 % ------------------------------------------------------------------------%
 %% mouse settings: configure how mouse data should be handled
@@ -130,7 +133,7 @@ SS.pldaps.trialMasterFunction            = 'runTrial';   % function to be called
 % SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
-SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples.
+SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
 SS.pldaps.useModularStateFunctions              = 0;     % use modular state functions, see pldaps.runModularTrial, pldaps.getModules, pldaps.runStateforModules
 
 % dirs: configure pldaps' built-in drawing options
@@ -154,7 +157,7 @@ SS.pldaps.draw.framerate.use                    = 1;          % set to true to c
 SS.pldaps.draw.grid.use                         = 0;     % enable drawing of the grid
 
 % photo diode: control drawing of a flashing photo diode square.
-SS.pldaps.draw.photodiode.use                   = 0;     % enable drawing the photo diode square
+SS.pldaps.draw.photodiode.use                   = 1;     % enable drawing the photo diode square
 SS.pldaps.draw.photodiode.everyXFrames          = 10;    % will be shown every nth frame
 SS.pldaps.draw.photodiode.location              = 1;     % location of the square as an index: 1-4 for the different corners of the screen
 
@@ -184,14 +187,23 @@ SS.stimulus.cursorW   = 8;    % cursor width in pixels
 % of definitions that work most reliable across several tasks.
 
 % ------------------------------------------------------------------------%
-%% Analog input channels
+%% Analog/digital input/output channels
 % specify channel assignments and the use of joystick input
-SS.datapixx.adc.PupilChannel = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
+SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initia mapping of eye position. 
+SS.datapixx.adc.PupilChannel  = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
 
-SS.datapixx.useJoystick      = 1;  % acquire data about joystick state                                           !!!
+SS.datapixx.useJoystick       = 1;  % acquire data about joystick state                                           !!!
 
-SS.datapixx.adc.XJoyChannel  = 3;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
-SS.datapixx.adc.YJoyChannel  = 4;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
+SS.datapixx.adc.XJoyChannel   = 4;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
+SS.datapixx.adc.YJoyChannel   = 5;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
+
+SS.datapixx.adc.RewardChannel = 3;  % if SS.datapixx.useForReward then this digital output channel will be used
+SS.datapixx.adc.TTLamp        = 3;  % amplitude of TTL pulses via adc
+
+% ------------------------------------------------------------------------%
+%% Tucker Davis control
+SS.datapixx.daq = 'tdt';           % what system is used for data acquisition? tdt, plexon?
+SS.tdt.use  = 1;                   % set use of tdt system instead of plexon; will disable all plexon functionality
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
@@ -202,6 +214,7 @@ SS.key.reward = 'space';    % trigger reward
 SS.key.pause  = 'p';
 SS.key.quit   = 'ESCAPE';
 SS.key.debug  = 'd';
+SS.key.exe    = 'x';
 
 % ------------------------------------------------------------------------%
 %% Define task epoch flags

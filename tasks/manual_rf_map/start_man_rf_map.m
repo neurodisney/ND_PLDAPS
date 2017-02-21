@@ -1,9 +1,10 @@
-function start_joy_train(subjname)
+function start_man_rf_map(subjname)
 
 % use this script to define a default configuration in order to create a
-% pldaps object and run it with the joy_train trial function.
+% pldaps object and run it with the rf_map trial function.
 %
-%
+% Nate Faber, Feb. 2017
+% Adapted from:
 % wolf zinke, Dec. 2016
 
 
@@ -31,10 +32,8 @@ SS.sound.use          = 0;  % no sound for now
 SS.display.bgColor    = [50, 50, 50] / 255;
 
 % prepare for eye tracking and joystick monitoring
-SS.datapixx.adc.srate    = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
-SS.mouse.useAsEyepos     = 0;
-SS.datapixx.useAsEyepos  = 0;
-SS.behavior.fixation.use = 0;
+SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
+SS.mouse.useAsEyepos  = 0;
 
 SS.pldaps.nosave = 1;  % For now do not bother with the pldaps file format, use plain text file instead.
 
@@ -52,4 +51,3 @@ p.run
 if(Datapixx('IsReady'))
     Datapixx('Close');
 end
-
