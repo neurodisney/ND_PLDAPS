@@ -5,6 +5,11 @@ function p = ND_EventDef(p)
 % wolf zinke, Feb. 2017
 
 
+disp('****************************************************************')
+disp('>>>>  ND:  Defining Event Codes <<<<')
+disp('****************************************************************')
+disp('');
+
 p.defaultParameters.event.TRIALSTART = 7;
 p.defaultParameters.event.TRIALEND   = 6;
 

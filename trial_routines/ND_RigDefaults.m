@@ -265,16 +265,16 @@ SS.FixState.GazeOut     =   0;  % Gaze left fixation window
 
 % ------------------------------------------------------------------------%
 %% Define task outcomes
-SS.outcome.CurrOutcome  = NaN;  % just initialize, no start no outcome
+SS.outcome.CurrOutcome = NaN;  % just initialize, no start no outcome
 
-SS.outcome.Correct      =   0;  % correct performance, no error occurred
-SS.outcome.NoPress      =   1;  % No joystick press occurred to initialize trial
-SS.outcome.Abort        =   2;  % early joystick release prior stimulus onset
-SS.outcome.Early        =   3;  % release prior to response window
-SS.outcome.False        =   4;  % wrong response within response window
-SS.outcome.Late         =   5;  % response occurred after response window
-SS.outcome.Miss         =   6;  % no response at a reasonable time
-SS.outcome.FalseStart   =   7;  % no response at a reasonable time
+SS.outcome.Correct     =   0;  % correct performance, no error occurred
+SS.outcome.NoPress     =   1;  % No joystick press occurred to initialize trial
+SS.outcome.Abort       =   2;  % early joystick release prior stimulus onset
+SS.outcome.Early       =   3;  % release prior to response window
+SS.outcome.False       =   4;  % wrong response within response window
+SS.outcome.Late        =   5;  % response occurred after response window
+SS.outcome.Miss        =   6;  % no response at a reasonable time
+SS.outcome.NoStart     =   7;  % trial not started
 
 % get a string representation of the outcome
 SS.outcome.codenames = fieldnames(SS.outcome);

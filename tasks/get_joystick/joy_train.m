@@ -57,8 +57,8 @@ if(isempty(state))
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.
-    ND_DefineCol(p, 'TargetOn', 30, [1.00, 1.00, 1.00]);
-    ND_DefineCol(p, 'TargetDimm',   31, [0.5, 0.5, 0.5]);
+    ND_DefineCol(p, 'TargetOn',   30, [1.00, 1.00, 1.00]);
+    ND_DefineCol(p, 'TargetDimm', 31, [0.5, 0.5, 0.5]);
     
     % ND_DefineCol(p, 'TargetDimm', 30, [0.00, 1.00, 0.00]);
     % ND_DefineCol(p, 'TargetOn',   31, [1.00, 0.00, 0.00]);
@@ -235,7 +235,7 @@ function TaskDesign(p)
                 if(p.trial.task.EV.StartRT <  p.trial.behavior.joystick.minRT)
                 % too quick to be a true response
                      %ND_CtrlMsg(p, 'premature start'); 
-                     p.trial.outcome.CurrOutcome = p.trial.outcome.FalseStart;
+                     p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
                 
                      p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                 
@@ -323,7 +323,7 @@ function TaskDesign(p)
                 p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
                 
                 pds.behavior.reward.give(p, p.trial.task.Reward.Curr);
-                ND_CtrlMsg(p, ['Reward: ', num2str(p.trial.task.Reward.Curr), ' seconds']);
+                % ND_CtrlMsg(p, ['Reward: ', num2str(p.trial.task.Reward.Curr), ' seconds']);
                 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end

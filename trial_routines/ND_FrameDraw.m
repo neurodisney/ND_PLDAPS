@@ -94,6 +94,8 @@ end
 if(p.trial.pldaps.draw.photodiode.use && ...
    mod(p.trial.iFrame, p.trial.pldaps.draw.photodiode.everyXFrames) == 0 )
 
+    pds.tdt.strobe(p.defaultParameters.event.PDFLASH);
+    
     p.trial.timing.photodiodeTimes(:, p.trial.pldaps.draw.photodiode.dataEnd) = [p.trial.ttime, p.trial.iFrame];
     p.trial.pldaps.draw.photodiode.dataEnd = p.trial.pldaps.draw.photodiode.dataEnd + 1;
 
@@ -101,11 +103,11 @@ if(p.trial.pldaps.draw.photodiode.use && ...
 end
 
 % ------------------------------------------------------------------------%
-%% Write trial information
-LastOut = cellfun(@(x) x.outcome.CurrOutcome, p.data);
-cNumHit = sum(LastOut == p.trial.outcome.Correct);
+%% Write trial information to control screen
+% TODO: Check why this is not working
+               
+% Screen('DrawText', p.trial.display.overlayptr, p.trial.SmryStr , 20, 1040, ...
+%                    p.trial.display.clut.text, p.trial.display.clut.bg);
+%                
+               
 
-txtmsg = sprintf('Condition: %d  Block: %d \n %d/%d correct trials (%.2f)', ...
-                  p.trial.Nr, p.trial.blocks(p.trial.pldaps.iTrial), cNumHit, ...
-                  p.trial.pldaps.iTrial, cNumHit/p.trial.pldaps.iTrial*100);
-Screen('DrawText', p.trial.display.overlayptr, txtmsg , 80, 1000, p.trial.display.clut.text);

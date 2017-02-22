@@ -99,8 +99,12 @@ end
 
 % --------------------------------------------------------------------%
 %% set variables that contain summary information across trials
-p.trial.LastHits         = 0;      % how many correct trials since last error
-p.trial.NHits            = 0;      % how many correct trials in total
+p.trial.LastHits         = 0;   % how many correct trials since last error
+p.trial.NHits            = 0;   % how many correct trials in total
+p.trial.NError           = 0;   % how incorrect trials (excluding not started trials)
+p.trial.NCompleted       = 0;   % number of started trials
+p.trial.cPerf            = 0;   % current hit rate
+p.trial.SmryStr          = ' '; % text message with trial/session summary
 
 % --------------------------------------------------------------------%
 %% sanity checks for variable consistency
@@ -109,7 +113,6 @@ p.trial.NHits            = 0;      % how many correct trials in total
 if(~p.trial.mouse.useAsEyepos && ~p.trial.datapixx.useAsEyepos && ~p.trial.eyelink.use)
     p.trial.pldaps.draw.eyepos.use = 0;
 end
-
 
 % --------------------------------------------------------------------%
 %% Define session start time    
@@ -125,13 +128,17 @@ p.trial.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: in
 
 
 % --------------------------------------------------------------------%
+%% Set text size for screen display
+Screen('TextSize', p.trial.display.overlayptr , 36);
+
+% --------------------------------------------------------------------%
 %% helper functions
 
 function p = CheckChannelExists(p, channm, chk)
    
     if(isempty(p.defaultParameters.datapixx.adc.(channm)) || isnan(p.defaultParameters.datapixx.adc.(channm)) )
         if(chk == 1)
-            error([channm , ' has no value assigned!']);
+            error([channm, ' has no value assigned!']);
         end
     else
         if(~any(p.defaultParameters.datapixx.adc.channels == p.defaultParameters.datapixx.adc.(channm)))
