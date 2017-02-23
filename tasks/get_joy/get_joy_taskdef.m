@@ -1,8 +1,8 @@
-% function p = joy_train_taskdef(p)
+% function p = get_joy_taskdef(p)
 % define task parameters for the joystick training task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
-% modifications of the task. 
+% modifications of the task.
 %
 % TODO: - Make sure that changed parameters are kept in the data file, i.e.
 %         that there is some log when changes happened
@@ -14,7 +14,6 @@
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
-p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % ------------------------------------------------------------------------%
 %% levels of complexity
@@ -22,35 +21,38 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 % on, wait for a change of the target and then release the joystick as
 % response. If FullTask is set to zero it just waits for the trial start
 % cue and rewards when pressed as response to the cue onset.
-p.trial.task.FullTask = 0;  
 
 % ------------------------------------------------------------------------%
 %% Reward
-p.trial.task.Reward.Pull    = 0;              % If 1 then give reward for pulling the joystick
-p.trial.task.Reward.PullRew = 0.2;            % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
+p.trial.task.Reward.RewTrain = 1;         % give a series of rewards during hold time
+p.trial.task.Reward.TrainRew = 0.1;       % reward amount for during the burst train (if p.trial.task.Reward.RewTrain == 1)
+p.trial.task.Reward.RewGap   = 0.4;       % spacing between subsequent reward pulses
+p.trial.task.Reward.Timer    = NaN;       % initialize timer to control subsequent rewards
 
-p.trial.task.Reward.IncrConsecutive = 1;      % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.3, 0.6];      % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step = [1, 2];            % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
+p.trial.task.Reward.IncrConsecutive = 0;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
+p.trial.task.Reward.Dur  = [0.3, 0.6];    % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
 
-p.trial.task.Reward.Lag    = 0.10;            % Delay between response and reward onset
-p.trial.task.Reward.ManDur = 0.2;             % reward duration [s] for reward given by keyboard presses
+p.trial.task.Reward.Lag    = 0.10;        % Delay between response and reward onset
+p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.task.Timing.WaitStart   = 6.00;   % maximal time period [s] in seconds to press the lever in order to start a trial.
-p.trial.task.Timing.WaitResp    = 6.00;   % Only response times [s] after this wait period will be considered stimulus driven responses
-
-p.trial.task.Timing.MinRel      = 1.0;    % minimum time to consider a bar released prior trial start
+p.trial.task.Timing.WaitStart   = 10.00;  % maximal time period [s] in seconds to press the lever in order to start a trial.
+p.trial.task.Timing.WaitResp    = 10.00;  % Only response times [s] after this wait period will be considered stimulus driven responses
+p.trial.task.Timing.minRT       =  0.15;  % If a response occurs prior this time it is considered an early response
+p.trial.task.Timing.MinRel      = 0.5;    % minimum time to consider a bar released prior trial start
 
 % inter-trial interval
 p.trial.task.Timing.MinITI      = 0.5;    % minimum time period [s] between subsequent trials
 p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subsequent trials
 
-p.trial.task.Timing.TimeOut     =  0;   % Time [s] out for incorrect responses
-p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a trial starts after random lever presses (NIY!)
+% penalties
+p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
+p.trial.task.Timing.PullTimeOut =  0;     % Minimum time [s] passed before a trial starts after random lever presses (NIY!)
 
-p.trial.behavior.joystick.minRT =  0.20;  % If a response occurs prior this time it is considered an early response
+
+p.trial.task.Timing.WaitTimer   = NaN;    % Initialize variable that contains the timer to control task epochs
 
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
@@ -76,12 +78,11 @@ p.trial.behavior.joystick.RelThr  = 1.0;  % threshold to detect a joystick relea
 %% Trial duration
 % maxTrialLength is used to pre-allocate memory at several initialization
 % steps. It specifies a duration in seconds.
-
 p.trial.pldaps.maxTrialLength = 60; % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
 % ------------------------------------------------------------------------%
 %% initialize event times as NaN
-p.trial.task.EV.TrialStart = NaN; % Trial start time 
+p.trial.task.EV.TrialStart = NaN; % Trial start time
 p.trial.task.EV.TaskStart  = NaN; % actual task start after animal got ready (i.e. joystick is released)
 p.trial.task.EV.JoyPress   = NaN; % Press time to start task
 p.trial.task.EV.GoCue      = NaN; % Onset of Go-signal
@@ -89,6 +90,3 @@ p.trial.task.EV.JoyRelease = NaN; % time of joystick release
 p.trial.task.EV.Reward     = NaN; % time of reward delivery
 p.trial.task.EV.StartRT    = NaN; % response time to start trial after active cue
 p.trial.task.EV.RespRT     = NaN; % reaction time
-
-
-

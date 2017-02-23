@@ -12,4 +12,5 @@ addpath('~/Experiments/ND_PLDAPS/misc');
 
 
 %% task specific sub-directories
-addpath('~/Experiments/ND_PLDAPS/tasks/get_joystick');
+addpath('~/Experiments/ND_PLDAPS/tasks/get_joy');
+addpath('~/Experiments/ND_PLDAPS/tasks/joy_train');

@@ -189,7 +189,7 @@ SS.stimulus.cursorW   = 8;    % cursor width in pixels
 % ------------------------------------------------------------------------%
 %% Analog/digital input/output channels
 % specify channel assignments and the use of joystick input
-SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initia mapping of eye position. 
+SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initia mapping of eye position.
 SS.datapixx.adc.PupilChannel  = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
 
 SS.datapixx.useJoystick       = 1;  % acquire data about joystick state                                           !!!
