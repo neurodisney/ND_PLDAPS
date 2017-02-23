@@ -94,7 +94,7 @@ end
 if(p.trial.pldaps.draw.photodiode.use && ...
    mod(p.trial.iFrame, p.trial.pldaps.draw.photodiode.everyXFrames) == 0 )
 
-    pds.tdt.strobe(p.defaultParameters.event.PDFLASH);
+    pds.tdt.strobe(p.trial.event.PDFLASH);
     
     p.trial.timing.photodiodeTimes(:, p.trial.pldaps.draw.photodiode.dataEnd) = [p.trial.ttime, p.trial.iFrame];
     p.trial.pldaps.draw.photodiode.dataEnd = p.trial.pldaps.draw.photodiode.dataEnd + 1;

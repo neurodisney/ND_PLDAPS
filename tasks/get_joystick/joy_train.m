@@ -205,12 +205,27 @@ function TaskDesign(p)
         case p.trial.epoch.GetReady
         %% before the trial can start joystick needs to be in a released state
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-            % joystick in a released state, let's start the trial    
+                ND_CtrlMsg(p, 'bar released');
+                p.trial.task.Timing.WaitTimer = GetSecs + p.trial.task.Timing.MinRel;
+                p.trial.CurrEpoch = p.trial.epoch.CheckBarRel;
+            end
+            
+        case p.trial.epoch.CheckBarRel    
+            ctm = GetSecs;
+            
+            if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
+                % pressed again to quickly
+                ND_CtrlMsg(p, 'premature bar press');
+                p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
+                
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                
+            elseif(ctm > p.trial.task.Timing.WaitTimer)             
+            % joystick in a properly released state, let's start the trial    
+                ND_CtrlMsg(p, 'premature bar press');
                 p.trial.task.EV.TaskStart     = GetSecs;
                 p.trial.task.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
-                %ND_CtrlMsg(p, 'Trial started');
-                
-                pds.datapixx.analogOut(0.01, 0); % send TTL pulse to signal trial end 
+                ND_CtrlMsg(p, 'Trial started');
                 
                 p.trial.task.Timing.WaitTimer = p.trial.task.EV.TaskStart + p.trial.task.Timing.WaitStart;
                 
@@ -243,14 +258,27 @@ function TaskDesign(p)
                 % we just got a press in time
                     %ND_CtrlMsg(p, 'Joystick press');
 
-                    p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
-                    p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.HoldTime;
+                    if(p.trial.task.FullTask)
+                        % do full task, use other task epochs
+                        p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
+                        p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.HoldTime;
 
-                    p.trial.CurrEpoch = p.trial.epoch.WaitGo;[0.4, 0.60, 0.8];
-                    
-                    if(p.trial.task.Reward.Pull)
-                        pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
-                        %ND_CtrlMsg(p, 'Reward');
+                        p.trial.CurrEpoch = p.trial.epoch.WaitGo;[0.4, 0.60, 0.8];
+
+                        if(p.trial.task.Reward.Pull)
+                            pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
+                            %ND_CtrlMsg(p, 'Reward');
+                        end
+                    else
+                        % That was the task, reward animal and done
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
+
+                        p.trial.LastHits = p.trial.LastHits + 1;
+                        p.trial.NHits    = p.trial.NHits    + 1;
+
+                        p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Reward.Lag;
+
+                        p.trial.CurrEpoch = p.trial.epoch.WaitReward;
                     end
                 end
             end
@@ -334,6 +362,12 @@ function TaskDesign(p)
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 p.trial.task.EV.JoyRelease = GetSecs;
                 %ND_CtrlMsg(p, 'Late Release');
+
+                % use it as optional release reward if not full task is
+                % used
+                if(p.trial.task.Reward.Pull && ~p.trial.task.FullTask) 
+                    pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
+                end
                 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
@@ -429,7 +463,7 @@ function Trial2Ascii(p, act)
             fclose(tblptr);
             
         case 'save'
-            if(p.trial.pldaps.quit == 0)  % we might loose the last trial when pressing esc.
+            if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart)  % we might loose the last trial when pressing esc.
                 trltm = p.trial.task.EV.TaskStart - p.trial.timing.datapixxSessionStart;
                     
                 cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};

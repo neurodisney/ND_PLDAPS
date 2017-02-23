@@ -157,7 +157,7 @@ SS.pldaps.draw.framerate.use                    = 1;          % set to true to c
 SS.pldaps.draw.grid.use                         = 0;     % enable drawing of the grid
 
 % photo diode: control drawing of a flashing photo diode square.
-SS.pldaps.draw.photodiode.use                   = 1;     % enable drawing the photo diode square
+SS.pldaps.draw.photodiode.use                   = 0;     % enable drawing the photo diode square
 SS.pldaps.draw.photodiode.everyXFrames          = 10;    % will be shown every nth frame
 SS.pldaps.draw.photodiode.location              = 1;     % location of the square as an index: 1-4 for the different corners of the screen
 
@@ -230,6 +230,8 @@ SS.epoch.WaitGo         =   7;  % delay period before response is required
 SS.epoch.WaitReward     =   8;  % delay before reward delivery
 SS.epoch.TaskEnd        =   9;  % trial completed
 SS.epoch.ITI            =  10;  % inter-trial interval: wait before next trial to start
+SS.epoch.CheckBarRel    =  11;  % time period to ensure bar release
+
 SS.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
 
 % ------------------------------------------------------------------------%
