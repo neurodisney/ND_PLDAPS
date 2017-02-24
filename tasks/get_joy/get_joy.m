@@ -44,7 +44,7 @@ if(isempty(state))
     % --------------------------------------------------------------------%
     %% get task parameters
     %p = joy_train_taskdef(p);  % WZ: could it be removed here and just run in trialSetup?
-    joy_train_taskdef;  % WZ: could it be removed here and just run in trialSetup?
+    get_joy_taskdef;  % WZ: could it be removed here and just run in trialSetup?
 
     %ND_CtrlMsg(p, 'Experimental SETUP');
     % --------------------------------------------------------------------%
@@ -192,6 +192,8 @@ function TaskSetUp(p)
     p.trial.task.TaskStart   = NaN;
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
+    
+    p.trial.task.Reward.Curr = NaN;
 
     p.trial.task.Reward.Timer = 0; % set zero to start with a reward upon press
 
@@ -293,9 +295,9 @@ function TaskDesign(p)
                 % shoot of a train of rewards
 
                 if(ctm > p.trial.task.Reward.Timer)
-                    pds.behavior.reward.give(p, p.trial.task.Reward.TrainRew);
                     p.trial.task.Reward.Timer = ctm + p.trial.task.Reward.TrainRew ...
                                                     + p.trial.task.Reward.RewGap;
+                    pds.behavior.reward.give(p, p.trial.task.Reward.TrainRew);
                 end
             end
 

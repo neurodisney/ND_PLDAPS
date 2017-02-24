@@ -50,7 +50,7 @@ else
 
             ND_CheckKey(p);   % check for key hits
 
-            if(~p.trial.datapixx.use || isempty(p.trial.datapixx.adc.channels))
+            if(p.trial.datapixx.use || ~isempty(p.trial.datapixx.adc.channels))
                 pds.datapixx.adc.getData(p); % get analogData from Datapixx, including eye position and joystick
             end
 

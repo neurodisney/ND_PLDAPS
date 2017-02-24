@@ -57,7 +57,7 @@ p.trial.task.Timing.WaitTimer   = NaN;    % Initialize variable that contains th
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
 % target item
-p.trial.task.TargetSz_dva  = 4;   % Stimulus diameter in dva
+p.trial.task.TargetSz_dva  = 8;   % Stimulus diameter in dva
 p.trial.task.TargetPos_dva = [0, 0];    % Stimulus diameter in dva25seconds
 
 p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
@@ -65,8 +65,8 @@ p.trial.task.TargetPos_pxl = ND_cart2ptb(p, p.trial.task.TargetPos_dva);
 p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
 
 % Frame indicating active trial
-p.trial.task.FrameWdth  = 20; % hard-coded for now, make it more flexible
-p.trial.task.FrameSize  = ND_dva2pxl([18 18], p); % hard-coded for now, make it more flexible
+p.trial.task.FrameWdth  = 25; % hard-coded for now, make it more flexible
+p.trial.task.FrameSize  = ND_dva2pxl([20 20], p); % hard-coded for now, make it more flexible
 p.trial.task.FrameRect  = ND_GetRect(p.trial.display.ctr(1:2), p.trial.task.FrameSize);
 
 % ------------------------------------------------------------------------%
