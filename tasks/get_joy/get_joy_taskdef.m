@@ -30,7 +30,7 @@ p.trial.task.Reward.RewGap   = 0.4;       % spacing between subsequent reward pu
 p.trial.task.Reward.Timer    = NaN;       % initialize timer to control subsequent rewards
 
 p.trial.task.Reward.IncrConsecutive = 0;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.3, 0.6];    % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Dur  = [0.5, 0.75];    % reward duration [s], user vector to specify values used for incremental reward scheme
 p.trial.task.Reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
 
 p.trial.task.Reward.Lag    = 0.10;        % Delay between response and reward onset

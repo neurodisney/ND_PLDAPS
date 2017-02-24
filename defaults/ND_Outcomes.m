@@ -31,7 +31,7 @@ p.defaultParameters.outcome.FIX_BRK_SPEED =   3003;
 
 
 % get a string representation of the outcome
-p.defaultParameters.outcome.codenames = fieldnames(p.defaultParameters.outcome.);
+p.defaultParameters.outcome.codenames = fieldnames(p.defaultParameters.outcome);
 noc = length(p.defaultParameters.outcome.codenames);
 p.defaultParameters.outcome.codes = nan(1,noc);
 for(i=1:noc)

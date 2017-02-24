@@ -230,7 +230,8 @@ function TaskDesign(p)
                 ND_CtrlMsg(p, 'Trial started');
 
                 p.trial.task.Timing.WaitTimer = p.trial.task.EV.TaskStart + p.trial.task.Timing.WaitStart;
-
+                
+                
                 p.trial.CurrEpoch = p.trial.epoch.WaitStart;
             end
 
@@ -246,9 +247,9 @@ function TaskDesign(p)
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
-
-                p.trial.task.EV.StartRT = ctm - p.trial.task.EV.TaskStart;
-
+               p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
+                pds.tdt.strobe(p.trial.event.JOY_PRESS);
+                
                 if(p.trial.task.EV.StartRT <  p.trial.task.Timing.minRT)
                 % too quick to be a true response
                      %ND_CtrlMsg(p, 'premature start');
@@ -260,11 +261,14 @@ function TaskDesign(p)
                 % we just got a press in time
                     %ND_CtrlMsg(p, 'Joystick press');
 
+                    pds.tdt.strobe(p.trial.event.TASK_ON);
+
+                    p.trial.task.EV.StartRT = ctm - p.trial.task.EV.TaskStart;
+                    
                     % do full task, use other task epochs
-                    p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
                     p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.HoldTime;
 
-                    p.trial.CurrEpoch = p.trial.epoch.WaitGo;[0.4, 0.60, 0.8];
+                    p.trial.CurrEpoch = p.trial.epoch.WaitGo;
 
                     if(p.trial.task.Reward.Pull)
                         pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
@@ -279,13 +283,18 @@ function TaskDesign(p)
             ctm = GetSecs;
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
                 %ND_CtrlMsg(p, 'Early release');
+                pds.tdt.strobe(p.trial.event.JOY_RELEASE);
+                pds.tdt.strobe(p.trial.event.RESP_EARLY);
+                
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
-                p.trial.task.EV.JoyRelease = ctm - p.trial.task.EV.TaskStart;
+                p.trial.task.EV.JoyRelease  = ctm - p.trial.task.EV.TaskStart;
 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 
             elseif(ctm > p.trial.task.Timing.WaitTimer)
                 %ND_CtrlMsg(p, 'Wait response');
+                pds.tdt.strobe(p.trial.event.GOCUE);
+                
                 p.trial.task.EV.GoCue         = ctm - p.trial.task.EV.TaskStart;
                 p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.WaitResp;
 
@@ -312,12 +321,13 @@ function TaskDesign(p)
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-
+                pds.tdt.strobe(p.trial.event.JOY_RELEASE);               
                 p.trial.task.EV.RespRT = ctm - p.trial.task.EV.GoCue;
 
                 if(p.trial.task.EV.RespRT <  p.trial.task.Timing.minRT)
                 % premature response - too early to be a true response
                      %ND_CtrlMsg(p, 'premature response');
+                     pds.tdt.strobe(p.trial.event.RESP_PREMAT);
                      p.trial.outcome.CurrOutcome = outcome.Early;
 
                      p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
@@ -325,6 +335,7 @@ function TaskDesign(p)
                 else
                 % correct response
                     %ND_CtrlMsg(p, 'Correct Response');
+                    pds.tdt.strobe(p.trial.event.RESP_CORR);
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
 
                     p.trial.LastHits = p.trial.LastHits + 1;
@@ -361,7 +372,9 @@ function TaskDesign(p)
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 p.trial.task.EV.JoyRelease = GetSecs;
                 %ND_CtrlMsg(p, 'Late Release');
-
+                pds.tdt.strobe(p.trial.event.JOY_RELEASE);  
+                pds.tdt.strobe(p.trial.event.RESP_LATE);               
+                
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
 
@@ -383,6 +396,8 @@ function TaskDesign(p)
 
                 p.trial.CurrEpoch = p.trial.epoch.ITI;
             end
+            
+            pds.tdt.strobe(p.trial.event.TASK_OFF);               
 
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI

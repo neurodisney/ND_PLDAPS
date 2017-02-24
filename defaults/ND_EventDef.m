@@ -9,45 +9,6 @@ disp('****************************************************************')
 disp('>>>>  ND:  Defining Event Codes <<<<')
 disp('****************************************************************')
 disp('');
-
-% ------------------------------------------------------------------------%
-%% System encodes
-% encoded by running pldaps, can be ignored for task development.
-p.defaultParameters.event.TRIALSTART = 10;
-p.defaultParameters.event.TRIALEND   = 11;
-
-p.defaultParameters.event.REWARD     = 1003;
-
-p.defaultParameters.event.FIX_IN     = 2000;
-p.defaultParameters.event.FIX_OUT    = 2001;
-
-p.defaultParameters.event.JOYPRESS   = 2100;
-p.defaultParameters.event.JOYRELEASE = 2101;
-
-p.defaultParameters.event.PDFLASH    = 2010;
-
-% analog output
-p.defaultParameters.event.AO_1       = 2311;
-p.defaultParameters.event.AO_2       = 2312;
-p.defaultParameters.event.AO_3       = 2313;
-p.defaultParameters.event.AO_4       = 2314;
-
-% digital output
-p.defaultParameters.event.DO_1       = 2321;
-p.defaultParameters.event.DO_2       = 2322;
-p.defaultParameters.event.DO_3       = 2323;
-p.defaultParameters.event.DO_4       = 2324;
-p.defaultParameters.event.DO_5       = 2325;
-p.defaultParameters.event.DO_6       = 2326;
-p.defaultParameters.event.DO_7       = 2327;
-p.defaultParameters.event.DO_8       = 2328;
-
-% marker to select start and end of trial header
-p.defaultParameters.event.TRIALHDR_ON  = 9000;
-p.defaultParameters.event.TRIALHDR_OFF = 9001;
-
-% auditory feedback (NIY!)
-
 % ------------------------------------------------------------------------%
 %% Task encodes
 % it is the responsibility of the person programming tasks to use these encodes
@@ -60,6 +21,13 @@ p.defaultParameters.event.TC_CORR       = 1004;    % trial complete, correct
 p.defaultParameters.event.TC_ERR		= 3010;    % trial complete, incorrect
 p.defaultParameters.event.NO_TC			= 3011;    % trial incomplete
 
+% response relate
+p.defaultParameters.event.RESP_CORR    = 1110;     % correct response occurred
+p.defaultParameters.event.RESP_EARLY   = 1111;     % early response occurred
+p.defaultParameters.event.RESP_PREMAT  = 1112;     % premature (early) response occurred, after go signal but too early to be true
+p.defaultParameters.event.RESP_FALSE   = 1113;     % false response occurred
+p.defaultParameters.event.RESP_LATE    = 1114;     % late response occurred
+
 % fixation related
 p.defaultParameters.event.FIXSPOT_ON    = 110;     % onset of fixation spot
 p.defaultParameters.event.FIXSPOT_OFF   = 111;     % offset of fixation spot
@@ -70,6 +38,10 @@ p.defaultParameters.event.FIX_BRK_BSL   = 3000;    % fixation break during the p
 p.defaultParameters.event.FIX_BRK_CUE   = 3001;    % fixation break while the cue is on
 p.defaultParameters.event.FIX_BRK_STIM  = 3002;    % fixation break during stimulus presentation
 p.defaultParameters.event.FIX_BRK_SPEED = 3003;
+
+% joystick related
+p.defaultParameters.event.JOY_PRESS     = 2100;    % joystick press detected
+p.defaultParameters.event.JOY_RELEASE   = 2101;    % joystick release detected
 
 % visual stimulus
 p.defaultParameters.event.STIM_ON       = 130;     % stimulus onset
@@ -95,6 +67,48 @@ p.defaultParameters.event.MICROSTIM     = 666;     % microstimulation pulse onse
 p.defaultParameters.event.INJECT        = 667;     % start of pressure injection
 p.defaultParameters.event.IONTO         = 667;     % start of iontophoretic drug delivery
 
+
+% ------------------------------------------------------------------------%
+%% System encodes
+% encoded by running PLDAPS, can be ignored for task development. These
+% events have to be defined otherwise PLDAPS will produce erors!
+p.defaultParameters.event.TRIALSTART = 10;
+p.defaultParameters.event.TRIALEND   = 11;
+
+p.defaultParameters.event.REWARD     = 1003;
+
+p.defaultParameters.event.FIX_IN     = 2000;
+p.defaultParameters.event.FIX_OUT    = 2001;
+
+p.defaultParameters.event.JOY_ON     = 2100;
+p.defaultParameters.event.JOY_OFF    = 2101;
+
+p.defaultParameters.event.PDFLASH    = 2010;
+
+% analog output
+p.defaultParameters.event.AO_1       = 2311;
+p.defaultParameters.event.AO_2       = 2312;
+p.defaultParameters.event.AO_3       = 2313;
+p.defaultParameters.event.AO_4       = 2314;
+
+% digital output
+p.defaultParameters.event.DO_1       = 2321;
+p.defaultParameters.event.DO_2       = 2322;
+p.defaultParameters.event.DO_3       = 2323;
+p.defaultParameters.event.DO_4       = 2324;
+p.defaultParameters.event.DO_5       = 2325;
+p.defaultParameters.event.DO_6       = 2326;
+p.defaultParameters.event.DO_7       = 2327;
+p.defaultParameters.event.DO_8       = 2328;
+
+% marker to select start and end of trial header
+p.defaultParameters.event.defaultParametersHDR_ON  = 9000;
+p.defaultParameters.event.defaultParametersHDR_OFF = 9001;
+
+% auditory feedback (NIY!)
+p.defaultParameters.event.AUDIO_REW = 1300;
+
+% TODO: encode trial states (and task epochs)?
 
 %% task/stimulus parameters (NIY!)
 % #define	X_RF			5000

@@ -35,7 +35,7 @@ SS.mouse.useAsEyepos     = 0;
 SS.datapixx.useAsEyepos  = 0;
 SS.behavior.fixation.use = 0;
 
-SS.pldaps.nosave = 1;  % For now do not bother with the pldaps file format, use plain text file instead.
+SS.pldaps.nosave = 0;  % For now do not bother with the pldaps file format, use plain text file instead.
 
 % ------------------------------------------------------------------------%
 %% create the pldaps class
