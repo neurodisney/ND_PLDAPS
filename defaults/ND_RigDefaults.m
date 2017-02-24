@@ -217,24 +217,6 @@ SS.key.debug  = 'd';
 SS.key.exe    = 'x';
 
 % ------------------------------------------------------------------------%
-%% Define task epoch flags
-% TODO: Get a set of required task epochs with a clear naming convention
-SS.epoch.GetReady       =   0;  % Wait to initialize task
-SS.epoch.WaitStart      =   1;  % Wait for a joystick press to indicate readiness to work on a trial
-SS.epoch.WaitResponse   =   2;  % Wait for joystick release
-SS.epoch.WaitPress      =   3;  % Target not acquired yet, wait for fixation
-SS.epoch.WaitRelease    =   4;  % Target not acquired yet, wait for fixation
-SS.epoch.WaitFix        =   5;  % Target not acquired yet, wait for fixation
-SS.epoch.WaitTarget     =   6;  % wait for target onset
-SS.epoch.WaitGo         =   7;  % delay period before response is required
-SS.epoch.WaitReward     =   8;  % delay before reward delivery
-SS.epoch.TaskEnd        =   9;  % trial completed
-SS.epoch.ITI            =  10;  % inter-trial interval: wait before next trial to start
-SS.epoch.CheckBarRel    =  11;  % time period to ensure bar release
-
-SS.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
-
-% ------------------------------------------------------------------------%
 %% joystick parameters
 SS.behavior.joystick.use       =  1;         % does this task require control of joystick state
 SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state (released)
@@ -257,31 +239,10 @@ SS.behavior.fixation.use       =  1;      % does this task require control of ey
 SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
 SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window
-SS.behavior.joystick.Sample    = 20;      % how many data points to use for determining fixation state.
+SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
 
 % ------------------------------------------------------------------------%
 %% Define fixation states
 SS.FixState.Current     = NaN;
 SS.FixState.GazeIn      =   1;  % Gaze at target
 SS.FixState.GazeOut     =   0;  % Gaze left fixation window
-
-% ------------------------------------------------------------------------%
-%% Define task outcomes
-SS.outcome.CurrOutcome = NaN;  % just initialize, no start no outcome
-
-SS.outcome.Correct     =   0;  % correct performance, no error occurred
-SS.outcome.NoPress     =   1;  % No joystick press occurred to initialize trial
-SS.outcome.Abort       =   2;  % early joystick release prior stimulus onset
-SS.outcome.Early       =   3;  % release prior to response window
-SS.outcome.False       =   4;  % wrong response within response window
-SS.outcome.Late        =   5;  % response occurred after response window
-SS.outcome.Miss        =   6;  % no response at a reasonable time
-SS.outcome.NoStart     =   7;  % trial not started
-
-% get a string representation of the outcome
-SS.outcome.codenames = fieldnames(SS.outcome);
-noc = length(SS.outcome.codenames);
-SS.outcome.codes = nan(1,noc);
-for(i=1:noc)
-    SS.outcome.codes(i) = SS.outcome.(SS.outcome.codenames{i});
-end
