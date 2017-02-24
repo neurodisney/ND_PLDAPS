@@ -14,7 +14,7 @@ p.defaultParameters.pldaps.dirs.data = fullfile(p.defaultParameters.pldaps.dirs.
 % --------------------------------------------------------------------%
 %% Define Trial function
 % The runTrial function requires trialFunction to be defined, but buried in
-% their tutorial they show that this needs to be defined when initializing 
+% their tutorial they show that this needs to be defined when initializing
 % the trial function (i.e. the experimentSetupFile), otherwise there will be
 % an error running runTrial.
 if(~isfield(p.defaultParameters.pldaps, 'trialFunction'))
@@ -33,12 +33,12 @@ if(~isfield(p.defaultParameters.pldaps, 'experimentAfterTrialsFunction') || ...
 end
 
 % --------------------------------------------------------------------%
-%% initialize the random number generator 
+%% initialize the random number generator
 % verify how this affects pldaps
 rng('shuffle', 'twister');
 
 % --------------------------------------------------------------------%
-%% ensure that the data directory exists 
+%% ensure that the data directory exists
 % TODO: use the entry from the trial struct
 if(~exist(fullfile(p.trial.pldaps.dirs.data,'TEMP'),'dir'))
     mkdir(fullfile(p.trial.pldaps.dirs.data,'TEMP'));
@@ -46,7 +46,7 @@ end
 
 % --------------------------------------------------------------------%
 %% ensure channel mapping
-% test if the channels needed are specified 
+% test if the channels needed are specified
 if (p.defaultParameters.datapixx.useAsEyepos == 1)
     p = CheckChannelExists(p, 'XEyeposChannel', 1);
     p = CheckChannelExists(p, 'YEyeposChannel', 1);
@@ -78,23 +78,23 @@ p.defaultParameters.pldaps.maxFrames = p.defaultParameters.pldaps.maxTrialLength
 %% define drawing area for joystick representation
 if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.useJoystick)
 
-    % hardcode right now location and size of joystick representation   
+    % hardcode right now location and size of joystick representation
     p.trial.pldaps.draw.joystick.size   = [60 400];        % what area to occupy with joystick representation (pixel)
     p.trial.pldaps.draw.joystick.pos    = [p.trial.display.pWidth - ...
                                           (p.trial.display.pWidth/10 - 1.5*p.trial.pldaps.draw.joystick.size(1)), ...
                                            round(p.trial.display.pHeight/2)]; % where to center joystick representation
-                                       
+
     p.trial.pldaps.draw.joystick.sclfac = p.trial.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
-    
+
     p.trial.pldaps.draw.joystick.rect = ND_GetRect(p.trial.pldaps.draw.joystick.pos, ...
                                                    p.trial.pldaps.draw.joystick.size);
-                                               
-    p.trial.pldaps.draw.joystick.levelsz =  round(p.trial.pldaps.draw.joystick.size .* [1.25, 0.01]);    
-    
+
+    p.trial.pldaps.draw.joystick.levelsz =  round(p.trial.pldaps.draw.joystick.size .* [1.25, 0.01]);
+
     % initialize joystick level at zero
     cjpos = [p.trial.pldaps.draw.joystick.pos(1), p.trial.pldaps.draw.joystick.rect(2)];
     p.trial.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.trial.pldaps.draw.joystick.levelsz);
-    
+
 end
 
 % --------------------------------------------------------------------%
@@ -114,8 +114,22 @@ if(~p.trial.mouse.useAsEyepos && ~p.trial.datapixx.useAsEyepos && ~p.trial.eyeli
     p.trial.pldaps.draw.eyepos.use = 0;
 end
 
+% check that each task epoch has a unique number
+if(isfield(p.trial, 'epoch'))
+    fldnms = fieldnames(p.trial.epoch);
+
+    epnum = nan(1,length(fldnms));
+
+    for(i=1:length(fldnms))
+        if(any(epnum == p.trial.epoch.(fldnms{i})))
+            error('Task epochs must have unique integer identifier!');
+        end
+        epnum(i) =  p.trial.epoch;
+    end
+end
+
 % --------------------------------------------------------------------%
-%% Define session start time    
+%% Define session start time
 % PsychDataPixx('GetPreciseTime') is very slow. However, in order to keep
 % various timings in sync it seems to be recommended to call this more
 % often, hence it might be good to use it whenever timing is not a big
@@ -135,17 +149,14 @@ Screen('TextSize', p.trial.display.overlayptr , 36);
 %% helper functions
 
 function p = CheckChannelExists(p, channm, chk)
-   
+
     if(isempty(p.defaultParameters.datapixx.adc.(channm)) || isnan(p.defaultParameters.datapixx.adc.(channm)) )
         if(chk == 1)
             error([channm, ' has no value assigned!']);
         end
     else
         if(~any(p.defaultParameters.datapixx.adc.channels == p.defaultParameters.datapixx.adc.(channm)))
-            p.defaultParameters.datapixx.adc.channels = ... 
+            p.defaultParameters.datapixx.adc.channels = ...
                 sort([p.defaultParameters.datapixx.adc.channels, p.defaultParameters.datapixx.adc.(channm)]);
-        end        
+        end
     end
-
-
-

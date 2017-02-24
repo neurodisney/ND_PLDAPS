@@ -5,6 +5,7 @@ function p = ND_CheckCondRepeat(p)
 %
 % wolf zinke, Dec. 2016
 
+% TODO: debug!!!
 
 if(p.trial.task.EqualCorrect && ~p.trial.pldaps.goodtrial) % need to check if success, repeat if not    
     curCND = p.conditions{p.trial.pldaps.iTrial};
