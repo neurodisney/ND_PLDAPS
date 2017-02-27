@@ -7,6 +7,10 @@ function p = ND_TrialCleanUpandSave(p)
 %
 % wolf zinke, Dec. 2016
 
+%-------------------------------------------------------------------------%
+%% dump trial header
+ND_TrialHDR(p);
+
 % might be moved to pds.datapixx.cleanUpandSave
 [p.trial.timing.flipTimes(:,p.trial.iFrame)] = deal(Screen('Flip', p.trial.display.ptr));
 
