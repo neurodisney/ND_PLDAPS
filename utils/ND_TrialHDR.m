@@ -3,23 +3,28 @@ function ND_TrialHDR(p)
 % fixed length for an experiment.
 %
 % TODO: - implement robust method to encode relevant task parameters
-%       - initialize to store information in the pldaps data file or
-%         additional text file about the header format to allow for
-%         easy/robust reconstruction
+%       - initialize to store information in the pldaps data file or additional text
+%         file about the header format to allow for easy/robust reconstruction
 %
 %
 % wolf zinke, Feb 2017
 
+% ------------------------------------------------------------------------%
+%% encode begin of header/tail
+pds.tdt.strobe(p.trial.event.TRIAL_HDR_ON);  
 
-pds.tdt.strobe(p.trial.event.TRIAL_HDR_ON);  % encode begin of header/tail
-
-% default information 
+% ------------------------------------------------------------------------%
+%% default information 
 pds.tdt.strobe(p.trial.pldaps.iTrial);       % trial number
 pds.tdt.strobe(p.trial.Nr);                  % condition number
 pds.tdt.strobe(p.trial.outcome.CurrOutcome); % outcome
 
-% task dependent information 
+% ------------------------------------------------------------------------%
+%% task dependent information 
 
-pds.tdt.strobe(p.trial.event.TRIAL_HDR_OFF);  % encode end of header/tail
+
+% ------------------------------------------------------------------------%
+%% encode end of header/tail
+pds.tdt.strobe(p.trial.event.TRIAL_HDR_OFF);  
 
 

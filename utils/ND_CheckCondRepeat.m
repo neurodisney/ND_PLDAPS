@@ -9,10 +9,10 @@ function p = ND_CheckCondRepeat(p)
 
 if(p.trial.task.EqualCorrect && ~p.trial.pldaps.goodtrial) % need to check if success, repeat if not    
     curCND = p.conditions{p.trial.pldaps.iTrial};
-    curBLK = p.blocks{p.trial.pldaps.iTrial};
+    curBLK = p.trial.blocks(p.trial.pldaps.iTrial);
 
     poslst = 1:length(p.conditions);
-    cpos   = find(poslst > p.trial.pldaps.iTrial & p.blocks == curBLK);
+    cpos   = find(poslst > p.trial.pldaps.iTrial & p.trial.blocks == curBLK);
 
     InsPos = cpos(randi(length(cpos))); % determine random position in the current block for repetition
 

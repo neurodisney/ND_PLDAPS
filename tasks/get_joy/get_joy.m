@@ -262,6 +262,8 @@ function TaskDesign(p)
                     %ND_CtrlMsg(p, 'Joystick press');
 
                     pds.tdt.strobe(p.trial.event.TASK_ON);
+                    
+                    pds.datapixx.TTL_state(1,1);
 
                     p.trial.task.EV.StartRT = ctm - p.trial.task.EV.TaskStart;
                     
@@ -398,7 +400,7 @@ function TaskDesign(p)
             end
             
             pds.tdt.strobe(p.trial.event.TASK_OFF);               
-
+            pds.datapixx.TTL_state(1,0);
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI
         %% inter-trial interval: wait before next trial to start
@@ -471,7 +473,7 @@ function Trial2Ascii(p, act)
             fclose(tblptr);
 
         case 'save'
-            if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart)  % we might loose the last trial when pressing esc.
+            if(~p.trial.pldaps.quit && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart)  % we might loose the last trial when pressing esc.
                 trltm = p.trial.task.EV.TaskStart - p.trial.timing.datapixxSessionStart;
 
                 cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
