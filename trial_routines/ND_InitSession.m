@@ -11,10 +11,10 @@ disp('****************************************************************')
 disp('');
 
 % --------------------------------------------------------------------%
-%% set output directory
-p.defaultParameters.pldaps.dirs.data = fullfile(p.defaultParameters.pldaps.dirs.data, ...
-                                                p.defaultParameters.session.subject, ...
-                                                p.defaultParameters.session.experimentSetupFile, datestr(now,'yyyy_mm_dd'));
+%% set output directory  (moved to PLDAPS/@pldaps/run.m)
+% p.defaultParameters.pldaps.dirs.data = fullfile(p.defaultParameters.pldaps.dirs.data, ...
+%                                                 p.defaultParameters.session.subject, ...
+%                                                 p.defaultParameters.session.experimentSetupFile, datestr(now,'yyyy_mm_dd'));
 
 % --------------------------------------------------------------------%
 %% Define Trial function
@@ -65,6 +65,9 @@ end
 
 % --------------------------------------------------------------------%
 %% Set some defaults
+
+% trial states
+p = ND_TrialStates(p);
 
 % colors
 % Setup default color lookup tables for huklab experiments. You can modify

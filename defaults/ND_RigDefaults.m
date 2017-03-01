@@ -55,8 +55,8 @@ SS.datapixx.adc.startDelay                      = 0;      % delay until beginnin
 SS.datapixx.adc.channels                        = [0, 1, 2, 3, 4]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
 SS.datapixx.adc.channelMapping = {'AI.Eye.X', 'AI.Eye.Y', 'AI.Eye.PD', 'AI.Joy.X', 'AI.Joy.Y'}; % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
 
-SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel set eyeX    !!!
-SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
+SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel as eyeX    !!!
+SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel as eyeY    !!!
 
 % ------------------------------------------------------------------------%
 %% display settings: specify options for the screen.
@@ -80,7 +80,7 @@ SS.display.sourceFactorNew      = 'GL_SRC_ALPHA';         % Blending mode used f
 SS.display.destinationFactorNew = 'GL_ONE_MINUS_SRC_ALPHA';  % Blending mode used for psychtoolblox screen BlendFunction (http://docs.psychtoolbox.org/BlendFunction)
 SS.display.displayName          = 'defaultScreenParameters'; % a name for your screen
 
-% movie: optinal create of videos, typically used during replay
+% movie: optional create of videos, typically used during replay
 SS.display.movie.create                         = false; % toggle movie creation
 SS.display.movie.dir                            = [];    % directory to store the movie.
 SS.display.movie.file                           = [];    % file name. Leave empty to use same file base as PDS file
@@ -109,7 +109,7 @@ SS.mouse.use                                    = 0;     % collect and store mou
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
 
 % ------------------------------------------------------------------------%
-%% sound: contol sound playback
+%% sound: control sound playback
 SS.sound.use                                    = 0;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
@@ -184,7 +184,9 @@ SS.stimulus.cursorW   = 8;    % cursor width in pixels
 % ####################################################################### %
 %% Below follow definitions used in the Disney Lab
 % This is currently work in progress and we need to find an efficient set
-% of definitions that work most reliable across several tasks.
+% of definitions that will work most reliable across several tasks.
+
+SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 
 % ------------------------------------------------------------------------%
 %% Analog/digital input/output channels

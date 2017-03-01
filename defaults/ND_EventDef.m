@@ -18,15 +18,15 @@ disp('');
 p.defaultParameters.event.TASK_ON       = 10;      % start of task (should happen after pldaps encodes a trial start)
 p.defaultParameters.event.TASK_OFF      = 11;      % end of task (should happen before pldaps encodes a trial end)
 p.defaultParameters.event.TC_CORR       = 1004;    % trial complete, correct
-p.defaultParameters.event.TC_ERR		= 3010;    % trial complete, incorrect
-p.defaultParameters.event.NO_TC			= 3011;    % trial incomplete
+p.defaultParameters.event.TC_ERR        = 3010;    % trial complete, incorrect
+p.defaultParameters.event.NO_TC         = 3011;    % trial incomplete
 
 % response relate
-p.defaultParameters.event.RESP_CORR    = 1110;     % correct response occurred
-p.defaultParameters.event.RESP_EARLY   = 1111;     % early response occurred
-p.defaultParameters.event.RESP_PREMAT  = 1112;     % premature (early) response occurred, after go signal but too early to be true
-p.defaultParameters.event.RESP_FALSE   = 1113;     % false response occurred
-p.defaultParameters.event.RESP_LATE    = 1114;     % late response occurred
+p.defaultParameters.event.RESP_CORR     = 1110;    % correct response occurred
+p.defaultParameters.event.RESP_EARLY    = 1111;    % early response occurred
+p.defaultParameters.event.RESP_PREMAT   = 1112;    % premature (early) response occurred, after go signal but too early to be true
+p.defaultParameters.event.RESP_FALSE    = 1113;    % false response occurred
+p.defaultParameters.event.RESP_LATE     = 1114;    % late response occurred
 
 % fixation related
 p.defaultParameters.event.FIXSPOT_ON    = 110;     % onset of fixation spot
@@ -71,19 +71,22 @@ p.defaultParameters.event.IONTO         = 667;     % start of iontophoretic drug
 % ------------------------------------------------------------------------%
 %% System encodes
 % encoded by running PLDAPS, can be ignored for task development. These
-% events have to be defined otherwise PLDAPS will produce erors!
-p.defaultParameters.event.TRIALSTART = 10;
-p.defaultParameters.event.TRIALEND   = 11;
+% events have to be defined otherwise PLDAPS will produce errors!
+p.defaultParameters.event.TRIALSTART = 10;         % begin of a trial according to PLDAPS (could differ from task begin)
+p.defaultParameters.event.TRIALEND   = 11;         % end of a trial according to PLDAPS (could differ from task end)
 
-p.defaultParameters.event.REWARD     = 1003;
+p.defaultParameters.event.REWARD     = 1003;       % reward delivery, irrespective if earned in task or manually given by experimenter
 
-p.defaultParameters.event.FIX_IN     = 2000;
-p.defaultParameters.event.FIX_OUT    = 2001;
+p.defaultParameters.event.FIX_IN     = 2000;       % gaze enters fixation window
+p.defaultParameters.event.FIX_OUT    = 2001;       % gaze leaves fixation window
 
-p.defaultParameters.event.JOY_ON     = 2100;
-p.defaultParameters.event.JOY_OFF    = 2101;
+p.defaultParameters.event.JOY_ON     = 2100;       % joystick elevation above pressing threshold
+p.defaultParameters.event.JOY_OFF    = 2101;       % joystick elevation below releasing threshold
 
-p.defaultParameters.event.PDFLASH    = 2010;
+p.defaultParameters.event.PDFLASH    = 2010;       % onset of photo diode flash
+
+% auditory feedback (NIY!)
+p.defaultParameters.event.AUDIO_REW = 1300;
 
 % analog output
 p.defaultParameters.event.AO_1       = 2311;
@@ -104,9 +107,6 @@ p.defaultParameters.event.DO_8       = 2328;
 % marker to select start and end of trial header
 p.defaultParameters.event.TRIAL_HDR_ON  = 9000;
 p.defaultParameters.event.TRIAL_HDR_OFF = 9001;
-
-% auditory feedback (NIY!)
-p.defaultParameters.event.AUDIO_REW = 1300;
 
 % TODO: encode trial states (and task epochs)?
 

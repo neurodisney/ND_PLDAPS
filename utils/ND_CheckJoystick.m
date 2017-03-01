@@ -31,8 +31,9 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
         % ND_CtrlMsg(p, ['Joystick State: ',int2str(p.trial.JoyState.Current),'; curr Amp: ',num2str(p.trial.joyAmp,'%.4f')]);
         
         switch p.trial.JoyState.Current
-            %% wait for release
             case p.trial.JoyState.JoyHold
+            %-------------------------------------------------------------------------%
+	    %% wait for release
                 jchk = p.trial.AI.Joy.Amp(sIdx) > p.trial.behavior.joystick.RelThr; % invert selection to just use 'any'
                 
                 % all below threshold?
@@ -42,8 +43,9 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
                     %ND_CtrlMsg(p, 'Joystick Released...');
                 end
                 
-                %% wait for press
             case p.trial.JoyState.JoyRest
+            %-------------------------------------------------------------------------%
+            %% wait for press
                 jchk = p.trial.AI.Joy.Amp(sIdx) < p.trial.behavior.joystick.PullThr; % invert selection to just use 'any'
                 
                 % all above threshold?
@@ -53,8 +55,9 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
                     %ND_CtrlMsg(p, 'Joystick Pressed...');
                 end
                 
-                %% if it is nan, so just get the current state
             otherwise
+            %-------------------------------------------------------------------------%
+            %% if it is nan, so just get the current state
                 if(isnan(p.trial.JoyState.Current))
                     if(p.trial.AI.Joy.Amp(p.trial.datapixx.adc.dataSampleCount) >= p.trial.behavior.joystick.PullThr)
                         p.trial.JoyState.Current = p.trial.JoyState.JoyHold;
@@ -71,8 +74,9 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
         end  % switch p.JoyState.Current
     end  % if(p.trial.behavior.joystick.use)
     
+    %-------------------------------------------------------------------------%
+    %% if joystick state needs to be shown on experimenter screen update it now   
     if(p.trial.pldaps.draw.joystick.use)
-        %% update joystick representation
         % show current elevation
         cjpos = [p.trial.pldaps.draw.joystick.pos(1), ...
             p.trial.pldaps.draw.joystick.rect(4) - p.trial.joyAmp * p.trial.pldaps.draw.joystick.sclfac];
@@ -84,14 +88,15 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
         
         switch p.trial.JoyState.Current
             
-            % wait for press
             case p.trial.JoyState.JoyRest
+            % wait for press
                 p.trial.pldaps.draw.joystick.threct(2) = p.trial.pldaps.draw.joystick.threct(2) + ...
                     (p.trial.pldaps.draw.joystick.size(2)   - ...
                     p.trial.behavior.joystick.PullThr * p.trial.pldaps.draw.joystick.sclfac);
-                % wait for release
+
             case p.trial.JoyState.JoyHold
-                p.trial.pldaps.draw.joystick.threct(2) = p.trial.pldaps.draw.joystick.threct(2) + ...
+            % wait for release
+		p.trial.pldaps.draw.joystick.threct(2) = p.trial.pldaps.draw.joystick.threct(2) + ...
                     (p.trial.pldaps.draw.joystick.size(2)   - ...
                     p.trial.behavior.joystick.RelThr * p.trial.pldaps.draw.joystick.sclfac);
         end
