@@ -36,17 +36,20 @@ p = ND_GeneralTrialRoutines(p, state);
 if(isempty(state))
 
     % --------------------------------------------------------------------%
-    %% Set initial parameters for bar
+    %% Set initial parameters for the rf bar
+    
+    p.trial.task.rfbarLength_dva   =   6; % Length of the bar in degrees of visual angle
+    p.trial.task.rfbarWidth_dva    =   3;
+    p.trial.task.rfbarPos_dva      =   [0, 0];
+    
+    % Convert these to pixels
+    p.trial.task.rfbarLength_pxl   =   ND_dva2pxl(p.trial.task.rfbarLength_dva, p);
+    p.trial.task.rfbarWidth_pxl    =   ND_dva2pxl(p.trial.task.rfbarWidth_dva, p);
+    p.trial.task.rfbarPos_pxl      =   ND_cart2ptb(p, p.trial.task.rfbarPos_dva;
+    
     
 
-    %ND_CtrlMsg(p, 'Experimental SETUP');
-    % --------------------------------------------------------------------%
-    %% define ascii output file
-    % call this after ND_InitSession to be sure that output directory exists!
-    
-    %Trial2Ascii(p, 'init'); TODO: Save bar parameters to file every frame
 
-    % --------------------------------------------------------------------%
     %% Color definitions of stuff shown during the trial
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
@@ -73,7 +76,12 @@ if(isempty(state))
         colorArray{index + 1} = colorName;
     end
 
+    %% define ascii output file
+    % call this after ND_InitSession to be sure that output directory exists!
+    
+    %Trial2Ascii(p, 'init'); TODO: Save bar parameters to file every frame
 
+    % --------------------------------------------------------------------%
     
 end
 
