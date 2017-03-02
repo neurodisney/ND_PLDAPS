@@ -25,13 +25,13 @@
 % ------------------------------------------------------------------------%
 %% Reward
 p.trial.task.Reward.RewTrain = 1;         % give a series of rewards during hold time
-p.trial.task.Reward.TrainRew = 0.1;       % reward amount for during the burst train (if p.trial.task.Reward.RewTrain == 1)
-p.trial.task.Reward.RewGap   = 0.4;       % spacing between subsequent reward pulses
+p.trial.task.Reward.TrainRew = 0.2;       % reward amount for during the burst train (if p.trial.task.Reward.RewTrain == 1)
+p.trial.task.Reward.RewGap   = 0.5;       % spacing between subsequent reward pulses
 p.trial.task.Reward.Timer    = NaN;       % initialize timer to control subsequent rewards
 
 p.trial.task.Reward.IncrConsecutive = 0;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.5, 0.75];    % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
+p.trial.task.Reward.Dur  = [0.5, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Step = [2, 4];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
 
 p.trial.task.Reward.Lag    = 0.10;        % Delay between response and reward onset
 p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
@@ -45,7 +45,7 @@ p.trial.task.Timing.MinRel      = 0.5;    % minimum time to consider a bar relea
 
 % inter-trial interval
 p.trial.task.Timing.MinITI      = 0.5;    % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI      =  2;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
@@ -57,8 +57,8 @@ p.trial.task.Timing.WaitTimer   = NaN;    % Initialize variable that contains th
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
 % target item
-p.trial.task.TargetSz_dva  = 8;   % Stimulus diameter in dva
-p.trial.task.TargetPos_dva = [0, 0];    % Stimulus diameter in dva25seconds
+p.trial.task.TargetSz_dva  = 10;          % Stimulus diameter in dva
+p.trial.task.TargetPos_dva = [0, 0];      % Stimulus diameter in dva25seconds
 
 p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
 p.trial.task.TargetPos_pxl = ND_cart2ptb(p, p.trial.task.TargetPos_dva);

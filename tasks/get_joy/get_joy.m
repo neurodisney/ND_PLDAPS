@@ -100,7 +100,7 @@ if(isempty(state))
 
     % create a cell array containing all conditions
     % conditions = {c1, c2, c3, c4, c5};
-    conditions = {c1, c2, c3, c4};
+    conditions = {c2, c3, c4, c5};
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
 

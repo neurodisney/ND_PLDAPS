@@ -6,15 +6,32 @@ function p = ND_InitSession(p)
 % wolf zinke, Jan. 2017
 
 disp('****************************************************************')
-disp('>>>>  NInitializen Sessions <<<<')
+disp('>>>>  Initializen Sessions <<<<')
 disp('****************************************************************')
 disp('');
 
 % --------------------------------------------------------------------%
 %% set output directory  (moved to PLDAPS/@pldaps/run.m)
-% p.defaultParameters.pldaps.dirs.data = fullfile(p.defaultParameters.pldaps.dirs.data, ...
-%                                                 p.defaultParameters.session.subject, ...
-%                                                 p.defaultParameters.session.experimentSetupFile, datestr(now,'yyyy_mm_dd'));
+% WZ: define output directory
+p.defaultParameters.pldaps.dirs.data = fullfile(p.defaultParameters.pldaps.dirs.data, ...
+                                        p.defaultParameters.session.subject, ...
+                                        p.defaultParameters.session.experimentSetupFile, datestr(now,'yyyy_mm_dd'));
+                                    
+% ensure that the data directory exists
+if(~exist(fullfile(p.defaultParameters.pldaps.dirs.data,'TEMP'),'dir'))
+    mkdir(fullfile(p.defaultParameters.pldaps.dirs.data,'TEMP'));
+end
+
+if(~p.defaultParameters.pldaps.nosave)
+
+    p.defaultParameters.session.dir  = p.defaultParameters.pldaps.dirs.data;
+
+    p.defaultParameters.session.file = [p.defaultParameters.session.subject, '_', datestr(p.defaultParameters.session.initTime, 'yyyymmdd'), '_', ...
+                                       p.defaultParameters.session.experimentSetupFile, '_', datestr(p.defaultParameters.session.initTime, 'HHMM') '.pds'];
+else
+    p.defaultParameters.session.file = '';
+    % p.defaultParameters.session.dir='';
+end
 
 % --------------------------------------------------------------------%
 %% Define Trial function
@@ -41,13 +58,6 @@ end
 %% initialize the random number generator
 % verify how this affects pldaps
 rng('shuffle', 'twister');
-
-% --------------------------------------------------------------------%
-%% ensure that the data directory exists
-% TODO: use the entry from the trial struct
-if(~exist(fullfile(p.defaultParameters.pldaps.dirs.data,'TEMP'),'dir'))
-    mkdir(fullfile(p.defaultParameters.pldaps.dirs.data,'TEMP'));
-end
 
 % --------------------------------------------------------------------%
 %% ensure channel mapping
