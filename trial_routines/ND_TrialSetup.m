@@ -60,7 +60,7 @@ end
 pds.behavior.reward.trialSetup(p);
 
 % ------------------------------------------------------------------------%
-%% Update trial summary information
+%% Update summary information for preceding trials
 LastOut = cellfun(@(x) x.outcome.CurrOutcome, p.data);
 
 if(~isempty(LastOut))
@@ -73,11 +73,19 @@ if(~isempty(LastOut))
         p.trial.LastHits = 0;
     end
     
-    p.trial.NHits    = sum(LastOut == p.trial.outcome.Correct);
-else
-    p.trial.LastHits = 0;
-    p.trial.NHits    = 0;
+    p.trial.NHits      = sum(LastOut == p.trial.outcome.Correct);
+    p.trial.NError     = sum(LastOut ~= p.trial.outcome.NoStart & ...
+                             LastOut ~= p.trial.outcome.Correct);
+    p.trial.NCompleted = sum(LastOut ~= p.trial.outcome.NoStart);
+    p.trial.cPerf      = p.trial.NHits/p.trial.NCompleted*100;
 end
+
+p.trial.SmryStr = sprintf('Condition: %d  Block: %d -- %d/%d correct trials (%.2f)', ...
+                   p.trial.Nr, p.trial.blocks(p.trial.pldaps.iTrial), p.trial.NHits, ...
+                   p.trial.pldaps.iTrial, p.trial.cPerf);
+
+ND_CtrlMsg(p, p.trial.SmryStr);
+
 
 % ------------------------------------------------------------------------%
 %% framerate history

@@ -11,8 +11,8 @@ function ND_FrameFlip(p)
 p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
 
 p.trial.stimulus.timeLastFrame     = p.trial.timing.flipTimes(1, p.trial.iFrame) - p.trial.trstart;
-p.trial.framePreLastDrawIdleCount  = 0;
-p.trial.framePostLastDrawIdleCount = 0;
+% p.trial.framePreLastDrawIdleCount  = 0;
+% p.trial.framePostLastDrawIdleCount = 0;
 
 % TODO: WZ - check if there is a check implemented somewhere that keeps track of the difference between expected flip time and current flip time.
 

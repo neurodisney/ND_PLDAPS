@@ -55,8 +55,8 @@ SS.datapixx.adc.startDelay                      = 0;      % delay until beginnin
 SS.datapixx.adc.channels                        = [0, 1, 2, 3, 4]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
 SS.datapixx.adc.channelMapping = {'AI.Eye.X', 'AI.Eye.Y', 'AI.Eye.PD', 'AI.Joy.X', 'AI.Joy.Y'}; % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
 
-SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel set eyeX    !!!
-SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel set eyeY    !!!
+SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel as eyeX    !!!
+SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel as eyeY    !!!
 
 % ------------------------------------------------------------------------%
 %% display settings: specify options for the screen.
@@ -80,7 +80,7 @@ SS.display.sourceFactorNew      = 'GL_SRC_ALPHA';         % Blending mode used f
 SS.display.destinationFactorNew = 'GL_ONE_MINUS_SRC_ALPHA';  % Blending mode used for psychtoolblox screen BlendFunction (http://docs.psychtoolbox.org/BlendFunction)
 SS.display.displayName          = 'defaultScreenParameters'; % a name for your screen
 
-% movie: optinal create of videos, typically used during replay
+% movie: optional create of videos, typically used during replay
 SS.display.movie.create                         = false; % toggle movie creation
 SS.display.movie.dir                            = [];    % directory to store the movie.
 SS.display.movie.file                           = [];    % file name. Leave empty to use same file base as PDS file
@@ -109,7 +109,7 @@ SS.mouse.use                                    = 0;     % collect and store mou
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
 
 % ------------------------------------------------------------------------%
-%% sound: contol sound playback
+%% sound: control sound playback
 SS.sound.use                                    = 0;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
@@ -129,7 +129,7 @@ SS.pldaps.maxTrialLength                        = 25;    % Maximum duration of a
 SS.pldaps.nosave                                = 0;     % disables saving of data when true. see .pldaps.save for more control
 SS.pldaps.pass                                  = 0;     % indicator of behavior (i.e. fixations) should always be assumed to be good.
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
-SS.pldaps.trialMasterFunction            = 'runTrial';   % function to be called to run a single Trial.
+SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
 % SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
@@ -157,7 +157,7 @@ SS.pldaps.draw.framerate.use                    = 1;          % set to true to c
 SS.pldaps.draw.grid.use                         = 0;     % enable drawing of the grid
 
 % photo diode: control drawing of a flashing photo diode square.
-SS.pldaps.draw.photodiode.use                   = 1;     % enable drawing the photo diode square
+SS.pldaps.draw.photodiode.use                   = 0;     % enable drawing the photo diode square
 SS.pldaps.draw.photodiode.everyXFrames          = 10;    % will be shown every nth frame
 SS.pldaps.draw.photodiode.location              = 1;     % location of the square as an index: 1-4 for the different corners of the screen
 
@@ -184,12 +184,14 @@ SS.stimulus.cursorW   = 8;    % cursor width in pixels
 % ####################################################################### %
 %% Below follow definitions used in the Disney Lab
 % This is currently work in progress and we need to find an efficient set
-% of definitions that work most reliable across several tasks.
+% of definitions that will work most reliable across several tasks.
+
+SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 
 % ------------------------------------------------------------------------%
 %% Analog/digital input/output channels
 % specify channel assignments and the use of joystick input
-SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initia mapping of eye position. 
+SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initia mapping of eye position.
 SS.datapixx.adc.PupilChannel  = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
 
 SS.datapixx.useJoystick       = 1;  % acquire data about joystick state                                           !!!
@@ -199,6 +201,9 @@ SS.datapixx.adc.YJoyChannel   = 5;  % if datapixx.useJoystick=true, use this cha
 
 SS.datapixx.adc.RewardChannel = 3;  % if SS.datapixx.useForReward then this digital output channel will be used
 SS.datapixx.adc.TTLamp        = 3;  % amplitude of TTL pulses via adc
+
+SS.datapixx.TTLdur            = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the TTL pulse
+SS.datapixx.EVdur             = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the strobe signal
 
 % ------------------------------------------------------------------------%
 %% Tucker Davis control
@@ -215,22 +220,6 @@ SS.key.pause  = 'p';
 SS.key.quit   = 'ESCAPE';
 SS.key.debug  = 'd';
 SS.key.exe    = 'x';
-
-% ------------------------------------------------------------------------%
-%% Define task epoch flags
-% TODO: Get a set of required task epochs with a clear naming convention
-SS.epoch.GetReady       =   0;  % Wait to initialize task
-SS.epoch.WaitStart      =   1;  % Wait for a joystick press to indicate readiness to work on a trial
-SS.epoch.WaitResponse   =   2;  % Wait for joystick release
-SS.epoch.WaitPress      =   3;  % Target not acquired yet, wait for fixation
-SS.epoch.WaitRelease    =   4;  % Target not acquired yet, wait for fixation
-SS.epoch.WaitFix        =   5;  % Target not acquired yet, wait for fixation
-SS.epoch.WaitTarget     =   6;  % wait for target onset
-SS.epoch.WaitGo         =   7;  % delay period before response is required
-SS.epoch.WaitReward     =   8;  % delay before reward delivery
-SS.epoch.TaskEnd        =   9;  % trial completed
-SS.epoch.ITI            =  10;  % inter-trial interval: wait before next trial to start
-SS.epoch.AbortError     =  -1;  % Error occurred, finish trial (maybe add time out)
 
 % ------------------------------------------------------------------------%
 %% joystick parameters
@@ -255,31 +244,10 @@ SS.behavior.fixation.use       =  1;      % does this task require control of ey
 SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
 SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window
-SS.behavior.joystick.Sample    = 20;      % how many data points to use for determining fixation state.
+SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
 
 % ------------------------------------------------------------------------%
 %% Define fixation states
 SS.FixState.Current     = NaN;
 SS.FixState.GazeIn      =   1;  % Gaze at target
 SS.FixState.GazeOut     =   0;  % Gaze left fixation window
-
-% ------------------------------------------------------------------------%
-%% Define task outcomes
-SS.outcome.CurrOutcome  = NaN;  % just initialize, no start no outcome
-
-SS.outcome.Correct      =   0;  % correct performance, no error occurred
-SS.outcome.NoPress      =   1;  % No joystick press occurred to initialize trial
-SS.outcome.Abort        =   2;  % early joystick release prior stimulus onset
-SS.outcome.Early        =   3;  % release prior to response window
-SS.outcome.False        =   4;  % wrong response within response window
-SS.outcome.Late         =   5;  % response occurred after response window
-SS.outcome.Miss         =   6;  % no response at a reasonable time
-SS.outcome.FalseStart   =   7;  % no response at a reasonable time
-
-% get a string representation of the outcome
-SS.outcome.codenames = fieldnames(SS.outcome);
-noc = length(SS.outcome.codenames);
-SS.outcome.codes = nan(1,noc);
-for(i=1:noc)
-    SS.outcome.codes(i) = SS.outcome.(SS.outcome.codenames{i});
-end

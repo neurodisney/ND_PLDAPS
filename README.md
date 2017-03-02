@@ -13,9 +13,6 @@ Please do not change these files when just working on task development!
 
 This are mainly stand-alone functions that were extracted from pldapsDefaultTrialFunction in the PLDAPS package and adapted if needed. These functions execute standard routines for hardware interaction that should be used in the same way for all tasks. If there are adjustments necessary we need to implement it in a generalized way that works in combination with every task, or, if really needed, create a dedicated branch.
 
-* __ND_RigDefaults__
-Generate a settings struct with default parameters for the Disney-Lab that will be used to initialize the pldaps class.
-
 * __ND_GeneralTrialRoutines__
 Current replacement for pldapsDefaultTrialFunction. First it calls functions that are now separate files so that it is more convenient to understand them and apply modifications
 
@@ -40,6 +37,31 @@ What needs to be done during *p.trial.pldaps.trialStates.trialCleanUpandSave*: F
 * __ND_AfterTrial__
 Make sure changed variable values will be passed on to the next trial. DO everything here that requires the lock on defaultParameters to be removed.
 
+
+### default
+
+Please do not change these files when just working on task development!
+
+Files in this directory contain default definitions of several parameters and settings that are used in the Disney-Lab
+
+* __ND_RigDefaults__
+Generate a settings struct with default parameters for the Disney-Lab that will be used to initialize the pldaps class.
+
+* __ND_TrialStates__
+Default trial states used between subsequent screen refreshes.
+
+* __ND_DefaultColors__
+Use the first set of CLUT entries with color definitions that are required for basic PLDAPS functionality.
+
+* __ND_EventDef__
+Definition of event codes that are sent to the DAQ system (e.g. Tucker-Davis). These definitions are the key to decoding/interpreting data files and therefore should not be change retrospect, just add new entries if needed.
+
+* __ND_Outcomes__
+Definition of potential trial outcomes based on animal performance. These definitions are the key to decoding/interpreting data files and therefore should not be change retrospect, just add new entries if needed.
+
+* __ND_TaskEpochs__
+Definition of potential task epochs that will be used during a trial.
+
 ### utils
 
 A set of function modules that will be used for various task and therefore are kept as stand-alone functions here instead of replicating the code inside each task file.
@@ -54,7 +76,7 @@ Check keyboard presses and mouse actions and trigger actions accordingly. ==WIP:
 Read the mouse position and check for button presses
 
 * __ND_CheckJoystick__
-==WIP:== Check current joystick signal and adjust states accordingly.
+Check current joystick signal and adjust states accordingly.
 
 * __ND_GetConditionList__
 Create a vector of conditions and blocks that are used during the experiment.
@@ -90,7 +112,7 @@ Send a TTL pulse over one of the last 8 bits of the digital output.
 Utilities to facilitate the drawing process.
 ==WIP: Some of these routines might already be implemented in a better way pldaps, try to identify, and if not then make it OOP to potentially speed up processing.==
 
-==WIP: Here we should provide more basic grafic routines, e.g. for displaying fixation spots, specific items and so on to allow for an easier, user-friendly usage.==
+==WIP: Here we should provide more basic graphic routines, e.g. for displaying fixation spots, specific items and so on to allow for an easier, user-friendly usage.==
 
 * __ND_GetRect__
 Determine the rect to draw stuff.
@@ -107,13 +129,25 @@ Show Cue for active trial.
 
 Files to run specific experiments are found int the `tasks` subdirectory.
 
-### get_joystick
+### get_joy
+
+Task code for initial training step with the purpose to use a joystick (i.e. lever) in order to receive juice rewards.
+
+* __start_get_joy__
+
+* __get_joy__
+
+* __get_joy_taskdef__
+
+
+
+### joy_train
 
 Task code for initial training step with the purpose to use a joystick (i.e. lever) in order to receive juice rewards.
 
 * __start_joy_train__
 
-* __joy_run__
+* __joy_train__
 
 * __joy_train_taskdef__
 
@@ -126,7 +160,7 @@ Task code for initial training step with the purpose to use a joystick (i.e. lev
 A set of functions that support running/processing experiments but are functional outside PLDAPS.
 
 
-* __ND_FlushReward__ 
+* __ND_FlushReward__
 
 Send a longer opening time to the reward system to allow flushing and cleaning.
 

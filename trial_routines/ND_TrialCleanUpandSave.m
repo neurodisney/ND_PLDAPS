@@ -7,6 +7,12 @@ function p = ND_TrialCleanUpandSave(p)
 %
 % wolf zinke, Dec. 2016
 
+%-------------------------------------------------------------------------%
+%% dump trial header
+if(~p.trial.pldaps.quit) % skip if trial was interrupted (WZ: this will loose last trial info! Just a quick fix to avoid errors.)
+    ND_TrialHDR(p);
+end
+
 % might be moved to pds.datapixx.cleanUpandSave
 [p.trial.timing.flipTimes(:,p.trial.iFrame)] = deal(Screen('Flip', p.trial.display.ptr));
 
@@ -65,7 +71,7 @@ end
 
 %-------------------------------------------------------------------------%
 %% Trial information
-p.trial.trialnumber   = p.trial.pldaps.iTrial;
+% p.trial.trialnumber   = p.trial.pldaps.iTrial;
 
 % system timing
 p.trial.timing.flipTimes             = p.trial.timing.flipTimes(:, 1:p.trial.iFrame);  % WZ: Why here again? Was defined at the function start...

@@ -18,16 +18,24 @@ function p = ND_DefaultColors(p)
 % wolf zinke, Jan. 2017
 
 % keep the currently defined background color
+
+
+disp('****************************************************************')
+disp('>>>>  ND:  Setting Default Colors <<<<')
+disp('****************************************************************')
+disp('');
+
 bgcol = p.defaultParameters.display.bgColor;
 
 %% remove PLDAPS default colors
 % this ensures that there is not interference with the PLDAPS definitions,
 % but make sure that required colors will be re-defined to not break pldaps.
+% should be obsolet now in the PLDAPS neurodisney or ND_dev branch.
 p_disp = p.defaultParameters.display;
 
 if(isfield(p_disp, 'clut'))
     p_disp = rmfield(p_disp, {'clut', 'humanCLUT', 'monkeyCLUT'});
-    p.defaultParameters.display = p_disp; % hope this does not cause trouble...
+    p.defaultParameters.display = p_disp;
 end
 
 %% pre-allocate lookup table
@@ -54,7 +62,10 @@ ND_DefineCol(p, 'redbg',      15, [1.00, 0.00, 0.00], bgcol);
 ND_DefineCol(p, 'blue',       16, [0.00, 0.00, 1.00]);
 ND_DefineCol(p, 'green',      17, [0.00, 1.00, 0.00]);
 ND_DefineCol(p, 'greenbg',    18, [0.00, 1.00, 0.00], bgcol);
+ND_DefineCol(p, 'text',       32, [1.00, 1.00, 1.00], bgcol);
 
-ND_DefineCol(p, 'targetgood', 19, [0.00, 1.00, 0.00]);
-ND_DefineCol(p, 'targetnull', 20, [1.00, 0.00, 0.00]);
-ND_DefineCol(p, 'fixation',   21, [1.00, 0.00, 0.00]);
+
+
+%ND_DefineCol(p, 'targetgood', 50, [0.00, 1.00, 0.00]);
+%ND_DefineCol(p, 'targetnull', 51, [1.00, 0.00, 0.00]);
+%ND_DefineCol(p, 'fixation',   52, [1.00, 0.00, 0.00]);

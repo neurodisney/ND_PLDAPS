@@ -8,9 +8,10 @@ function qp = ND_CheckMouse(p)
 
 [cursorX, cursorY,isMouseButtonDown] = GetMouse();
 
-p.trial.mouse.samples =              p.trial.mouse.samples+1;
-p.trial.mouse.samplesTimes(          p.trial.mouse.samples) = GetSecs;
-p.trial.mouse.cursorSamples(     1:2,p.trial.mouse.samples) = [cursorX;cursorY];
+p.trial.mouse.samples =    p.trial.mouse.samples+1;
+p.trial.mouse.samplesTimes(p.trial.mouse.samples) = GetSecs;
+p.trial.mouse.X(p.trial.mouse.samples) = cursorX;
+p.trial.mouse.Y(p.trial.mouse.samples) = cursorY;
 p.trial.mouse.buttonPressSamples( :, p.trial.mouse.samples) = isMouseButtonDown';
 
 %if(p.trial.mouse.useAsEyepos)

@@ -40,7 +40,22 @@ p.defaultParameters.display.humanCLUT( pos+1,:) = hCol;
 p.defaultParameters.display.monkeyCLUT(pos+1,:) = mCol;
 
 if(p.defaultParameters.display.useOverlay)  % apparently, both, datapixx and software overlays use indexed colors
+    % check if the clut index is already in use
+    if(isfield(p.defaultParameters.display,'clut'))
+        fldnms = fieldnames(p.defaultParameters.display.clut);
+
+        for(i = 1:length(fldnms))
+            if(p.defaultParameters.display.clut.(fldnms{i}) == pos)
+                if(~strcmp(fldnms{i},colname)) % ignore if same color name
+                    warning(['CLUT conflict: index ', int2str(pos), 'already used for ',fldnms{i},'!']);
+                end
+            end
+        end
+    end
+    
+    % set index
     p.defaultParameters.display.clut.(colname) = pos; % use color lookup table indices
 else
+    % use RGB value
     p.defaultParameters.display.clut.(colname) = p.defaultParameters.display.monkeyCLUT(pos+1,:)'; % just copy colors defined for monkey screen, no overlay
 end
