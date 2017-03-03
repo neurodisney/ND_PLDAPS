@@ -16,6 +16,7 @@ disp('');
 p.trial.pldaps.trialStates.trialSetup          = -1;
 p.trial.pldaps.trialStates.trialPrepare        = -2;
 p.trial.pldaps.trialStates.trialCleanUpandSave = -3;
+p.trial.pldaps.trialStates.experimentAfterTrials = -4;
 
 %% actual trial loop
 % this should be increasing numbers because states are used as numeric

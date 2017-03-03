@@ -75,36 +75,53 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.task.Timing.MinHoldTime = 0.1;
-    c1.task.Timing.MaxHoldTime = 0.2;
+    c1.task.Timing.MinHoldTime = 0.2;
+    c1.task.Timing.MaxHoldTime = 0.4;
 
     % condition 2
     c2.Nr = 2;
-    c2.task.Timing.MinHoldTime = 0.2;
-    c2.task.Timing.MaxHoldTime = 0.4;
+    c2.task.Timing.MinHoldTime = 0.4;
+    c2.task.Timing.MaxHoldTime = 0.6;
 
     % condition 3
     c3.Nr = 3;
-    c3.task.Timing.MinHoldTime = 0.4;
-    c3.task.Timing.MaxHoldTime = 0.6;
+    c3.task.Timing.MinHoldTime = 0.6;
+    c3.task.Timing.MaxHoldTime = 0.8;
 
     % condition 4
     c4.Nr = 4;
-    c4.task.Timing.MinHoldTime = 0.6;
-    c4.task.Timing.MaxHoldTime = 0.8;
+    c4.task.Timing.MinHoldTime = 0.8;
+    c4.task.Timing.MaxHoldTime = 1.0;
 
     % condition 5
     c5.Nr = 5;
-    c5.task.Timing.MinHoldTime = 0.8;
-    c5.task.Timing.MaxHoldTime = 1.0;
+    c5.task.Timing.MinHoldTime = 1.0;
+    c5.task.Timing.MaxHoldTime = 1.2;
+    
+    % condition 6
+    c6.Nr = 6;
+    c6.task.Timing.MinHoldTime = 1.2;
+    c6.task.Timing.MaxHoldTime = 1.4;
+    
+    % condition 7
+    c7.Nr = 7;
+    c7.task.Timing.MinHoldTime = 1.4;
+    c7.task.Timing.MaxHoldTime = 1.6;
+    
+    % condition 8
+    c8.Nr = 8;
+    c8.task.Timing.MinHoldTime = 1.6;
+    c8.task.Timing.MaxHoldTime = 1.8;
+    
+    % condition 9
+    c9.Nr = 9;
+    c9.task.Timing.MinHoldTime = 1.8;
+    c9.task.Timing.MaxHoldTime = 2.0;
 
     % create a cell array containing all conditions
     % conditions = {c1, c2, c3, c4, c5};
-    conditions = {c1, c2, c3, c4};
+    conditions = {c1, c2, c3, c4, c5, c6, c7, c8, c9};
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
-
-
-%     p.trial.ChkPassTime = NaN;
 
 else
 % ####################################################################### %
