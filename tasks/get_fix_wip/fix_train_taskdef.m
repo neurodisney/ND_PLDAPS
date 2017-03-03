@@ -1,8 +1,8 @@
 % fix_train_taskdef.m
 %
-%
-%
-%
+% 03/02/2017 AB last edited
+% 02/08/2017 AB created 
+% modified from: joy_train_taskdef.m (WZ)
 
 %% Condition/Block design
 p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are
@@ -18,7 +18,6 @@ p.trial.task.Reward.PullRew = 0.2;
 p.trial.task.Reward.IncrConsecutive = 1;     
 % increase reward for subsequent correct trials. Otherwise reward will 
 % increase with the number of hits (but not correct rejections)
-% AB: 
 p.trial.task.Reward.Dur  = [0.25, 0.50, 0.75]; 
 % reward duration [s], user vector to specify values used for incremental
 % reward scheme
@@ -48,3 +47,6 @@ p.trial.task.Timing.TimeOut     =  2;     % Time [s] out for incorrect responses
 p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a trial starts after random lever presses
 
 p.trial.behavior.joystick.minRT =  0.20;     % If a response occurs prior this time it is considered an early response
+
+% fixation-related temporal parameters
+p.trial.task.Timing.

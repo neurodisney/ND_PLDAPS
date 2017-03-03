@@ -114,64 +114,64 @@ else
     switch state
 % ####################################################################### %
 % DONE BEFORE MAIN TRIAL LOOP:
-        % ----------------------------------------------------------------%
+% ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialSetup
-        %% trial set-up
-        % prepare everything for the trial, including allocation of stimuli
-        % and all other more time demanding stuff.
-
-        TaskSetUp(p);
-        %ND_CtrlMsg(p, 'TRIAL SETUP');
-
-        % ----------------------------------------------------------------%
+            %% trial set-up
+            % prepare everything for the trial, including allocation of stimuli
+            % and all other more time demanding stuff.
+            
+            TaskSetUp(p);
+            %ND_CtrlMsg(p, 'TRIAL SETUP');
+            
+            % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
-        %% trial preparation
-        % just prior to actual trial start, use it for time sensitive preparations;
-
-        p.trial.task.EV.TrialStart = GetSecs;
-
-% ####################################################################### %
-% DONE DURING THE MAIN TRIAL LOOP:
-
-%         case p.trial.pldaps.trialStates.frameUpdate
-%         p.trial.ChkPassTime = GetSecs;
-
-        % ----------------------------------------------------------------%
+            %% trial preparation
+            % just prior to actual trial start, use it for time sensitive preparations;
+            
+            p.trial.task.EV.TrialStart = GetSecs;
+            
+            % ####################################################################### %
+            % DONE DURING THE MAIN TRIAL LOOP:
+            
+            %         case p.trial.pldaps.trialStates.frameUpdate
+            %         p.trial.ChkPassTime = GetSecs;
+            
+            % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.framePrepareDrawing
-        %% Get ready to display
-        % prepare the stimuli that should be shown, do some required calculations
-
-        TaskDesign(p);
-
-        % ----------------------------------------------------------------%
+            %% Get ready to display
+            % prepare the stimuli that should be shown, do some required calculations
+            
+            TaskDesign(p);
+            
+            % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
-        %% Display stuff on the screen
-        % Just call graphic routines, avoid any computations
-
-        TaskDraw(p)
-
-%         p.trial.ChkPassTime = 1000*(GetSecs - p.trial.ChkPassTime);
-%         ND_CtrlMsg(p, ['one pass: ',num2str(p.trial.ChkPassTime,'%.2f'),' ms']);
-
-% ####################################################################### %
-% DONE AFTER THE MAIN TRIAL LOOP:
-        % ----------------------------------------------------------------%
+            %% Display stuff on the screen
+            % Just call graphic routines, avoid any computations
+            
+            TaskDraw(p)
+            
+            %         p.trial.ChkPassTime = 1000*(GetSecs - p.trial.ChkPassTime);
+            %         ND_CtrlMsg(p, ['one pass: ',num2str(p.trial.ChkPassTime,'%.2f'),' ms']);
+            
+            % ####################################################################### %
+            % DONE AFTER THE MAIN TRIAL LOOP:
+            % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
-        %% trial end
-
+            %% trial end
+            
             % FinishTask(p);
-
+            
             p = ND_CheckCondRepeat(p); % ensure all conditions were performed correctly equal often
-
+            
             Trial2Ascii(p, 'save');
-
+            
             % just as fail safe, make sure to finish when done
             if(p.trial.pldaps.iTrial == length(p.conditions))
                 p.trial.pldaps.finish = p.trial.pldaps.iTrial;
             end
-
+            
             %ND_CtrlMsg(p, 'TRIAL END');
-
+            
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
 
