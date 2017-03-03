@@ -22,16 +22,16 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 % on, wait for a change of the target and then release the joystick as
 % response. If FullTask is set to zero it just waits for the trial start
 % cue and rewards when pressed as response to the cue onset.
-p.trial.task.FullTask = 0;
+p.trial.task.FullTask = 1;
 
 % ------------------------------------------------------------------------%
 %% Reward
-p.trial.task.Reward.Pull    = 0;          % If 1 then give reward for pulling the joystick
+p.trial.task.Reward.Pull    = 1;          % If 1 then give reward for pulling the joystick
 p.trial.task.Reward.PullRew = 0.2;        % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
 
 p.trial.task.Reward.IncrConsecutive = 1;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.4, 0.75];    % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
+p.trial.task.Reward.Dur  = [0.3, 0.4, 0.5, 0.6, 0.7, 0.8];    % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Step = 1:6;        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
 
 p.trial.task.Reward.Lag    = 0.10;        % Delay between response and reward onset
 p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses

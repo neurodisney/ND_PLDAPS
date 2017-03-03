@@ -230,8 +230,7 @@ function TaskDesign(p)
                 ND_CtrlMsg(p, 'Trial started');
 
                 p.trial.task.Timing.WaitTimer = p.trial.task.EV.TaskStart + p.trial.task.Timing.WaitStart;
-                
-                
+                                
                 p.trial.CurrEpoch = p.trial.epoch.WaitStart;
             end
 
@@ -247,7 +246,7 @@ function TaskDesign(p)
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
-               p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
+                p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
                 pds.tdt.strobe(p.trial.event.JOY_PRESS);
                 
                 if(p.trial.task.EV.StartRT <  p.trial.task.Timing.minRT)
@@ -407,7 +406,7 @@ function TaskDesign(p)
             if(GetSecs > p.trial.task.Timing.WaitTimer)
                 p.trial.flagNextTrial = 1;
             end
-    end
+    end   % switch p.trial.CurrEpoch
 
 % ------------------------------------------------------------------------%
 function TaskDraw(p)

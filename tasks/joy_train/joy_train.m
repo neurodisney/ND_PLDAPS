@@ -100,7 +100,7 @@ if(isempty(state))
 
     % create a cell array containing all conditions
     % conditions = {c1, c2, c3, c4, c5};
-    conditions = {c1, c2, c3, c4};
+    conditions = {c2, c3, c4, c5};
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
 
@@ -246,6 +246,7 @@ function TaskDesign(p)
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
 
                 p.trial.task.EV.StartRT = ctm - p.trial.task.EV.TaskStart;
+                pds.tdt.strobe(p.trial.event.JOY_PRESS);
 
                 if(p.trial.task.EV.StartRT <  p.trial.task.Timing.minRT)
                 % too quick to be a true response
@@ -257,6 +258,7 @@ function TaskDesign(p)
                 else
                 % we just got a press in time
                     %ND_CtrlMsg(p, 'Joystick press');
+                    pds.tdt.strobe(p.trial.event.TASK_ON);
 
                     if(p.trial.task.FullTask)
                         % do full task, use other task epochs
@@ -289,12 +291,16 @@ function TaskDesign(p)
             ctm = GetSecs;
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
                 %ND_CtrlMsg(p, 'Early release');
+                pds.tdt.strobe(p.trial.event.JOY_RELEASE);
+                pds.tdt.strobe(p.trial.event.RESP_EARLY);
+
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
                 p.trial.task.EV.JoyRelease = ctm - p.trial.task.EV.TaskStart;
 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 
             elseif(ctm > p.trial.task.Timing.WaitTimer)
+                pds.tdt.strobe(p.trial.event.GOCUE);
                 %ND_CtrlMsg(p, 'Wait response');
                 p.trial.task.EV.GoCue         = ctm - p.trial.task.EV.TaskStart;
                 p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.WaitResp;
@@ -314,11 +320,13 @@ function TaskDesign(p)
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
 
+                pds.tdt.strobe(p.trial.event.JOY_RELEASE);               
                 p.trial.task.EV.RespRT = ctm - p.trial.task.EV.GoCue;
 
                 if(p.trial.task.EV.RespRT <  p.trial.task.Timing.minRT)
                 % premature response - too early to be a true response
                      %ND_CtrlMsg(p, 'premature response');
+                     pds.tdt.strobe(p.trial.event.RESP_PREMAT);
                      p.trial.outcome.CurrOutcome = outcome.Early;
 
                      p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
@@ -362,6 +370,8 @@ function TaskDesign(p)
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 p.trial.task.EV.JoyRelease = GetSecs;
                 %ND_CtrlMsg(p, 'Late Release');
+                pds.tdt.strobe(p.trial.event.JOY_RELEASE);  
+                pds.tdt.strobe(p.trial.event.RESP_LATE);               
 
                 % use it as optional release reward if not full task is used
                 if(p.trial.task.Reward.Pull && ~p.trial.task.FullTask)
@@ -389,6 +399,9 @@ function TaskDesign(p)
 
                 p.trial.CurrEpoch = p.trial.epoch.ITI;
             end
+            
+            pds.tdt.strobe(p.trial.event.TASK_OFF);               
+            pds.datapixx.TTL_state(1,0);
 
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI
@@ -396,7 +409,7 @@ function TaskDesign(p)
             if(GetSecs > p.trial.task.Timing.WaitTimer)
                 p.trial.flagNextTrial = 1;
             end
-    end
+    end  % switch p.trial.CurrEpoch
 
 % ------------------------------------------------------------------------%
 function TaskDraw(p)
