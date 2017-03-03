@@ -82,6 +82,10 @@ if(isempty(state))
     %Trial2Ascii(p, 'init'); TODO: Save bar parameters to file every frame
 
     % --------------------------------------------------------------------%
+
+% ####################################################################### %
+else
+    %% Subsequent calls during actual trials
     
 end
 
