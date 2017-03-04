@@ -1,7 +1,11 @@
 function start_fix_train(subjname)
-
+%
+% function is good to go
+% maybe migrate/initialize some future parameter parameters here?
+%
 % created 08/02/2017 AB
-% last edited 08/02/2017 AB
+% last edited 03/03/2017 AB
+% - added comments, reviewed code
 % based on 'start_joy_train.m' WZ
 %
 % run this function to begin a fixation training experiment
@@ -14,7 +18,7 @@ if(~exist('subjname','var') || isempty(subjname))
 end
 
 % function to set up experiment (and maybe also including trial function)
-exp_fun = 'fix_train_task'; % TO BE CREATED
+exp_fun = 'fix_train_task'; 
 
 %% load default settings
 SS=ND_RigDefaults;  % load default settings according to the current rig setup
@@ -28,7 +32,9 @@ SS.display.bgColor    = [50, 50, 50] / 255;
 
 % prepare for eye tracking and joystick monitoring
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
-SS.mouse.useAsEyepos  = 0;
+SS.mouse.useAsEyepos     = 0;
+SS.datapixx.useAsEyepos  = 0;
+SS.behavior.fixation.use = 0;
 
 SS.pldaps.nosave = 1;  % For now do not bother with the pldaps file format, use plain text file instead.
 

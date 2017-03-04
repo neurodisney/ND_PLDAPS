@@ -47,6 +47,10 @@ if(isempty(state))
     % entries later in the lookup table for the definition of task related colors.
     ND_DefineCol(p, 'TargetDimm', 30, [0.00, 1.00, 0.00]);
     ND_DefineCol(p, 'TargetOn',   31, [1.00, 0.00, 0.00]);
+    ND_DefineCol(p, 'FixSpotInit', 32, [1 1 1]); % initial fixspot clr
+    ND_DefineCol(p, 'FixSpotAcq', 33, [0.8 1 0.8]); 
+    % optional, use flagged is TODO, color fixspot changes to upon
+    % acquisition of (stable?) fixation
     
     %% Determine conditions and their sequence
     % define conditions (conditions could be passed to the pldaps call as
@@ -59,9 +63,10 @@ if(isempty(state))
     
     % condition 1
     c1.Nr = 1;
-    %c1.task.Timing.MinHoldTime = 0.1;
-    %c1.task.Timing.MaxHoldTime = 0.2;
-    
+    c1.task.Timing.MinHoldTime = 0.1;
+    c1.task.Timing.MaxHoldTime = 0.2;
+    c1.task.Timing.minFixHoldTime = 0.2; % amb 03/03/17 added
+    c1.task.Timing.maxFixHoldTime = 0.4; % amb 03/03/17 added
 %     % condition 2
 %     c2.Nr = 2;
 %     
@@ -75,7 +80,8 @@ if(isempty(state))
 %     c5.Nr = 5;
     
     % create a cell array containing all conditions
-    conditions = {c1, c2, c3, c4, c5};
+%     conditions = {c1, c2, c3, c4, c5};
+    conditions = {c1};
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 else
     %% Subsequent calls during actual trials
@@ -93,6 +99,7 @@ else
             TaskDraw(p);
             %% DONE AFTER THE MAIN TRIAL LOOP:
         case p.trial.pldaps.trialStates.trialCleanUpandSave
+            % ensure all conditions were performed correctly equal often
             p = ND_CheckCondRepeat(p);
             Trial2Ascii(p, 'save');
             if(p.trial.pldaps.iTrial == length(p.conditions))
@@ -112,15 +119,25 @@ function TaskSetUp(p)
 % TODO: make it robust and let it work with parameter changes via keyboard,
 % see e.g. monkeylogic editable concept.
 fix_train_taskdef;
+% AB to WZ:  this is already done on initialization, do we need it in both
+% places?
 
 p.trial.task.Timing.ITI=ND_GetITI(p.trial.task.Timing.MinITI,      ...
     p.trial.task.Timing.MaxITI,      [], [], 1, 0.10);
 p.trial.task.Timing.HoldTime=ND_GetITI(p.trial.task.Timing.MinHoldTime, ...
     p.trial.task.Timing.MaxHoldTime, [], [], 1, 0.02);
+
+% AB 03/03/17 -- generate these for fix params
+% R = ND_GetITI(minval, maxval, rndmeth, mu, n, step)
+% n = number of random times to output, step = min stepsize between samples
+p.trial.task.Timing.FixHoldTime=ND_GetITI(p.trial.task.Timing.MinFixHoldTime, ...
+    p.trial.task.Timing.MaxITI,      [], [], 1, 0.01); 
+
 % Minimum time before response is expected
 p.trial.task.TaskStart   = NaN;
 p.trial.CurrEpoch = p.trial.epoch.GetReady;
-p.trial.task.Reward.Curr = p.trial.task.Reward.Dur(1);
+%p.trial.task.Reward.Curr = p.trial.task.Reward.Dur(1);
+p.trial.task.Reward.Curr = NaN;
 
 function TaskDesign(p)%% main task outline
 % The different task stages (i.e. 'epochs') are defined here.
