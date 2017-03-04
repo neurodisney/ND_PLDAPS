@@ -128,12 +128,16 @@ p.trial.task.Timing.HoldTime=ND_GetITI(p.trial.task.Timing.MinHoldTime, ...
     p.trial.task.Timing.MaxHoldTime, [], [], 1, 0.02);
 
 % AB 03/03/17 -- generate these for fix params
+% R = ND_GetITI(minval, maxval, rndmeth, mu, n, step)
+% n = number of random times to output, step = min stepsize between samples
 p.trial.task.Timing.FixHoldTime=ND_GetITI(p.trial.task.Timing.MinFixHoldTime, ...
-    p.trial.task.Timing.MaxITI,      [], [], 1, 0.02);
+    p.trial.task.Timing.MaxITI,      [], [], 1, 0.01); 
+
 % Minimum time before response is expected
 p.trial.task.TaskStart   = NaN;
 p.trial.CurrEpoch = p.trial.epoch.GetReady;
-p.trial.task.Reward.Curr = p.trial.task.Reward.Dur(1);
+%p.trial.task.Reward.Curr = p.trial.task.Reward.Dur(1);
+p.trial.task.Reward.Curr = NaN;
 
 function TaskDesign(p)%% main task outline
 % The different task stages (i.e. 'epochs') are defined here.
