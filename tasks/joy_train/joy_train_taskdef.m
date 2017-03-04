@@ -27,11 +27,11 @@ p.trial.task.FullTask = 1;
 % ------------------------------------------------------------------------%
 %% Reward
 p.trial.task.Reward.Pull    = 1;          % If 1 then give reward for pulling the joystick
-p.trial.task.Reward.PullRew = 0.15;        % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
+p.trial.task.Reward.PullRew = 0.25;       % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
 
 p.trial.task.Reward.IncrConsecutive = 1;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.25, 0.5, 0.75];    % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step = [1, 2, 3];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
+p.trial.task.Reward.Dur  = [0.5, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
 
 p.trial.task.Reward.Lag    = 0.10;        % Delay between response and reward onset
 p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
@@ -55,7 +55,7 @@ p.trial.task.Timing.minRT =  0.20;        % If a response occurs prior this time
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
 % target item
-p.trial.task.TargetSz_dva  = 8;   % Stimulus diameter in dva
+p.trial.task.TargetSz_dva  = 6;   % Stimulus diameter in dva
 p.trial.task.TargetPos_dva = [0, 0];    % Stimulus diameter in dva25seconds
 
 p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva

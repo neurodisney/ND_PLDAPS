@@ -71,7 +71,6 @@ end
 
 %-------------------------------------------------------------------------%
 %% Trial information
-% p.trial.trialnumber   = p.trial.pldaps.iTrial;
 
 % system timing
 p.trial.timing.flipTimes             = p.trial.timing.flipTimes(:, 1:p.trial.iFrame);  % WZ: Why here again? Was defined at the function start...

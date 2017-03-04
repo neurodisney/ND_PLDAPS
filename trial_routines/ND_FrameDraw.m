@@ -91,6 +91,8 @@ end
 % ------------------------------------------------------------------------%
 %% draw photodiode
 % this is displayed as mono-chromatic (white) element on p.trial.display.ptr
+% TODO: WZ: use a combination of state and timer instead of calling mod.
+%           Whenever timer expires and state changes require a screen synch
 if(p.trial.pldaps.draw.photodiode.use && ...
    mod(p.trial.iFrame, p.trial.pldaps.draw.photodiode.everyXFrames) == 0 )
 
