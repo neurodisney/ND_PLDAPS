@@ -1,0 +1,75 @@
+/* As inspiration for codes to be used with PLDAPS some previous encodes */
+
+/******** DEFINE PLX ENCODES ***********/
+#define TRIAL_START             10
+#define TRIAL_END               11
+
+#define START_EYE_DATA          100
+#define STOP_EYE_DATA           101
+#define START_BSL               102
+#define TURN_FIXSPOT_ON         110
+#define TURN_FIXSPOT_OFF        111
+#define TURN_CUE_ON             120
+#define TURN_STIM_ON            130
+#define START_MOVE              131
+#define SPEED_UP                140
+#define STOP_MOVE               150
+#define TURN_STIM_OFF           151
+
+#define FIXATION_OCCURS         1000
+#define EYE_GO                  1001
+#define TGT_ARRIVE              1002 
+#define GOT_REW                 1003
+#define TC_CORR                 1004 //trial complete, correct 
+
+#define FIX_BRK_BSL             3000
+#define FIX_BRK_CUE             3001
+#define FIX_BRK_STIM            3002
+#define FIX_BRK_SPEED           3003
+#define ERR_NO_START            3004
+#define ERR_EARLY_WRONG         3005
+#define	ERR_FA			3006
+#define	ERR_MISS		3007
+#define	ERR_WR_RESP		3008
+#define	ERR_TGT_BRK		3009
+#define TC_ERR			3010 //trial complete, incorrect
+#define NO_TC			3011 //trial incomplete
+
+#define	X_RF			5000
+#define Y_RF			5100
+#define	DIR_TGT_BASE		6000
+#define	COND_NUM_BASE		7000
+#define	UNCUE_TRL		8000
+#define	CUE_TRL			8100
+
+#define ENCODE_STATS     	11000
+
+/********OTHER PLX**************************/
+#define TRUE                    1
+#define FALSE                   0
+#define USE_INPBSY              FALSE
+#define	PLEXON_DEV		1 	//device number as given by order listed in 
+					//cortex.cfg. The nth device is dev.num.n-1
+#define	PLEXON_PORT_CTRL	0x02	//low byte(strobe output),hi byte (busy input)
+#define	PLEXON_INPBSY		0x10	//Busy bit (input). bit mask used for 
+					//determining state of plexon word read
+					//busy or not
+#define	PLEXON_DATA_ON		0x02	//keep high while recording data
+#define	PLEXON_DATA_OFF		0x00	//pause plexon data recording
+#define NOP			0	//No operation code
+#define	PLEXON_PORT_LSB		0x00	//output: low byte for plexon
+#define	PLEXON_PORT_MSB		0x01	//output: hi byte (7 bits) for plexon
+#define	PLEXON_STROBE_BIT	0x01	//strobe bit (output)
+#define	PLEXON_STROBE_OFF	0x00	//strobe bit off
+#define CONFIG_PORT		0x03	//config port for input and output
+
+int prior_event_code; 
+
+/************************ DEFINE QTN ENCODES ******************************/
+
+#define QTN_OUT                 0x378
+#define QTN_TRL_START           0x01
+#define QTN_BSL                 0x02
+#define QTN_CUE                 0x04
+#define QTN_TRL_END             0x08
+#define QTN_OFF                 0x00

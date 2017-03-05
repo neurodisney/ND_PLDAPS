@@ -60,3 +60,6 @@ p.trial.TrialStart = datestr(now,'HH:MM:SS:FFF');  % WZ: added absolute time as 
 
 p.trial.EV.TrialStart = p.trial.trstart; % WZ: added for convenience/consistency
 
+p.trial.CurTime = vblTime;  % keep track of current time
+
+

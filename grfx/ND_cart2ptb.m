@@ -1,7 +1,7 @@
 function [ptb_x, ptb_y] = ND_cart2ptb(p, xc, yc, scrctr, scres)
-% convert cartesian pixel coordinates (origin is screen center) into coordinates used by the psychtoolbox,
-% see http://docs.psychtoolbox.org/Screen : "All screen and window coordinates
-% follow Apple Macintosh conventions".
+% convert cartesian pixel coordinates (origin is screen center) into coordinates
+% used by the psychtoolbox, see http://docs.psychtoolbox.org/Screen:
+% "All screen and window coordinates follow Apple Macintosh conventions".
 %
 %
 % wolf zinke, Jan. 2017

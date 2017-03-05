@@ -8,13 +8,11 @@ function ND_FrameFlip(p)
 
 %-------------------------------------------------------------------------%
 %% Flip the screen and keep track of frame timings
+% TODO: WZ: Set a flag that screen synch is required, otherwise use the
+%           'dontsync' argument and set it to 0
 p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
 
-p.trial.stimulus.timeLastFrame     = p.trial.timing.flipTimes(1, p.trial.iFrame) - p.trial.trstart;
-p.trial.framePreLastDrawIdleCount  = 0;
-p.trial.framePostLastDrawIdleCount = 0;
-
-% TODO: WZ - check if there is a check implemented somewhere that keeps track of the difference between expected flip time and current flip time.
+p.trial.stimulus.timeLastFrame = p.trial.timing.flipTimes(1, p.trial.iFrame) - p.trial.trstart;
 
 % %-------------------------------------------------------------------------%
 % %% Create movie (WZ: do we need this for now?)
