@@ -9,6 +9,22 @@ disp('****************************************************************')
 disp('>>>>  ND:  Defining Event Codes <<<<')
 disp('****************************************************************')
 disp('');
+
+
+% ------------------------------------------------------------------------%
+%% initialize event times as NaN
+p.defaultParameters.EV.TrialStart = NaN; % Trial start time
+p.defaultParameters.EV.TaskStart  = NaN; % actual task start after animal got ready (i.e. joystick is released)
+p.defaultParameters.EV.JoyPress   = NaN; % Press time to start task
+p.defaultParameters.EV.GoCue      = NaN; % Onset of Go-signal
+p.defaultParameters.EV.JoyRelease = NaN; % time of joystick release
+p.defaultParameters.EV.Reward     = NaN; % time of reward delivery
+p.defaultParameters.EV.StartRT    = NaN; % response time to start trial after active cue
+p.defaultParameters.EV.RespRT     = NaN; % reaction time
+p.defaultParameters.EV.FixStart   = NaN; % start of fixation
+p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
+p.defaultParameters.EV.Saccade    = NaN; % response saccade detected
+
 % ------------------------------------------------------------------------%
 %% Task encodes
 % it is the responsibility of the person programming tasks to use these encodes
@@ -66,7 +82,6 @@ p.defaultParameters.event.SOUND_ON      = 180;     % stimulus onset
 p.defaultParameters.event.MICROSTIM     = 666;     % microstimulation pulse onset
 p.defaultParameters.event.INJECT        = 667;     % start of pressure injection
 p.defaultParameters.event.IONTO         = 667;     % start of iontophoretic drug delivery
-
 
 % ------------------------------------------------------------------------%
 %% System encodes

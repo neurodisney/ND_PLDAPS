@@ -55,8 +55,7 @@ end
 
 % ------------------------------------------------------------------------%
 %% Reward    
-%%% prepare reward system
-% TODO: This might not be needed for ND, needs to be checked
+%%% prepare reward system and pre-allocate variables for reward timings
 pds.behavior.reward.trialSetup(p);
 
 % ------------------------------------------------------------------------%
@@ -86,7 +85,6 @@ p.trial.SmryStr = sprintf('Condition: %d  Block: %d -- %d/%d correct trials (%.2
 
 ND_CtrlMsg(p, p.trial.SmryStr);
 
-
 % ------------------------------------------------------------------------%
 %% framerate history
 %%% prepare to plot framerate history on screen
@@ -104,6 +102,9 @@ if(p.trial.pldaps.draw.framerate.use)
 end
 
 % ------------------------------------------------------------------------%
-%% Set task epoch to nan
-p.trial.CurrEpoch = NaN; 
+%% Initialize default trial control variables
+p.trial.CurrEpoch             = NaN;  % keep track of task epochs
+p.trial.task.Timing.WaitTimer = NaN;  % Initialize variable that contains a timer 
+p.trial.CurTime               = NaN;  % keep track of current time
+
 

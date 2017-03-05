@@ -23,17 +23,18 @@ p.defaultParameters.outcome.False       =   3006;  % wrong response within respo
 p.defaultParameters.outcome.Late        =   5;  % response occurred after response window
 p.defaultParameters.outcome.Miss        =   3007;  % no response at a reasonable time
 p.defaultParameters.outcome.NoStart     =   3004;  % trial not started
+p.defaultParameters.outcome.PrematStart =   3007;  % trial start not too early as response to cue
 
 p.defaultParameters.outcome.FIX_BRK_BSL   =   3000;
 p.defaultParameters.outcome.FIX_BRK_CUE   =   3001;
 p.defaultParameters.outcome.FIX_BRK_STIM  =   3002;
 p.defaultParameters.outcome.FIX_BRK_SPEED =   3003;
 
-
-% get a string representation of the outcome
+%% get a string representation of the outcome
 p.defaultParameters.outcome.codenames = fieldnames(p.defaultParameters.outcome);
 noc = length(p.defaultParameters.outcome.codenames);
 p.defaultParameters.outcome.codes = nan(1,noc);
+
 for(i=1:noc)
     p.defaultParameters.outcome.codes(i) = p.defaultParameters.outcome.(p.defaultParameters.outcome.codenames{i});
 end

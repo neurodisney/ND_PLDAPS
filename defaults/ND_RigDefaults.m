@@ -20,7 +20,8 @@ function SS = ND_RigDefaults(SS)
 
 % ------------------------------------------------------------------------%
 %% behavior settings: behavioral control parameters
-SS.behavior.reward.defaultAmount                = 0.05;   % Default amount of reward.=0; [in seconds]
+SS.reward.defaultAmount                         = 0.05;   % Default amount of reward.=0; [in seconds]
+SS.reward.Lag                                   = 0.15;   % Delay between response and reward onset
 
 % ------------------------------------------------------------------------%
 %% datapixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
@@ -204,6 +205,9 @@ SS.datapixx.adc.TTLamp        = 3;  % amplitude of TTL pulses via adc
 
 SS.datapixx.TTLdur            = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the TTL pulse
 SS.datapixx.EVdur             = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the strobe signal
+
+SS.datapixx.TTL_trialOn       = 1;   % if 1 set a digital output high while trial is active
+SS.datapixx.TTL_trialOnChan   = 1;   % DIO channel used for trial state TTL
 
 % ------------------------------------------------------------------------%
 %% Tucker Davis control

@@ -10,6 +10,7 @@ addpath('~/Experiments/ND_PLDAPS/grfx');
 addpath('~/Experiments/ND_PLDAPS/trial_routines');
 addpath('~/Experiments/ND_PLDAPS/misc');
 addpath('~/Experiments/ND_PLDAPS/defaults');
+addpath('~/Experiments/ND_PLDAPS/flow');
 
 
 %% task specific sub-directories
