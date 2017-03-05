@@ -129,6 +129,8 @@ else
 %% Subsequent calls during actual trials
 % execute trial specific commands here.
 
+    p.trial.CurTime = GetSecs;  % get the current time
+
     switch state
 % ####################################################################### %
 % DONE BEFORE MAIN TRIAL LOOP:
@@ -212,38 +214,38 @@ function TaskSetUp(p)
     p.trial.task.Reward.Curr = NaN;
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
-
+    
 % ------------------------------------------------------------------------%
 function TaskDesign(p)
 %% main task outline
 % The different task stages (i.e. 'epochs') are defined here.
 
+    
     switch p.trial.CurrEpoch
         % ----------------------------------------------------------------%
         case p.trial.epoch.GetReady
         %% before the trial can start joystick needs to be in a released state
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-                ND_CtrlMsg(p, 'bar released');
+                %ND_CtrlMsg(p, 'bar released');
                 p.trial.task.Timing.WaitTimer = GetSecs + p.trial.task.Timing.MinRel;
                 p.trial.CurrEpoch = p.trial.epoch.CheckBarRel;
             end
 
         case p.trial.epoch.CheckBarRel
         %% make sure that the bar is fully release by waiting for a specified time    
-            ctm = GetSecs;
 
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
             % pressed again to quickly
-                ND_CtrlMsg(p, 'premature bar press');
+                %ND_CtrlMsg(p, 'premature bar press');
                 p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 
-            elseif(ctm > p.trial.task.Timing.WaitTimer)
+            elseif(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
             % joystick in a properly released state, let's start the trial
-                p.trial.task.EV.TaskStart     = GetSecs;
+                p.trial.task.EV.TaskStart     = p.trial.CurTime;
                 p.trial.task.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
-                ND_CtrlMsg(p, 'Trial started');
+                %ND_CtrlMsg(p, 'Trial started');
 
                 p.trial.task.Timing.WaitTimer = p.trial.task.EV.TaskStart + p.trial.task.Timing.WaitStart;
 
@@ -253,8 +255,7 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitStart
         %% Wait for joystick press
-            ctm = GetSecs;
-            if(ctm > p.trial.task.Timing.WaitTimer)
+            if(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
             % no trial initiated in the given time window
                 %ND_CtrlMsg(p, 'No joystick press');
                 p.trial.outcome.CurrOutcome = p.trial.outcome.NoPress;
@@ -263,7 +264,7 @@ function TaskDesign(p)
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
 
-                p.trial.task.EV.StartRT = ctm - p.trial.task.EV.TaskStart;
+                p.trial.task.EV.StartRT = p.trial.CurTime - p.trial.task.EV.TaskStart;
                 pds.tdt.strobe(p.trial.event.JOY_PRESS);
                 
                 if(p.trial.task.EV.StartRT <  p.trial.task.Timing.minRT)
@@ -282,8 +283,8 @@ function TaskDesign(p)
 
                    if(p.trial.task.FullTask)
                         % do full task, use other task epochs
-                        p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
-                        p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.HoldTime;
+                        p.trial.task.EV.JoyPress      = p.trial.CurTime - p.trial.task.EV.TaskStart;
+                        p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.HoldTime;
 
                         p.trial.CurrEpoch = p.trial.epoch.WaitGo;
 
@@ -295,7 +296,7 @@ function TaskDesign(p)
                         % That was the task, reward animal and done
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
 
-                        p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Reward.Lag;
+                        p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Reward.Lag;
 
                         p.trial.CurrEpoch = p.trial.epoch.WaitReward;
                     end
@@ -305,23 +306,22 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitGo
         %% delay before response is needed
-            ctm = GetSecs;
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
                 %ND_CtrlMsg(p, 'Early release');
                 pds.tdt.strobe(p.trial.event.JOY_RELEASE);
                 pds.tdt.strobe(p.trial.event.RESP_EARLY);
                 
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
-                p.trial.task.EV.JoyRelease = ctm - p.trial.task.EV.TaskStart;
+                p.trial.task.EV.JoyRelease  = p.trial.CurTime - p.trial.task.EV.TaskStart;
 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 
-            elseif(ctm > p.trial.task.Timing.WaitTimer)
+            elseif(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
                 %ND_CtrlMsg(p, 'Wait response');
                 pds.tdt.strobe(p.trial.event.GOCUE);
                 
-                p.trial.task.EV.GoCue         = ctm - p.trial.task.EV.TaskStart;
-                p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.WaitResp;
+                p.trial.task.EV.GoCue         = p.trial.CurTime - p.trial.task.EV.TaskStart;
+                p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.WaitResp;
 
                 p.trial.CurrEpoch = p.trial.epoch.WaitResponse;
             end
@@ -329,8 +329,7 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitResponse
         %% Wait for joystick release
-            ctm = GetSecs;
-            if(ctm > p.trial.task.Timing.WaitTimer)
+            if(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
                 %ND_CtrlMsg(p, 'No Response');
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
 
@@ -339,7 +338,7 @@ function TaskDesign(p)
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
 
                 pds.tdt.strobe(p.trial.event.JOY_RELEASE);               
-                p.trial.task.EV.RespRT = ctm - p.trial.task.EV.GoCue;
+                p.trial.task.EV.RespRT = p.trial.CurTime - p.trial.task.EV.GoCue;
 
                 if(p.trial.task.EV.RespRT <  p.trial.task.Timing.minRT)
                 % premature response - too early to be a true response
@@ -355,8 +354,8 @@ function TaskDesign(p)
                     pds.tdt.strobe(p.trial.event.RESP_CORR);
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
 
-                    p.trial.task.EV.JoyRelease    = ctm - p.trial.task.EV.TaskStart;
-                    p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Reward.Lag;
+                    p.trial.task.EV.JoyRelease    = p.trial.CurTime - p.trial.task.EV.TaskStart;
+                    p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Reward.Lag;
 
                     p.trial.CurrEpoch = p.trial.epoch.WaitReward;
                 end
@@ -366,9 +365,8 @@ function TaskDesign(p)
         case p.trial.epoch.WaitReward
         %% Wait for for reward
         % add error condition for new press
-            ctm = GetSecs;
-            if(ctm > p.trial.task.Timing.WaitTimer)
-                p.trial.task.EV.Reward = ctm - p.trial.task.EV.TaskStart;
+            if(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
+                p.trial.task.EV.Reward = p.trial.CurTime - p.trial.task.EV.TaskStart;
                 % TODO: add function to select current reward amount based on time or
                 %       number of consecutive correct trials preceding the current one.
 
@@ -384,7 +382,7 @@ function TaskDesign(p)
         case p.trial.epoch.WaitRelease
         %% Wait for joystick release after missed response    FalseStart
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-                p.trial.task.EV.JoyRelease = GetSecs;
+                p.trial.task.EV.JoyRelease = p.trial.CurTime;
                 %ND_CtrlMsg(p, 'Late Release');
 
                 pds.tdt.strobe(p.trial.event.JOY_RELEASE);  
@@ -402,17 +400,15 @@ function TaskDesign(p)
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
 
-            %pds.datapixx.analogOut(0.01, 1); % send TTL pulse to signal trial end
-
             if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
                 
-                p.trial.task.Timing.WaitTimer = GetSecs + p.trial.task.Timing.ITI;
+                p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.ITI;
                 %ND_CtrlMsg(p, ['Correct: next trial in ', num2str(p.trial.task.Timing.ITI, '%.4f'), 'seconds.']);
 
                 p.trial.CurrEpoch = p.trial.epoch.ITI;
 
             else
-                p.trial.task.Timing.WaitTimer = GetSecs + p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
+                p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
                 %ND_CtrlMsg(p, ['Error: next trial in ', num2str(p.trial.task.Timing.ITI, '%.4f'), 'seconds.']);
 
                 p.trial.CurrEpoch = p.trial.epoch.ITI;
@@ -424,7 +420,7 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI
         %% inter-trial interval: wait before next trial to start
-            if(GetSecs > p.trial.task.Timing.WaitTimer)
+            if(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
                 p.trial.flagNextTrial = 1;
             end
     end
