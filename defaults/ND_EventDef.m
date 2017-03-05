@@ -75,7 +75,6 @@ p.defaultParameters.event.IONTO         = 667;     % start of iontophoretic drug
 p.defaultParameters.event.TRIALSTART = 10;         % begin of a trial according to PLDAPS (could differ from task begin)
 p.defaultParameters.event.TRIALEND   = 11;         % end of a trial according to PLDAPS (could differ from task end)
 
-p.defaultParameters.event.REWARD     = 1003;       % reward delivery, irrespective if earned in task or manually given by experimenter
 
 p.defaultParameters.event.FIX_IN     = 2000;       % gaze enters fixation window
 p.defaultParameters.event.FIX_OUT    = 2001;       % gaze leaves fixation window
@@ -85,8 +84,9 @@ p.defaultParameters.event.JOY_OFF    = 2101;       % joystick elevation below re
 
 p.defaultParameters.event.PDFLASH    = 2010;       % onset of photo diode flash
 
-% auditory feedback (NIY!)
-p.defaultParameters.event.AUDIO_REW = 1300;
+% feedback
+p.defaultParameters.event.REWARD     = 1003;       % reward delivery, irrespective if earned in task or manually given by experimenter
+p.defaultParameters.event.AUDIO_REW  = 1300;
 
 % analog output
 p.defaultParameters.event.AO_1       = 2311;

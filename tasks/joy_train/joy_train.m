@@ -132,50 +132,50 @@ else
     switch state
 % ####################################################################### %
 % DONE BEFORE MAIN TRIAL LOOP:
-% ----------------------------------------------------------------%
+        % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialSetup
-            %% trial set-up
-            % prepare everything for the trial, including allocation of stimuli
-            % and all other more time demanding stuff.
+        %% trial set-up
+        % prepare everything for the trial, including allocation of stimuli
+        % and all other more time demanding stuff.
             
             TaskSetUp(p);
             %ND_CtrlMsg(p, 'TRIAL SETUP');
             
-            % ----------------------------------------------------------------%
+        % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
-            %% trial preparation
-            % just prior to actual trial start, use it for time sensitive preparations;
+        %% trial preparation
+        % just prior to actual trial start, use it for time sensitive preparations;
             
             p.trial.task.EV.TrialStart = GetSecs;
             
-            % ####################################################################### %
-            % DONE DURING THE MAIN TRIAL LOOP:
+% ####################################################################### %
+% DONE DURING THE MAIN TRIAL LOOP:
             
             %         case p.trial.pldaps.trialStates.frameUpdate
             %         p.trial.ChkPassTime = GetSecs;
             
-            % ----------------------------------------------------------------%
+        % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.framePrepareDrawing
-            %% Get ready to display
-            % prepare the stimuli that should be shown, do some required calculations
+        %% Get ready to display
+        % prepare the stimuli that should be shown, do some required calculations
             
             TaskDesign(p);
             
-            % ----------------------------------------------------------------%
+        % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
-            %% Display stuff on the screen
-            % Just call graphic routines, avoid any computations
+        %% Display stuff on the screen
+        % Just call graphic routines, avoid any computations
             
             TaskDraw(p)
             
             %         p.trial.ChkPassTime = 1000*(GetSecs - p.trial.ChkPassTime);
             %         ND_CtrlMsg(p, ['one pass: ',num2str(p.trial.ChkPassTime,'%.2f'),' ms']);
             
-            % ####################################################################### %
-            % DONE AFTER THE MAIN TRIAL LOOP:
-            % ----------------------------------------------------------------%
+% ####################################################################### %
+% DONE AFTER THE MAIN TRIAL LOOP:
+        % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
-            %% trial end
+        %% trial end
             
             % FinishTask(p);
             
@@ -229,10 +229,11 @@ function TaskDesign(p)
             end
 
         case p.trial.epoch.CheckBarRel
+        %% make sure that the bar is fully release by waiting for a specified time    
             ctm = GetSecs;
 
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
-                % pressed again to quickly
+            % pressed again to quickly
                 ND_CtrlMsg(p, 'premature bar press');
                 p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 
@@ -240,7 +241,6 @@ function TaskDesign(p)
 
             elseif(ctm > p.trial.task.Timing.WaitTimer)
             % joystick in a properly released state, let's start the trial
-                ND_CtrlMsg(p, 'premature bar press');
                 p.trial.task.EV.TaskStart     = GetSecs;
                 p.trial.task.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
                 ND_CtrlMsg(p, 'Trial started');
@@ -264,7 +264,8 @@ function TaskDesign(p)
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
 
                 p.trial.task.EV.StartRT = ctm - p.trial.task.EV.TaskStart;
-
+                pds.tdt.strobe(p.trial.event.JOY_PRESS);
+                
                 if(p.trial.task.EV.StartRT <  p.trial.task.Timing.minRT)
                 % too quick to be a true response
                      %ND_CtrlMsg(p, 'premature start');
@@ -276,12 +277,15 @@ function TaskDesign(p)
                 % we just got a press in time
                     %ND_CtrlMsg(p, 'Joystick press');
 
-                    if(p.trial.task.FullTask)
+                    pds.tdt.strobe(p.trial.event.TASK_ON);
+                    pds.datapixx.TTL_state(1,1);
+
+                   if(p.trial.task.FullTask)
                         % do full task, use other task epochs
                         p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
                         p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.HoldTime;
 
-                        p.trial.CurrEpoch = p.trial.epoch.WaitGo;[0.4, 0.60, 0.8];
+                        p.trial.CurrEpoch = p.trial.epoch.WaitGo;
 
                         if(p.trial.task.Reward.Pull)
                             pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
@@ -290,9 +294,6 @@ function TaskDesign(p)
                     else
                         % That was the task, reward animal and done
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
-
-                        p.trial.LastHits = p.trial.LastHits + 1;
-                        p.trial.NHits    = p.trial.NHits    + 1;
 
                         p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Reward.Lag;
 
@@ -307,6 +308,9 @@ function TaskDesign(p)
             ctm = GetSecs;
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
                 %ND_CtrlMsg(p, 'Early release');
+                pds.tdt.strobe(p.trial.event.JOY_RELEASE);
+                pds.tdt.strobe(p.trial.event.RESP_EARLY);
+                
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
                 p.trial.task.EV.JoyRelease = ctm - p.trial.task.EV.TaskStart;
 
@@ -314,6 +318,8 @@ function TaskDesign(p)
 
             elseif(ctm > p.trial.task.Timing.WaitTimer)
                 %ND_CtrlMsg(p, 'Wait response');
+                pds.tdt.strobe(p.trial.event.GOCUE);
+                
                 p.trial.task.EV.GoCue         = ctm - p.trial.task.EV.TaskStart;
                 p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.WaitResp;
 
@@ -332,11 +338,13 @@ function TaskDesign(p)
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
 
+                pds.tdt.strobe(p.trial.event.JOY_RELEASE);               
                 p.trial.task.EV.RespRT = ctm - p.trial.task.EV.GoCue;
 
                 if(p.trial.task.EV.RespRT <  p.trial.task.Timing.minRT)
                 % premature response - too early to be a true response
                      %ND_CtrlMsg(p, 'premature response');
+                     pds.tdt.strobe(p.trial.event.RESP_PREMAT);
                      p.trial.outcome.CurrOutcome = outcome.Early;
 
                      p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
@@ -344,10 +352,8 @@ function TaskDesign(p)
                 else
                 % correct response
                     %ND_CtrlMsg(p, 'Correct Response');
+                    pds.tdt.strobe(p.trial.event.RESP_CORR);
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
-
-                    p.trial.LastHits = p.trial.LastHits + 1;
-                    p.trial.NHits    = p.trial.NHits    + 1;
 
                     p.trial.task.EV.JoyRelease    = ctm - p.trial.task.EV.TaskStart;
                     p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Reward.Lag;
@@ -381,6 +387,9 @@ function TaskDesign(p)
                 p.trial.task.EV.JoyRelease = GetSecs;
                 %ND_CtrlMsg(p, 'Late Release');
 
+                pds.tdt.strobe(p.trial.event.JOY_RELEASE);  
+                pds.tdt.strobe(p.trial.event.RESP_LATE);               
+
                 % use it as optional release reward if not full task is used
                 if(p.trial.task.Reward.Pull && ~p.trial.task.FullTask)
                     pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
@@ -396,6 +405,7 @@ function TaskDesign(p)
             %pds.datapixx.analogOut(0.01, 1); % send TTL pulse to signal trial end
 
             if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
+                
                 p.trial.task.Timing.WaitTimer = GetSecs + p.trial.task.Timing.ITI;
                 %ND_CtrlMsg(p, ['Correct: next trial in ', num2str(p.trial.task.Timing.ITI, '%.4f'), 'seconds.']);
 
@@ -407,6 +417,9 @@ function TaskDesign(p)
 
                 p.trial.CurrEpoch = p.trial.epoch.ITI;
             end
+            
+            pds.tdt.strobe(p.trial.event.TASK_OFF);               
+            pds.datapixx.TTL_state(1,0);
 
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI

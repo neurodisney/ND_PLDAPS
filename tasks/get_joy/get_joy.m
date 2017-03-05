@@ -247,7 +247,8 @@ function TaskDesign(p)
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
-               p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
+                
+                p.trial.task.EV.JoyPress    = ctm - p.trial.task.EV.TaskStart;
                 pds.tdt.strobe(p.trial.event.JOY_PRESS);
                 
                 if(p.trial.task.EV.StartRT <  p.trial.task.Timing.minRT)
@@ -262,7 +263,6 @@ function TaskDesign(p)
                     %ND_CtrlMsg(p, 'Joystick press');
 
                     pds.tdt.strobe(p.trial.event.TASK_ON);
-                    
                     pds.datapixx.TTL_state(1,1);
 
                     p.trial.task.EV.StartRT = ctm - p.trial.task.EV.TaskStart;
@@ -340,9 +340,6 @@ function TaskDesign(p)
                     pds.tdt.strobe(p.trial.event.RESP_CORR);
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
 
-                    p.trial.LastHits = p.trial.LastHits + 1;
-                    p.trial.NHits    = p.trial.NHits    + 1;
-
                     p.trial.task.EV.JoyRelease    = ctm - p.trial.task.EV.TaskStart;
                     p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Reward.Lag;
 
@@ -401,6 +398,7 @@ function TaskDesign(p)
             
             pds.tdt.strobe(p.trial.event.TASK_OFF);               
             pds.datapixx.TTL_state(1,0);
+            
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI
         %% inter-trial interval: wait before next trial to start
