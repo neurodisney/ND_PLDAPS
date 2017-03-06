@@ -48,7 +48,7 @@ if(isempty(state))
     ND_DefineCol(p, 'TargetDimm', 30, [0.00, 1.00, 0.00]);
     ND_DefineCol(p, 'TargetOn',   31, [1.00, 0.00, 0.00]);
     ND_DefineCol(p, 'FixSpotInit', 32, [1 1 1]); % initial fixspot clr
-    ND_DefineCol(p, 'FixSpotAcq', 33, [0.8 1 0.8]); 
+    ND_DefineCol(p, 'FixSpotAcq', 33, [0.8 1 0.8]);
     % optional, use flagged is TODO, color fixspot changes to upon
     % acquisition of (stable?) fixation
     
@@ -65,22 +65,23 @@ if(isempty(state))
     c1.Nr = 1;
     c1.task.Timing.MinHoldTime = 0.1;
     c1.task.Timing.MaxHoldTime = 0.2;
-    c1.task.Timing.minFixHoldTime = 0.2; % amb 03/03/17 added
-    c1.task.Timing.maxFixHoldTime = 0.4; % amb 03/03/17 added
-%     % condition 2
-%     c2.Nr = 2;
-%     
-%     % condition 3
-%     c3.Nr = 3;
-%     
-%     % condition 4
-%     c4.Nr = 4;
-%     
-%     % condition 5
-%     c5.Nr = 5;
+    c1.task.Timing.minFixHoldTime = 45; % amb 03/03/17 added
+    c1.task.Timing.maxFixHoldTime = 45; % amb 03/03/17 added
+    c1.task.Timing.FixWaitDur=5; % time to wait for fixation in seconds
+    %     % condition 2
+    %     c2.Nr = 2;
+    %
+    %     % condition 3
+    %     c3.Nr = 3;
+    %
+    %     % condition 4
+    %     c4.Nr = 4;
+    %
+    %     % condition 5
+    %     c5.Nr = 5;
     
     % create a cell array containing all conditions
-%     conditions = {c1, c2, c3, c4, c5};
+    %     conditions = {c1, c2, c3, c4, c5};
     conditions = {c1};
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 else
@@ -131,13 +132,15 @@ p.trial.task.Timing.HoldTime=ND_GetITI(p.trial.task.Timing.MinHoldTime, ...
 % R = ND_GetITI(minval, maxval, rndmeth, mu, n, step)
 % n = number of random times to output, step = min stepsize between samples
 p.trial.task.Timing.FixHoldTime=ND_GetITI(p.trial.task.Timing.MinFixHoldTime, ...
-    p.trial.task.Timing.MaxITI,      [], [], 1, 0.01); 
+    p.trial.task.Timing.MaxITI,      [], [], 1, 0.01);
 
 % Minimum time before response is expected
 p.trial.task.TaskStart   = NaN;
 p.trial.CurrEpoch = p.trial.epoch.GetReady;
 %p.trial.task.Reward.Curr = p.trial.task.Reward.Dur(1);
 p.trial.task.Reward.Curr = NaN;
+p.trial.task.Reward.Timer = 0; % set zero to start with a reward upon press
+
 
 function TaskDesign(p)%% main task outline
 % The different task stages (i.e. 'epochs') are defined here.
@@ -155,7 +158,7 @@ switch p.trial.CurrEpoch
             
             p.trial.CurrEpoch = p.trial.epoch.WaitStart;
         end
-    %% Wait for joystick press
+        %% Wait for joystick press
     case p.trial.epoch.WaitStart
         ctm = GetSecs;
         if(ctm > p.trial.task.Timing.WaitTimer)
@@ -183,17 +186,87 @@ switch p.trial.CurrEpoch
                 p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
                 p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.HoldTime;
                 
-                p.trial.CurrEpoch = p.trial.epoch.WaitGo;
-                
+                %p.trial.CurrEpoch = p.trial.epoch.WaitGo;
+                p.trial.CurrEpoch = p.trial.epoch.WaitFix;
+                % send event for fixation spot onset
+                % dsamr as JoyPress for now
                 if(p.trial.task.Reward.Pull)
                     pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
                     %ND_CtrlMsg(p, 'Reward');
                 end
             end
         end
-    %% delay before response is needed
-    % this is the epoch while the joystick is held down
-    case p.trial.epoch.WaitGo    
+        %% delay before response is needed
+        % this is the epoch while the joystick is held down
+    case p.trial.epoch.WaitFix
+        % this epoch is good for now, amb 3/6/17
+        ctm = GetSecs;
+        % need to start WaitFix TImer
+        % time from joy press to now
+        p.trial.task.EV.WaitFix = ctm - pp.trial.task.EV.JoyPress;
+        % check if joystick is still down
+        % check how long we wait for fixation
+        if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
+            %ND_CtrlMsg(p, 'Early release');
+            p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+            p.trial.task.EV.JoyRelease = ctm - p.trial.task.EV.TaskStart;
+            
+            p.trial.CurrEpoch = p.trial.epochTaskEnd;
+        else
+            % now get eye data, see if fixation acquired
+            p = ND_CheckFixation(p);
+            p = ND_CheckFixWin(p);
+            if p.trial.CurrFixWinState
+                p.trial.task.EV.FixStart= ctm - p.trial.task.EV.TaskStart;
+                p.trial.CurrEpoch=p.trial.epoch.Fixating;
+            elseif p.trial.task.EV.WaitFix > p.trial.task.Timing.FixWaitDur
+                % check if duration to acquire fixation has surpassed
+                % since we arent fixating yet
+                p.trial.outcome.CurrOutcome = ...
+                    %p.defaultParameters.outcome.FIX_BRK_BSL;
+                p.defaultParameters.outcome.FIX_BRK_BSL;
+                p.trial.task.EV.FixTimeOut = ctm - ...
+                    p.trial.task.EV.TaskStart;
+                p.trial.CurrEpoch = p.trial.epochTaskEnd;
+                % TODO
+            end
+        end
+        %% fIXATING
+    case p.trial.epoch.Fixating
+        ctm = GetSecs;
+        p.trial.task.EV.Fixating = ctm - pp.trial.task.EV.JoyPress;
+        % check if joystick is still down
+        if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
+            %ND_CtrlMsg(p, 'Early release');
+            p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+            p.trial.task.EV.JoyRelease = ctm - p.trial.task.EV.TaskStart;
+            
+            p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+        else % joy is still down, check em data
+            % now get eye data, see if fixation acquired
+            p = ND_CheckFixation(p);
+            p = ND_CheckFixWin(p);
+            if p.trial.CurrFixWinState
+                % check if time for reward
+                % taken from get_joy.m WaitGo epoch
+                if p.trial.task.Reward.RewTrain
+                    if ctm > p.trial.task.Reward.Timer
+                        p.trial.task.Reward.Timer = ctm + p.trial.task.Reward.TrainRew ...
+                            + p.trial.task.Reward.RewGap;
+                        pds.behavior.reward.give(p, p.trial.task.Reward.TrainRew);
+                    end
+                end
+                
+            else % fixation was broken
+                p.trial.outcome.CurrOutcome = ...
+                    p.defaultParameters.outcome.FIX_BRK_CUE ;
+                p.trial.task.EV.FixBreak = ctm - ...
+                    p.trial.task.EV.TaskStart;
+                p.trial.CurrEpoch = p.trial.epochTaskEnd;
+            end
+        end
+        %% WAITGO
+    case p.trial.epoch.WaitGo
         ctm = GetSecs;
         if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
             %ND_CtrlMsg(p, 'Early release');
@@ -209,18 +282,34 @@ switch p.trial.CurrEpoch
             
             p.trial.CurrEpoch = p.trial.epoch.WaitResponse;
         end
-    %% Wait for joystick release
-    case p.trial.epoch.WaitResponse    
+    case p.trial.epoch.FixHold
+        %% Wait for joystick release
+        % rename as WaitFixationStart
+        % then add wait WaitFixationComplete
+    case p.trial.epoch.WaitResponse
         ctm = GetSecs;
+        % check/update fixdur
+        %p.trial.task.eye.fixAOIDurComplete=...
+        %    ND_FixAOIDurComplete(p);
+        % ND_CheckFixation
+        %         p = ND_CheckFixation(p);
+        % p.trial.task.Timing.FixHoldTime
+        % p.trial.behavior.fixation.FixWin
         if(ctm > p.trial.task.Timing.WaitTimer)
             %ND_CtrlMsg(p, 'No Response');
             p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
             
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             
+            
+            % elseif was fixation broken
+            
+            %         elseif p.trial.task.eye.fixAOIDurComplete
         elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
             
+            
             p.trial.task.EV.RespRT = ctm - p.trial.task.EV.GoCue;
+            
             
             if(p.trial.task.EV.RespRT <  p.trial.behavior.joystick.minRT)
                 % premature response - too early to be a true response
@@ -243,8 +332,8 @@ switch p.trial.CurrEpoch
                 p.trial.CurrEpoch = p.trial.epoch.WaitReward;
             end
         end
-    %% Wait for for reward
-    % add error condition for new press
+        %% Wait for for reward
+        % add error condition for new press
     case p.trial.epoch.WaitReward
         ctm = GetSecs;
         if(ctm > p.trial.task.Timing.WaitTimer)
@@ -259,7 +348,7 @@ switch p.trial.CurrEpoch
             
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
         end
-    %% Wait for joystick release after missed response    FalseStart
+        %% Wait for joystick release after missed response    FalseStart
     case p.trial.epoch.WaitRelease
         
         if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
@@ -292,3 +381,102 @@ switch p.trial.CurrEpoch
             p.trial.flagNextTrial = 1;
         end
 end % switch p.trial.CurrEpoch
+
+%% begin subfunction
+
+function TaskDraw(p)
+%% show epoch dependent stimuli
+% go through the task epochs as defined in TaskDesign and draw the stimulus
+% content that needs to be shown during this epoch.
+
+switch p.trial.CurrEpoch
+    % ----------------------------------------------------------------%
+    case p.trial.epoch.WaitStart
+        %% Wait for joystick press
+        TrialOn(p);
+        
+        % ----------------------------------------------------------------%
+    case p.trial.epoch.WaitGo
+        %% delay before response is needed
+        TrialOn(p);
+        Target(p, 'TargetOn');
+        
+        % ----------------------------------------------------------------%
+    case p.trial.epoch.WaitResponse
+        %% Wait for fixation of sufficient duration
+        TrialOn(p);
+        Target(p, 'TargetDimm');
+        
+        % ----------------------------------------------------------------%
+    case p.trial.epoch.WaitReward
+        %% Wait for for reward
+        TrialOn(p);
+        Target(p, 'TargetDimm');
+        %% fix_train-specific epoch stimuli
+    case p.trial.epoch.WaitFix
+        TrialOn(p);
+        FixSpot(p, 'FixSpotInit')
+    case p.trial.epoch.Fixating
+        TrialOn(p);
+        FixSpot(p, 'FixSpotAcq')
+end
+
+function TrialOn(p)
+%% show a frame to indicate the trial is active
+
+Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.TrialStart, ...
+    p.trial.task.FrameRect , p.trial.task.FrameWdth);
+
+function Target(p, colstate)
+%% show the target item with the given color
+Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(colstate), p.trial.task.TargetRect);
+
+function Trial2Ascii(p, act)
+%% Save trial progress in an ASCII table
+% 'init' creates the file with a header defining all columns
+% 'save' adds a line with the information for the current trial
+%
+% make sure that number of header names is the same as the number of entries
+% to write, also that the position matches.
+
+switch act
+    case 'init'
+        p.trial.session.asciitbl = [datestr(now,'yyyy_mm_dd_HHMM'),'.dat'];
+        tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'w');
+        
+        fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  JPress  GoCue  JRelease  Reward  RewDur  ',...
+            'Result  Outcome  StartRT  RT  ChangeTime \n']);
+        fclose(tblptr);
+        
+    case 'save'
+        if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && ...
+                p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)  % we might loose the last trial when pressing esc.
+            
+            if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct || ...
+                    p.trial.outcome.CurrOutcome == p.trial.outcome.Early)
+                RT = p.trial.EV.JoyRelease - p.trial.task.Timing.HoldTime;
+            else
+                RT = NaN;
+            end
+            
+            trltm = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
+            
+            cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+            
+            tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'a');
+            
+            fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s  %.5f  %.5f  %.5f\n' , ...
+                datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
+                p.trial.EV.TaskStart, p.trial.session.subject, ...
+                p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
+                trltm, p.trial.EV.JoyPress, ...
+                p.trial.EV.GoCue, p.trial.EV.JoyRelease, p.trial.EV.Reward, ...
+                p.trial.task.Reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
+                p.trial.EV.StartRT, RT, p.trial.task.Timing.HoldTime);
+            fclose(tblptr);
+        end
+end
+
+function FixSpot(p, colstate)
+%% show the target item with the given color
+Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(colstate), p.trial.task.FixSpotRect);

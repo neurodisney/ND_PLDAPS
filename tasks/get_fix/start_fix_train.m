@@ -33,8 +33,17 @@ SS.display.bgColor    = [50, 50, 50] / 255;
 % prepare for eye tracking and joystick monitoring
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 SS.mouse.useAsEyepos     = 0;
-SS.datapixx.useAsEyepos  = 0;
-SS.behavior.fixation.use = 0;
+SS.datapixx.useAsEyepos  = 1;
+SS.behavior.fixation.use = 1;
+
+% reward
+% moved to *_taskdef.m
+% SS.task.Reward.RewTrain = 1;         % give a series of rewards during hold time
+% SS.task.Reward.TrainRew = 0.2;       % reward amount for during the burst train (if p.trial.task.Reward.RewTrain == 1)
+% SS.task.Reward.RewGap   = 0.5;       % spacing between subsequent reward pulses, in seconds?
+
+% fixation parameters
+%SS.beha
 
 SS.pldaps.nosave = 1;  % For now do not bother with the pldaps file format, use plain text file instead.
 
