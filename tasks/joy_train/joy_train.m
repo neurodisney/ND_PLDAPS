@@ -442,7 +442,7 @@ function Trial2Ascii(p, act)
                 
                 if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct || ...
                    p.trial.outcome.CurrOutcome == p.trial.outcome.Early)
-                    RT = p.trial.EV.JoyRelease - p.trial.EV.GoCue;
+                    RT = p.trial.EV.JoyRelease - p.trial.task.Timing.HoldTime;
                 else
                     RT = NaN;
                 end

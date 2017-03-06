@@ -43,15 +43,14 @@ try
     Trial_tm = (Trial_tm - Trial_tm(1)) / 60; % first trial defines zero, convert to minutes    
     
     Resp_tm  = cellfun(@(x) x.EV.JoyRelease, p.data) * 1000; % convert to ms
-    Go_tm    = cellfun(@(x) x.EV.GoCue,      p.data) * 1000; % convert to ms
-    
+    Go_tm    = cellfun(@(x) x.task.Timing.HoldTime, p.data) * 1000; % convert to ms
+        
     RT = Resp_tm - Go_tm;
-    
     
     %% get plots
     
     % release times
-    subplot(2,2,1);
+    subplot(3,2,1);
     
     if(any(isfinite(Resp_tm)))
         bv = 0 : resp_bin : max(Resp_tm)+resp_bin;
@@ -67,12 +66,13 @@ try
         
         hold on;
         yl = ylim;
-        plot(nanmedian(Resp_tm),yl,'r','LineWidth', 2.5);
+        medResp = nanmedian(Resp_tm);
+        plot([medResp,medResp], yl,'-r','LineWidth', 2.5);
         hold off
     end
     
     % reaction times
-    subplot(2,2,2);
+    subplot(3,2,2);
     if(any(isfinite(RT)))
         bv = 0 : resp_bin : max(RT)+resp_bin;
 
@@ -87,11 +87,14 @@ try
         
         hold on;
         yl = ylim;
-        plot(nanmedian(RT),yl,'r','LineWidth', 2.5);
+        medRT = nanmedian(RT);
+        plot([medRT,medRT], yl,'-r','LineWidth', 2.5);
         hold off
     end
     
-    subplot(2,1,2);
+    
+    % release times in trial
+    subplot(3,1,2);
     
     hp = Results == p.data{1}.outcome.Correct;
     he = Results == p.data{1}.outcome.Early;
@@ -107,6 +110,26 @@ try
     
     ylabel('release time [ms]');
     xlabel('trial time [min]');
+    
+    
+    % reaction times in trial
+    subplot(3,1,3);
+    
+    
+    plot(Trial_tm(hp), RT(hp), 'o', 'MarkerSize', 6, ...
+        'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
+    hold on;
+    plot(Trial_tm(he), RT(he), 'o', 'MarkerSize', 6, ...
+        'MarkerEdgeColor', early_col,'MarkerFaceColor',early_col)
+%     plot(Trial_tm(hl), RT(hl), 'o', 'MarkerSize', 6, ...
+%         'MarkerEdgeColor', late_col,'MarkerFaceColor',late_col)
+    
+    ylabel('reaction time [ms]');
+    xlabel('trial time [min]');
+    
+    
+        
+    
     
     %% update plot
     drawnow
