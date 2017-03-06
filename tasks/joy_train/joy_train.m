@@ -203,7 +203,8 @@ function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
     %p = joy_train_taskdef(p);  % brute force: read in task parameters every time to allow for online modifications. TODO: make it robust and let it work with parameter changes via keyboard, see e.g. monkeylogic editable concept.
-    joy_train_taskdef;
+    clear joy_train_taskdef; % needs to be cleared to read in updated information 
+    joy_train_taskdef(p);
 
     p.trial.task.Timing.ITI      = ND_GetITI(p.trial.task.Timing.MinITI,      ...
                                              p.trial.task.Timing.MaxITI,      [], [], 1, 0.10);
