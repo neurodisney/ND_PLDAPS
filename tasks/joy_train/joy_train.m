@@ -43,8 +43,8 @@ if(isempty(state))
 
     % --------------------------------------------------------------------%
     %% get task parameters
-    %p = joy_train_taskdef(p);  % WZ: could it be removed here and just run in trialSetup?
-    joy_train_taskdef;  % WZ: could it be removed here and just run in trialSetup?
+    p = joy_train_taskdef(p);  % WZ: could it be removed here and just run in trialSetup?
+    %joy_train_taskdef;  % WZ: could it be removed here and just run in trialSetup?
 
     %ND_CtrlMsg(p, 'Experimental SETUP');
     % --------------------------------------------------------------------%

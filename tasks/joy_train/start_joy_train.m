@@ -36,6 +36,8 @@ SS.mouse.useAsEyepos     = 0;
 SS.datapixx.useAsEyepos  = 0;
 SS.behavior.fixation.use = 0;
 
+SS.pldaps.draw.photodiode.use = 1;
+
 SS.pldaps.nosave = 1;  % For now do not bother with the pldaps file format, use plain text file instead.
 
 SS.plot.do_online       =  1;  % run online data analysis between two subsequent trials
