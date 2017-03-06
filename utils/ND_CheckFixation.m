@@ -32,14 +32,16 @@ else
                                     (p.trial.AI.Eye.Y(sIdx) - p.trial.behavior.fixation.FixPos(2)).^2);
 
     % calculate a moving average of the joystick position for display reasons
-    p.trial.eyeX   = mean(p.trial.AI.Eye.X(sIdx));
-    p.trial.eyeY   = mean(p.trial.AI.Eye.Y(sIdx));
+    p.trial.eyeX   = mean(p.trial.AI.Eye.X(sIdx) - p.trial.behavior.fixation.Zero(1));
+    p.trial.eyeY   = mean(p.trial.AI.Eye.Y(sIdx) - p.trial.behavior.fixation.Zero(2));
+
+%     p.trial.eyeX   = mean(p.trial.AI.Eye.X(sIdx));
+%     p.trial.eyeY   = mean(p.trial.AI.Eye.Y(sIdx));
     p.trial.eyeAmp = mean(p.trial.AI.Eye.Amp(sIdx));
 end
 
 % if relevant for task determine joystick state
 if(p.trial.behavior.fixation.use)
-    % ND_CtrlMsg(p, ['Joystick State: ',int2str(p.trial.FixState.Current),'; curr Amp: ',num2str(p.trial.joyAmp,'%.4f')]);
 
     switch p.trial.FixState.Current
         %% wait for release

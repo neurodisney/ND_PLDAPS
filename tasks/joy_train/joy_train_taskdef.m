@@ -41,7 +41,7 @@ p.trial.task.Timing.WaitStart   = 2.50;   % maximal time period [s] in seconds t
 p.trial.task.Timing.WaitResp    = 2.50;   % Only response times [s] after this wait period will be considered stimulus driven responses
 
 p.trial.task.Timing.MinRel      = 0.5;    % minimum time to consider a bar released prior trial start
-p.trial.task.Timing.minRT =  0.20;        % If a response occurs prior this time it is considered an early response
+p.trial.task.Timing.minRT       = 0.20;   % If a response occurs prior this time it is considered an early response
 
 % inter-trial interval
 p.trial.task.Timing.MinITI      = 0.25;   % minimum time period [s] between subsequent trials
@@ -54,7 +54,7 @@ p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a tri
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
 % target item
-p.trial.task.TargetSz_dva  = 6;   % Stimulus diameter in dva
+p.trial.task.TargetSz_dva  = 2;   % Stimulus diameter in dva
 p.trial.task.TargetPos_dva = [0, 0];    % Stimulus diameter in dva25seconds
 
 p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
