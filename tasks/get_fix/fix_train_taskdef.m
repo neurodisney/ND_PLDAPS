@@ -47,14 +47,48 @@ p.trial.task.Timing.WaitResp    = 1.50;
 p.trial.task.Timing.MinITI      = 0.5;    % minimum time period [s] between subsequent trials
 p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subsequent trials
 
-p.trial.task.Timing.TimeOut     =  2;     % Time [s] out for incorrect responses
-p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a trial starts after random lever presses
-
-%p.trial.behavior.joystick.minRT =  0.20;     % If a response occurs prior this time it is considered an early response
-p.trial.behavior.joystick.minRT =  0.05;     % If a response occurs prior this time it is considered an early response
+% penalties
+p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
+p.trial.task.Timing.PullTimeOut =  0;     % Minimum time [s] passed before a trial starts after random lever presses (NIY!)
+p.trial.task.Timing.minRT       =  0.15;  % If a response occurs prior this time it is considered an early response
 % this is still used for fixation, maybe set low or eliminate?
+p.trial.task.Timing.MinRel      = 0.5;    % minimum time to consider a bar released prior trial start
+
+%% Stimulus parameters
+% target item
+p.trial.task.TargetSz_dva  = 10;          % Stimulus diameter in dva
+p.trial.task.TargetPos_dva = [0, 0];      % Stimulus diameter in dva25seconds
+
+p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
+p.trial.task.TargetPos_pxl = ND_cart2ptb(p, p.trial.task.TargetPos_dva);
+p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
+
+% fixation spot
+p.trial.task.FixSpotSz_dva  = 4;          % Stimulus diameter in dva
+p.trial.task.FixSpotPos_dva = [0, 0];      % Stimulus diameter in dva25seconds
+
+p.trial.task.FixSpotSz_pxl  = ND_dva2pxl(p.trial.task.FixSpotSz_dva, p); % Stimulus diameter in dva
+p.trial.task.FixSpotPos_pxl = ND_cart2ptb(p, p.trial.task.FixSpotPos_dva);
+p.trial.task.FixSpotRect    = ND_GetRect(p.trial.task.FixSpotPos_pxl, p.trial.task.FixSpotSz_pxl);
+
+% Frame indicating active trial
+p.trial.task.FrameWdth  = 25; % hard-coded for now, make it more flexible
+p.trial.task.FrameSize  = ND_dva2pxl([20 20], p); % hard-coded for now, make it more flexible
+p.trial.task.FrameRect  = ND_GetRect(p.trial.display.ctr(1:2), p.trial.task.FrameSize);
+
+
+% ------------------------------------------------------------------------%
+%% Joystick parameters
+p.trial.behavior.joystick.PullThr = 1.5;  % threshold to detect a joystick press
+p.trial.behavior.joystick.RelThr  = 1.0;  % threshold to detect a joystick release
 
 % fixation-related temporal parameters
 % p.trial.task.Timing.minFixHoldTime = 0.2; % amb 03/03/17 added
 % p.trial.task.Timing.maxFixHoldTime = 0.4;
 % declare this via conditions in fix_train_task.m instead
+
+%% Trial duration
+% maxTrialLength is used to pre-allocate memory at several initialization
+% steps. It specifies a duration in seconds.
+p.trial.pldaps.maxTrialLength = 60; % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+

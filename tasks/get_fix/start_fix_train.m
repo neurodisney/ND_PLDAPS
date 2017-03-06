@@ -45,7 +45,7 @@ SS.behavior.fixation.use = 1;
 % fixation parameters
 %SS.beha
 
-SS.pldaps.nosave = 0;  % For now do not bother with the pldaps file format, use plain text file instead.
+SS.pldaps.nosave = 1;  % For now do not bother with the pldaps file format, use plain text file instead.
 
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);

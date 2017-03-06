@@ -188,7 +188,8 @@ switch p.trial.CurrEpoch
                 
                 %p.trial.CurrEpoch = p.trial.epoch.WaitGo;
                 p.trial.CurrEpoch = p.trial.epoch.WaitFix;
-                
+                % send event for fixation spot onset
+                % dsamr as JoyPress for now
                 if(p.trial.task.Reward.Pull)
                     pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
                     %ND_CtrlMsg(p, 'Reward');
@@ -210,26 +211,27 @@ switch p.trial.CurrEpoch
             p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
             p.trial.task.EV.JoyRelease = ctm - p.trial.task.EV.TaskStart;
             
-            p.trial.CurrEpoch = p.trial.epochTaskEnd;         
+            p.trial.CurrEpoch = p.trial.epochTaskEnd;
         else
             % now get eye data, see if fixation acquired
             p = ND_CheckFixation(p);
             p = ND_CheckFixWin(p);
             if p.trial.CurrFixWinState
-                p.trial.task.EV.FixOnset= ctm - p.trial.task.EV.TaskStart;
+                p.trial.task.EV.FixStart= ctm - p.trial.task.EV.TaskStart;
                 p.trial.CurrEpoch=p.trial.epoch.Fixating;
             elseif p.trial.task.EV.WaitFix > p.trial.task.Timing.FixWaitDur
                 % check if duration to acquire fixation has surpassed
                 % since we arent fixating yet
                 p.trial.outcome.CurrOutcome = ...
-                    p.defaultParameters.outcome.FIX_BRK_BSL;
+                    %p.defaultParameters.outcome.FIX_BRK_BSL;
+                p.defaultParameters.outcome.FIX_BRK_BSL;
                 p.trial.task.EV.FixTimeOut = ctm - ...
                     p.trial.task.EV.TaskStart;
                 p.trial.CurrEpoch = p.trial.epochTaskEnd;
                 % TODO
             end
         end
-    %% fIXATING
+        %% fIXATING
     case p.trial.epoch.Fixating
         ctm = GetSecs;
         p.trial.task.EV.Fixating = ctm - pp.trial.task.EV.JoyPress;
@@ -246,7 +248,7 @@ switch p.trial.CurrEpoch
             p = ND_CheckFixWin(p);
             if p.trial.CurrFixWinState
                 % check if time for reward
-                % taken from get_joy.m WaitGo epoch                 
+                % taken from get_joy.m WaitGo epoch
                 if p.trial.task.Reward.RewTrain
                     if ctm > p.trial.task.Reward.Timer
                         p.trial.task.Reward.Timer = ctm + p.trial.task.Reward.TrainRew ...
@@ -263,9 +265,9 @@ switch p.trial.CurrEpoch
                 p.trial.CurrEpoch = p.trial.epochTaskEnd;
             end
         end
-    %% WAITGO
+        %% WAITGO
     case p.trial.epoch.WaitGo
-        ctm = GetSecs;            
+        ctm = GetSecs;
         if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
             %ND_CtrlMsg(p, 'Early release');
             p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
@@ -282,8 +284,8 @@ switch p.trial.CurrEpoch
         end
     case p.trial.epoch.FixHold
         %% Wait for joystick release
-    % rename as WaitFixationStart
-    % then add wait WaitFixationComplete
+        % rename as WaitFixationStart
+        % then add wait WaitFixationComplete
     case p.trial.epoch.WaitResponse
         ctm = GetSecs;
         % check/update fixdur
@@ -299,10 +301,10 @@ switch p.trial.CurrEpoch
             
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             
-           
-        % elseif was fixation broken 
-        
-%         elseif p.trial.task.eye.fixAOIDurComplete     
+            
+            % elseif was fixation broken
+            
+            %         elseif p.trial.task.eye.fixAOIDurComplete
         elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
             
             
@@ -410,6 +412,13 @@ switch p.trial.CurrEpoch
         %% Wait for for reward
         TrialOn(p);
         Target(p, 'TargetDimm');
+        %% fix_train-specific epoch stimuli
+    case p.trial.epoch.WaitFix
+        TrialOn(p);
+        FixSpot(p, 'FixSpotInit')
+    case p.trial.epoch.Fixating
+        TrialOn(p);
+        FixSpot(p, 'FixSpotAcq')
 end
 
 function TrialOn(p)
@@ -467,3 +476,7 @@ switch act
             fclose(tblptr);
         end
 end
+
+function FixSpot(p, colstate)
+%% show the target item with the given color
+Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(colstate), p.trial.task.FixSpotRect);

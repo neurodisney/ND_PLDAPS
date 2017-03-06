@@ -53,6 +53,13 @@ p.defaultParameters.event.FIX_BRK_CUE   = 3001;    % fixation break while the cu
 p.defaultParameters.event.FIX_BRK_STIM  = 3002;    % fixation break during stimulus presentation
 p.defaultParameters.event.FIX_BRK_SPEED = 3003;
 
+% error related
+p.defaultParameters.events.NO_FIX       = 3010;
+% AD: 3000-3009 for fixation breaks
+%       3010-for errors
+
+% separate encode of reward delivered?
+
 % joystick related
 p.defaultParameters.event.JOY_PRESS     = 2100;    % joystick press detected
 p.defaultParameters.event.JOY_RELEASE   = 2101;    % joystick release detected

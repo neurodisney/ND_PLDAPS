@@ -25,10 +25,14 @@ p.defaultParameters.outcome.Miss          =   3007;  % no response at a reasonab
 p.defaultParameters.outcome.NoStart       =   3004;  % trial not started
 p.defaultParameters.outcome.PrematStart   =   3008;  % trial start not too early as response to cue
 
-p.defaultParameters.outcome.FIX_BRK_BSL   =   3000; % ? amb - BSL = baseline? use this for no fixation acquired for now
-p.defaultParameters.outcome.FIX_BRK_CUE   =   3001; % ? amb - use for fixation break from fixspot?
+p.defaultParameters.outcome.FIX_BRK_BSL   =   3000; % use for fixation break from fixspot, where relevant
+p.defaultParameters.outcome.FIX_BRK_CUE   =   3001; 
 p.defaultParameters.outcome.FIX_BRK_STIM  =   3002;
 p.defaultParameters.outcome.FIX_BRK_SPEED =   3003;
+
+p.defaultParameters.outcome.FIXATION      =   1000;
+p.defaultParameters.outcome.NO_FIX        =   3010;
+p.defaultParameters.outcome.NoFix         =   3010;
 
 %% get a string representation of the outcome
 p.defaultParameters.outcome.codenames = fieldnames(p.defaultParameters.outcome);
