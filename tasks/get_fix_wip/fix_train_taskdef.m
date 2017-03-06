@@ -27,9 +27,13 @@ p.trial.task.Reward.Step = [2, 4, 6];
 
 p.trial.task.Reward.Lag    = 0.10;           
 % Delay between response and reward onset
-p.trial.task.Reward.ManDur = 120;            
+p.trial.task.Reward.ManDur = 0.2;            
 % reward duration [s] for reward given by keyboard presses
-% AB: units seem wrong here, 120 seconds??
+
+p.trial.task.Reward.RewTrain = 1;         % give a series of rewards during hold time
+p.trial.task.Reward.TrainRew = 0.2;       % reward amount for during the burst train (if p.trial.task.Reward.RewTrain == 1)
+p.trial.task.Reward.RewGap   = 0.5;       % spacing between subsequent reward pulses
+p.trial.task.Reward.Timer    = NaN;       % initialize timer to control subsequent rewards
 
 %% Task Timings
 p.trial.task.Timing.WaitStart   = 2.50;    
@@ -46,7 +50,11 @@ p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subs
 p.trial.task.Timing.TimeOut     =  2;     % Time [s] out for incorrect responses
 p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a trial starts after random lever presses
 
-p.trial.behavior.joystick.minRT =  0.20;     % If a response occurs prior this time it is considered an early response
+%p.trial.behavior.joystick.minRT =  0.20;     % If a response occurs prior this time it is considered an early response
+p.trial.behavior.joystick.minRT =  0.05;     % If a response occurs prior this time it is considered an early response
+% this is still used for fixation, maybe set low or eliminate?
 
 % fixation-related temporal parameters
-p.trial.task.Timing.
+% p.trial.task.Timing.minFixHoldTime = 0.2; % amb 03/03/17 added
+% p.trial.task.Timing.maxFixHoldTime = 0.4;
+% declare this via conditions in fix_train_task.m instead
