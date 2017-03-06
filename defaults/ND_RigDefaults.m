@@ -19,12 +19,12 @@ function SS = ND_RigDefaults(SS)
 
 
 % ------------------------------------------------------------------------%
-%% behavior settings: behavioral control parameters
+%% Reward settings
 SS.reward.defaultAmount                         = 0.05;   % Default amount of reward.=0; [in seconds]
 SS.reward.Lag                                   = 0.15;   % Delay between response and reward onset
 
 % ------------------------------------------------------------------------%
-%% datapixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
+%% DataPixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
 SS.datapixx.use                                 = 1;      % enable control of VPixx devices
 
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
@@ -60,7 +60,7 @@ SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEye
 SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel as eyeY    !!!
 
 % ------------------------------------------------------------------------%
-%% display settings: specify options for the screen.
+%% Display settings: specify options for the screen.
 SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 57;     % screen distance to the observer                            !!!
@@ -91,7 +91,7 @@ SS.display.movie.width                          = [];    % width of the movie.
 SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encoding parameters
 
 % ------------------------------------------------------------------------%
-%% eyelink settings: Eyelink specific parameters
+%% EyeLink settings: Eyelink specific parameters
 SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
 
 % SS.eyelink.buffereventlength                    = 30;    % don't change.
@@ -105,23 +105,23 @@ SS.eyelink.use                                  = 0;     % if 1 use the eyelink 
 % SS.eyelink.useRawData                           = 0;     % toggle use of raw (uncalibrated) Data.
 
 % ------------------------------------------------------------------------%
-%% mouse settings: configure how mouse data should be handled
+%% Mouse settings: configure how mouse data should be handled
 SS.mouse.use                                    = 0;     % collect and store mouse positions
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
 
 % ------------------------------------------------------------------------%
-%% sound: control sound playback
+%% Sound: control sound playback
 SS.sound.use                                    = 0;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
 
 % ------------------------------------------------------------------------%
-%% plexon settings: interact with plexon MAP or Omniplex
+%% Plexon settings: interact with plexon MAP or Omniplex
 % spikeserver: configure our plexon spike server.
 SS.plexon.spikeserver.use	                    = 0;     % toggle use of our plexon spike server
 
 % ------------------------------------------------------------------------%
-%% pldaps settings: pldaps core parameters
+%% PLDAPS settings: pldaps core parameters
 SS.pldaps.finish                                = inf;   % Number of trials to run. Can be changed dynamically
 SS.pldaps.goodtrial                             = 0;     % indicator whether the trial was good. Not used by pldaps itself
 SS.pldaps.iTrial                                = 1;     % trial number. cannot be changed by the user
@@ -135,7 +135,7 @@ SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
 SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
-SS.pldaps.useModularStateFunctions              = 0;     % use modular state functions, see pldaps.runModularTrial, pldaps.getModules, pldaps.runStateforModules
+% SS.pldaps.useModularStateFunctions              = 0;     % use modular state functions, see pldaps.runModularTrial, pldaps.getModules, pldaps.runStateforModules
 
 % dirs: configure pldaps' built-in drawing options
 SS.pldaps.dirs.data                             = '~/Data/ExpData';   % data directory.
@@ -181,12 +181,13 @@ SS.stimulus.fixdotW   = 8;    % width of the fixation dot
 SS.stimulus.targdotW  = 8;    % width of the target dot
 SS.stimulus.cursorW   = 8;    % cursor width in pixels
 
-
 % ####################################################################### %
 %% Below follow definitions used in the Disney Lab
 % This is currently work in progress and we need to find an efficient set
 % of definitions that will work most reliable across several tasks.
 
+% ------------------------------------------------------------------------%
+%% Debugging
 SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 
 % ------------------------------------------------------------------------%
@@ -217,7 +218,7 @@ SS.tdt.use  = 1;                   % set use of tdt system instead of plexon; wi
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
 % assign keys to specific functions here and utilize these in the
-% ND_CheckKeyMouse function to trigger defined actions.
+% ND_CheckKey function to trigger defined actions.
 
 SS.key.reward = 'space';    % trigger reward
 SS.key.pause  = 'p';
@@ -226,7 +227,7 @@ SS.key.debug  = 'd';
 SS.key.exe    = 'x';
 
 % ------------------------------------------------------------------------%
-%% joystick parameters
+%% Joystick parameters
 SS.behavior.joystick.use       =  1;         % does this task require control of joystick state
 SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state (released)
 SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
@@ -255,3 +256,13 @@ SS.behavior.fixation.Sample    = 20;      % how many data points to use for dete
 SS.FixState.Current     = NaN;
 SS.FixState.GazeIn      =   1;  % Gaze at target
 SS.FixState.GazeOut     =   0;  % Gaze left fixation window
+
+% ------------------------------------------------------------------------%
+%% Online plots
+% allow specification of a matlab routine for online data analysis
+SS.plot.do_online       =  0;  % run online data analysis between two subsequent trials
+SS.plot.routine         = [];  % matlab function to be called for online analysis (TODO: make a default routine for the most rudimentary analysis)
+SS.plot.fig             = [];  % figure handle for online plot (leave empty)
+
+
+

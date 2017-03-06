@@ -81,8 +81,4 @@ p.trial.timing.frameStateChangeTimes = p.trial.timing.frameStateChangeTimes(:, 1
 % TODO: remove entries in the trial struct that need not to be written but
 % might occupy a lot of disk space.
 
-%-------------------------------------------------------------------------%
-%%  reward system
-% TODO: Is this needed?
-pds.behavior.reward.cleanUpandSave(p);
 

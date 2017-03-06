@@ -140,20 +140,28 @@ if(~p.defaultParameters.mouse.useAsEyepos && ~p.defaultParameters.datapixx.useAs
     p.defaultParameters.pldaps.draw.eyepos.use = 0;
 end
 
+% don't enable online plots if not function is specified
+if(~exist(p.defaultParameters.plot.routine,'file'))
+    warning('Plotting routine for online analysis not found, disabled plotting!');
+    p.defaultParameters.plot.do_online  =  0;  
+elseif(~isfield(p.defaultParameters.plot, 'fig'))
+    p.defaultParameters.plot.fig = [];
+end
+
 % check that each task epoch has a unique number
-if(isfield(p.defaultParameters, 'epoch'))
+if(isField(p.defaultParameters, 'epoch'))
     disp('>>>>  Checking p.defaultParameters.epoch for consistency <<<<')
     CheckUniqueNumbers(p.defaultParameters.epoch);
 end
 
 % check that event codes are unique
-if(isfield(p.defaultParameters, 'event'))
+if(isField(p.defaultParameters, 'event'))
     disp('>>>>  Checking p.defaultParameters.event for consistency <<<<')
     CheckUniqueNumbers(p.defaultParameters.event);
 end
 
 % check that task outcome codes are unique
-if(isfield(p.defaultParameters, 'outcome'))
+if(isField(p.defaultParameters, 'outcome'))
     disp('>>>>  Checking p.defaultParameters.outcome for consistency <<<<')
     CheckUniqueNumbers(p.defaultParameters.outcome);
 end
@@ -197,8 +205,10 @@ function CheckUniqueNumbers(s)
     epnum = nan(1,length(fldnms));
 
     for(i=1:length(fldnms))
-        if(any(epnum == s.(fldnms{i})))
-            error(['Duplicate number assignment found for field :',fldnms{i}, '!']);
+        if(~iscell(s.(fldnms{i})) && isnumeric(s.(fldnms{i})) && length(s.(fldnms{i})) == 1)
+            if(any(epnum == s.(fldnms{i})))
+                error(['Duplicate number assignment found for field :',fldnms{i}, '!']);
+            end
+            epnum(i) =  s.(fldnms{i});
         end
-        epnum(i) =  s.(fldnms{i});
     end

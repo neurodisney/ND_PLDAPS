@@ -13,17 +13,17 @@ disp('');
 
 % ------------------------------------------------------------------------%
 %% Define task outcomes
-p.defaultParameters.outcome.CurrOutcome = NaN;  % just initialize, no start no outcome
+p.defaultParameters.outcome.CurrOutcome   = NaN;  % just initialize, no start no outcome
 
-p.defaultParameters.outcome.Correct     =   1004;  % correct performance, no error occurred
-p.defaultParameters.outcome.NoPress     =   1;  % No joystick press occurred to initialize trial
-p.defaultParameters.outcome.Abort       =   2;  % early joystick release prior stimulus onset
-p.defaultParameters.outcome.Early       =   3005;  % release prior to response window
-p.defaultParameters.outcome.False       =   3006;  % wrong response within response window
-p.defaultParameters.outcome.Late        =   5;  % response occurred after response window
-p.defaultParameters.outcome.Miss        =   3007;  % no response at a reasonable time
-p.defaultParameters.outcome.NoStart     =   3004;  % trial not started
-p.defaultParameters.outcome.PrematStart =   3007;  % trial start not too early as response to cue
+p.defaultParameters.outcome.Correct       =   1004;  % correct performance, no error occurred
+p.defaultParameters.outcome.NoPress       =   1;  % No joystick press occurred to initialize trial
+p.defaultParameters.outcome.Abort         =   2;  % early joystick release prior stimulus onset
+p.defaultParameters.outcome.Early         =   3005;  % release prior to response window
+p.defaultParameters.outcome.False         =   3006;  % wrong response within response window
+p.defaultParameters.outcome.Late          =   5;  % response occurred after response window
+p.defaultParameters.outcome.Miss          =   3007;  % no response at a reasonable time
+p.defaultParameters.outcome.NoStart       =   3004;  % trial not started
+p.defaultParameters.outcome.PrematStart   =   3008;  % trial start not too early as response to cue
 
 p.defaultParameters.outcome.FIX_BRK_BSL   =   3000;
 p.defaultParameters.outcome.FIX_BRK_CUE   =   3001;

@@ -4,12 +4,10 @@ function p = ND_EventDef(p)
 %
 % wolf zinke, Feb. 2017
 
-
 disp('****************************************************************')
 disp('>>>>  ND:  Defining Event Codes <<<<')
 disp('****************************************************************')
 disp('');
-
 
 % ------------------------------------------------------------------------%
 %% initialize event times as NaN
@@ -81,26 +79,25 @@ p.defaultParameters.event.SOUND_ON      = 180;     % stimulus onset
 % stimulations (etc. drug delivery)
 p.defaultParameters.event.MICROSTIM     = 666;     % microstimulation pulse onset
 p.defaultParameters.event.INJECT        = 667;     % start of pressure injection
-p.defaultParameters.event.IONTO         = 667;     % start of iontophoretic drug delivery
+p.defaultParameters.event.IONTO         = 668;     % start of iontophoretic drug delivery
 
 % ------------------------------------------------------------------------%
 %% System encodes
 % encoded by running PLDAPS, can be ignored for task development. These
 % events have to be defined otherwise PLDAPS will produce errors!
-p.defaultParameters.event.TRIALSTART = 10;         % begin of a trial according to PLDAPS (could differ from task begin)
-p.defaultParameters.event.TRIALEND   = 11;         % end of a trial according to PLDAPS (could differ from task end)
+p.defaultParameters.event.TRIALSTART = 1;         % begin of a trial according to PLDAPS (could differ from task begin)
+p.defaultParameters.event.TRIALEND   = 2;         % end of a trial according to PLDAPS (could differ from task end)
 
+p.defaultParameters.event.FIX_IN     = 2000;      % gaze enters fixation window
+p.defaultParameters.event.FIX_OUT    = 2001;      % gaze leaves fixation window
 
-p.defaultParameters.event.FIX_IN     = 2000;       % gaze enters fixation window
-p.defaultParameters.event.FIX_OUT    = 2001;       % gaze leaves fixation window
+p.defaultParameters.event.JOY_ON     = 2110;      % joystick elevation above pressing threshold
+p.defaultParameters.event.JOY_OFF    = 2111;      % joystick elevation below releasing threshold
 
-p.defaultParameters.event.JOY_ON     = 2100;       % joystick elevation above pressing threshold
-p.defaultParameters.event.JOY_OFF    = 2101;       % joystick elevation below releasing threshold
-
-p.defaultParameters.event.PDFLASH    = 2010;       % onset of photo diode flash
+p.defaultParameters.event.PDFLASH    = 2010;      % onset of photo diode flash
 
 % feedback
-p.defaultParameters.event.REWARD     = 1003;       % reward delivery, irrespective if earned in task or manually given by experimenter
+p.defaultParameters.event.REWARD     = 1003;      % reward delivery, irrespective if earned in task or manually given by experimenter
 p.defaultParameters.event.AUDIO_REW  = 1300;
 
 % analog output
