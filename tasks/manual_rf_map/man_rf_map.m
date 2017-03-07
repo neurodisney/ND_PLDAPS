@@ -38,14 +38,15 @@ if(isempty(state))
     % --------------------------------------------------------------------%
     %% Set initial parameters for the rf bar
     
-    p.trial.task.rfbarLength_dva   =   6; % Length of the bar in degrees of visual angle
-    p.trial.task.rfbarWidth_dva    =   3;
-    p.trial.task.rfbarPos_dva      =   [0, 0];
+    p.trial.task.rfbar.length_dva   =   6; % Length of the bar in degrees of visual angle
+    p.trial.task.rfbar.width_dva    =   3;
+    p.trial.task.rfbar.pos_dva      =   [0, 0];
+    p.trial.task.rfbar.angle        =   0;
     
     % Convert these to pixels
-    p.trial.task.rfbarLength_pxl   =   ND_dva2pxl(p.trial.task.rfbarLength_dva, p);
-    p.trial.task.rfbarWidth_pxl    =   ND_dva2pxl(p.trial.task.rfbarWidth_dva, p);
-    p.trial.task.rfbarPos_pxl      =   ND_cart2ptb(p, p.trial.task.rfbarPos_dva;
+    p.trial.task.rfbar.length_pxl   =   ND_dva2pxl(p.trial.task.rfbarLength_dva, p);
+    p.trial.task.rfbar.width_pxl    =   ND_dva2pxl(p.trial.task.rfbarWidth_dva, p);
+    p.trial.task.rfbar.pos_pxl      =   ND_cart2ptb(p, p.trial.task.rfbarPos_dva;
     
     
 
@@ -75,6 +76,9 @@ if(isempty(state))
         ND_DefineCol(p, colorName, 30 + index, colorValue);
         colorArray{index + 1} = colorName;
     end
+    
+    % Initial Color is black
+    p.trial.task.rfbar.color = p.defaultParameters.display.Black;
 
     %% define ascii output file
     % call this after ND_InitSession to be sure that output directory exists!
@@ -87,43 +91,67 @@ if(isempty(state))
 else
     %% Subsequent calls during actual trials
     
+    switch state
+        
+        %################################################################%
+        % Done before main trail loop:
+        
+        case p.trial.pldaps.trialStates.trialSetup
+            % Prepare everything for the trial, especially the time
+            % demanding stuff
+            TaskSetup(p)
+            
+        case p.trial.pldaps.trialStates.trialPrepare
+            % Just prior to acutal trial start
+            p.trial.EV.TrialStart = p.trial.CurTime;
+            
+    end
+            
 end
 
 end
 
-% function Trial2Ascii(p, act)
-% %% Save trial progress in an ASCII table
-% % 'init' creates the file with a header defining all columns
-% % 'save' adds a line with the information for the current trial
-% %
-% % make sure that number of header names is the same as the number of entries
-% % to write, also that the position matches.
-% 
-%     switch act
-%         case 'init'
-%             p.trial.session.asciitbl = [datestr(now,'yyyy_mm_dd_HHMM'),'.dat'];
-%             tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'w');
-% 
-%             fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  JPress  GoCue  JRelease  Reward  RewDur  ',...
-%                              'Result  Outcome  StartRT  RT  ChangeTime \n']);
-%             fclose(tblptr);
-% 
-%         case 'save'
-%             if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart)  % we might loose the last trial when pressing esc.
-%                 trltm = p.trial.task.EV.TaskStart - p.trial.timing.datapixxSessionStart;
-% 
-%                 cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-% 
-%                 tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'a');
-% 
-%                 fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s  %.5f  %.5f  %.5f\n' , ...
-%                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.task.EV.TaskStartTime, ...
-%                                 p.trial.task.EV.TaskStart, p.trial.session.subject, ...
-%                                 p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
-%                                 trltm, p.trial.task.EV.JoyPress, ...
-%                                 p.trial.task.EV.GoCue, p.trial.task.EV.JoyRelease, p.trial.task.EV.Reward, ...
-%                                 p.trial.task.Reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
-%                                 p.trial.task.EV.StartRT, p.trial.task.EV.RespRT, p.trial.task.Timing.HoldTime);
-%                fclose(tblptr);
-%             end
-%     end
+function TaskSetup(p)
+%% main task outline
+% Determine everything here that can be specified/calculated before the actual trial start
+    p.trial.CurrEpoch = p.trial.epoch.MoveBar;
+end
+
+function TaskDesign(p)
+%% main task outline
+% This defines the behavior of the task. Controls the flow of the state
+% machine and determines the next epoch based off of the current epoch and
+% incoming data.
+    switch p.trial.CurrEpoch
+        
+        case p.trial.epoch.MoveBar
+            
+            
+        case p.trial.epoch.TaskEnd
+            
+    end
+end
+
+function TaskDraw(p)
+%% Draws the appropriate stimuli for each epoch
+window = p.trial.display.overlayptr;
+rfbar = p.trial.task.rfbar;
+
+    switch p.trial.CurrEpoch
+        
+        case p.trial.epoch.MoveBar
+            % Draw the bar stimuli by creating a custom coordinate frame
+            % for it. Then translate and rotate the correct amounts
+            Screen('glPushMatrix', window);
+            Screen('glTranslate', window, rfbar.pos_pxl(1), rfbar.pos_pxl(2) );
+            Screen('glRotate', window, rfbar.angle);
+            DrawBar(window,rfbar.width_pxl,rfbar.height_pxl);
+            Screen('glPopMatrix',window);
+            
+        case p.trial.epoch.TaskEnd
+    end
+end
+
+function DrawBar(window,width,height,color)
+    Screen('FillRect', window, color, [-width/2.0, height/2.0, width/2.0, height/2.0])
+end
