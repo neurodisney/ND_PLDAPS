@@ -129,8 +129,7 @@ else
 %% Subsequent calls during actual trials
 % execute trial specific commands here.
 
-    p.trial.CurTime = GetSecs;  % get the current time
-
+   
     switch state
 % ####################################################################### %
 % DONE BEFORE MAIN TRIAL LOOP:
