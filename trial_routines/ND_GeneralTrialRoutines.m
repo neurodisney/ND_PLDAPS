@@ -58,8 +58,15 @@ else
                 ND_CheckJoystick(p);         % needs to be called after pds.datapixx.adc.getData
             end
 
-            if(p.trial.datapixx.useAsEyepos ||  p.trial.mouse.useAsEyepos)    
-                ND_CheckFixation(p,task);   % needs to be called after pds.datapixx.adc.getData
+            if(p.trial.datapixx.useAsEyepos ||  p.trial.mouse.useAsEyepos)
+                % ab to wz: unsure of what 'task' input for
+                % ND_CheckFixation is for, so added this conditional to let my
+                % script run
+                if ~exist('task','var')
+                    ND_CheckFixation(p);
+                else
+                    ND_CheckFixation(p,task);   % needs to be called after pds.datapixx.adc.getData
+                end
             end
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw

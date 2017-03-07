@@ -131,8 +131,8 @@ p.trial.task.Timing.HoldTime=ND_GetITI(p.trial.task.Timing.MinHoldTime, ...
 % AB 03/03/17 -- generate these for fix params
 % R = ND_GetITI(minval, maxval, rndmeth, mu, n, step)
 % n = number of random times to output, step = min stepsize between samples
-p.trial.task.Timing.FixHoldTime=ND_GetITI(p.trial.task.Timing.MinFixHoldTime, ...
-    p.trial.task.Timing.MaxITI,      [], [], 1, 0.01);
+p.trial.task.Timing.FixHoldTime=ND_GetITI(p.trial.task.Timing.minFixHoldTime, ...
+    p.trial.task.Timing.maxFixHoldTime,      [], [], 1, 0.01);
 
 % Minimum time before response is expected
 p.trial.task.TaskStart   = NaN;
@@ -223,7 +223,6 @@ switch p.trial.CurrEpoch
                 % check if duration to acquire fixation has surpassed
                 % since we arent fixating yet
                 p.trial.outcome.CurrOutcome = ...
-                    %p.defaultParameters.outcome.FIX_BRK_BSL;
                 p.defaultParameters.outcome.FIX_BRK_BSL;
                 p.trial.task.EV.FixTimeOut = ctm - ...
                     p.trial.task.EV.TaskStart;
@@ -279,14 +278,10 @@ switch p.trial.CurrEpoch
             %ND_CtrlMsg(p, 'Wait response');
             p.trial.task.EV.GoCue         = ctm - p.trial.task.EV.TaskStart;
             p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.WaitResp;
-            
+
             p.trial.CurrEpoch = p.trial.epoch.WaitResponse;
         end
-    case p.trial.epoch.FixHold
-        %% Wait for joystick release
-        % rename as WaitFixationStart
-        % then add wait WaitFixationComplete
-    case p.trial.epoch.WaitResponse
+   case p.trial.epoch.WaitResponse
         ctm = GetSecs;
         % check/update fixdur
         %p.trial.task.eye.fixAOIDurComplete=...
