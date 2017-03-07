@@ -24,10 +24,12 @@ end
 
 if(~p.defaultParameters.pldaps.nosave)
 
-    p.defaultParameters.session.dir  = p.defaultParameters.pldaps.dirs.data;
-
-    p.defaultParameters.session.file = [p.defaultParameters.session.subject, '_', datestr(p.defaultParameters.session.initTime, 'yyyymmdd'), '_', ...
-                                       p.defaultParameters.session.experimentSetupFile, '_', datestr(p.defaultParameters.session.initTime, 'HHMM') '.pds'];
+    p.defaultParameters.session.dir      = p.defaultParameters.pldaps.dirs.data;
+    p.defaultParameters.session.filestem = [p.defaultParameters.session.subject, '_', ...
+                                           datestr(p.defaultParameters.session.initTime, 'yyyymmdd'), '_', ...
+                                           p.defaultParameters.session.experimentSetupFile, '_',  ...
+                                           datestr(p.defaultParameters.session.initTime, 'HHMM')];
+    p.defaultParameters.session.file     = [p.defaultParameters.session.filestem, '.pds'];
 else
     p.defaultParameters.session.file = '';
     % p.defaultParameters.session.dir='';

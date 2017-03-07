@@ -430,7 +430,7 @@ function Trial2Ascii(p, act)
 
     switch act
         case 'init'
-            p.trial.session.asciitbl = [datestr(now,'yyyy_mm_dd_HHMM'),'.dat'];
+            p.trial.session.asciitbl = [p.trial.session.filestem,'.dat'];
             tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'w');
 
             fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  JPress  GoCue  JRelease  Reward  RewDur  ',...
