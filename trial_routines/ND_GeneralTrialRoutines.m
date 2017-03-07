@@ -90,4 +90,5 @@ else
             ND_CtrlMsg(p, 'AfterTrial');
 
     end  %/ switch state
+     p.trial.CurTime = GetSecs;  % get the current time
 end  %/  if(nargin == 1) [...] else [...]
