@@ -12,16 +12,24 @@ disp('');
 % ------------------------------------------------------------------------%
 %% initialize event times as NaN
 p.defaultParameters.EV.TrialStart = NaN; % Trial start time
-p.defaultParameters.EV.TaskStart  = NaN; % actual task start after animal got ready (i.e. joystick is released)
-p.defaultParameters.EV.JoyPress   = NaN; % Press time to start task
+p.defaultParameters.EV.TaskStart  = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
 p.defaultParameters.EV.GoCue      = NaN; % Onset of Go-signal
-p.defaultParameters.EV.JoyRelease = NaN; % time of joystick release
 p.defaultParameters.EV.Reward     = NaN; % time of reward delivery
 p.defaultParameters.EV.StartRT    = NaN; % response time to start trial after active cue
 p.defaultParameters.EV.RespRT     = NaN; % reaction time
-p.defaultParameters.EV.FixStart   = NaN; % start of fixation
-p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
-p.defaultParameters.EV.Saccade    = NaN; % response saccade detected
+
+% if joystick is used for behavior
+if(p.trial.behavior.joystick.use)
+    p.defaultParameters.EV.JoyRelease = NaN; % time of joystick release
+    p.defaultParameters.EV.JoyPress   = NaN; % Press time to start task
+end
+
+% if fixation is used
+if(p.trial.behavior.fixation.use)
+    p.defaultParameters.EV.FixStart   = NaN; % start of fixation
+    p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
+    p.defaultParameters.EV.Saccade    = NaN; % response saccade detected
+end
 
 % ------------------------------------------------------------------------%
 %% Task encodes
@@ -48,6 +56,10 @@ p.defaultParameters.event.FIXSPOT_OFF   = 111;     % offset of fixation spot
 p.defaultParameters.event.FIXATION      = 1000;    % valid fixation acquired
 p.defaultParameters.event.EYE_GO        = 1001;    % eye movement required, eye leaves current fixation window
 p.defaultParameters.event.TGT_FIX       = 1002;    % fixation of target item
+
+% refinement of fixation break times
+% ToDo: WZ - need to check what encodes should/need to be used as events and
+%            what should be used as outcome encoded in the trial header
 p.defaultParameters.event.FIX_BRK_BSL   = 3000;    % fixation break during the pre-stimulus period
 p.defaultParameters.event.FIX_BRK_CUE   = 3001;    % fixation break while the cue is on
 p.defaultParameters.event.FIX_BRK_STIM  = 3002;    % fixation break during stimulus presentation

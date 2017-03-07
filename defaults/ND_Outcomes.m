@@ -31,8 +31,7 @@ p.defaultParameters.outcome.FIX_BRK_STIM  =   3002;
 p.defaultParameters.outcome.FIX_BRK_SPEED =   3003;
 
 p.defaultParameters.outcome.FIXATION      =   1000;
-p.defaultParameters.outcome.NO_FIX        =   3010;
-p.defaultParameters.outcome.NoFix         =   3011;
+p.defaultParameters.outcome.NoFix         =   3010;
 
 %% get a string representation of the outcome
 p.defaultParameters.outcome.codenames = fieldnames(p.defaultParameters.outcome);

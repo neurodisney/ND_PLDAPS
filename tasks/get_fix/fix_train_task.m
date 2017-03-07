@@ -45,7 +45,7 @@ if(isempty(state))
     % executing pds.datapixx.init, hence this is a good place to do so. To
     % avoid conflicts with future changes in the set of default colors, use
     % entries later in the lookup table for the definition of task related colors.
-    ND_DefineCol(p, 'TargetDimm', 30, [0.00, 1.00, 0.00]);
+    ND_DefineCol(p, 'TargetDimm', 30, [0.00, 1.00, 0.00]);   % WZ: how is target different from FixSpot?
     ND_DefineCol(p, 'TargetOn',   31, [1.00, 0.00, 0.00]);
     ND_DefineCol(p, 'FixSpotInit', 32, [1 1 1]); % initial fixspot clr
     ND_DefineCol(p, 'FixSpotAcq', 33, [0.8 1 0.8]);
@@ -62,7 +62,7 @@ if(isempty(state))
     maxBlocks = 1000;
     
     % condition 1
-    c1.Nr = 1;
+    c1.Nr = 1;  % WZ: for conditions we should define parameter that differ between conditions. If they are constant, keep them in the TaskDef
     c1.task.Timing.MinHoldTime = 0.1;
     c1.task.Timing.MaxHoldTime = 0.2;
     c1.task.Timing.minFixHoldTime = 45; % amb 03/03/17 added
@@ -119,9 +119,10 @@ function TaskSetUp(p)
 % modifications.
 % TODO: make it robust and let it work with parameter changes via keyboard,
 % see e.g. monkeylogic editable concept.
+clear fix_train_taskdef; % WZ: make sure that contents are reloaded every trial in case updates are done. Right now quick&dirty hack
 fix_train_taskdef;
-% AB to WZ:  this is already done on initialization, do we need it in both
-% places?
+% AB to WZ:  this is already done on initialization, do we need it in both places?
+% WZ: please read my explanations in the documentation
 
 p.trial.task.Timing.ITI=ND_GetITI(p.trial.task.Timing.MinITI,      ...
     p.trial.task.Timing.MaxITI,      [], [], 1, 0.10);
@@ -160,7 +161,7 @@ switch p.trial.CurrEpoch
         end
         %% Wait for joystick press
     case p.trial.epoch.WaitStart
-        ctm = GetSecs;
+        ctm = GetSecs;  % WZ: you might want to check the current joy_train file, I refined the use of ctm there, reducing it to a single GetSecs line at the beginning and setting the current time in p.
         if(ctm > p.trial.task.Timing.WaitTimer)
             % no trial initiated in the given time window
             %ND_CtrlMsg(p, 'No joystick press');
@@ -201,9 +202,9 @@ switch p.trial.CurrEpoch
     case p.trial.epoch.WaitFix
         % this epoch is good for now, amb 3/6/17
         ctm = GetSecs;
-        % need to start WaitFix TImer
+        % need to start WaitFix TImer % WZ: do this when WaitFix is defined as current epoch, this is the place to update the timer
         % time from joy press to now
-        p.trial.task.EV.WaitFix = ctm - pp.trial.task.EV.JoyPress;
+        p.trial.task.EV.WaitFix = ctm - pp.trial.task.EV.JoyPress;  % WZ: what is this supposed to do? It will be reset here every time this epoch is called.
         % check if joystick is still down
         % check how long we wait for fixation
         if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
@@ -211,29 +212,29 @@ switch p.trial.CurrEpoch
             p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
             p.trial.task.EV.JoyRelease = ctm - p.trial.task.EV.TaskStart;
             
-            p.trial.CurrEpoch = p.trial.epochTaskEnd;
+            p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
         else
             % now get eye data, see if fixation acquired
-            p = ND_CheckFixation(p);
-            p = ND_CheckFixWin(p);
-            if p.trial.CurrFixWinState
+            p = ND_CheckFixation(p);  % WZ: This should be called once in ND_GeneralTrialRoutines, no need to repeat
+            p = ND_CheckFixWin(p);    % WZ: the idea was in ND_CheckFixation to set the state, as defined already in ND_RigDefaults (end of files, if you want you can rename to FixIn/Out; also analog to the joystick there is FixState.Current)
+            if p.trial.CurrFixWinState  % WZ: for readability and robustness define state since it might get different values in the future
                 p.trial.task.EV.FixStart= ctm - p.trial.task.EV.TaskStart;
                 p.trial.CurrEpoch=p.trial.epoch.Fixating;
-            elseif p.trial.task.EV.WaitFix > p.trial.task.Timing.FixWaitDur
+            elseif p.trial.task.EV.WaitFix > p.trial.task.Timing.FixWaitDur  % WZ: EV should refer to event times, not be used as timer. If it makes handling more convenient we coult use a Timer substruct. If you follow my logic, setting a time once when the next epoch is defined reduces the required calculation a lot.
                 % check if duration to acquire fixation has surpassed
                 % since we arent fixating yet
                 p.trial.outcome.CurrOutcome = ...
                 p.defaultParameters.outcome.FIX_BRK_BSL;
                 p.trial.task.EV.FixTimeOut = ctm - ...
                     p.trial.task.EV.TaskStart;
-                p.trial.CurrEpoch = p.trial.epochTaskEnd;
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                 % TODO
             end
         end
         %% fIXATING
     case p.trial.epoch.Fixating
         ctm = GetSecs;
-        p.trial.task.EV.Fixating = ctm - pp.trial.task.EV.JoyPress;
+        p.trial.task.EV.Fixating = ctm - pp.trial.task.EV.JoyPress;  % WZ: See above, EV should refer to times when an event happens (once). Avoid unnecessary calculations for code efficiency
         % check if joystick is still down
         if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
             %ND_CtrlMsg(p, 'Early release');
@@ -243,7 +244,7 @@ switch p.trial.CurrEpoch
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
         else % joy is still down, check em data
             % now get eye data, see if fixation acquired
-            p = ND_CheckFixation(p);
+            p = ND_CheckFixation(p);  % WZ: See above. This should be done once in ND_GeneralTrialRoutines
             p = ND_CheckFixWin(p);
             if p.trial.CurrFixWinState
                 % check if time for reward
@@ -261,7 +262,7 @@ switch p.trial.CurrEpoch
                     p.defaultParameters.outcome.FIX_BRK_CUE ;
                 p.trial.task.EV.FixBreak = ctm - ...
                     p.trial.task.EV.TaskStart;
-                p.trial.CurrEpoch = p.trial.epochTaskEnd;
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
         end
         %% WAITGO

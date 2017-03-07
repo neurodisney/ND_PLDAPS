@@ -59,15 +59,8 @@ else
             end
 
             if(p.trial.datapixx.useAsEyepos ||  p.trial.mouse.useAsEyepos)
-                % ab to wz: unsure of what 'task' input for
-                % ND_CheckFixation is for, so added this conditional to let my
-                % script run
-                if ~exist('task','var')
-                    ND_CheckFixation(p);
-                else
-                    ND_CheckFixation(p,task);   % needs to be called after pds.datapixx.adc.getData
-                end
-            end
+                ND_CheckFixation(p);
+             end
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
