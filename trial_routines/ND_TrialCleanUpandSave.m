@@ -73,8 +73,8 @@ end
 %% Trial information
 
 % system timing
-p.trial.timing.flipTimes             = p.trial.timing.flipTimes(:, 1:p.trial.iFrame);  % WZ: Why here again? Was defined at the function start...
-p.trial.timing.frameStateChangeTimes = p.trial.timing.frameStateChangeTimes(:, 1:p.trial.iFrame - 1);
+% p.trial.timing.flipTimes             = p.trial.timing.flipTimes(:, 1:p.trial.iFrame);  % WZ: Why here again? Was defined at the function start...
+% p.trial.timing.frameStateChangeTimes = p.trial.timing.frameStateChangeTimes(:, 1:p.trial.iFrame - 1);
 
 %-------------------------------------------------------------------------%
 %%  clean up data

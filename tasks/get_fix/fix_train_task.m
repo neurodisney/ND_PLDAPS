@@ -47,8 +47,8 @@ if(isempty(state))
     % entries later in the lookup table for the definition of task related colors.
     ND_DefineCol(p, 'TargetDimm', 30, [0.00, 1.00, 0.00]);   % WZ: how is target different from FixSpot?
     ND_DefineCol(p, 'TargetOn',   31, [1.00, 0.00, 0.00]);
-    ND_DefineCol(p, 'FixSpotInit', 32, [1 1 1]); % initial fixspot clr
-    ND_DefineCol(p, 'FixSpotAcq', 33, [0.8 1 0.8]);
+%     ND_DefineCol(p, 'FixSpotInit', 32, [1 1 1]); % initial fixspot clr
+%     ND_DefineCol(p, 'FixSpotAcq', 33, [1 1 1]);
     % optional, use flagged is TODO, color fixspot changes to upon
     % acquisition of (stable?) fixation
     
@@ -238,7 +238,7 @@ switch p.trial.CurrEpoch
         %% fIXATING
     case p.trial.epoch.Fixating
         ctm = GetSecs;
-        p.trial.task.EV.Fixating = ctm - pp.trial.task.EV.JoyPress;  % WZ: See above, EV should refer to times when an event happens (once). Avoid unnecessary calculations for code efficiency
+        p.trial.task.EV.Fixating = ctm - p.trial.task.EV.JoyPress;  % WZ: See above, EV should refer to times when an event happens (once). Avoid unnecessary calculations for code efficiency
         % check if joystick is still down
         if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
             %ND_CtrlMsg(p, 'Early release');
@@ -264,7 +264,7 @@ switch p.trial.CurrEpoch
                 
             else % fixation was broken
                 p.trial.outcome.CurrOutcome = ...
-                    p.defaultParameters.outcome.FIX_BRK_CUE ;
+                    p.trial.outcome.FIX_BRK_CUE ;
                 p.trial.task.EV.FixBreak = ctm - ...
                     p.trial.task.EV.TaskStart;
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
@@ -419,10 +419,10 @@ switch p.trial.CurrEpoch
         %% fix_train-specific epoch stimuli
     case p.trial.epoch.WaitFix
         TrialOn(p);
-        FixSpot(p, 'FixSpotInit')
+        FixSpot(p, 'TargetOn')
     case p.trial.epoch.Fixating
         TrialOn(p);
-        FixSpot(p, 'FixSpotAcq')
+        FixSpot(p, 'TargetOn')
 end
 
 function TrialOn(p)

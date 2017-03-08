@@ -429,8 +429,7 @@ function Trial2Ascii(p, act)
 
     switch act
         case 'init'
-            p.trial.session.asciitbl = [p.trial.session.filestem,'.dat'];
-            tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'w');
+            tblptr = fopen(p.trial.session.asciitbl , 'w');
 
             fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  JPress  GoCue  JRelease  Reward  RewDur  ',...
                              'Result  Outcome  StartRT  RT  ChangeTime \n']);
@@ -451,7 +450,7 @@ function Trial2Ascii(p, act)
 
                 cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
 
-                tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'a');
+                tblptr = fopen(p.trial.session.asciitbl, 'a');
 
                 fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s  %.5f  %.5f  %.5f\n' , ...
                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
