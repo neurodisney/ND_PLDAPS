@@ -63,6 +63,8 @@ if(isempty(state))
     
     % condition 1
     c1.Nr = 1;  % WZ: for conditions we should define parameter that differ between conditions. If they are constant, keep them in the TaskDef
+    % AB to WZ: makes sense. should I leave it for now in case we want to
+    % alter task structure to a multi-condition one later?
     c1.task.Timing.MinHoldTime = 0.1;
     c1.task.Timing.MaxHoldTime = 0.2;
     c1.task.Timing.minFixHoldTime = 45; % amb 03/03/17 added
