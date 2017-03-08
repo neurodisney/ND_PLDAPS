@@ -16,6 +16,13 @@ pds.tdt.strobe(p.trial.event.TRIAL_HDR_ON);
 % ------------------------------------------------------------------------%
 %% default information 
 pds.tdt.strobe(p.trial.pldaps.iTrial);       % trial number
+
+% TODO?
+%  strobe hour
+%  strobe min
+%  strobe sec
+%  strobe ms
+
 pds.tdt.strobe(p.trial.Nr);                  % condition number
 pds.tdt.strobe(p.trial.outcome.CurrOutcome); % outcome
 

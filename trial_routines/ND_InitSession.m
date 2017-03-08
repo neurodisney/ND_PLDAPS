@@ -127,6 +127,8 @@ end
 
 % --------------------------------------------------------------------%
 %% set variables that contain summary information across trials
+% TODO: WZ: right now not working correctly. Needs to be updated between trials
+%           in ND_runTrial when lock is removed from defaultParameters
 p.defaultParameters.LastHits         = 0;   % how many correct trials since last error
 p.defaultParameters.NHits            = 0;   % how many correct trials in total
 p.defaultParameters.NError           = 0;   % how incorrect trials (excluding not started trials)
@@ -142,7 +144,7 @@ if(~p.defaultParameters.mouse.useAsEyepos && ~p.defaultParameters.datapixx.useAs
     p.defaultParameters.pldaps.draw.eyepos.use = 0;
 end
 
-% don't enable online plots if not function is specified
+% don't enable online plots if no function is specified
 if(~exist(p.defaultParameters.plot.routine,'file'))
     warning('Plotting routine for online analysis not found, disabled plotting!');
     p.defaultParameters.plot.do_online  =  0;  

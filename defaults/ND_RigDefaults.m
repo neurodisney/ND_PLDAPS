@@ -1,9 +1,9 @@
 function SS = ND_RigDefaults(SS)
-% set default parameters for a rig in the disney lab.
+% set default parameters for a rig in the Disney lab.
 %
 % This file summarizes gives an overview of parameters that could be set for
 % the pldaps class and provides the default settings for an actual rig that
-% is used for experiments. It will overide the class paramters defined by
+% is used for experiments. It will override the class parameters defined by
 % the function @pldaps/pldapsClassDefaultParameters.m
 %
 % This function takes a struct with default rig settings as input (optional)
@@ -93,16 +93,6 @@ SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encodin
 % ------------------------------------------------------------------------%
 %% EyeLink settings: Eyelink specific parameters
 SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
-
-% SS.eyelink.buffereventlength                    = 30;    % don't change.
-% SS.eyelink.buffersamplelength                   = 31;    % don't change.
-% SS.eyelink.calibration_matrix                   = [];    % calibration matrix when using raw (uncalibrated) Data
-% SS.eyelink.collectQueue                         = 1;     % collect and store each sample recorded during trials
-% SS.eyelink.custom_calibration                   = 0;     % don't use.
-% SS.eyelink.custom_calibrationScale              = 0.25;  % don't use.
-% SS.eyelink.saveEDF                              = 0;     % toggle downloading of the EDF file directly after the experiment.
-% SS.eyelink.useAsEyepos                          = 1;     % toggle use of eyelink to set eyeX and eyeY
-% SS.eyelink.useRawData                           = 0;     % toggle use of raw (uncalibrated) Data.
 
 % ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
@@ -226,7 +216,8 @@ SS.key.quit   = 'ESCAPE';   % end experiment
 SS.key.debug  = 'd';
 SS.key.exe    = 'x';
 
-SS.key.CtrFix = 'z';  % set current eye position as center (NIY!)
+SS.key.CtrFix = 'z';  % set current eye position as center
+SS.key.CtrJoy = 'j';  % set current joystick position as zero
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters
@@ -235,7 +226,6 @@ SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state 
 SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
 SS.behavior.joystick.PullThr   = 1.5;        % threshold to detect a joystick press
 SS.behavior.joystick.RelThr    = 1.0;        % threshold to detect a joystick release
-% SS.behavior.joystick.ActTime   =  20;        % minimum time [ms] required to be considered as joystick action
 
 SS.pldaps.draw.joystick.use    = 1;          % draw joystick states on control screen
 

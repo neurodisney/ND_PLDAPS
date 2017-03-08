@@ -36,6 +36,12 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             p.trial.behavior.fixation.Zero = p.trial.behavior.fixation.Zero + [p.trial.eyeX, p.trial.eyeY];
         end
         
+        case KbName(p.trial.key.CtrJoy)
+        % set current eye position as expected fixation position
+        if(p.trial.behavior.joystick.use)
+            p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
+        end
+
         case KbName(p.trial.key.pause)
         % pause trial
             p.trial.pldaps.quit = 1;
