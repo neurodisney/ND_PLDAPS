@@ -205,7 +205,7 @@ switch p.trial.CurrEpoch
         ctm = GetSecs;
         % need to start WaitFix TImer % WZ: do this when WaitFix is defined as current epoch, this is the place to update the timer
         % time from joy press to now
-        p.trial.task.EV.WaitFix = ctm - p.trial.task.EV.JoyPress;  % WZ: what is this supposed to do? It will be reset here every time this epoch is called.
+        %p.trial.task.EV.WaitFix = ctm - p.trial.task.EV.JoyPress;  % WZ: what is this supposed to do? It will be reset here every time this epoch is called.
         % check if joystick is still down
         % check how long we wait for fixation
         if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
@@ -214,6 +214,7 @@ switch p.trial.CurrEpoch
             p.trial.task.EV.JoyRelease = ctm - p.trial.task.EV.TaskStart;
             
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+            disp([datetime]); disp([ 'bar release during fix'])
         else
             % now get eye data, see if fixation acquired
             p = ND_CheckFixation(p);  % WZ: This should be called once in ND_GeneralTrialRoutines, no need to repeat
@@ -221,7 +222,8 @@ switch p.trial.CurrEpoch
             if p.trial.CurrFixWinState  % WZ: for readability and robustness define state since it might get different values in the future
                 p.trial.task.EV.FixStart= ctm - p.trial.task.EV.TaskStart;
                 p.trial.CurrEpoch=p.trial.epoch.Fixating;
-            elseif p.trial.task.EV.WaitFix > p.trial.task.Timing.FixWaitDur  % WZ: EV should refer to event times, not be used as timer. If it makes handling more convenient we coult use a Timer substruct. If you follow my logic, setting a time once when the next epoch is defined reduces the required calculation a lot.
+                disp([datetime]); disp([ 'fixation acquired'])
+            elseif p.trial.task.EV.JoyPress > p.trial.task.Timing.FixWaitDur  % WZ: EV should refer to event times, not be used as timer. If it makes handling more convenient we coult use a Timer substruct. If you follow my logic, setting a time once when the next epoch is defined reduces the required calculation a lot.
                 % check if duration to acquire fixation has surpassed
                 % since we arent fixating yet
                 p.trial.outcome.CurrOutcome = ...
@@ -229,6 +231,7 @@ switch p.trial.CurrEpoch
                 p.trial.task.EV.FixTimeOut = ctm - ...
                     p.trial.task.EV.TaskStart;
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                disp([datetime]); disp([ 'fixation not acquired during duration'])
                 % TODO
             end
         end
@@ -255,6 +258,7 @@ switch p.trial.CurrEpoch
                         p.trial.task.Reward.Timer = ctm + p.trial.task.Reward.TrainRew ...
                             + p.trial.task.Reward.RewGap;
                         pds.behavior.reward.give(p, p.trial.task.Reward.TrainRew);
+                        disp([datetime]); disp([ 'rewtrain given'])
                     end
                 end
                 
@@ -264,10 +268,12 @@ switch p.trial.CurrEpoch
                 p.trial.task.EV.FixBreak = ctm - ...
                     p.trial.task.EV.TaskStart;
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+               disp([datetime]); disp([ 'fixation broken'])
             end
         end
         %% WAITGO
     case p.trial.epoch.WaitGo
+        disp([datetime]); disp([ 'in waitgo'])
         ctm = GetSecs;
         if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
             %ND_CtrlMsg(p, 'Early release');
@@ -284,6 +290,7 @@ switch p.trial.CurrEpoch
             p.trial.CurrEpoch = p.trial.epoch.WaitResponse;
         end
    case p.trial.epoch.WaitResponse
+        disp([datetime]); disp([ 'in waitresp'])
         ctm = GetSecs;
         % check/update fixdur
         %p.trial.task.eye.fixAOIDurComplete=...
