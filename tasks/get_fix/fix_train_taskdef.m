@@ -51,6 +51,7 @@ p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subs
 p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
 p.trial.task.Timing.PullTimeOut =  0;     % Minimum time [s] passed before a trial starts after random lever presses (NIY!)
 p.trial.task.Timing.minRT       =  0.15;  % If a response occurs prior this time it is considered an early response
+p.trial.behavior.joystick.minRT =  0.15;
 % this is still used for fixation, maybe set low or eliminate?
 p.trial.task.Timing.MinRel      = 0.5;    % minimum time to consider a bar released prior trial start
 

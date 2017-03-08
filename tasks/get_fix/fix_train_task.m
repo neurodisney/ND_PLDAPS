@@ -153,6 +153,7 @@ switch p.trial.CurrEpoch
             % joystick in a released state, let's start the trial
             p.trial.task.EV.TaskStart     = GetSecs;
             p.trial.task.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
+            p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             %ND_CtrlMsg(p, 'Trial started');
             
             p.trial.task.Timing.WaitTimer = p.trial.task.EV.TaskStart + p.trial.task.Timing.WaitStart;
@@ -204,7 +205,7 @@ switch p.trial.CurrEpoch
         ctm = GetSecs;
         % need to start WaitFix TImer % WZ: do this when WaitFix is defined as current epoch, this is the place to update the timer
         % time from joy press to now
-        p.trial.task.EV.WaitFix = ctm - pp.trial.task.EV.JoyPress;  % WZ: what is this supposed to do? It will be reset here every time this epoch is called.
+        p.trial.task.EV.WaitFix = ctm - p.trial.task.EV.JoyPress;  % WZ: what is this supposed to do? It will be reset here every time this epoch is called.
         % check if joystick is still down
         % check how long we wait for fixation
         if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
@@ -224,7 +225,7 @@ switch p.trial.CurrEpoch
                 % check if duration to acquire fixation has surpassed
                 % since we arent fixating yet
                 p.trial.outcome.CurrOutcome = ...
-                p.defaultParameters.outcome.FIX_BRK_BSL;
+                p.trial.outcome.FIX_BRK_BSL;
                 p.trial.task.EV.FixTimeOut = ctm - ...
                     p.trial.task.EV.TaskStart;
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;

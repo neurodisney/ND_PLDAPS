@@ -209,7 +209,7 @@ function TaskSetUp(p)
                                              p.trial.task.Timing.MaxITI,      [], [], 1, 0.10);
     p.trial.task.Timing.HoldTime = ND_GetITI(p.trial.task.Timing.MinHoldTime, ...
                                              p.trial.task.Timing.MaxHoldTime, [], [], 1, 0.02);   % Minimum time before response is expected
-    p.trial.task.TaskStart   = NaN;
+    p.trial.task.Task   = NaN;
     
     p.trial.task.Reward.Curr = NaN;
 
