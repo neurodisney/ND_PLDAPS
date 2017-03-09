@@ -62,18 +62,6 @@ function s=pldapsClassDefaultParameters(s)
  s.	display.	movie.	options = ':CodecType=x264enc :EncodingQuality=1.0';
  s.	display.	movie.	width = [ ];
 
-%s.	eyelink.
- s.	eyelink.	buffereventlength = 30;
- s.	eyelink.	buffersamplelength = 31;
- s.	eyelink.	calibration_matrix = [ ];
- s.	eyelink.	collectQueue = true;
- s.	eyelink.	custom_calibration = false;
- s.	eyelink.	custom_calibrationScale = 0.2500;
- s.	eyelink.	saveEDF = false;
- s.	eyelink.	use = true;
- s.	eyelink.	useAsEyepos = true;
- s.	eyelink.	useRawData = false;
-
 %s.	git.
  s.	git.	use = false;
 
@@ -83,17 +71,6 @@ function s=pldapsClassDefaultParameters(s)
  s.	mouse.	useAsEyepos = false;
  s.	mouse.	useLocalCoordinates = false;
  s.	mouse.	windowPtr = [ ];
-
-%s.	newEraSyringePump.
- s.	newEraSyringePump.	alarmMode = 1;
- s.	newEraSyringePump.	allowNewDiameter = false;
- s.	newEraSyringePump.	diameter = 38;
- s.	newEraSyringePump.	lowNoiseMode = 0;
- s.	newEraSyringePump.	port = '/dev/cu.usbserial';
- s.	newEraSyringePump.	rate = 2900;
- s.	newEraSyringePump.	triggerMode = 'T2';
- s.	newEraSyringePump.	use = false;
- s.	newEraSyringePump.	volumeUnits = 'ML';
 
 %s.	pldaps.
  s.	pldaps.	experimentAfterTrialsFunction = [ ];
@@ -108,7 +85,7 @@ function s=pldapsClassDefaultParameters(s)
  s.	pldaps.	quit = 0;
  s.	pldaps.	trialMasterFunction = 'runTrial';
  s.	pldaps.	useFileGUI = false;
- s.	pldaps.	useModularStateFunctions = false;
+ %s.	pldaps.	useModularStateFunctions = false;
 
 %s.	pldaps.	dirs.
  s.	pldaps.	dirs.	data = '/Data';

@@ -31,7 +31,7 @@ p.trial.task.Reward.Timer    = NaN;       % initialize timer to control subseque
 
 p.trial.task.Reward.IncrConsecutive = 0;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
 p.trial.task.Reward.Dur  = [0.5, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step = [2, 4];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
+p.trial.task.Reward.Step = [2, 4];        % define the number of trials when to increase reward. Vector length can not be longer than p.trial.task.Reward.Dur
 
 p.trial.task.Reward.Lag    = 0.10;        % Delay between response and reward onset
 p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
@@ -51,8 +51,6 @@ p.trial.task.Timing.MaxITI      =  2;    % maximum time period [s] between subse
 p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
 p.trial.task.Timing.PullTimeOut =  0;     % Minimum time [s] passed before a trial starts after random lever presses (NIY!)
 
-
-p.trial.task.Timing.WaitTimer   = NaN;    % Initialize variable that contains the timer to control task epochs
 
 % ------------------------------------------------------------------------%
 %% Stimulus parameters

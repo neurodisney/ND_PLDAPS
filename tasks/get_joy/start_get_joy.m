@@ -39,7 +39,7 @@ SS.pldaps.trialFunction = exp_fun; % This function is both, set-up for the exper
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
 SS.sound.use          = 0;  % no sound for now
-SS.display.bgColor    = [0.2, 0.2, 0.2];
+SS.display.bgColor    = [0.35, 0.35, 0.35];
 SS.pldaps.draw.photodiode.use = 0;
 % prepare for eye tracking and joystick monitoring
 SS.mouse.useAsEyepos     = 0;

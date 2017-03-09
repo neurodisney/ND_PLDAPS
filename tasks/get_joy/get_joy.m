@@ -128,7 +128,7 @@ else
         %% trial preparation
         % just prior to actual trial start, use it for time sensitive preparations;
 
-        p.trial.task.EV.TrialStart = GetSecs;
+        p.trial.EV.TrialStart = GetSecs;
 
 % ####################################################################### %
 % DONE DURING THE MAIN TRIAL LOOP:
@@ -225,12 +225,12 @@ function TaskDesign(p)
             elseif(ctm > p.trial.task.Timing.WaitTimer)
             % joystick in a properly released state, let's start the trial
                 ND_CtrlMsg(p, 'premature bar press');
-                p.trial.task.EV.TaskStart     = GetSecs;
-                p.trial.task.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
+                p.trial.EV.TaskStart     = GetSecs;
+                p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
                 ND_CtrlMsg(p, 'Trial started');
 
-                p.trial.task.Timing.WaitTimer = p.trial.task.EV.TaskStart + p.trial.task.Timing.WaitStart;
-                                
+                p.trial.task.Timing.WaitTimer = p.trial.EV.TaskStart + p.trial.task.Timing.WaitStart;
+
                 p.trial.CurrEpoch = p.trial.epoch.WaitStart;
             end
 
@@ -246,10 +246,12 @@ function TaskDesign(p)
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
-                p.trial.task.EV.JoyPress      = ctm - p.trial.task.EV.TaskStart;
+                
+                p.trial.EV.JoyPress    = ctm - p.trial.EV.TaskStart;
+
                 pds.tdt.strobe(p.trial.event.JOY_PRESS);
                 
-                if(p.trial.task.EV.StartRT <  p.trial.task.Timing.minRT)
+                if(p.trial.EV.StartRT <  p.trial.task.Timing.minRT)
                 % too quick to be a true response
                      %ND_CtrlMsg(p, 'premature start');
                      p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
@@ -261,10 +263,9 @@ function TaskDesign(p)
                     %ND_CtrlMsg(p, 'Joystick press');
 
                     pds.tdt.strobe(p.trial.event.TASK_ON);
-                    
                     pds.datapixx.TTL_state(1,1);
 
-                    p.trial.task.EV.StartRT = ctm - p.trial.task.EV.TaskStart;
+                    p.trial.EV.StartRT = ctm - p.trial.EV.TaskStart;
                     
                     % do full task, use other task epochs
                     p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.HoldTime;
@@ -288,7 +289,7 @@ function TaskDesign(p)
                 pds.tdt.strobe(p.trial.event.RESP_EARLY);
                 
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
-                p.trial.task.EV.JoyRelease  = ctm - p.trial.task.EV.TaskStart;
+                p.trial.EV.JoyRelease  = ctm - p.trial.EV.TaskStart;
 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 
@@ -296,7 +297,7 @@ function TaskDesign(p)
                 %ND_CtrlMsg(p, 'Wait response');
                 pds.tdt.strobe(p.trial.event.GOCUE);
                 
-                p.trial.task.EV.GoCue         = ctm - p.trial.task.EV.TaskStart;
+                p.trial.EV.GoCue         = ctm - p.trial.EV.TaskStart;
                 p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Timing.WaitResp;
 
                 p.trial.CurrEpoch = p.trial.epoch.WaitResponse;
@@ -323,9 +324,9 @@ function TaskDesign(p)
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 pds.tdt.strobe(p.trial.event.JOY_RELEASE);               
-                p.trial.task.EV.RespRT = ctm - p.trial.task.EV.GoCue;
+                p.trial.EV.RespRT = ctm - p.trial.EV.GoCue;
 
-                if(p.trial.task.EV.RespRT <  p.trial.task.Timing.minRT)
+                if(p.trial.EV.RespRT <  p.trial.task.Timing.minRT)
                 % premature response - too early to be a true response
                      %ND_CtrlMsg(p, 'premature response');
                      pds.tdt.strobe(p.trial.event.RESP_PREMAT);
@@ -339,11 +340,8 @@ function TaskDesign(p)
                     pds.tdt.strobe(p.trial.event.RESP_CORR);
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
 
-                    p.trial.LastHits = p.trial.LastHits + 1;
-                    p.trial.NHits    = p.trial.NHits    + 1;
-
-                    p.trial.task.EV.JoyRelease    = ctm - p.trial.task.EV.TaskStart;
-                    p.trial.task.Timing.WaitTimer = ctm + p.trial.task.Reward.Lag;
+                    p.trial.EV.JoyRelease    = ctm - p.trial.EV.TaskStart;
+                    p.trial.task.Timing.WaitTimer = ctm + p.trial.reward.Lag;
 
                     p.trial.CurrEpoch = p.trial.epoch.WaitReward;
                 end
@@ -355,7 +353,7 @@ function TaskDesign(p)
         % add error condition for new press
             ctm = GetSecs;
             if(ctm > p.trial.task.Timing.WaitTimer)
-                p.trial.task.EV.Reward = ctm - p.trial.task.EV.TaskStart;
+                p.trial.EV.Reward = ctm - p.trial.EV.TaskStart;
                 % TODO: add function to select current reward amount based on time or
                 %       number of consecutive correct trials preceding the current one.
 
@@ -371,7 +369,7 @@ function TaskDesign(p)
         case p.trial.epoch.WaitRelease
         %% Wait for joystick release after missed response
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-                p.trial.task.EV.JoyRelease = GetSecs;
+                p.trial.EV.JoyRelease = GetSecs;
                 %ND_CtrlMsg(p, 'Late Release');
                 pds.tdt.strobe(p.trial.event.JOY_RELEASE);  
                 pds.tdt.strobe(p.trial.event.RESP_LATE);               
@@ -400,6 +398,7 @@ function TaskDesign(p)
             
             pds.tdt.strobe(p.trial.event.TASK_OFF);               
             pds.datapixx.TTL_state(1,0);
+            
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI
         %% inter-trial interval: wait before next trial to start
@@ -473,20 +472,20 @@ function Trial2Ascii(p, act)
 
         case 'save'
             if(~p.trial.pldaps.quit && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart)  % we might loose the last trial when pressing esc.
-                trltm = p.trial.task.EV.TaskStart - p.trial.timing.datapixxSessionStart;
+                trltm = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
 
                 cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
 
                 tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'a');
 
                 fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s  %.5f  %.5f  %.5f\n' , ...
-                                datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.task.EV.TaskStartTime, ...
-                                p.trial.task.EV.TaskStart, p.trial.session.subject, ...
+                                datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
+                                p.trial.EV.TaskStart, p.trial.session.subject, ...
                                 p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
-                                trltm, p.trial.task.EV.JoyPress, ...
-                                p.trial.task.EV.GoCue, p.trial.task.EV.JoyRelease, p.trial.task.EV.Reward, ...
+                                trltm, p.trial.EV.JoyPress, ...
+                                p.trial.EV.GoCue, p.trial.EV.JoyRelease, p.trial.EV.Reward, ...
                                 p.trial.task.Reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
-                                p.trial.task.EV.StartRT, p.trial.task.EV.RespRT, p.trial.task.Timing.HoldTime);
+                                p.trial.EV.StartRT, p.trial.EV.RespRT, p.trial.task.Timing.HoldTime);
                fclose(tblptr);
             end
     end
