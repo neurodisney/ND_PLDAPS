@@ -271,7 +271,7 @@ function TaskDesign(p)
                         p.trial.CurrEpoch = p.trial.epoch.WaitGo;
 
                         if(p.trial.task.Reward.Pull)
-                            pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
+                            pds.reward.give(p, p.trial.task.Reward.PullRew);
                         end
                     else
                         % That was the task, reward animal and done                        
@@ -321,7 +321,7 @@ function TaskDesign(p)
 
                 p.trial.reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
 
-                pds.behavior.reward.give(p, p.trial.reward.Curr);
+                pds.reward.give(p, p.trial.reward.Curr);
                 % ND_CtrlMsg(p, ['Reward: ', num2str(p.trial.task.Reward.Curr), ' seconds']);
 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
@@ -340,7 +340,7 @@ function TaskDesign(p)
 
                 % use it as optional release reward if not full task is used
                 if(p.trial.task.Reward.Pull && ~p.trial.task.FullTask)
-                    pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
+                    pds.reward.give(p, p.trial.task.Reward.PullRew);
                 end
 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;

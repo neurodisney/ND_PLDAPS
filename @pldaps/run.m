@@ -395,7 +395,7 @@ while(true)
             
             case KbName(p.trial.key.reward)
                 % check for manual reward delivery via keyboard
-                pds.behavior.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
+                pds.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
 
                 %D: Debugger
             case KbName(p.trial.key.debug)

@@ -56,7 +56,7 @@ end
 % ------------------------------------------------------------------------%
 %% Reward    
 %%% prepare reward system and pre-allocate variables for reward timings
-pds.behavior.reward.trialSetup(p);
+pds.reward.trialSetup(p);
 
 % ------------------------------------------------------------------------%
 %% Update summary information for preceding trials

@@ -14,7 +14,7 @@ function analogOut(open_time, chan, TTLamp, sampleRate)
 % written by Kyler Eastman 2011
 % modified by JLY 2012 - replaced if~exist with nargin calls for speedup
 % modified by JK  2014 - slight adjustments for use with version 4.1
-% modified by wolf zinke, Feb. 2017 - put reward defaults into pds.behavior.reward.give
+% modified by wolf zinke, Feb. 2017 - put reward defaults into pds.reward.give
 %                                   - encode events when analog channel is used
 
 
