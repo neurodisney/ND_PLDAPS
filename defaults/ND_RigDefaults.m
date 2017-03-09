@@ -86,6 +86,10 @@ SS.display.useDegreeUnits                       = 0;    % 0 uses pixels, 1 uses 
 SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
 
 % ------------------------------------------------------------------------%
+%% EyeLink settings: Eyelink specific parameters
+SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
+
+% ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
 SS.mouse.use                                    = 0;     % collect and store mouse positions
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
