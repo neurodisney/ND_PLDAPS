@@ -74,7 +74,7 @@ try
     % reaction times
     subplot(3,2,2);
     if(any(isfinite(RT)))
-        bv = 0 : resp_bin : max(RT)+resp_bin;
+        bv = min(RT)-resp_bin : resp_bin : max(RT)+resp_bin;
 
         hist(RT, bv);
         title('Reaction times')

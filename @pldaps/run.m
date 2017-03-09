@@ -342,9 +342,9 @@ try
         PDS.functionHandles = p.functionHandles;
         
         if p.defaultParameters.pldaps.save.v73
-            save(fullfile(p.defaultParameters.session.dir, p.defaultParameters.session.file),'PDS','-mat','-v7.3')
+            save(p.defaultParameters.session.file,'-mat','-v7.3')
         else
-            save(fullfile(p.defaultParameters.session.dir, p.defaultParameters.session.file),'PDS','-mat')
+            save(p.defaultParameters.session.file,'-mat')
         end
     end
     
