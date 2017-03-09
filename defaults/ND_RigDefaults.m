@@ -77,6 +77,10 @@ SS.display.movie.height                         = [];    % height of the movie.
 SS.display.movie.width                          = [];    % width of the movie.
 SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encoding parameters
 
+% Use the coordinate frame transformations
+SS.display.useCustomOrigin                      = 0;    % 0 is off (use PTB standard origin in corner), 1 uses central origin, [x,y] uses custom pixel location as origin
+SS.display.useDegreeUnits                       = 0;    % 0 uses pixels, 1 uses uniform scaling to degrees, 2 (not implemented yet) uses nonuniform scaling across screen for accurate degrees 
+
 % ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
 SS.mouse.use                                    = 0;     % collect and store mouse positions
@@ -104,6 +108,7 @@ SS.pldaps.nosave                                = 0;     % disables saving of da
 SS.pldaps.pass                                  = 0;     % indicator of behavior (i.e. fixations) should always be assumed to be good.
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
 SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
+SS.pldaps.OpenScreenFunction          = 'openscrenn';   % function to be called to run a single Trial.
 % SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file. (WZ TODO: I think could be removed. File names generated automatically.)
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
