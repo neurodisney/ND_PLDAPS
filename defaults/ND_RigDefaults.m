@@ -82,6 +82,10 @@ SS.display.useCustomOrigin                      = 0;    % 0 is off (use PTB stan
 SS.display.useDegreeUnits                       = 0;    % 0 uses pixels, 1 uses uniform scaling to degrees, 2 (not implemented yet) uses nonuniform scaling across screen for accurate degrees 
 
 % ------------------------------------------------------------------------%
+%% EyeLink settings: Eyelink specific parameters
+SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
+
+% ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
 SS.mouse.use                                    = 0;     % collect and store mouse positions
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
