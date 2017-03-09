@@ -79,7 +79,7 @@ try
     
     %-------------------------------------------------------------------------%
     %% REWARD
-    p = pds.behavior.reward.setup(p);
+    p = pds.reward.setup(p);
     
     % Initialize Datapixx including dual CLUTS and timestamp logging
     p = pds.datapixx.init(p);
