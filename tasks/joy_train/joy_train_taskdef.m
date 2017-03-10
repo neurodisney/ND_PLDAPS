@@ -68,6 +68,7 @@ p.trial.task.FrameRect  = ND_GetRect(p.trial.display.ctr(1:2), p.trial.task.Fram
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters
+p.trial.behavior.joystick.use     = 1;    % Use the joystick
 p.trial.behavior.joystick.PullThr = 1.5;  % threshold to detect a joystick press
 p.trial.behavior.joystick.RelThr  = 1.0;  % threshold to detect a joystick release
 
