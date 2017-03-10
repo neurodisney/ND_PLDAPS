@@ -62,9 +62,6 @@ function s=pldapsClassDefaultParameters(s)
  s.	display.	movie.	options = ':CodecType=x264enc :EncodingQuality=1.0';
  s.	display.	movie.	width = [ ];
 
-%s.	git.
- s.	git.	use = false;
-
 %s.	mouse.
  s.	mouse.	initialCoordinates = [];
  s.	mouse.	use = true;

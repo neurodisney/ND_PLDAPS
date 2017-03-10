@@ -56,28 +56,29 @@ end
 % ------------------------------------------------------------------------%
 %% Reward    
 %%% prepare reward system and pre-allocate variables for reward timings
-pds.reward.trialSetup(p);
+p.trial.reward.iReward     = 1; % counter for reward times
+p.trial.reward.timeReward  = nan(2,p.trial.pldaps.maxTrialLength*2); %preallocate for a reward up to every 0.5 s
 
 % ------------------------------------------------------------------------%
 %% Update summary information for preceding trials
-LastOut = cellfun(@(x) x.outcome.CurrOutcome, p.data);
-
-if(~isempty(LastOut))
-    if(LastOut(end) == p.trial.outcome.Correct)
-        p.trial.LastHits = find(flip(LastOut) ~= p.trial.outcome.Correct, 1, 'first') - 1;
-        if(isempty(p.trial.LastHits))
-            p.trial.LastHits = length(LastOut);
-        end
-    else
-        p.trial.LastHits = 0;
-    end
-    
-    p.trial.NHits      = sum(LastOut == p.trial.outcome.Correct);
-    p.trial.NError     = sum(LastOut ~= p.trial.outcome.NoStart & ...
-                             LastOut ~= p.trial.outcome.Correct);
-    p.trial.NCompleted = sum(LastOut ~= p.trial.outcome.NoStart);
-    p.trial.cPerf      = p.trial.NHits/p.trial.NCompleted*100;
-end
+%  LastOut = cellfun(@(x) x.outcome.CurrOutcome, p.data);
+%
+%  if(~isempty(LastOut))
+%      if(LastOut(end) == p.trial.outcome.Correct)
+%          p.trial.LastHits = find(flip(LastOut) ~= p.trial.outcome.Correct, 1, 'first') - 1;
+%          if(isempty(p.trial.LastHits))
+%              p.trial.LastHits = length(LastOut);
+%          end
+%      else
+%          p.trial.LastHits = 0;
+%      end
+%
+%      p.trial.NHits      = sum(LastOut == p.trial.outcome.Correct);
+%      p.trial.NError     = sum(LastOut ~= p.trial.outcome.NoStart & ...
+%                               LastOut ~= p.trial.outcome.Correct);
+%      p.trial.NCompleted = sum(LastOut ~= p.trial.outcome.NoStart);
+%      p.trial.cPerf      = p.trial.NHits/p.trial.NCompleted*100;
+%  end
 
 p.trial.SmryStr = sprintf('Condition: %d  Block: %d -- %d/%d correct trials (%.2f)', ...
                    p.trial.Nr, p.trial.blocks(p.trial.pldaps.iTrial), p.trial.NHits, ...
@@ -104,7 +105,7 @@ end
 % ------------------------------------------------------------------------%
 %% Initialize default trial control variables
 p.trial.CurrEpoch             = NaN;  % keep track of task epochs
-p.trial.task.Timing.WaitTimer = NaN;  % Initialize variable that contains a timer 
+p.trial.task.Timing.WaitTimer = NaN;  % Initialize variable that contains a timer  # TODO: WZ: make it p.trial.WaitTimer, p.trial.Timer.WaitTimer?
 p.trial.CurTime               = NaN;  % keep track of current time
 
 

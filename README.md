@@ -1,9 +1,18 @@
 ND_PLDAPS
 ==========
 
-This repository contains helper tools and experiments to be used in combination with the PLDAPS software (https://github.com/HukLab/PLDAPS), using a modified fork with the 'neurodisney' branch (https://github.com/neurodisney/PLDAPS).
+A NeuroDisney flavor of the PLDAPS software provided by the Huk-Lab (https://github.com/HukLab/PLDAPS).
 
-Currently, this repository contains the 'master' branch, a developmental branch ('dev'), and a branch with stable code used for training and experiments in one rig ('rig1').
+This repository contains a stripped down and slightly re-organized version of the PLDAPS version from the openreception branch (Version 4.2). ND_PLDAPS is tailored for the hardware used in the Disney-Lab and provides additional functions and task code.
+
+
+
+
+
+
+
+
+
 
 ***
 ## Tools and utilities

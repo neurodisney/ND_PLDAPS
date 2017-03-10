@@ -11,26 +11,28 @@ disp('****************************************************************')
 disp('');
 
 % --------------------------------------------------------------------%
-%% set output directory  (moved to PLDAPS/@pldaps/run.m)
-% WZ: define output directory
-p.defaultParameters.pldaps.dirs.data = fullfile(p.defaultParameters.pldaps.dirs.data, ...
+%% set output directories and file names
+p.defaultParameters.session.dir      =  fullfile(p.defaultParameters.pldaps.dirs.data, ...
                                         p.defaultParameters.session.subject, ...
                                         p.defaultParameters.session.experimentSetupFile, datestr(now,'yyyy_mm_dd'));
                                     
 % ensure that the data directory exists
-if(~exist(fullfile(p.defaultParameters.pldaps.dirs.data,'TEMP'),'dir'))
-    mkdir(fullfile(p.defaultParameters.pldaps.dirs.data,'TEMP'));
+p.defaultParameters.session.tmpdir   = fullfile(p.defaultParameters.session.dir,'TEMP');
+
+if(~exist(p.defaultParameters.session.tmpdir,'dir'))
+    mkdir(p.defaultParameters.session.tmpdir);
 end
 
-p.defaultParameters.session.dir      =  p.defaultParameters.pldaps.dirs.data;
 p.defaultParameters.session.filestem = [p.defaultParameters.session.dir, ...
                                         p.defaultParameters.session.subject, '_', ...
                                         datestr(p.defaultParameters.session.initTime, 'yyyymmdd'), '_', ...
                                         p.defaultParameters.session.experimentSetupFile, '_',  ...
                                         datestr(p.defaultParameters.session.initTime, 'HHMM')];
+                                    
 p.defaultParameters.session.file     = [p.defaultParameters.session.filestem, '.pds'];
 
 p.defaultParameters.session.asciitbl = [p.trial.session.filestem,'.dat'];
+
 
 % --------------------------------------------------------------------%
 %% Define Trial function
@@ -48,10 +50,10 @@ end
 % This function allows to pass variable content between trials. Otherwise,
 % the variables that are changed within a trial will not be updated and
 % reset to the initial value for the subsequent trial.
-if(~isfield(p.defaultParameters.pldaps, 'experimentAfterTrialsFunction') || ...
-    isempty(p.defaultParameters.pldaps.experimentAfterTrialsFunction) )
-    p.defaultParameters.pldaps.experimentAfterTrialsFunction = 'ND_AfterTrial';  % a function to be called after each trial.
-end
+% if(~isfield(p.defaultParameters.pldaps, 'experimentAfterTrialsFunction') || ...
+%     isempty(p.defaultParameters.pldaps.experimentAfterTrialsFunction) )
+%     p.defaultParameters.pldaps.experimentAfterTrialsFunction = 'ND_AfterTrial';  % a function to be called after each trial.
+% end
 
 % --------------------------------------------------------------------%
 %% initialize the random number generator
@@ -183,8 +185,11 @@ p.defaultParameters.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime'
 %% Set text size for screen display
 Screen('TextSize', p.defaultParameters.display.overlayptr , 36);
 
+
+
 % --------------------------------------------------------------------%
 %% helper functions
+
 function p = CheckChannelExists(p, channm, chk)
 % ensure that adc channels do exist
     if(isempty(p.defaultParameters.datapixx.adc.(channm)) || isnan(p.defaultParameters.datapixx.adc.(channm)) )
