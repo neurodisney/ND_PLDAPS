@@ -153,7 +153,7 @@ try
         if(~p.trial.pldaps.quit)
             
             % ----------------------------------------------------------------%
-            %load parameters for next tria
+            %% load parameters for next trial
             trialNr = trialNr+1;
 
             % get information for current condition
@@ -167,7 +167,10 @@ try
             p.defaultParameters.pldaps.iTrial = trialNr;
 
             %% update trial information
-            % Todo: Maybe create a trial update function for easier control
+            % Todo: - Maybe create a trial update function for easier control
+            %       - define 'editables', either as 2D cell array (variable
+            %         name and value) or text file for task parameters that
+            %         have to be updated between trials.
             if(trialNr > 1)
                 % The old trial struct is still in memory
                 if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
@@ -210,9 +213,9 @@ try
             %is supposed to do that, but that is very slow, so we create
             %a manual deep copy by saving the struct to a file and loading it
             %back in.
-            save([p.trial.pldaps.dirs.data, filesep, 'TEMP', filesep, 'deepTrialStruct'], 'tmpts');
+            save(fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct'), 'tmpts');
             clear tmpts
-            load([p.trial.pldaps.dirs.data, filesep, 'TEMP', filesep, 'deepTrialStruct']);
+            load(fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct'));
             p.trial = tmpts;
             clear tmpts;
 
@@ -230,7 +233,7 @@ try
             %% complete trial: plot and save data
             % save tmp data
             result = saveTempFile(p);
-            if ~isempty(result)
+            if(~isempty(result))
                 disp(result.message)
             end
             
@@ -276,7 +279,6 @@ try
             elseif pause==2
                 pauseLoop(p);
             end
-            %             pds.datapixx.refresh(dv);
             
             %now I'm assuming that nobody created new levels,
             %but I guess when you know how to do that
@@ -289,80 +291,49 @@ try
         end  %  if(~p.trial.pldaps.quit)
     end  %  while(p.trial.pldaps.iTrial < p.trial.pldaps.finish && p.trial.pldaps.quit ~= 2)
     
-    %make the session parameterStruct active
+    %% make the session parameterStruct active
     p.defaultParameters.setLevels(levelsPreTrials);
     p.trial = p.defaultParameters;
     
-    % return cursor and command-line control
+    %% return cursor and command-line control
     ShowCursor;
     ListenChar(0);
     Priority(0);
     
+    %% end datapixx
     if(p.defaultParameters.datapixx.use)
         %start adc data collection if requested
         pds.datapixx.adc.stop(p);
         
         status = PsychDataPixx('GetStatus');
-        if status.timestampLogCount
+        if(status.timestampLogCount)
             p.defaultParameters.datapixx.timestamplog = PsychDataPixx('GetTimestampLog', 1);
         end
     end
     
-    % shut down audio
-    if p.defaultParameters.sound.use
+    %% shut down audio
+    if(p.defaultParameters.sound.use)
         pds.audio.clearBuffer(p);
         % Close the audio device:
         PsychPortAudio('Close', p.defaultParameters.sound.master);
     end
-     
-    %% save online plot
-    if(p.defaultParameters.plot.do_online)
-        p.defaultParameters.plot.fig = []; % avoid saving the figure to data
-        hgexport(gcf, [p.defaultParameters.session.filestem, '.pdf'], hgexport('factorystyle'), 'Format', 'pdf');
-    end
+    
+    %% save the session data to file
+    saveSession(p);
 
-    %% save data as pds file
-    if(~p.defaultParameters.pldaps.nosave)
-        [structs,structNames] = p.defaultParameters.getAllStructs();
-        
-        PDS = struct;
-        PDS.initialParameters     = structs(levelsPreTrials);
-        PDS.initialParameterNames = structNames(levelsPreTrials);
-        
-        if(p.defaultParameters.pldaps.save.initialParametersMerged)
-            PDS.initialParametersMerged=mergeToSingleStruct(p.defaultParameters); %too redundant?
-        end
-        
-        levelsCondition = 1:length(structs);
-        levelsCondition(ismember(levelsCondition,levelsPreTrials)) = [];
-        
-        PDS.conditions = structs(levelsCondition);
-        PDS.conditionNames = structNames(levelsCondition);
-        PDS.data = p.data;
-        PDS.functionHandles = p.functionHandles;
-        
-        if p.defaultParameters.pldaps.save.v73
-            save(p.defaultParameters.session.file,'-mat','-v7.3')
-        else
-            save(p.defaultParameters.session.file,'-mat')
-        end
-    end
-    
-    if p.trial.display.movie.create
-        Screen('FinalizeMovie', p.trial.display.movie.ptr);
-    end
-    
-    if ~p.defaultParameters.datapixx.use && p.defaultParameters.display.useOverlay
+    %% close screens
+    if(~p.defaultParameters.datapixx.use && p.defaultParameters.display.useOverlay)
         glDeleteTextures(2,glGenTextures(1));
     end
+    
     Screen('CloseAll');
     
     sca;
     
 catch me
     sca
-    if p.trial.sound.use
-        PsychPortAudio('Close')
+    if(p.trial.sound.use)
+        PsychPortAudio('Close', p.defaultParameters.sound.master);
     end
     % return cursor and command-line control
     ShowCursor
@@ -378,6 +349,8 @@ catch me
 end
 
 end
+
+
 %we are pausing, will create a new defaultParaneters Level where changes
 %would go.
 function pauseLoop(dv)
