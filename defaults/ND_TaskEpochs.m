@@ -48,3 +48,6 @@ if(p.trial.behavior.fixation.use)
     p.defaultParameters.epoch.Fixating    =   6;  % Ongoing fixation
 end
 
+% Wait for intervention from experimenter
+p.defaultParameters.epoch.WaitExperimenter =  20;
+

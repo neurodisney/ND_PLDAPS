@@ -77,6 +77,14 @@ if(isempty(state))
     % call this after ND_InitSession to be sure that output directory exists!
     
     %Trial2Ascii(p, 'init'); TODO: Save bar parameters to file every frame
+    
+    
+    %% Set up conditions
+    % For now, just one condition, because ust one trial happens
+    c1.Nr = 1;
+    
+    conditions = {c1};
+    p = ND_GetConditionList(p, conditions, 1, 1);
 
     % --------------------------------------------------------------------%
 
@@ -107,7 +115,7 @@ end
 function TaskSetup(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
-    p.trial.CurrEpoch = p.trial.epoch.MoveBar;
+    p.trial.CurrEpoch = p.trial.epoch.WaitExperimenter;
 end
 
 function TaskDesign(p)
@@ -117,7 +125,7 @@ function TaskDesign(p)
 % incoming data.
     switch p.trial.CurrEpoch
         
-        case p.trial.epoch.MoveBar
+        case p.trial.epoch.WaitExperimenter
             
             
         case p.trial.epoch.TaskEnd
