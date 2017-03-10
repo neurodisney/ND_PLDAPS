@@ -49,7 +49,7 @@ SS.datapixx.useAsEyepos  = 0;
 SS.behavior.fixation.use = 0;
 
 SS.pldaps.GetTrialStateTimes  = 1; 
-SS.pldaps.draw.photodiode.use = 1;
+SS.pldaps.draw.photodiode.use = 0;
 
 SS.pldaps.nosave = 0;  
 
