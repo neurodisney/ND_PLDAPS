@@ -185,8 +185,11 @@ p.defaultParameters.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime'
 %% Set text size for screen display
 Screen('TextSize', p.defaultParameters.display.overlayptr , 36);
 
+
+
 % --------------------------------------------------------------------%
 %% helper functions
+
 function p = CheckChannelExists(p, channm, chk)
 % ensure that adc channels do exist
     if(isempty(p.defaultParameters.datapixx.adc.(channm)) || isnan(p.defaultParameters.datapixx.adc.(channm)) )
