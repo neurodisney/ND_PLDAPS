@@ -273,7 +273,7 @@ function TaskDesign(p)
                     p.trial.CurrEpoch = p.trial.epoch.WaitGo;
 
                     if(p.trial.task.Reward.Pull)
-                        pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
+                        pds.reward.give(p, p.trial.task.Reward.PullRew);
                         %ND_CtrlMsg(p, 'Reward');
                     end
                 end
@@ -308,7 +308,7 @@ function TaskDesign(p)
                 if(ctm > p.trial.task.Reward.Timer)
                     p.trial.task.Reward.Timer = ctm + p.trial.task.Reward.TrainRew ...
                                                     + p.trial.task.Reward.RewGap;
-                    pds.behavior.reward.give(p, p.trial.task.Reward.TrainRew);
+                    pds.reward.give(p, p.trial.task.Reward.TrainRew);
                 end
             end
 
@@ -359,7 +359,7 @@ function TaskDesign(p)
 
                 p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
 
-                pds.behavior.reward.give(p, p.trial.task.Reward.Curr);
+                pds.reward.give(p, p.trial.task.Reward.Curr);
                 % ND_CtrlMsg(p, ['Reward: ', num2str(p.trial.task.Reward.Curr), ' seconds']);
 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;

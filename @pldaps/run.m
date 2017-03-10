@@ -79,7 +79,7 @@ try
     
     %-------------------------------------------------------------------------%
     %% REWARD
-    p = pds.behavior.reward.setup(p);
+    p = pds.reward.setup(p);
     
     % Initialize Datapixx including dual CLUTS and timestamp logging
     p = pds.datapixx.init(p);
@@ -395,7 +395,7 @@ while(true)
             
             case KbName(p.trial.key.reward)
                 % check for manual reward delivery via keyboard
-                pds.behavior.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
+                pds.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
 
                 %D: Debugger
             case KbName(p.trial.key.debug)
