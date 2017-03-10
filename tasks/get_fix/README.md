@@ -19,5 +19,16 @@ iii. fix_train_taskdef.m -
 
 todos:
 ------
-- remove *_wip from folder name once code is runnable
 - implement variable position of fixation spot
+
+
+03/08/2017 Update/Notes:
+------
+- need to check if eye position is displayed
+- ensure kb button press to pause task and modify specific settings
+- plot at end of each trial of eye behavior
+
+
+p.trial.behavior.fixation.FixPos(1)=x coordinate of interest/ref
+p.trial.behavior.fixation.FixPos(2)=y coordinate of interest/ref
+

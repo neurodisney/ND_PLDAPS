@@ -427,6 +427,14 @@ switch p.trial.CurrEpoch
         FixSpot(p, 'TargetOn')
 end
 
+% Draw eye position
+if(p.trial.pldaps.draw.eyepos.use)
+% TODO: keep history of several frames, use alpha blending to fade out old locations
+    Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX, p.trial.eyeY]', ...
+                        p.trial.stimulus.eyeW, p.trial.display.clut.eyepos, [0 0],0);
+end
+
+
 function TrialOn(p)
 %% show a frame to indicate the trial is active
 

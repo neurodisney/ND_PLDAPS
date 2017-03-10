@@ -4,6 +4,10 @@
 % 02/08/2017 AB created 
 % modified from: joy_train_taskdef.m (WZ)
 
+%% parameters which are modified on the fly/trial-by-trial manually by experimenter
+
+
+
 %% Condition/Block design
 p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are
 %repeated until the same number of correct trials is obtained for all
@@ -39,7 +43,7 @@ p.trial.task.Reward.Timer    = NaN;       % initialize timer to control subseque
 p.trial.task.Timing.WaitStart   = 2.50;    
 % maximal time period [s] in seconds to press the lever in order to start a
 % trial.
-p.trial.task.Timing.WaitResp    = 1.50;    
+p.trial.task.Timing.WaitResp    = 1.50;    % AB: not sure if this is relevant here
 % Only response times [s] after this wait period will be considered 
 % stimulus driven responses
 
@@ -64,9 +68,10 @@ p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulu
 p.trial.task.TargetPos_pxl = ND_cart2ptb(p, p.trial.task.TargetPos_dva);
 p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
 
+% can probably just use above 'target' for now and erase this
 % fixation spot
 p.trial.task.FixSpotSz_dva  = 4;          % Stimulus diameter in dva
-p.trial.task.FixSpotPos_dva = [0, 0];      % Stimulus diameter in dva25seconds
+p.trial.task.FixSpotPos_dva = [0, 0];      % Stimulus position in dva25seconds
 
 p.trial.task.FixSpotSz_pxl  = ND_dva2pxl(p.trial.task.FixSpotSz_dva, p); % Stimulus diameter in dva
 p.trial.task.FixSpotPos_pxl = ND_cart2ptb(p, p.trial.task.FixSpotPos_dva);
