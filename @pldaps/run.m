@@ -13,7 +13,6 @@ function p = run(p)
 %                                    move data file name definition to ND_InitSession
 %
 %TODO: 
-% one unified system for modules, e.g. moduleSetup, moduleUpdate, moduleClose
 % make HideCursor optional
 % TODO: reset class at end of experiment or mark as recorded, so I don't
 % run the same again by mistake
@@ -42,12 +41,12 @@ try
         p.defaultParameters.session.experimentSetupFile = cfile;
     end
     
+    %-------------------------------------------------------------------------%
     %% Open PLDAPS windows
     % Open PsychToolbox Screen
     p = openScreen(p);
     
     % Setup PLDAPS experiment condition
-    p.defaultParameters.pldaps.maxFrames = p.defaultParameters.pldaps.maxTrialLength * p.defaultParameters.display.frate;
     feval(p.defaultParameters.session.experimentSetupFile, p);
     
     %-------------------------------------------------------------------------%
@@ -62,15 +61,6 @@ try
         p = initTicks(p);
     end
     
-    %get and store changes of current code to the git repository
-    p = pds.git.setup(p);
-    
-    %things that were in the conditionFile
-    if(p.trial.eyelink.use)
-        p = pds.eyelink.setup(p);
-    end
-    %things that where in the default Trial Structure
-    
     %-------------------------------------------------------------------------%
     %% Audio
     if(p.trial.sound.use)
@@ -81,17 +71,24 @@ try
     %% REWARD
     p = pds.reward.setup(p);
     
-    % Initialize Datapixx including dual CLUTS and timestamp logging
+    %-------------------------------------------------------------------------%
+    %% Initialize Datapixx including dual CLUTS and timestamp logging
     p = pds.datapixx.init(p);
     
+
+    %-------------------------------------------------------------------------%
+    %% Initialize keyboard
     pds.keyboard.setup(p);
     
+    %-------------------------------------------------------------------------%
+    %% Initialize mouse
     if(p.trial.mouse.useLocalCoordinates)
-        p.trial.mouse.windowPtr=p.trial.display.ptr;
+        p.trial.mouse.windowPtr = p.trial.display.ptr;
     end
     
     if(~isempty(p.trial.mouse.initialCoordinates))
-        SetMouse(p.trial.mouse.initialCoordinates(1),p.trial.mouse.initialCoordinates(2),p.trial.mouse.windowPtr)
+        SetMouse(p.trial.mouse.initialCoordinates(1), ...
+                 p.trial.mouse.initialCoordinates(2), p.trial.mouse.windowPtr)
     end
     
     % --------------------------------------------------------------------%
@@ -108,7 +105,8 @@ try
         keyboard %#ok<MCKBD>
     end
     
-    %%%%start recoding on all controlled components this in not currently done here
+    % --------------------------------------------------------------------%
+    %% start recoding on all controlled components this in not currently done here
     % save timing info from all controlled components (datapixx, eyelink, this pc)
     p = ND_BeginExperiment(p);
     
@@ -130,22 +128,9 @@ try
         disp(result.message)
     end
     
-    %now setup everything for the first trial
-    
-    %     dv.defaultParameters.pldaps.iTrial=trialNr;
-    
-    %we'll have a trialNr counter that the trial function can tamper with?
-    %do we need to lock the defaultParameters to prevent tampering there?
+    % --------------------------------------------------------------------%
+    %% prepare first trial
     levelsPreTrials = p.defaultParameters.getAllLevels();
-    %     dv.defaultParameters.addLevels(dv.conditions(trialNr), {['Trial' num2str(trialNr) 'Parameters']});
-    
-    %for now all structs will be in the parameters class, first
-    %levelsPreTrials, then we'll add the condition struct before each trial.
-    %     dv.defaultParameters.setLevels([levelsPreTrials length(levelsPreTrials)+trialNr])
-    %     dv.defaultParameters.pldaps.iTrial=trialNr;
-    %     dv.trial=mergeToSingleStruct(dv.defaultParameters);
-    
-    %only use dv.trial from here on!
     
     %% main trial loop %%
     while(p.trial.pldaps.iTrial < p.trial.pldaps.finish && p.trial.pldaps.quit ~= 2)
@@ -199,6 +184,7 @@ try
 
             % ----------------------------------------------------------------%
             %% create new trial struct
+
             % create temporary trial struct
             tmpts = mergeToSingleStruct(p.defaultParameters);
 
@@ -207,12 +193,7 @@ try
                tmpts.plot.fig = [];
             end
 
-            %it looks like the trial struct gets really partitioned in
-            %memory and this appears to make some get (!) calls slow.
-            %We thus need a deep copy. The superclass matlab.mixin.Copyable
-            %is supposed to do that, but that is very slow, so we create
-            %a manual deep copy by saving the struct to a file and loading it
-            %back in.
+            % easiest (and quickest) way to create a deep copy is to save it as mat file and load it again
             save(fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct'), 'tmpts');
             clear tmpts
             load(fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct'));
@@ -245,19 +226,19 @@ try
                 dTrialStruct = getDifferenceFromStruct(p.defaultParameters, p.trial);
             end
             p.data{trialNr}=dTrialStruct;
-                       
-            
+
             if(~p.defaultParameters.datapixx.use && p.defaultParameters.display.useOverlay)
                 glDeleteTextures(2,glGenTextures(1));
             end
 
+            % ----------------------------------------------------------------%
             %% make online plots
             if(p.defaultParameters.plot.do_online)
                 feval(p.defaultParameters.plot.routine,  p);
                 p.trial.plot.fig = []; % avoid saving the figure to data
             end
 
-        else %dbquit ==1 is meant to be pause. should we halt eyelink, datapixx, etc?
+        else %dbquit == 1 is meant to be pause. should we halt datapixx?
 
             %create a new level to store all changes in,
             %load only non trial paraeters
@@ -291,15 +272,18 @@ try
         end  %  if(~p.trial.pldaps.quit)
     end  %  while(p.trial.pldaps.iTrial < p.trial.pldaps.finish && p.trial.pldaps.quit ~= 2)
     
+    % ----------------------------------------------------------------%
     %% make the session parameterStruct active
     p.defaultParameters.setLevels(levelsPreTrials);
     p.trial = p.defaultParameters;
     
+    % ----------------------------------------------------------------%
     %% return cursor and command-line control
     ShowCursor;
     ListenChar(0);
     Priority(0);
     
+    % ----------------------------------------------------------------%
     %% end datapixx
     if(p.defaultParameters.datapixx.use)
         %start adc data collection if requested
@@ -311,6 +295,7 @@ try
         end
     end
     
+    % ----------------------------------------------------------------%
     %% shut down audio
     if(p.defaultParameters.sound.use)
         pds.audio.clearBuffer(p);
@@ -318,9 +303,11 @@ try
         PsychPortAudio('Close', p.defaultParameters.sound.master);
     end
     
+    % ----------------------------------------------------------------%
     %% save the session data to file
     saveSession(p);
 
+    % ----------------------------------------------------------------%
     %% close screens
     if(~p.defaultParameters.datapixx.use && p.defaultParameters.display.useOverlay)
         glDeleteTextures(2,glGenTextures(1));
@@ -350,7 +337,7 @@ end
 
 end
 
-
+% ----------------------------------------------------------------%
 %we are pausing, will create a new defaultParaneters Level where changes
 %would go.
 function pauseLoop(dv)
