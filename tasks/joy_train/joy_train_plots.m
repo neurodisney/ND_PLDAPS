@@ -58,8 +58,9 @@ try
         hist(Resp_tm, bv);
         title('Release times')
         ylabel('count');
-        xlabel('time [ms]')
-
+        xlabel('time trial start [ms]')
+        axis tight; 
+        
 %         h = findobj(gca,'Type','patch');
 %         h.FaceColor = [0 0 0];
 %         h.EdgeColor = [0 0 0];
@@ -79,7 +80,7 @@ try
         hist(RT, bv);
         title('Reaction times')
         ylabel('count');
-        xlabel('time [ms]')
+        xlabel('time from stimulus change [ms]')
 
 %         h = findobj(gca,'Type','patch');
 %         h.FaceColor = [0 0 0];
@@ -91,7 +92,6 @@ try
         plot([medRT,medRT], yl,'-r','LineWidth', 2.5);
         hold off
     end
-    
     
     % release times in trial
     subplot(3,1,2);
@@ -108,13 +108,13 @@ try
 %     plot(Trial_tm(hl), Resp_tm(hl), 'o', 'MarkerSize', 6, ...
 %         'MarkerEdgeColor', late_col,'MarkerFaceColor',late_col)
     
-    ylabel('release time [ms]');
+    ylim([min(Resp_tm), max(Resp_tm)]);
+    ylabel('time trial start [ms]');
     xlabel('trial time [min]');
     
     
     % reaction times in trial
     subplot(3,1,3);
-    
     
     plot(Trial_tm(hp), RT(hp), 'o', 'MarkerSize', 6, ...
         'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
@@ -124,10 +124,9 @@ try
 %     plot(Trial_tm(hl), RT(hl), 'o', 'MarkerSize', 6, ...
 %         'MarkerEdgeColor', late_col,'MarkerFaceColor',late_col)
     
-    ylabel('reaction time [ms]');
+    ylim([min(RT), max(RT)]);
+    ylabel('time from stimulus change [ms]');
     xlabel('trial time [min]');
-    
-    
         
     
     

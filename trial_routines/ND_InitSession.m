@@ -23,15 +23,14 @@ if(~exist(p.defaultParameters.session.tmpdir,'dir'))
     mkdir(p.defaultParameters.session.tmpdir);
 end
 
-p.defaultParameters.session.filestem = [p.defaultParameters.session.dir, ...
-                                        p.defaultParameters.session.subject, '_', ...
+p.defaultParameters.session.filestem = [p.defaultParameters.session.subject, '_', ...
                                         datestr(p.defaultParameters.session.initTime, 'yyyymmdd'), '_', ...
                                         p.defaultParameters.session.experimentSetupFile, '_',  ...
                                         datestr(p.defaultParameters.session.initTime, 'HHMM')];
                                     
-p.defaultParameters.session.file     = [p.defaultParameters.session.filestem, '.pds'];
+p.defaultParameters.session.file     = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
 
-p.defaultParameters.session.asciitbl = [p.trial.session.filestem,'.dat'];
+p.defaultParameters.session.asciitbl = [p.defaultParameters.session.dir, filesep, p.trial.session.filestem,'.dat'];
 
 
 % --------------------------------------------------------------------%

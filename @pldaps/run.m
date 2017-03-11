@@ -10,7 +10,7 @@ function p = run(p)
 % 04/2014 jk  moved into a pldaps class; adapted to new class structure
 %
 % modified by wolf zinke, Feb. 2017: cleaned for unused hardware options,
-%                                    move data file name definition to ND_InitSession
+%                                    
 %
 %TODO: 
 % make HideCursor optional
@@ -305,9 +305,41 @@ try
     
     % ----------------------------------------------------------------%
     %% save the session data to file
-    saveSession(p);
+    
+    % save online plot
+    if(p.defaultParameters.plot.do_online)
+        p.defaultParameters.plot.fig = []; % avoid saving the figure to data
+        hgexport(gcf, [p.defaultParameters.session.filestem, '.pdf'], hgexport('factorystyle'), 'Format', 'pdf');
+    end
 
-    % ----------------------------------------------------------------%
+    % save data as pds file
+    if(~p.defaultParameters.pldaps.nosave)
+        [structs,structNames] = p.defaultParameters.getAllStructs();
+
+        PDS = struct;
+        PDS.initialParameters     = structs(levelsPreTrials);
+        PDS.initialParameterNames = structNames(levelsPreTrials);
+
+        if(p.defaultParameters.pldaps.save.initialParametersMerged)
+            PDS.initialParametersMerged=mergeToSingleStruct(p.defaultParameters); %too redundant?
+        end
+
+        levelsCondition = 1:length(structs);
+        levelsCondition(ismember(levelsCondition,levelsPreTrials)) = [];
+
+        PDS.conditions = structs(levelsCondition);
+        PDS.conditionNames = structNames(levelsCondition);
+        PDS.data = p.data;
+        PDS.functionHandles = p.functionHandles;
+
+        if p.defaultParameters.pldaps.save.v73
+            save(p.defaultParameters.session.file,'-mat','-v7.3')
+        else
+            save(p.defaultParameters.session.file,'-mat')
+        end
+    end
+
+% ----------------------------------------------------------------%
     %% close screens
     if(~p.defaultParameters.datapixx.use && p.defaultParameters.display.useOverlay)
         glDeleteTextures(2,glGenTextures(1));
@@ -320,8 +352,9 @@ try
 catch me
     sca
     if(p.trial.sound.use)
-        PsychPortAudio('Close', p.defaultParameters.sound.master);
+        PsychPortAudio('Close');
     end
+    
     % return cursor and command-line control
     ShowCursor
     ListenChar(0)
