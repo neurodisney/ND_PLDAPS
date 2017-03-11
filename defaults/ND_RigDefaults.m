@@ -219,7 +219,7 @@ SS.key.CtrJoy = 'j';  % set current joystick position as zero
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters
-SS.behavior.joystick.use       =  1;         % does this task require control of joystick state
+SS.behavior.joystick.use       =  0;         % does this task require control of joystick state
 SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state (released)
 SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
 SS.behavior.joystick.PullThr   = 1.5;        % threshold to detect a joystick press
