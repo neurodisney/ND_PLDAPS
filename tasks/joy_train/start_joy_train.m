@@ -72,6 +72,39 @@ if(~exist('experimenter','var') || isempty(experimenter))
     experimenter = getenv('USER');
 end
 
+% function to set up experiment (and maybe also including trial function)
+exp_fun = 'joy_train';
+
+% ------------------------------------------------------------------------%
+%% load default settings into a struct
+SS = ND_RigDefaults;    % load default settings according to the current rig setup
+
+% define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
+SS.pldaps.trialFunction = exp_fun; % This function is both, set-up for the experiment session as well as the trial function
+
+% ------------------------------------------------------------------------%
+%% make modifications of default settings
+SS.sound.use          = 0;  % no sound for now
+SS.display.bgColor    = [50, 50, 50] / 255;
+SS.pldaps.draw.photodiode.use = 0;
+SS.display.useCustomOrigin = 1;
+SS.display.useDegreeUnits = 1;
+
+% prepare for eye tracking and joystick monitoring
+SS.datapixx.adc.srate    = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
+SS.mouse.useAsEyepos     = 0;
+SS.datapixx.useAsEyepos  = 0;
+SS.behavior.fixation.use = 0;
+SS.behavior.joystick.use = 1;
+
+SS.pldaps.GetTrialStateTimes  = 1; 
+SS.pldaps.draw.photodiode.use = 0;
+
+SS.pldaps.nosave = 0;  
+
+SS.plot.do_online       =  1;  % run online data analysis between two subsequent trials
+SS.plot.routine         = 'joy_train_plots';  % matlab function to be called for online analysis
+
 % ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);
