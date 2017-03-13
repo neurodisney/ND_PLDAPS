@@ -41,12 +41,15 @@ SS.pldaps.trialFunction = exp_fun; % This function is both, set-up for the exper
 SS.sound.use          = 0;  % no sound for now
 SS.display.bgColor    = [50, 50, 50] / 255;
 SS.pldaps.draw.photodiode.use = 0;
+SS.display.useCustomOrigin = 1;
+SS.display.useDegreeUnits = 1;
 
 % prepare for eye tracking and joystick monitoring
 SS.datapixx.adc.srate    = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 SS.mouse.useAsEyepos     = 0;
 SS.datapixx.useAsEyepos  = 0;
 SS.behavior.fixation.use = 0;
+SS.behavior.joystick.use = 1;
 
 SS.pldaps.GetTrialStateTimes  = 1; 
 SS.pldaps.draw.photodiode.use = 0;
