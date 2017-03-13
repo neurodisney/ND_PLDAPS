@@ -143,7 +143,7 @@ p.trial.display.w2px=[p.trial.display.pWidth/p.trial.display.wWidth; p.trial.dis
 p.trial.display.px2w=[p.trial.display.wWidth/p.trial.display.pWidth; p.trial.display.wHeight/p.trial.display.pHeight];
 
 % Get the pixels per degree at the center of the screen
-p.trial.display.centralPxPerDeg = tand(1) * p.trial.display.viewdist * p.trial.display.w2px; 
+p.trial.display.ppdCentral = tand(1) * p.trial.display.viewdist * p.trial.display.w2px; 
 
 % Set screen rotation
 p.trial.display.ltheta = 0.00*pi;                                    % Screen rotation to adjust for mirrors
@@ -176,7 +176,7 @@ if isfield(p.trial.display, 'useCustomOrigin') && p.trial.display.useCustomOrigi
     end
     
     Screen('glTranslate', p.trial.display.ptr, xTrans, yTrans)
-    
+    p.trial.display.winRect = p.trial.display.winRect - [xTrans, yTrans, xTrans, yTrans];
 end
 
 % Scale the units to degrees of visual angle
@@ -184,10 +184,11 @@ if isfield(p.trial.display, 'useDegreeUnits') && p.trial.display.useDegreeUnits 
     
     % If useDegreeUnits == 1, scale uniformly prioritizing accuracy in center of screen (may be slightly inaccurate)
     if p.trial.display.useDegreeUnits == 1
-        xScaleFactor = p.trial.display.centralPxPerDeg(1);
-        yScaleFactor = p.trial.display.centralPxPerDeg(2);
+        xScaleFactor = p.trial.display.ppdCentral(1);
+        yScaleFactor = p.trial.display.ppdCentral(2);
         
         Screen('glScale', p.trial.display.ptr, xScaleFactor, yScaleFactor)
+        p.trial.display.winRect = p.trial.display.winRect ./ [xScaleFactor, yScaleFactor, xScaleFactor, yScaleFactor];
     
     % Otherwise give an error
     else
