@@ -142,6 +142,9 @@ p.trial.display.dHeight = atand(p.trial.display.wHeight/2 / p.trial.display.view
 p.trial.display.w2px=[p.trial.display.pWidth/p.trial.display.wWidth; p.trial.display.pHeight/p.trial.display.wHeight];
 p.trial.display.px2w=[p.trial.display.wWidth/p.trial.display.pWidth; p.trial.display.wHeight/p.trial.display.pHeight];
 
+% Get the pixels per degree at the center of the screen
+p.trial.display.centralPxPerDeg = tand(1) * p.trial.display.viewdist * p.trial.display.w2px; 
+
 % Set screen rotation
 p.trial.display.ltheta = 0.00*pi;                                    % Screen rotation to adjust for mirrors
 p.trial.display.rtheta = -p.trial.display.ltheta;
@@ -181,8 +184,8 @@ if isfield(p.trial.display, 'useDegreeUnits') && p.trial.display.useDegreeUnits 
     
     % If useDegreeUnits == 1, scale uniformly (may be slightly inaccurate)
     if p.trial.display.useDegreeUnits == 1
-        xScaleFactor = p.trial.display.pWidth / p.trial.display.dWidth;
-        yScaleFactor = p.trial.display.pHeight / p.trial.display.dHeight;
+        xScaleFactor = p.trial.display.centralPxPerDeg(1);
+        yScaleFactor = p.trial.display.centralPxPerDeg(2);
         
         Screen('glScale', p.trial.display.ptr, xScaleFactor, yScaleFactor)
         
