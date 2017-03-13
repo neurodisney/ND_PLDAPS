@@ -43,12 +43,12 @@ p.trial.stimulus.timeLastFrame = p.trial.timing.flipTimes(1, p.trial.iFrame) - p
 % we could trust users not to draw before frameDraw, but we'll check again at frameDraw to be sure
 
 if(any(p.trial.pldaps.lastBgColor ~= p.trial.display.bgColor))
-    Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor);
+    Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor, p.trial.display.winRect);
     p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
 end
 
 if(p.trial.display.overlayptr ~= p.trial.display.ptr)
-    Screen('FillRect', p.trial.display.overlayptr, 0);
+    Screen('FillRect', p.trial.display.overlayptr, 0, p.trial.display.winRect);
 end
 
 %-------------------------------------------------------------------------%
