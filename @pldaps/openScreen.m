@@ -155,7 +155,7 @@ Screen('TextStyle',p.trial.display.ptr,1);
 %% Push transformation matrices onto the graphics stack to change the origin and scale coordinates to degrees
 
 % Translate the origin
-if exist('p.trial.display.useCustomOrigin', 'var') && p.trial.display.useCustomOrigin ~= 0
+if isfield(p.trial.display, 'useCustomOrigin') && p.trial.display.useCustomOrigin ~= 0
     
     % If useCustomOrigin == 1, use a central origin
     if p.trial.display.useCustomOrigin == 1
@@ -177,7 +177,7 @@ if exist('p.trial.display.useCustomOrigin', 'var') && p.trial.display.useCustomO
 end
 
 % Scale the units to degrees of visual angle
-if exist('p.trial.display.useDegreeUnits', 'var') && p.trial.display.useDegreeUnits ~= 0
+if isfield(p.trial.display, 'useDegreeUnits') && p.trial.display.useDegreeUnits ~= 0
     
     % If useDegreeUnits == 1, scale uniformly (may be slightly inaccurate)
     if p.trial.display.useDegreeUnits == 1
