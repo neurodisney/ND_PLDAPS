@@ -176,7 +176,7 @@ if isfield(p.trial.display, 'useCustomOrigin') && p.trial.display.useCustomOrigi
     end
     
     Screen('glTranslate', p.trial.display.ptr, xTrans, yTrans)
-    
+    p.trial.display.winRect = p.trial.display.winRect - [xTrans, yTrans, xTrans, yTrans];
 end
 
 % Scale the units to degrees of visual angle
@@ -188,6 +188,7 @@ if isfield(p.trial.display, 'useDegreeUnits') && p.trial.display.useDegreeUnits 
         yScaleFactor = p.trial.display.ppdCentral(2);
         
         Screen('glScale', p.trial.display.ptr, xScaleFactor, yScaleFactor)
+        p.trial.display.winRect = p.trial.display.winRect ./ [xScaleFactor, yScaleFactor, xScaleFactor, yScaleFactor];
     
     % Otherwise give an error
     else
