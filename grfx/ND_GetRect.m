@@ -12,4 +12,4 @@ end
 
 r = sz./2;
 rect = kron([1,1], pos) + kron([-1,1],r);
-rect = floor(rect); % pixels
+% rect = floor(rect); % pixels
