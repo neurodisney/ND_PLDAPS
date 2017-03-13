@@ -184,8 +184,8 @@ if isfield(p.trial.display, 'useDegreeUnits') && p.trial.display.useDegreeUnits 
     
     % If useDegreeUnits == 1, scale uniformly (may be slightly inaccurate)
     if p.trial.display.useDegreeUnits == 1
-        xScaleFactor = p.trial.display.pWidth / p.trial.display.dWidth;
-        yScaleFactor = p.trial.display.pHeight / p.trial.display.dHeight;
+        xScaleFactor = p.trial.display.ppdCentral(1);
+        yScaleFactor = p.trial.display.ppdCentral(2);
         
         Screen('glScale', p.trial.display.ptr, xScaleFactor, yScaleFactor)
         
