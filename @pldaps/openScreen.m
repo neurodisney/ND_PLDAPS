@@ -182,17 +182,12 @@ end
 % Scale the units to degrees of visual angle
 if isfield(p.trial.display, 'useDegreeUnits') && p.trial.display.useDegreeUnits ~= 0
     
-    % If useDegreeUnits == 1, scale uniformly (may be slightly inaccurate)
+    % If useDegreeUnits == 1, scale uniformly prioritizing accuracy in center of screen (may be slightly inaccurate)
     if p.trial.display.useDegreeUnits == 1
         xScaleFactor = p.trial.display.ppdCentral(1);
         yScaleFactor = p.trial.display.ppdCentral(2);
         
         Screen('glScale', p.trial.display.ptr, xScaleFactor, yScaleFactor)
-        
-    % If useDegreeUnits == 2, scale non uniformaly to more closely match
-    % actual degree values (may cause local shape distortion)
-    elseif p.trial.display.useDegreeUnits == 2
-        % TODO
     
     % Otherwise give an error
     else
