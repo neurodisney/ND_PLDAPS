@@ -11,6 +11,7 @@ function p = ND_runTrial(p)
     %the trialFunctionHandle
     tfh = str2func(p.trial.pldaps.trialFunction);
     
+    % initial trial setup
     tfh(p, p.trial.pldaps.trialStates.trialSetup);
     
     % switch to high priority mode
@@ -22,7 +23,7 @@ function p = ND_runTrial(p)
         end
     end
 
-    %w ill be called just before the trial starts for time critical calls to start data acquisition
+    % will be called just before the trial starts for time critical calls to start data acquisition
     tfh(p, p.trial.pldaps.trialStates.trialPrepare);
 
     %%% MAIN WHILE LOOP %%%

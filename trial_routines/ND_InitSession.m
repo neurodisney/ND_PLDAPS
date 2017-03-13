@@ -44,6 +44,14 @@ if(~isfield(p.defaultParameters.pldaps, 'trialFunction'))
 end
 
 % --------------------------------------------------------------------%
+%% get task parameters
+if(isfield(p.trial.task, 'TaskDef'))
+    if(~isempty(p.trial.task.TaskDef))
+        p = feval(p.trial.task.TaskDef,  p);
+    end
+end
+
+% --------------------------------------------------------------------%
 %% After Trial function
 % Define function that is executed after trial completion when the lock of defaultParameters is released
 % This function allows to pass variable content between trials. Otherwise,
@@ -138,7 +146,7 @@ p.defaultParameters.SmryStr          = ' '; % text message with trial/session su
 %% sanity checks
 
 % there is no point of drawing eye position if it is not recorded
-if(~p.defaultParameters.mouse.useAsEyepos && ~p.defaultParameters.datapixx.useAsEyepos && ~p.defaultParameters.eyelink.use)
+if(~p.defaultParameters.mouse.useAsEyepos && ~p.defaultParameters.datapixx.useAsEyepos)
     p.defaultParameters.pldaps.draw.eyepos.use = 0;
 end
 

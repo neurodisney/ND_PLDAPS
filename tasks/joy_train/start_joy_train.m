@@ -39,6 +39,8 @@ SS.pldaps.trialFunction = exp_fun; % This function is both, set-up for the exper
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
 SS.sound.use          = 0;  % no sound for now
+SS.behavior.joystick.use = 1;
+
 SS.display.bgColor    = [50, 50, 50] / 255;
 SS.pldaps.draw.photodiode.use = 0;
 

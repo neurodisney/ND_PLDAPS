@@ -8,6 +8,16 @@ function p = ND_TrialSetup(p)
 p.trial.timing.flipTimes           = zeros(4,p.trial.pldaps.maxFrames);
 p.trial.timing.frameStateChangeTimes = nan(9,p.trial.pldaps.maxFrames);
 
+
+% --------------------------------------------------------------------%
+%% get task parameters
+if(isfield(p.trial.task, 'TaskDef'))
+    if(~isempty(p.trial.task.TaskDef))
+        clear(p.trial.task.TaskDef); % make sure content gets updated
+        p = feval(p.trial.task.TaskDef,  p);
+    end
+end
+
 % ------------------------------------------------------------------------%
 %% Photo Diode
 if(p.trial.pldaps.draw.photodiode.use)

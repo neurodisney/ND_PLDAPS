@@ -235,7 +235,7 @@ SS.JoyState.JoyRest     =   0;  % joystick released
 
 % ------------------------------------------------------------------------%
 %% Saccade parameters
-SS.behavior.fixation.use       =  1;      % does this task require control of eye position
+SS.behavior.fixation.use       =  0;      % does this task require control of eye position
 SS.behavior.fixation.Zero      = [0, 0];  % analog input signal that corresponds to center fixation
 SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva

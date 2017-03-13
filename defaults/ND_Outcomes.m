@@ -1,6 +1,7 @@
 function p = ND_Outcomes(p)
 % Defines numeric values for possible trial outcomes.
 %
+% The outcome will be encoded in the trial header.
 %
 % wolf zinke, Feb. 2017
 
@@ -11,14 +12,15 @@ disp('****************************************************************')
 disp('');
 
 
+
 % ------------------------------------------------------------------------%
 %% Define task outcomes
 
 p.defaultParameters.outcome.Correct           =   1004;  % correct performance, no error occurred
-p.defaultParameters.outcome.Abort             =   2;  % early joystick release prior stimulus onset
+p.defaultParameters.outcome.Abort             =   2;     % early joystick release prior stimulus onset
 p.defaultParameters.outcome.Early             =   3005;  % release prior to response window
 p.defaultParameters.outcome.False             =   3006;  % wrong response within response window
-p.defaultParameters.outcome.Late              =   5;  % response occurred after response window
+p.defaultParameters.outcome.Late              =   5;     % response occurred after response window
 p.defaultParameters.outcome.Miss              =   3007;  % no response at a reasonable time
 p.defaultParameters.outcome.NoStart           =   3004;  % trial not started
 p.defaultParameters.outcome.PrematStart       =   3008;  % trial start not too early as response to cue
@@ -27,6 +29,9 @@ p.defaultParameters.outcome.PrematStart       =   3008;  % trial start not too e
 if(p.trial.behavior.joystick.use)
     p.defaultParameters.outcome.NoPress       =   1;  % No joystick press occurred to initialize trial
 end
+
+% AD: 3000-3009 for fixation breaks
+%       3010-for errors
 
 % fixation related
 if(p.trial.behavior.fixation.use)
