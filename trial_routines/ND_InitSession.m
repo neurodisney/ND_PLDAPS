@@ -105,18 +105,22 @@ p.defaultParameters.pldaps.maxFrames = p.defaultParameters.pldaps.maxTrialLength
 %% define drawing area for joystick representation
 if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.useJoystick)
 
-    % hardcode right now location and size of joystick representation
-    p.defaultParameters.pldaps.draw.joystick.size   = [60 400];        % what area to occupy with joystick representation (pixel)
-    p.defaultParameters.pldaps.draw.joystick.pos    = [p.defaultParameters.display.pWidth - ...
-                                          (p.defaultParameters.display.pWidth/10 - 1.5*p.defaultParameters.pldaps.draw.joystick.size(1)), ...
-                                           round(p.defaultParameters.display.pHeight/2)]; % where to center joystick representation
+    % hardcoded location and size of joystick representation
+    if p.defaultParameters.display.useDegreeUnits
+        p.defaultParameters.pldaps.draw.joystick.size   = [1.5 8];
+    else
+        p.defaultParameters.pldaps.draw.joystick.size   = [60 400];        % what area to occupy with joystick representation (pixel)
+    end
+    
+    % Draw the joystick meter on the right side of the screen
+    p.defaultParameters.pldaps.draw.joystick.pos    = [p.trial.display.winRect(3) - 3 * p.defaultParameters.pldaps.draw.joystick.size(1), 0];
 
     p.defaultParameters.pldaps.draw.joystick.sclfac = p.defaultParameters.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
 
     p.defaultParameters.pldaps.draw.joystick.rect = ND_GetRect(p.defaultParameters.pldaps.draw.joystick.pos, ...
                                                    p.defaultParameters.pldaps.draw.joystick.size);
 
-    p.defaultParameters.pldaps.draw.joystick.levelsz =  round(p.defaultParameters.pldaps.draw.joystick.size .* [1.25, 0.01]);
+    p.defaultParameters.pldaps.draw.joystick.levelsz =  p.defaultParameters.pldaps.draw.joystick.size .* [1.25, 0.01];
 
     % initialize joystick level at zero
     cjpos = [p.defaultParameters.pldaps.draw.joystick.pos(1), p.defaultParameters.pldaps.draw.joystick.rect(2)];
