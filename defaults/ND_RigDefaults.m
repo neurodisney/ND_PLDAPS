@@ -30,8 +30,9 @@ SS.datapixx.use                                 = 1;      % enable control of VP
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
 
-SS.datapixx.useAsEyepos                         = 1;      % use Datapixx adc inputs as eye position                    !!!
-SS.datapixx.useForReward                        = 1;      % use Datapixx to set for a given duration. WZ: Default channel used is chan 3, needs hard coding in pldaps code to change                 !!!
+SS.datapixx.useAsEyepos                         = 0;      % use Datapixx adc inputs as eye position                    !!!
+
+SS.datapixx.useForReward                        = 0;      % use Datapixx to set for a given duration. WZ: Default channel used is chan 3, needs hard coding in pldaps code to change                 !!!
 
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
@@ -184,7 +185,7 @@ SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) wit
 SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initial mapping of eye position.
 SS.datapixx.adc.PupilChannel  = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
 
-SS.datapixx.useJoystick       = 1;  % acquire data about joystick state                                           !!!
+SS.datapixx.useJoystick       = 0;  % acquire data about joystick state                                           !!!
 
 SS.datapixx.adc.XJoyChannel   = 4;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
 SS.datapixx.adc.YJoyChannel   = 5;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
