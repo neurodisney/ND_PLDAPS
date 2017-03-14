@@ -105,7 +105,31 @@ else
         case p.trial.pldaps.trialStates.trialPrepare
             % Just prior to acutal trial start
             p.trial.EV.TrialStart = p.trial.CurTime;
+       
+        %################################################################%
+        % Done during main trial loop:
+        
+        case p.trial.pldaps.trialStates.framePrepareDrawing
+        %% Get ready to display
+        % prepare the stimuli that should be shown, do some required calculations
             
+            TaskDesign(p);
+            
+        % ----------------------------------------------------------------%
+        case p.trial.pldaps.trialStates.frameDraw
+        %% Display stuff on the screen
+        % Just call graphic routines, avoid any computations
+            
+            TaskDraw(p)
+            
+        % ####################################################################### %
+        % DONE AFTER THE MAIN TRIAL LOOP:
+        
+        case p.trial.pldaps.trialStates.trialCleanUpandSave
+            % just as fail safe, make sure to finish when done
+            if(p.trial.pldaps.iTrial == length(p.conditions))
+                p.trial.pldaps.finish = p.trial.pldaps.iTrial;
+            end
     end
             
 end
@@ -126,7 +150,9 @@ function TaskDesign(p)
     switch p.trial.CurrEpoch
         
         case p.trial.epoch.WaitExperimenter
-            
+            if p.trail.CurTime > p.trial.EV.TrialStart + 3
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+            end
             
         case p.trial.epoch.TaskEnd
             
@@ -150,6 +176,7 @@ rfbar = p.trial.task.rfbar;
             Screen('glPopMatrix',window);
             
         case p.trial.epoch.TaskEnd
+            Task_OFF(p);
     end
 end
 

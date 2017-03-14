@@ -40,6 +40,9 @@ SS.pldaps.nosave = 1;  % For now do not bother with the pldaps file format, use 
 % For now turn off reward since not setup for rig2 where I am testing this.
 SS.datapixx.useForReward = 0;
 
+% Turn off joystick
+SS.datapixx.useJoystick = 0;
+
 % ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);
