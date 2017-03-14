@@ -150,7 +150,7 @@ function TaskDesign(p)
     switch p.trial.CurrEpoch
         
         case p.trial.epoch.WaitExperimenter
-            if p.trail.CurTime > p.trial.EV.TrialStart + 3
+            if p.trial.CurTime > p.trial.EV.TrialStart + 3
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
             
