@@ -30,10 +30,6 @@ SS.datapixx.use                                 = 1;      % enable control of VP
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
 
-SS.datapixx.useAsEyepos                         = 0;      % use Datapixx adc inputs as eye position                    !!!
-
-SS.datapixx.useForReward                        = 0;      % use Datapixx to set for a given duration. WZ: Default channel used is chan 3, needs hard coding in pldaps code to change                 !!!
-
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
 % WZ: Also for more clarification check the PsychDataPixx function in Psychtoolbox-3/Psychtoolbox/PsychHardware/DatapixxToolbox/DatapixxBasic
@@ -52,11 +48,9 @@ SS.datapixx.adc.maxSamples                      = 0;      % maximum number of sa
 SS.datapixx.adc.numBufferFrames                 = 600000; % maximum number of samples to store in datapixx memory.
 SS.datapixx.adc.srate                           = 1000;   % samples rate in Hz
 SS.datapixx.adc.startDelay                      = 0;      % delay until beginning of recording.
-SS.datapixx.adc.channels                        = [0, 1, 2, 3, 4]; % List of channels to collect data from. Channel 3 is as default reserved for reward.               !!!
-SS.datapixx.adc.channelMapping = {'AI.Eye.X', 'AI.Eye.Y', 'AI.Eye.PD', 'AI.Joy.X', 'AI.Joy.Y'}; % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
+SS.datapixx.adc.channels                        = [];     % Start empty, will be populated in ND_InitSession
+SS.datapixx.adc.channelMapping                  = {};     % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
 
-SS.datapixx.adc.XEyeposChannel                  = 0;      % if datapixx.useAsEyepos=true, use this channel as eyeX    !!!
-SS.datapixx.adc.YEyeposChannel                  = 1;      % if datapixx.useAsEyepos=true, use this channel as eyeY    !!!
 
 % ------------------------------------------------------------------------%
 %% Display settings: specify options for the screen.
@@ -180,17 +174,65 @@ SS.pldaps.save.v73                              = 0;     % save as matlab versio
 SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 
 % ------------------------------------------------------------------------%
+%% Eye tracking
+SS.datapixx.useAsEyepos           = 0;
+
+% default ADC channels to use (set up later in ND_InitSession)
+SS.datapixx.adc.XEyeposChannel  = 0;
+SS.datapixx.adc.YEyeposChannel  = 1;
+SS.datapixx.adc.PupilChannel    = 2;
+
+% range of analog signal, use this for initial mapping of eye position.
+SS.datapixx.adc.EyeRange = [-10, 10];
+
+% Saccade parameters
+SS.behavior.fixation.use       =  0;      % does this task require control of eye position
+SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
+SS.behavior.fixation.Zero      = [0 ,0];  % offset to get current position signal to FixPos
+SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window
+SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
+SS.behavior.fixation.FixScale  = [1 , 1]; % scaling factor to match screen/dva [TODO: get from calibration]
+
+SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
+
+SS.pldaps.draw.eyepos.history  = 20;      % show eye position of the previous n frames in addition to current one
+SS.pldaps.draw.eyepos.sz       = 8;       % size in pixels of the eye pos indicator
+
+% Define fixation states
+SS.FixState.Current    = NaN;
+SS.FixState.FixIn      =   1;  % Gaze within fixation window
+SS.FixState.FixOut     =   0;  % Gaze left fixation window
+
+
+%% Reward
+SS.datapixx.useForReward  = 0;     %WZ: Default channel used is chan 3, needs hard coding in pldaps code to change                 !!!
+
+% Default ADC channel (set up later in ND_InitSession)
+SS.datapixx.adc.RewardChannel = 3;
+
+
+%% Joystick
+SS.datapixx.useJoystick       = 0;
+
+% default ADC channels to use (set up later in ND_InitSession)
+SS.datapixx.adc.XJoyChannel   = 4;
+SS.datapixx.adc.YJoyChannel   = 5;
+
+SS.behavior.joystick.use       =  0;         % does this task require control of joystick state
+SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state (released)
+SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
+SS.behavior.joystick.PullThr   = 1.5;        % threshold to detect a joystick press
+SS.behavior.joystick.RelThr    = 1.0;        % threshold to detect a joystick release
+
+SS.pldaps.draw.joystick.use    = 1;          % draw joystick states on control screen
+
+% Define joystick states
+SS.JoyState.Current     = NaN;
+SS.JoyState.JoyHold     =   1;  % joystick pressed
+SS.JoyState.JoyRest     =   0;  % joystick released
+
 %% Analog/digital input/output channels
-% specify channel assignments and the use of joystick input
-SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initial mapping of eye position.
-SS.datapixx.adc.PupilChannel  = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
 
-SS.datapixx.useJoystick       = 0;  % acquire data about joystick state                                           !!!
-
-SS.datapixx.adc.XJoyChannel   = 4;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
-SS.datapixx.adc.YJoyChannel   = 5;  % if datapixx.useJoystick=true, use this channel to determine x               !!!
-
-SS.datapixx.adc.RewardChannel = 3;  % if SS.datapixx.useForReward then this digital output channel will be used
 SS.datapixx.adc.TTLamp        = 3;  % amplitude of TTL pulses via adc
 
 SS.datapixx.TTLdur            = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the TTL pulse
@@ -212,42 +254,6 @@ SS.key.exe    = 'x';
 
 SS.key.CtrFix = 'z';  % set current eye position as center
 SS.key.CtrJoy = 'j';  % set current joystick position as zero
-
-% ------------------------------------------------------------------------%
-%% Joystick parameters
-SS.behavior.joystick.use       =  0;         % does this task require control of joystick state
-SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state (released)
-SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
-SS.behavior.joystick.PullThr   = 1.5;        % threshold to detect a joystick press
-SS.behavior.joystick.RelThr    = 1.0;        % threshold to detect a joystick release
-
-SS.pldaps.draw.joystick.use    = 1;          % draw joystick states on control screen
-
-% ------------------------------------------------------------------------%
-%% Define joystick states
-SS.JoyState.Current     = NaN;
-SS.JoyState.JoyHold     =   1;  % joystick pressed
-SS.JoyState.JoyRest     =   0;  % joystick released
-
-% ------------------------------------------------------------------------%
-%% Saccade parameters
-SS.behavior.fixation.use       =  0;      % does this task require control of eye position
-SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
-SS.behavior.fixation.Zero      = [0 ,0];  % offset to get current position signal to FixPos
-SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window
-SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
-SS.behavior.fixation.FixScale  = [1 , 1]; % scaling factor to match screen/dva [TODO: get from calibration]
-
-SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
-
-SS.pldaps.draw.eyepos.history  = 20;      % show eye position of the previous n frames in addition to current one
-SS.pldaps.draw.eyepos.sz       = 8;       % size in pixels of the eye pos indicator
-
-% ------------------------------------------------------------------------%
-%% Define fixation states
-SS.FixState.Current    = NaN;
-SS.FixState.FixIn      =   1;  % Gaze within fixation window
-SS.FixState.FixOut     =   0;  % Gaze left fixation window
 
 % ------------------------------------------------------------------------%
 %% Online plots

@@ -70,17 +70,35 @@ end
 rng('shuffle', 'twister');
 
 % --------------------------------------------------------------------%
-%% ensure channel mapping
-% test if the channels needed are specified
+%% Map the ADC channels
+% Ensure that the channels vector and channelMapping cell array are initialized
+if ~isfield(p.defaultParameters.datapixx.adc, 'channels')
+    p.defaultParameters.datapixx.adc.channels = [];
+end
+
+if ~isfield(p.defaultParameters.datapixx.adc, 'channelMapping')
+    p.defaultParameters.datapixx.adc.channelMapping = {};
+end
+
 if (p.defaultParameters.datapixx.useAsEyepos == 1)
-    p = CheckChannelExists(p, 'XEyeposChannel', 1);
-    p = CheckChannelExists(p, 'YEyeposChannel', 1);
-    p = CheckChannelExists(p, 'PupilChannel',   0);
+    p.defaultParameters.datapixx.channels(end+1) = p.defaultParameters.datapixx.adc.XEyeposChannel;
+    p.defaultParameters.datapixx.channelMapping{end+1} = 'Eye.X.Pos';
+    
+    p.defaultParameters.datapixx.channels(end+1) = p.defaultParameters.datapixx.adc.YEyeposChannel;
+    p.defaultParameters.datapixx.channelMapping{end+1} = 'Eye.Y.Pos';
+end
+
+if (p.defaultParameters.datapixx.useForReward == 1)
+    p.defaultParameters.datapixx.channels(end+1) = p.defaultParameters.datapixx.adc.RewardChannel;
+    p.defaultParameters.datapixx.channelMapping{end+1} = 'Reward';
 end
 
 if (p.defaultParameters.datapixx.useJoystick == 1)
-    p = CheckChannelExists(p, 'XJoyChannel', 1);
-    p = CheckChannelExists(p, 'YJoyChannel', 1);
+    p.defaultParameters.datapixx.channels(end+1) = p.defaultParameters.datapixx.adc.XJoyChannel;
+    p.defaultParameters.datapixx.channelMapping{end+1} = 'Joy.X.Pos';
+    
+    p.defaultParameters.datapixx.channels(end+1) = p.defaultParameters.datapixx.adc.YJoyChannel;
+    p.defaultParameters.datapixx.channelMapping{end+1} = 'Joy.Y.Pos';
 end
 
 % --------------------------------------------------------------------%
