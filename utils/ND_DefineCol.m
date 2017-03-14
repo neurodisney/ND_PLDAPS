@@ -47,7 +47,7 @@ if(p.defaultParameters.display.useOverlay)  % apparently, both, datapixx and sof
         for(i = 1:length(fldnms))
             if(p.defaultParameters.display.clut.(fldnms{i}) == pos)
                 if(~strcmp(fldnms{i},colname)) % ignore if same color name
-                    warning(['CLUT conflict: index ', int2str(pos), 'already used for ',fldnms{i},'!']);
+                    warning(['CLUT conflict: index ', int2str(pos), ' already used for ',fldnms{i},'!']);
                 end
             end
         end

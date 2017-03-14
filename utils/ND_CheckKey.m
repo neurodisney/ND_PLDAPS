@@ -28,7 +28,19 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
 
         case KbName(p.trial.key.reward)
         % check for manual reward delivery via keyboard
-            pds.behavior.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
+            pds.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
+
+        case KbName(p.trial.key.CtrFix)
+        % set current eye position as expected fixation position
+        if(p.trial.behavior.fixation.use)
+            p.trial.behavior.fixation.Zero = p.trial.behavior.fixation.Zero + [p.trial.eyeX, p.trial.eyeY];
+        end
+        
+        case KbName(p.trial.key.CtrJoy)
+        % set current eye position as expected fixation position
+        if(p.trial.behavior.joystick.use)
+            p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
+        end
 
         case KbName(p.trial.key.pause)
         % pause trial
@@ -44,7 +56,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
         %  go into debug mode
             disp('stepped into debugger. Type return to start first trial...')
             keyboard %#ok<MCKBD>
-
+            
     end  %/ switch Kact
 else
     qp = [];

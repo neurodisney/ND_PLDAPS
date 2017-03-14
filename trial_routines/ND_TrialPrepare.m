@@ -24,7 +24,7 @@ if p.trial.datapixx.use
 end
 
 %-------------------------------------------------------------------------%
-%% Initalize Keyboard %%%
+%% Initialize Keyboard %%%
 pds.keyboard.clearBuffer(p);
 
 %-------------------------------------------------------------------------%
@@ -59,4 +59,5 @@ p.trial.timing.syncTimeDuration = p.trial.ttime;
 p.trial.TrialStart = datestr(now,'HH:MM:SS:FFF');  % WZ: added absolute time as string
 
 p.trial.EV.TrialStart = p.trial.trstart; % WZ: added for convenience/consistency
+
 

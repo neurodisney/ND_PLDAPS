@@ -60,24 +60,33 @@ end
 
 % ------------------------------------------------------------------------%
 %% draw eye position
-% show eye position
+% show history of recent eye position
 if(p.trial.pldaps.draw.eyepos.use)
-% TODO: keep history of several frames, use alpha blending to fade out old locations
-    Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX, p.trial.eyeY]', ...
-                        p.trial.stimulus.eyeW, p.trial.display.clut.eyepos, [0 0],0);
+% TODO: use alpha blending to fade out old locations
+
+    Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.window, ...
+                        p.trial.task.fixrect , 10);
+
+    Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX_hist; p.trial.eyeY_hist], ...
+                        p.trial.pldaps.draw.eyepos.sz/2, p.trial.display.clut.eyeold, [0 0], 0);
+                    
+    Screen('Drawdots',  p.trial.display.overlayptr, p.trial.eyeXY_draw, ...
+                        p.trial.pldaps.draw.eyepos.sz, p.trial.display.clut.eyepos, [0 0], 0);
 end
 
 % ------------------------------------------------------------------------%
 %% draw joystick state
 % show a representation of the joystick elevation level
 if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
-% TODO: keep history of several frames, use alpha blending to fade out old locations
+    % draw joystick area above threshold (i.e. pressed)
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joythr , ...
-                       p.trial.pldaps.draw.joystick.rect);      % draw joystick area above threshold (i.e. pressed)
+                       p.trial.pldaps.draw.joystick.rect);      
+    % draw joystick area below threshold               
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joybox , ...
-                       p.trial.pldaps.draw.joystick.threct);    % draw joystick area below threshold
+                       p.trial.pldaps.draw.joystick.threct);    
+    % draw current joystick level               
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joypos , ...
-                       p.trial.pldaps.draw.joystick.levelrect); % draw current joystick level
+                       p.trial.pldaps.draw.joystick.levelrect); 
 end
 
 % % ------------------------------------------------------------------------%
@@ -85,12 +94,14 @@ end
 % TODO: Fix to match current mouse implementation
 % if(p.trial.mouse.use && p.trial.pldaps.draw.cursor.use)
 %     Screen('Drawdots',  p.trial.display.overlayptr,  p.trial.mouse.cursorSamples(1:2,p.trial.mouse.samples), ...
-%                         p.trial.stimulus.eyeW, p.trial.display.clut.cursor, [0 0],0);
+%                         p.trial.pldaps.draw.cursor.sz, p.trial.display.clut.cursor, [0 0],0);
 % end
 
 % ------------------------------------------------------------------------%
 %% draw photodiode
 % this is displayed as mono-chromatic (white) element on p.trial.display.ptr
+% TODO: WZ: use a combination of state and timer instead of calling mod.
+%           Whenever timer expires and state changes require a screen synch
 if(p.trial.pldaps.draw.photodiode.use && ...
    mod(p.trial.iFrame, p.trial.pldaps.draw.photodiode.everyXFrames) == 0 )
 

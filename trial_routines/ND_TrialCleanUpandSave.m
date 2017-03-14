@@ -71,19 +71,14 @@ end
 
 %-------------------------------------------------------------------------%
 %% Trial information
-% p.trial.trialnumber   = p.trial.pldaps.iTrial;
 
 % system timing
-p.trial.timing.flipTimes             = p.trial.timing.flipTimes(:, 1:p.trial.iFrame);  % WZ: Why here again? Was defined at the function start...
-p.trial.timing.frameStateChangeTimes = p.trial.timing.frameStateChangeTimes(:, 1:p.trial.iFrame - 1);
+% p.trial.timing.flipTimes             = p.trial.timing.flipTimes(:, 1:p.trial.iFrame);  % WZ: Why here again? Was defined at the function start...
+% p.trial.timing.frameStateChangeTimes = p.trial.timing.frameStateChangeTimes(:, 1:p.trial.iFrame - 1);
 
 %-------------------------------------------------------------------------%
 %%  clean up data
 % TODO: remove entries in the trial struct that need not to be written but
 % might occupy a lot of disk space.
 
-%-------------------------------------------------------------------------%
-%%  reward system
-% TODO: Is this needed?
-pds.behavior.reward.cleanUpandSave(p);
 

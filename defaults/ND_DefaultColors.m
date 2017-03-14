@@ -49,8 +49,8 @@ ND_DefineCol(p, 'TrialStart',  2, [0.65, 0.65, 0.65]); % indicate that a trial s
 ND_DefineCol(p, 'joypos',      3, [1.00, 0.80, 0.20], bgcol);  % current joystick position
 ND_DefineCol(p, 'joybox',      4, [0.45, 0.20, 0.00], bgcol);  % color representing released state
 ND_DefineCol(p, 'joythr',      5, [0.65, 0.25, 0.00], bgcol);  % color representing pressed state
-ND_DefineCol(p, 'eyepos',      6, [0.00, 1.00, 1.00], bgcol);  % eye positions
-ND_DefineCol(p, 'eyeold',      7, [0.00, 0.65, 0.65], bgcol);  % eye positions
+ND_DefineCol(p, 'eyepos',      6, [0.00, 1.00, 1.00], bgcol);  % current eye position
+ND_DefineCol(p, 'eyeold',      7, [0.00, 0.65, 0.65], bgcol);  % eye positions from previous frames
 ND_DefineCol(p, 'window',      8, [0.80, 0.80, 0.80], bgcol);
 ND_DefineCol(p, 'cursor',      9, [0.90, 0.90, 0.90], bgcol);
 ND_DefineCol(p, 'black',      10, [0.00, 0.00, 0.00]);
@@ -62,10 +62,13 @@ ND_DefineCol(p, 'redbg',      15, [1.00, 0.00, 0.00], bgcol);
 ND_DefineCol(p, 'blue',       16, [0.00, 0.00, 1.00]);
 ND_DefineCol(p, 'green',      17, [0.00, 1.00, 0.00]);
 ND_DefineCol(p, 'greenbg',    18, [0.00, 1.00, 0.00], bgcol);
-ND_DefineCol(p, 'text',       32, [1.00, 1.00, 1.00], bgcol);
+
+
+%ND_DefineCol(p, 'text',       32, [1.00, 1.00, 1.00], bgcol);
 
 
 
 %ND_DefineCol(p, 'targetgood', 50, [0.00, 1.00, 0.00]);
 %ND_DefineCol(p, 'targetnull', 51, [1.00, 0.00, 0.00]);
 %ND_DefineCol(p, 'fixation',   52, [1.00, 0.00, 0.00]);
+
