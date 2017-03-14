@@ -13,9 +13,11 @@ function p = ND_BeginExperiment(p)
 % 10/2016 jk    bumped version to 4.2
 %
 % 03/2017 wz    removed eyelink related stuff
+%               make git information more flexible by reading out actual version
+%              
 %
-% 03/2017 WZ: make git info flexible to read out actual information instead of hardcoding it
-
+% WZ TODO: get git hash/version for PsychToolbox as well
+%        
 
 %% keep git version control
 pathStr = fileparts(mfilename('fullpath'));
@@ -27,9 +29,9 @@ cd(pathStr)
 
 gitnfo = getGitInfo;
 
-p.defaultParameters.pldaps.git.hash=gitnfo.hash;
-p.defaultParameters.pldaps.git.branch=gitnfo.branch;
-p.defaultParameters.pldaps.git.dir = pathStr;
+p.defaultParameters.pldaps.git.hash   = gitnfo.hash;
+p.defaultParameters.pldaps.git.branch = gitnfo.branch;
+p.defaultParameters.pldaps.git.dir    = pathStr;
 
 cd(cwd);
 

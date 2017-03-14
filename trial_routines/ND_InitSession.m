@@ -107,7 +107,8 @@ p = ND_TaskEpochs(p);
 %% pre-allocate frame data
 % The frame allocation can only be set once the pldaps is run, otherwise
 % p.defaultParameters.display.frate will not be available because it is defined in the openscreen call.
-p.defaultParameters.pldaps.maxFrames = p.defaultParameters.pldaps.maxTrialLength * p.defaultParameters.display.frate;
+% WZ TODO: get rid of this pre-allocation that makes it necessary to specify a (arbitrary) trial length!
+p.defaultParameters.pldaps.maxFrames = p.defaultParameters.pldaps.maxTrialLength * p.defaultParameters.display.frate; 
 
 % --------------------------------------------------------------------%
 %% define drawing area for joystick representation

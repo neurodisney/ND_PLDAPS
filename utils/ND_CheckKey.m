@@ -56,7 +56,6 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
         %  go into debug mode
             disp('stepped into debugger. Type return to start first trial...')
             keyboard %#ok<MCKBD>
-
             
     end  %/ switch Kact
 else

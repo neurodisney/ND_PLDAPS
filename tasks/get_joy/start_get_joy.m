@@ -38,6 +38,8 @@ SS.pldaps.trialFunction = exp_fun; % This function is both, set-up for the exper
 
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
+% If there are modification from the default settings needed, copy the
+% needed lines from ND_RigDefaults and alter the values here.
 SS.sound.use          = 0;  % no sound for now
 SS.display.bgColor    = [0.35, 0.35, 0.35];
 SS.pldaps.draw.photodiode.use = 0;

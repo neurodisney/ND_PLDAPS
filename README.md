@@ -1,9 +1,12 @@
 ND_PLDAPS
 ==========
 
-A NeuroDisney flavor of the PLDAPS software provided by the Huk-Lab (https://github.com/HukLab/PLDAPS).
+A NeuroDisney flavor of the PLDAPS software provided by the Huk-Lab (https://github.com/HukLab/PLDAPS) and described by Eastman & Huk (2012) in Frontiers in Neuroinformatics:
 
-This repository contains a stripped down and slightly re-organized version of the PLDAPS version from the openreception branch (Version 4.2). ND_PLDAPS is tailored for the hardware used in the Disney-Lab and provides additional functions and task code.
+> Eastman, K.M. & Huk, A.C. (2012). PLDAPS: A hardware architecture and software toolbox for neurophysiology requiring complex visual stimuli and online behavioral control. *Frontiers in Neuroinformatics*, **6**:1. doi: 10.3389/fninf.2012.00001
+
+
+This repository contains a stripped down and slightly re-organized version of the PLDAPS version derived from the *openreception* branch (Version 4.2). ND_PLDAPS is tailored for the hardware used in the Disney-Lab and provides additional functions and task code.
 
 
 

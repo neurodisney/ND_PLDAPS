@@ -28,6 +28,6 @@ function p = give(p, amount)
     end
     
     %% store data
-    p.trial.reward.timeReward(:,p.trial.reward.iReward) = [GetSecs amount];
     p.trial.reward.iReward = p.trial.reward.iReward + 1;
+    p.trial.reward.timeReward(:,p.trial.reward.iReward) = [GetSecs amount]; % WZ: currently not pre-allocated
     

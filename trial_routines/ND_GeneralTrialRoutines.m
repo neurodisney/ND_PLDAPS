@@ -44,23 +44,8 @@ else
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameUpdate
         %% collect data (i.e. a hardware module) and store it
-            ND_CheckKey(p);   % check for key hits
-
-            if(p.trial.datapixx.use || ~isempty(p.trial.datapixx.adc.channels))
-                pds.datapixx.adc.getData(p); % get analogData from Datapixx, including eye position and joystick
-            end
-
-            if(p.trial.datapixx.useJoystick)
-                ND_CheckJoystick(p);         % needs to be called after pds.datapixx.adc.getData
-            end
-
-            if(p.trial.mouse.use)
-              ND_CheckMouse(p);   % check mouse position if needed
-            end
-
-            if(p.trial.datapixx.useAsEyepos || p.trial.mouse.useAsEyepos)
-                ND_CheckFixation(p);
-             end
+            ND_FrameUpdate(p);
+            
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen

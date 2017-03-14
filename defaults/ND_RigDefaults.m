@@ -123,7 +123,6 @@ SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
 SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
-% SS.pldaps.useModularStateFunctions              = 0;     % use modular state functions, see pldaps.runModularTrial, pldaps.getModules, pldaps.runStateforModules
 
 % dirs: configure pldaps' built-in drawing options
 SS.pldaps.dirs.data                             = '~/Data/ExpData';   % data directory.
@@ -131,9 +130,10 @@ SS.pldaps.dirs.wavfiles                         = '/usr/local/PLDAPS/beepsounds'
 
 % cursor: control drawing of the mouse cursor
 SS.pldaps.draw.cursor.use                       = 0;     % enable drawing of the mouse cursor.
+SS.pldaps.draw.cursor.sz                        = 8;     % cursor width in pixels 
 
 % eyepos: control drawing of the eye position
-SS.pldaps.draw.eyepos.use                       = 1;     % enable drawing of the eye position.
+SS.pldaps.draw.eyepos.use                       = 0;     % enable drawing of the eye position.
 
 % frame rate: control drawing of a frame rate history to see frame drops.
 SS.pldaps.draw.framerate.location               = [-30, -10]; % location (XY) of the plot in degrees of visual angle.
@@ -164,10 +164,10 @@ SS.pldaps.save.v73                              = 0;     % save as matlab versio
 %% Screen/Display parameters
 % dot sizes for drawing (Taken from pdsDefaultTrialStructure)
 % corresponding colors are defined in ND_DefaultColors.
-SS.stimulus.eyeW      = 8;    % eye indicator width in pixels
-SS.stimulus.fixdotW   = 8;    % width of the fixation dot
-SS.stimulus.targdotW  = 8;    % width of the target dot
-SS.stimulus.cursorW   = 8;    % cursor width in pixels
+%  SS.stimulus.eyeW      = 8;    % eye indicator width in pixels
+%  SS.stimulus.fixdotW   = 8;    % width of the fixation dot
+%  SS.stimulus.targdotW  = 8;    % width of the target dot
+%  SS.stimulus.cursorW   = 8;    % cursor width in pixels
 
 % ####################################################################### %
 %% Below follow definitions used in the Disney Lab
@@ -181,7 +181,7 @@ SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) wit
 % ------------------------------------------------------------------------%
 %% Analog/digital input/output channels
 % specify channel assignments and the use of joystick input
-SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initia mapping of eye position.
+SS.datapixx.adc.EyeRange = [-10, 10]; % range of analog signal, use this for initial mapping of eye position.
 SS.datapixx.adc.PupilChannel  = 2;  % if datapixx.useAsEyepos=true, use this channel to determine pupil diameter  !!!
 
 SS.datapixx.useJoystick       = 1;  % acquire data about joystick state                                           !!!
@@ -197,11 +197,6 @@ SS.datapixx.EVdur             = [];  % depending on the DAQ sampling rate it mig
 
 SS.datapixx.TTL_trialOn       = 1;   % if 1 set a digital output high while trial is active
 SS.datapixx.TTL_trialOnChan   = 1;   % DIO channel used for trial state TTL
-
-% ------------------------------------------------------------------------%
-%% Tucker Davis control
-SS.datapixx.daq = 'tdt';           % what system is used for data acquisition? tdt, plexon?
-SS.tdt.use  = 1;                   % set use of tdt system instead of plexon; will disable all plexon functionality
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
@@ -236,17 +231,22 @@ SS.JoyState.JoyRest     =   0;  % joystick released
 % ------------------------------------------------------------------------%
 %% Saccade parameters
 SS.behavior.fixation.use       =  0;      % does this task require control of eye position
-SS.behavior.fixation.Zero      = [0, 0];  % analog input signal that corresponds to center fixation
-SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
+SS.behavior.fixation.Zero      = [0 ,0];  % offset to get current position signal to FixPos
 SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window
 SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
+SS.behavior.fixation.FixScale  = [1 , 1]; % scaling factor to match screen/dva [TODO: get from calibration]
+
+SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
+
+SS.pldaps.draw.eyepos.history  = 20;      % show eye position of the previous n frames in addition to current one
+SS.pldaps.draw.eyepos.sz       = 8;       % size in pixels of the eye pos indicator
 
 % ------------------------------------------------------------------------%
 %% Define fixation states
-SS.FixState.Current     = NaN;
-SS.FixState.GazeIn      =   1;  % Gaze at target
-SS.FixState.GazeOut     =   0;  % Gaze left fixation window
+SS.FixState.Current    = NaN;
+SS.FixState.FixIn      =   1;  % Gaze within fixation window
+SS.FixState.FixOut     =   0;  % Gaze left fixation window
 
 % ------------------------------------------------------------------------%
 %% Online plots
