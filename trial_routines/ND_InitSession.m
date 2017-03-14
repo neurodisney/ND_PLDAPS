@@ -45,11 +45,9 @@ end
 
 % --------------------------------------------------------------------%
 %% get task parameters
-if isfield(p.trial, 'task')
-    if isfield(p.trial.task, 'TaskDef')
-        if(~isempty(p.trial.task.TaskDef))
-            p = feval(p.trial.task.TaskDef,  p);
-        end
+if(isfield(p.defaultParameters.task, 'TaskDef'))
+    if(~isempty(p.defaultParameters.task.TaskDef))
+        p = feval(p.defaultParameters.task.TaskDef,  p);
     end
 end
 
