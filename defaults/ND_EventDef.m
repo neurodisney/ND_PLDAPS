@@ -1,6 +1,11 @@
 function p = ND_EventDef(p)
 % Defines numeric values for 16 bit codes of trial events
 %
+% The encodes defined in 'event' will be sent during the course of a trial
+% to mark the time when this event happened.
+%
+% The fields in 'EV' should be used to save the times of these events
+% to the pldaps data file.
 %
 % wolf zinke, Feb. 2017
 
@@ -11,6 +16,9 @@ disp('');
 
 % ------------------------------------------------------------------------%
 %% initialize event times as NaN
+% This should be used to store times when these events happened (to data
+% file or if needed for later use in the task program)
+
 p.defaultParameters.EV.TrialStart = NaN; % Trial start time
 p.defaultParameters.EV.TaskStart  = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
 p.defaultParameters.EV.GoCue      = NaN; % Onset of Go-signal
@@ -37,38 +45,33 @@ end
 % in a responsible way to keep as much information about the task as possible.
 
 % task markers
-p.defaultParameters.event.TASK_ON       = 10;      % start of task (should happen after pldaps encodes a trial start)
-p.defaultParameters.event.TASK_OFF      = 11;      % end of task (should happen before pldaps encodes a trial end)
-p.defaultParameters.event.TC_CORR       = 1004;    % trial complete, correct
-p.defaultParameters.event.TC_ERR        = 3010;    % trial complete, incorrect
-p.defaultParameters.event.NO_TC         = 3011;    % trial incomplete
+p.defaultParameters.event.TASK_ON       = 10;   % start of task (should happen after pldaps encodes a trial start)
+p.defaultParameters.event.TASK_OFF      = 11;   % end of task (should happen before pldaps encodes a trial end)
+p.defaultParameters.event.TC_CORR       = 1004; % trial complete, correct
+p.defaultParameters.event.TC_ERR        = 3010; % trial complete, incorrect
+p.defaultParameters.event.NO_TC         = 3011; % trial incomplete
 
-% response relate
-p.defaultParameters.event.RESP_CORR     = 1110;    % correct response occurred
-p.defaultParameters.event.RESP_EARLY    = 1111;    % early response occurred
-p.defaultParameters.event.RESP_PREMAT   = 1112;    % premature (early) response occurred, after go signal but too early to be true
-p.defaultParameters.event.RESP_FALSE    = 1113;    % false response occurred
-p.defaultParameters.event.RESP_LATE     = 1114;    % late response occurred
+% response related
+p.defaultParameters.event.RESP_CORR     = 1110; % correct response occurred
+p.defaultParameters.event.RESP_EARLY    = 1111; % early response occurred
+p.defaultParameters.event.RESP_PREMAT   = 1112; % premature (early) response occurred, after go signal but too early to be true
+p.defaultParameters.event.RESP_FALSE    = 1113; % false response occurred
+p.defaultParameters.event.RESP_LATE     = 1114; % late response occurred
 
 % fixation related
-p.defaultParameters.event.FIXSPOT_ON    = 110;     % onset of fixation spot
-p.defaultParameters.event.FIXSPOT_OFF   = 111;     % offset of fixation spot
-p.defaultParameters.event.FIXATION      = 1000;    % valid fixation acquired
-p.defaultParameters.event.EYE_GO        = 1001;    % eye movement required, eye leaves current fixation window
-p.defaultParameters.event.TGT_FIX       = 1002;    % fixation of target item
+p.defaultParameters.event.FIXSPOT_ON    = 110;  % onset of fixation spot
+p.defaultParameters.event.FIXSPOT_OFF   = 111;  % offset of fixation spot
+p.defaultParameters.event.FIXATION      = 1000; % valid fixation acquired
+p.defaultParameters.event.EYE_GO        = 1001; % eye movement required, eye leaves current fixation window
+p.defaultParameters.event.TGT_FIX       = 1002; % fixation of target item
 
 % refinement of fixation break times
 % ToDo: WZ - need to check what encodes should/need to be used as events and
 %            what should be used as outcome encoded in the trial header
-p.defaultParameters.event.FIX_BRK_BSL   = 3000;    % fixation break during the pre-stimulus period
-p.defaultParameters.event.FIX_BRK_CUE   = 3001;    % fixation break while the cue is on
-p.defaultParameters.event.FIX_BRK_STIM  = 3002;    % fixation break during stimulus presentation
+p.defaultParameters.event.FIX_BRK_BSL   = 3000; % fixation break during the pre-stimulus period
+p.defaultParameters.event.FIX_BRK_CUE   = 3001; % fixation break while the cue is on
+p.defaultParameters.event.FIX_BRK_STIM  = 3002; % fixation break during stimulus presentation
 p.defaultParameters.event.FIX_BRK_SPEED = 3003;
-
-% error related
-p.defaultParameters.events.NO_FIX       = 3012;
-% AD: 3000-3009 for fixation breaks
-%       3010-for errors
 
 % separate encode of reward delivered?
 

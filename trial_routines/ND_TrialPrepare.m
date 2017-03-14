@@ -24,7 +24,7 @@ if p.trial.datapixx.use
 end
 
 %-------------------------------------------------------------------------%
-%% Initalize Keyboard %%%
+%% Initialize Keyboard %%%
 pds.keyboard.clearBuffer(p);
 
 %-------------------------------------------------------------------------%

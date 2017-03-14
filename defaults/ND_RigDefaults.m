@@ -33,8 +33,6 @@ SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearP
 SS.datapixx.useAsEyepos                         = 1;      % use Datapixx adc inputs as eye position                    !!!
 SS.datapixx.useForReward                        = 1;      % use Datapixx to set for a given duration. WZ: Default channel used is chan 3, needs hard coding in pldaps code to change                 !!!
 
-SS.datapixx.LogOnsetTimestampLevel              = 2;      % Get and Store a the time each frame arrived at the VPixx device.
-
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
 % WZ: Also for more clarification check the PsychDataPixx function in Psychtoolbox-3/Psychtoolbox/PsychHardware/DatapixxToolbox/DatapixxBasic
@@ -221,7 +219,7 @@ SS.key.CtrJoy = 'j';  % set current joystick position as zero
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters
-SS.behavior.joystick.use       =  1;         % does this task require control of joystick state
+SS.behavior.joystick.use       =  0;         % does this task require control of joystick state
 SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state (released)
 SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
 SS.behavior.joystick.PullThr   = 1.5;        % threshold to detect a joystick press
@@ -237,7 +235,7 @@ SS.JoyState.JoyRest     =   0;  % joystick released
 
 % ------------------------------------------------------------------------%
 %% Saccade parameters
-SS.behavior.fixation.use       =  1;      % does this task require control of eye position
+SS.behavior.fixation.use       =  0;      % does this task require control of eye position
 SS.behavior.fixation.Zero      = [0, 0];  % analog input signal that corresponds to center fixation
 SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva

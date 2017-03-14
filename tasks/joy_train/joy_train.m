@@ -121,7 +121,8 @@ if(isempty(state))
     % create a cell array containing all conditions
     % conditions = {c1, c2, c3, c4, c5};
     %conditions = {c1, c2, c3, c4, c5, c6, c7, c8, c9};
-    conditions = {c1, c2, c3, c4, c5};
+    conditions = {c1, c2, c3, c4, c5, c6};
+
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
 else
@@ -270,7 +271,7 @@ function TaskDesign(p)
                         p.trial.CurrEpoch = p.trial.epoch.WaitGo;
 
                         if(p.trial.task.Reward.Pull)
-                            pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
+                            pds.reward.give(p, p.trial.task.Reward.PullRew);
                         end
                     else
                         % That was the task, reward animal and done                        
@@ -282,8 +283,7 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitGo
         %% delay before response is needed
-            if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
-                
+            if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release                
                 Response_JoyRelease(p);
                 Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
 
@@ -304,7 +304,6 @@ function TaskDesign(p)
                 if(p.trial.EV.RespRT <  p.trial.task.Timing.minRT)
                 % premature response - too early to be a true response
                      Response_Early(p); % Go directly to TaskEnd, do not continue task, do not collect reward
-
                 else
                 % correct response
                     Task_Correct(p);
@@ -322,7 +321,7 @@ function TaskDesign(p)
 
                 p.trial.reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
 
-                pds.behavior.reward.give(p, p.trial.reward.Curr);
+                pds.reward.give(p, p.trial.reward.Curr);
                 % ND_CtrlMsg(p, ['Reward: ', num2str(p.trial.task.Reward.Curr), ' seconds']);
 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
@@ -334,12 +333,14 @@ function TaskDesign(p)
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 p.trial.EV.JoyRelease = p.trial.CurTime;
                 %ND_CtrlMsg(p, 'Late Release');
+                pds.tdt.strobe(p.trial.event.JOY_RELEASE);  
+                pds.tdt.strobe(p.trial.event.RESP_LATE);               
 
                 Response_JoyRelease(p);
 
                 % use it as optional release reward if not full task is used
                 if(p.trial.task.Reward.Pull && ~p.trial.task.FullTask)
-                    pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
+                    pds.reward.give(p, p.trial.task.Reward.PullRew);
                 end
 
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
@@ -371,7 +372,7 @@ function TaskDesign(p)
             if(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
                 p.trial.flagNextTrial = 1;
             end
-    end
+    end  % switch p.trial.CurrEpoch
 
 % ------------------------------------------------------------------------%
 function TaskDraw(p)
@@ -404,8 +405,10 @@ function TaskDraw(p)
             Target(p, 'TargetDimm');
     end
 
+% ####################################################################### %
+%% additional inline functions that
 
-
+% ------------------------------------------------------------------------%
 function TrialOn(p)
 %% show a frame to indicate the trial is active
 
@@ -413,6 +416,7 @@ function TrialOn(p)
                         p.trial.task.FrameRect , p.trial.task.FrameWdth);
 
 
+% ------------------------------------------------------------------------%
 function Target(p, colstate)
 %% show the target item with the given color
     Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(colstate), p.trial.task.TargetRect);

@@ -195,7 +195,7 @@ switch p.trial.CurrEpoch
                 % send event for fixation spot onset
                 % dsamr as JoyPress for now
                 if(p.trial.task.Reward.Pull)
-                    pds.behavior.reward.give(p, p.trial.task.Reward.PullRew);
+                    pds.reward.give(p, p.trial.task.Reward.PullRew);
                     %ND_CtrlMsg(p, 'Reward');
                 end
             end
@@ -259,7 +259,7 @@ switch p.trial.CurrEpoch
                     if ctm > p.trial.task.Reward.Timer
                         p.trial.task.Reward.Timer = ctm + p.trial.task.Reward.TrainRew ...
                             + p.trial.task.Reward.RewGap;
-                        pds.behavior.reward.give(p, p.trial.task.Reward.TrainRew);
+                        pds.reward.give(p, p.trial.task.Reward.TrainRew);
                         disp([datetime]); disp([ 'rewtrain given'])
                     end
                 end
@@ -349,7 +349,7 @@ switch p.trial.CurrEpoch
             
             p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
             
-            pds.behavior.reward.give(p, p.trial.task.Reward.Curr);
+            pds.reward.give(p, p.trial.task.Reward.Curr);
             ND_CtrlMsg(p, ['Reward: ', num2str(p.trial.task.Reward.Curr), ' seconds']);
             
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;

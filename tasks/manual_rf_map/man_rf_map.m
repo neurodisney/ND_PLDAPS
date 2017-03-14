@@ -38,17 +38,10 @@ if(isempty(state))
     % --------------------------------------------------------------------%
     %% Set initial parameters for the rf bar
     
-    p.trial.task.rfbar.length_dva   =   6; % Length of the bar in degrees of visual angle
-    p.trial.task.rfbar.width_dva    =   3;
-    p.trial.task.rfbar.pos_dva      =   [0, 0];
+    p.trial.task.rfbar.length       =   6; % Length of the bar in degrees of visual angle
+    p.trial.task.rfbar.width        =   3;
+    p.trial.task.rfbar.pos          =   [0, 0];
     p.trial.task.rfbar.angle        =   0;
-    
-    % Convert these to pixels
-    p.trial.task.rfbar.length_pxl   =   ND_dva2pxl(p.trial.task.rfbarLength_dva, p);
-    p.trial.task.rfbar.width_pxl    =   ND_dva2pxl(p.trial.task.rfbarWidth_dva, p);
-    p.trial.task.rfbar.pos_pxl      =   ND_cart2ptb(p, p.trial.task.rfbarPos_dva;
-    
-    
 
 
     %% Color definitions of stuff shown during the trial
@@ -78,12 +71,20 @@ if(isempty(state))
     end
     
     % Initial Color is black
-    p.trial.task.rfbar.color = p.defaultParameters.display.Black;
+    p.trial.task.rfbar.color = p.trial.display.clut.Black;
 
     %% define ascii output file
     % call this after ND_InitSession to be sure that output directory exists!
     
     %Trial2Ascii(p, 'init'); TODO: Save bar parameters to file every frame
+    
+    
+    %% Set up conditions
+    % For now, just one condition, because ust one trial happens
+    c1.Nr = 1;
+    
+    conditions = {c1};
+    p = ND_GetConditionList(p, conditions, 1, 1);
 
     % --------------------------------------------------------------------%
 
@@ -114,7 +115,7 @@ end
 function TaskSetup(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
-    p.trial.CurrEpoch = p.trial.epoch.MoveBar;
+    p.trial.CurrEpoch = p.trial.epoch.WaitExperimenter;
 end
 
 function TaskDesign(p)
@@ -124,7 +125,7 @@ function TaskDesign(p)
 % incoming data.
     switch p.trial.CurrEpoch
         
-        case p.trial.epoch.MoveBar
+        case p.trial.epoch.WaitExperimenter
             
             
         case p.trial.epoch.TaskEnd
@@ -143,9 +144,9 @@ rfbar = p.trial.task.rfbar;
             % Draw the bar stimuli by creating a custom coordinate frame
             % for it. Then translate and rotate the correct amounts
             Screen('glPushMatrix', window);
-            Screen('glTranslate', window, rfbar.pos_pxl(1), rfbar.pos_pxl(2) );
+            Screen('glTranslate', window, rfbar.pos(1), rfbar.pos(2) );
             Screen('glRotate', window, rfbar.angle);
-            DrawBar(window,rfbar.width_pxl,rfbar.height_pxl);
+            DrawBar(window,rfbar.width,rfbar.height);
             Screen('glPopMatrix',window);
             
         case p.trial.epoch.TaskEnd

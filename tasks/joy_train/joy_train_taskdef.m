@@ -27,10 +27,10 @@ p.trial.task.FullTask = 1;
 % ------------------------------------------------------------------------%
 %% Reward
 p.trial.task.Reward.Pull    = 1;          % If 1 then give reward for pulling the joystick
-p.trial.task.Reward.PullRew = 0.25;       % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
+p.trial.task.Reward.PullRew = 0.1;       % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
 
 p.trial.task.Reward.IncrConsecutive = 1;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.5, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Dur  = [0.6, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
 p.trial.task.Reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
 
 p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
@@ -54,7 +54,7 @@ p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a tri
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
 % target item
-p.trial.task.TargetSz_dva  = 2;   % Stimulus diameter in dva
+p.trial.task.TargetSz_dva  = 4;   % Stimulus diameter in dva
 p.trial.task.TargetPos_dva = [0, 0];    % Stimulus diameter in dva25seconds
 
 p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
@@ -68,6 +68,7 @@ p.trial.task.FrameRect  = ND_GetRect(p.trial.display.ctr(1:2), p.trial.task.Fram
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters
+p.trial.behavior.joystick.use     = 1;    % Use the joystick
 p.trial.behavior.joystick.PullThr = 1.5;  % threshold to detect a joystick press
 p.trial.behavior.joystick.RelThr  = 1.0;  % threshold to detect a joystick release
 
