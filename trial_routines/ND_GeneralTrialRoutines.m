@@ -15,7 +15,7 @@ function p = ND_GeneralTrialRoutines(p, state)
 if(isempty(state))
     % --------------------------------------------------------------------%
     %% Initialise session
-    p = ND_InitSession(p);
+    % p = ND_PrepSession(p);  % Do init
     % p.defaultParameters.(task).randomNumberGenerater = 'mt19937ar'; % WZ: just copied from the pldaps plain function, can not find an instance where it is used...
 
 else

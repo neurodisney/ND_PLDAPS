@@ -35,7 +35,7 @@ p.defaultParameters.epoch.ITI             =  13;  % inter-trial interval: wait b
 p.defaultParameters.epoch.AbortError      = 666;  % Error occurred, finish trial (maybe add time out)
 
 % joystick related
-if(p.trial.behavior.joystick.use)
+if(p.defaultParameters.behavior.joystick.use)
     p.defaultParameters.epoch.CheckBarRel =  40;  % time period to ensure bar release (WZ: might be merged with GetReady)
     p.defaultParameters.epoch.Pressing    =  41;  % Ongoing joystick press
     p.defaultParameters.epoch.WaitPress   =  42;  % Wait for a joystick press
@@ -43,7 +43,7 @@ if(p.trial.behavior.joystick.use)
 end
 
 % fixation related
-if(p.trial.behavior.fixation.use)
+if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.epoch.WaitFix     =   31;  % Target not acquired yet, wait for fixation
     p.defaultParameters.epoch.Fixating    =   32;  % Ongoing fixation
     p.defaultParameters.epoch.LostFix     =   33;  % fixation break detected, wait to verify clear break

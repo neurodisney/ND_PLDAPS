@@ -1,15 +1,10 @@
-function start_joy_train(subjname, rig, experimenter)
+function p = start_joy_train(subjname, rig, experimenter)
 
 % use this script to define a default configuration in order to create a
 % pldaps object and run it with the joy_train trial function.
 %
 %
 % wolf zinke, Dec. 2016
-
-
-
-
-
 
 
 % ------------------------------------------------------------------------%
@@ -40,6 +35,10 @@ SS.pldaps.nosave              = 0; % disable saving data to pds files
 SS.pldaps.draw.joystick.use   = 1; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 0; % enable drawing of the eye position.
 SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
+SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
+
+SS.datapixx.useAsEyepos       = 1;
+SS.datapixx.useJoystick       = 1;
 
 SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states are called
 
@@ -83,7 +82,7 @@ p.defaultParameters.session.experimenter = experimenter;
 
 % ------------------------------------------------------------------------%
 %% run the experiment
-p.run
+p.run;
 
 % ------------------------------------------------------------------------%
 %% Ensure DataPixx is closed

@@ -18,84 +18,41 @@ function p = run(p)
 % run the same again by mistake
 
 try
+
     %% Setup and File management
     % Ensure we have an experimentSetupFile set and verify output file
     
     %make sure we are not running an experiment twice
-    if isField(p.defaultParameters, 'session.initTime')
+    if(isField(p.defaultParameters, 'session.initTime'))
         warning('pldaps:run', 'pldaps objects appears to have been run before. A new pldaps object is needed for each run');
         return
     else
-        p.defaultParameters.session.initTime=now;
+        p.defaultParameters.session.initTime = now;
     end
+
+    %% Setup and File management
+    % define dependent parameter checks and check for consistency (needs to be called before openscreen)   
+    p = ND_PrepSession(p);  % 
     
-    % pick YOUR experiment's main CONDITION file-- this is where all
-    % expt-specific stuff emerges from
-    if isempty(p.defaultParameters.session.experimentSetupFile)
-        [cfile, cpath] = uigetfile('*.m', 'choose condition file', [base '/CONDITION/debugcondition.m']); %#ok<NASGU>
+    %-------------------------------------------------------------------------%
+    %% Setup PLDAPS experiment 
+    % this still acts on defaultParameters
+    if(~isfield(p.defaultParameters.session, 'experimentSetupFile') || ...
+        isempty(p.defaultParameters.session.experimentSetupFile)    || ...
+        ~exist( p.defaultParameters.session.experimentSetupFile, 'file'))
+        error('Need a valid specification for the experimental setup file!');
+    else
+        feval(p.defaultParameters.session.experimentSetupFile, p); % needs to be called before openscreen    
+    end
         
-        dotm = strfind(cfile, '.m');
-        if ~isempty(dotm)
-            cfile(dotm:end) = [];
-        end
-        p.defaultParameters.session.experimentSetupFile = cfile;
-    end
-    
     %-------------------------------------------------------------------------%
     %% Open PLDAPS windows
     % Open PsychToolbox Screen
     p = openScreen(p);
     
-    % Setup PLDAPS experiment condition
-    feval(p.defaultParameters.session.experimentSetupFile, p);
-    
     %-------------------------------------------------------------------------%
-    %% Setup Photodiode stimuli
-    if(p.trial.pldaps.draw.photodiode.use)
-        makePhotodiodeRect(p);
-    end
-
-    %-------------------------------------------------------------------------%
-    %% Tick Marks
-    if(p.trial.pldaps.draw.grid.use)
-        p = initTicks(p);
-    end
-    
-    %-------------------------------------------------------------------------%
-    %% Audio
-    if(p.trial.sound.use)
-        p = pds.audio.setup(p);
-    end
-    
-    %-------------------------------------------------------------------------%
-    %% REWARD
-    p = pds.reward.setup(p);
-    
-    %-------------------------------------------------------------------------%
-    %% Initialize Datapixx including dual CLUTS and timestamp logging
-    p = pds.datapixx.init(p);
-    
-
-    %-------------------------------------------------------------------------%
-    %% Initialize keyboard
-    pds.keyboard.setup(p);
-    
-    %-------------------------------------------------------------------------%
-    %% Initialize mouse
-    if(p.trial.mouse.useLocalCoordinates)
-        p.trial.mouse.windowPtr = p.trial.display.ptr;
-    end
-    
-    if(~isempty(p.trial.mouse.initialCoordinates))
-        SetMouse(p.trial.mouse.initialCoordinates(1), ...
-                 p.trial.mouse.initialCoordinates(2), p.trial.mouse.windowPtr)
-    end
-    
-    % --------------------------------------------------------------------%
-    %% prepare online plots
-    if(p.defaultParameters.plot.do_online)
-        p = feval(p.defaultParameters.plot.routine,  p);
-    end
+    %% Initialize session
+    p = ND_InitSession(p); % final itialization, needs to be called after openscreen
     
     % --------------------------------------------------------------------%
     %% Last chance to check variables
@@ -120,7 +77,7 @@ try
     %save defaultParameters as trial 0
     trialNr = 0;
     
-    p.trial.pldaps.iTrial=0;
+    p.trial.pldaps.iTrial = 0;
     p.trial = mergeToSingleStruct(p.defaultParameters);
     result = saveTempFile(p);
     
@@ -257,6 +214,7 @@ try
                 p.trial.pldaps.quit = 0;
                 ListenChar(2);
                 HideCursor;
+                
             elseif pause==2
                 pauseLoop(p);
             end
@@ -308,8 +266,9 @@ try
     
     % save online plot
     if(p.defaultParameters.plot.do_online)
+        ND_fig2pdf(p.defaultParameters.plot.fig, [p.defaultParameters.session.filestem, '.pdf']);
         p.defaultParameters.plot.fig = []; % avoid saving the figure to data
-        hgexport(gcf, [p.defaultParameters.session.filestem, '.pdf'], hgexport('factorystyle'), 'Format', 'pdf');
+        %hgexport(gcf, [p.defaultParameters.session.filestem, '.pdf'], hgexport('factorystyle'), 'Format', 'pdf');
     end
 
     % save data as pds file
@@ -332,10 +291,10 @@ try
         PDS.data = p.data;
         PDS.functionHandles = p.functionHandles;
 
-        if p.defaultParameters.pldaps.save.v73
-            save(p.defaultParameters.session.file,'-mat','-v7.3')
+        if(p.defaultParameters.pldaps.save.v73)
+            save(p.defaultParameters.session.file, 'PDS','-mat','-v7.3')
         else
-            save(p.defaultParameters.session.file,'-mat')
+            save(p.defaultParameters.session.file, 'PDS','-mat')
         end
     end
 
@@ -351,8 +310,10 @@ try
     
 catch me
     sca
-    if(p.trial.sound.use)
-        PsychPortAudio('Close');
+    if(isfield(p, 'trial.sound.use'))
+        if(p.trial.sound.use)
+            PsychPortAudio('Close');
+        end
     end
     
     % return cursor and command-line control

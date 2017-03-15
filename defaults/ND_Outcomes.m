@@ -26,7 +26,7 @@ p.defaultParameters.outcome.NoStart           =   3004;  % trial not started
 p.defaultParameters.outcome.PrematStart       =   3008;  % trial start not too early as response to cue
 
 % joystick related
-if(p.trial.behavior.joystick.use)
+if(p.defaultParameters.behavior.joystick.use)
     p.defaultParameters.outcome.NoPress       =   1;  % No joystick press occurred to initialize trial
 end
 
@@ -34,7 +34,7 @@ end
 %       3010-for errors
 
 % fixation related
-if(p.trial.behavior.fixation.use)
+if(p.defaultParameters.behavior.fixation.use)
 
     p.defaultParameters.outcome.FIXATION      =   1000;
     p.defaultParameters.outcome.NoFix         =   3010;

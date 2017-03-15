@@ -1,7 +1,10 @@
 function p = ND_InitSession(p)
 %% Initialize session
 % perform default steps to start a session
-%
+% 
+% This initialization happens after openscreen was called, hence display
+% information is available and all information here should be added to
+% p.trial and not p.defaultParameters anymore.
 %
 % wolf zinke, Jan. 2017
 
@@ -11,191 +14,105 @@ disp('****************************************************************')
 disp('');
 
 % --------------------------------------------------------------------%
-%% set output directories and file names
-p.defaultParameters.session.dir      =  fullfile(p.defaultParameters.pldaps.dirs.data, ...
-                                        p.defaultParameters.session.subject, ...
-                                        p.defaultParameters.session.experimentSetupFile, datestr(now,'yyyy_mm_dd'));
-                                    
-% ensure that the data directory exists
-p.defaultParameters.session.tmpdir   = fullfile(p.defaultParameters.session.dir,'TEMP');
-
-if(~exist(p.defaultParameters.session.tmpdir,'dir'))
-    mkdir(p.defaultParameters.session.tmpdir);
-end
-
-p.defaultParameters.session.filestem = [p.defaultParameters.session.subject, '_', ...
-                                        datestr(p.defaultParameters.session.initTime, 'yyyymmdd'), '_', ...
-                                        p.defaultParameters.session.experimentSetupFile, '_',  ...
-                                        datestr(p.defaultParameters.session.initTime, 'HHMM')];
-                                    
-p.defaultParameters.session.file     = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
-
-p.defaultParameters.session.asciitbl = [p.defaultParameters.session.dir, filesep, p.trial.session.filestem,'.dat'];
-
-
-% --------------------------------------------------------------------%
-%% Define Trial function
-% The runTrial function requires trialFunction to be defined, but buried in
-% their tutorial they show that this needs to be defined when initializing
-% the trial function (i.e. the experimentSetupFile), otherwise there will be
-% an error running runTrial.
-if(~isfield(p.defaultParameters.pldaps, 'trialFunction'))
-    p.defaultParameters.pldaps.trialFunction = p.defaultParameters.session.experimentSetupFile;
-end
-
-% --------------------------------------------------------------------%
 %% get task parameters
 if isfield(p.defaultParameters, 'task')
-    if(isfield(p.defaultParameters.task, 'TaskDef'))
-        if(~isempty(p.defaultParameters.task.TaskDef))
-            p = feval(p.defaultParameters.task.TaskDef,  p);
+    if(isfield(p.trial.task, 'TaskDef'))
+        if(~isempty(p.trial.task.TaskDef))
+            p = feval(p.trial.task.TaskDef,  p);
         end
     end
 end
-
-% --------------------------------------------------------------------%
-%% After Trial function
-% Define function that is executed after trial completion when the lock of defaultParameters is released
-% This function allows to pass variable content between trials. Otherwise,
-% the variables that are changed within a trial will not be updated and
-% reset to the initial value for the subsequent trial.
-% if(~isfield(p.defaultParameters.pldaps, 'experimentAfterTrialsFunction') || ...
-%     isempty(p.defaultParameters.pldaps.experimentAfterTrialsFunction) )
-%     p.defaultParameters.pldaps.experimentAfterTrialsFunction = 'ND_AfterTrial';  % a function to be called after each trial.
-% end
-
-% --------------------------------------------------------------------%
-%% initialize the random number generator
-% verify how this affects pldaps
-rng('shuffle', 'twister');
-
-% --------------------------------------------------------------------%
-%% Map the ADC channels
-% Ensure that the channels vector and channelMapping cell array are initialized
-if ~isfield(p.defaultParameters.datapixx.adc, 'channels')
-    p.defaultParameters.datapixx.adc.channels = [];
-end
-
-if ~isfield(p.defaultParameters.datapixx.adc, 'channelMapping')
-    p.defaultParameters.datapixx.adc.channelMapping = {};
-end
-
-if (p.defaultParameters.datapixx.useAsEyepos == 1)
-    p.defaultParameters.datapixx.channels(end+1) = p.defaultParameters.datapixx.adc.XEyeposChannel;
-    p.defaultParameters.datapixx.channelMapping{end+1} = 'Eye.X.Pos';
-    
-    p.defaultParameters.datapixx.channels(end+1) = p.defaultParameters.datapixx.adc.YEyeposChannel;
-    p.defaultParameters.datapixx.channelMapping{end+1} = 'Eye.Y.Pos';
-end
-
-if (p.defaultParameters.datapixx.useForReward == 1)
-    p.defaultParameters.datapixx.channels(end+1) = p.defaultParameters.datapixx.adc.RewardChannel;
-    p.defaultParameters.datapixx.channelMapping{end+1} = 'Reward';
-end
-
-if (p.defaultParameters.datapixx.useJoystick == 1)
-    p.defaultParameters.datapixx.channels(end+1) = p.defaultParameters.datapixx.adc.XJoyChannel;
-    p.defaultParameters.datapixx.channelMapping{end+1} = 'Joy.X.Pos';
-    
-    p.defaultParameters.datapixx.channels(end+1) = p.defaultParameters.datapixx.adc.YJoyChannel;
-    p.defaultParameters.datapixx.channelMapping{end+1} = 'Joy.Y.Pos';
-end
-
-% --------------------------------------------------------------------%
-%% Set some defaults
-
-% trial states
-p = ND_TrialStates(p);
-
-% colors
-% Setup default color lookup tables for huklab experiments. You can modify
-% these later as long as it's done before pdsDatapixxInit
-p = ND_DefaultColors(p);
-
-% bits
-% define standard event codes for trial events (16 bit)
-p = ND_EventDef(p);
-
-% outcomes
-% define possible task outcomes
-p = ND_Outcomes(p);
-
-% task epochs
-p = ND_TaskEpochs(p);
 
 % --------------------------------------------------------------------%
 %% pre-allocate frame data
 % The frame allocation can only be set once the pldaps is run, otherwise
 % p.defaultParameters.display.frate will not be available because it is defined in the openscreen call.
 % WZ TODO: get rid of this pre-allocation that makes it necessary to specify a (arbitrary) trial length!
-p.defaultParameters.pldaps.maxFrames = p.defaultParameters.pldaps.maxTrialLength * p.defaultParameters.display.frate; 
-
-% --------------------------------------------------------------------%
-%% define drawing area for joystick representation
-if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.useJoystick)
-
-    % hardcode right now location and size of joystick representation
-    p.defaultParameters.pldaps.draw.joystick.size   = [60 400];        % what area to occupy with joystick representation (pixel)
-    p.defaultParameters.pldaps.draw.joystick.pos    = [p.defaultParameters.display.pWidth - ...
-                                          (p.defaultParameters.display.pWidth/10 - 1.5*p.defaultParameters.pldaps.draw.joystick.size(1)), ...
-                                           round(p.defaultParameters.display.pHeight/2)]; % where to center joystick representation
-
-    p.defaultParameters.pldaps.draw.joystick.sclfac = p.defaultParameters.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
-
-    p.defaultParameters.pldaps.draw.joystick.rect = ND_GetRect(p.defaultParameters.pldaps.draw.joystick.pos, ...
-                                                   p.defaultParameters.pldaps.draw.joystick.size);
-
-    p.defaultParameters.pldaps.draw.joystick.levelsz =  round(p.defaultParameters.pldaps.draw.joystick.size .* [1.25, 0.01]);
-
-    % initialize joystick level at zero
-    cjpos = [p.defaultParameters.pldaps.draw.joystick.pos(1), p.defaultParameters.pldaps.draw.joystick.rect(2)];
-    p.defaultParameters.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.defaultParameters.pldaps.draw.joystick.levelsz);
-end
+p.trial.pldaps.maxFrames = p.trial.pldaps.maxTrialLength * p.trial.display.frate; 
 
 % --------------------------------------------------------------------%
 %% set variables that contain summary information across trials
 % TODO: WZ: right now not working correctly. Needs to be updated between trials
 %           in ND_runTrial when lock is removed from defaultParameters
-p.defaultParameters.LastHits         = 0;   % how many correct trials since last error
-p.defaultParameters.NHits            = 0;   % how many correct trials in total
-p.defaultParameters.NError           = 0;   % how incorrect trials (excluding not started trials)
-p.defaultParameters.NCompleted       = 0;   % number of started trials
-p.defaultParameters.cPerf            = 0;   % current hit rate
-p.defaultParameters.SmryStr          = ' '; % text message with trial/session summary
+p.trial.LastHits         = 0;   % how many correct trials since last error
+p.trial.NHits            = 0;   % how many correct trials in total
+p.trial.NError           = 0;   % how incorrect trials (excluding not started trials)
+p.trial.NCompleted       = 0;   % number of started trials
+p.trial.cPerf            = 0;   % current hit rate
+p.trial.SmryStr          = ' '; % text message with trial/session summary
 
 % --------------------------------------------------------------------%
-%% sanity checks
+%% define drawing area for joystick representation
+if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
 
-% there is no point of drawing eye position if it is not recorded
-if(~p.defaultParameters.mouse.useAsEyepos && ~p.defaultParameters.datapixx.useAsEyepos)
-    p.defaultParameters.pldaps.draw.eyepos.use = 0;
+    % hardcode right now location and size of joystick representation
+    p.trial.pldaps.draw.joystick.size   = [60 400];        % what area to occupy with joystick representation (pixel)
+    p.trial.pldaps.draw.joystick.pos    = [p.trial.display.pWidth - ...
+                                          (p.trial.display.pWidth/10 - 1.5*p.trial.pldaps.draw.joystick.size(1)), ...
+                                           round(p.trial.display.pHeight/2)]; % where to center joystick representation
+
+    p.trial.pldaps.draw.joystick.sclfac = p.trial.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
+
+    p.trial.pldaps.draw.joystick.rect = ND_GetRect(p.trial.pldaps.draw.joystick.pos, ...
+                                                               p.trial.pldaps.draw.joystick.size);
+
+    p.trial.pldaps.draw.joystick.levelsz =  round(p.trial.pldaps.draw.joystick.size .* [1.25, 0.01]);
+
+    % initialize joystick level at zero
+    cjpos = [p.trial.pldaps.draw.joystick.pos(1), p.trial.pldaps.draw.joystick.rect(2)];
+    p.trial.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.trial.pldaps.draw.joystick.levelsz);
 end
 
-% don't enable online plots if no function is specified
-if(~exist(p.defaultParameters.plot.routine,'file'))
-    warning('Plotting routine for online analysis not found, disabled plotting!');
-    p.defaultParameters.plot.do_online  =  0;  
-elseif(~isfield(p.defaultParameters.plot, 'fig'))
-    p.defaultParameters.plot.fig = [];
+%-------------------------------------------------------------------------%
+%% Setup Photodiode stimuli
+if(p.trial.pldaps.draw.photodiode.use)
+    makePhotodiodeRect(p);
 end
 
-% check that each task epoch has a unique number
-if(isField(p.defaultParameters, 'epoch'))
-    disp('>>>>  Checking p.defaultParameters.epoch for consistency <<<<')
-    CheckUniqueNumbers(p.defaultParameters.epoch);
+%-------------------------------------------------------------------------%
+%% Tick Marks
+if(p.trial.pldaps.draw.grid.use)
+    p = initTicks(p);
 end
 
-% check that event codes are unique
-if(isField(p.defaultParameters, 'event'))
-    disp('>>>>  Checking p.defaultParameters.event for consistency <<<<')
-    CheckUniqueNumbers(p.defaultParameters.event);
+%-------------------------------------------------------------------------%
+%% Audio
+if(p.trial.sound.use)
+    p = pds.audio.setup(p);
 end
 
-% check that task outcome codes are unique
-if(isField(p.defaultParameters, 'outcome'))
-    disp('>>>>  Checking p.defaultParameters.outcome for consistency <<<<')
-    CheckUniqueNumbers(p.defaultParameters.outcome);
+%-------------------------------------------------------------------------%
+%% REWARD
+p = pds.reward.setup(p);
+
+%-------------------------------------------------------------------------%
+%% Initialize Datapixx including dual CLUTS and timestamp logging
+p = pds.datapixx.init(p);
+
+%-------------------------------------------------------------------------%
+%% Initialize keyboard
+pds.keyboard.setup(p);
+
+%-------------------------------------------------------------------------%
+%% Initialize mouse
+if(p.trial.mouse.useLocalCoordinates)
+    p.trial.mouse.windowPtr = p.trial.display.ptr;
 end
+
+if(~isempty(p.trial.mouse.initialCoordinates))
+    SetMouse(p.trial.mouse.initialCoordinates(1), ...
+             p.trial.mouse.initialCoordinates(2), p.trial.mouse.windowPtr)
+end
+
+% --------------------------------------------------------------------%
+%% prepare online plots
+if(p.trial.plot.do_online)
+    p = feval(p.trial.plot.routine,  p);
+end
+
+% --------------------------------------------------------------------%
+%% Set text size for screen display
+Screen('TextSize', p.trial.display.overlayptr , 36);
 
 % --------------------------------------------------------------------%
 %% Define session start time
@@ -206,43 +123,6 @@ end
 % should be much faster. PsychDataPixx('GetPreciseTime') and GetSecs seem
 % to output the time with a comparable reference.
 
-p.defaultParameters.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: inserted this entry for follow up timings
+p.trial.timing.datapixxSessionStart = PsychDataPixx('GetPreciseTime');  % WZ: inserted this entry for follow up timings
 % this call happens before datapixx gets initialized in pldaps.run!
 
-% --------------------------------------------------------------------%
-%% Set text size for screen display
-Screen('TextSize', p.defaultParameters.display.overlayptr , 36);
-
-
-
-% --------------------------------------------------------------------%
-%% helper functions
-
-function p = CheckChannelExists(p, channm, chk)
-% ensure that adc channels do exist
-    if(isempty(p.defaultParameters.datapixx.adc.(channm)) || isnan(p.defaultParameters.datapixx.adc.(channm)) )
-        if(chk == 1)
-            error([channm, ' has no value assigned!']);
-        end
-    else
-        if(~any(p.defaultParameters.datapixx.adc.channels == p.defaultParameters.datapixx.adc.(channm)))
-            p.defaultParameters.datapixx.adc.channels = ...
-                sort([p.defaultParameters.datapixx.adc.channels, p.defaultParameters.datapixx.adc.(channm)]);
-        end
-    end
-
-% --------------------------------------------------------------------%
-function CheckUniqueNumbers(s)
-% make sure that all fields in a struct have unique numbers assigned
-    fldnms = fieldnames(s);
-
-    epnum = nan(1,length(fldnms));
-
-    for(i=1:length(fldnms))
-        if(~iscell(s.(fldnms{i})) && isnumeric(s.(fldnms{i})) && length(s.(fldnms{i})) == 1)
-            if(any(epnum == s.(fldnms{i})))
-                error(['Duplicate number assignment found for field :',fldnms{i}, '!']);
-            end
-            epnum(i) =  s.(fldnms{i});
-        end
-    end

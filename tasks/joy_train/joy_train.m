@@ -37,16 +37,12 @@ p = ND_GeneralTrialRoutines(p, state);
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed.
 % This part corresponds to the experimental setup file and could be a separate
-% file. In this case p.defaultParameters.pldaps.trialFunction needs to be defined
-% here to refer to the file with the actual trial
+% file. In this case p.defaultParameters.pldaps.trialFunction needs to be 
+% defined here to refer to the file with the actual trial.
+% At this stage, p.trial is not yet defined. All assignments need
+% to go to p.defaultparameters
 if(isempty(state))
 
-    % --------------------------------------------------------------------%
-    %% get task parameters
-    p = joy_train_taskdef(p);  % WZ: could it be removed here and just run in trialSetup?
-    %joy_train_taskdef;  % WZ: could it be removed here and just run in trialSetup?
-
-    %ND_CtrlMsg(p, 'Experimental SETUP');
     % --------------------------------------------------------------------%
     %% define ascii output file
     % call this after ND_InitSession to be sure that output directory exists!

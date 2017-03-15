@@ -27,13 +27,13 @@ p.defaultParameters.EV.StartRT    = NaN; % response time to start trial after ac
 p.defaultParameters.EV.RespRT     = NaN; % reaction time
 
 % if joystick is used for behavior
-if(p.trial.behavior.joystick.use)
+if(p.defaultParameters.behavior.joystick.use)
     p.defaultParameters.EV.JoyRelease = NaN; % time of joystick release
     p.defaultParameters.EV.JoyPress   = NaN; % Press time to start task
 end
 
 % if fixation is used
-if(p.trial.behavior.fixation.use)
+if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.EV.FixStart   = NaN; % start of fixation
     p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
     p.defaultParameters.EV.Saccade    = NaN; % response saccade detected

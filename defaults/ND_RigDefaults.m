@@ -19,11 +19,6 @@ function SS = ND_RigDefaults(SS)
 
 
 % ------------------------------------------------------------------------%
-%% Reward settings
-SS.reward.defaultAmount                         = 0.05;   % Default amount of reward.=0; [in seconds]
-SS.reward.Lag                                   = 0.15;   % Delay between response and reward onset
-
-% ------------------------------------------------------------------------%
 %% DataPixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
 SS.datapixx.use                                 = 1;      % enable control of VPixx devices
 
@@ -50,7 +45,6 @@ SS.datapixx.adc.srate                           = 1000;   % samples rate in Hz
 SS.datapixx.adc.startDelay                      = 0;      % delay until beginning of recording.
 SS.datapixx.adc.channels                        = [];     % Start empty, will be populated in ND_InitSession
 SS.datapixx.adc.channelMapping                  = {};     % Specify where to store the collected data. WZ: Seems that the names need to start with 'datapixx.' to ensure that the fields are created (apparently only in the datapixx substructure).
-
 
 % ------------------------------------------------------------------------%
 %% Display settings: specify options for the screen.
@@ -84,10 +78,6 @@ SS.display.movie.width                          = [];    % width of the movie.
 SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encoding parameters
 
 % ------------------------------------------------------------------------%
-%% EyeLink settings: Eyelink specific parameters
-SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
-
-% ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
 SS.mouse.use                                    = 0;     % collect and store mouse positions
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
@@ -106,8 +96,8 @@ SS.plexon.spikeserver.use	                    = 0;     % toggle use of our plexo
 % ------------------------------------------------------------------------%
 %% PLDAPS settings: pldaps core parameters
 SS.pldaps.finish                                = inf;   % Number of trials to run. Can be changed dynamically
-SS.pldaps.goodtrial                             = 0;     % indicator whether the trial was good. Not used by pldaps itself
-SS.pldaps.iTrial                                = 1;     % trial number. cannot be changed by the user
+%SS.pldaps.goodtrial                             = 0;     % indicator whether the trial was good. Not used by pldaps itself
+%SS.pldaps.iTrial                                = 1;     % trial number. cannot be changed by the user
 SS.pldaps.maxPriority                           = 1;     % Switch to PTB to maxpriority during the trial? See MaxPriority('?')
 SS.pldaps.maxTrialLength                        = 25;    % Maximum duration of a trial in seconds. Used to allocate memory.
 SS.pldaps.nosave                                = 0;     % disables saving of data when true. see .pldaps.save for more control
@@ -115,7 +105,7 @@ SS.pldaps.pass                                  = 0;     % indicator of behavior
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
 SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
 % SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
-SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file.
+SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file. (WZ TODO: I think could be removed. File names generated automatically.)
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
 SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
 
@@ -124,7 +114,7 @@ SS.pldaps.dirs.data                             = '~/Data/ExpData';   % data dir
 SS.pldaps.dirs.wavfiles                         = '/usr/local/PLDAPS/beepsounds';  % directory for sound files
 
 % cursor: control drawing of the mouse cursor
-SS.pldaps.draw.cursor.use                       = 0;     % enable drawing of the mouse cursor.
+SS.pldaps.draw.cursor.use                       = 0;     % enable drawing of the mouse cursor. (WZ TODO: Will we ever use it? Maybe get rid of it.)
 SS.pldaps.draw.cursor.sz                        = 8;     % cursor width in pixels 
 
 % eyepos: control drawing of the eye position
@@ -174,8 +164,15 @@ SS.pldaps.save.v73                              = 0;     % save as matlab versio
 SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 
 % ------------------------------------------------------------------------%
+%% Reward settings
+SS.reward.defaultAmount   = 0.05;  % Default amount of reward.=0; [in seconds]
+SS.reward.Lag             = 0.15;  % Delay between response and reward onset
+SS.datapixx.useForReward  = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
+SS.datapixx.adc.RewardChannel = 3; % Default ADC output channel 
+
+% ------------------------------------------------------------------------%
 %% Eye tracking
-SS.datapixx.useAsEyepos           = 0;
+SS.datapixx.useAsEyepos         = 0;
 
 % default ADC channels to use (set up later in ND_InitSession)
 SS.datapixx.adc.XEyeposChannel  = 0;
@@ -204,19 +201,12 @@ SS.FixState.FixIn      =   1;  % Gaze within fixation window
 SS.FixState.FixOut     =   0;  % Gaze left fixation window
 
 
-%% Reward
-SS.datapixx.useForReward  = 0;     %WZ: Default channel used is chan 3, needs hard coding in pldaps code to change                 !!!
-
-% Default ADC channel (set up later in ND_InitSession)
-SS.datapixx.adc.RewardChannel = 3;
-
-
 %% Joystick
 SS.datapixx.useJoystick       = 0;
 
 % default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XJoyChannel   = 4;
-SS.datapixx.adc.YJoyChannel   = 5;
+SS.datapixx.adc.XJoyChannel   = 3;
+SS.datapixx.adc.YJoyChannel   = 4;
 
 SS.behavior.joystick.use       =  0;         % does this task require control of joystick state
 SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state (released)
@@ -232,8 +222,7 @@ SS.JoyState.JoyHold     =   1;  % joystick pressed
 SS.JoyState.JoyRest     =   0;  % joystick released
 
 %% Analog/digital input/output channels
-
-SS.datapixx.adc.TTLamp        = 3;  % amplitude of TTL pulses via adc
+SS.datapixx.adc.TTLamp        =  3;  % amplitude of TTL pulses via adc
 
 SS.datapixx.TTLdur            = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the TTL pulse
 SS.datapixx.EVdur             = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the strobe signal
