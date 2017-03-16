@@ -126,10 +126,8 @@ else
         % DONE AFTER THE MAIN TRIAL LOOP:
         
         case p.trial.pldaps.trialStates.trialCleanUpandSave
-            % just as fail safe, make sure to finish when done
-            if(p.trial.pldaps.iTrial == length(p.conditions))
-                p.trial.pldaps.finish = p.trial.pldaps.iTrial;
-            end
+            disp('Task finished')
+            %Task_Finish(p)
     end
             
 end
@@ -155,7 +153,7 @@ function TaskDesign(p)
             end
             
         case p.trial.epoch.TaskEnd
-            
+            p.trial.pldaps.quit = 1;
     end
 end
 
@@ -176,7 +174,7 @@ rfbar = p.trial.task.rfbar;
             Screen('glPopMatrix',window);
             
         case p.trial.epoch.TaskEnd
-            Task_OFF(p);
+            
     end
 end
 
