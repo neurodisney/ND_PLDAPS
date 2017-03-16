@@ -28,8 +28,8 @@ SS.pldaps.trialFunction = exp_fun; % This function is both, set-up for the exper
 
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
-SS.sound.use          = 0;  % no sound for now
-SS.display.bgColor    = [50, 50, 50] / 255;
+SS.sound.use          = 1;
+SS.display.bgColor    = [0.5, 0.5, 0.5];
 
 % prepare for eye tracking and joystick monitoring
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use

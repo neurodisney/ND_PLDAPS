@@ -38,9 +38,9 @@ if(isempty(state))
     % --------------------------------------------------------------------%
     %% Set initial parameters for the rf bar
     
-    p.trial.task.rfbar.length       =   6; % Length of the bar in degrees of visual angle
-    p.trial.task.rfbar.width        =   3;
-    p.trial.task.rfbar.pos          =   [0, 0];
+    p.trial.task.rfbar.length       =   100; % Length of the bar in degrees of visual angle
+    p.trial.task.rfbar.width        =   50;
+    p.trial.task.rfbar.pos          =   [500, 500];
     p.trial.task.rfbar.angle        =   0;
 
 
