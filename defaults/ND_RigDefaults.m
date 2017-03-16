@@ -87,7 +87,8 @@ SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse t
 SS.sound.use                                    = 0;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
-
+SS.sound.volume                                 = 0.4;
+SS.sound.usePsychPortAudio                      = 0;      % This should be left to 0 since we are using datapixx
 % ------------------------------------------------------------------------%
 %% Plexon settings: interact with plexon MAP or Omniplex
 % spikeserver: configure our plexon spike server.

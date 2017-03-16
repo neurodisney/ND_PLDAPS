@@ -258,7 +258,7 @@ try
     if(p.defaultParameters.sound.use)
         pds.audio.clearBuffer(p);
         % Close the audio device:
-        PsychPortAudio('Close', p.defaultParameters.sound.master);
+        % PsychPortAudio('Close', p.defaultParameters.sound.master);
     end
     
     % ----------------------------------------------------------------%

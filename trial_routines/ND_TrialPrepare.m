@@ -12,7 +12,9 @@ function p = ND_TrialPrepare(p)
 % has less timing issues than Beeper.m -- Beeper freezes flips as long as
 % it is producing sound whereas PsychPortAudio loads a wav file into the
 % buffer and can call it instantly without wasting much compute time.
-pds.audio.clearBuffer(p)
+
+% Going to use datapixx for the sound, so disabling this
+% pds.audio.clearBuffer(p)
 
 %-------------------------------------------------------------------------%
 %% Initialize DataPixx
