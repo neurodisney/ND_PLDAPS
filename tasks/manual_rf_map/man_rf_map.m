@@ -148,7 +148,7 @@ function TaskDesign(p)
     switch p.trial.CurrEpoch
         
         case p.trial.epoch.WaitExperimenter
-            if p.trial.CurTime > p.trial.EV.TrialStart + 3
+            if p.trial.CurTime > p.trial.EV.TrialStart + 10
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
             
@@ -172,6 +172,9 @@ rfbar = p.trial.task.rfbar;
             Screen('glRotate', window, rfbar.angle);
             DrawBar(window,rfbar.width,rfbar.length,rfbar.color);
             Screen('glPopMatrix',window);
+            
+            pds.audio.playDatapixxAudio(p,'reward');
+            pause(2)
             
         case p.trial.epoch.TaskEnd
             
