@@ -38,9 +38,9 @@ if(isempty(state))
     % --------------------------------------------------------------------%
     %% Set initial parameters for the rf bar
     
-    p.trial.task.rfbar.length       =   6; % Length of the bar in degrees of visual angle
-    p.trial.task.rfbar.width        =   3;
-    p.trial.task.rfbar.pos          =   [0, 0];
+    p.trial.task.rfbar.length       =   100; % Length of the bar in degrees of visual angle
+    p.trial.task.rfbar.width        =   50;
+    p.trial.task.rfbar.pos          =   [500, 500];
     p.trial.task.rfbar.angle        =   0;
 
 
@@ -126,10 +126,8 @@ else
         % DONE AFTER THE MAIN TRIAL LOOP:
         
         case p.trial.pldaps.trialStates.trialCleanUpandSave
-            % just as fail safe, make sure to finish when done
-            if(p.trial.pldaps.iTrial == length(p.conditions))
-                p.trial.pldaps.finish = p.trial.pldaps.iTrial;
-            end
+            disp('Task finished')
+            %Task_Finish(p)
     end
             
 end
@@ -150,12 +148,12 @@ function TaskDesign(p)
     switch p.trial.CurrEpoch
         
         case p.trial.epoch.WaitExperimenter
-            if p.trial.CurTime > p.trial.EV.TrialStart + 3
+            if p.trial.CurTime > p.trial.EV.TrialStart + 10
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
             
         case p.trial.epoch.TaskEnd
-            
+            p.trial.pldaps.quit = 1;
     end
 end
 
@@ -166,20 +164,23 @@ rfbar = p.trial.task.rfbar;
 
     switch p.trial.CurrEpoch
         
-        case p.trial.epoch.MoveBar
+        case p.trial.epoch.WaitExperimenter
             % Draw the bar stimuli by creating a custom coordinate frame
             % for it. Then translate and rotate the correct amounts
             Screen('glPushMatrix', window);
             Screen('glTranslate', window, rfbar.pos(1), rfbar.pos(2) );
             Screen('glRotate', window, rfbar.angle);
-            DrawBar(window,rfbar.width,rfbar.height);
+            DrawBar(window,rfbar.width,rfbar.length,rfbar.color);
             Screen('glPopMatrix',window);
             
+            pds.audio.playDatapixxAudio(p,'reward');
+            pause(2)
+            
         case p.trial.epoch.TaskEnd
-            Task_OFF(p);
+            
     end
 end
 
-function DrawBar(window,width,height,color)
-    Screen('FillRect', window, color, [-width/2.0, height/2.0, width/2.0, height/2.0])
+function DrawBar(window,width,length,color)
+    Screen('FillRect', window, color, [-width/2.0, length/2.0, width/2.0, length/2.0])
 end
