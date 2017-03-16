@@ -166,13 +166,13 @@ rfbar = p.trial.task.rfbar;
 
     switch p.trial.CurrEpoch
         
-        case p.trial.epoch.MoveBar
+        case p.trial.epoch.WaitExperimenter
             % Draw the bar stimuli by creating a custom coordinate frame
             % for it. Then translate and rotate the correct amounts
             Screen('glPushMatrix', window);
             Screen('glTranslate', window, rfbar.pos(1), rfbar.pos(2) );
             Screen('glRotate', window, rfbar.angle);
-            DrawBar(window,rfbar.width,rfbar.height);
+            DrawBar(window,rfbar.width,rfbar.length,rfbar.color);
             Screen('glPopMatrix',window);
             
         case p.trial.epoch.TaskEnd
@@ -180,6 +180,6 @@ rfbar = p.trial.task.rfbar;
     end
 end
 
-function DrawBar(window,width,height,color)
-    Screen('FillRect', window, color, [-width/2.0, height/2.0, width/2.0, height/2.0])
+function DrawBar(window,width,length,color)
+    Screen('FillRect', window, color, [-width/2.0, length/2.0, width/2.0, length/2.0])
 end
