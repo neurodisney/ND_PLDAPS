@@ -76,15 +76,6 @@ end
 
 p.trial.task.FrameRect  = ND_GetRect([0,0], p.trial.task.FrameSize);
 
-% target item
-p.trial.task.TargetSz_dva  = 4;           % Stimulus diameter in dva
-p.trial.task.TargetPos_dva = [0, 0];      % Stimulus diameter in dva25seconds
-
-% get dva values into psychtoolbox pixel values/coordinates
-p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
-p.trial.task.TargetPos_pxl = ND_cart2ptb(p, ND_dva2pxl(p.trial.task.TargetPos_dva, p));
-p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
-
 % ------------------------------------------------------------------------%
 %% Joystick parameters
 p.trial.behavior.joystick.use     = 1;    % Use the joystick
