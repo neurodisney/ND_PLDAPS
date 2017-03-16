@@ -8,6 +8,9 @@ function p = ND_CheckFixation(p)
 % because it is diameter in dva but needs to be radius and map to the
 % voltage.
 %
+% TODO: right now, fixation detection is based on some arbitrary pixel
+% values, needs to be changed to dva.
+%
 %
 % wolf zinke, Jan. 2017
 
@@ -17,8 +20,8 @@ if(p.trial.mouse.useAsEyepos)
     sIdx = (p.trial.mouse.samples - p.trial.behavior.fixation.Sample + 1) : p.trial.mouse.samples;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
     % calculate amplitude for each time point in the current sample
-    p.trial.mouse.Amp(sIdx) = sqrt((p.trial.mouse.X(sIdx) - p.trial.behavior.fixation.Zero(1)).^2 + ...
-                                   (p.trial.mouse.Y(sIdx) - p.trial.behavior.fixation.Zero(2)).^2);
+    p.trial.mouse.Amp(sIdx) = sqrt((p.trial.mouse.X(sIdx) - p.trial.behavior.fixation.FixPos(1) - p.trial.behavior.fixation.Offset(1)).^2 + ...
+                                   (p.trial.mouse.Y(sIdx) - p.trial.behavior.fixation.FixPos(2) - p.trial.behavior.fixation.Offset(2)).^2);
 
     % calculate a moving average of the joystick position for display reasons
     p.trial.eyeX   = mean(p.trial.mouse.X(  sIdx));
@@ -28,22 +31,19 @@ else
     % TODO: Define sample based on a time period.
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
-    % calculate amplitude for each time point in the current sample
-    p.trial.AI.Eye.Amp(sIdx) = sqrt((p.trial.AI.Eye.X(sIdx) - p.trial.behavior.fixation.Zero(1)).^2 + ...
-                                    (p.trial.AI.Eye.Y(sIdx) - p.trial.behavior.fixation.Zero(2)).^2);
-
     % calculate a moving average of the joystick position for display reasons
-    p.trial.eyeX   = mean(p.trial.AI.Eye.X(sIdx)) - p.trial.behavior.fixation.Zero(1);
-    p.trial.eyeY   = mean(p.trial.AI.Eye.Y(sIdx)) - p.trial.behavior.fixation.Zero(2);
+    p.trial.eyeX   = p.trial.behavior.fixation.FixScale(1) * mean(p.trial.AI.Eye.X(sIdx)) - ...
+                     p.trial.behavior.fixation.Offset(1);
+    p.trial.eyeY   = p.trial.behavior.fixation.FixScale(1) * mean(p.trial.AI.Eye.Y(sIdx)) - ...
+                     p.trial.behavior.fixation.Offset(2);
 
-%     p.trial.eyeX   = mean(p.trial.AI.Eye.X(sIdx));
-%     p.trial.eyeY   = mean(p.trial.AI.Eye.Y(sIdx));
-    p.trial.eyeAmp = mean(p.trial.AI.Eye.Amp(sIdx));
+    p.trial.eyeAmp = sqrt( (p.trial.eyeX - p.trial.behavior.fixation.FixPos(1))^2 + ...
+                           (p.trial.eyeY - p.trial.behavior.fixation.FixPos(2))^2 );
 end
 
 %% update eye position history (per frame)
 if(p.trial.pldaps.draw.eyepos.use)
-    p.trial.eyeXY_draw = ND_dva2pxl(p.trial.behavior.fixation.FixScale(1) * [p.trial.eyeX, p.trial.eyeY], p);
+    p.trial.eyeXY_draw = ND_cart2ptb(p, [p.trial.eyeX, p.trial.eyeY]);
     
     p.trial.eyeX_hist = [p.trial.eyeXY_draw(1), p.trial.eyeX_hist(1:end-1)];
     p.trial.eyeY_hist = [p.trial.eyeXY_draw(2), p.trial.eyeY_hist(1:end-1)];
@@ -55,31 +55,28 @@ if(p.trial.behavior.fixation.use)
     switch p.trial.FixState.Current
         %% wait for release
         case p.trial.FixState.FixOut
-            fixchk = p.trial.AI.Joy.Amp(sIdx) > p.trial.behavior.fixation.FixWin; % invert selection to just use 'any'
-
             % all below threshold?
-            if(~any(fixchk))
-                pds.datapixx.flipBit(p.trial.event.FIXATION);
+            if(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin_pxl/2 )
+                pds.datapixx.flipBit(p.trial.event.FIX_IN);
                 p.trial.FixState.Current = p.trial.FixState.FixIn;
             end
 
         %% wait for press
         case p.trial.FixState.FixIn
-            fixchk = p.trial.AI.Joy.Amp(sIdx) < p.trial.behavior.fixation.FixWin; % invert selection to just use 'any'
 
             % all above threshold?
-            if(~any(fixchk))
-                pds.datapixx.flipBit(p.trial.event.FIXBREAK);
+            if(p.trial.eyeAmp > p.trial.behavior.fixation.FixWin_pxl/2)
+                pds.datapixx.flipBit(p.trial.event.FIX_OUT);
                 p.trial.FixState.Current = p.trial.FixState.FixOut;
             end
 
         %% if it is nan, so just get the current state
         otherwise
             if(isnan(p.trial.FixState.Current))
-                if(p.trial.AI.Joy.Amp(p.trial.datapixx.adc.dataSampleCount) >= p.trial.behavior.fixation.FixWin)
+                if(p.trial.eyeAmp > p.trial.behavior.fixation.FixWin_pxl/2)
                     p.trial.FixState.Current = p.trial.FixState.FixOut;
 
-                elseif(p.trial.AI.Joy.Amp(p.trial.datapixx.adc.dataSampleCount) <= p.trial.behavior.fixation.FixWin)
+                elseif(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin_pxl/2)
                     p.trial.FixState.Current = p.trial.FixState.FixIn;
 
                 else

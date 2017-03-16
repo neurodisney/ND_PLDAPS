@@ -185,22 +185,22 @@ SS.datapixx.adc.EyeRange = [-10, 10];
 % Saccade parameters
 SS.behavior.fixation.use       =  0;      % does this task require control of eye position
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
-SS.behavior.fixation.Zero      = [0 ,0];  % offset to get current position signal to FixPos
-SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window
+SS.behavior.fixation.Offset    = [0 ,0];  % offset to get current position signal to FixPos
+SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window [dva]
 SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
 SS.behavior.fixation.FixScale  = [1 , 1]; % scaling factor to match screen/dva [TODO: get from calibration]
 
 SS.behavior.fixation.BreakTime = 25;      % minimum time [ms] to identify a fixation break
 
-SS.pldaps.draw.eyepos.history  = 20;      % show eye position of the previous n frames in addition to current one
+SS.pldaps.draw.eyepos.history  = 40;      % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz       = 8;       % size in pixels of the eye pos indicator
 
 % Define fixation states
 SS.FixState.Current    = NaN;
 SS.FixState.FixIn      =   1;  % Gaze within fixation window
-SS.FixState.FixOut     =   0;  % Gaze left fixation window
+SS.FixState.FixOut     =   0;  % Gaze out of fixation window
 
-
+% ------------------------------------------------------------------------%
 %% Joystick
 SS.datapixx.useJoystick       = 0;
 
@@ -221,6 +221,7 @@ SS.JoyState.Current     = NaN;
 SS.JoyState.JoyHold     =   1;  % joystick pressed
 SS.JoyState.JoyRest     =   0;  % joystick released
 
+% ------------------------------------------------------------------------%
 %% Analog/digital input/output channels
 SS.datapixx.adc.TTLamp        =  3;  % amplitude of TTL pulses via adc
 

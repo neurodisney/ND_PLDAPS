@@ -126,7 +126,6 @@ else
 %% Subsequent calls during actual trials
 % execute trial specific commands here.
 
-   
     switch state
 % ####################################################################### %
 % DONE BEFORE MAIN TRIAL LOOP:
@@ -149,9 +148,6 @@ else
 % ####################################################################### %
 % DONE DURING THE MAIN TRIAL LOOP:
             
-            %         case p.trial.pldaps.trialStates.frameUpdate
-            %         p.trial.ChkPassTime = p.trial.CurTime;
-            
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.framePrepareDrawing
         %% Get ready to display
@@ -165,26 +161,16 @@ else
         % Just call graphic routines, avoid any computations
             
             TaskDraw(p)
-            
-            %         p.trial.ChkPassTime = 1000*(p.trial.CurTime - p.trial.ChkPassTime);
-            %         ND_CtrlMsg(p, ['one pass: ',num2str(p.trial.ChkPassTime,'%.2f'),' ms']);
-            
+                        
 % ####################################################################### %
 % DONE AFTER THE MAIN TRIAL LOOP:
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
         %% trial end
             
-            % FinishTask(p);
-            
-            p = ND_CheckCondRepeat(p); % ensure all conditions were performed correctly equal often
-            
+            Task_Finish(p);
+                        
             Trial2Ascii(p, 'save');
-            
-            % just as fail safe, make sure to finish when done
-            if(p.trial.pldaps.iTrial == length(p.conditions))
-                p.trial.pldaps.finish = p.trial.pldaps.iTrial;
-            end
             
             %ND_CtrlMsg(p, 'TRIAL END');
             
@@ -198,17 +184,10 @@ end  %/  if(nargin == 1) [...] else [...]
 function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
-    %p = joy_train_taskdef(p);  % brute force: read in task parameters every time to allow for online modifications. TODO: make it robust and let it work with parameter changes via keyboard, see e.g. monkeylogic editable concept.
-    clear joy_train_taskdef; % needs to be cleared to read in updated information 
-    joy_train_taskdef(p);
-
     p.trial.task.Timing.ITI      = ND_GetITI(p.trial.task.Timing.MinITI,      ...
                                              p.trial.task.Timing.MaxITI,      [], [], 1, 0.10);
     p.trial.task.Timing.HoldTime = ND_GetITI(p.trial.task.Timing.MinHoldTime, ...
                                              p.trial.task.Timing.MaxHoldTime, [], [], 1, 0.02);   % Minimum time before response is expected
-    p.trial.task.Task   = NaN;
-    
-    p.trial.task.Reward.Curr = NaN;
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
     
@@ -216,8 +195,6 @@ function TaskSetUp(p)
 function TaskDesign(p)
 %% main task outline
 % The different task stages (i.e. 'epochs') are defined here.
-
-    
     switch p.trial.CurrEpoch
         % ----------------------------------------------------------------%
         case p.trial.epoch.GetReady

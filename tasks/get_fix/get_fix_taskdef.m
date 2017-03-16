@@ -54,20 +54,22 @@ p.trial.task.FrameRect  = ND_GetRect(p.trial.display.ctr(1:2), p.trial.task.Fram
 p.trial.task.TargetSz_dva  = 4;   % Stimulus diameter in dva
 p.trial.task.TargetPos_dva = [0, 0];    % Stimulus diameter in dva25seconds
 
+% get dva values into psychtoolbox pixel values/coordinates
 p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
-p.trial.task.TargetPos_pxl = ND_cart2ptb(p, p.trial.task.TargetPos_dva);
+p.trial.task.TargetPos_pxl = ND_cart2ptb(p, ND_dva2pxl(p.trial.task.TargetPos_dva, p));
 p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
-p.trial.behavior.fixation.FixScale = [10, 10];  % scaling factor to match screen/dva [TODO: get from calibration]
+p.trial.behavior.fixation.FixScale = [100, 100];  % scaling factor to match screen/dva [TODO: get from calibration]
 p.trial.behavior.fixation.FixWin   = 4;
 
-p.trial.task.FixWinSz_pxl  = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
-p.trial.task.FixWinPos_pxl = ND_cart2ptb(p, p.trial.behavior.fixation.FixPos);
+p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
+
+p.trial.task.FixWinPos_pxl = ND_cart2ptb(p, ND_dva2pxl(p.trial.behavior.fixation.FixPos, p));
 
 p.trial.task.fixrect = ND_GetRect(p.trial.task.FixWinPos_pxl, ...
-                                  p.trial.task.FixWinSz_pxl);  % make sure that this will be defined in a variable way in the future
+                                  p.trial.behavior.fixation.FixWin_pxl);  % make sure that this will be defined in a variable way in the future
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters

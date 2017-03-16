@@ -32,13 +32,15 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
 
         case KbName(p.trial.key.CtrFix)
         % set current eye position as expected fixation position
-        if(p.trial.behavior.fixation.use)
-            p.trial.behavior.fixation.Zero = p.trial.behavior.fixation.Zero + [p.trial.eyeX, p.trial.eyeY];
+        if(p.trial.datapixx.useAsEyepos)
+            p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset - p.trial.behavior.fixation.FixPos + ...
+                                              [p.trial.eyeX, p.trial.eyeY];
+            %ND_CtrlMsg(p, ['fixation offset changed to ', num2str(p.trial.behavior.fixation.Offset)]);                              
         end
         
         case KbName(p.trial.key.CtrJoy)
         % set current eye position as expected fixation position
-        if(p.trial.behavior.joystick.use)
+        if(p.trial.datapixx.useJoystick)
             p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
         end
 

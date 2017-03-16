@@ -1,5 +1,4 @@
 function p = start_joy_train(subjname, rig, experimenter)
-
 % use this script to define a default configuration in order to create a
 % pldaps object and run it with the joy_train trial function.
 %
@@ -33,7 +32,7 @@ SS.behavior.joystick.use      = 1; % joystick is behavioral relevant
 SS.plot.do_online             = 1; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
 SS.pldaps.draw.joystick.use   = 1; % draw joystick states on control screen
-SS.pldaps.draw.eyepos.use     = 0; % enable drawing of the eye position.
+SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
 SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
 SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
 
@@ -49,6 +48,7 @@ SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states
 
 SS.display.bgColor    = [50, 50, 50] / 255;  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
+SS.behavior.fixation.FixScale = [100, 100]; 
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%

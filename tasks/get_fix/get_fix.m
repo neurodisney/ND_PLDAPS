@@ -1,21 +1,6 @@
 function p = get_fix(p, state)
-% Main trial function for initial joystick training.
+% Main trial function for initial fixation training.
 %
-% The animal needs to learn how to operate a joystick (i.e. lever) in order
-% to receive a juice reward.
-%
-% 1) The trial starts with a change of background color (maybe changed to a
-%    appearance of a frame).
-% 2) The animal has to press a lever and a large square is shown together
-%    with a juice reward (this first reward will be disabled once the main
-%    principle is understood).
-% 3) If the animal keeps the lever pressed for a minimum hold time and then
-%    releases it, the square changes its contrast and another reward will be
-%    delivered.
-%
-% TODO: visualize eye position
-%
-% TODO: add accoustic feedback
 %
 %
 % wolf zinke, Dec. 2016
@@ -37,12 +22,12 @@ p = ND_GeneralTrialRoutines(p, state);
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed.
 % This part corresponds to the experimental setup file and could be a separate
-% file. In this case p.defaultParameters.pldaps.trialFunction needs to be defined
-% here to refer to the file with the actual trial
+% file. In this case p.defaultParameters.pldaps.trialFunction needs to be 
+% defined here to refer to the file with the actual trial.
+% At this stage, p.trial is not yet defined. All assignments need
+% to go to p.defaultparameters
 if(isempty(state))
 
-
-    %ND_CtrlMsg(p, 'Experimental SETUP');
     % --------------------------------------------------------------------%
     %% define ascii output file
     % call this after ND_InitSession to be sure that output directory exists!
@@ -74,50 +59,7 @@ if(isempty(state))
     c1.task.Timing.MinHoldTime = 0.2;
     c1.task.Timing.MaxHoldTime = 0.4;
 
-    % condition 2
-    c2.Nr = 2;
-    c2.task.Timing.MinHoldTime = 0.4;
-    c2.task.Timing.MaxHoldTime = 0.6;
-
-    % condition 3
-    c3.Nr = 3;
-    c3.task.Timing.MinHoldTime = 0.6;
-    c3.task.Timing.MaxHoldTime = 0.8;
-
-    % condition 4
-    c4.Nr = 4;
-    c4.task.Timing.MinHoldTime = 0.8;
-    c4.task.Timing.MaxHoldTime = 1.0;
-
-    % condition 5
-    c5.Nr = 5;
-    c5.task.Timing.MinHoldTime = 1.0;
-    c5.task.Timing.MaxHoldTime = 1.2;
-    
-    % condition 6
-    c6.Nr = 6;
-    c6.task.Timing.MinHoldTime = 1.2;
-    c6.task.Timing.MaxHoldTime = 1.4;
-    
-    % condition 7
-    c7.Nr = 7;
-    c7.task.Timing.MinHoldTime = 1.4;
-    c7.task.Timing.MaxHoldTime = 1.6;
-    
-    % condition 8
-    c8.Nr = 8;
-    c8.task.Timing.MinHoldTime = 1.6;
-    c8.task.Timing.MaxHoldTime = 1.8;
-    
-    % condition 9
-    c9.Nr = 9;
-    c9.task.Timing.MinHoldTime = 1.8;
-    c9.task.Timing.MaxHoldTime = 2.0;
-
-    % create a cell array containing all conditions
-    % conditions = {c1, c2, c3, c4, c5};
-    %conditions = {c1, c2, c3, c4, c5, c6, c7, c8, c9};
-    conditions = {c1, c2, c3, c4, c5, c6};
+    conditions = {c1};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
@@ -126,7 +68,6 @@ else
 %% Subsequent calls during actual trials
 % execute trial specific commands here.
 
-   
     switch state
 % ####################################################################### %
 % DONE BEFORE MAIN TRIAL LOOP:
@@ -149,9 +90,6 @@ else
 % ####################################################################### %
 % DONE DURING THE MAIN TRIAL LOOP:
             
-            %         case p.trial.pldaps.trialStates.frameUpdate
-            %         p.trial.ChkPassTime = p.trial.CurTime;
-            
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.framePrepareDrawing
         %% Get ready to display
@@ -166,25 +104,15 @@ else
             
             TaskDraw(p)
             
-            %         p.trial.ChkPassTime = 1000*(p.trial.CurTime - p.trial.ChkPassTime);
-            %         ND_CtrlMsg(p, ['one pass: ',num2str(p.trial.ChkPassTime,'%.2f'),' ms']);
-            
 % ####################################################################### %
 % DONE AFTER THE MAIN TRIAL LOOP:
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
         %% trial end
             
-            % FinishTask(p);
-            
-            p = ND_CheckCondRepeat(p); % ensure all conditions were performed correctly equal often
+            Task_Finish(p);
             
             Trial2Ascii(p, 'save');
-            
-            % just as fail safe, make sure to finish when done
-            if(p.trial.pldaps.iTrial == length(p.conditions))
-                p.trial.pldaps.finish = p.trial.pldaps.iTrial;
-            end
             
             %ND_CtrlMsg(p, 'TRIAL END');
             
@@ -198,17 +126,10 @@ end  %/  if(nargin == 1) [...] else [...]
 function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
-    %p = joy_train_taskdef(p);  % brute force: read in task parameters every time to allow for online modifications. TODO: make it robust and let it work with parameter changes via keyboard, see e.g. monkeylogic editable concept.
-    clear joy_train_taskdef; % needs to be cleared to read in updated information 
-    joy_train_taskdef(p);
-
     p.trial.task.Timing.ITI      = ND_GetITI(p.trial.task.Timing.MinITI,      ...
                                              p.trial.task.Timing.MaxITI,      [], [], 1, 0.10);
     p.trial.task.Timing.HoldTime = ND_GetITI(p.trial.task.Timing.MinHoldTime, ...
                                              p.trial.task.Timing.MaxHoldTime, [], [], 1, 0.02);   % Minimum time before response is expected
-    p.trial.task.Task   = NaN;
-    
-    p.trial.task.Reward.Curr = NaN;
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
     
@@ -216,8 +137,6 @@ function TaskSetUp(p)
 function TaskDesign(p)
 %% main task outline
 % The different task stages (i.e. 'epochs') are defined here.
-
-    
     switch p.trial.CurrEpoch
         % ----------------------------------------------------------------%
         case p.trial.epoch.GetReady
@@ -261,17 +180,12 @@ function TaskDesign(p)
                 % we just got a press in time
                     Task_ON(p);
                     
-                   if(p.trial.task.FullTask)
-                        % do full task, use other task epochs
-                        p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.HoldTime;
-                        p.trial.CurrEpoch = p.trial.epoch.WaitGo;
+                    % do full task, use other task epochs
+                    p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.HoldTime;
+                    p.trial.CurrEpoch = p.trial.epoch.WaitGo;
 
-                        if(p.trial.task.Reward.Pull)
-                            pds.reward.give(p, p.trial.task.Reward.PullRew);
-                        end
-                    else
-                        % That was the task, reward animal and done                        
-                        Task_Correct(p);
+                    if(p.trial.task.Reward.Pull)
+                        pds.reward.give(p, p.trial.task.Reward.PullRew);
                     end
                 end
             end

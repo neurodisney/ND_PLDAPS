@@ -108,5 +108,5 @@ end
 p.trial.CurrEpoch             = NaN;  % keep track of task epochs
 p.trial.task.Timing.WaitTimer = NaN;  % Initialize variable that contains a timer  # TODO: WZ: make it p.trial.WaitTimer, p.trial.Timer.WaitTimer?
 p.trial.CurTime               = NaN;  % keep track of current time
-
+p.trial.task.Reward.Curr      = p.trial.reward.defaultAmount;  % expected reward amount (set to default amount)
 

@@ -64,9 +64,19 @@ end
 if(p.trial.pldaps.draw.eyepos.use)
 % TODO: use alpha blending to fade out old locations
 
-    Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.window, ...
-                        p.trial.task.fixrect , 10);
-
+    if(p.trial.behavior.fixation.use)
+        if(p.trial.FixState.Current == p.trial.FixState.FixOut)
+            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyeold, ...
+                                p.trial.task.fixrect , 4);
+        elseif(p.trial.FixState.Current == p.trial.FixState.FixIn)
+            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyepos, ...
+                                p.trial.task.fixrect , 4);
+        else
+            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.window, ...
+                                p.trial.task.fixrect , 4);
+        end
+    end
+    
     Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX_hist; p.trial.eyeY_hist], ...
                         p.trial.pldaps.draw.eyepos.sz/2, p.trial.display.clut.eyeold, [0 0], 0);
                     

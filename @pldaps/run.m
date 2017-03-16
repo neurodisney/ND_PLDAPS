@@ -135,7 +135,7 @@ try
                 end
 
                 if(p.trial.datapixx.useAsEyepos)
-                    p.defaultParameters.behavior.fixation.Zero = p.trial.behavior.fixation.Zero;
+                    p.defaultParameters.behavior.fixation.Offset = p.trial.behavior.fixation.Offset;
                 end
             end
 
@@ -266,7 +266,7 @@ try
     
     % save online plot
     if(p.defaultParameters.plot.do_online)
-        ND_fig2pdf(p.defaultParameters.plot.fig, [p.defaultParameters.session.filestem, '.pdf']);
+        ND_fig2pdf(p.defaultParameters.plot.fig, [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pdf']);
         p.defaultParameters.plot.fig = []; % avoid saving the figure to data
         %hgexport(gcf, [p.defaultParameters.session.filestem, '.pdf'], hgexport('factorystyle'), 'Format', 'pdf');
     end
