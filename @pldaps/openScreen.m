@@ -142,9 +142,6 @@ p.defaultParameters.display.dHeight = atand(p.defaultParameters.display.wHeight/
 p.defaultParameters.display.w2px=[p.defaultParameters.display.pWidth/p.defaultParameters.display.wWidth; p.defaultParameters.display.pHeight/p.defaultParameters.display.wHeight];
 p.defaultParameters.display.px2w=[p.defaultParameters.display.wWidth/p.defaultParameters.display.pWidth; p.defaultParameters.display.wHeight/p.defaultParameters.display.pHeight];
 
-% Get the pixels per degree at the center of the screen
-p.trial.display.ppdCentral = tand(1) * p.trial.display.viewdist * p.trial.display.w2px; 
-
 % Set screen rotation
 p.defaultParameters.display.ltheta = 0.00*pi;                                    % Screen rotation to adjust for mirrors
 p.defaultParameters.display.rtheta = -p.defaultParameters.display.ltheta;
@@ -156,6 +153,9 @@ Screen('TextSize',p.defaultParameters.display.ptr,16);
 Screen('TextStyle',p.defaultParameters.display.ptr,1);
 
 %% Push transformation matrices onto the graphics stack to change the origin and scale coordinates to degrees
+
+% Get the pixels per degree at the center of the screen
+p.trial.display.ppdCentral = tand(1) * p.trial.display.viewdist * p.trial.display.w2px; 
 
 % Translate the origin
 if isfield(p.trial.display, 'useCustomOrigin') && p.trial.display.useCustomOrigin ~= 0
@@ -189,98 +189,6 @@ if isfield(p.trial.display, 'useDegreeUnits') && p.trial.display.useDegreeUnits 
         
         Screen('glScale', p.trial.display.ptr, xScaleFactor, yScaleFactor)
         p.trial.display.winRect = p.trial.display.winRect ./ [xScaleFactor, yScaleFactor, xScaleFactor, yScaleFactor];
-    
-    % Otherwise give an error
-    else
-        error('pldaps:openScreen', 'Bad value for p.trial.display.useDegreeUnits')
-    end
-
-end
-
-%% Push transformation matrices onto the graphics stack to change the origin and scale coordinates to degrees
-
-% Translate the origin
-if exist('p.trial.display.useCustomOrigin', 'var') && p.trial.display.useCustomOrigin ~= 0
-    
-    % If useCustomOrigin == 1, use a central origin
-    if p.trial.display.useCustomOrigin == 1
-        xTrans = p.trial.display.pWidth / 2;
-        yTrans = p.trial.display.pHeight / 2;
-    
-    % If useCustomOrigin == [x,y], set the origin to x,y expressed in pixels
-    elseif size(p.trial.display.useCustomOrigin) == 2
-        xTrans = p.trial.display.useCustomOrigin(1);
-        yTrans = p.trial.display.useCustomOrigin(2);
-        
-    % Otherwise give an error
-    else
-        error('pldaps:openScreen', 'Bad origin specified in p.trial.display.useCustomOrigin')
-    end
-    
-    Screen('glTranslate', p.trial.display.ptr, xTrans, yTrans)
-    
-end
-
-% Scale the units to degrees of visual angle
-if exist('p.trial.display.useDegreeUnits', 'var') && p.trial.display.useDegreeUnits ~= 0
-    
-    % If useDegreeUnits == 1, scale uniformly (may be slightly inaccurate)
-    if p.trial.display.useDegreeUnits == 1
-        xScaleFactor = p.trial.display.pWidth / p.trial.display.dWidth;
-        yScaleFactor = p.trial.display.pHeight / p.trial.display.dHeight;
-        
-        Screen('glScale', p.trial.display.ptr, xScaleFactor, yScaleFactor)
-        
-    % If useDegreeUnits == 2, scale non uniformaly to more closely match
-    % actual degree values (may cause local shape distortion)
-    elseif p.trial.display.useDegreeUnits == 2
-        % TODO
-    
-    % Otherwise give an error
-    else
-        error('pldaps:openScreen', 'Bad value for p.trial.display.useDegreeUnits')
-    end
-
-end
-
-%% Push transformation matrices onto the graphics stack to change the origin and scale coordinates to degrees
-
-% Translate the origin
-if exist('p.trial.display.useCustomOrigin', 'var') && p.trial.display.useCustomOrigin ~= 0
-    
-    % If useCustomOrigin == 1, use a central origin
-    if p.trial.display.useCustomOrigin == 1
-        xTrans = p.trial.display.pWidth / 2;
-        yTrans = p.trial.display.pHeight / 2;
-    
-    % If useCustomOrigin == [x,y], set the origin to x,y expressed in pixels
-    elseif size(p.trial.display.useCustomOrigin) == 2
-        xTrans = p.trial.display.useCustomOrigin(1);
-        yTrans = p.trial.display.useCustomOrigin(2);
-        
-    % Otherwise give an error
-    else
-        error('pldaps:openScreen', 'Bad origin specified in p.trial.display.useCustomOrigin')
-    end
-    
-    Screen('glTranslate', p.trial.display.ptr, xTrans, yTrans)
-    
-end
-
-% Scale the units to degrees of visual angle
-if exist('p.trial.display.useDegreeUnits', 'var') && p.trial.display.useDegreeUnits ~= 0
-    
-    % If useDegreeUnits == 1, scale uniformly (may be slightly inaccurate)
-    if p.trial.display.useDegreeUnits == 1
-        xScaleFactor = p.trial.display.pWidth / p.trial.display.dWidth;
-        yScaleFactor = p.trial.display.pHeight / p.trial.display.dHeight;
-        
-        Screen('glScale', p.trial.display.ptr, xScaleFactor, yScaleFactor)
-        
-    % If useDegreeUnits == 2, scale non uniformaly to more closely match
-    % actual degree values (may cause local shape distortion)
-    elseif p.trial.display.useDegreeUnits == 2
-        % TODO
     
     % Otherwise give an error
     else
