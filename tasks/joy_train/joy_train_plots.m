@@ -8,7 +8,7 @@ function p = joy_train_plots(p, offln)
 % wolf zinke, March 2017
 
 %% plot parameters
-resp_bin = 50;
+resp_bin = 100;
 
 hit_col   = [0, 0.65, 0];
 early_col = [0.65, 0, 0];
