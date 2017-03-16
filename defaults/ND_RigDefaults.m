@@ -111,7 +111,7 @@ SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a t
 
 % dirs: configure pldaps' built-in drawing options
 SS.pldaps.dirs.data                             = '~/Data/ExpData';   % data directory.
-SS.pldaps.dirs.wavfiles                         = '/usr/local/PLDAPS/beepsounds';  % directory for sound files
+SS.pldaps.dirs.wavfiles                         = './beepsounds';  % directory for sound files
 
 % cursor: control drawing of the mouse cursor
 SS.pldaps.draw.cursor.use                       = 0;     % enable drawing of the mouse cursor. (WZ TODO: Will we ever use it? Maybe get rid of it.)
