@@ -14,10 +14,12 @@ if(p.trial.datapixx.TTL_trialOn)
 end
 
 if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
-    p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.ITI;
-    p.trial.CurrEpoch = p.trial.epoch.ITI;
+    p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
+    p.trial.Timer.ITI  = p.trial.Timer.Wait;
+    p.trial.CurrEpoch  = p.trial.epoch.ITI;
 else
-    p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
-    p.trial.CurrEpoch = p.trial.epoch.ITI;
+    p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
+    p.trial.Timer.ITI  = p.trial.Timer.Wait;
+    p.trial.CurrEpoch  = p.trial.epoch.ITI;
 end
 

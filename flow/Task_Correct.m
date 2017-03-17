@@ -9,6 +9,7 @@ pds.tdt.strobe(p.trial.event.RESP_CORR);
 
 p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
 
-p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.reward.Lag;
+p.trial.Timer.Wait   = p.trial.CurTime + p.trial.reward.Lag;
+p.trial.Timer.Reward = p.trial.Timer.Wait;
 
-p.trial.CurrEpoch = p.trial.epoch.WaitReward;
+p.trial.CurrEpoch    = p.trial.epoch.WaitReward;

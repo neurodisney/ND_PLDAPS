@@ -5,6 +5,6 @@ p.trial.EV.TaskStart     = p.trial.CurTime;
 
 p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
 
-p.trial.task.Timing.WaitTimer = p.trial.EV.TaskStart + p.trial.task.Timing.WaitStart;
+p.trial.Timer.Wait       = p.trial.EV.TaskStart + p.trial.task.Timing.WaitStart;
 
-p.trial.CurrEpoch             = p.trial.epoch.WaitStart;
+p.trial.CurrEpoch        = p.trial.epoch.WaitStart;

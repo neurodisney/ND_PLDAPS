@@ -6,10 +6,9 @@ function [sesstm, timestamp] = ND_CtrlMsg(p, msgstr)
 
 timestamp = now;
 
-sesstm = GetSecs - p.trial.timing.datapixxSessionStart;
+sesstm = (GetSecs - p.trial.timing.datapixxSessionStart) / 60;
 
-msg = sprintf('%.13s \t-- trial %0.6d [%.5f] \n>>\t %s\n', ...
+fprintf('%.13s \t-- trial %0.6d [%.5f] \n>>\t %s\n', ...
               datestr(now,'HH:MM:SS:FFF'), p.trial.pldaps.iTrial, sesstm, msgstr);
 
-disp(msg);
 
