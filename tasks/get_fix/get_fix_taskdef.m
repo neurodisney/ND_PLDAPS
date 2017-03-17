@@ -51,7 +51,7 @@ p.trial.task.FrameSize  = ND_dva2pxl([18 18], p); % hard-coded for now, make it 
 p.trial.task.FrameRect  = ND_GetRect(p.trial.display.ctr(1:2), p.trial.task.FrameSize);
 
 % target item
-p.trial.task.TargetSz_dva  = 4;   % Stimulus diameter in dva
+p.trial.task.TargetSz_dva  = 1;   % Stimulus diameter in dva
 p.trial.task.TargetPos_dva = [0, 0];    % Stimulus diameter in dva25seconds
 
 % get dva values into psychtoolbox pixel values/coordinates

@@ -69,60 +69,50 @@ else
 % execute trial specific commands here.
 
     switch state
-% ####################################################################### %
+% ------------------------------------------------------------------------%
 % DONE BEFORE MAIN TRIAL LOOP:
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialSetup
         %% trial set-up
         % prepare everything for the trial, including allocation of stimuli
         % and all other more time demanding stuff.
-            
             TaskSetUp(p);
-            %ND_CtrlMsg(p, 'TRIAL SETUP');
             
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
         %% trial preparation
         % just prior to actual trial start, use it for time sensitive preparations;
-            
             p.trial.EV.TrialStart = p.trial.CurTime;
             
-% ####################################################################### %
+% ------------------------------------------------------------------------%
 % DONE DURING THE MAIN TRIAL LOOP:
-            
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.framePrepareDrawing
         %% Get ready to display
         % prepare the stimuli that should be shown, do some required calculations
-            
             TaskDesign(p);
             
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
-            
             TaskDraw(p)
             
-% ####################################################################### %
+% ------------------------------------------------------------------------%
 % DONE AFTER THE MAIN TRIAL LOOP:
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
         %% trial end
-            
             Task_Finish(p);
-            
             Trial2Ascii(p, 'save');
-            
-            %ND_CtrlMsg(p, 'TRIAL END');
-            
+                        
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
 
 % ------------------------------------------------------------------------%
 %% Task related functions
 
-% ------------------------------------------------------------------------%
+% ####################################################################### %
 function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
@@ -133,7 +123,9 @@ function TaskSetUp(p)
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
     
-% ------------------------------------------------------------------------%
+    p.trial.task.Reward.Timer = 0; 
+    
+% ####################################################################### %
 function TaskDesign(p)
 %% main task outline
 % The different task stages (i.e. 'epochs') are defined here.
@@ -208,7 +200,6 @@ function TaskDesign(p)
                 Response_Miss(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-
                 Response_JoyRelease(p);
                 
                 if(p.trial.EV.RespRT <  p.trial.task.Timing.minRT)
@@ -225,55 +216,22 @@ function TaskDesign(p)
         %% Wait for for reward
         % add error condition for new press
             if(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
-                p.trial.EV.Reward = p.trial.CurTime - p.trial.EV.TaskStart;
-                % TODO: add function to select current reward amount based on time or
-                %       number of consecutive correct trials preceding the current one.
-
-                p.trial.reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
-
-                pds.reward.give(p, p.trial.reward.Curr);
-                % ND_CtrlMsg(p, ['Reward: ', num2str(p.trial.task.Reward.Curr), ' seconds']);
-
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
+                Task_Reward(p);
             end
 
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitRelease
         %% Wait for joystick release after missed response    FalseStart
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-                p.trial.EV.JoyRelease = p.trial.CurTime;
-                %ND_CtrlMsg(p, 'Late Release');
-                pds.tdt.strobe(p.trial.event.JOY_RELEASE);  
-                pds.tdt.strobe(p.trial.event.RESP_LATE);               
-
                 Response_JoyRelease(p);
-
-                % use it as optional release reward if not full task is used
-                if(p.trial.task.Reward.Pull && ~p.trial.task.FullTask)
-                    pds.reward.give(p, p.trial.task.Reward.PullRew);
-                end
-
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                Response_Late(p);
             end
 
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
-
-            if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
-                
-                p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.ITI;
-                %ND_CtrlMsg(p, ['Correct: next trial in ', num2str(p.trial.task.Timing.ITI, '%.4f'), 'seconds.']);
-
-                p.trial.CurrEpoch = p.trial.epoch.ITI;
-
-            else
-                p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
-                %ND_CtrlMsg(p, ['Error: next trial in ', num2str(p.trial.task.Timing.ITI, '%.4f'), 'seconds.']);
-
-                p.trial.CurrEpoch = p.trial.epoch.ITI;
-            end
-            
+        % set timer for intertrial interval            
             Task_OFF(p);
 
         % ----------------------------------------------------------------%
@@ -284,7 +242,7 @@ function TaskDesign(p)
             end
     end  % switch p.trial.CurrEpoch
 
-% ------------------------------------------------------------------------%
+% ####################################################################### %
 function TaskDraw(p)
 %% show epoch dependent stimuli
 % go through the task epochs as defined in TaskDesign and draw the stimulus
@@ -317,22 +275,21 @@ function TaskDraw(p)
 
 % ####################################################################### %
 %% additional inline functions that
+% ####################################################################### %
 
-% ------------------------------------------------------------------------%
+% ####################################################################### %
 function TrialOn(p)
 %% show a frame to indicate the trial is active
 
     Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.TrialStart, ...
                         p.trial.task.FrameRect , p.trial.task.FrameWdth);
 
-
-% ------------------------------------------------------------------------%
+% ####################################################################### %
 function Target(p, colstate)
 %% show the target item with the given color
     Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(colstate), p.trial.task.TargetRect);
 
-
-% ------------------------------------------------------------------------%
+% ####################################################################### %
 function Trial2Ascii(p, act)
 %% Save trial progress in an ASCII table
 % 'init' creates the file with a header defining all columns
