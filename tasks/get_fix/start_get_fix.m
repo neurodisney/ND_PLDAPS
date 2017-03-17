@@ -47,8 +47,9 @@ SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states
 % If there are modification from the default settings needed, copy the
 % needed lines from ND_RigDefaults and alter the values here.
 
-SS.display.bgColor    = [50, 50, 50] / 255;  % change background color
+SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
+SS.behavior.fixation.FixScale = [100, 100]; 
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%

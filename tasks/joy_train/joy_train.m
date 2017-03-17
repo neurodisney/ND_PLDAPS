@@ -280,13 +280,8 @@ function TaskDesign(p)
         %% Wait for for reward
         % add error condition for new press
             if(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
-                p.trial.EV.Reward = p.trial.CurTime - p.trial.EV.TaskStart;
-
-                p.trial.reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
-
-                pds.reward.give(p, p.trial.reward.Curr);
-
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
+                Task_Reward(p);
             end
 
         % ----------------------------------------------------------------%
@@ -305,15 +300,7 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
-
-            if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
-                p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.ITI;
-                p.trial.CurrEpoch = p.trial.epoch.ITI;
-            else
-                p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
-                p.trial.CurrEpoch = p.trial.epoch.ITI;
-            end
-            
+        % set timer for intertrial interval
             Task_OFF(p);
 
         % ----------------------------------------------------------------%

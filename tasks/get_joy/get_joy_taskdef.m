@@ -12,15 +12,11 @@ function p = get_joy_taskdef(p)
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
-
-
-% ------------------------------------------------------------------------%
-%% Condition/Block design
 p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % ------------------------------------------------------------------------%
 %% Reward
-p.trial.task.Reward.Pull    = 1;          % If 1 then give reward for pulling the joystick
+p.trial.task.Reward.Pull    = 0;          % If 1 then give reward for pulling the joystick
 p.trial.task.Reward.PullRew = 0.05;        % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
 
 p.trial.task.Reward.RewTrain  =   1;      % give a series of rewards during hold time
