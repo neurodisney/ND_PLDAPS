@@ -90,7 +90,7 @@ ND_CtrlMsg(p, p.trial.SmryStr);
 % ------------------------------------------------------------------------%
 %% frame rate history
 %%% prepare to plot frame rate history on screen
-% TODO: what exactly is this doing? Is it needed? 
+% WZ TODO: what exactly is this doing? Is it needed? 
 if(p.trial.pldaps.draw.framerate.use)           
     p.trial.pldaps.draw.framerate.nFrames = round(p.trial.pldaps.draw.framerate.nSeconds / p.trial.display.ifi);
     p.trial.pldaps.draw.framerate.data    = zeros(p.trial.pldaps.draw.framerate.nFrames, 1); %holds the data
@@ -106,7 +106,18 @@ end
 % ------------------------------------------------------------------------%
 %% Initialize default trial control variables
 p.trial.CurrEpoch             = NaN;  % keep track of task epochs
-p.trial.task.Timing.WaitTimer = NaN;  % Initialize variable that contains a timer  # TODO: WZ: make it p.trial.WaitTimer, p.trial.Timer.WaitTimer?
 p.trial.CurTime               = NaN;  % keep track of current time
 p.trial.task.Reward.Curr      = p.trial.reward.defaultAmount;  % expected reward amount (set to default amount)
+
+% ------------------------------------------------------------------------%
+%% Initialize default Timer
+p.trial.Timer.Wait     = 0; % general timer that waits for an amount of time to expire  
+p.trial.Timer.Reward   = 0; % for series of rewards, this timer defines the gap between subsquent reward pulses
+p.trial.Timer.FixBreak = 0; % if gaze got out fixation window, this timer is set to ensure a certain leave
+p.trial.Timer.StimChng = 0; % if series of stimuli is shown this timer defines the change between subsequent stimuli
+p.trial.Timer.PhD      = 0; % timer to define state change of the photodiode 
+p.trial.Timer.ITI      = 0; % when does the intertrial interval expire and the next trial start?
+
+
+
 

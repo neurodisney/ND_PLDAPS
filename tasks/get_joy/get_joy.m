@@ -143,7 +143,7 @@ function TaskSetUp(p)
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
 
-    p.trial.task.Reward.Timer = 0; % set zero to start with a reward upon press
+    p.trial.Timer.Reward = 0; % set zero to start with a reward upon press
 
 % ####################################################################### %
 function TaskDesign(p)
@@ -154,7 +154,7 @@ function TaskDesign(p)
         case p.trial.epoch.GetReady
         %% before the trial can start joystick needs to be in a released state
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-                p.trial.task.Timing.WaitTimer = GetSecs + p.trial.task.Timing.MinRel;
+                p.trial.Timer.Wait = GetSecs + p.trial.task.Timing.MinRel;
                 p.trial.CurrEpoch = p.trial.epoch.CheckBarRel;
             end
 
@@ -164,7 +164,7 @@ function TaskDesign(p)
                 % pressed again to quickly
                 Task_NotReady(p);  % Go directly to TaskEnd, do not start task, do not collect reward
 
-            elseif(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
+            elseif(p.trial.CurTime > p.trial.Timer.Wait)
             % joystick in a properly released state, let's start the trial
                 Task_Ready(p);               
             end
@@ -172,7 +172,7 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitStart
         %% Wait for joystick press
-            if(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
+            if(p.trial.CurTime > p.trial.Timer.Wait)
             % no trial initiated in the given time window
                 Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
 
@@ -188,7 +188,7 @@ function TaskDesign(p)
                 % we just got a press in time
                     Task_ON(p);
 
-                    p.trial.task.Timing.WaitTimer = p.trial.CurTime + p.trial.task.Timing.HoldTime;
+                    p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;
                     p.trial.CurrEpoch = p.trial.epoch.WaitGo;
                         
                     if(p.trial.task.Reward.Pull)
@@ -204,15 +204,15 @@ function TaskDesign(p)
                 Response_JoyRelease(p);
                 Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
 
-            elseif(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
+            elseif(p.trial.CurTime > p.trial.Timer.Wait)
                 Task_GoCue(p);
 
             elseif(p.trial.task.Reward.RewTrain)
                 % shoot of a train of rewards
-                if(p.trial.CurTime > p.trial.task.Reward.Timer)
+                if(p.trial.CurTime > p.trial.Timer.Reward)
                     cr_gap = ND_GetITI(p.trial.task.Reward.RewGapMin, ...
                                        p.trial.task.Reward.RewGapMax,[],[],[], 0.01);
-                    p.trial.task.Reward.Timer = p.trial.CurTime + p.trial.task.Reward.TrainRew  + cr_gap;
+                    p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.TrainRew  + cr_gap;
                                                                
                     pds.reward.give(p, p.trial.task.Reward.TrainRew);
                 end
@@ -221,7 +221,7 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitResponse
         %% Wait for joystick release
-            if(p.trial.CurTime > p.trial.task.Timing.WaitTimer)
+            if(p.trial.CurTime > p.trial.Timer.Wait)
                 Response_Miss(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
 
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
@@ -240,7 +240,7 @@ function TaskDesign(p)
         case p.trial.epoch.WaitReward
         %% Wait for for reward
         % add error condition for new press
-            if(p.trial.JoyState.Current > p.trial.task.Timing.WaitTimer)
+            if(p.trial.JoyState.Current > p.trial.Timer.Wait)
                 p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
                 Task_Reward(p);
             end
@@ -262,7 +262,7 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI
         %% inter-trial interval: wait before next trial to start
-            if(GetSecs > p.trial.task.Timing.WaitTimer)
+            if(GetSecs > p.trial.Timer.Wait)
                 p.trial.flagNextTrial = 1;
             end
     end   % switch p.trial.CurrEpoch
