@@ -4,5 +4,7 @@ function p = Response_JoyRelease(p)
 %
 % wolf zinke, March 2017
 
-p.trial.EV.JoyRelease = p.trial.CurTime - p.trial.EV.TaskStart;
+p.trial.EV.JoyRelease = p.trial.CurTime;
+
 pds.tdt.strobe(p.trial.event.JOY_RELEASE);
+

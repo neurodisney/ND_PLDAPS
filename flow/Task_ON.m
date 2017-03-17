@@ -6,7 +6,8 @@ function p = Task_ON(p)
 
 pds.tdt.strobe(p.trial.event.TASK_ON);
 
-p.trial.EV.StartRT = p.trial.CurTime - p.trial.EV.TaskStart;
+p.trial.EV.StartRT   = p.trial.CurTime - p.trial.EV.TaskStart;
+p.trial.EV.Initiated = p.trial.CurTime;
 
 if(p.trial.datapixx.TTL_trialOn)
     pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan,1);

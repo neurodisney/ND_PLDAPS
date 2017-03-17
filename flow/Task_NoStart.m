@@ -1,4 +1,4 @@
-function p = Task_NotReady(p)
+function p = Task_NoStart(p)
 % default actions when the task starts
 %
 %

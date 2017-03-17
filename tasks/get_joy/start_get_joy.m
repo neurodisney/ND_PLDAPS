@@ -1,4 +1,4 @@
-function start_get_joy(subjname, rig, experimenter)
+function p = start_get_joy(subjname, rig, experimenter)
 
 % use this script to define a default configuration in order to create a
 % pldaps object and run it with the joy_train trial function.
@@ -6,6 +6,54 @@ function start_get_joy(subjname, rig, experimenter)
 %
 % wolf zinke, Dec. 2016
 
+
+
+% ------------------------------------------------------------------------%
+%% load default settings into a struct
+SS = ND_RigDefaults;    % load default settings according to the current rig setup
+
+
+%% ################## Edit within the following block ################## %%
+
+%% Define task related functions
+
+% function to set up experiment (and maybe also including the trial function)
+exp_fun = 'get_joy';
+
+% define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
+SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
+SS.task.TaskDef  = 'get_joy_taskdef';  % function that provides task specific parameter definitions
+SS.plot.routine  = '';    % function for online plotting of session progress
+
+% ------------------------------------------------------------------------%
+%% Enable required components if needed
+% Most of the components are disabled as default. If needed for the task enable them here.
+SS.sound.use                  = 0; % no sound for now
+SS.behavior.fixation.use      = 0; % eye position is behavioral relevant
+SS.behavior.joystick.use      = 1; % joystick is behavioral relevant
+SS.plot.do_online             = 1; % run online data analysis between two subsequent trials
+SS.pldaps.nosave              = 0; % disable saving data to pds files
+SS.pldaps.draw.joystick.use   = 1; % draw joystick states on control screen
+SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
+SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
+SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
+
+SS.datapixx.useAsEyepos       = 1;
+SS.datapixx.useJoystick       = 1;
+
+SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states are called
+
+% ------------------------------------------------------------------------%
+%% make modifications of default settings
+% If there are modification from the default settings needed, copy the
+% needed lines from ND_RigDefaults and alter the values here.
+
+SS.display.bgColor    = [50, 50, 50] / 255;  % change background color
+SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
+SS.behavior.fixation.FixScale = [100, 100]; 
+
+%% ################## Edit within the preceding block ################### %%
+%% ### Do not change code below [unless you know what you are doing]! ### %%
 
 % ------------------------------------------------------------------------%
 %% Set default variables
@@ -26,36 +74,11 @@ if(~exist('experimenter','var') || isempty(experimenter))
     experimenter = getenv('USER');
 end
 
-% function to set up experiment (and maybe also including trial function)
-exp_fun = 'get_joy';
-
-% ------------------------------------------------------------------------%
-%% load default settings into a struct
-SS = ND_RigDefaults;    % load default settings according to the current rig setup
-
-% define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
-SS.pldaps.trialFunction = exp_fun; % This function is both, set-up for the experiment session as well as the trial function
-
-% ------------------------------------------------------------------------%
-%% make modifications of default settings
-% If there are modification from the default settings needed, copy the
-% needed lines from ND_RigDefaults and alter the values here.
-SS.sound.use          = 0;  % no sound for now
-SS.display.bgColor    = [0.35, 0.35, 0.35];
-SS.pldaps.draw.photodiode.use = 0;
-% prepare for eye tracking and joystick monitoring
-SS.mouse.useAsEyepos     = 0;
-SS.datapixx.useAsEyepos  = 0;
-SS.behavior.fixation.use = 0;
-
-SS.pldaps.nosave         = 0;  
-SS.pldaps.GetTrialStateTimes  = 1; 
-
 % ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);
 
-% keep rig/experimeter specific infroamtion
+% keep rig/experimenter specific inforamtion
 p.defaultParameters.session.rig          = rig;
 p.defaultParameters.session.experimenter = experimenter;
 
@@ -68,4 +91,7 @@ p.run;
 if(Datapixx('IsReady'))
     Datapixx('Close');
 end
+
+
+
 

@@ -21,6 +21,8 @@ disp('');
 
 p.defaultParameters.EV.TrialStart = NaN; % Trial start time
 p.defaultParameters.EV.TaskStart  = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
+p.defaultParameters.EV.TaskEnd    = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
+p.defaultParameters.EV.Initiated  = NaN; % animal intiated the task
 p.defaultParameters.EV.GoCue      = NaN; % Onset of Go-signal
 p.defaultParameters.EV.Reward     = NaN; % time of reward delivery
 p.defaultParameters.EV.StartRT    = NaN; % response time to start trial after active cue

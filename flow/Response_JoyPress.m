@@ -4,5 +4,6 @@ function p = Response_JoyPress(p)
 %
 % wolf zinke, March 2017
 
-p.trial.EV.JoyPress = p.trial.CurTime - p.trial.EV.TaskStart;
+p.trial.EV.JoyPress = p.trial.CurTime;
+
 pds.tdt.strobe(p.trial.event.JOY_PRESS);

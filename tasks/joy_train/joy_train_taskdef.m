@@ -6,8 +6,6 @@ function p = joy_train_taskdef(p)
 %
 % TODO: - Make sure that changed parameters are kept in the data file, i.e.
 %         that there is some log when changes happened
-%       - read in only changes in order to allow quicker manipulations via the
-%         keyboard without overwriting it every time by calling this routine
 %
 %
 % wolf zinke, Dec. 2016
