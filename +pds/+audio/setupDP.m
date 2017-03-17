@@ -1,4 +1,4 @@
-function p=setupDatapixxAudio(p)
+function p=setupDP(p)
 
 %instead of using psychportaudio, this setup uses the datapixx to generate
 %audio output
@@ -6,7 +6,7 @@ function p=setupDatapixxAudio(p)
 if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
 
     Datapixx('InitAudio');
-    Datapixx('SetAudioVolume', p.trial.sound.volume);   
+    Datapixx('SetAudioVolume', p.trial.sound.datapixxVolume);   
     Datapixx('RegWrRd');
     
     soundsDir = p.trial.pldaps.dirs.wavfiles;

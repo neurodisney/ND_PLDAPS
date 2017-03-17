@@ -1,4 +1,4 @@
-function p=playDatapixxAudio(p,soundName)
+function p=playDP(p,soundName)
 
 %play a sound that has been buffered in the datapixx audiobuffer
 %input: p pldaps structure
@@ -6,10 +6,10 @@ function p=playDatapixxAudio(p,soundName)
 
 if p.trial.sound.use
     
-    buf=p.trial.sound.(soundName).buf;
-    freq=p.trial.sound.(soundName).freq;
-    nSamples=p.trial.sound.(soundName).nSamples;
-    nChannels=p.trial.sound.(soundName).nChannels;
+    buf=p.trial.sound.datapixx.(soundName).buf;
+    freq=p.trial.sound.datapixx.(soundName).freq;
+    nSamples=p.trial.sound.datapixx.(soundName).nSamples;
+    nChannels=p.trial.sound.datapixx.(soundName).nChannels;
     
     if nChannels==1
         lrMode=0;
