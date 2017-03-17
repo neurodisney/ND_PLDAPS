@@ -15,7 +15,7 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
     soundDirFiles={soundDirFiles.name};
     soundFiles=find(~cellfun(@isempty,strfind(soundDirFiles,'.wav')));
    
-    nextBuf=0;
+    nextBuf=16e6;
     for iFile=soundFiles
        name= soundDirFiles{iFile};
        p.trial.sound.wavfiles.(name(1:end-4))=fullfile(soundsDir,name);
