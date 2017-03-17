@@ -32,6 +32,8 @@ p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given
 p.trial.task.Timing.WaitStart   = 2.50;   % maximal time period [s] in seconds to press the lever in order to start a trial.
 p.trial.task.Timing.WaitResp    = 2.50;   % Only response times [s] after this wait period will be considered stimulus driven responses
 
+p.trial.task.Timing.WaitFix     = 2.50;   % time window to allow gaze to get into fixation window in order to continue trial
+
 p.trial.task.Timing.MinRel      = 0.5;    % minimum time to consider a bar released prior trial start
 p.trial.task.Timing.minRT       = 0.20;   % If a response occurs prior this time it is considered an early response
 

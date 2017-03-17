@@ -8,7 +8,7 @@ timestamp = now;
 
 sesstm = (GetSecs - p.trial.timing.datapixxSessionStart) / 60;
 
-fprintf('%.13s \t-- trial %0.6d [%.5f] \n>>\t %s\n', ...
+fprintf('%.13s \t-- trial %0.4d [%.2f] \n>>\t %s\n\n', ...
               datestr(now,'HH:MM:SS:FFF'), p.trial.pldaps.iTrial, sesstm, msgstr);
 
 

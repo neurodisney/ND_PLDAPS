@@ -220,6 +220,7 @@ function TaskDesign(p)
                 Response_Miss(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 Response_JoyRelease(p);
+                p.trial.EV.RespRT = p.trial.EV.JoyRelease - p.trial.EV.GoCue;
                 
                 if(p.trial.EV.RespRT <  p.trial.task.Timing.minRT)
                 % premature response - too early to be a true response

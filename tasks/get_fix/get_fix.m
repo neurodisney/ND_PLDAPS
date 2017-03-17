@@ -154,7 +154,6 @@ function TaskDesign(p)
         %% Wait for joystick press
             if(p.trial.CurTime > p.trial.Timer.Wait)
             % no trial initiated in the given time window
-                %ND_CtrlMsg(p, 'No joystick press');
                 Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
                 Task_InitPress(p);
@@ -168,8 +167,8 @@ function TaskDesign(p)
                     Task_ON(p);
                     
                     % do full task, use other task epochs
-                    p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;
-                    p.trial.CurrEpoch = p.trial.epoch.WaitGo;
+                    p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.WaitFix;
+                    p.trial.CurrEpoch = p.trial.epoch.WaitFix;
 
                     if(p.trial.task.Reward.Pull)
                         pds.reward.give(p, p.trial.task.Reward.PullRew);
@@ -178,7 +177,22 @@ function TaskDesign(p)
             end
 
         % ----------------------------------------------------------------%
-        case p.trial.epoch.WaitGo
+        case p.trial.epoch.WaitFix
+        %% Fixation target shown, wait until gaze gets in there
+            if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) 
+            % early bar release before fixation obtained               
+                Response_JoyRelease(p);
+                Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
+            elseif(p.trial.FixState.Current == p.trial.FixState.FixIn)
+            % got fixation
+                p.trial.CurrEpoch = p.trial.epoch.Fixating;
+                
+            elseif(p.trial.CurTime > p.trial.Timer.Wait)
+                Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
+            end
+            
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.Fixating
         %% delay before response is needed
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release                
                 Response_JoyRelease(p);
@@ -194,6 +208,7 @@ function TaskDesign(p)
                 Response_Miss(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 Response_JoyRelease(p);
+                p.trial.EV.RespRT = p.trial.EV.JoyRelease - p.trial.EV.GoCue;
                 
                 if(p.trial.EV.RespRT <  p.trial.task.Timing.minRT)
                 % premature response - too early to be a true response
