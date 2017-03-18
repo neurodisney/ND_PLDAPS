@@ -40,6 +40,8 @@ SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
 SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 1;
 
+SS.behavior.fixation.required = 1; % fixation required for this task
+
 SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states are called
 
 % ------------------------------------------------------------------------%
@@ -50,6 +52,7 @@ SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states
 SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 SS.behavior.fixation.FixScale = [100, 100]; 
+
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%

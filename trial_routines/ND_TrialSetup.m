@@ -105,9 +105,10 @@ end
 
 % ------------------------------------------------------------------------%
 %% Initialize default trial control variables
-p.trial.CurrEpoch             = NaN;  % keep track of task epochs
-p.trial.CurTime               = NaN;  % keep track of current time
-p.trial.task.Reward.Curr      = p.trial.reward.defaultAmount;  % expected reward amount (set to default amount)
+p.trial.CurrEpoch                = NaN;  % keep track of task epochs
+p.trial.CurTime                  = NaN;  % keep track of current time
+p.trial.behavior.fixation.GotFix =   0;  % assume no fixation at task start
+p.trial.task.Reward.Curr         = p.trial.reward.defaultAmount;  % expected reward amount (set to default amount)
 
 % ------------------------------------------------------------------------%
 %% Initialize default Timer

@@ -66,6 +66,7 @@ p.defaultParameters.event.FIXSPOT_OFF   = 111;  % offset of fixation spot
 p.defaultParameters.event.FIXATION      = 1000; % valid fixation acquired
 p.defaultParameters.event.EYE_GO        = 1001; % eye movement required, eye leaves current fixation window
 p.defaultParameters.event.TGT_FIX       = 1002; % fixation of target item
+p.defaultParameters.event.FIX_BREAK     = 1003; % fixation of target item
 
 % refinement of fixation break times
 % ToDo: WZ - need to check what encodes should/need to be used as events and

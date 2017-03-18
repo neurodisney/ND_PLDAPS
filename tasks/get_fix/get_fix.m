@@ -124,6 +124,7 @@ function TaskSetUp(p)
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
         
     p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
+        
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -185,18 +186,45 @@ function TaskDesign(p)
                 Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
             elseif(p.trial.FixState.Current == p.trial.FixState.FixIn)
             % got fixation
-                p.trial.CurrEpoch = p.trial.epoch.Fixating;
+                pds.tdt.strobe(p.trial.event.FIXATION);
+                p.trial.Timer.Wait  = p.trial.CurTime + p.trial.task.Timing.HoldTime;
+                p.trial.EV.FixStart = p.trial.CurTime;
+                p.trial.CurrEpoch   = p.trial.epoch.Fixating;
+                p.trial.behavior.fixation.GotFix = 1;
                 
-            elseif(p.trial.CurTime > p.trial.Timer.Wait)
-                Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
+            elseif(p.trial.CurTime  > p.trial.Timer.Wait)
+            % trial offering ended    
+                if(p.trial.behavior.fixation.required)
+                    Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
+                else
+                    % ignore lack of fixation and continue
+                    p.trial.CurrEpoch   = p.trial.epoch.Fixating;
+                end
             end
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.Fixating
-        %% delay before response is needed
+        %% Animal keeps fixation and is pressing joystick
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release                
                 Response_JoyRelease(p);
                 Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
+            elseif(p.trial.FixState.Current == p.trial.FixState.FixOut) % fixation break               
+                if(p.trial.behavior.fixation.required)
+                    if(p.trial.behavior.fixation.GotFix == 1)
+                    % first time break detected    
+                        p.trial.behavior.fixation.GotFix = 0;
+                        p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.BreakTime;
+                    elseif(p.trial.FixState.Current == p.trial.FixState.FixIn)
+                    % gaze returned in time to be not a fixation break
+                        p.trial.behavior.fixation.GotFix = 1;
+                    
+                    elseif(p.trial.CurTime > p.trial.Timer.FixBreak)
+                    % out too long, it's a break    
+                        pds.tdt.strobe(p.trial.event.FIX_BREAK);
+                        p.trial.EV.FixBreak = p.trial.CurTime - p.trial.behavior.fixation.BreakTime;
+                        p.trial.CurrEpoch   = p.trial.epoch.TaskEnd; % Go directly to TaskEnd, do not continue task, do not collect reward
+                    end
+                end
             elseif(p.trial.CurTime > p.trial.Timer.Wait)
                 Task_GoCue(p);
             end

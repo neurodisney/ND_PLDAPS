@@ -62,7 +62,6 @@ else
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
         %% trial end
-
             p = ND_TrialCleanUpandSave(p); % end all trial related processes
 
 % ####################################################################### %
@@ -72,10 +71,12 @@ else
         %% AfterTrial
         % pass on information between trials
 %              p = ND_AfterTrial(p);
-%              ND_CtrlMsg(p, 'AfterTrial');
 
     end  %/ switch state
 
-    p.trial.CurTime = GetSecs;  % get the current time in order to use it for subsequent calls
+    %% get the current time
+    % Define it here at a clear time point and use it later on whenever the 
+    % current time is needed instead of calling GetSecs every time.
+    p.trial.CurTime = GetSecs;  
 
 end  %/  if(nargin == 1) [...] else [...]
