@@ -250,6 +250,7 @@ SS.key.debug  = 'd';
 SS.key.exe    = 'x';
 
 SS.key.CtrFix = 'z';  % set current eye position as center
+SS.key.FixReq = 'f';  % disable/enable fixation control
 SS.key.CtrJoy = 'j';  % set current joystick position as zero
 
 % ------------------------------------------------------------------------%

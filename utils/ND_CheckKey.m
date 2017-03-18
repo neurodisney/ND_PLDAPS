@@ -26,36 +26,59 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
 
     switch qp
 
+        % ----------------------------------------------------------------%
         case KbName(p.trial.key.reward)
+        %% reward
         % check for manual reward delivery via keyboard
             pds.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
 
+        % ----------------------------------------------------------------%
         case KbName(p.trial.key.CtrFix)
+        %% Center fixation    
         % set current eye position as expected fixation position
         if(p.trial.datapixx.useAsEyepos)
             p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset - p.trial.behavior.fixation.FixPos + ...
                                               [p.trial.eyeX, p.trial.eyeY];
-            %ND_CtrlMsg(p, ['fixation offset changed to ', num2str(p.trial.behavior.fixation.Offset)]);                              
+            ND_CtrlMsg(p, ['fixation offset changed to ', num2str(p.trial.behavior.fixation.Offset)]);                              
         end
         
+        % ----------------------------------------------------------------%
+        case KbName(p.trial.key.FixReq)
+        %% Fixation request    
+        % disable/enable requirement of fixation for the task
+            if(p.defaultParameters.behavior.fixation.use)
+                if(p.trial.behavior.fixation.required)
+                    p.trial.behavior.fixation.required = 0;
+                    ND_CtrlMsg(p, 'Fixation requirement disabled!');                              
+                else
+                    p.trial.behavior.fixation.required = 1;
+                    ND_CtrlMsg(p, 'Fixation requirement enabled!');                              
+                end
+            end
+        
+        % ----------------------------------------------------------------%
         case KbName(p.trial.key.CtrJoy)
+        %% Center joystick    
         % set current eye position as expected fixation position
         if(p.trial.datapixx.useJoystick)
             p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
         end
 
-        case KbName(p.trial.key.pause)
-        % pause trial
+        % ----------------------------------------------------------------%
+        case KbName(p.trial.key.pause)  
+        %% pause trial
             p.trial.pldaps.quit = 1;
             ShowCursor;
 
+        % ----------------------------------------------------------------%
         case KbName(p.trial.key.quit)
-        % quit experiment
+        %% quit experiment
             p.trial.pldaps.quit = 2;
             ShowCursor;
 
+        % ----------------------------------------------------------------%
         case KbName(p.trial.key.quit)
-        %  go into debug mode
+        %%  go into debug mode
             disp('stepped into debugger. Type return to start first trial...')
             keyboard %#ok<MCKBD>
             
