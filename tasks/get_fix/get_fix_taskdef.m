@@ -64,12 +64,11 @@ p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task
 % ------------------------------------------------------------------------%
 %% Fixation parameters
 p.trial.behavior.fixation.FixScale = [100, 100];  % scaling factor to match screen/dva [TODO: get from calibration]
-p.trial.behavior.fixation.FixWin   = 4;
 
-p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
 
 p.trial.task.FixWinPos_pxl = ND_cart2ptb(p, ND_dva2pxl(p.trial.behavior.fixation.FixPos, p));
 
+p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
 p.trial.task.fixrect = ND_GetRect(p.trial.task.FixWinPos_pxl, ...
                                   p.trial.behavior.fixation.FixWin_pxl);  % make sure that this will be defined in a variable way in the future
 

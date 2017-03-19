@@ -46,7 +46,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
         case KbName(p.trial.key.FixReq)
         %% Fixation request    
         % disable/enable requirement of fixation for the task
-            if(p.defaultParameters.behavior.fixation.use)
+            if(p.trial.behavior.fixation.use)
                 if(p.trial.behavior.fixation.required)
                     p.trial.behavior.fixation.required = 0;
                     ND_CtrlMsg(p, 'Fixation requirement disabled!');                              
@@ -56,6 +56,41 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 end
             end
         
+        % ----------------------------------------------------------------%
+        case KbName(p.trial.key.FixReq)
+        %% Fixation request    
+        % disable/enable requirement of fixation for the task
+            if(p.trial.behavior.fixation.use)
+                if(p.trial.behavior.fixation.required)
+                    p.trial.behavior.fixation.required = 0;
+                    ND_CtrlMsg(p, 'Fixation requirement disabled!');                              
+                else
+                    p.trial.behavior.fixation.required = 1;
+                    ND_CtrlMsg(p, 'Fixation requirement enabled!');                              
+                end
+            end
+            
+        % ----------------------------------------------------------------%
+        case KbName(p.trial.key.FixInc)
+        %% Fixation Window increase    
+            if(p.trial.behavior.fixation.use)
+                p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin + ...
+                                                   p.trial.behavior.fixation.FixWinStp;
+                p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
+                p.trial.task.fixrect = ND_GetRect(p.trial.task.FixWinPos_pxl, ...
+                                                  p.trial.behavior.fixation.FixWin_pxl);  % make sure that this will be defined in a variable way in the future
+            end
+        % ----------------------------------------------------------------%
+        case KbName(p.trial.key.FixDec)
+        %% Fixation Window increase    
+            if(p.trial.behavior.fixation.use)
+                p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin - ...
+                                                   p.trial.behavior.fixation.FixWinStp;
+                p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
+                p.trial.task.fixrect = ND_GetRect(p.trial.task.FixWinPos_pxl, ...
+                                                  p.trial.behavior.fixation.FixWin_pxl);  % make sure that this will be defined in a variable way in the future
+            end
+           
         % ----------------------------------------------------------------%
         case KbName(p.trial.key.CtrJoy)
         %% Center joystick    

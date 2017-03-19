@@ -122,8 +122,8 @@ p.defaultParameters.event.JOY_OFF    = 2111;      % joystick elevation below rel
 p.defaultParameters.event.PDFLASH    = 2010;      % onset of photo diode flash
 
 % feedback
-p.defaultParameters.event.REWARD     = 1003;      % reward delivery, irrespective if earned in task or manually given by experimenter
-p.defaultParameters.event.AUDIO_REW  = 1300;
+p.defaultParameters.event.REWARD     = 1005;      % reward delivery, irrespective if earned in task or manually given by experimenter
+p.defaultParameters.event.AUDIO_REW  = 1500;
 
 % analog output
 p.defaultParameters.event.AO_1       = 2311;

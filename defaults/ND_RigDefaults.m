@@ -189,6 +189,8 @@ SS.behavior.fixation.use       =  0;      % does this task require control of ey
 SS.behavior.fixation.required  =  0;      % If not required, fixation states will be ignored
 
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
+SS.behavior.fixation.FixWinStp = 0.25;    % change of the size of the fixation window upon key press
+
 SS.behavior.fixation.Offset    = [0 ,0];  % offset to get current position signal to FixPos
 SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window [dva]
 SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
@@ -200,7 +202,7 @@ SS.behavior.fixation.GotFix    = 0;       % minimum time [ms] to identify a fixa
 
 SS.pldaps.draw.eyepos.history    = 40;    % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz         = 8;     % size in pixels of the eye pos indicator
-SS.pldaps.draw.eyepos.fixwinwdth = 8;     % frame width of the fixation window in pixels
+SS.pldaps.draw.eyepos.fixwinwdth = 2;     % frame width of the fixation window in pixels
 
 % Define fixation states
 SS.FixState.Current    = NaN;
@@ -252,6 +254,9 @@ SS.key.exe    = 'x';
 SS.key.CtrFix = 'z';  % set current eye position as center
 SS.key.FixReq = 'f';  % disable/enable fixation control
 SS.key.CtrJoy = 'j';  % set current joystick position as zero
+
+SS.key.FixInc = '=+'; % increase size of fixation window
+SS.key.FixDec = '-_'; % Decrease size of fixation window
 
 % ------------------------------------------------------------------------%
 %% Online plots

@@ -203,7 +203,7 @@ function CheckUniqueNumbers(s)
     for(i=1:length(fldnms))
         if(~iscell(s.(fldnms{i})) && isnumeric(s.(fldnms{i})) && length(s.(fldnms{i})) == 1)
             if(any(epnum == s.(fldnms{i})))
-                error(['Duplicate number assignment found for field :',fldnms{i}, '!']);
+                error('Duplicate number assignment (%d) found for field %s!\n',s.(fldnms{i}), fldnms{i});
             end
             epnum(i) =  s.(fldnms{i});
         end

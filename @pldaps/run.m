@@ -108,37 +108,8 @@ try
             
             p.defaultParameters.pldaps.iTrial = trialNr;
 
-            %% update trial information
-            % Todo: - Maybe create a trial update function for easier control
-            %       - define 'editables', either as 2D cell array (variable
-            %         name and value) or text file for task parameters that
-            %         have to be updated between trials.
-            if(trialNr > 1)
-                % The old trial struct is still in memory
-                if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
-                    p.defaultParameters.LastHits = p.defaultParameters.LastHits + 1;     % how many correct trials since last error
-                    p.defaultParameters.NHits    = p.defaultParameters.NHits + 1;        % how many correct trials in total
-                else
-                    p.defaultParameters.LastHits = 0;     % how many correct trials since last error
-
-                    if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && ...
-                        p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)
-                        p.defaultParameters.NCompleted = p.defaultParameters.NCompleted + 1; % number of started trials (excluding not started trials)
-                    end
-                end
-
-                p.defaultParameters.blocks = p.trial.blocks;
-
-                % Define a set of variables that should be editable, i.e. pass on information by default
-                if(p.trial.datapixx.useJoystick)
-                    p.defaultParameters.behavior.joystick.Zero = p.trial.behavior.joystick.Zero;
-                end
-
-                if(p.trial.datapixx.useAsEyepos)
-                    p.defaultParameters.behavior.fixation.Offset = p.trial.behavior.fixation.Offset;
-                end
-            end
-
+            p = ND_UpdateTrial(p);
+            
             % ----------------------------------------------------------------%
             %% create new trial struct
 

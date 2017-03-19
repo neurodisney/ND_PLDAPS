@@ -56,8 +56,8 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.task.Timing.MinHoldTime = 0.2;
-    c1.task.Timing.MaxHoldTime = 0.4;
+    c1.task.Timing.MinHoldTime = 2.5;
+    c1.task.Timing.MaxHoldTime = 6;
 
     conditions = {c1};
 
@@ -284,7 +284,7 @@ function TaskDraw(p)
             TrialOn(p);
 
         % ----------------------------------------------------------------%
-        case p.trial.epoch.WaitGo
+        case {p.trial.epoch.WaitGo, p.trial.epoch.WaitFix, p.trial.epoch.Fixating}
         %% delay before response is needed
             TrialOn(p);
             Target(p, 'TargetOn');
