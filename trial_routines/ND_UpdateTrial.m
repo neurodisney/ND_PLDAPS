@@ -36,18 +36,13 @@ if(p.trial.datapixx.useAsEyepos)
     p.defaultParameters.behavior.fixation.Offset = p.trial.behavior.fixation.Offset;
 end
 
+%% keep fixation requirements
+if(p.trial.behavior.fixation.use)
+    p.defaultParameters.behavior.fixation.required = p.trial.behavior.fixation.required;
+end
 
 
 %% editable variables
-
-
-% keep fixation requirements
-% if(p.trial.behavior.fixation.use)
-%     p.defaultParameters.behavior.fixation.required = p.trial.behavior.fixation.required;
-%     p.defaultParameters.behavior.fixation.FixWin   = p.trial.behavior.fixation.FixWin;
-% end
-
-
 if(isfield(p.trial, 'editable') && ~ isempty(p.trial.editable))
     for(i=1:length(p.trial.editable))
         eval(['p.defaultParameters.',p.trial.editable{i},' = p.trial.',p.trial.editable{i},';']);

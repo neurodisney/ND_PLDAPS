@@ -188,11 +188,14 @@ SS.behavior.fixation.use       =  0;      % does this task require control of ey
 
 SS.behavior.fixation.required  =  0;      % If not required, fixation states will be ignored
 
+
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
 SS.behavior.fixation.FixWinStp = 0.25;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixGridStp = [2, 2]; % x,y coordinates in a 9pt grid
 
 SS.behavior.fixation.Offset    = [0 ,0];  % offset to get current position signal to FixPos
 SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window [dva]
+
 SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
 SS.behavior.fixation.FixScale  = [1 , 1]; % scaling factor to match screen/dva [TODO: get from calibration]
 

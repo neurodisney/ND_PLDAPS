@@ -90,6 +90,7 @@ else
         case p.trial.pldaps.trialStates.framePrepareDrawing
         %% Get ready to display
         % prepare the stimuli that should be shown, do some required calculations
+            KeyAction(p);
             TaskDesign(p);
             
         % ----------------------------------------------------------------%
@@ -301,6 +302,91 @@ function TaskDraw(p)
             TrialOn(p);
             Target(p, 'TargetDimm');
     end
+% ####################################################################### %
+function KeyAction(p)
+%% task specific action upon key press
+    if(~isempty(p.trial.LastKeyPress))
+
+        grdX = p.trial.behavior.fixation.FixGridStp(1);
+        grdY = p.trial.behavior.fixation.FixGridStp(2);
+
+        switch p.trial.LastKeyPress
+
+            case KbName('1')
+            p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
+            MoveFix(p);
+            
+            case KbName('2')
+            p.trial.behavior.fixation.FixPos = [    0, -grdY];
+            MoveFix(p);
+            
+            case KbName('3')
+            p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
+            MoveFix(p);
+            
+            case KbName('4')
+            p.trial.behavior.fixation.FixPos = [-grdX,     0];
+            MoveFix(p);
+            
+            case KbName('5')
+            p.trial.behavior.fixation.FixPos = [    0,     0];
+            MoveFix(p);
+            
+            case KbName('6')
+            p.trial.behavior.fixation.FixPos = [ grdX,    0];
+            MoveFix(p);
+            
+            case KbName('7')
+            p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
+            MoveFix(p);
+            
+            case KbName('8')
+            p.trial.behavior.fixation.FixPos = [    0,  grdY];
+            MoveFix(p);
+            
+            case KbName('9')
+            p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
+            MoveFix(p);
+            
+
+            case KbName('RightArrow')
+            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
+                                                  p.trial.behavior.fixation.FixWinStp;   
+            MoveFix(p);
+            
+            case KbName('LeftArrow')
+            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
+                                                  p.trial.behavior.fixation.FixWinStp;
+            MoveFix(p);
+            
+            case KbName('UpArrow')
+            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
+                                                  p.trial.behavior.fixation.FixWinStp;
+            MoveFix(p);
+            
+            case KbName('DownArrow')
+            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
+                                                  p.trial.behavior.fixation.FixWinStp;
+            MoveFix(p);
+        end
+    end
+
+
+% ####################################################################### %
+function MoveFix(p)
+%% displace fixation window and fixation target
+p.trial.behavior.fixation.FixPos_pxl = ND_cart2ptb(p, ND_dva2pxl(p.trial.behavior.fixation.FixPos, p));
+p.trial.task.fixrect       = ND_GetRect(p.trial.behavior.fixation.FixPos_pxl, ...
+                                        p.trial.behavior.fixation.FixWin_pxl);  
+% target item
+p.trial.task.TargetPos_dva = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
+
+% get dva values into psychtoolbox pixel values/coordinates
+p.trial.task.TargetPos_dva = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
+p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;
+p.trial.task.TargetPos_pxl = p.trial.behavior.fixation.FixPos_pxl;
+p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
+
 
 % ####################################################################### %
 %% additional inline functions that

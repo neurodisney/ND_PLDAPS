@@ -49,10 +49,11 @@ p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a tri
 %% Fixation parameters
 p.trial.behavior.fixation.FixScale = [100, 100];  % scaling factor to match screen/dva [TODO: get from calibration]
 
-p.trial.task.FixWinPos_pxl = ND_cart2ptb(p, ND_dva2pxl(p.trial.behavior.fixation.FixPos, p));
+p.trial.behavior.fixation.FixPos_pxl = ND_cart2ptb(p, ND_dva2pxl(p.trial.behavior.fixation.FixPos, p));
 
 p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
-p.trial.task.fixrect = ND_GetRect(p.trial.task.FixWinPos_pxl, ...
+
+p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos_pxl, ...
                                   p.trial.behavior.fixation.FixWin_pxl);  % make sure that this will be defined in a variable way in the future
 
 % ------------------------------------------------------------------------%
@@ -68,7 +69,7 @@ p.trial.task.TargetPos_dva = p.trial.behavior.fixation.FixPos;    % Stimulus dia
 
 % get dva values into psychtoolbox pixel values/coordinates
 p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
-p.trial.task.TargetPos_pxl = ND_cart2ptb(p, ND_dva2pxl(p.trial.task.FixWinPos_pxl, p));
+p.trial.task.TargetPos_pxl = p.trial.behavior.fixation.FixPos_pxl;
 p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
 
 % ------------------------------------------------------------------------%

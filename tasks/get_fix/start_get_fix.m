@@ -26,8 +26,7 @@ SS.plot.routine  = 'get_fix_plots';    % function for online plotting of session
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'behavior.fixation.FixWin'; 'behavior.fixation.required'; ...
-               'behavior.fixation.FixPos'};
+SS.editable = {'behavior.fixation.FixWin'; 'behavior.fixation.FixPos'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
@@ -58,6 +57,8 @@ SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 SS.behavior.fixation.FixScale = [100, 100]; 
 SS.behavior.fixation.FixWin   = 4;
+SS.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
+SS.behavior.fixation.FixWinStp = 0.5;    % change of the size of the fixation window upon key press
 
 
 %% ################## Edit within the preceding block ################### %%

@@ -1,4 +1,4 @@
-function qp = ND_CheckKey(p)
+function p = ND_CheckKey(p)
 %% read in keyboard presses
 % code based on pldap's default trial function.
 % check for key presses and act accordingly.
@@ -22,9 +22,9 @@ end
 
 if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key in the buffer, might be worth to modify it in a way that the full buffer is used.
 
-    qp = find(p.trial.keyboard.firstPressQ); % identify which key was pressed
+    p.trial.LastKeyPress = find(p.trial.keyboard.firstPressQ); % identify which key was pressed
 
-    switch qp
+    switch p.trial.LastKeyPress
 
         % ----------------------------------------------------------------%
         case KbName(p.trial.key.reward)
@@ -37,7 +37,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
         %% Center fixation    
         % set current eye position as expected fixation position
         if(p.trial.datapixx.useAsEyepos)
-            p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset - p.trial.behavior.fixation.FixPos + ...
+            p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset + p.trial.behavior.fixation.FixPos_pxl - ...
                                               [p.trial.eyeX, p.trial.eyeY];
             ND_CtrlMsg(p, ['fixation offset changed to ', num2str(p.trial.behavior.fixation.Offset)]);                              
         end
@@ -56,20 +56,6 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 end
             end
         
-        % ----------------------------------------------------------------%
-        case KbName(p.trial.key.FixReq)
-        %% Fixation request    
-        % disable/enable requirement of fixation for the task
-            if(p.trial.behavior.fixation.use)
-                if(p.trial.behavior.fixation.required)
-                    p.trial.behavior.fixation.required = 0;
-                    ND_CtrlMsg(p, 'Fixation requirement disabled!');                              
-                else
-                    p.trial.behavior.fixation.required = 1;
-                    ND_CtrlMsg(p, 'Fixation requirement enabled!');                              
-                end
-            end
-            
         % ----------------------------------------------------------------%
         case KbName(p.trial.key.FixInc)
         %% Fixation Window increase    
@@ -119,5 +105,5 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             
     end  %/ switch Kact
 else
-    qp = [];
+    p.trial.LastKeyPress = [];
 end %/ if(any(p.trial.keyboard.firstPressQ))

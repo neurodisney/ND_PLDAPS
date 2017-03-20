@@ -3,11 +3,6 @@ function p = ND_CheckFixation(p)
 % Read in the eye position signal and check how much it deviates from a
 % defined position.
 %
-% This currently is a direct take from ND_CheckJoystick and needs to be
-% adapted. p.trial.behavior.fixation.FixWin is used wrong right now,
-% because it is diameter in dva but needs to be radius and map to the
-% voltage.
-%
 % TODO: right now, fixation detection is based on some arbitrary pixel
 % values, needs to be changed to dva.
 %
@@ -23,7 +18,7 @@ if(p.trial.mouse.useAsEyepos)
     p.trial.mouse.Amp(sIdx) = sqrt((p.trial.mouse.X(sIdx) - p.trial.behavior.fixation.FixPos(1) - p.trial.behavior.fixation.Offset(1)).^2 + ...
                                    (p.trial.mouse.Y(sIdx) - p.trial.behavior.fixation.FixPos(2) - p.trial.behavior.fixation.Offset(2)).^2);
 
-    % calculate a moving average of the joystick position for display reasons
+    % calculate a moving average of the eye position for display reasons
     p.trial.eyeX   = mean(p.trial.mouse.X(  sIdx));
     p.trial.eyeY   = mean(p.trial.mouse.Y(  sIdx));
     p.trial.eyeAmp = mean(p.trial.mouse.Amp(sIdx));
@@ -31,14 +26,14 @@ else
     % TODO: Define sample based on a time period.
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
-    % calculate a moving average of the joystick position for display reasons
-    p.trial.eyeX   = p.trial.behavior.fixation.FixScale(1) * mean(p.trial.AI.Eye.X(sIdx)) - ...
+    % calculate a moving average of the eye position for display reasons
+    p.trial.eyeX   = p.trial.behavior.fixation.FixScale(1) * mean(p.trial.AI.Eye.X(sIdx)) + ...
                      p.trial.behavior.fixation.Offset(1);
-    p.trial.eyeY   = p.trial.behavior.fixation.FixScale(1) * mean(p.trial.AI.Eye.Y(sIdx)) - ...
+    p.trial.eyeY   = p.trial.behavior.fixation.FixScale(1) * mean(p.trial.AI.Eye.Y(sIdx)) + ...
                      p.trial.behavior.fixation.Offset(2);
 
-    p.trial.eyeAmp = sqrt( (p.trial.eyeX - p.trial.behavior.fixation.FixPos(1))^2 + ...
-                           (p.trial.eyeY - p.trial.behavior.fixation.FixPos(2))^2 );
+    p.trial.eyeAmp = sqrt((p.trial.behavior.fixation.FixPos(1) - p.trial.eyeX)^2 + ...
+                          (p.trial.behavior.fixation.FixPos(2) - p.trial.eyeY)^2 );
 end
 
 %% update eye position history (per frame)
@@ -49,11 +44,11 @@ if(p.trial.pldaps.draw.eyepos.use)
     p.trial.eyeY_hist = [p.trial.eyeXY_draw(2), p.trial.eyeY_hist(1:end-1)];
 end
 
-%% if relevant for task determine joystick state
+%% if relevant for task determine fixation state
 if(p.trial.behavior.fixation.use)
 
     switch p.trial.FixState.Current
-        %% wait for release
+        %% currently not fixating
         case p.trial.FixState.FixOut
             % all below threshold?
             if(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin_pxl/2 )
@@ -61,7 +56,7 @@ if(p.trial.behavior.fixation.use)
                 p.trial.FixState.Current = p.trial.FixState.FixIn;
             end
 
-        %% wait for press
+        %% gaze within fixation window
         case p.trial.FixState.FixIn
 
             % all above threshold?
@@ -83,7 +78,7 @@ if(p.trial.behavior.fixation.use)
                     p.trial.FixState.Current = NaN;
                 end
             else
-                error('Unknown joystick state!');
+                error('Unknown fixation state!');
             end
     end  % switch p.FixState.Current
 end  % if(p.trial.behavior.fixation.use)
