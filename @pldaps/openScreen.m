@@ -152,6 +152,51 @@ Screen('TextFont',p.defaultParameters.display.ptr,'Helvetica');
 Screen('TextSize',p.defaultParameters.display.ptr,16);
 Screen('TextStyle',p.defaultParameters.display.ptr,1);
 
+%% Push transformation matrices onto the graphics stack to change the origin and scale coordinates to degrees
+
+% Get the pixels per degree at the center of the screen
+p.trial.display.ppdCentral = tand(1) * p.trial.display.viewdist * p.trial.display.w2px; 
+
+% Translate the origin
+if isfield(p.trial.display, 'useCustomOrigin') && p.trial.display.useCustomOrigin ~= 0
+    
+    % If useCustomOrigin == 1, use a central origin
+    if p.trial.display.useCustomOrigin == 1
+        xTrans = p.trial.display.pWidth / 2;
+        yTrans = p.trial.display.pHeight / 2;
+    
+    % If useCustomOrigin == [x,y], set the origin to x,y expressed in pixels
+    elseif size(p.trial.display.useCustomOrigin) == 2
+        xTrans = p.trial.display.useCustomOrigin(1);
+        yTrans = p.trial.display.useCustomOrigin(2);
+        
+    % Otherwise give an error
+    else
+        error('pldaps:openScreen', 'Bad origin specified in p.trial.display.useCustomOrigin')
+    end
+    
+    Screen('glTranslate', p.trial.display.ptr, xTrans, yTrans)
+    p.trial.display.winRect = p.trial.display.winRect - [xTrans, yTrans, xTrans, yTrans];
+end
+
+% Scale the units to degrees of visual angle
+if isfield(p.trial.display, 'useDegreeUnits') && p.trial.display.useDegreeUnits ~= 0
+    
+    % If useDegreeUnits == 1, scale uniformly prioritizing accuracy in center of screen (may be slightly inaccurate)
+    if p.trial.display.useDegreeUnits == 1
+        xScaleFactor = p.trial.display.ppdCentral(1);
+        yScaleFactor = p.trial.display.ppdCentral(2);
+        
+        Screen('glScale', p.trial.display.ptr, xScaleFactor, yScaleFactor)
+        p.trial.display.winRect = p.trial.display.winRect ./ [xScaleFactor, yScaleFactor, xScaleFactor, yScaleFactor];
+    
+    % Otherwise give an error
+    else
+        error('pldaps:openScreen', 'Bad value for p.trial.display.useDegreeUnits')
+    end
+
+end
+
 %% Assign overlay pointer
 if p.defaultParameters.display.useOverlay==1
     if p.defaultParameters.datapixx.use

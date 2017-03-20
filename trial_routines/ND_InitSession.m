@@ -45,18 +45,22 @@ p.trial.SmryStr          = ' '; % text message with trial/session summary
 %% define drawing area for joystick representation
 if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
 
-    % hardcode right now location and size of joystick representation
-    p.trial.pldaps.draw.joystick.size   = [60 400];        % what area to occupy with joystick representation (pixel)
-    p.trial.pldaps.draw.joystick.pos    = [p.trial.display.pWidth - ...
-                                          (p.trial.display.pWidth/10 - 1.5*p.trial.pldaps.draw.joystick.size(1)), ...
-                                           round(p.trial.display.pHeight/2)]; % where to center joystick representation
+    % hardcoded location and size of joystick representation
+    if p.defaultParameters.display.useDegreeUnits
+        p.defaultParameters.pldaps.draw.joystick.size   = [1.5 8];
+    else
+        p.defaultParameters.pldaps.draw.joystick.size   = [60 400];        % what area to occupy with joystick representation (pixel)
+    end
+    
+    % Draw the joystick meter on the right side of the screen
+    p.defaultParameters.pldaps.draw.joystick.pos    = [p.trial.display.winRect(3) - 3 * p.defaultParameters.pldaps.draw.joystick.size(1), 0];
 
     p.trial.pldaps.draw.joystick.sclfac = p.trial.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
 
     p.trial.pldaps.draw.joystick.rect = ND_GetRect(p.trial.pldaps.draw.joystick.pos, ...
                                                                p.trial.pldaps.draw.joystick.size);
 
-    p.trial.pldaps.draw.joystick.levelsz =  round(p.trial.pldaps.draw.joystick.size .* [1.25, 0.01]);
+    p.defaultParameters.pldaps.draw.joystick.levelsz =  p.defaultParameters.pldaps.draw.joystick.size .* [1.25, 0.01];
 
     % initialize joystick level at zero
     cjpos = [p.trial.pldaps.draw.joystick.pos(1), p.trial.pldaps.draw.joystick.rect(2)];
