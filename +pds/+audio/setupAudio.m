@@ -1,6 +1,6 @@
 function p = setupAudio(p)
 % pds.audio.setupAudio  loads the audio files from dirs.wavfiles, then sets
-% up PsychportAudio and Datapixx to be able to play them
+% up PsychPortAudio and Datapixx to be able to play them
 
 if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
     
@@ -20,8 +20,8 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
         nextBuf = 16e6;
     end
     
-    % Setup to write to PsychportAudio, if enabled
-    if p.trial.sound.usePsychportAudio
+    % Setup to write to PsychPortAudio, if enabled
+    if p.trial.sound.usePsychPortAudio
         InitializePsychSound;
         
         % open a PsychPortAudio master device. Master devices themselves are
@@ -41,7 +41,7 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
         end
         
         % set the volume
-        PsychPortAudio('Volume', p.trial.sound.master, p.trial.sound.psychportVolume);
+        PsychPortAudio('Volume', p.trial.sound.master, p.trial.sound.psychPortVolume);
     end
     
     %% Iterate through all the wav files
@@ -73,8 +73,8 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
             end
         end
         
-        % Load the sound into device memory PsychportAudio
-        if p.trial.sound.usePsychportAudio
+        % Load the sound into device memory PsychPortAudio
+        if p.trial.sound.usePsychPortAudio
             pahandle = PsychPortAudio('OpenSlave', p.trial.sound.master, 1, nChannels);
             PsychPortAudio('FillBuffer',pahandle, wav)
             

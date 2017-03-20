@@ -96,13 +96,13 @@ SS.sound.use                                    = 0;     % toggle use of sound  
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
 
-% Datapixx sound and PsychportAudio can both be used simultaneously to
+% Datapixx sound and PsychPortAudio can both be used simultaneously to
 % maximize audio channels (Need to get datapixx working first)
 SS.sound.useDatapixx                            = 1;
 SS.sound.datpixxVolume                          = 1;
 
-SS.sound.usePsychportAudio                      = 0.9;
-SS.sound.psychportVolume                        = 0.9;
+SS.sound.usePsychPortAudio                      = 0.9;
+SS.sound.psychPortVolume                        = 0.9;
 % ------------------------------------------------------------------------%
 %% Plexon settings: interact with plexon MAP or Omniplex
 % spikeserver: configure our plexon spike server.
