@@ -139,13 +139,13 @@ function s=pldapsClassDefaultParameters(s)
 
 %s.	plexon.
 %s.	plexon.	spikeserver.
- s.	plexon.	spikeserver.	continuous = false;
- s.	plexon.	spikeserver.	eventsonly = false;
- s.	plexon.	spikeserver.	remoteip = 'xx.xx.xx.xx';
- s.	plexon.	spikeserver.	remoteport = 3333;
- s.	plexon.	spikeserver.	selfip = 'xx.xx.xx.xx';
- s.	plexon.	spikeserver.	selfport = 3332;
- s.	plexon.	spikeserver.	use = 0;
+%   s.	plexon.	spikeserver.	continuous = false;
+%   s.	plexon.	spikeserver.	eventsonly = false;
+%   s.	plexon.	spikeserver.	remoteip = 'xx.xx.xx.xx';
+%   s.	plexon.	spikeserver.	remoteport = 3333;
+%   s.	plexon.	spikeserver.	selfip = 'xx.xx.xx.xx';
+%   s.	plexon.	spikeserver.	selfport = 3332;
+%   s.	plexon.	spikeserver.	use = 0;
 
 %s.	session.
  s.	session.	experimentFile = [ ];

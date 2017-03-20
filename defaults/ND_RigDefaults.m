@@ -92,7 +92,7 @@ SS.sound.usePsychPortAudio                      = 0;      % This should be left 
 % ------------------------------------------------------------------------%
 %% Plexon settings: interact with plexon MAP or Omniplex
 % spikeserver: configure our plexon spike server.
-SS.plexon.spikeserver.use	                    = 0;     % toggle use of our plexon spike server
+% SS.plexon.spikeserver.use	                    = 0;     % toggle use of our plexon spike server
 
 % ------------------------------------------------------------------------%
 %% PLDAPS settings: pldaps core parameters
@@ -116,7 +116,7 @@ SS.pldaps.dirs.wavfiles                         = './beepsounds';  % directory f
 
 % cursor: control drawing of the mouse cursor
 SS.pldaps.draw.cursor.use                       = 0;     % enable drawing of the mouse cursor. (WZ TODO: Will we ever use it? Maybe get rid of it.)
-SS.pldaps.draw.cursor.sz                        = 8;     % cursor width in pixels 
+SS.pldaps.draw.cursor.sz                        = 8;     % cursor width in pixels
 
 % eyepos: control drawing of the eye position
 SS.pldaps.draw.eyepos.use                       = 0;     % enable drawing of the eye position.
@@ -169,7 +169,7 @@ SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) wit
 SS.reward.defaultAmount   = 0.05;  % Default amount of reward.=0; [in seconds]
 SS.reward.Lag             = 0.15;  % Delay between response and reward onset
 SS.datapixx.useForReward  = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
-SS.datapixx.adc.RewardChannel = 3; % Default ADC output channel 
+SS.datapixx.adc.RewardChannel = 3; % Default ADC output channel
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
