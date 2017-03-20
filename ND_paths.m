@@ -7,6 +7,9 @@
 %% Get the directory where this script resides to add the paths relatively to it
 [pathStr,~,~] = fileparts(mfilename('fullpath'));
 
+% cd to this directory
+cd(pathStr);
+
 % generate all paths from this root
 a = genpath(pathStr);
 b = textscan(a,'%s','delimiter',':');
