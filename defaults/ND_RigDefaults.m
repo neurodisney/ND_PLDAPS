@@ -199,7 +199,6 @@ SS.behavior.fixation.FixScale  = [1 , 1]; % scaling factor to match screen/dva [
 SS.behavior.fixation.BreakTime = 50;      % minimum time [ms] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;       % minimum time [ms] to identify a fixation break
 
-
 SS.pldaps.draw.eyepos.history    = 40;    % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz         = 8;     % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth = 2;     % frame width of the fixation window in pixels
@@ -257,6 +256,10 @@ SS.key.CtrJoy = 'j';  % set current joystick position as zero
 
 SS.key.FixInc = '=+'; % increase size of fixation window
 SS.key.FixDec = '-_'; % Decrease size of fixation window
+
+% ------------------------------------------------------------------------%
+%% initialize field for editable variables
+SS.editable   = {};
 
 % ------------------------------------------------------------------------%
 %% Online plots

@@ -25,6 +25,11 @@ SS.task.TaskDef  = 'get_fix_taskdef';  % function that provides task specific pa
 SS.plot.routine  = 'get_fix_plots';    % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
+%% define variables that need to passed to next trial
+SS.editable = {'behavior.fixation.FixWin'; 'behavior.fixation.required'; ...
+               'behavior.fixation.FixPos'};
+                  
+% ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
 SS.sound.use                  = 0; % no sound for now

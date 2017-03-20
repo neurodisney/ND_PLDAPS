@@ -108,7 +108,9 @@ try
             
             p.defaultParameters.pldaps.iTrial = trialNr;
 
-            p = ND_UpdateTrial(p);
+            if(trialNr > 1)
+                p = ND_UpdateTrial(p);
+            end
             
             % ----------------------------------------------------------------%
             %% create new trial struct
