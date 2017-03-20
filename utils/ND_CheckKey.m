@@ -34,31 +34,31 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
 
         % ----------------------------------------------------------------%
         case KbName(p.trial.key.CtrFix)
-        %% Center fixation    
+        %% Center fixation
         % set current eye position as expected fixation position
         if(p.trial.datapixx.useAsEyepos)
-            p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset + p.trial.behavior.fixation.FixPos_pxl - ...
-                                              [p.trial.eyeX, p.trial.eyeY];
-            ND_CtrlMsg(p, ['fixation offset changed to ', num2str(p.trial.behavior.fixation.Offset)]);                              
+            p.trial.behavior.fixation.Offset = [p.trial.eyeX, p.trial.eyeY] - p.trial.behavior.fixation.FixPos_pxl;
+                                              
+            ND_CtrlMsg(p, ['fixation offset changed to ', num2str(p.trial.behavior.fixation.Offset)]);
         end
-        
+
         % ----------------------------------------------------------------%
         case KbName(p.trial.key.FixReq)
-        %% Fixation request    
+        %% Fixation request
         % disable/enable requirement of fixation for the task
             if(p.trial.behavior.fixation.use)
                 if(p.trial.behavior.fixation.required)
                     p.trial.behavior.fixation.required = 0;
-                    ND_CtrlMsg(p, 'Fixation requirement disabled!');                              
+                    ND_CtrlMsg(p, 'Fixation requirement disabled!');
                 else
                     p.trial.behavior.fixation.required = 1;
-                    ND_CtrlMsg(p, 'Fixation requirement enabled!');                              
+                    ND_CtrlMsg(p, 'Fixation requirement enabled!');
                 end
             end
-        
+
         % ----------------------------------------------------------------%
         case KbName(p.trial.key.FixInc)
-        %% Fixation Window increase    
+        %% Fixation Window increase
             if(p.trial.behavior.fixation.use)
                 p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin + ...
                                                    p.trial.behavior.fixation.FixWinStp;
@@ -68,7 +68,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             end
         % ----------------------------------------------------------------%
         case KbName(p.trial.key.FixDec)
-        %% Fixation Window increase    
+        %% Fixation Window increase
             if(p.trial.behavior.fixation.use)
                 p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin - ...
                                                    p.trial.behavior.fixation.FixWinStp;
@@ -76,17 +76,17 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 p.trial.task.fixrect = ND_GetRect(p.trial.task.FixWinPos_pxl, ...
                                                   p.trial.behavior.fixation.FixWin_pxl);  % make sure that this will be defined in a variable way in the future
             end
-           
+
         % ----------------------------------------------------------------%
         case KbName(p.trial.key.CtrJoy)
-        %% Center joystick    
+        %% Center joystick
         % set current eye position as expected fixation position
         if(p.trial.datapixx.useJoystick)
             p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
         end
 
         % ----------------------------------------------------------------%
-        case KbName(p.trial.key.pause)  
+        case KbName(p.trial.key.pause)
         %% pause trial
             p.trial.pldaps.quit = 1;
             ShowCursor;
@@ -102,7 +102,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
         %%  go into debug mode
             disp('stepped into debugger. Type return to start first trial...')
             keyboard %#ok<MCKBD>
-            
+
     end  %/ switch Kact
 else
     p.trial.LastKeyPress = [];
