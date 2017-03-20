@@ -24,6 +24,9 @@ if (~exist('chan','var') || isempty(chan))
     chan = 3; 
 end
 
+% If Control-C is pressed stop flushing the reward
+cleanupObj = onCleanup(@cleanUp);
+
 sampleRate = 1000; % Hz 
 
 bufferData = [voltage * ones(1, round(opentime * sampleRate)) 0] ;
@@ -43,7 +46,16 @@ Datapixx RegWrRd;
 disp(['Waiting for reward flushing for ', num2str(opentime, '%.3f'), ' seconds ...']);
 
 pause(opentime);
+  
+    function cleanUp
+        display('Stopping reward flush')
+        buffer = [0];
+        Datapixx('WriteDacBuffer', buffer, 0, chan)
+        Datapixx('SetDacSchedule', 0, sampleRate, 1, chan);
+        Datapixx('StartDacSchedule');
+        Datapixx('RegWrRd');
+        
+        Datapixx('Close');
+    end
 
-% end
-Datapixx('Close');
-
+end
