@@ -1,0 +1,25 @@
+# NF: Currently I've generated these sounds using this 8-bit style sound generator:
+# https://www.leshylabs.com/apps/sfMaker/
+# You can use the "Sound Texts" below to restore the noises for tinkering.
+# Feel free to modify these sounds to better suit the needs of all the experiments.
+
+# PsychPortAudio, to avoid creating multiple virtual devices, requires that all the sound effects have the same sample rate. So I would suggest leaving the sample rate set at 48000 on the generator.
+# If using PLDAPS exclusively for sound playback this shouldn't be a problem.
+
+#reward.wav:
+W=48000,_=-0.9,A=3,b=0,s=8,S=100,g=0.561,l=0.3,L=2
+
+# breakfix.wav
+w=Sawtooth,W=48000,f=3877.103,t=86.789,T=0.153,_=0.207,d=116.401,D=0.104,p=1.021,b=0,r=0.5,s=38,S=161.788,z=Down,g=0.387,l=0.102,L=1.395
+
+# jackpot.wav
+W=48000,f=660,_=-0.9,A=3,b=0,r=2,s=16,S=100,g=0.561,l=0.6,L=2
+
+# incorrect.wav
+W=48000,f=300,p=1.725,b=0.5,r=0.8,s=41,S=2.065,z=Down,g=0.421,l=0.4,L=2
+
+# timeout.wav
+w=Noise,W=48000,f=130.667,v=195.737,V=27.061,t=6,T=1,_=0.014,d=14.337,D=0.212,p=1.9,a=0.2,A=0.2,b=0,r=0.2,s=16,S=2.352,g=0.143,l=0.3,L=2,e=Sine,N=2,F=2,E=12368
+
+# cue.wav
+W=48000,f=1495.359,p=1.376,a=0.8,A=0.8,b=3,r=1.9,g=0.246,l=0.05,L=2
