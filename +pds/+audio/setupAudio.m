@@ -13,7 +13,7 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
     % Setup to write to Datapixx, if enabled
     if p.trial.sound.useDatapixx
         Datapixx('InitAudio');
-        Datapixx('SetAudioVolume', p.trial.sound.datapixxVolume);
+        Datapixx('SetAudioVolume', [p.trial.sound.datapixxVolume, p.trial.sound.datapixxInternalSpeakerVolume]);
         Datapixx('RegWrRd');
         
         % Set the base buffer location where the sounds will be written
