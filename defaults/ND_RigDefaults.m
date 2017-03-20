@@ -99,9 +99,9 @@ SS.sound.useForReward                           = 1;     % toggle playing a soun
 % Datapixx sound and PsychPortAudio can both be used simultaneously to
 % maximize audio channels (Need to get datapixx working first)
 SS.sound.useDatapixx                            = 1;
-SS.sound.datpixxVolume                          = 1;
+SS.sound.datapixxVolume                          = 0.9;
 
-SS.sound.usePsychPortAudio                      = 0.9;
+SS.sound.usePsychPortAudio                      = 1;
 SS.sound.psychPortVolume                        = 0.9;
 % ------------------------------------------------------------------------%
 %% Plexon settings: interact with plexon MAP or Omniplex

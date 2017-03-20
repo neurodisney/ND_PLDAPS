@@ -6,10 +6,10 @@ function p=playDP(p,soundName)
 
 if p.trial.sound.use
     
-    buf=p.trial.sound.datapixx.(soundName).buf;
-    freq=p.trial.sound.datapixx.(soundName).freq;
-    nSamples=p.trial.sound.datapixx.(soundName).nSamples;
-    nChannels=p.trial.sound.datapixx.(soundName).nChannels;
+    buf=p.trial.sound.(soundName).buf;
+    freq=p.trial.sound.(soundName).sampleRate;
+    nSamples=p.trial.sound.(soundName).nSamples;
+    nChannels=p.trial.sound.(soundName).nChannels;
     
     if nChannels==1
         lrMode=0;
@@ -19,6 +19,7 @@ if p.trial.sound.use
     
     %set up audio schedule
     Datapixx('SetAudioSchedule', 0, freq, nSamples, lrMode, buf, []);
+    Datapixx('RegWrRd');
     
     %start playback (will stop on its own)
     Datapixx('StartAudioSchedule');

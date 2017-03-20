@@ -59,7 +59,7 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
         
         % Store the attributes of the sound
         nSamples = size(wav,2);
-        nChannels = size(wave,1);
+        nChannels = size(wav,1);
         p.trial.sound.(name).sampleRate = sampleRate;
         p.trial.sound.(name).nSamples = nSamples;
         p.trial.sound.(name).nChannels = nChannels;
