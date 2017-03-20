@@ -95,8 +95,14 @@ SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse t
 SS.sound.use                                    = 0;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
-SS.sound.volume                                 = 0.4;
-SS.sound.usePsychPortAudio                      = 0;      % This should be left to 0 since we are using datapixx
+
+% Datapixx sound and PsychportAudio can both be used simultaneously to
+% maximize audio channels (Need to get datapixx working first)
+SS.sound.useDatapixx                            = 1;
+SS.sound.datpixxVolume                          = 1;
+
+SS.sound.usePsychportAudio                      = 0.9;
+SS.sound.psychportVolume                        = 0.9;
 % ------------------------------------------------------------------------%
 %% Plexon settings: interact with plexon MAP or Omniplex
 % spikeserver: configure our plexon spike server.
@@ -112,8 +118,7 @@ SS.pldaps.maxTrialLength                        = 25;    % Maximum duration of a
 SS.pldaps.nosave                                = 0;     % disables saving of data when true. see .pldaps.save for more control
 SS.pldaps.pass                                  = 0;     % indicator of behavior (i.e. fixations) should always be assumed to be good.
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
-SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
-SS.pldaps.OpenScreenFunction          = 'openscrenn';   % function to be called to run a single Trial.
+SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.d
 % SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file. (WZ TODO: I think could be removed. File names generated automatically.)
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.

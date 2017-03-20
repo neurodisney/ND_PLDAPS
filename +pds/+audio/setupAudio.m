@@ -41,7 +41,7 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
         end
         
         % set the volume
-        PsychPortAudio('Volume', p.trial.sound.master, psychportVolume);
+        PsychPortAudio('Volume', p.trial.sound.master, p.trial.sound.psychportVolume);
     end
     
     %% Iterate through all the wav files
@@ -76,7 +76,9 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
         % Load the sound into device memory PsychportAudio
         if p.trial.sound.usePsychportAudio
             pahandle = PsychPortAudio('OpenSlave', p.trial.sound.master, 1, nChannels);
-            p.trial.sound.(name).pahandle = pahandle;
-            
             PsychPortAudio('FillBuffer',pahandle, wav)
-  
+            
+            p.trial.sound.(name).pahandle = pahandle;
+        end
+    end
+end
