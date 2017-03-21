@@ -78,8 +78,8 @@ SS.display.movie.width                          = [];    % width of the movie.
 SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encoding parameters
 
 % Use the coordinate frame transformations
-SS.display.useCustomOrigin                      = 0;    % 0 is off (use PTB standard origin in corner), 1 uses central origin, [x,y] uses custom pixel location as origin
-SS.display.useDegreeUnits                       = 0;    % 0 uses pixels, 1 uses uniform scaling to degrees priortizing accuracy near the center of the screen
+SS.display.useCustomOrigin                      = 1;    % 0 is off (use PTB standard origin in corner), 1 uses central origin, [x,y] uses custom pixel location as origin
+SS.display.useDegreeUnits                       = 1;    % 0 uses pixels, 1 uses uniform scaling to degrees priortizing accuracy near the center of the screen
 
 % ------------------------------------------------------------------------%
 %% EyeLink settings: Eyelink specific parameters
