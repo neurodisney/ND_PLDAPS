@@ -85,17 +85,17 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
             
             % Left 
             paLeft = PsychPortAudio('OpenSlave', p.trial.sound.master, 1, 1, [1]);
-            PsychPortAudio('FillBuffer',paLeft, wav(1,:))                    
+            PsychPortAudio('FillBuffer',paLeft, wav(1,:));                    
             p.trial.sound.(name).paLeft = paLeft;
             
             %Right
             paRight = PsychPortAudio('OpenSlave', p.trial.sound.master, 1, 1, [2]);
-            PsychPortAudio('FillBuffer',paRight, wav(2,:))                    
+            PsychPortAudio('FillBuffer',paRight, wav(2,:));                   
             p.trial.sound.(name).paRight = paRight;
             
             %Both
             paBoth = PsychPortAudio('OpenSlave', p.trial.sound.master, 1, 2, [1,2]);
-            PsychPortAudio('FillBuffer',paBoth, wav)                    
+            PsychPortAudio('FillBuffer',paBoth, wav);                    
             p.trial.sound.(name).paBoth = paBoth;
             
         end
