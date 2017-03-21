@@ -34,16 +34,16 @@ p = ND_GeneralTrialRoutines(p, state);
 % file. In this case p.defaultParameters.pldaps.trialFunction needs to be defined
 % here to refer to the file with the actual trial
 if(isempty(state))
-
+    
     % --------------------------------------------------------------------%
     %% Set initial parameters for the rf bar
     
-    p.trial.task.rfbar.length       =   100; % Length of the bar in degrees of visual angle
-    p.trial.task.rfbar.width        =   50;
-    p.trial.task.rfbar.pos          =   [500, 500];
+    p.trial.task.rfbar.length       =   8; % Length of the bar in degrees of visual angle
+    p.trial.task.rfbar.width        =   0.5;
+    p.trial.task.rfbar.pos          =   [0, 0];
     p.trial.task.rfbar.angle        =   0;
-
-
+    
+    
     %% Color definitions of stuff shown during the trial
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
@@ -72,7 +72,7 @@ if(isempty(state))
     
     % Initial Color is black
     p.trial.task.rfbar.color = p.trial.display.clut.Black;
-
+    
     %% define ascii output file
     % call this after ND_InitSession to be sure that output directory exists!
     
@@ -85,10 +85,10 @@ if(isempty(state))
     
     conditions = {c1};
     p = ND_GetConditionList(p, conditions, 1, 1);
-
+    
     % --------------------------------------------------------------------%
-
-% ####################################################################### %
+    
+    % ####################################################################### %
 else
     %% Subsequent calls during actual trials
     
@@ -105,31 +105,31 @@ else
         case p.trial.pldaps.trialStates.trialPrepare
             % Just prior to acutal trial start
             p.trial.EV.TrialStart = p.trial.CurTime;
-       
-        %################################################################%
-        % Done during main trial loop:
-        
+            
+            %################################################################%
+            % Done during main trial loop:
+            
         case p.trial.pldaps.trialStates.framePrepareDrawing
-        %% Get ready to display
-        % prepare the stimuli that should be shown, do some required calculations
+            %% Get ready to display
+            % prepare the stimuli that should be shown, do some required calculations
             
             TaskDesign(p);
             
-        % ----------------------------------------------------------------%
+            % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
-        %% Display stuff on the screen
-        % Just call graphic routines, avoid any computations
+            %% Display stuff on the screen
+            % Just call graphic routines, avoid any computations
             
             TaskDraw(p)
             
-        % ####################################################################### %
-        % DONE AFTER THE MAIN TRIAL LOOP:
-        
+            % ####################################################################### %
+            % DONE AFTER THE MAIN TRIAL LOOP:
+            
         case p.trial.pldaps.trialStates.trialCleanUpandSave
             disp('Task finished')
             %Task_Finish(p)
     end
-            
+    
 end
 
 end
@@ -137,7 +137,7 @@ end
 function TaskSetup(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
-    p.trial.CurrEpoch = p.trial.epoch.WaitExperimenter;
+p.trial.CurrEpoch = p.trial.epoch.WaitExperimenter;
 end
 
 function TaskDesign(p)
@@ -145,16 +145,16 @@ function TaskDesign(p)
 % This defines the behavior of the task. Controls the flow of the state
 % machine and determines the next epoch based off of the current epoch and
 % incoming data.
-    switch p.trial.CurrEpoch
+switch p.trial.CurrEpoch
+    
+    case p.trial.epoch.WaitExperimenter
+        if p.trial.CurTime > p.trial.EV.TrialStart + 10
+            p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+        end
         
-        case p.trial.epoch.WaitExperimenter
-            if p.trial.CurTime > p.trial.EV.TrialStart + 10
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-            end
-            
-        case p.trial.epoch.TaskEnd
-            p.trial.pldaps.quit = 1;
-    end
+    case p.trial.epoch.TaskEnd
+        p.trial.pldaps.quit = 1;
+end
 end
 
 function TaskDraw(p)
@@ -162,25 +162,25 @@ function TaskDraw(p)
 window = p.trial.display.overlayptr;
 rfbar = p.trial.task.rfbar;
 
-    switch p.trial.CurrEpoch
+switch p.trial.CurrEpoch
+    
+    case p.trial.epoch.WaitExperimenter
+        % Draw the bar stimuli by creating a custom coordinate frame
+        % for it. Then translate and rotate the correct amounts
+        Screen('glPushMatrix', window);
+        Screen('glTranslate', window, rfbar.pos(1), rfbar.pos(2) );
+        Screen('glRotate', window, rfbar.angle);
         
-        case p.trial.epoch.WaitExperimenter
-            % Draw the bar stimuli by creating a custom coordinate frame
-            % for it. Then translate and rotate the correct amounts
-            Screen('glPushMatrix', window);
-            Screen('glTranslate', window, rfbar.pos(1), rfbar.pos(2) );
-            Screen('glRotate', window, rfbar.angle);
-            DrawBar(window,rfbar.width,rfbar.length,rfbar.color);
-            Screen('glPopMatrix',window);
-            
-            pds.audio.playDatapixxAudio(p,'reward');
-            pause(2)
-            
-        case p.trial.epoch.TaskEnd
-            
-    end
+        DrawBar(window,rfbar.width,rfbar.length,rfbar.color);
+        
+        Screen('glPopMatrix',window);
+        pause(2)
+        
+    case p.trial.epoch.TaskEnd
+        
+end
 end
 
 function DrawBar(window,width,length,color)
-    Screen('FillRect', window, color, [-width/2.0, length/2.0, width/2.0, length/2.0])
+Screen('FillRect', window, color, [-width/2.0, -length/2.0, width/2.0, length/2.0])
 end
