@@ -113,6 +113,7 @@ else
             %% Get ready to display
             % prepare the stimuli that should be shown, do some required calculations
             
+            MouseInput(p);
             TaskDesign(p);
             
             % ----------------------------------------------------------------%
@@ -140,6 +141,17 @@ function TaskSetup(p)
 p.trial.CurrEpoch = p.trial.epoch.WaitExperimenter;
 end
 
+function MouseInput(p)
+    % Processes the mouse input.
+    % In this case, change in mouse x y is used to change the position of
+    % the rf bar
+    iSample = p.trial.mouse.samples;
+    
+    xPos = p.trial.mouse.X(iSample);
+    yPos = p.trial.mouse.Y(iSample);
+    fprintf('Mouse Pos: %.2f, %.2f\n', xPos, yPos);
+end
+
 function TaskDesign(p)
 %% main task outline
 % This defines the behavior of the task. Controls the flow of the state
@@ -148,9 +160,9 @@ function TaskDesign(p)
 switch p.trial.CurrEpoch
     
     case p.trial.epoch.WaitExperimenter
-        if p.trial.CurTime > p.trial.EV.TrialStart + 10
-            p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-        end
+%         if p.trial.CurTime > p.trial.EV.TrialStart + 10
+%             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+%         end
         
     case p.trial.epoch.TaskEnd
         p.trial.pldaps.quit = 1;
@@ -174,7 +186,6 @@ switch p.trial.CurrEpoch
         DrawBar(window,rfbar.width,rfbar.length,rfbar.color);
         
         Screen('glPopMatrix',window);
-        pause(2)
         
     case p.trial.epoch.TaskEnd
         
