@@ -20,24 +20,24 @@ p.trial.task.Reward.Pull    = 0;          % If 1 then give reward for pulling th
 p.trial.task.Reward.PullRew = 0.05;        % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
 
 p.trial.task.Reward.RewTrain  =   1;      % give a series of rewards during hold time
-p.trial.task.Reward.TrainRew  = 0.1;      % reward amount for during the burst train (if p.trial.task.Reward.RewTrain == 1)
+p.trial.task.Reward.TrainRew  = 0.25;      % reward amount for during the burst train (if p.trial.task.Reward.RewTrain == 1)
 p.trial.task.Reward.RewGapMin = 0.25;     % spacing between subsequent reward pulses
-p.trial.task.Reward.RewGapMax = 0.75;     % spacing between subsequent reward pulses
+p.trial.task.Reward.RewGapMax = 1.0;     % spacing between subsequent reward pulses
 p.trial.task.Reward.Timer     = NaN;      % initialize timer to control subsequent rewards
 
 p.trial.task.Reward.IncrConsecutive = 0;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.5, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Dur  = [0.65, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
 p.trial.task.Reward.Step = [2, 4];        % define the number of trials when to increase reward. Vector length can not be longer than p.trial.task.Reward.Dur
 
 p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.task.Timing.WaitStart   = 2.00;  % maximal time period [s] in seconds to press the lever in order to start a trial.
-p.trial.task.Timing.WaitResp    = 3.00;  % Only response times [s] after this wait period will be considered stimulus driven responses
+p.trial.task.Timing.WaitStart   = 2.50;  % maximal time period [s] in seconds to press the lever in order to start a trial.
+p.trial.task.Timing.WaitResp    = 2.50;  % Only response times [s] after this wait period will be considered stimulus driven responses
 
 p.trial.task.Timing.minRT       = 0.15;  % If a response occurs prior this time it is considered an early response
-p.trial.task.Timing.MinRel      = 1.0;    % minimum time to consider a bar released prior trial start
+p.trial.task.Timing.MinRel      = 0.75;    % minimum time to consider a bar released prior trial start
 
 % inter-trial interval
 p.trial.task.Timing.MinITI      = 0.25;    % minimum time period [s] between subsequent trials
