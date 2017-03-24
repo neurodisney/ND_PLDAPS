@@ -163,8 +163,7 @@ function MouseInput(p)
         % Load in variables from p
         iSample = p.trial.mouse.samples;
         
-        xPos = p.trial.mouse.X(iSample);
-        yPos = p.trial.mouse.Y(iSample);
+        [xPos, yPos] = p.trial.mouse.cursorSamples(:,iSample)';
         
         xLock = p.trial.mouse.xLock;
         yLock = p.trial.mouse.yLock;

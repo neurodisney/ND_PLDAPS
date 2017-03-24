@@ -11,8 +11,7 @@ function p = ND_CheckMouse(p)
 iSamples =    p.trial.mouse.samples+1;
 p.trial.mouse.samples = iSamples;
 p.trial.mouse.samplesTimes(iSamples) = GetSecs;
-p.trial.mouse.X(iSamples) = cursorX;
-p.trial.mouse.Y(iSamples) = cursorY;
+p.trial.mouse.cursorSamples(:, iSamples) = [cursorX; cursorY];
 
 %% Process Mouse buttons
 
