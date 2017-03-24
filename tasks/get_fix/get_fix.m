@@ -375,17 +375,14 @@ function KeyAction(p)
 % ####################################################################### %
 function MoveFix(p)
 %% displace fixation window and fixation target
-p.trial.behavior.fixation.FixPos_pxl = ND_cart2ptb(p, ND_dva2pxl(p.trial.behavior.fixation.FixPos, p));
-p.trial.task.fixrect       = ND_GetRect(p.trial.behavior.fixation.FixPos_pxl, ...
-                                        p.trial.behavior.fixation.FixWin_pxl);  
+p.trial.task.fixrect       = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+                                        p.trial.behavior.fixation.FixWin);  
 % target item
-p.trial.task.TargetPos_dva = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
+p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
 
 % get dva values into psychtoolbox pixel values/coordinates
-p.trial.task.TargetPos_dva = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
-p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;
-p.trial.task.TargetPos_pxl = p.trial.behavior.fixation.FixPos_pxl;
-p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
+p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;
+p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
 
 
 % ####################################################################### %

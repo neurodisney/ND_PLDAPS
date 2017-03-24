@@ -65,9 +65,9 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 if(p.trial.behavior.fixation.use)
                     p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin + ...
                                                        p.trial.behavior.fixation.FixWinStp;
-                    p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
-                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos_pxl, ...
-                                                      p.trial.behavior.fixation.FixWin_pxl);  % make sure that this will be defined in a variable way in the future
+                    %p.trial.behavior.fixation.FixWin = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
+                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+                                                      p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
                 end
             % ----------------------------------------------------------------%
             case KbName(p.trial.key.FixDec)
@@ -75,9 +75,9 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 if(p.trial.behavior.fixation.use)
                     p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin - ...
                                                        p.trial.behavior.fixation.FixWinStp;
-                    p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
-                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos_pxl, ...
-                                                      p.trial.behavior.fixation.FixWin_pxl);  % make sure that this will be defined in a variable way in the future
+                    %p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
+                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+                                                      p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
                 end
 
             % ----------------------------------------------------------------%

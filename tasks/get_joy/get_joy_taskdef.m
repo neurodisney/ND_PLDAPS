@@ -51,9 +51,8 @@ p.trial.task.Timing.PullTimeOut =  0;     % Minimum time [s] passed before a tri
 %% Stimulus parameters
 
 % Frame indicating active trial
-p.trial.task.FrameWdth  = 0.2; % hard-coded for now, make it more flexible
+p.trial.task.FrameWdth  = 0.25; % hard-coded for now, make it more flexible
 p.trial.task.FrameSize  = [18, 18]; % hard-coded for now, make it more flexible
-p.trial.task.FrameRect  = ND_GetRect(p.trial.display.ctr(1:2), p.trial.task.FrameSize);
 
 p.trial.task.FrameRect  = ND_GetRect([0,0], p.trial.task.FrameSize);
 

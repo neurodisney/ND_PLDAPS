@@ -219,7 +219,7 @@ SS.behavior.fixation.GotFix    = 0;       % minimum time [ms] to identify a fixa
 
 SS.pldaps.draw.eyepos.history    = 40;    % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz         = 8;     % size in pixels of the eye pos indicator
-SS.pldaps.draw.eyepos.fixwinwdth = 2;     % frame width of the fixation window in pixels
+SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2; % frame width of the fixation window in pixels
 
 % Define fixation states
 SS.FixState.Current    = NaN;

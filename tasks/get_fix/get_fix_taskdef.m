@@ -49,22 +49,23 @@ p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a tri
 %% Fixation parameters
 p.trial.behavior.fixation.FixScale = [10, 10];  % scaling factor to match screen/dva [TODO: get from calibration]
 
-p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos_pxl, ...
-                                  p.trial.behavior.fixation.FixWin_pxl);  % make sure that this will be defined in a variable way in the future
+p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+                                  p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
 
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
 % Frame indicating active trial
-p.trial.task.FrameWdth  = 20; % hard-coded for now, make it more flexible
-p.trial.task.FrameSize  = ND_dva2pxl([18 18], p); % hard-coded for now, make it more flexible
-p.trial.task.FrameRect  = ND_GetRect(p.trial.display.ctr(1:2), p.trial.task.FrameSize);
+p.trial.task.FrameWdth  = 0.25; % hard-coded for now, make it more flexible
+p.trial.task.FrameSize  = [18, 18]; % hard-coded for now, make it more flexible
+
+p.trial.task.FrameRect  = ND_GetRect([0,0], p.trial.task.FrameSize);
 
 % target item
 p.trial.task.TargetSz  = 1;   % Stimulus diameter in dva
 p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
 
 % get dva values into psychtoolbox pixel values/coordinates
-p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
+p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters

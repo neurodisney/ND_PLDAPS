@@ -41,31 +41,72 @@ p.trial.NCompleted       = 0;   % number of started trials
 p.trial.cPerf            = 0;   % current hit rate
 p.trial.SmryStr          = ' '; % text message with trial/session summary
 
+
+
+
+% % --------------------------------------------------------------------%
+% %% define drawing area for joystick representation
+% if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.useJoystick)
+% 
+%     % hardcode right now location and size of joystick representation
+%     p.defaultParameters.pldaps.draw.joystick.size   = [60 400];        % what area to occupy with joystick representation (pixel)
+%     if p.trial.display.useDegreeUnits
+%         p.trial.pldaps.draw.joystick.size = ND_pxl2dva(p.trial.pldaps.draw.joystick.size, p);
+%     end
+%     
+%     if p.defaultParameters.display.useCustomOrigin
+%         
+%     else
+%         p.defaultParameters.pldaps.draw.joystick.pos    = [p.defaultParameters.display.pWidth - ...
+%                                                           (p.defaultParameters.display.pWidth/10 - 1.5*p.defaultParameters.pldaps.draw.joystick.size(1)), ...
+%                                                           round(p.defaultParameters.display.pHeight/2)]; % where to center joystick representation
+%     end                                   
+%                                        
+%     if p.trial.display.useDegreeUnits
+%         p.trial.pldaps.draw.joystick.pos = ND_pxl2dva(p.trial.pldaps.draw.joystick.pos, p);
+%     end
+% 
+%     p.defaultParameters.pldaps.draw.joystick.sclfac = p.defaultParameters.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
+% 
+%     p.defaultParameters.pldaps.draw.joystick.rect = ND_GetRect(p.defaultParameters.pldaps.draw.joystick.pos, ...
+%                                                    p.defaultParameters.pldaps.draw.joystick.size);
+% 
+%     p.defaultParameters.pldaps.draw.joystick.levelsz =  round(p.defaultParameters.pldaps.draw.joystick.size .* [1.25, 0.01]);
+% 
+%     % initialize joystick level at zero
+%     cjpos = [p.defaultParameters.pldaps.draw.joystick.pos(1), p.defaultParameters.pldaps.draw.joystick.rect(2)];
+%     p.defaultParameters.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.defaultParameters.pldaps.draw.joystick.levelsz);
+% end
+
 % --------------------------------------------------------------------%
 %% define drawing area for joystick representation
 if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
-
+    p.trial.pldaps.draw.joystick.size   = [60 400];
+    
     % hardcoded location and size of joystick representation
-    if p.defaultParameters.display.useDegreeUnits
-        p.defaultParameters.pldaps.draw.joystick.size   = [1.5 8];
-    else
-        p.defaultParameters.pldaps.draw.joystick.size   = [60 400];        % what area to occupy with joystick representation (pixel)
+    if p.trial.display.useDegreeUnits
+        p.trial.pldaps.draw.joystick.size = ND_pxl2dva(p.trial.pldaps.draw.joystick.size, p);
     end
     
     % Draw the joystick meter on the right side of the screen
-    p.defaultParameters.pldaps.draw.joystick.pos    = [p.trial.display.winRect(3) - 3 * p.defaultParameters.pldaps.draw.joystick.size(1), 0];
+    p.trial.pldaps.draw.joystick.pos    = [p.trial.display.winRect(3) - 3 * p.defaultParameters.pldaps.draw.joystick.size(1), 0];
 
     p.trial.pldaps.draw.joystick.sclfac = p.trial.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
 
     p.trial.pldaps.draw.joystick.rect = ND_GetRect(p.trial.pldaps.draw.joystick.pos, ...
                                                                p.trial.pldaps.draw.joystick.size);
 
-    p.defaultParameters.pldaps.draw.joystick.levelsz =  p.defaultParameters.pldaps.draw.joystick.size .* [1.25, 0.01];
+    p.trial.pldaps.draw.joystick.levelsz =  p.trial.pldaps.draw.joystick.size .* [1.25, 0.01];
 
     % initialize joystick level at zero
     cjpos = [p.trial.pldaps.draw.joystick.pos(1), p.trial.pldaps.draw.joystick.rect(2)];
     p.trial.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.trial.pldaps.draw.joystick.levelsz);
 end
+
+%-------------------------------------------------------------------------%
+%% prepare fixation control display
+
+p.trial.pldaps.draw.eyepos.fixwinwdth = ND_pxl2dva(p.trial.pldaps.draw.eyepos.fixwinwdth_pxl, p);
 
 %-------------------------------------------------------------------------%
 %% Setup Photodiode stimuli
