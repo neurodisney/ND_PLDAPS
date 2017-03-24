@@ -43,6 +43,17 @@ if(isempty(state))
     p.trial.task.rfbar.pos          =   [0, 0];
     p.trial.task.rfbar.angle        =   0;
     
+    %% Setup mouse to move the bar manually
+    
+    % User will click to enable/diable moving 
+    p.trial.mouse.moveBar   = 1;
+    
+    % Lock the mouse to the center of the screen
+    p.trial.mouse.xLock     = 500; %p.trial.display.ctr(1);
+    p.trial.mouse.yLock     = 500; %p.trial.display.ctr(2);
+    SetMouse(p.trial.mouse.xLock,p.trial.mouse.yLock,0);
+    
+    
     
     %% Color definitions of stuff shown during the trial
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
@@ -145,11 +156,53 @@ function MouseInput(p)
     % Processes the mouse input.
     % In this case, change in mouse x y is used to change the position of
     % the rf bar
-    iSample = p.trial.mouse.samples;
     
-    xPos = p.trial.mouse.X(iSample);
-    yPos = p.trial.mouse.Y(iSample);
-    fprintf('Mouse Pos: %.2f, %.2f\n', xPos, yPos);
+    % Check if mouse binding is currently enabled
+    if p.trial.mouse.moveBar
+        
+        % Load in variables from p
+        iSample = p.trial.mouse.samples;
+        
+        xPos = p.trial.mouse.X(iSample);
+        yPos = p.trial.mouse.Y(iSample);
+        
+        xLock = p.trial.mouse.xLock;
+        yLock = p.trial.mouse.yLock;
+        
+        barPos = p.trial.task.rfbar.pos;
+        
+        % Check how far the mouse has moved from the lock position
+        delta = [ xPos - xLock, yPos - yLock];
+
+        % Move the position of the bar by the delta * some scaling
+        % coefficient
+        % Right now coefficient hard coded
+        p.trial.task.rfbar.pos = barPos + delta * 0.01;
+        
+        % Reset mouse postion to the lock position
+        SetMouse(xLock,yLock,0);
+        
+        % If a click occurs unlock the bar from the mouse
+        if p.trial.mouse.buttons(1)
+            p.trial.mouse.moveBar = 0;
+            ShowCursor;
+        end
+        
+    else
+        % If click occurs, reenable locking bar position to mouse
+        iSample = p.trial.mouse.samples;
+        if p.trial.mouse.buttons(1)
+            
+            p.trial.mouse.moveBar = 1;
+            HideCursor;
+            
+            % And lock the mouse back to the center
+            xLock = p.trial.mouse.xLock;
+            yLock = p.trial.mouse.yLock;
+            SetMouse(xLock,yLock,0);
+            
+        end
+    end   
 end
 
 function TaskDesign(p)
