@@ -51,17 +51,17 @@ p.trial.task.Timing.PullTimeOut =  0;     % Minimum time [s] passed before a tri
 %% Stimulus parameters
 
 % Frame indicating active trial
-p.trial.task.FrameWdth  = 20; % hard-coded for now, make it more flexible
-p.trial.task.FrameSize  = ND_dva2pxl([18 18], p); % hard-coded for now, make it more flexible
+p.trial.task.FrameWdth  = 0.2; % hard-coded for now, make it more flexible
+p.trial.task.FrameSize  = [18, 18]; % hard-coded for now, make it more flexible
 p.trial.task.FrameRect  = ND_GetRect(p.trial.display.ctr(1:2), p.trial.task.FrameSize);
 
-% target item
-p.trial.task.TargetSz_dva  = 4;          % Stimulus diameter in dva
-p.trial.task.TargetPos_dva = [0, 0];      % Stimulus diameter in dva25seconds
+p.trial.task.FrameRect  = ND_GetRect([0,0], p.trial.task.FrameSize);
 
-p.trial.task.TargetSz_pxl  = ND_dva2pxl(p.trial.task.TargetSz_dva, p); % Stimulus diameter in dva
-p.trial.task.TargetPos_pxl = ND_cart2ptb(p, ND_dva2pxl(p.trial.task.TargetPos_dva, p));
-p.trial.task.TargetRect    = ND_GetRect(p.trial.task.TargetPos_pxl, p.trial.task.TargetSz_pxl);
+% target item
+p.trial.task.TargetSz   = 4;          % Stimulus diameter in dva
+p.trial.task.TargetPos  = [0, 0];     % Stimulus diameter in dva25seconds
+
+p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
 
 % ------------------------------------------------------------------------%
 %% Joystick parameters

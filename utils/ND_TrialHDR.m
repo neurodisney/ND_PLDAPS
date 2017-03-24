@@ -20,7 +20,7 @@ pds.tdt.strobe(p.trial.event.TRIAL_HDR_ON);
 pds.tdt.strobe(p.trial.pldaps.iTrial);  % trial number
 
 % get time stamp as encoded for trial start
-cpos = find(p.trial.TrialStart, ':');
+cpos = find(p.trial.TrialStart == ':');
 if(length(cpos) < 3)
     error('Something unexpected happened with the time string for trial start!')
 else

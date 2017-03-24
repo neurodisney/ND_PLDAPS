@@ -38,7 +38,7 @@ end
 
 %% update eye position history (per frame)
 if(p.trial.pldaps.draw.eyepos.use)
-    p.trial.eyeXY_draw = ND_cart2ptb(p, [p.trial.eyeX, p.trial.eyeY]);
+    p.trial.eyeXY_draw = [p.trial.eyeX, p.trial.eyeY];
     
     p.trial.eyeX_hist = [p.trial.eyeXY_draw(1), p.trial.eyeX_hist(1:end-1)];
     p.trial.eyeY_hist = [p.trial.eyeXY_draw(2), p.trial.eyeY_hist(1:end-1)];
