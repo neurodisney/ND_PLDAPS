@@ -21,7 +21,7 @@ p.trial.mouse.buttonPressSamples( :, iSamples) = buttons';
 
 % Then, check whether the button being down is new for this frame
 % Store this in mouse.newButtons. 1 = newly pressed, 0 = no change, -1 = newly released
-lastButtons = p.trial.mouse.buttonPressSamples(:, iSamples - 1);
+lastButtons = p.trial.mouse.buttonPressSamples(:, max(iSamples - 1, 1));
 p.trial.mouse.newButtons = buttons' - lastButtons;
 
 
