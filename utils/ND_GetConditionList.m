@@ -1,7 +1,8 @@
 function p = ND_GetConditionList(p, cnd, maxTrials_per_BlockCond, maxBlocks)
 % generate sequence of blocks and conditions
-% 
-% TODO: add more flexibility for the randomization
+%
+% TODO: - add more flexibility for the randomization
+%       - allow to specify probabilities for each condition
 %
 % wolf zinke, Dec. 2016
 
@@ -23,4 +24,4 @@ end
 p.conditions   = cnd(CNDlst);
 p.trial.blocks = BLKlst; % WZ: added this to pldaps, seems that they do not use the concept of blocks
 
-p.defaultParameters.pldaps.finish = maxTrials; 
+p.defaultParameters.pldaps.finish = maxTrials;
