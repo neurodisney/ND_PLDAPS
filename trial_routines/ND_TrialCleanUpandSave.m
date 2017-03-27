@@ -24,10 +24,8 @@ p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
 
 vblTime = Screen('Flip', p.trial.display.ptr,0);
 
-p.trial.trialend                = vblTime;
-p.trial.trialduration           = vblTime - p.trial.trstart;
-
-p.trial.timing.datapixxTrialEnd = PsychDataPixx('GetPreciseTime');
+p.trial.trialend      = vblTime;
+p.trial.trialduration = vblTime - p.trial.trstart;
 
 %-------------------------------------------------------------------------%
 %% end DataPixx ( since we use it no if querry needed
