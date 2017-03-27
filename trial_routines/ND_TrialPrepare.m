@@ -38,8 +38,9 @@ if(p.trial.datapixx.use)
     p.trial.timing.datapixxTRIALSTART = pds.datapixx.flipBit(p.trial.event.TRIALSTART);  % start of trial
 end
 
+
 %-------------------------------------------------------------------------%
-%% Get last Screen FLip prior to trial
+%% Get last Screen Flip prior to trial
 % This should be the last step before the main trial loop starts
 % because it catches the screen flip that defines trial start
 

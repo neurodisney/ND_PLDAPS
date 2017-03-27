@@ -19,14 +19,16 @@ disp('');
 % This should be used to store times when these events happened (to data
 % file or if needed for later use in the task program)
 
-p.defaultParameters.EV.TrialStart = NaN; % Trial start time
-p.defaultParameters.EV.TaskStart  = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
-p.defaultParameters.EV.TaskEnd    = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
-p.defaultParameters.EV.Initiated  = NaN; % animal intiated the task
-p.defaultParameters.EV.GoCue      = NaN; % Onset of Go-signal
-p.defaultParameters.EV.Reward     = NaN; % time of reward delivery
-p.defaultParameters.EV.StartRT    = NaN; % response time to start trial after active cue
-p.defaultParameters.EV.RespRT     = NaN; % reaction time
+p.defaultParameters.EV.TrialStart  = NaN; % Trial start time
+p.defaultParameters.EV.TaskStart   = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
+p.defaultParameters.EV.TaskEnd     = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
+p.defaultParameters.EV.Initiated   = NaN; % animal intiated the task
+p.defaultParameters.EV.GoCue       = NaN; % Onset of Go-signal
+p.defaultParameters.EV.Reward      = NaN; % time of reward delivery
+p.defaultParameters.EV.StartRT     = NaN; % response time to start trial after active cue
+p.defaultParameters.EV.RespRT      = NaN; % reaction time
+p.defaultParameters.EV.DPX_TaskOn  = NaN; % Synch time with datapixx for task on
+p.defaultParameters.EV.DPX_TaskOff = NaN; %  Synch time with datapixx for task off
 
 % if joystick is used for behavior
 if(p.defaultParameters.behavior.joystick.use)

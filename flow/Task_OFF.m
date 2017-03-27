@@ -5,7 +5,8 @@ function p = Task_OFF(p)
 %
 % wolf zinke, March 2017
 
-pds.tdt.strobe(p.trial.event.TASK_OFF);
+tms = pds.tdt.strobe(p.trial.event.TASK_OFF);
+p.trial.EV.DPX_TaskOff = tms(1);
 
 p.trial.EV.TaskEnd = p.trial.CurTime;
 
