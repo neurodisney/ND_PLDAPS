@@ -5,8 +5,7 @@ A NeuroDisney flavor of the PLDAPS software provided by the Huk-Lab (https://git
 
 > Eastman, K.M. & Huk, A.C. (2012). PLDAPS: A hardware architecture and software toolbox for neurophysiology requiring complex visual stimuli and online behavioral control. *Frontiers in Neuroinformatics*, **6**:1. doi: 10.3389/fninf.2012.00001
 
-
-This repository contains a stripped down and slightly re-organized version of the PLDAPS version derived from the *openreception* branch (Version 4.2). ND_PLDAPS is tailored for the hardware used in the Disney-Lab and provides additional functions and task code.
+This repository contains a stripped down and slightly re-organized version of the PLDAPS version derived from the *openreception* branch (Version 4.2). ND_PLDAPS is tailored for the hardware used in the Disney-Lab and provides additional functions and task code. The software is under ongoing development and we do not guarantee that it will work for other experimental set-ups without putting a considerable effort into it. Our approach is to give up flexibility and generalizability of the code in favor of more accurate control of timings. Please feel free to use this code as inspiration and example, but do not expect that it will work for you out of the box. 
 
 
 
@@ -177,4 +176,3 @@ A set of functions that support running/processing experiments but are functiona
 Send a longer opening time to the reward system to allow flushing and cleaning.
 
 ***
-
