@@ -41,7 +41,6 @@ if(isempty(state))
     ND_DefineCol(p, 'TargetOn',   30, [1.00, 1.00, 1.00]);
     ND_DefineCol(p, 'TargetDimm', 31, [0.5, 0.5, 0.5]);
 
-
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
     % define conditions (conditions could be passed to the pldaps call as
@@ -54,17 +53,30 @@ if(isempty(state))
 
     % condition 1  : Target shown, rewarded if fixating in random intervals
     c1.Nr = 1;
-    c1.task.Reward.RewGapMin   = 0.4;   % spacing between subsequent reward pulses
-    c1.task.Reward.RewGapMax   = 0.8;   % spacing between subsequent reward pulses
-    c1.task.Timing.WaitFix     = 2.5;
-
+    c1.task.Reward.RewGapMin = 0.25;   % spacing between subsequent reward pulses
+    c1.task.Reward.RewGapMax = 0.5;   % spacing between subsequent reward pulses
+    c1.task.Timing.WaitFix   = 10;
+    c1.reward.Lag            = 0.075;
+    c1.task.Reward.TrainRew  = 0.25;
+    c1.task.Timing.MinITI    = 1.5;   % minimum time period [s] between subsequent trials
+    c1.task.Timing.MaxITI    = 2.5;   % maximum time period [s] between subsequent trials
+    c1.task.Timing.MinHoldTime = 10;   % minimum time to keep fixation
+    c1.task.Timing.MaxHoldTime = 15;   % maximum time to keep fixation
+    
     % condition 2  : blank screen, reward at random when looking to center of screen
     c2.Nr = 2;
-    c2.task.Reward.RewGapMin   = 0.25;   % spacing between subsequent reward pulses
-    c2.task.Reward.RewGapMax   = 0.25;   % spacing between subsequent reward pulses
-    c2.task.Timing.WaitFix     = 4;
-    c2.reward.Lag              = 0.075;
-    
+    c2.task.Reward.RewGapMin = 0.4;   % spacing between subsequent reward pulses
+    c2.task.Reward.RewGapMax = 0.4;   % spacing between subsequent reward pulses
+    c2.task.Timing.WaitFix   = 10;
+    c2.reward.Lag            = 0.075;
+    c2.task.Reward.TrainRew  = 0.5;
+    c2.task.Timing.MinITI    = 0.2;    % minimum time period [s] between subsequent trials
+    c2.task.Timing.MaxITI    = 0.2;    % maximum time period [s] between subsequent trials
+    c2.task.Reward.prob      = 0.25;   % probability of a random reward
+    c2.task.Timing.MinHoldTime = 10;    % minimum time to keep fixation
+    c2.task.Timing.MaxHoldTime = 15;      % maximum time to keep fixation
+
+    % make condition list
     conditions = {c1, c1, c1, c2};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
@@ -96,11 +108,7 @@ else
         case p.trial.pldaps.trialStates.framePrepareDrawing
         %% Get ready to display
         % prepare the stimuli that should be shown, do some required calculations
-            if(p.trial.Nr == 1)
-                FixTask(p);
-            else
-                RandRew(p);
-            end
+            RandRew(p);
 
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
@@ -148,6 +156,8 @@ function RandRew(p)
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.MinRel;
                 p.trial.CurrEpoch  = p.trial.epoch.CheckBarRel;
+            else
+                p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
             end
 
         % ----------------------------------------------------------------%
@@ -161,20 +171,45 @@ function RandRew(p)
             elseif(p.trial.CurTime > p.trial.Timer.Wait)
             % joystick in a properly released state, let's start the trial
                 Task_Ready(p);
-                p.trial.task.Good = 1;
-                p.trial.CurrEpoch  = p.trial.epoch.WaitFix; 
+                
+                if(p.trial.Nr == 2)
+                    p.trial.task.Good = 1;
+                    p.trial.CurrEpoch  = p.trial.epoch.WaitFix; 
+                    p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;    
+                else
+                    p.trial.CurrEpoch  = p.trial.epoch.WaitStart;                     
+                end
             end
             
         % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitStart
+        %% Wait for joystick press
+        
+            Task_WaitStart(p);
+
+            if(p.trial.task.Good)
+                p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;
+                p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
+
+                if(p.trial.task.Reward.Pull)
+                    pds.reward.give(p, p.trial.task.Reward.PullRew);
+                end
+            end
+            
+            % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
         %% Wait for gaze getting into fixation window
 
-            if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
+            if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold && p.trial.Nr == 2)
             % bar pressed, stop it here 
                 Response_JoyPress(p);
                 Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
-                disp('undesired Press!')
 
+            elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest && p.trial.Nr == 1)
+            % bar pressed, stop it here 
+                Response_JoyRelease(p);
+                Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
+                
             elseif(p.trial.behavior.fixation.GotFix == 0 && p.trial.FixState.Current == p.trial.FixState.FixIn)
             % got fixation
                 pds.tdt.strobe(p.trial.event.FIXATION);
@@ -182,26 +217,25 @@ function RandRew(p)
                 p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.Lag; 
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION;
 
-                disp('fixation!')
             elseif(p.trial.behavior.fixation.GotFix == 1 && p.trial.FixState.Current == p.trial.FixState.FixOut)
                 % first time break detected
                 p.trial.behavior.fixation.GotFix = 0;
                 pds.tdt.strobe(p.trial.event.FIX_BREAK);
 
-                disp('fix break!')
             elseif(p.trial.CurTime  > p.trial.Timer.Wait)
             % end of time
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;  
-                disp('end task!')
+                if(p.trial.Nr == 1)
+                    Task_GoCue(p);
+                else
+                    p.trial.CurrEpoch = p.trial.epoch.TaskEnd;  
+                end
 
             end
 
             if(p.trial.task.Good && p.trial.behavior.fixation.GotFix == 1 && p.trial.CurTime > p.trial.Timer.Reward)
-                disp('try reward!')
-
-                if(rand > p.trial.task.Reward.prob)
+                
+                if(p.trial.Nr == 1 || rand < p.trial.task.Reward.prob)
                     pds.reward.give(p, p.trial.task.Reward.TrainRew);
-                    disp('got reward!')
                 end
                 
                 cr_gap = ND_GetITI(p.trial.task.Reward.RewGapMin, ...
@@ -210,95 +244,6 @@ function RandRew(p)
                 p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.TrainRew  + cr_gap;
             end
                         
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.TaskEnd
-        %% finish trial and error handling
-        % set timer for intertrial interval
-            Task_OFF(p);
-
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.ITI
-        %% inter-trial interval: wait before next trial to start
-            Task_WaitITI(p);
-
-    end  % switch p.trial.CurrEpoch
-
-
-% ####################################################################### %
-function FixTask(p)
-%% show fixation spot and get fixation
-% Task outline for first condition
-
-    switch p.trial.CurrEpoch
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.GetReady
-        %% before the trial can start joystick needs to be in a released state
-            if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-                p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.MinRel;
-                p.trial.CurrEpoch  = p.trial.epoch.CheckBarRel;
-            end
-
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.CheckBarRel
-        %% make sure that the bar is fully release by waiting for a specified time
-        
-            if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
-            % pressed again to quickly
-                Task_NotReady(p);  % Go directly to TaskEnd, do not start task, do not collect reward
-            elseif(p.trial.CurTime > p.trial.Timer.Wait)
-            % joystick in a properly released state, let's start the trial
-                Task_Ready(p);
-            end
-
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.WaitStart
-        %% Wait for joystick press
-        
-            Task_WaitStart(p);
-
-            if(p.trial.task.Good)
-                p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.WaitFix;
-                p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
-
-                if(p.trial.task.Reward.Pull)
-                    pds.reward.give(p, p.trial.task.Reward.PullRew);
-                end
-            end
-
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.WaitFix
-        %% Fixation target shown, wait until gaze gets in there
-
-            Task_WaitFix(p);
-            
-            if(p.trial.task.Good && p.trial.CurTime  > p.trial.Timer.Wait)
-                p.trial.CurrEpoch    = p.trial.epoch.Fixating;
-                p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.Lag;
-            end
-
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.Fixating
-        %% Animal keeps fixation and is pressing joystick
-        
-            Task_Fixating(p);
-            
-            if(p.trial.task.Good)       
-            % shoot of a train of rewards              
-                 
-                if(p.trial.CurTime > p.trial.Timer.Reward)
-                    pds.reward.give(p, p.trial.task.Reward.TrainRew);
-
-                    cr_gap = ND_GetITI(p.trial.task.Reward.RewGapMin, ...
-                                       p.trial.task.Reward.RewGapMax,[],[],[], 0.01);
-
-                    p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.TrainRew  + cr_gap;
-                end                
-
-                if(p.trial.CurTime > p.trial.Timer.Wait)
-                    Task_GoCue(p);
-                end
-            end
-
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitResponse
         %% Wait for joystick release
@@ -352,7 +297,6 @@ function TaskDraw(p)
             TrialOn(p);
             Target(p, 'TargetDimm');
     end
-
 
 % ####################################################################### %
 %% additional inline functions that

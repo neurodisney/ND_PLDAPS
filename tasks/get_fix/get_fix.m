@@ -225,6 +225,7 @@ function TaskDesign(p)
                         pds.tdt.strobe(p.trial.event.FIX_BREAK);
                         p.trial.EV.FixBreak = p.trial.CurTime - p.trial.behavior.fixation.BreakTime;
                         p.trial.CurrEpoch   = p.trial.epoch.TaskEnd; % Go directly to TaskEnd, do not continue task, do not collect reward
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
                     end
                 end
             elseif(p.trial.CurTime > p.trial.Timer.Wait)
@@ -234,7 +235,13 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitResponse
         %% Wait for joystick release
-            if(p.trial.CurTime > p.trial.Timer.Wait)
+        
+            Task_CheckFix(p)
+            if(p.trial.task.Good == 0 && p.trial.behavior.fixation.GotFix == 0)
+                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd; % Go directly to TaskEnd, do not continue task, do not collect reward
+                
+            elseif(p.trial.CurTime > p.trial.Timer.Wait)
                 Response_Miss(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 Response_JoyRelease(p);

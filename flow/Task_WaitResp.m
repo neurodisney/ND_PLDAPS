@@ -1,4 +1,4 @@
-function p = Task_WaitFix(p)
+function p = Task_WaitResp(p)
 % default actions when the task starts
 %
 %

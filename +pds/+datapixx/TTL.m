@@ -27,7 +27,7 @@ if(nargin > 1)
 end
 
 if(nargin < 2)
-    dur = 0.0001; % a minimal time delay might be required to be detected by the TDT system
+    dur = 0.0005; % a minimal time delay might be required to be detected by the TDT system
 end
 
 %% select channels for the DIO TTL pulse
