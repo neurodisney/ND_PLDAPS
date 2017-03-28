@@ -153,8 +153,8 @@ function TaskDesign(p)
         case p.trial.epoch.GetReady
         %% before the trial can start joystick needs to be in a released state
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
-                p.trial.Timer.Wait = GetSecs + p.trial.task.Timing.MinRel;
-                p.trial.CurrEpoch = p.trial.epoch.CheckBarRel;
+                p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.MinRel;
+                p.trial.CurrEpoch  = p.trial.epoch.CheckBarRel;
             end
 
         case p.trial.epoch.CheckBarRel

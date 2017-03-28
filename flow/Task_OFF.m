@@ -5,7 +5,7 @@ function p = Task_OFF(p)
 %
 % wolf zinke, March 2017
 
-tms = pds.tdt.strobe(p.trial.event.TASK_OFF);
+tms = pds.tdt.strobe(p.trial.event.TASK_OFF); % WZ ToDo: Utilize the other timings for TDT synch?
 p.trial.EV.DPX_TaskOff = tms(1);
 
 p.trial.EV.TaskEnd = p.trial.CurTime;

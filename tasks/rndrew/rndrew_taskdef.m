@@ -9,17 +9,14 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % ------------------------------------------------------------------------%
 %% Reward
-p.trial.task.Reward.Pull    = 1;          % If 1 then give reward for pulling the joystick
-p.trial.task.Reward.PullRew = 0.1;        % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
+p.trial.task.Reward.Pull     = 1;        % If 1 then give reward for pulling the joystick
+p.trial.task.Reward.PullRew  = 0.1;      % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
 
-p.trial.task.Reward.TrainRew  = 0.25;     % reward amount for during the burst train (if p.trial.task.Reward.RewTrain == 1)
-p.trial.task.Reward.prob      = 0.45;     % probability of a random reward
+p.trial.task.Reward.TrainRew = 0.25;     % reward amount for during the burst train (if p.trial.task.Reward.RewTrain == 1)
+p.trial.task.Reward.prob     = 0.65;     % probability of a random reward
 
-p.trial.task.Reward.IncrConsecutive = 1;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.6, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
-
-p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.defaultAmount = 0.75;     % just use one amount
+p.trial.task.Reward.ManDur   = 0.2;      % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
@@ -27,14 +24,17 @@ p.trial.task.Timing.WaitStart   = 2.50;   % maximal time period [s] in seconds t
 p.trial.task.Timing.WaitResp    = 2.50;   % Only response times [s] after this wait period will be considered stimulus driven responses
 
 p.trial.task.Timing.WaitFix     = 2.50;   % time window to allow gaze to get into fixation window in order to continue trial
-
+p.trial.behavior.fixation.BreakTime = 150;      % minimum time [ms] to identify a fixation break
 
 p.trial.task.Timing.MinRel      = 0.5;    % minimum time to consider a bar released prior trial start
 p.trial.task.Timing.minRT       = 0.20;   % If a response occurs prior this time it is considered an early response
 
+p.trial.task.Timing.MinHoldTime = 2.5;    % minimum time to keep fixation
+p.trial.task.Timing.MaxHoldTime = 5;      % maximum time to keep fixation
+
 % inter-trial interval
-p.trial.task.Timing.MinITI      = 0.25;   % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI      = 1.0;    % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI      = 2.0;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses

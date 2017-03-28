@@ -138,9 +138,10 @@ function TaskDesign(p)
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 %ND_CtrlMsg(p, 'bar released');
                 p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.MinRel;
-                p.trial.CurrEpoch = p.trial.epoch.CheckBarRel;
+                p.trial.CurrEpoch  = p.trial.epoch.CheckBarRel;
             end
 
+        % ----------------------------------------------------------------%
         case p.trial.epoch.CheckBarRel
         %% make sure that the bar is fully release by waiting for a specified time    
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
@@ -170,7 +171,7 @@ function TaskDesign(p)
                     
                     % do full task, use other task epochs
                     p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.WaitFix;
-                    p.trial.CurrEpoch = p.trial.epoch.WaitFix;
+                    p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
 
                     if(p.trial.task.Reward.Pull)
                         pds.reward.give(p, p.trial.task.Reward.PullRew);

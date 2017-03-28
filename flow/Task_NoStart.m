@@ -6,5 +6,7 @@ function p = Task_NoStart(p)
 
 p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 
+p.trial.task.Good = 0;
+
 % Go directly to TaskEnd, do not start task, do not collect reward
 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
