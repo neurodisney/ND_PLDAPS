@@ -35,7 +35,7 @@ function p = start(p)
 %     jk  modified 2014 new parameter structure, add flexibility, sample timing
 
 %% build the AdcChListCode
-if(isempty(p.trial.datapixx.adc.channels))
+
     return;
 end
 
