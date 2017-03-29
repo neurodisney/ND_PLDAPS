@@ -1,18 +1,18 @@
 function p = start(p)
 %pds.datapixx.adc.prepareTrial    start continuous datapixx data aquisition
 %
-% p = pds.datapixx.adc.start(p) 
+% p = pds.datapixx.adc.start(p)
 %
-% The function starts a continuous schedule of ADC data acquisition, stored 
+% The function starts a continuous schedule of ADC data acquisition, stored
 % on the datapixx buffer.
 % Data will be read in by repeatedly (once per frame or trial) calling
 % pds.datapixx.adc.getData (using Datapixx('ReadAdcBuffer')) and when
 % pds.datapixx.adc.stop is called, which will also stop adc data aquesition (Datapixx('StopAdcSchedule'))
 % parameters that are required by Datapixx are in the '.datapixx.adc.' fields.
-% 
+%
 % INPUTS
 %	p   - pldaps class
-% with parameters set: 
+% with parameters set:
 % p.trial
 %       .datapixx.useAsEyepos = false % in seconds
 %       .datapixx.adc.startDelay = 0 % in seconds
@@ -35,13 +35,14 @@ function p = start(p)
 %     jk  modified 2014 new parameter structure, add flexibility, sample timing
 
 %% build the AdcChListCode
-if ~p.trial.datapixx.use || isempty(p.trial.datapixx.adc.channels)
+if(isempty(p.trial.datapixx.adc.channels))
     return;
 end
+
 AdcChListCode = zeros(2,length(p.trial.datapixx.adc.channels));
 AdcChListCode(1,:)=p.trial.datapixx.adc.channels;
 if ~isempty(p.trial.datapixx.adc.channelModes)
-	AdcChListCode(2,:)=p.trial.datapixx.adc.channelModes; %i.e. channelMode can be a common scalar or a vector 
+	AdcChListCode(2,:)=p.trial.datapixx.adc.channelModes; %i.e. channelMode can be a common scalar or a vector
 end
 
 %% prepare mapping of the data
@@ -74,15 +75,15 @@ for imap=1:length(maps)
     if maps{imap}(1)=='.'
         levels(1)=[];
     end
-   
+
     Snew=repmat(S,[1 length(levels)]);
     [Snew.subs]=deal(levels{:});
     S2=S;
     S2.type='()';
     S2.subs={1:length(p.trial.datapixx.adc.channelMappingChannels{imap}), 1};
-    
+
     p.trial.datapixx.adc.channelMappingSubs{imap}=[S Snew S2];
-    
+
     if ~isempty(p.trial.datapixx.adc.XEyeposChannel) && ismember(p.trial.datapixx.adc.XEyeposChannel,p.trial.datapixx.adc.channelMappingChannels{imap})
         S2.subs{1}=find(p.trial.datapixx.adc.channelMappingChannels{imap}==p.trial.datapixx.adc.XEyeposChannel);
         p.trial.datapixx.adc.XEyeposChannelSubs=[S Snew S2];
@@ -109,5 +110,4 @@ Datapixx('RegWrRd')
 p.trial.datapixx.adc.startDatapixxTime = Datapixx('GetTime'); %GetSecs;
 p.trial.datapixx.adc.startPldapsTime = GetSecs;
 [getsecs, boxsecs, confidence] = PsychDataPixx('GetPreciseTime');
-p.trial.datapixx.adc.startDatapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence]; 
- 
+p.trial.datapixx.adc.startDatapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
