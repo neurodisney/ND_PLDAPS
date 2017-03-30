@@ -6,6 +6,8 @@ function ND_TrialHDR(p)
 %       - initialize to store information in the pldaps data file or additional text
 %         file about the header format to allow for easy/robust reconstruction
 %
+% BUG?  - TDT will not encode zero as value because it is no state change!
+%         This is a potential issue when encoding time stams...
 %
 % wolf zinke, Feb 2017
 
