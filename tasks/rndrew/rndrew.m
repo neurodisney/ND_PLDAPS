@@ -55,26 +55,26 @@ if(isempty(state))
     c1.Nr = 1;
     c1.task.Reward.RewGapMin = 0.25;   % spacing between subsequent reward pulses
     c1.task.Reward.RewGapMax = 0.5;   % spacing between subsequent reward pulses
-    c1.task.Timing.WaitFix   = 10;
-    c1.reward.Lag            = 0.075;
+    c1.task.Timing.WaitFix   = 4;
+    c1.reward.Lag            = 0.05;
     c1.task.Reward.TrainRew  = 0.25;
-    c1.task.Timing.MinITI    = 1.5;   % minimum time period [s] between subsequent trials
-    c1.task.Timing.MaxITI    = 2.5;   % maximum time period [s] between subsequent trials
-    c1.task.Timing.MinHoldTime = 10;   % minimum time to keep fixation
-    c1.task.Timing.MaxHoldTime = 15;   % maximum time to keep fixation
+    c1.task.Timing.MinITI    = 0.5;   % minimum time period [s] between subsequent trials
+    c1.task.Timing.MaxITI    = 1.0;   % maximum time period [s] between subsequent trials
+    c1.task.Timing.MinHoldTime = 1;   % minimum time to keep fixation
+    c1.task.Timing.MaxHoldTime = 5;   % maximum time to keep fixation
     
     % condition 2  : blank screen, reward at random when looking to center of screen
     c2.Nr = 2;
     c2.task.Reward.RewGapMin = 0.4;   % spacing between subsequent reward pulses
     c2.task.Reward.RewGapMax = 0.4;   % spacing between subsequent reward pulses
-    c2.task.Timing.WaitFix   = 10;
-    c2.reward.Lag            = 0.075;
+    c2.task.Timing.WaitFix   = 5;
+    c2.reward.Lag            = 0.05;
     c2.task.Reward.TrainRew  = 0.5;
     c2.task.Timing.MinITI    = 0.2;    % minimum time period [s] between subsequent trials
     c2.task.Timing.MaxITI    = 0.2;    % maximum time period [s] between subsequent trials
     c2.task.Reward.prob      = 0.25;   % probability of a random reward
-    c2.task.Timing.MinHoldTime = 10;    % minimum time to keep fixation
-    c2.task.Timing.MaxHoldTime = 15;      % maximum time to keep fixation
+    c2.task.Timing.MinHoldTime = 2.5;    % minimum time to keep fixation
+    c2.task.Timing.MaxHoldTime = 6;      % maximum time to keep fixation
 
     % make condition list
     conditions = {c1, c1, c1, c2};

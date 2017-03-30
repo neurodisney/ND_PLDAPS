@@ -159,7 +159,6 @@ SS.pldaps.pause.type                            = 1;     % Only type 1 is curren
 SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial parameters
 SS.pldaps.save.mergedData                       = 1;     % Save merged data. By default pldaps only saves changes to the trial struct in .data. When mergedData is enabled, the complete content of p.trial is saved to p.data. This can cause significantly larger files
 SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with the data from each trial?
-SS.pldaps.save.v73                              = 0;     % save as matlab version v73?
 
 % ------------------------------------------------------------------------%
 %% Screen/Display parameters

@@ -36,8 +36,6 @@ function p = start(p)
 
 %% build the AdcChListCode
 
-    return;
-end
 
 AdcChListCode = zeros(2,length(p.trial.datapixx.adc.channels));
 AdcChListCode(1,:)=p.trial.datapixx.adc.channels;

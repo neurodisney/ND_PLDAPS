@@ -263,11 +263,7 @@ try
         PDS.data = p.data;
         PDS.functionHandles = p.functionHandles;
 
-        if(p.defaultParameters.pldaps.save.v73)
-            save(p.defaultParameters.session.file, 'PDS','-mat','-v7.3')
-        else
-            save(p.defaultParameters.session.file, 'PDS','-mat')
-        end
+        save(p.defaultParameters.session.file, 'PDS','-mat','-v7.3')
     end
 
 % ----------------------------------------------------------------%
