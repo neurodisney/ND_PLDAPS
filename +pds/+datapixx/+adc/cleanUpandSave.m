@@ -1,12 +1,12 @@
 function p = cleanUpandSave(p)
 %pds.datapixx.adc.prepareTrial    clean up after the trial
 %
-% p = pds.datapixx.adc.cleanUpandSave(p) 
+% p = pds.datapixx.adc.cleanUpandSave(p)
 %
 % prunes unused preallocated dataspace.
 %     jk  2015 wrote it
 
-if ~p.trial.datapixx.use || isempty(p.trial.datapixx.adc.channels)
+if(isempty(p.trial.datapixx.adc.channels))
     return;
 end
 
@@ -16,7 +16,7 @@ maxDataSamplesPerTrial=size(p.trial.datapixx.adc.dataSampleTimes,2);
 
 %prune Data structs
 nMaps=length(p.trial.datapixx.adc.channelMappingChannels);
-if p.trial.datapixx.adc.dataSampleCount < maxDataSamplesPerTrial/2 
+if p.trial.datapixx.adc.dataSampleCount < maxDataSamplesPerTrial/2
     inds=1:p.trial.datapixx.adc.dataSampleCount;
         p.trial.datapixx.adc.dataSampleTimes=p.trial.datapixx.adc.dataSampleTimes(inds);
         for imap=1:nMaps
@@ -41,4 +41,3 @@ elseif p.trial.datapixx.adc.dataSampleCount < maxDataSamplesPerTrial
             p=subsasgn(p,iSub,[]);
         end
 end
- 

@@ -35,67 +35,66 @@ function p =  init(p)
 % 2016       jly add software overlay
 global dpx GL;
 
-if p.trial.datapixx.use
-    
-    if ~Datapixx('IsReady')
-        Datapixx('Open');
-    end
-    
-    % From help PsychDataPixx:
-    % Timestamping is disabled by default (mode == 0), as it incurs a bit of
-    % computational overhead to acquire and log timestamps, typically up to 2-3
-    % msecs of extra time per 'Flip' command.
-    % Buffer is collected at the end of the expeiment!
-    PsychDataPixx('LogOnsetTimestamps',p.trial.datapixx.LogOnsetTimestampLevel);%2
-    PsychDataPixx('ClearTimestampLog');
-    
-    %set getPreciseTime options, see testsuite/pldapsTimingTests for
-    %details
-    if ~isempty(p.trial.datapixx.GetPreciseTime.syncmode)
-        dpx.syncmode=p.trial.datapixx.GetPreciseTime.syncmode; %1,2,3
-    end
-    if ~isempty(p.trial.datapixx.GetPreciseTime.maxDuration)
-        dpx.maxDuration=p.trial.datapixx.GetPreciseTime.maxDuration;
-    end
-    if ~isempty(p.trial.datapixx.GetPreciseTime.optMinwinThreshold)
-        dpx.optMinwinThreshold=p.trial.datapixx.GetPreciseTime.optMinwinThreshold;
-    end
-    
-    if Datapixx('IsPropixx')
-        %this might not work reliably
-        if ~Datapixx('IsPropixxAwake')
-            Datapixx('SetPropixxAwake');
-        end
-        Datapixx('EnablePropixxLampLed');
-        
-        if p.trial.datapixx.enablePropixxRearProjection
-            Datapixx('EnablePropixxRearProjection');
-        else
-            Datapixx('DisablePropixxRearProjection');
-        end
-        
-        if p.trial.datapixx.enablePropixxCeilingMount
-            Datapixx('EnablePropixxCeilingMount');
-        else
-            Datapixx('DisablePropixxCeilingMount');
-        end
-    end
-    
-    p.trial.datapixx.info.DatapixxFirmwareRevision = Datapixx('GetFirmwareRev');
-    p.trial.datapixx.info.DatapixxRamSize = Datapixx('GetRamSize');
-       
-    %%% Open Datapixx and get ready for data aquisition %%%
-    Datapixx('StopAllSchedules');
-    Datapixx('DisableDinDebounce');
-    Datapixx('EnableAdcFreeRunning');
-    Datapixx('SetDinLog');
-    Datapixx('StartDinLog');
-    Datapixx('SetDoutValues',0);
-    Datapixx('RegWrRd');
-    
-    %start adc data collection if requested
-    pds.datapixx.adc.start(p);
+
+if ~Datapixx('IsReady')
+    Datapixx('Open');
 end
+
+% From help PsychDataPixx:
+% Timestamping is disabled by default (mode == 0), as it incurs a bit of
+% computational overhead to acquire and log timestamps, typically up to 2-3
+% msecs of extra time per 'Flip' command.
+% Buffer is collected at the end of the expeiment!
+PsychDataPixx('LogOnsetTimestamps',p.trial.datapixx.LogOnsetTimestampLevel);%2
+PsychDataPixx('ClearTimestampLog');
+
+%set getPreciseTime options, see testsuite/pldapsTimingTests for
+%details
+if ~isempty(p.trial.datapixx.GetPreciseTime.syncmode)
+    dpx.syncmode=p.trial.datapixx.GetPreciseTime.syncmode; %1,2,3
+end
+if ~isempty(p.trial.datapixx.GetPreciseTime.maxDuration)
+    dpx.maxDuration=p.trial.datapixx.GetPreciseTime.maxDuration;
+end
+if ~isempty(p.trial.datapixx.GetPreciseTime.optMinwinThreshold)
+    dpx.optMinwinThreshold=p.trial.datapixx.GetPreciseTime.optMinwinThreshold;
+end
+
+if Datapixx('IsPropixx')
+    %this might not work reliably
+    if ~Datapixx('IsPropixxAwake')
+        Datapixx('SetPropixxAwake');
+    end
+    Datapixx('EnablePropixxLampLed');
+
+    if p.trial.datapixx.enablePropixxRearProjection
+        Datapixx('EnablePropixxRearProjection');
+    else
+        Datapixx('DisablePropixxRearProjection');
+    end
+
+    if p.trial.datapixx.enablePropixxCeilingMount
+        Datapixx('EnablePropixxCeilingMount');
+    else
+        Datapixx('DisablePropixxCeilingMount');
+    end
+end
+
+p.trial.datapixx.info.DatapixxFirmwareRevision = Datapixx('GetFirmwareRev');
+p.trial.datapixx.info.DatapixxRamSize = Datapixx('GetRamSize');
+
+%%% Open Datapixx and get ready for data aquisition %%%
+Datapixx('StopAllSchedules');
+Datapixx('DisableDinDebounce');
+Datapixx('EnableAdcFreeRunning');
+Datapixx('SetDinLog');
+Datapixx('StartDinLog');
+Datapixx('SetDoutValues',0);
+Datapixx('RegWrRd');
+
+%start adc data collection if requested
+pds.datapixx.adc.start(p);
+
 
 if p.trial.display.useOverlay==1 % Datapixx overlay
     if p.trial.datapixx.use
@@ -105,7 +104,7 @@ if p.trial.display.useOverlay==1 % Datapixx overlay
         disp('Combining color look up tables that can be found in')
         disp('p.disp.humanCLUT and p.disp.monkeyCLUT')
         disp('****************************************************************')
-        
+
         %check if transparant color is availiable? but how? firmware versions
         %differ between all machines...hmm, instead:
         %Set the transparancy color to the background color. Could set it
@@ -120,7 +119,7 @@ if p.trial.display.useOverlay==1 % Datapixx overlay
         Datapixx('SetVideoClutTransparencyColor', bgColor);
         Datapixx('EnableVideoClutTransparencyColorMode');
         Datapixx('RegWr');
-        
+
         if p.trial.display.switchOverlayCLUTs
             combinedClut = [p.trial.display.humanCLUT; p.trial.display.monkeyCLUT];
         else
@@ -132,16 +131,16 @@ if p.trial.display.useOverlay==1 % Datapixx overlay
             % get size of the combiend CLUT. It should be 512 x 3 (two 256 x 3 CLUTS
             % on top of eachother).
             sc = size(combinedClut);
-            
+
             % use sc to make a vector of 8-bit color steps from 0-1
             x = linspace(0,1,sc(1)/2);
             % use the gamma table to lookup what the values should be
             y = interp1(x,p.trial.display.gamma.table(:,1), combinedClut(:));
             % reshape the combined clut back to 512 x 3
             combinedClut = reshape(y, sc);
-        elseif isField(p.trial, 'display.gamma.power')            
+        elseif isField(p.trial, 'display.gamma.power')
             combinedClut=combinedClut .^ p.trial.display.gamma.power;
-            
+
         end
 
         % WARNING about LoadNormalizedGammaTable from Mario Kleiner:
@@ -171,7 +170,7 @@ elseif p.trial.display.useOverlay==2 % software overlay
     %assign transparency color
     bgColor=p.trial.display.bgColor;
     glUniform3f(glGetUniformLocation(p.trial.display.shader, 'transparencycolor'), bgColor(1), bgColor(2), bgColor(3));
-    
+
     if p.trial.display.switchOverlayCLUTs
         combinedClut = [p.trial.display.humanCLUT; p.trial.display.monkeyCLUT];
     else
