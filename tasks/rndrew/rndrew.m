@@ -196,7 +196,7 @@ function RandRew(p)
                 end
             end
             
-            % ----------------------------------------------------------------%
+        % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
         %% Wait for gaze getting into fixation window
 

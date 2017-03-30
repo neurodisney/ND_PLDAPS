@@ -144,8 +144,8 @@ p.defaultParameters.event.DO_7       = 2327;
 p.defaultParameters.event.DO_8       = 2328;
 
 % marker to select start and end of trial header
-p.defaultParameters.event.TRIAL_HDR_ON  = 9000;
-p.defaultParameters.event.TRIAL_HDR_OFF = 9001;
+p.defaultParameters.event.TRIAL_HDR_ON  = 99001;
+p.defaultParameters.event.TRIAL_HDR_OFF = 99000;
 
 % TODO: encode trial states (and task epochs)?
 
