@@ -176,7 +176,7 @@ SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with 
 
 % ------------------------------------------------------------------------%
 %% Debugging
-SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
+SS.pldaps.GetTrialStateTimes = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 
 % ------------------------------------------------------------------------%
 %% Reward settings
@@ -201,7 +201,6 @@ SS.datapixx.adc.EyeRange = [-10, 10];
 SS.behavior.fixation.use       =  0;      % does this task require control of eye position
 
 SS.behavior.fixation.required  =  0;      % If not required, fixation states will be ignored
-
 
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
 SS.behavior.fixation.FixWinStp = 0.25;    % change of the size of the fixation window upon key press
