@@ -1,4 +1,4 @@
-function dpTime = strobe2(EV, dur)
+function timings = strobe2(EV, dur)
 % pds.tdt.strobe   strobes 16 bit integer event marker to the Tucker Davis system.
 %
 % This function is a modification of the pds.datapixx.strobe function included in PLDAPS
@@ -38,35 +38,46 @@ end
 
 % Create the pulse waveform (2 values ON and then OFF again)
 waveform = [EV, 0];
-Datapixx('WriteDoutBuffer', waveform)
+Datapixx('WriteDoutBuffer', waveform);
 
 % Now, schedule it. The 3 in [dur 3] means that it plays at dur seconds per
 % sample
-Datapixx('SetDoutSchedule', 0, [dur 3], 2);
+Datapixx('SetDoutSchedule', 0, [dur 3], size(waveform,2));
 
 % Get the precise timing when the signal is sent
-Datapixx('SetMarker')
+Datapixx('SetMarker');
+
+% Signal to start the schedule on the next RegWrRd
+Datapixx('StartDoutSchedule');
 
 % If timings are requested, get them. Otherwise just send the signal
 if nargout ~= 0   
     t = nan(2,1);
     t(1) = GetSecs;
      
-    % SEND THE SIGNAL
+    % GO
     Datapixx('RegWrRd');
     
     t(2) = GetSecs;
+    
+    % Get the time when the signal occured
+    dpTime = Datapixx('GetMarker');
+    
+    timings = [mean(t) dpTime diff(t)];
+    
 else
-    % SEND THE SIGNAL
+    % GO
     Datapixx('RegWrRd');
 end
     
-% Get the time when the signal occured
-dpTime = Datapixx('GetMarker');
+
+
 
 % Wait for waveform to finish playing before returning control
+Datapixx('RegWrRd');
 status = Datapixx('GetDoutStatus');
 while status.scheduleRunning
-    pause(0.0001);
+    pause(0.001);
+    Datapixx('RegWrRd');
     status = Datapixx('GetDoutStatus');
 end
