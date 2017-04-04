@@ -37,7 +37,7 @@ if(nargin < 2)
 end
 
 % Create the pulse waveform (2 values ON and then OFF again)
-waveform = [EV, 0];
+waveform = [EV, 0, 0];
 Datapixx('WriteDoutBuffer', waveform);
 
 % Now, schedule it. The 3 in [dur 3] means that it plays at dur seconds per
@@ -77,7 +77,7 @@ end
 Datapixx('RegWrRd');
 status = Datapixx('GetDoutStatus');
 while status.scheduleRunning
-    pause(0.001);
+    WaitSecs(0.0001);
     Datapixx('RegWrRd');
     status = Datapixx('GetDoutStatus');
 end
