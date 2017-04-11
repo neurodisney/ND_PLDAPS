@@ -1,4 +1,4 @@
-function timings = strobe(EV, dur)
+function timings = strobe2(EV, dur)
 % pds.tdt.strobe   strobes 16 bit integer event marker to the Tucker Davis system.
 %
 % This function is a modification of the pds.datapixx.strobe function included in PLDAPS
@@ -30,50 +30,53 @@ function timings = strobe(EV, dur)
 %
 %
 % wolf zinke & Kia Banaie, Feb 2017
+% nate faber, Apr 2017 (Use schedules)
 
 if(nargin < 2)
     dur = 0.001; % a minimal time delay might be required to be detected by the TDT system
 end
 
-TwoByte = hex2dec('000FFFF'); % mask first 16 bits, do not address the the remaining 8 bits
+% Create the pulse waveform (2 values ON and then OFF again)
+waveform = [EV, 0, 0];
+Datapixx('WriteDoutBuffer', waveform);
 
-if(nargout == 0)
-    % just send event one-way for efficiency 
-    Datapixx('SetDoutValues', EV, TwoByte);
-    Datapixx('RegWr');
-else
-    % get time stamp back, might impair performance
+% Now, schedule it. The 3 in [dur 3] means that it plays at dur seconds per
+% sample
+Datapixx('SetDoutSchedule', 0, [dur 3], size(waveform,2));
+
+% Get the precise timing when the signal is sent
+Datapixx('SetMarker');
+
+% Signal to start the schedule on the next RegWrRd
+Datapixx('StartDoutSchedule');
+
+% If timings are requested, get them. Otherwise just send the signal
+if nargout ~= 0   
     t = nan(2,1);
-
-    oldPriority = Priority;
-
-    if(oldPriority < MaxPriority('GetSecs'))
-        Priority(MaxPriority('GetSecs'));
-    end
-
-    Datapixx('SetDoutValues', EV, TwoByte);
-    Datapixx('SetMarker');
-
-    t(1)=GetSecs;
+    t(1) = GetSecs;
+     
+    % GO
     Datapixx('RegWrRd');
-    t(2)=GetSecs;
-
+    
+    t(2) = GetSecs;
+    
+    % Get the time when the signal occured
     dpTime = Datapixx('GetMarker');
-
-    if(Priority ~= oldPriority)
-        Priority(oldPriority);
-    end
-
-    timings = [mean(t), dpTime, diff(t)];
+    
+    timings = [mean(t) dpTime diff(t)];
+    
+else
+    % GO
+    Datapixx('RegWrRd');
 end
+    
+% WaitSecs(dur); 
 
-% a minimal time delay might be required to be detected by the TDT system:
-% check the sampling rate of the RZ unit.
-WaitSecs(dur); 
-
-% need to reset, otherwise if the same event follows it will not be captured
-Datapixx('SetDoutValues', 0, TwoByte);
-Datapixx('RegWr');
-
-WaitSecs(dur); 
-
+% Wait for waveform to finish playing before returning control
+Datapixx('RegWrRd');
+status = Datapixx('GetDoutStatus');
+while status.scheduleRunning
+    WaitSecs(0.0001);
+    Datapixx('RegWrRd');
+    status = Datapixx('GetDoutStatus');
+end

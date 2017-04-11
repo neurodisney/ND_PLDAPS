@@ -29,6 +29,8 @@ p.defaultParameters.EV.StartRT     = NaN; % response time to start trial after a
 p.defaultParameters.EV.RespRT      = NaN; % reaction time
 p.defaultParameters.EV.DPX_TaskOn  = NaN; % Synch time with datapixx for task on
 p.defaultParameters.EV.DPX_TaskOff = NaN; % Synch time with datapixx for task off
+p.defaultParameters.EV.TDT_TaskOn  = NaN; % Synch time with datapixx for task on
+p.defaultParameters.EV.TDT_TaskOff = NaN; % Synch time with datapixx for task off
 
 % if joystick is used for behavior
 if(p.defaultParameters.behavior.joystick.use)

@@ -10,6 +10,7 @@ function ND_FrameFlip(p)
 %% Flip the screen and keep track of frame timings
 % TODO: WZ: Set a flag that screen synch is required, otherwise use the
 %           'dontsync' argument and set it to 0
+
 p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
 
 p.trial.stimulus.timeLastFrame = p.trial.timing.flipTimes(1, p.trial.iFrame) - p.trial.trstart;
@@ -18,14 +19,14 @@ p.trial.stimulus.timeLastFrame = p.trial.timing.flipTimes(1, p.trial.iFrame) - p
 % %% Create movie (WZ: do we need this for now?)
 %
 % if(p.trial.display.movie.create)
-%  % we should skip every nth frame depending on the ration of frame rates, 
+%  % we should skip every nth frame depending on the ration of frame rates,
 %  % or increase every nth frame duration by 1 every nth frame
 %     if(p.trial.display.frate > p.trial.display.movie.frameRate)
 %         thisframe = mod(p.trial.iFrame, p.trial.display.frate / p.trial.display.movie.frameRate) > 0;
 %     else
 %         thisframe = true;
 %     end
-% 
+%
 %     if thisframe
 %         frameDuration = 1;
 %         Screen('AddFrameToMovie', p.trial.display.ptr, [], [], p.trial.display.movie.ptr, frameDuration);

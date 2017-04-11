@@ -24,6 +24,8 @@ p.defaultParameters.epoch.WaitStart       =   1;  % Wait for a joystick press to
 p.defaultParameters.epoch.WaitResponse    =   2;  % Wait for task response (saccade or joystick state change)
 p.defaultParameters.epoch.TaskEnd         =  11;  % trial completed (successful or not)
 
+p.defaultParameters.epoch.TrialStart       =   0; % trial starts for animal
+
 p.defaultParameters.epoch.WaitTarget      =   8;  % wait for target onset
 p.defaultParameters.epoch.WaitGo          =   9;  % delay period before response is required
 

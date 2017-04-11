@@ -176,7 +176,7 @@ SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with 
 
 % ------------------------------------------------------------------------%
 %% Debugging
-SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
+SS.pldaps.GetTrialStateTimes = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 
 % ------------------------------------------------------------------------%
 %% Reward settings
