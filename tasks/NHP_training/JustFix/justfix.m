@@ -146,7 +146,7 @@ function TaskSetUp(p)
                                          p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
                                      
     p.trial.task.CurRewDelay = ND_GetITI(p.trial.task.Reward.MinWaitInitial,  ...
-                                         p.trial.task.Reward.MaxWaitInitial,  [], [], 1, 0.10);
+                                         p.trial.task.Reward.MaxWaitInitial,  [], [], 1, 0.001);
 
     p.trial.CurrEpoch = p.trial.epoch.TrialStart;
         
@@ -154,7 +154,7 @@ function TaskSetUp(p)
         
     p.trial.task.Good = 1;
     p.trial.task.Reward.cnt = 0;  % counter for received rewardsw
-    
+    p.trial.behavior.fixation.GotFix = 0;
     p.trial.task.FixCol = 'Fix_W';
     
     
@@ -166,6 +166,7 @@ function TaskDesign(p)
 
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
+            
             tms = pds.tdt.strobe(p.trial.event.TASK_ON); 
             p.trial.EV.DPX_TaskOn = tms(1);
             p.trial.EV.TDT_TaskOn = tms(2);
@@ -187,31 +188,40 @@ function TaskDesign(p)
             % got fixation
                 if(p.trial.behavior.fixation.GotFix == 0) % starts to fixate
                     p.trial.behavior.fixation.GotFix = 1;
-                    p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.EnsureFix;
+                    p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.EnsureFix; % start timer to check if it is robust fixation
+                    fprintf('Fix in \n');
                     
                 elseif(p.trial.FixState.Current == p.trial.FixState.FixOut)
                     p.trial.behavior.fixation.GotFix = 0;
+                    fprintf('Fix out \n');
                     
                 elseif(p.trial.CurTime > p.trial.Timer.FixBreak) % long enough within FixWin
+                    fprintf('Fixating \n');
                     pds.tdt.strobe(p.trial.event.FIXATION);
 
                     p.trial.EV.FixStart = p.trial.CurTime - p.trial.behavior.fixation.EnsureFix;
                     
                     p.trial.Timer.Wait  = p.trial.CurTime + p.trial.task.Timing.MaxFix;
                     p.trial.CurrEpoch   = p.trial.epoch.Fixating;
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION;
                     
-                    p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.CurRewDelay; 
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION; % at least fixation was achieved
+                    
+                    p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.CurRewDelay; % timer for initial reward
+                    
+                    fprintf('initial reward: %.4f \n', p.trial.task.CurRewDelay);
                 end
                 
             elseif(p.trial.CurTime  > p.trial.Timer.Wait)
             % trial offering ended    
-                Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
+                p.trial.task.Good = 0;
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;  % Go directly to TaskEnd, do not start task, do not collect reward
+                p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
+                
             end
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.Fixating
-        %% Animal keeps fixation and is pressing joystick
+        %% Animal maintains fixation 
         
             % check current fixation
             if(p.trial.FixState.Current == p.trial.FixState.FixOut) % fixation break          
@@ -222,7 +232,7 @@ function TaskDesign(p)
                     p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.BreakTime;
                     
                 elseif(p.trial.FixState.Current == p.trial.FixState.FixIn)
-                % gaze returned in time to be not a fixation break
+                % gaze returned in time to not be a fixation break
                     p.trial.behavior.fixation.GotFix = 1;
 
                 elseif(p.trial.CurTime > p.trial.Timer.FixBreak)
@@ -238,10 +248,14 @@ function TaskDesign(p)
                     
                     p.trial.task.Good = 0;
                 end
+            % fixation time expired    
+            elseif(p.trial.CurTime  > p.trial.Timer.Wait)
+                pds.reward.give(p,  p.trial.task.Reward.JackPot);  % long term fixation, deserves something big
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
             
             % reward if it is about time
-            if(p.trial.task.Good == 0 && p.trial.behavior.fixation.GotFix == 1 && ...
+            if(p.trial.task.Good == 1 && p.trial.behavior.fixation.GotFix == 1 && ...
                p.trial.CurTime > p.trial.Timer.Reward)
                 
                 pds.reward.give(p, p.trial.task.Reward.Curr);
@@ -251,7 +265,9 @@ function TaskDesign(p)
                 
                 rs = find(~(p.trial.task.Reward.Step >= p.trial.task.Reward.cnt), 1, 'last');
 
-                p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.WaitNext(rs);
+                p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.Dur + p.trial.task.Reward.WaitNext(rs);
+                
+                fprintf('reward cound: %d  --> next reward: %.4f \n', p.trial.task.Reward.cnt, p.trial.task.CurRewDelay);
                 
                 p.trial.task.Reward.Curr = p.trial.task.Reward.Dur;
             end
@@ -259,6 +275,7 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
+            fprintf('TaskEnd \n');
         % set timer for intertrial interval            
             tms = pds.tdt.strobe(p.trial.event.TASK_OFF); 
             p.trial.EV.DPX_TaskOff = tms(1);
@@ -301,6 +318,7 @@ function TaskDraw(p)
             Target(p, p.trial.task.FixCol);
 
     end
+    
 % ####################################################################### %
 function KeyAction(p)
 %% task specific action upon key press
@@ -376,19 +394,17 @@ function KeyAction(p)
         end
     end
 
-
 % ####################################################################### %
 function MoveFix(p)
 %% displace fixation window and fixation target
-p.trial.task.fixrect       = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
-                                        p.trial.behavior.fixation.FixWin);  
+p.trial.task.fixrect    = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+                                     p.trial.behavior.fixation.FixWin);  
 % target item
-p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
+p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva
 
 % get dva values into psychtoolbox pixel values/coordinates
 p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;
 p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
-
 
 % ####################################################################### %
 %% additional inline functions that
@@ -412,12 +428,12 @@ function Trial2Ascii(p, act)
         case 'init'
             tblptr = fopen(p.trial.session.asciitbl , 'w');
 
-            fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  ',...
+            fprintf(tblptr, ['Date  Secs  Subject  Experiment  Tcnt  Cond  Tstart  ',...
                              'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor\n']);
             fclose(tblptr);
 
         case 'save'
-            if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart)  % we might loose the last trial when pressing esc.
+            if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoFix)  % we might loose the last trial when pressing esc.
                                 
                 trltm = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
 
@@ -425,12 +441,12 @@ function Trial2Ascii(p, act)
 
                 tblptr = fopen(p.trial.session.asciitbl, 'a');
 
-                fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f  %.5f  %d  %d  %s  %.5f  %s\n' , ...
-                                datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
-                                p.trial.EV.TaskStart, p.trial.session.subject,  p.trial.session.experimentSetupFile, ...
+                fprintf(tblptr, '%s  %.4f  %s  %s  %d  %d  %.5f  %.5f  %d  %d  %s  %.5f  %s\n' , ...
+                                datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.DPX_TaskOn, ...
+                                p.trial.session.subject,  p.trial.session.experimentSetupFile, ...
                                 p.trial.pldaps.iTrial, p.trial.Nr, trltm,  ...
                                 p.trial.task.CurRewDelay, p.trial.task.Reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
-                                p.trial.EV.FixBreak-p.EV.EV.FixStart, p.trial.task.FixCol);
+                                p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.task.FixCol);
                fclose(tblptr);
             end
     end

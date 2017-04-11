@@ -43,6 +43,7 @@ SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
 
 SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
+SS.datapixx.TTL_trialOn       = 0;
 
 SS.behavior.fixation.required = 1; % fixation required for this task
 

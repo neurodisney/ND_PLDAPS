@@ -24,10 +24,12 @@ p.trial.task.Reward.MinWaitInitial  = 0.05; % min wait period for initial reward
 p.trial.task.Reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
 p.trial.task.Reward.InitialRew      = 0.1;  % duration for initial reward pulse
 
+p.trial.task.Reward.JackPot         = 1.5;  % unlikely he gets here
+
 % reward series for continous fixation
-p.trial.task.Reward.WaitNext = [200, 100, 50];  % wait period until next reward
-p.trial.task.Reward.Dur      = 0.6;             % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step     = [0, 2, 4];          % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.task.Reward.WaitNext = [0.25, 0.20, 0.15, 0.10];  % wait period until next reward
+p.trial.task.Reward.Dur      = 0.2;             % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Step     = [0, 2, 4, 6];          % define the number of subsequent rewards after that the next delay period should be used.
 
 % manual reward from experimenter
 p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
@@ -51,9 +53,9 @@ p.trial.behavior.fixation.FixScale = [5, 5];  % scaling factor to match screen/d
 p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
                                   p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
 
-p.trial.behavior.fixation.BreakTime = 50;  % minimum time [ms] to identify a fixation break
+p.trial.behavior.fixation.BreakTime = 0.05;  % minimum time [ms] to identify a fixation break
 
-p.trial.behavior.fixation.EnsureFix = 50;  % minimum time to stay within fixation window to detect initial fixation start
+p.trial.behavior.fixation.EnsureFix = 0.05;  % minimum time to stay within fixation window to detect initial fixation start
 
 
 % ------------------------------------------------------------------------%
@@ -71,5 +73,5 @@ p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.Target
 % maxTrialLength is used to pre-allocate memory at several initialization
 % steps. It specifies a duration in seconds.
 
-p.trial.pldaps.maxTrialLength = 120; % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+p.trial.pldaps.maxTrialLength = 2*p.trial.task.Timing.MaxFix; % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
