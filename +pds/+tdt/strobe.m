@@ -32,7 +32,7 @@ function timings = strobe(EV, dur)
 % wolf zinke & Kia Banaie, Feb 2017
 
 if(nargin < 2)
-    dur = 0.0005; % a minimal time delay might be required to be detected by the TDT system
+    dur = 0.001; % a minimal time delay might be required to be detected by the TDT system
 end
 
 TwoByte = hex2dec('000FFFF'); % mask first 16 bits, do not address the the remaining 8 bits
@@ -74,4 +74,6 @@ WaitSecs(dur);
 % need to reset, otherwise if the same event follows it will not be captured
 Datapixx('SetDoutValues', 0, TwoByte);
 Datapixx('RegWr');
+
+WaitSecs(dur); 
 

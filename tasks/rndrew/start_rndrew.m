@@ -57,7 +57,7 @@ SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
 SS.behavior.fixation.FixPos     = [ 0 , 0];
-SS.behavior.fixation.FixScale   = [10, 10];
+SS.behavior.fixation.FixScale   = [2, 2];
 SS.behavior.fixation.FixWin     = 4;
 SS.behavior.fixation.FixGridStp = [ 4,  4]; 
 SS.behavior.fixation.FixWinStp  = 0.25;   

@@ -320,6 +320,7 @@ function KeyAction(p)
 
         switch p.trial.LastKeyPress
 
+            % grid positions
             case KbName('1')
             p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
             MoveFix(p);
@@ -356,7 +357,7 @@ function KeyAction(p)
             p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
             MoveFix(p);
             
-
+            % steps
             case KbName('RightArrow')
             p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
                                                   p.trial.behavior.fixation.FixWinStp;   
@@ -376,6 +377,11 @@ function KeyAction(p)
             p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
                                                   p.trial.behavior.fixation.FixWinStp;
             MoveFix(p);
+            
+            case KbName('g')
+                
+                fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
+                        p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
         end
     end
 

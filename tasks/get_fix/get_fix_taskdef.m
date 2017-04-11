@@ -47,7 +47,7 @@ p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a tri
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
-p.trial.behavior.fixation.FixScale = [10, 10];  % scaling factor to match screen/dva [TODO: get from calibration]
+p.trial.behavior.fixation.FixScale = [5, 5];  % scaling factor to match screen/dva [TODO: get from calibration]
 
 p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
                                   p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future

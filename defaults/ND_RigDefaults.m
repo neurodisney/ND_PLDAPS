@@ -194,14 +194,10 @@ SS.datapixx.adc.XEyeposChannel  = 0;
 SS.datapixx.adc.YEyeposChannel  = 1;
 SS.datapixx.adc.PupilChannel    = 2;
 
-% range of analog signal, use this for initial mapping of eye position.
-SS.datapixx.adc.EyeRange = [-10, 10];
-
 % Saccade parameters
 SS.behavior.fixation.use       =  0;      % does this task require control of eye position
 
 SS.behavior.fixation.required  =  0;      % If not required, fixation states will be ignored
-
 
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
 SS.behavior.fixation.FixWinStp = 0.25;    % change of the size of the fixation window upon key press

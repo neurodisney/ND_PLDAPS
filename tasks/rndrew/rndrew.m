@@ -60,8 +60,8 @@ if(isempty(state))
     c1.task.Reward.TrainRew  = 0.25;
     c1.task.Timing.MinITI    = 0.5;   % minimum time period [s] between subsequent trials
     c1.task.Timing.MaxITI    = 1.0;   % maximum time period [s] between subsequent trials
-    c1.task.Timing.MinHoldTime = 1;   % minimum time to keep fixation
-    c1.task.Timing.MaxHoldTime = 5;   % maximum time to keep fixation
+    c1.task.Timing.MinHoldTime = 0.75;   % minimum time to keep fixation
+    c1.task.Timing.MaxHoldTime = 2.5;   % maximum time to keep fixation
     
     % condition 2  : blank screen, reward at random when looking to center of screen
     c2.Nr = 2;
@@ -177,7 +177,7 @@ function RandRew(p)
                     p.trial.CurrEpoch  = p.trial.epoch.WaitFix; 
                     p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;    
                 else
-                    p.trial.CurrEpoch  = p.trial.epoch.WaitStart;                     
+                    p.trial.CurrEpoch  = p.trial.epoch.WaitStart;    
                 end
             end
             
@@ -190,6 +190,7 @@ function RandRew(p)
             if(p.trial.task.Good)
                 p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;
                 p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
+                pds.tdt.strobe(p.trial.event.STIM_ON);
 
                 if(p.trial.task.Reward.Pull)
                     pds.reward.give(p, p.trial.task.Reward.PullRew);
