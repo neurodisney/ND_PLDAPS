@@ -8,13 +8,14 @@ function p = justfix_plots(p, offln)
 % wolf zinke, March 2017
 
 %% plot parameters
-resp_bin = 50;
+resp_bin = 100;
+smPT = 50;
 
 hit_col   = [0, 0.65, 0];
 early_col = [0.65, 0, 0];
 late_col  = [0, 0, 0.65];
 
-fig_sz = [100, 100, 1000, 800];
+fig_sz = [100, 100, 1200, 800];
 
 %% optional offline analysis
 if(~exist('offln', 'var'))
@@ -33,106 +34,131 @@ else
 end
 
 try
+
     %% get relevant data
     Ntrials  = length(p.data);
 
     Cond     = cellfun(@(x) x.Nr, p.data);
     Results  = cellfun(@(x) x.outcome.CurrOutcome, p.data);
 
-    Trial_tm = cellfun(@(x) x.EV.TaskStart, p.data);
-    Trial_tm = (Trial_tm - Trial_tm(1)) / 60; % first trial defines zero, convert to minutes    
+    TaskStart = cellfun(@(x) x.EV.TaskStart, p.data);
+    Trial_tm = (TaskStart - TaskStart(1)) / 60; % first trial defines zero, convert to minutes    
     
-    Resp_tm  = cellfun(@(x) x.EV.JoyRelease, p.data) * 1000; % convert to ms
-    Go_tm    = cellfun(@(x) x.task.Timing.HoldTime, p.data) * 1000; % convert to ms
-        
-    RT = Resp_tm - Go_tm;
+    FixStart  = cellfun(@(x) x.EV.FixStart, p.data);
+    FixRT     = (FixStart - TaskStart) * 1000;
     
+    FixBreak  = cellfun(@(x) x.EV.FixBreak, p.data);
+    FixDur    = (FixBreak - FixStart);
+    
+    fp = Results ~= p.data{1}.outcome.NoFix;
+    
+
     %% get plots
-    
-    % release times
-    subplot(3,2,1);
-    
-    if(any(isfinite(Resp_tm)))
-        bv = 0 : resp_bin : max(Resp_tm)+resp_bin;
-
-        hist(Resp_tm, bv);
-        title('Release times')
-        ylabel('count');
-        xlabel('time trial start [ms]')
-        axis tight; 
+    if(sum(fp) > 4)
         
-%         h = findobj(gca,'Type','patch');
-%         h.FaceColor = [0 0 0];
-%         h.EdgeColor = [0 0 0];
+    Tm  = Trial_tm(fp);
+    RT  = FixRT(fp);
+    Dur = FixDur(fp);
         
-        hold on;
-        yl = ylim;
-        medResp = nanmedian(Resp_tm);
-        plot([medResp,medResp], yl,'-r','LineWidth', 2.5);
-        hold off
-    end
+    % fixation durations over session time
+    subplot(3,3,1);
     
-    % reaction times
-    subplot(3,2,2);
-    if(any(isfinite(RT)))
-        bv = min(RT)-resp_bin : resp_bin : max(RT)+resp_bin;
+    bv = min(RT)-resp_bin : resp_bin : max(RT)+resp_bin;
 
-        hist(RT, bv);
-        title('Reaction times')
-        ylabel('count');
-        xlabel('time from stimulus change [ms]')
+    hist(RT, bv, 'FaceColor','k', 'EdgeColor','k');
+    title('Reaction times')
+    ylabel('count');
+    xlabel('time from target onset [ms]')
+    xlim([0,prctile(RT,90)]);
+    axis tight
+    
+    hold on;
+    yl = ylim;
+    medRT = nanmedian(RT);
+    plot([medRT,medRT], yl,'-r','LineWidth', 2.5);
+    hold off
+    
+    subplot(3,3,2);
+    
+    rb = resp_bin/1000;
+    bv = min(Dur)-rb : rb : max(Dur)+rb;
 
-%         h = findobj(gca,'Type','patch');
-%         h.FaceColor = [0 0 0];
-%         h.EdgeColor = [0 0 0];
+    hist(Dur, bv, 'FaceColor','k', 'EdgeColor','k');
+    title('fixation duration')
+    ylabel('count');
+    xlabel('time from fixation onset [s]')
+    xlim([0,prctile(Dur,98)]);
+    axis tight
+    
+    hold on;
+    yl = ylim;
+    medRT = nanmedian(Dur);
+    plot([medRT,medRT], yl,'-r','LineWidth', 2.5);
+    hold off
         
-        hold on;
-        yl = ylim;
-        medRT = nanmedian(RT);
-        plot([medRT,medRT], yl,'-r','LineWidth', 2.5);
-        hold off
-    end
-    
-    % release times in trial
+    % fixation durations over session time
     subplot(3,1,2);
     
-    hp = Results == p.data{1}.outcome.Correct;
-    he = Results == p.data{1}.outcome.Early;
-%    hl = Results == p.data{1}.outcome.Late | Results == p.data{1}.outcome.Miss;
-    
-    plot(Trial_tm(hp), Resp_tm(hp), 'o', 'MarkerSize', 6, ...
+    plot(Tm, RT, 'o', 'MarkerSize', 6, ...
         'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
     hold on;
-    plot(Trial_tm(he), Resp_tm(he), 'o', 'MarkerSize', 6, ...
-        'MarkerEdgeColor', early_col,'MarkerFaceColor',early_col)
-%     plot(Trial_tm(hl), Resp_tm(hl), 'o', 'MarkerSize', 6, ...
-%         'MarkerEdgeColor', late_col,'MarkerFaceColor',late_col)
     
-    ylim([min(Resp_tm), max(Resp_tm)]);
-    ylabel('time trial start [ms]');
+    if(Ntrials > 4)
+
+        X = [ones(length(Tm),1) Tm(:)];
+        cFit = X\RT(:);
+        cFitln = X*cFit;
+
+        plot(Tm,cFitln,'-g', 'LineWidth', 2);
+    end
+    
+    if(Ntrials > smPT)
+        RTsm = smooth(Tm,RT,smPT/Ntrials,'rloess');
+        plot(Tm,RTsm,'-r');
+    end
+    
+    ylim([min(FixRT), max(FixRT)]);
+    ylabel('RT [ms]');
     xlabel('trial time [min]');
+    axis tight    
+        
     
-    
-    % reaction times in trial
+    % fixation durations over session time
     subplot(3,1,3);
     
-    plot(Trial_tm(hp), RT(hp), 'o', 'MarkerSize', 6, ...
+    plot(Tm, Dur, 'o', 'MarkerSize', 6, ...
         'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
     hold on;
-    plot(Trial_tm(he), RT(he), 'o', 'MarkerSize', 6, ...
-        'MarkerEdgeColor', early_col,'MarkerFaceColor',early_col)
-%     plot(Trial_tm(hl), RT(hl), 'o', 'MarkerSize', 6, ...
-%         'MarkerEdgeColor', late_col,'MarkerFaceColor',late_col)
     
-    ylim([min(RT), max(RT)]);
-    ylabel('time from stimulus change [ms]');
+    if(Ntrials > 4)
+
+        X = [ones(length(Tm),1) Tm(:)];
+        cFit = X\Dur(:);
+        cFitln = X*cFit;
+
+        plot(Tm,cFitln,'-g', 'LineWidth', 2);
+    end
+    
+    if(Ntrials > smPT)
+        RTsm = smooth(Tm,Dur,smPT/Ntrials,'rloess');
+        plot(Tm,RTsm,'-r');
+    end
+    
+    ylim([min(FixRT), max(FixRT)]);
+    ylabel('fix duration [ms]');
     xlabel('trial time [min]');
-        
+    axis tight    
+
+    
+    
+    
+    
+
     
     
     %% update plot
     drawnow
-    
+    end
 catch me
     disp('Online plot failed!');
     disp(me.message);

@@ -32,7 +32,7 @@ end
 %% DataPixx
 pds.datapixx.adc.trialSetup(p); % setup analog data collection from Datapixx
 
-% call PsychDataPixx('GetPreciseTime') to make sure the clocks stay synced
+% call PsychDataPixx('GetPreciseTime') to make sure the clocks stay in synch
 [getsecs, boxsecs, confidence]          = PsychDataPixx('GetPreciseTime');
 p.trial.timing.datapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
 

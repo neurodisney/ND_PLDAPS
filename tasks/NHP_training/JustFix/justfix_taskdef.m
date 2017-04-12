@@ -36,7 +36,7 @@ p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.task.Timing.WaitFix     = 10;   % time window to allow gaze to get into fixation window in order to continue trial
+p.trial.task.Timing.WaitFix     = 4;   % time window to allow gaze to get into fixation window in order to continue trial
 p.trial.task.Timing.MaxFix      = 30;   % maximal time for fixation (avoid matlab buffer overflows)
 
 % inter-trial interval
