@@ -90,7 +90,7 @@ if(isempty(state))
     c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     
-    conditions = {c1, c2, c3};
+    conditions = {c1, c2, c3, c4};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 

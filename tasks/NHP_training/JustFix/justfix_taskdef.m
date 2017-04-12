@@ -36,33 +36,31 @@ p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.task.Timing.WaitFix     = 4;   % time window to allow gaze to get into fixation window in order to continue trial
-p.trial.task.Timing.MaxFix      = 30;   % maximal time for fixation (avoid matlab buffer overflows)
+p.trial.task.Timing.WaitFix     =  2;   % time window to allow gaze to get into fixation window in order to continue trial
+p.trial.task.Timing.MaxFix      = 12;   % maximal time for fixation (avoid matlab buffer overflows)
 
 % inter-trial interval
-p.trial.task.Timing.MinITI      = 1.0;   % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI      = 2.5;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI      = 1.5;   % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI      = 3.0;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
-p.trial.behavior.fixation.FixScale = [5, 5];  % scaling factor to match screen/dva [TODO: get from calibration]
+p.trial.behavior.fixation.FixScale = [4.5, 4.5];  % scaling factor to match screen/dva [TODO: get from calibration]
 
 p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
                                   p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
 
 p.trial.behavior.fixation.BreakTime = 0.05;  % minimum time [ms] to identify a fixation break
-
 p.trial.behavior.fixation.EnsureFix = 0.05;  % minimum time to stay within fixation window to detect initial fixation start
-
 
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
 
 % target item
-p.trial.task.TargetSz  = 1;   % Stimulus diameter in dva
+p.trial.task.TargetSz  = 0.5;   % Stimulus diameter in dva
 p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
 
 % get dva values into psychtoolbox pixel values/coordinates
