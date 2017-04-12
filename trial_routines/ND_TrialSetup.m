@@ -5,9 +5,12 @@ function p = ND_TrialSetup(p)
 %
 % wolf zinke, Dec. 2016
 
-p.trial.timing.flipTimes           = zeros(4,p.trial.pldaps.maxFrames);
-p.trial.timing.frameStateChangeTimes = nan(9,p.trial.pldaps.maxFrames);
 
+p.trial.timing.flipTimes           = zeros(4,p.trial.pldaps.maxFrames);
+
+if(p.trial.pldaps.GetTrialStateTimes)
+    p.trial.timing.frameStateChangeTimes = nan(9,p.trial.pldaps.maxFrames);
+end
 
 % --------------------------------------------------------------------%
 %% get task parameters
@@ -30,14 +33,12 @@ end
 pds.datapixx.adc.trialSetup(p); % setup analog data collection from Datapixx
 
 % call PsychDataPixx('GetPreciseTime') to make sure the clocks stay synced
-if(p.trial.datapixx.use)
-    [getsecs, boxsecs, confidence]          = PsychDataPixx('GetPreciseTime');
-    p.trial.timing.datapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
-    p.trial.timing.datapixxTrialStart       = getsecs;
-end
+[getsecs, boxsecs, confidence]          = PsychDataPixx('GetPreciseTime');
+p.trial.timing.datapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
+
 
 % ------------------------------------------------------------------------%
-%% Reward    
+%% Reward
 %%% prepare reward system and pre-allocate variables for reward timings
 p.trial.reward.iReward     = 0; % counter for reward times
 % p.trial.reward.timeReward  = nan(2,p.trial.pldaps.maxTrialLength*2); %preallocate for a reward up to every 0.5 s
@@ -47,7 +48,7 @@ p.trial.reward.iReward     = 0; % counter for reward times
 
 if(p.trial.pldaps.draw.eyepos.use)
     p.trial.eyeXY_draw = nan(1, 2);
-    
+
     p.trial.eyeX_hist = nan(1, p.trial.pldaps.draw.eyepos.history);
     p.trial.eyeY_hist = nan(1, p.trial.pldaps.draw.eyepos.history);
 end
@@ -68,7 +69,7 @@ p.trial.keyboard.lastReleaseSamples  = zeros(p.trial.keyboard.nCodes, round(p.tr
 %% Mouse
 % setup a fields for the mouse data
 if(p.trial.mouse.use)
-    [~,~,isMouseButtonDown]          = GetMouse(); 
+    [~,~,isMouseButtonDown]          = GetMouse();
     p.trial.mouse.cursorSamples      = zeros(2, round(round(p.trial.pldaps.maxFrames*1.1)));
     p.trial.mouse.buttonPressSamples = zeros(length(isMouseButtonDown), round(round(p.trial.pldaps.maxFrames*1.1)));
     p.trial.mouse.samplesTimes       = zeros(1, round(round(p.trial.pldaps.maxFrames*1.1)));
@@ -77,7 +78,7 @@ end
 
 % ------------------------------------------------------------------------%
 %% Spike Server
-% TODO: integrate Tucker Davis system 
+% TODO: integrate Tucker Davis system
 
 % ------------------------------------------------------------------------%
 %% Update summary information for preceding trials
@@ -90,12 +91,12 @@ ND_CtrlMsg(p, p.trial.SmryStr);
 % ------------------------------------------------------------------------%
 %% frame rate history
 %%% prepare to plot frame rate history on screen
-% WZ TODO: what exactly is this doing? Is it needed? 
-if(p.trial.pldaps.draw.framerate.use)           
+% WZ TODO: what exactly is this doing? Is it needed?
+if(p.trial.pldaps.draw.framerate.use)
     p.trial.pldaps.draw.framerate.nFrames = round(p.trial.pldaps.draw.framerate.nSeconds / p.trial.display.ifi);
     p.trial.pldaps.draw.framerate.data    = zeros(p.trial.pldaps.draw.framerate.nFrames, 1); %holds the data
     sf.startPos  = round(p.trial.display.w2px' .* p.trial.pldaps.draw.framerate.location + [p.trial.display.pWidth/2, p.trial.display.pHeight/2]);
-    sf.size      =       p.trial.display.w2px' .* p.trial.pldaps.draw.framerate.size;    
+    sf.size      =       p.trial.display.w2px' .* p.trial.pldaps.draw.framerate.size;
     sf.window    =       p.trial.display.overlayptr;
     sf.xlims     =   [1, p.trial.pldaps.draw.framerate.nFrames];
     sf.ylims     = [0, 2*p.trial.display.ifi];
@@ -105,6 +106,7 @@ end
 
 % ------------------------------------------------------------------------%
 %% Initialize default trial control variables
+p.trial.task.Good                = 0;    % flag to indicate if an error occurred or the task flow continues. This will be set to 1 when task is on (Task_ON)
 p.trial.CurrEpoch                = NaN;  % keep track of task epochs
 p.trial.CurTime                  = NaN;  % keep track of current time
 p.trial.behavior.fixation.GotFix =   0;  % assume no fixation at task start
@@ -112,11 +114,11 @@ p.trial.task.Reward.Curr         = p.trial.reward.defaultAmount;  % expected rew
 
 % ------------------------------------------------------------------------%
 %% Initialize default Timer
-p.trial.Timer.Wait     = 0; % general timer that waits for an amount of time to expire  
+p.trial.Timer.Wait     = 0; % general timer that waits for an amount of time to expire
 p.trial.Timer.Reward   = 0; % for series of rewards, this timer defines the gap between subsquent reward pulses
 p.trial.Timer.FixBreak = 0; % if gaze got out fixation window, this timer is set to ensure a certain leave
 p.trial.Timer.StimChng = 0; % if series of stimuli is shown this timer defines the change between subsequent stimuli
-p.trial.Timer.PhD      = 0; % timer to define state change of the photodiode 
+p.trial.Timer.PhD      = 0; % timer to define state change of the photodiode
 p.trial.Timer.ITI      = 0; % when does the intertrial interval expire and the next trial start?
 
 

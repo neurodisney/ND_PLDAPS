@@ -1,9 +1,10 @@
-function p = start_joy_train(subjname, rig, experimenter)
-% use this script to define a default configuration in order to create a
-% pldaps object and run it with the joy_train trial function.
+function p = start_rndrew(subjname, rig, experimenter)
+% main function to run a task
 %
+% This function prepares a task by defining setting task related matlab functions,
+% setting parameters for the session, creating a pldaps class and running the experiment.
 %
-% wolf zinke, Dec. 2016
+% wolf zinke, Mar. 2017
 
 
 % ------------------------------------------------------------------------%
@@ -16,20 +17,24 @@ SS = ND_RigDefaults;    % load default settings according to the current rig set
 %% Define task related functions
 
 % function to set up experiment (and maybe also including the trial function)
-exp_fun = 'joy_train';
+exp_fun = 'rndrew';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef  = 'joy_train_taskdef';  % function that provides task specific parameter definitions
-SS.plot.routine  = 'joy_train_plots';    % function for online plotting of session progress
+SS.task.TaskDef  = 'rndrew_taskdef';  % function that provides task specific parameter definitions
+SS.plot.routine  = 'rndrew_plots';    % function for online plotting of session progress
+
+% ------------------------------------------------------------------------%
+%% define variables that need to passed to next trial
+SS.editable = {'behavior.fixation.FixWin'};
 
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
-% Most of the components are disabled as default. If needed for the task enable them here.
+% Most of the components are disabled as default. If needed for the task enable 1them here.
 SS.sound.use                  = 0; % no sound for now
-SS.behavior.fixation.use      = 0; % eye position is behavioral relevant
+SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 1; % joystick is behavioral relevant
-SS.plot.do_online             = 1; % run online data analysis between two subsequent trials
+SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
 SS.pldaps.draw.joystick.use   = 1; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
@@ -38,6 +43,8 @@ SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
 
 SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 1;
+
+SS.behavior.fixation.required = 1; % fixation required for this task
 
 SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states are called
 
@@ -48,7 +55,12 @@ SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states
 
 SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
-SS.behavior.fixation.FixScale = [100, 100]; 
+
+SS.behavior.fixation.FixPos     = [ 0 , 0];
+SS.behavior.fixation.FixScale   = [2, 2];
+SS.behavior.fixation.FixWin     = 4;
+SS.behavior.fixation.FixGridStp = [ 4,  4]; 
+SS.behavior.fixation.FixWinStp  = 0.25;   
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
@@ -89,7 +101,3 @@ p.run;
 if(Datapixx('IsReady'))
     Datapixx('Close');
 end
-
-
-
-

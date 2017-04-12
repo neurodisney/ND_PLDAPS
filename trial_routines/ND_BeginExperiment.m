@@ -14,10 +14,10 @@ function p = ND_BeginExperiment(p)
 %
 % 03/2017 wz    removed eyelink related stuff
 %               make git information more flexible by reading out actual version
-%              
+%
 %
 % WZ TODO: get git hash/version for PsychToolbox as well
-%        
+%
 
 %% keep git version control
 pathStr = fileparts(mfilename('fullpath'));
@@ -37,9 +37,9 @@ cd(cwd);
 
 %% get session time
 % multiple sessions not supported for now
-p.defaultParameters.session.experimentStart = GetSecs; 
+p.defaultParameters.session.experimentStart = GetSecs;
 
-if p.defaultParameters.datapixx.use && Datapixx('IsReady')
+if(Datapixx('IsReady'))
     p.defaultParameters.datapixx.experimentStartDatapixx = Datapixx('GetTime');
 end
 

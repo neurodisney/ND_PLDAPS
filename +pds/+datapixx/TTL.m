@@ -26,6 +26,10 @@ if(nargin > 1)
     end
 end
 
+if(nargin < 2)
+    dur = 0.0005; % a minimal time delay might be required to be detected by the TDT system
+end
+
 %% select channels for the DIO TTL pulse
 chanmask = zeros(1,8);
 chanmask(9-chan) = 1; % add 16 to skip the first 16 bits used for event codes (reverse order)
@@ -64,13 +68,8 @@ else
     timings = [mean(t), dpTime, diff(t)];
 end
 
-if(nargin > 2)
-% a minimal time delay might be required to be detected by the TDT system:
-% check the sampling rate of the RZ unit.
-    if(~isempty(dur))
-        WaitSecs(dur); 
-    end
-end
+% a minimal time delay might be required to be detected 
+WaitSecs(dur); 
 
 %% reset channels to low again
 Datapixx('SetDoutValues', 0, chanmask);

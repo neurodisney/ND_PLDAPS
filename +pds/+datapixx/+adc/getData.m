@@ -1,17 +1,13 @@
 function p = getData(p)
 %pds.datapixx.adc.getData    getData from the Datapixx buffer
 %
-% p = pds.datapixx.adc.getData(p) 
+% p = pds.datapixx.adc.getData(p)
 %
 % Retrieves new samples from the datapixx buffer during the trial
 % (c) lnk 2012
 %     jly modified 2013
 %     jk  reqrote  2014 to use new parameter structure and add flexibilty
 %                       and proper tracking of sample times
-
-if(~p.trial.datapixx.use || isempty(p.trial.datapixx.adc.channels))
-    return;
-end
 
 %consider having a preallocated bufferData and bufferTimeTags
 Datapixx('RegWrRd');
@@ -40,6 +36,6 @@ for imap=1:nMaps
 %     iChannels=p.trial.datapixx.adc.channelMappingChannels{imap};
     iSub = p.trial.datapixx.adc.channelMappingSubs{imap};
     iSub(end).subs{2}=inds;
-    
+
     p=subsasgn(p,iSub,bufferData(p.trial.datapixx.adc.channelMappingChannelInds{imap},:));
 end

@@ -229,9 +229,8 @@ try
     % ----------------------------------------------------------------%
     %% shut down audio
     if(p.defaultParameters.sound.use)
-        pds.audio.clearBuffer(p);
         % Close the audio device:
-        % PsychPortAudio('Close', p.defaultParameters.sound.master);
+        PsychPortAudio('Close', p.defaultParameters.sound.master);
     end
     
     % ----------------------------------------------------------------%
@@ -264,11 +263,7 @@ try
         PDS.data = p.data;
         PDS.functionHandles = p.functionHandles;
 
-        if(p.defaultParameters.pldaps.save.v73)
-            save(p.defaultParameters.session.file, 'PDS','-mat','-v7.3')
-        else
-            save(p.defaultParameters.session.file, 'PDS','-mat')
-        end
+        save(p.defaultParameters.session.file, 'PDS','-mat','-v7.3')
     end
 
 % ----------------------------------------------------------------%

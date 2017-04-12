@@ -30,33 +30,33 @@ end
 
 % ------------------------------------------------------------------------%
 %% draw a history of fast inter frame intervals
-if(p.trial.pldaps.draw.framerate.use && p.trial.iFrame > 2)
-    % update data
-    p.trial.pldaps.draw.framerate.data      = circshift(p.trial.pldaps.draw.framerate.data,-1);
-    p.trial.pldaps.draw.framerate.data(end) = p.trial.timing.flipTimes(1, p.trial.iFrame - 1) - ...
-                                              p.trial.timing.flipTimes(1, p.trial.iFrame - 2);
-    % plot
-    if(p.trial.pldaps.draw.framerate.show)
-        % adjust y limit
-        p.trial.pldaps.draw.framerate.sf.ylims = [0 max(max(p.trial.pldaps.draw.framerate.data), 2*p.trial.display.ifi)];
-
-        % current ifi is solid black
-        pds.pldaps.draw.screenPlot(p.trial.pldaps.draw.framerate.sf, p.trial.pldaps.draw.framerate.sf.xlims, ...
-                                  [p.trial.display.ifi, p.trial.display.ifi], p.trial.display.clut.blackbg, '-');
-
-        % 2 ifi reference is 5 black dots
-        pds.pldaps.draw.screenPlot(p.trial.pldaps.draw.framerate.sf, p.trial.pldaps.draw.framerate.sf.xlims(2)*(0:0.25:1), ...
-                                   ones(1,5)*2*p.trial.display.ifi,  p.trial.display.clut.blackbg, '.');
-
-        % 0 ifi reference is 5 black dots
-        pds.pldaps.draw.screenPlot(p.trial.pldaps.draw.framerate.sf, p.trial.pldaps.draw.framerate.sf.xlims(2)*(0:0.25:1), ...
-                                   zeros(1,5), p.trial.display.clut.blackbg, '.');
-
-        % data are red dots
-        pds.pldaps.draw.screenPlot(p.trial.pldaps.draw.framerate.sf,  1:p.trial.pldaps.draw.framerate.nFrames, ...
-                                   p.trial.pldaps.draw.framerate.data', p.trial.display.clut.redbg, '.');
-    end
-end
+%  if(p.trial.pldaps.draw.framerate.use && p.trial.iFrame > 2)
+%      % update data
+%      p.trial.pldaps.draw.framerate.data      = circshift(p.trial.pldaps.draw.framerate.data,-1);
+%      p.trial.pldaps.draw.framerate.data(end) = p.trial.timing.flipTimes(1, p.trial.iFrame - 1) - ...
+%                                                p.trial.timing.flipTimes(1, p.trial.iFrame - 2);
+%      % plot
+%      if(p.trial.pldaps.draw.framerate.show)
+%          % adjust y limit
+%          p.trial.pldaps.draw.framerate.sf.ylims = [0 max(max(p.trial.pldaps.draw.framerate.data), 2*p.trial.display.ifi)];
+%
+%          % current ifi is solid black
+%          pds.pldaps.draw.screenPlot(p.trial.pldaps.draw.framerate.sf, p.trial.pldaps.draw.framerate.sf.xlims, ...
+%                                    [p.trial.display.ifi, p.trial.display.ifi], p.trial.display.clut.blackbg, '-');
+%
+%          % 2 ifi reference is 5 black dots
+%          pds.pldaps.draw.screenPlot(p.trial.pldaps.draw.framerate.sf, p.trial.pldaps.draw.framerate.sf.xlims(2)*(0:0.25:1), ...
+%                                     ones(1,5)*2*p.trial.display.ifi,  p.trial.display.clut.blackbg, '.');
+%
+%          % 0 ifi reference is 5 black dots
+%          pds.pldaps.draw.screenPlot(p.trial.pldaps.draw.framerate.sf, p.trial.pldaps.draw.framerate.sf.xlims(2)*(0:0.25:1), ...
+%                                     zeros(1,5), p.trial.display.clut.blackbg, '.');
+%
+%          % data are red dots
+%          pds.pldaps.draw.screenPlot(p.trial.pldaps.draw.framerate.sf,  1:p.trial.pldaps.draw.framerate.nFrames, ...
+%                                     p.trial.pldaps.draw.framerate.data', p.trial.display.clut.redbg, '.');
+%      end
+%  end
 
 % ------------------------------------------------------------------------%
 %% draw eye position
@@ -66,20 +66,30 @@ if(p.trial.pldaps.draw.eyepos.use)
 
     if(p.trial.behavior.fixation.use)
         if(p.trial.FixState.Current == p.trial.FixState.FixOut && p.trial.behavior.fixation.required)
-            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyeold, ...
-                                p.trial.task.fixrect , p.trial.pldaps.draw.eyepos.fixwinwdth);
+            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyeold, p.trial.task.fixrect, ...
+                                p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
         elseif(p.trial.FixState.Current == p.trial.FixState.FixIn && p.trial.behavior.fixation.required)
-            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyepos, ...
-                                p.trial.task.fixrect , p.trial.pldaps.draw.eyepos.fixwinwdth);
+            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyepos, p.trial.task.fixrect, ...
+                                p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
         else
-            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.window, ...
-                                p.trial.task.fixrect , p.trial.pldaps.draw.eyepos.fixwinwdth);
+            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.window, p.trial.task.fixrect, ...
+                                p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
         end
+%         if(p.trial.FixState.Current == p.trial.FixState.FixOut && p.trial.behavior.fixation.required)
+%             Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.eyeold, ...
+%                                 p.trial.task.fixrect , p.trial.pldaps.draw.eyepos.fixwinwdth);
+%         elseif(p.trial.FixState.Current == p.trial.FixState.FixIn && p.trial.behavior.fixation.required)
+%             Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.eyepos, ...
+%                                 p.trial.task.fixrect , p.trial.pldaps.draw.eyepos.fixwinwdth);
+%         else
+%             Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.window, ...
+%                                 p.trial.task.fixrect , p.trial.pldaps.draw.eyepos.fixwinwdth);
+%         end
     end
-    
+
     Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX_hist; p.trial.eyeY_hist], ...
                         p.trial.pldaps.draw.eyepos.sz/2, p.trial.display.clut.eyeold, [0 0], 0);
-                    
+
     Screen('Drawdots',  p.trial.display.overlayptr, p.trial.eyeXY_draw, ...
                         p.trial.pldaps.draw.eyepos.sz, p.trial.display.clut.eyepos, [0 0], 0);
 end
@@ -90,13 +100,13 @@ end
 if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
     % draw joystick area above threshold (i.e. pressed)
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joythr , ...
-                       p.trial.pldaps.draw.joystick.rect);      
-    % draw joystick area below threshold               
+                       p.trial.pldaps.draw.joystick.rect);
+    % draw joystick area below threshold
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joybox , ...
-                       p.trial.pldaps.draw.joystick.threct);    
-    % draw current joystick level               
+                       p.trial.pldaps.draw.joystick.threct);
+    % draw current joystick level
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joypos , ...
-                       p.trial.pldaps.draw.joystick.levelrect); 
+                       p.trial.pldaps.draw.joystick.levelrect);
 end
 
 % % ------------------------------------------------------------------------%
@@ -116,7 +126,7 @@ if(p.trial.pldaps.draw.photodiode.use && ...
    mod(p.trial.iFrame, p.trial.pldaps.draw.photodiode.everyXFrames) == 0 )
 
     pds.tdt.strobe(p.trial.event.PDFLASH);
-    
+
     p.trial.timing.photodiodeTimes(:, p.trial.pldaps.draw.photodiode.dataEnd) = [p.trial.ttime, p.trial.iFrame];
     p.trial.pldaps.draw.photodiode.dataEnd = p.trial.pldaps.draw.photodiode.dataEnd + 1;
 
@@ -126,9 +136,9 @@ end
 % ------------------------------------------------------------------------%
 %% Write trial information to control screen
 % TODO: Check why this is not working
-               
+
 % Screen('DrawText', p.trial.display.overlayptr, p.trial.SmryStr , 20, 1040, ...
 %                    p.trial.display.clut.text, p.trial.display.clut.bg);
-%                
-               
+%
+
 

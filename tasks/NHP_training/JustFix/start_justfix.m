@@ -1,10 +1,10 @@
-function p = start_get_fix(subjname, rig, experimenter)
+function p = start_justfix(subjname, rig, experimenter)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,
 % setting parameters for the session, creating a pldaps class and running the experiment.
 %
-% wolf zinke, Mar. 2017
+% wolf zinke, Apr. 2017
 
 
 % ------------------------------------------------------------------------%
@@ -17,12 +17,12 @@ SS = ND_RigDefaults;    % load default settings according to the current rig set
 %% Define task related functions
 
 % function to set up experiment (and maybe also including the trial function)
-exp_fun = 'get_fix';
+exp_fun = 'justfix';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef  = 'get_fix_taskdef';  % function that provides task specific parameter definitions
-SS.plot.routine  = 'get_fix_plots';    % function for online plotting of session progress
+SS.task.TaskDef  = 'justfix_taskdef';  % function that provides task specific parameter definitions
+SS.plot.routine  = 'justfix_plots';    % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
@@ -33,20 +33,21 @@ SS.editable = {'behavior.fixation.FixWin'; 'behavior.fixation.FixPos'};
 % Most of the components are disabled as default. If needed for the task enable them here.
 SS.sound.use                  = 0; % no sound for now
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
-SS.behavior.joystick.use      = 1; % joystick is behavioral relevant
+SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
 SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
-SS.pldaps.draw.joystick.use   = 1; % draw joystick states on control screen
+SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
 SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
 SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
 
 SS.datapixx.useAsEyepos       = 1;
-SS.datapixx.useJoystick       = 1;
+SS.datapixx.useJoystick       = 0;
+SS.datapixx.TTL_trialOn       = 0;
 
 SS.behavior.fixation.required = 1; % fixation required for this task
 
-SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states are called
+SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
@@ -55,10 +56,11 @@ SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states
 
 SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
-SS.behavior.fixation.FixScale = [100, 100]; 
-SS.behavior.fixation.FixWin   = 4;
-SS.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixWinStp = 0.5;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixScale = [4.5, 4.5]; 
+
+SS.behavior.fixation.FixWin     = 8;
+SS.behavior.fixation.FixGridStp = [2, 2]; % x,y coordinates in a 9pt grid
+SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
 
 
 %% ################## Edit within the preceding block ################### %%

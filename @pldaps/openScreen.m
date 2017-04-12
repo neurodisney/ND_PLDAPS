@@ -106,7 +106,7 @@ disp('****************************************************************')
 disp('****************************************************************')
 disp('Adding DisplayColorCorrection to FinalFormatting')
 disp('****************************************************************')
-if isField(p.trial, 'display.gamma.power')
+if isField(p.defaultParameters, 'display.gamma.power')
     PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'SimpleGamma');
 else
 	PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'LookupTable');
@@ -151,6 +151,51 @@ p.defaultParameters.display.scr_rot = 0;                                        
 Screen('TextFont',p.defaultParameters.display.ptr,'Helvetica');
 Screen('TextSize',p.defaultParameters.display.ptr,16);
 Screen('TextStyle',p.defaultParameters.display.ptr,1);
+
+%% Push transformation matrices onto the graphics stack to change the origin and scale coordinates to degrees
+
+% Get the pixels per degree at the center of the screen
+p.defaultParameters.display.ppdCentral = tand(1) * p.defaultParameters.display.viewdist * p.defaultParameters.display.w2px; 
+
+% Translate the origin
+if isfield(p.defaultParameters.display, 'useCustomOrigin') && p.defaultParameters.display.useCustomOrigin ~= 0
+    
+    % If useCustomOrigin == 1, use a central origin
+    if p.defaultParameters.display.useCustomOrigin == 1
+        xTrans = p.defaultParameters.display.ctr(1); % p.defaultParameters.display.pWidth / 2;
+        yTrans = p.defaultParameters.display.ctr(2); %p.defaultParameters.display.pHeight / 2;
+    
+    % If useCustomOrigin == [x,y], set the origin to x,y expressed in pixels
+    elseif size(p.defaultParameters.display.useCustomOrigin) == 2
+        xTrans = p.defaultParameters.display.useCustomOrigin(1);
+        yTrans = p.defaultParameters.display.useCustomOrigin(2);
+        
+    % Otherwise give an error
+    else
+        error('pldaps:openScreen', 'Bad origin specified in p.defaultParameters.display.useCustomOrigin')
+    end
+    
+    Screen('glTranslate', p.defaultParameters.display.ptr, xTrans, yTrans)
+    p.defaultParameters.display.winRect = p.defaultParameters.display.winRect - [xTrans, yTrans, xTrans, yTrans];
+end
+
+% Scale the units to degrees of visual angle
+if isfield(p.defaultParameters.display, 'useDegreeUnits') && p.defaultParameters.display.useDegreeUnits ~= 0
+    
+    % If useDegreeUnits == 1, scale uniformly prioritizing accuracy in center of screen (may be slightly inaccurate)
+    if p.defaultParameters.display.useDegreeUnits == 1
+        xScaleFactor = p.defaultParameters.display.ppdCentral(1);
+        yScaleFactor = p.defaultParameters.display.ppdCentral(2);
+        
+        Screen('glScale', p.defaultParameters.display.ptr, xScaleFactor, yScaleFactor)
+        p.defaultParameters.display.winRect = p.defaultParameters.display.winRect ./ [xScaleFactor, yScaleFactor, xScaleFactor, yScaleFactor];
+    
+    % Otherwise give an error
+    else
+        error('pldaps:openScreen', 'Bad value for p.defaultParameters.display.useDegreeUnits')
+    end
+
+end
 
 %% Assign overlay pointer
 if p.defaultParameters.display.useOverlay==1
@@ -233,7 +278,7 @@ else
 end
 
 % % Set gamma lookup table
-if isField(p.trial, 'display.gamma')
+if isField(p.defaultParameters, 'display.gamma')
     disp('****************************************************************')
     disp('****************************************************************')
     disp('Loading gamma correction')

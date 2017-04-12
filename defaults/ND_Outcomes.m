@@ -11,8 +11,6 @@ disp('>>>>  ND:  Defining Task Outcomes <<<<')
 disp('****************************************************************')
 disp('');
 
-
-
 % ------------------------------------------------------------------------%
 %% Define task outcomes
 
@@ -24,6 +22,7 @@ p.defaultParameters.outcome.Late              =   5;     % response occurred aft
 p.defaultParameters.outcome.Miss              =   3007;  % no response at a reasonable time
 p.defaultParameters.outcome.NoStart           =   3004;  % trial not started
 p.defaultParameters.outcome.PrematStart       =   3008;  % trial start not too early as response to cue
+p.defaultParameters.outcome.TaskStart         =   3009;  % trial not started
 
 % joystick related
 if(p.defaultParameters.behavior.joystick.use)

@@ -50,9 +50,9 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
-SS.display.viewdist                             = 57;     % screen distance to the observer                            !!!
-SS.display.heightcm                             = 29.5;   % height of the visible screen in cm                         !!!
-SS.display.widthcm                              = 52.0;   % width  of the visible screen in cm                         !!!
+SS.display.viewdist                             = 114;     % screen distance to the observer                            !!!
+SS.display.heightcm                             = 35;   % height of the visible screen in cm                         !!!
+SS.display.widthcm                              = 64;   % width  of the visible screen in cm                         !!!
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -77,6 +77,14 @@ SS.display.movie.height                         = [];    % height of the movie.
 SS.display.movie.width                          = [];    % width of the movie.
 SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encoding parameters
 
+% Use the coordinate frame transformations
+SS.display.useCustomOrigin                      = 1;    % 0 is off (use PTB standard origin in corner), 1 uses central origin, [x,y] uses custom pixel location as origin
+SS.display.useDegreeUnits                       = 1;    % 0 uses pixels, 1 uses uniform scaling to degrees priortizing accuracy near the center of the screen
+
+% ------------------------------------------------------------------------%
+%% EyeLink settings: Eyelink specific parameters
+SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
+
 % ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
 SS.mouse.use                                    = 0;     % collect and store mouse positions
@@ -87,8 +95,15 @@ SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse t
 SS.sound.use                                    = 0;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
-SS.sound.volume                                 = 0.4;
-SS.sound.usePsychPortAudio                      = 0;      % This should be left to 0 since we are using datapixx
+
+% Datapixx sound and PsychPortAudio can both be used simultaneously to
+% maximize audio channels (Need to get datapixx working first)
+SS.sound.useDatapixx                            = 1;
+SS.sound.datapixxVolume                         = 0.9;
+SS.sound.datapixxInternalSpeakerVolume          = 0;
+
+SS.sound.usePsychPortAudio                      = 1;
+SS.sound.psychPortVolume                        = 0.9;
 % ------------------------------------------------------------------------%
 %% Plexon settings: interact with plexon MAP or Omniplex
 % spikeserver: configure our plexon spike server.
@@ -104,7 +119,7 @@ SS.pldaps.maxTrialLength                        = 25;    % Maximum duration of a
 SS.pldaps.nosave                                = 0;     % disables saving of data when true. see .pldaps.save for more control
 SS.pldaps.pass                                  = 0;     % indicator of behavior (i.e. fixations) should always be assumed to be good.
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
-SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
+SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.d
 % SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file. (WZ TODO: I think could be removed. File names generated automatically.)
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
@@ -144,7 +159,6 @@ SS.pldaps.pause.type                            = 1;     % Only type 1 is curren
 SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial parameters
 SS.pldaps.save.mergedData                       = 1;     % Save merged data. By default pldaps only saves changes to the trial struct in .data. When mergedData is enabled, the complete content of p.trial is saved to p.data. This can cause significantly larger files
 SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with the data from each trial?
-SS.pldaps.save.v73                              = 0;     % save as matlab version v73?
 
 % ------------------------------------------------------------------------%
 %% Screen/Display parameters
@@ -162,7 +176,7 @@ SS.pldaps.save.v73                              = 0;     % save as matlab versio
 
 % ------------------------------------------------------------------------%
 %% Debugging
-SS.pldaps.GetTrialStateTimes  = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
+SS.pldaps.GetTrialStateTimes = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 
 % ------------------------------------------------------------------------%
 %% Reward settings
@@ -180,14 +194,10 @@ SS.datapixx.adc.XEyeposChannel  = 0;
 SS.datapixx.adc.YEyeposChannel  = 1;
 SS.datapixx.adc.PupilChannel    = 2;
 
-% range of analog signal, use this for initial mapping of eye position.
-SS.datapixx.adc.EyeRange = [-10, 10];
-
 % Saccade parameters
 SS.behavior.fixation.use       =  0;      % does this task require control of eye position
 
 SS.behavior.fixation.required  =  0;      % If not required, fixation states will be ignored
-
 
 SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
 SS.behavior.fixation.FixWinStp = 0.25;    % change of the size of the fixation window upon key press
@@ -204,12 +214,13 @@ SS.behavior.fixation.GotFix    = 0;       % minimum time [ms] to identify a fixa
 
 SS.pldaps.draw.eyepos.history    = 40;    % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz         = 8;     % size in pixels of the eye pos indicator
-SS.pldaps.draw.eyepos.fixwinwdth = 2;     % frame width of the fixation window in pixels
+SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2; % frame width of the fixation window in pixels
 
 % Define fixation states
 SS.FixState.Current    = NaN;
 SS.FixState.FixIn      =   1;  % Gaze within fixation window
 SS.FixState.FixOut     =   0;  % Gaze out of fixation window
+SS.FixState.FixBreak   =  -1;  % Gaze out of fixation window
 
 % ------------------------------------------------------------------------%
 %% Joystick

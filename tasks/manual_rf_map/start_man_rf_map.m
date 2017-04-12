@@ -31,9 +31,8 @@ SS.pldaps.trialFunction = exp_fun; % This function is both, set-up for the exper
 SS.sound.use          = 1;
 SS.display.bgColor    = [0.5, 0.5, 0.5];
 
-% prepare for eye tracking and joystick monitoring
-SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
-SS.mouse.useAsEyepos  = 0;
+% Use the mouse
+SS.mouse.use = 1;
 
 SS.pldaps.nosave = 1;  % For now do not bother with the pldaps file format, use plain text file instead.
 

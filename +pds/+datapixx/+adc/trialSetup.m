@@ -1,13 +1,13 @@
 function p = trialSetup(p)
 %pds.datapixx.adc.trialSetup    setup everything for a trial
 %
-% p = pds.datapixx.adc.trialSetup(p) 
-% 
+% p = pds.datapixx.adc.trialSetup(p)
+%
 % The function mainly preallocates data for the trial
-% 
+%
 %     jk  wrote it 2014
 
-if ~p.trial.datapixx.use || isempty(p.trial.datapixx.adc.channels)
+if( isempty(p.trial.datapixx.adc.channels))
     return;
 end
 
@@ -24,7 +24,7 @@ nMaps=length(p.trial.datapixx.adc.channelMappingChannels);
 for imap=1:nMaps
 %     iChannels=p.trial.datapixx.adc.channelMappingChannels{imap};
     iSub = p.trial.datapixx.adc.channelMappingSubs{imap};
-       
+
     %always reassign, because that's what happening at the first write
     %anyways.
     p=subsasgn(p,iSub(1:end-1),nan(length(p.trial.datapixx.adc.channelMappingChannels{imap}), maxDataSamplesPerTrial));

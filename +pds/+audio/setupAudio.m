@@ -1,6 +1,6 @@
 function p = setupAudio(p)
 % pds.audio.setupAudio  loads the audio files from dirs.wavfiles, then sets
-% up PsychportAudio and Datapixx to be able to play them
+% up PsychPortAudio and Datapixx to be able to play them
 
 if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
     
@@ -13,15 +13,15 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
     % Setup to write to Datapixx, if enabled
     if p.trial.sound.useDatapixx
         Datapixx('InitAudio');
-        Datapixx('SetAudioVolume', p.trial.sound.datapixxVolume);
+        Datapixx('SetAudioVolume', [p.trial.sound.datapixxVolume, p.trial.sound.datapixxInternalSpeakerVolume]);
         Datapixx('RegWrRd');
         
         % Set the base buffer location where the sounds will be written
         nextBuf = 16e6;
     end
     
-    % Setup to write to PsychportAudio, if enabled
-    if p.trial.sound.usePsychportAudio
+    % Setup to write to PsychPortAudio, if enabled
+    if p.trial.sound.usePsychPortAudio
         InitializePsychSound;
         
         % open a PsychPortAudio master device. Master devices themselves are
@@ -41,7 +41,7 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
         end
         
         % set the volume
-        PsychPortAudio('Volume', p.trial.sound.master, psychportVolume);
+        PsychPortAudio('Volume', p.trial.sound.master, p.trial.sound.psychPortVolume);
     end
     
     %% Iterate through all the wav files
@@ -59,12 +59,12 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
         
         % Store the attributes of the sound
         nSamples = size(wav,2);
-        nChannels = size(wave,1);
+        nChannels = size(wav,1);
         p.trial.sound.(name).sampleRate = sampleRate;
         p.trial.sound.(name).nSamples = nSamples;
         p.trial.sound.(name).nChannels = nChannels;
         
-        % Load the sound into device memory for Datapixx
+        %% Load the sound into device memory for Datapixx
         if p.trial.sound.useDatapixx
             p.trial.sound.(name).buf = nextBuf;
             [nextBuf,~,overflow] = Datapixx('WriteAudioBuffer', wav, nextBuf);
@@ -73,10 +73,31 @@ if p.trial.sound.use && isField(p.trial, 'pldaps.dirs.wavfiles')
             end
         end
         
-        % Load the sound into device memory PsychportAudio
-        if p.trial.sound.usePsychportAudio
-            pahandle = PsychPortAudio('OpenSlave', p.trial.sound.master, 1, nChannels);
-            p.trial.sound.(name).pahandle = pahandle;
+        %% Load the sound into device memory PsychPortAudio
+        if p.trial.sound.usePsychPortAudio
+            % If wav file is a mono stream, duplicate into a stereo stream
+            if nChannels == 1
+                wav = [wav;wav];
+            end
             
-            PsychPortAudio('FillBuffer',pahandle, wav)
-  
+            % Create a different PsychPortAudio buffer for left, right, and
+            % both(stereo) playback
+            
+            % Left 
+            paLeft = PsychPortAudio('OpenSlave', p.trial.sound.master, 1, 1, [1]);
+            PsychPortAudio('FillBuffer',paLeft, wav(1,:));                    
+            p.trial.sound.(name).paLeft = paLeft;
+            
+            %Right
+            paRight = PsychPortAudio('OpenSlave', p.trial.sound.master, 1, 1, [2]);
+            PsychPortAudio('FillBuffer',paRight, wav(2,:));                   
+            p.trial.sound.(name).paRight = paRight;
+            
+            %Both
+            paBoth = PsychPortAudio('OpenSlave', p.trial.sound.master, 1, 2, [1,2]);
+            PsychPortAudio('FillBuffer',paBoth, wav);                    
+            p.trial.sound.(name).paBoth = paBoth;
+            
+        end
+    end
+end

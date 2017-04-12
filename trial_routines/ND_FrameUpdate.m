@@ -14,7 +14,7 @@ ND_CheckKey(p);   % check for key hits
 
 % ------------------------------------------------------------------------%
 %% get analog data
-if(p.trial.datapixx.use && ~isempty(p.trial.datapixx.adc.channels))
+if(~isempty(p.trial.datapixx.adc.channels))
     pds.datapixx.adc.getData(p); % get analogData from Datapixx, including eye position and joystick
 end
 
@@ -23,13 +23,13 @@ end
 % needs to be called after pds.datapixx.adc.getData
 
 if(p.trial.datapixx.useJoystick)
-    ND_CheckJoystick(p);         
+    ND_CheckJoystick(p);
 end
 
 % ------------------------------------------------------------------------%
 %% % check mouse position
 if(p.trial.mouse.use)
-  ND_CheckMouse(p);   
+  ND_CheckMouse(p);
 end
 
 % ------------------------------------------------------------------------%

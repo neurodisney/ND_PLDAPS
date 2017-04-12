@@ -17,7 +17,6 @@ function p = ND_DefaultColors(p)
 %
 % wolf zinke, Jan. 2017
 
-% keep the currently defined background color
 
 
 disp('****************************************************************')
@@ -25,6 +24,7 @@ disp('>>>>  ND:  Setting Default Colors <<<<')
 disp('****************************************************************')
 disp('');
 
+% keep the currently defined background color
 bgcol = p.defaultParameters.display.bgColor;
 
 %% remove PLDAPS default colors

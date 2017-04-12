@@ -38,7 +38,7 @@ end
 
 %% update eye position history (per frame)
 if(p.trial.pldaps.draw.eyepos.use)
-    p.trial.eyeXY_draw = ND_cart2ptb(p, [p.trial.eyeX, p.trial.eyeY]);
+    p.trial.eyeXY_draw = [p.trial.eyeX, p.trial.eyeY];
     
     p.trial.eyeX_hist = [p.trial.eyeXY_draw(1), p.trial.eyeX_hist(1:end-1)];
     p.trial.eyeY_hist = [p.trial.eyeXY_draw(2), p.trial.eyeY_hist(1:end-1)];
@@ -51,7 +51,7 @@ if(p.trial.behavior.fixation.use)
         %% currently not fixating
         case p.trial.FixState.FixOut
             % all below threshold?
-            if(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin_pxl/2 )
+            if(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin/2 )
                 pds.datapixx.flipBit(p.trial.event.FIX_IN);
                 p.trial.FixState.Current = p.trial.FixState.FixIn;
             end
@@ -60,7 +60,7 @@ if(p.trial.behavior.fixation.use)
         case p.trial.FixState.FixIn
 
             % all above threshold?
-            if(p.trial.eyeAmp > p.trial.behavior.fixation.FixWin_pxl/2)
+            if(p.trial.eyeAmp > p.trial.behavior.fixation.FixWin/2)
                 pds.datapixx.flipBit(p.trial.event.FIX_OUT);
                 p.trial.FixState.Current = p.trial.FixState.FixOut;
             end
@@ -68,10 +68,10 @@ if(p.trial.behavior.fixation.use)
         %% if it is nan, so just get the current state
         otherwise
             if(isnan(p.trial.FixState.Current))
-                if(p.trial.eyeAmp > p.trial.behavior.fixation.FixWin_pxl/2)
+                if(p.trial.eyeAmp > p.trial.behavior.fixation.FixWin/2)
                     p.trial.FixState.Current = p.trial.FixState.FixOut;
 
-                elseif(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin_pxl/2)
+                elseif(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin/2)
                     p.trial.FixState.Current = p.trial.FixState.FixIn;
 
                 else
@@ -83,54 +83,3 @@ if(p.trial.behavior.fixation.use)
     end  % switch p.FixState.Current
 end  % if(p.trial.behavior.fixation.use)
 
-
-
-
-
-
-% function checkFixation(p, sn)
-% currentEye=[p.trial.eyeX p.trial.eyeY]; %p.trial.(sn).eyeXYs(1:2,p.trial.iFrame);
-% %     fprintf('checking: state ')
-% % check if fixation should be shown
-% switch p.trial.(sn).state
-%     case p.trial.(sn).states.START
-%         %             fprintf('START\n')
-%
-%         % time to turn on fixation
-%         if p.trial.ttime > p.trial.(sn).preTrial
-%             fixOn(p,sn) % fixation point on
-%         end
-%
-%     case p.trial.(sn).states.FPON
-%         %             fprintf('FPON\n')
-%         % is fixation held
-%         isheld=p.trial.(sn).hFix.isheld(currentEye);
-%         if isheld && p.trial.ttime < p.trial.(sn).fixWait + p.trial.(sn).timeFpOn
-%             fixHold(p,sn)
-%         elseif p.trial.ttime > p.trial.(sn).fixWait + p.trial.(sn).timeFpOn
-%             breakFix(p,sn)
-%         end
-%
-%     case p.trial.(sn).states.FPHOLD
-%         %             fprintf('FPHOLD\n')
-%         % fixation controls motion
-%         if ~p.trial.(sn).showMotion && p.trial.iFrame > p.trial.(sn).frameFpEntered + p.trial.(sn).preStim
-%             motionOn(p,sn)
-%         end
-%
-%         % is fixation held
-%         isheld=p.trial.(sn).hFix.isheld(currentEye);
-%         if isheld && p.trial.ttime < p.trial.(sn).maxFixHold + p.trial.(sn).timeFpEntered
-%             % do nothing
-%         elseif ~isheld && p.trial.ttime > p.trial.(sn).minFixHold + p.trial.(sn).timeFpEntered
-%             fixOff(p,sn)
-%             motionOff(p,sn)
-%         else % break fixation
-%             breakFix(p,sn)
-%         end
-%
-%
-% end
-%
-% end
-%

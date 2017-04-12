@@ -19,14 +19,18 @@ disp('');
 % This should be used to store times when these events happened (to data
 % file or if needed for later use in the task program)
 
-p.defaultParameters.EV.TrialStart = NaN; % Trial start time
-p.defaultParameters.EV.TaskStart  = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
-p.defaultParameters.EV.TaskEnd    = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
-p.defaultParameters.EV.Initiated  = NaN; % animal intiated the task
-p.defaultParameters.EV.GoCue      = NaN; % Onset of Go-signal
-p.defaultParameters.EV.Reward     = NaN; % time of reward delivery
-p.defaultParameters.EV.StartRT    = NaN; % response time to start trial after active cue
-p.defaultParameters.EV.RespRT     = NaN; % reaction time
+p.defaultParameters.EV.TrialStart  = NaN; % Trial start time
+p.defaultParameters.EV.TaskStart   = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
+p.defaultParameters.EV.TaskEnd     = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
+p.defaultParameters.EV.Initiated   = NaN; % animal intiated the task
+p.defaultParameters.EV.GoCue       = NaN; % Onset of Go-signal
+p.defaultParameters.EV.Reward      = NaN; % time of reward delivery
+p.defaultParameters.EV.StartRT     = NaN; % response time to start trial after active cue
+p.defaultParameters.EV.RespRT      = NaN; % reaction time
+p.defaultParameters.EV.DPX_TaskOn  = NaN; % Synch time with datapixx for task on
+p.defaultParameters.EV.DPX_TaskOff = NaN; % Synch time with datapixx for task off
+p.defaultParameters.EV.TDT_TaskOn  = NaN; % Synch time with datapixx for task on
+p.defaultParameters.EV.TDT_TaskOff = NaN; % Synch time with datapixx for task off
 
 % if joystick is used for behavior
 if(p.defaultParameters.behavior.joystick.use)
@@ -142,8 +146,8 @@ p.defaultParameters.event.DO_7       = 2327;
 p.defaultParameters.event.DO_8       = 2328;
 
 % marker to select start and end of trial header
-p.defaultParameters.event.TRIAL_HDR_ON  = 9000;
-p.defaultParameters.event.TRIAL_HDR_OFF = 9001;
+p.defaultParameters.event.TRIAL_HDR_ON  = 99001;
+p.defaultParameters.event.TRIAL_HDR_OFF = 99000;
 
 % TODO: encode trial states (and task epochs)?
 
