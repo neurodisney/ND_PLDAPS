@@ -270,8 +270,6 @@ function TaskDesign(p)
                 pds.reward.give(p, p.trial.task.Reward.Curr);
                 p.trial.task.Reward.cnt = p.trial.task.Reward.cnt + 1;
                 
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Correct; % received a reward, hence correct
-                
                 rs = find(~(p.trial.task.Reward.Step >= p.trial.task.Reward.cnt), 1, 'last');
 
                 p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.Dur + p.trial.task.Reward.WaitNext(rs);
@@ -294,6 +292,10 @@ function TaskDesign(p)
 
             if(p.trial.datapixx.TTL_trialOn)
                 pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
+            end
+            
+            if(p.trial.task.Reward.cnt > 0)
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Correct; % received a reward, hence correct
             end
 
             % determine ITI

@@ -24,7 +24,7 @@ function p = give(p, amount)
     %%sound
     if(p.trial.sound.use && p.trial.sound.useForReward)
         PsychPortAudio('Start', p.trial.sound.reward);
-        pds.datapixx.flipBit(p.trial.event.AUDIO_REW);
+        pds.tdt.strobe(p.trial.event.AUDIO_REW);
     end
 
     %% store data
