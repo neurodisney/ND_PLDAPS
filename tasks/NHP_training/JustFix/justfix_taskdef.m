@@ -28,8 +28,8 @@ p.trial.task.Reward.JackPot         = 1.5;  % unlikely he gets here
 
 % reward series for continous fixation
 p.trial.task.Reward.WaitNext = [0.4, 0.2, 0.1];  % wait period until next reward
-p.trial.task.Reward.Dur      = 0.2;             % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step     = [0, 3, 6];          % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.task.Reward.Dur      = 0.2;              % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Step     = [0, 3, 6];        % define the number of subsequent rewards after that the next delay period should be used.
 
 % manual reward from experimenter
 p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
