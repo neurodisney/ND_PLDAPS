@@ -27,8 +27,8 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 p.trial.task.Reward.JackPot         = 1.5;  % unlikely he gets here
 
 % reward series for continous fixation
-p.trial.task.Reward.WaitNext = [0.4, 0.2, 0.1];  % wait period until next reward
-p.trial.task.Reward.Dur      = 0.2;              % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.WaitNext = [0.75, 0.5, 0.25];  % wait period until next reward
+p.trial.task.Reward.Dur      = 0.15;              % reward duration [s], user vector to specify values used for incremental reward scheme
 p.trial.task.Reward.Step     = [0, 3, 6];        % define the number of subsequent rewards after that the next delay period should be used.
 
 % manual reward from experimenter
@@ -48,7 +48,7 @@ p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
-p.trial.behavior.fixation.FixScale = [4.5, 4.5];  % scaling factor to match screen/dva [TODO: get from calibration]
+p.trial.behavior.fixation.FixScale = [5, 5];  % scaling factor to match screen/dva [TODO: get from calibration]
 
 p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
                                   p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
@@ -71,5 +71,5 @@ p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.Target
 % maxTrialLength is used to pre-allocate memory at several initialization
 % steps. It specifies a duration in seconds.
 
-p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix+p.trial.task.Timing.MaxFix); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix + p.trial.task.Timing.MaxFix); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
