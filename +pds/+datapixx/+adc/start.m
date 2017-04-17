@@ -86,6 +86,7 @@ for imap=1:length(maps)
         S2.subs{1}=find(p.trial.datapixx.adc.channelMappingChannels{imap}==p.trial.datapixx.adc.XEyeposChannel);
         p.trial.datapixx.adc.XEyeposChannelSubs=[S Snew S2];
     end
+    
     if ~isempty(p.trial.datapixx.adc.YEyeposChannel) && ismember(p.trial.datapixx.adc.YEyeposChannel,p.trial.datapixx.adc.channelMappingChannels{imap})
         S2.subs{1}=find(p.trial.datapixx.adc.channelMappingChannels{imap}==p.trial.datapixx.adc.YEyeposChannel);
         p.trial.datapixx.adc.YEyeposChannelSubs=[S Snew S2];

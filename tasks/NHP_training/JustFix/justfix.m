@@ -48,6 +48,7 @@ if(isempty(state))
     ND_DefineCol(p, 'Fix_M',  33, [1.00, 0.00, 1.00]);
 
     p.trial.task.Color_list = Shuffle({'Fix_W', 'Fix_R', 'Fix_G', 'Fix_B', 'Fix_O', 'Fix_Y', 'Fix_C', 'Fix_M'});  
+    p.trial.task.Color_list = Shuffle({'Fix_W'});  
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -90,7 +91,8 @@ if(isempty(state))
     c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     
-    conditions = {c1, c2, c3, c4};
+    conditions = {c1, c2};
+    %conditions = {c1, c2, c3, c4};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
