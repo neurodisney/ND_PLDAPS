@@ -343,7 +343,7 @@ function KeyAction(p)
         switch p.trial.LastKeyPress
             
             
-            %% TODO: accept eye position, random target position, save current calibration
+            %% TODO: accept eye position, random target position, save current calibration, update current calibration
             
             % grid positions
             case KbName('1')

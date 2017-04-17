@@ -114,8 +114,7 @@ if(p.trial.behavior.fixation.useCalibration)
         [pathStr,~,~] = fileparts(mfilename('fullpath'));
         p.trial.behavior.fixation.CalibMat = [pathStr,filesep,'FixCal.mat'];
     end
-    
-    
+    p.trial.Calib.Eye = load(p.trial.behavior.fixation.CalibMat);
 end
 
 %-------------------------------------------------------------------------%

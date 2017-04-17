@@ -39,9 +39,11 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             % set current eye position as expected fixation position
             if(p.trial.datapixx.useAsEyepos)
 %                 p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.FixPos_pxl - ( [p.trial.eyeX, p.trial.eyeY] - p.trial.behavior.fixation.Offset);
-% 
+
                 p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset + p.trial.behavior.fixation.FixPos - ...
-                                                  [p.trial.eyeX, p.trial.eyeY];
+                                                  [nanmedian(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr)), ...
+                                                   nanmedian(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr))];
+                                                   
                 ND_CtrlMsg(p, ['fixation offset changed to ', num2str(p.trial.behavior.fixation.Offset)]);
             end
 

@@ -6,11 +6,9 @@ function p = start_FixTrainCalib(subjname, rig, experimenter)
 %
 % wolf zinke, Apr. 2017
 
-
 % ------------------------------------------------------------------------%
 %% load default settings into a struct
 SS = ND_RigDefaults;    % load default settings according to the current rig setup
-
 
 %% ################## Edit within the following block ################## %%
 
@@ -45,6 +43,8 @@ SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
+SS.behavior.fixation.useCalibration = 1;
+
 SS.behavior.fixation.required = 1; % fixation required for this task
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
@@ -61,7 +61,6 @@ SS.behavior.fixation.FixScale = [4.5, 4.5];
 SS.behavior.fixation.FixWin     = 8;
 SS.behavior.fixation.FixGridStp = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
-
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
