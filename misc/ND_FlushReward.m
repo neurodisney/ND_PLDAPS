@@ -47,15 +47,16 @@ disp(['Waiting for reward flushing for ', num2str(opentime, '%.3f'), ' seconds .
 
 pause(opentime);
   
-    function cleanUp
-        display('Stopping reward flush')
-        buffer = [0];
-        Datapixx('WriteDacBuffer', buffer, 0, chan);
-        Datapixx('SetDacSchedule', 0, sampleRate, 1, chan);
-        Datapixx('StartDacSchedule');
-        Datapixx('RegWrRd');
-        
-        Datapixx('Close');
-    end
 
-end
+
+function cleanUp
+    display('Stopping reward flush')
+    buffer = [0];
+    Datapixx('WriteDacBuffer', buffer, 0, chan);
+    Datapixx('SetDacSchedule', 0, sampleRate, 1, chan);
+    Datapixx('StartDacSchedule');
+    Datapixx('RegWrRd');
+
+    Datapixx('Close');
+    
+

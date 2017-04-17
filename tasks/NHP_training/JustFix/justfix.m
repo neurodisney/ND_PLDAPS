@@ -90,7 +90,7 @@ if(isempty(state))
     c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     
-    conditions = {c1, c2, c3};
+    conditions = {c1, c2, c3, c4};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
@@ -270,8 +270,6 @@ function TaskDesign(p)
                 pds.reward.give(p, p.trial.task.Reward.Curr);
                 p.trial.task.Reward.cnt = p.trial.task.Reward.cnt + 1;
                 
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Correct; % received a reward, hence correct
-                
                 rs = find(~(p.trial.task.Reward.Step >= p.trial.task.Reward.cnt), 1, 'last');
 
                 p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.Dur + p.trial.task.Reward.WaitNext(rs);
@@ -294,6 +292,10 @@ function TaskDesign(p)
 
             if(p.trial.datapixx.TTL_trialOn)
                 pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
+            end
+            
+            if(p.trial.task.Reward.cnt > 0)
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Correct; % received a reward, hence correct
             end
 
             % determine ITI
@@ -438,7 +440,7 @@ function Trial2Ascii(p, act)
             tblptr = fopen(p.trial.session.asciitbl , 'w');
 
             fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  FixRT  ',...
-                             'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI\n']);
+                             'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI FixWin  FixPos_X  FixPos_Y \n']);
             fclose(tblptr);
 
         case 'save'
@@ -450,12 +452,13 @@ function Trial2Ascii(p, act)
 
                 tblptr = fopen(p.trial.session.asciitbl, 'a');
 
-                fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f  %.5f  %.5f  %d  %d  %s  %.5f  %s  %.5f  \n' , ...
+                fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f  %.5f  %.5f  %d  %d  %s  %.5f  %s  %.5f  %.2f  %.2f  %.2f \n' , ...
                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
                                 p.trial.EV.DPX_TaskOn, p.trial.session.subject, p.trial.session.experimentSetupFile, ...
                                 p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
                                 p.trial.task.CurRewDelay, p.trial.task.Reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
-                                p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.task.FixCol, p.trial.task.Timing.ITI);
+                                p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.task.FixCol, p.trial.task.Timing.ITI, ...
+                                p.trial.behavior.fixation.FixWin, p.trial.task.TargetPos(1), p.trial.task.TargetPos(2));
                fclose(tblptr);
             end
     end
