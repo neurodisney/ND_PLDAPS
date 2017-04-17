@@ -180,40 +180,39 @@ SS.pldaps.GetTrialStateTimes = 0;  % create a 2D matrix (trialstate, frame) with
 
 % ------------------------------------------------------------------------%
 %% Reward settings
-SS.reward.defaultAmount   = 0.05;  % Default amount of reward.=0; [in seconds]
-SS.reward.Lag             = 0.15;  % Delay between response and reward onset
-SS.datapixx.useForReward  = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
-SS.datapixx.adc.RewardChannel = 3; % Default ADC output channel
+SS.datapixx.useForReward      = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
+SS.reward.defaultAmount       = 0.05;  % Default amount of reward.=0; [in seconds]
+SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
+SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
 SS.datapixx.useAsEyepos         = 0;
 
-% default ADC channels to use (set up later in ND_InitSession)
+% Default ADC channels to use (set up later in ND_InitSession)
 SS.datapixx.adc.XEyeposChannel  = 0;
 SS.datapixx.adc.YEyeposChannel  = 1;
 SS.datapixx.adc.PupilChannel    = 2;
 
 % Saccade parameters
-SS.behavior.fixation.use       =  0;      % does this task require control of eye position
+SS.behavior.fixation.use        =  0;     % does this task require control of eye position
 
-SS.behavior.fixation.required  =  0;      % If not required, fixation states will be ignored
+SS.behavior.fixation.required   =  0;     % If not required, fixation states will be ignored
 
-SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
-SS.behavior.fixation.FixWinStp = 0.25;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixWin     =  4;     % diameter of fixation window in dva
+SS.behavior.fixation.FixWinStp  = 0.25;   % change of the size of the fixation window upon key press
 SS.behavior.fixation.FixGridStp = [2, 2]; % x,y coordinates in a 9pt grid
 
 SS.behavior.fixation.Offset    = [0 ,0];  % offset to get current position signal to FixPos
 SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window [dva]
 
 SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
-SS.behavior.fixation.FixScale  = [1 , 1]; % scaling factor to match screen/dva [TODO: get from calibration]
 
 SS.behavior.fixation.BreakTime = 50;      % minimum time [ms] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;       % minimum time [ms] to identify a fixation break
 
-SS.pldaps.draw.eyepos.history    = 40;    % show eye position of the previous n frames in addition to current one
-SS.pldaps.draw.eyepos.sz         = 8;     % size in pixels of the eye pos indicator
+SS.pldaps.draw.eyepos.history  = 40;      % show eye position of the previous n frames in addition to current one
+SS.pldaps.draw.eyepos.sz       = 8;       % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2; % frame width of the fixation window in pixels
 
 % Define fixation states
@@ -222,11 +221,16 @@ SS.FixState.FixIn      =   1;  % Gaze within fixation window
 SS.FixState.FixOut     =   0;  % Gaze out of fixation window
 SS.FixState.FixBreak   =  -1;  % Gaze out of fixation window
 
+% Calibration of eye position
+SS.behavior.fixation.useCalibration = 0; % load mat file for eye calibration
+SS.behavior.fixation.CalibMat = [];
+SS.behavior.fixation.FixScale = [1 , 1]; % scaling factor to match screen/dva [TODO: get from calibration]
+
 % ------------------------------------------------------------------------%
 %% Joystick
 SS.datapixx.useJoystick       = 0;
 
-% default ADC channels to use (set up later in ND_InitSession)
+% Default ADC channels to use (set up later in ND_InitSession)
 SS.datapixx.adc.XJoyChannel   = 3;
 SS.datapixx.adc.YJoyChannel   = 4;
 
@@ -269,7 +273,7 @@ SS.key.FixReq = 'f';  % disable/enable fixation control
 SS.key.CtrJoy = 'j';  % set current joystick position as zero
 
 SS.key.FixInc = '=+'; % increase size of fixation window
-SS.key.FixDec = '-_'; % Decrease size of fixation window
+SS.key.FixDec = '-_'; % decrease size of fixation window
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables

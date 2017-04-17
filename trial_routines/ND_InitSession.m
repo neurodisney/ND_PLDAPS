@@ -103,8 +103,20 @@ end
 
 %-------------------------------------------------------------------------%
 %% prepare fixation control display
+if(p.trial.pldaps.draw.eyepos.use)
+    p.trial.pldaps.draw.eyepos.fixwinwdth = ND_pxl2dva(p.trial.pldaps.draw.eyepos.fixwinwdth_pxl, p);
+end
 
-p.trial.pldaps.draw.eyepos.fixwinwdth = ND_pxl2dva(p.trial.pldaps.draw.eyepos.fixwinwdth_pxl, p);
+%-------------------------------------------------------------------------%
+%% eye calibration
+if(p.trial.behavior.fixation.useCalibration)
+    if(isempty(p.trial.behavior.fixation.CalibMat))
+        [pathStr,~,~] = fileparts(mfilename('fullpath'));
+        p.trial.behavior.fixation.CalibMat = [pathStr,filesep,'FixCal.mat'];
+    end
+    
+    
+end
 
 %-------------------------------------------------------------------------%
 %% Setup Photodiode stimuli
@@ -123,6 +135,7 @@ end
 if(p.trial.sound.use)
     p = pds.audio.setupAudio(p);
 end
+
 
 %-------------------------------------------------------------------------%
 %% REWARD
