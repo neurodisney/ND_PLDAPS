@@ -109,12 +109,8 @@ end
 
 %-------------------------------------------------------------------------%
 %% eye calibration
-if(p.trial.behavior.fixation.useCalibration)
-    if(isempty(p.trial.behavior.fixation.CalibMat))
-        [pathStr,~,~] = fileparts(mfilename('fullpath'));
-        p.trial.behavior.fixation.CalibMat = [pathStr,filesep,'FixCal.mat'];
-    end
-    p.trial.Calib.Eye = load(p.trial.behavior.fixation.CalibMat);
+if(p.trial.behavior.fixation.useCalibration)    
+    p = pds.eyecalib.setup(p);
 end
 
 %-------------------------------------------------------------------------%

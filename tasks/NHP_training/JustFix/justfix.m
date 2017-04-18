@@ -344,67 +344,52 @@ function KeyAction(p)
 
             % grid positions
             case KbName('1')
-            p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
-            MoveFix(p);
+                p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
             
             case KbName('2')
-            p.trial.behavior.fixation.FixPos = [    0,  grdY];
-            MoveFix(p);
+                p.trial.behavior.fixation.FixPos = [    0,  grdY];
             
             case KbName('3')
-            p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
-            MoveFix(p);
+                p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
             
             case KbName('4')
-            p.trial.behavior.fixation.FixPos = [-grdX,     0];
-            MoveFix(p);
+                p.trial.behavior.fixation.FixPos = [-grdX,     0];
             
             case KbName('5')
-            p.trial.behavior.fixation.FixPos = [    0,     0];
-            MoveFix(p);
+                p.trial.behavior.fixation.FixPos = [    0,     0];
             
             case KbName('6')
-            p.trial.behavior.fixation.FixPos = [ grdX,    0];
-            MoveFix(p);
+                p.trial.behavior.fixation.FixPos = [ grdX,    0];
             
             case KbName('7')
-            p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
-            MoveFix(p);
+                p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
             
             case KbName('8')
-            p.trial.behavior.fixation.FixPos = [    0, -grdY];
-            MoveFix(p);
+                p.trial.behavior.fixation.FixPos = [    0, -grdY];
             
             case KbName('9')
-            p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
-            MoveFix(p);
+                p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
             
             % steps
             case KbName('RightArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
-                                                  p.trial.behavior.fixation.FixWinStp;   
-            MoveFix(p);
-            
+                p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
+                                                      p.trial.behavior.fixation.FixWinStp;   
             case KbName('LeftArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
-                                                  p.trial.behavior.fixation.FixWinStp;
-            MoveFix(p);
-            
+                p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
+                                                      p.trial.behavior.fixation.FixWinStp;
             case KbName('UpArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
-                                                  p.trial.behavior.fixation.FixWinStp;
-            MoveFix(p);
-            
+                p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
+                                                      p.trial.behavior.fixation.FixWinStp;
             case KbName('DownArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
-                                                  p.trial.behavior.fixation.FixWinStp;
-            MoveFix(p);
-            
+                p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
+                                                      p.trial.behavior.fixation.FixWinStp;
             case KbName('g')
                 
                 fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
                         p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
         end
+        
+        MoveFix(p);
     end
 
 % ####################################################################### %
