@@ -15,14 +15,13 @@ hit_col   = [0, 0.65, 0];
 early_col = [0.65, 0, 0];
 late_col  = [0, 0, 0.65];
 
-fig_sz = [100, 100, 1600, 960];
+fig_sz = [50, 50, 1600, 1200];
 
 %% optional offline analysis
 if(~exist('offln', 'var'))
     offln = 0;
 end
 
-        
 %% initialize plot
 if(offln == 1)
     figure('Position', fig_sz, 'Units', 'normalized');
@@ -41,7 +40,7 @@ Results  = cellfun(@(x) x.outcome.CurrOutcome, p.data);
 
 fp = Results ~= p.trial.outcome.NoFix;
 
-try
+% try
     if(sum(fp) > 4)
         
         %% get relevant data
@@ -60,12 +59,12 @@ try
         CurrRew   = cellfun(@(x) x.task.CurRewDelay, p.data);
         RewCnt    = cellfun(@(x) x.reward.iReward,   p.data);
 
+        InitRew = zeros(Ntrials,1);
         for(i=Ntrials)
-            cp = DT.TrialNo(i);
-
             % get reward occurences during trials
-            InitRew(i) = PDS.data{cp}.reward.timeReward(1,1);
+            InitRew(i) = p.data{i}.reward.timeReward(1,1);
         end
+        
         InitRew(RewCnt==0) = CurrRew(RewCnt==0);
         
         Tm      = Trial_tm(fp);
@@ -83,6 +82,7 @@ try
         bv = min(RT)-resp_bin : resp_bin : max(RT)+resp_bin;
         
         hist(RT, bv, 'FaceColor','k', 'EdgeColor','k');
+        hold on;
         title('Reaction times')
         ylabel('count');
         xlabel('time from target onset [ms]')
@@ -101,6 +101,7 @@ try
         bv = min(Dur)-rb : rb : max(Dur)+rb;
         
         hist(Dur, bv, 'FaceColor','k', 'EdgeColor','k');
+        hold on;
         title('fixation duration')
         ylabel('count');
         xlabel('time from fixation onset [s]')
@@ -114,8 +115,8 @@ try
         
         % duration of fixation depending on RT
         subplot(3,5,3);
-        hold on;
         plot(RT, Dur, '.k');
+        hold on;
         plot([medRT,medRT], yl,':r','LineWidth', 1);
         plot(xlim, [medDur,medDur], ':r','LineWidth', 1);
         
@@ -129,9 +130,9 @@ try
        
         % fixation duration depending on initial reward time
         subplot(3,5,3);
+        plot(FrstRew(RewCnt(fp)>0),  Dur(RewCnt(fp)>0),  '.', 'color', hit_col);
         hold on;
-        plot(FrstRew(RewCnt>0),  Dur(RewCnt>0),  '.', 'color', hit_col);
-        plot(FrstRew(RewCnt==0), Dur(RewCnt==0), '.', 'color', hit_col);
+        plot(FrstRew(RewCnt(fp)==0), Dur(RewCnt(fp)==0), '.', 'color', early_col);
         
         title('fix duration depneding on first reward')
         ylabel('duration [s]');
@@ -141,12 +142,31 @@ try
         axis tight
         hold off
         
+        % fixation duration depending on initial reward time
+        subplot(3,5,4);
+        plot(ITI(RewCnt(fp)>0),  Dur(RT(fp)>0),  '.', 'color', hit_col);
+        hold on;
+        plot(ITI(RewCnt(fp)==0), Dur(RT(fp)==0), '.', 'color', early_col);
+        
+        title('RT depending on ITI')
+        ylabel('RT [ms]');
+        xlabel('ITI [s]')
+        xlim([0,max(ITI)]);
+        ylim([0,max(RT)]);
+        axis tight
+        hold off
+        
+        
+        
+        
         % fixation durations over session time
         subplot(3,1,2);
-        hold on;
         
-        plot(Tm(RewCnt>0), RT(RewCnt>0), 'o', 'MarkerSize', 6, ...
+        plot(Tm(RewCnt(fp)>0),  RT(RewCnt(fp)>0),  'o', 'MarkerSize', 6, ...
             'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
+        hold on;
+        plot(Tm(RewCnt(fp)==0), RT(RewCnt(fp)==0), 'o', 'MarkerSize', 6, ...
+            'MarkerEdgeColor', hit_col,'MarkerFaceColor',early_col)
         
         if(Ntrials > 4)
             
@@ -171,10 +191,13 @@ try
         
         % fixation durations over session time
         subplot(3,1,3);
-        hold on;
         
-        plot(Tm, Dur, 'o', 'MarkerSize', 6, ...
+        plot(Tm(RewCnt(fp)>0),  Dur(RewCnt(fp)>0),  'o', 'MarkerSize', 6, ...
             'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
+        hold on;
+        plot(Tm(RewCnt(fp)==0), Dur(RewCnt(fp)==0), 'o', 'MarkerSize', 6, ...
+            'MarkerEdgeColor', hit_col,'MarkerFaceColor',early_col)
+        
         
         if(Ntrials > 4)
             
@@ -200,7 +223,7 @@ try
         %% update plot
         drawnow
     end
-catch me
-    disp('Online plot failed!');
-    disp(me.message);
+% catch me
+%     disp('Online plot failed!');
+%     disp(me.message);
 end

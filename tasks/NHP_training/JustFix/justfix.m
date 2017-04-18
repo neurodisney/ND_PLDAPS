@@ -91,7 +91,7 @@ if(isempty(state))
     c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     
-    conditions = {c1, c2};
+    conditions = {c1, c2, c3};
     %conditions = {c1, c2, c3, c4};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
@@ -156,7 +156,7 @@ function TaskSetUp(p)
     p.trial.task.CurRewDelay = ND_GetITI(p.trial.task.Reward.MinWaitInitial,  ...
                                          p.trial.task.Reward.MaxWaitInitial,  [], [], 1, 0.001);
 
-    p.trial.task.InitRewDelay = p.trial.task.InitRewDelay;  
+    p.trial.task.InitRewDelay = p.trial.task.CurRewDelay;  
     
     p.trial.CurrEpoch = p.trial.epoch.TrialStart;
         
@@ -338,60 +338,61 @@ function TaskDraw(p)
 function KeyAction(p)
 %% task specific action upon key press
     if(~isempty(p.trial.LastKeyPress))
+        try
+            grdX = p.trial.behavior.fixation.FixGridStp(1);
+            grdY = p.trial.behavior.fixation.FixGridStp(2);
 
-        grdX = p.trial.behavior.fixation.FixGridStp(1);
-        grdY = p.trial.behavior.fixation.FixGridStp(2);
+            switch p.trial.LastKeyPress(1)
 
-        switch p.trial.LastKeyPress
+                % grid positions
+                case KbName('1')
+                    p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
 
-            % grid positions
-            case KbName('1')
-                p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
-            
-            case KbName('2')
-                p.trial.behavior.fixation.FixPos = [    0,  grdY];
-            
-            case KbName('3')
-                p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
-            
-            case KbName('4')
-                p.trial.behavior.fixation.FixPos = [-grdX,     0];
-            
-            case KbName('5')
-                p.trial.behavior.fixation.FixPos = [    0,     0];
-            
-            case KbName('6')
-                p.trial.behavior.fixation.FixPos = [ grdX,    0];
-            
-            case KbName('7')
-                p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
-            
-            case KbName('8')
-                p.trial.behavior.fixation.FixPos = [    0, -grdY];
-            
-            case KbName('9')
-                p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
-            
-            % steps
-            case KbName('RightArrow')
-                p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
-                                                      p.trial.behavior.fixation.FixWinStp;   
-            case KbName('LeftArrow')
-                p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
-                                                      p.trial.behavior.fixation.FixWinStp;
-            case KbName('UpArrow')
-                p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
-                                                      p.trial.behavior.fixation.FixWinStp;
-            case KbName('DownArrow')
-                p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
-                                                      p.trial.behavior.fixation.FixWinStp;
-            case KbName('g')
-                
-                fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
-                        p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
+                case KbName('2')
+                    p.trial.behavior.fixation.FixPos = [    0,  grdY];
+
+                case KbName('3')
+                    p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
+
+                case KbName('4')
+                    p.trial.behavior.fixation.FixPos = [-grdX,     0];
+
+                case KbName('5')
+                    p.trial.behavior.fixation.FixPos = [    0,     0];
+
+                case KbName('6')
+                    p.trial.behavior.fixation.FixPos = [ grdX,    0];
+
+                case KbName('7')
+                    p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
+
+                case KbName('8')
+                    p.trial.behavior.fixation.FixPos = [    0, -grdY];
+
+                case KbName('9')
+                    p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
+
+                % steps
+                case KbName('RightArrow')
+                    p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
+                                                          p.trial.behavior.fixation.FixWinStp;   
+                case KbName('LeftArrow')
+                    p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
+                                                          p.trial.behavior.fixation.FixWinStp;
+                case KbName('UpArrow')
+                    p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
+                                                          p.trial.behavior.fixation.FixWinStp;
+                case KbName('DownArrow')
+                    p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
+                                                          p.trial.behavior.fixation.FixWinStp;
+                case KbName('g')
+
+                    fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
+                            p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
+            end
+
+            MoveFix(p);
         end
-        
-        MoveFix(p);
     end
 
 % ####################################################################### %
