@@ -63,30 +63,6 @@ end
 % show history of recent eye position
 if(p.trial.pldaps.draw.eyepos.use)
 % TODO: use alpha blending to fade out old locations
-
-    if(p.trial.behavior.fixation.use)
-        if(p.trial.FixState.Current == p.trial.FixState.FixOut && p.trial.behavior.fixation.required)
-            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyeold, p.trial.task.fixrect, ...
-                                p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
-        elseif(p.trial.FixState.Current == p.trial.FixState.FixIn && p.trial.behavior.fixation.required)
-            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyepos, p.trial.task.fixrect, ...
-                                p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
-        else
-            Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.window, p.trial.task.fixrect, ...
-                                p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
-        end
-%         if(p.trial.FixState.Current == p.trial.FixState.FixOut && p.trial.behavior.fixation.required)
-%             Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.eyeold, ...
-%                                 p.trial.task.fixrect , p.trial.pldaps.draw.eyepos.fixwinwdth);
-%         elseif(p.trial.FixState.Current == p.trial.FixState.FixIn && p.trial.behavior.fixation.required)
-%             Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.eyepos, ...
-%                                 p.trial.task.fixrect , p.trial.pldaps.draw.eyepos.fixwinwdth);
-%         else
-%             Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.window, ...
-%                                 p.trial.task.fixrect , p.trial.pldaps.draw.eyepos.fixwinwdth);
-%         end
-    end
-
     Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX_hist; p.trial.eyeY_hist], ...
                         p.trial.pldaps.draw.eyepos.sz/2, p.trial.display.clut.eyeold, [0 0], 0);
 

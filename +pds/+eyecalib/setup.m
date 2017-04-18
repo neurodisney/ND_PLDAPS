@@ -32,9 +32,9 @@ p.trial.behavior.fixation.CalibMat = [p.defaultParameters.session.dir,filesep,'F
 grdX = p.trial.behavior.fixation.FixGridStp(1);
 grdY = p.trial.behavior.fixation.FixGridStp(2);
 
-p.trial.Calib.Grid_X = [-grdX;    0; grdX; -grdX; 0; grdX; -grdX;     0;  grdX];
-p.trial.Calib.Grid_Y = [ grdY; grdY; grdY;     0; 0;    0; -grdY; -grdY; -grdY];
-
+p.trial.Calib.Grid_X = [-grdX;     0;  grdX; -grdX; 0; grdX; -grdX;    0; grdX];
+p.trial.Calib.Grid_Y = [-grdY; -grdY; -grdY;     0; 0;    0;  grdY; grdY; grdY];
             
 % save calibration file
 pds.eyecalib.save(p);
+

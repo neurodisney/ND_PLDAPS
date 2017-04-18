@@ -17,7 +17,6 @@ function SS = ND_RigDefaults(SS)
 %
 % wolf zinke, Oct. 2016
 
-
 % ------------------------------------------------------------------------%
 %% DataPixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
 SS.datapixx.use                                 = 1;      % enable control of VPixx devices
@@ -106,22 +105,14 @@ SS.sound.usePsychPortAudio                      = 1;
 SS.sound.psychPortVolume                        = 0.9;
 
 % ------------------------------------------------------------------------%
-%% Plexon settings: interact with plexon MAP or Omniplex
-% spikeserver: configure our plexon spike server.
-% SS.plexon.spikeserver.use	                    = 0;     % toggle use of our plexon spike server
-
-% ------------------------------------------------------------------------%
 %% PLDAPS settings: pldaps core parameters
 SS.pldaps.finish                                = inf;   % Number of trials to run. Can be changed dynamically
-%SS.pldaps.goodtrial                             = 0;    % indicator whether the trial was good. Not used by pldaps itself
-%SS.pldaps.iTrial                                = 1;    % trial number. cannot be changed by the user
 SS.pldaps.maxPriority                           = 1;     % Switch to PTB to maxpriority during the trial? See MaxPriority('?')
 SS.pldaps.maxTrialLength                        = 25;    % Maximum duration of a trial in seconds. Used to allocate memory.
 SS.pldaps.nosave                                = 0;     % disables saving of data when true. see .pldaps.save for more control
 SS.pldaps.pass                                  = 0;     % indicator of behavior (i.e. fixations) should always be assumed to be good.
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
-SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.d
-% SS.pldaps.trialFunction                       = [];    % function to be called to run a single Trial.
+SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file. (WZ TODO: I think could be removed. File names generated automatically.)
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
 SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
@@ -161,15 +152,6 @@ SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial p
 SS.pldaps.save.mergedData                       = 1;     % Save merged data. By default pldaps only saves changes to the trial struct in .data. When mergedData is enabled, the complete content of p.trial is saved to p.data. This can cause significantly larger files
 SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with the data from each trial?
 
-% ------------------------------------------------------------------------%
-%% Screen/Display parameters
-% dot sizes for drawing (Taken from pdsDefaultTrialStructure)
-% corresponding colors are defined in ND_DefaultColors.
-%  SS.stimulus.eyeW      = 8;    % eye indicator width in pixels
-%  SS.stimulus.fixdotW   = 8;    % width of the fixation dot
-%  SS.stimulus.targdotW  = 8;    % width of the target dot
-%  SS.stimulus.cursorW   = 8;    % cursor width in pixels
-
 % ####################################################################### %
 %% Below follow definitions used in the Disney Lab
 % This is currently work in progress and we need to find an efficient set
@@ -196,54 +178,56 @@ SS.datapixx.adc.YEyeposChannel  = 1;
 SS.datapixx.adc.PupilChannel    = 2;
 
 % Saccade parameters
-SS.behavior.fixation.use        =  0;     % does this task require control of eye position
+SS.behavior.fixation.use        =  0;       % does this task require control of eye position
 
-SS.behavior.fixation.required   =  0;     % If not required, fixation states will be ignored
+SS.behavior.fixation.required   =  0;       % If not required, fixation states will be ignored
+SS.behavior.fixation.Sample     = 20;       % how many data points to use for determining fixation state.
+SS.behavior.fixation.BreakTime  = 50;       % minimum time [ms] to identify a fixation break
+SS.behavior.fixation.GotFix     = 0;        % state indicating if currently fixation is acquired
 
-SS.behavior.fixation.FixWin     =  4;     % diameter of fixation window in dva
-SS.behavior.fixation.FixWinStp  = 0.25;   % change of the size of the fixation window upon key press
-SS.behavior.fixation.FixGridStp = [2, 2]; % x,y coordinates in a 9pt grid
-
-SS.behavior.fixation.Offset    = [0 ,0];  % offset to get current position signal to FixPos
-SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window [dva]
-
-SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
-
-SS.behavior.fixation.BreakTime = 50;      % minimum time [ms] to identify a fixation break
-SS.behavior.fixation.GotFix    = 0;       % minimum time [ms] to identify a fixation break
-
-SS.pldaps.draw.eyepos.history  = 40;      % show eye position of the previous n frames in addition to current one
-SS.pldaps.draw.eyepos.sz       = 8;       % size in pixels of the eye pos indicator
-SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2; % frame width of the fixation window in pixels
-
-% Define fixation states
-SS.FixState.Current    = NaN;
-SS.FixState.FixIn      =   1;  % Gaze within fixation window
-SS.FixState.FixOut     =   0;  % Gaze out of fixation window
-SS.FixState.FixBreak   =  -1;  % Gaze out of fixation window
+% fixation target parameters
+SS.behavior.fixation.FixPos    = [0 ,0];    % center position of fixation window [dva]
+SS.behavior.fixation.FixType   = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+SS.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
+SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % Calibration of eye position
-SS.behavior.fixation.useCalibration = 0; % load mat file for eye calibration
+SS.behavior.fixation.FixGridStp = [2, 2];  % x,y coordinates in a 9pt grid
+SS.behavior.fixation.FixWinStp  = 0.25;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.useCalibration = 0;   % load mat file for eye calibration
 SS.behavior.fixation.CalibMat = [];
-SS.behavior.fixation.FixScale = [1 , 1]; % scaling factor to match screen/dva [TODO: get from calibration]
+SS.behavior.fixation.FixScale = [1 , 1];   % scaling factor to match screen/dva [TODO: get from calibration]
+SS.behavior.fixation.Offset   = [0 ,0];    % offset to get current position signal to FixPos
 
-SS.behavior.fixation.NumSmplCtr = 10;  % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
+SS.behavior.fixation.NumSmplCtr = 10;      % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
+
+% fixation window
+SS.behavior.fixation.FixWin          =  4; % diameter of fixation window in dva
+SS.pldaps.draw.eyepos.history        = 40; % show eye position of the previous n frames in addition to current one
+SS.pldaps.draw.eyepos.sz             = 8;  % size in pixels of the eye pos indicator
+SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;  % frame width of the fixation window in pixels
+
+% Define fixation states
+SS.FixState.Current  = NaN;
+SS.FixState.FixIn    =   1;  % Gaze within fixation window
+SS.FixState.FixOut   =   0;  % Gaze out of fixation window
+SS.FixState.FixBreak =  -1;  % Gaze out of fixation window
 
 % ------------------------------------------------------------------------%
 %% Joystick
-SS.datapixx.useJoystick       = 0;
+SS.datapixx.useJoystick      = 0;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XJoyChannel   = 3;
-SS.datapixx.adc.YJoyChannel   = 4;
+SS.datapixx.adc.XJoyChannel  = 3;
+SS.datapixx.adc.YJoyChannel  = 4;
 
-SS.behavior.joystick.use       =  0;         % does this task require control of joystick state
-SS.behavior.joystick.Zero      = [2.6, 2.6]; % joystick signal at resting state (released)
-SS.behavior.joystick.Sample    = 20;         % how many data points to use for determining joystick state.
-SS.behavior.joystick.PullThr   = 1.5;        % threshold to detect a joystick press
-SS.behavior.joystick.RelThr    = 1.0;        % threshold to detect a joystick release
+SS.behavior.joystick.use     =  0;         % does this task require control of joystick state
+SS.behavior.joystick.Zero    = [2.6, 2.6]; % joystick signal at resting state (released)
+SS.behavior.joystick.Sample  = 20;         % how many data points to use for determining joystick state.
+SS.behavior.joystick.PullThr = 1.5;        % threshold to detect a joystick press
+SS.behavior.joystick.RelThr  = 1.0;        % threshold to detect a joystick release
 
-SS.pldaps.draw.joystick.use    = 1;          % draw joystick states on control screen
+SS.pldaps.draw.joystick.use  = 1;          % draw joystick states on control screen
 
 % Define joystick states
 SS.JoyState.Current     = NaN;
@@ -252,13 +236,13 @@ SS.JoyState.JoyRest     =   0;  % joystick released
 
 % ------------------------------------------------------------------------%
 %% Analog/digital input/output channels
-SS.datapixx.adc.TTLamp        =  3;  % amplitude of TTL pulses via adc
+SS.datapixx.adc.TTLamp      =  3;  % amplitude of TTL pulses via adc
 
-SS.datapixx.TTLdur            = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the TTL pulse
-SS.datapixx.EVdur             = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the strobe signal
+SS.datapixx.TTLdur          = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the TTL pulse
+SS.datapixx.EVdur           = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the strobe signal
 
-SS.datapixx.TTL_trialOn       = 1;   % if 1 set a digital output high while trial is active
-SS.datapixx.TTL_trialOnChan   = 1;   % DIO channel used for trial state TTL
+SS.datapixx.TTL_trialOn     = 1;   % if 1 set a digital output high while trial is active
+SS.datapixx.TTL_trialOnChan = 1;   % DIO channel used for trial state TTL
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments
@@ -285,9 +269,9 @@ SS.editable   = {};
 % ------------------------------------------------------------------------%
 %% Online plots
 % allow specification of a matlab routine for online data analysis
-SS.plot.do_online       =  0;  % run online data analysis between two subsequent trials
-SS.plot.routine         = [];  % matlab function to be called for online analysis (TODO: make a default routine for the most rudimentary analysis)
-SS.plot.fig             = [];  % figure handle for online plot (leave empty)
+SS.plot.do_online =  0;  % run online data analysis between two subsequent trials
+SS.plot.routine   = [];  % matlab function to be called for online analysis (TODO: make a default routine for the most rudimentary analysis)
+SS.plot.fig       = [];  % figure handle for online plot (leave empty)
 
 
 

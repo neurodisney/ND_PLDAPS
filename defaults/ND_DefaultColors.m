@@ -52,18 +52,19 @@ ND_DefineCol(p, 'joythr',      5, [0.65, 0.25, 0.00], bgcol);  % color represent
 ND_DefineCol(p, 'eyepos',      6, [0.00, 1.00, 1.00], bgcol);  % current eye position
 ND_DefineCol(p, 'eyeold',      7, [0.00, 0.65, 0.65], bgcol);  % eye positions from previous frames
 ND_DefineCol(p, 'window',      8, [0.80, 0.80, 0.80], bgcol);
-ND_DefineCol(p, 'fixwin',      9, [0.00, 1.00, 1.00], bgcol);
-ND_DefineCol(p, 'targetfix',  10, [1.00, 0.00, 0.00], bgcol);
-ND_DefineCol(p, 'cursor',     11, [0.90, 0.90, 0.90], bgcol);
-ND_DefineCol(p, 'black',      12, [0.00, 0.00, 0.00]);
-ND_DefineCol(p, 'blackbg',    13, [0.00, 0.00, 0.00], bgcol);
-ND_DefineCol(p, 'white',      14, [1.00, 1.00, 1.00]);
-ND_DefineCol(p, 'whitebg',    15, [1.00, 1.00, 1.00], bgcol);
-ND_DefineCol(p, 'red',        16, [1.00, 0.00, 0.00]);
-ND_DefineCol(p, 'redbg',      17, [1.00, 0.00, 0.00], bgcol);
-ND_DefineCol(p, 'blue',       18, [0.00, 0.00, 1.00]);
-ND_DefineCol(p, 'green',      19, [0.00, 1.00, 0.00]);
-ND_DefineCol(p, 'greenbg',    20, [0.00, 1.00, 0.00], bgcol);
+ND_DefineCol(p, 'fixspot',     9, [0.80, 0.80, 0.80], bgcol);
+ND_DefineCol(p, 'fixwin',     10, [0.00, 1.00, 1.00], bgcol);
+ND_DefineCol(p, 'targetfix',  11, [1.00, 0.00, 0.00], bgcol);
+ND_DefineCol(p, 'cursor',     12, [0.90, 0.90, 0.90], bgcol);
+ND_DefineCol(p, 'black',      13, [0.00, 0.00, 0.00]);
+ND_DefineCol(p, 'blackbg',    14, [0.00, 0.00, 0.00], bgcol);
+ND_DefineCol(p, 'white',      15, [1.00, 1.00, 1.00]);
+ND_DefineCol(p, 'whitebg',    16, [1.00, 1.00, 1.00], bgcol);
+ND_DefineCol(p, 'red',        17, [1.00, 0.00, 0.00]);
+ND_DefineCol(p, 'redbg',      18, [1.00, 0.00, 0.00], bgcol);
+ND_DefineCol(p, 'blue',       19, [0.00, 0.00, 1.00]);
+ND_DefineCol(p, 'green',      20, [0.00, 1.00, 0.00]);
+ND_DefineCol(p, 'greenbg',    21, [0.00, 1.00, 0.00], bgcol);
 
 
 %ND_DefineCol(p, 'text',       32, [1.00, 1.00, 1.00], bgcol);

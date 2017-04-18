@@ -35,8 +35,7 @@ p.defaultParameters.session.file     = [p.defaultParameters.session.dir, filesep
 
 p.defaultParameters.session.asciitbl = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem,'.dat'];
 
-
-% --------------------------------------------------------------------%
+ --------------------------------------------------------------------%
 %% Define Trial function
 % The runTrial function requires trialFunction to be defined, but buried in
 % their tutorial they show that this needs to be defined when initializing
@@ -61,7 +60,6 @@ end
 %% initialize the random number generator
 % verify how this affects pldaps
 rng('shuffle', 'twister');
-
 
 % --------------------------------------------------------------------%
 %% Set some defaults

@@ -5,7 +5,6 @@ function p = ND_TrialPrepare(p)
 %
 % wolf zinke, Dec. 2016
 
-
 %-------------------------------------------------------------------------%
 %% setup PsychPortAudio %%%
 % use the PsychPortAudio pipeline to give auditory feedback because it
@@ -23,7 +22,6 @@ function p = ND_TrialPrepare(p)
 % %TODO: do we need this?. Why here and not TrialSetup?
 Datapixx RegWrRd;
 
-
 %-------------------------------------------------------------------------%
 %% Initialize Keyboard %%%
 pds.keyboard.clearBuffer(p);
@@ -31,7 +29,6 @@ pds.keyboard.clearBuffer(p);
 %-------------------------------------------------------------------------%
 %% Start of trial timing
 % record start of trial in Datapixx, PC & DAQ; each device has a separate clock
-
 p.trial.timing.datapixxStartTime  = Datapixx('Gettime');
 p.trial.timing.datapixxTRIALSTART = pds.tdt.strobe(p.trial.event.TRIALSTART);  % start of trial
 
