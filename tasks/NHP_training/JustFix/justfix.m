@@ -346,13 +346,13 @@ function KeyAction(p)
 
                 % grid positions
                 case KbName('1')
-                    p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
+                    p.trial.behavior.fixation.FixPos = [-grdX,  -grdY];
 
                 case KbName('2')
-                    p.trial.behavior.fixation.FixPos = [    0,  grdY];
+                    p.trial.behavior.fixation.FixPos = [    0,  -grdY];
 
                 case KbName('3')
-                    p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
+                    p.trial.behavior.fixation.FixPos = [ grdX,  -grdY];
 
                 case KbName('4')
                     p.trial.behavior.fixation.FixPos = [-grdX,     0];
@@ -364,13 +364,13 @@ function KeyAction(p)
                     p.trial.behavior.fixation.FixPos = [ grdX,    0];
 
                 case KbName('7')
-                    p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
+                    p.trial.behavior.fixation.FixPos = [-grdX, grdY];
 
                 case KbName('8')
-                    p.trial.behavior.fixation.FixPos = [    0, -grdY];
+                    p.trial.behavior.fixation.FixPos = [    0, grdY];
 
                 case KbName('9')
-                    p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
+                    p.trial.behavior.fixation.FixPos = [ grdX, grdY];
 
                 % steps
                 case KbName('RightArrow')
@@ -380,10 +380,10 @@ function KeyAction(p)
                     p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
                                                           p.trial.behavior.fixation.FixWinStp;
                 case KbName('UpArrow')
-                    p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
+                    p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
                                                           p.trial.behavior.fixation.FixWinStp;
                 case KbName('DownArrow')
-                    p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
+                    p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
                                                           p.trial.behavior.fixation.FixWinStp;
                 case KbName('g')
 
