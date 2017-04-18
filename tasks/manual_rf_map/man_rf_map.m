@@ -184,7 +184,7 @@ function MouseInput(p)
         SetMouse(xLock,yLock,0);
         
         % If a click occurs unlock the bar from the mouse
-        if p.trial.mouse.buttons(1)
+        if p.trial.mouse.newButtons(1) == 1
             p.trial.mouse.moveBar = 0;
             ShowCursor;
         end
@@ -192,7 +192,7 @@ function MouseInput(p)
     else
         % If click occurs, reenable locking bar position to mouse
         iSample = p.trial.mouse.samples;
-        if p.trial.mouse.buttons(1)
+        if p.trial.mouse.newButtons(1) == 1
             
             p.trial.mouse.moveBar = 1;
             HideCursor;
