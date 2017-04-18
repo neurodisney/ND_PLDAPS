@@ -189,7 +189,10 @@ if isfield(p.defaultParameters.display, 'useDegreeUnits') && p.defaultParameters
         
         Screen('glScale', p.defaultParameters.display.ptr, xScaleFactor, yScaleFactor)
         p.defaultParameters.display.winRect = p.defaultParameters.display.winRect ./ [xScaleFactor, yScaleFactor, xScaleFactor, yScaleFactor];
-    
+        
+        % FillRect (and possibly other PTB functions) requires that a rect [x1 y1 x2 y2] satisfy x1 < x2 and y1 < y2. Therfore, flip the y values to satisfy this condition
+        p.defaultParameters.display.winRect = p.defaultParameters.display.winRect([1 4 3 2]);
+        
     % Otherwise give an error
     else
         error('pldaps:openScreen', 'Bad value for p.defaultParameters.display.useDegreeUnits')
