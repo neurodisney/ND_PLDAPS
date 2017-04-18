@@ -103,8 +103,15 @@ end
 
 %-------------------------------------------------------------------------%
 %% prepare fixation control display
+if(p.trial.pldaps.draw.eyepos.use)
+    p.trial.pldaps.draw.eyepos.fixwinwdth = ND_pxl2dva(p.trial.pldaps.draw.eyepos.fixwinwdth_pxl, p);
+end
 
-p.trial.pldaps.draw.eyepos.fixwinwdth = ND_pxl2dva(p.trial.pldaps.draw.eyepos.fixwinwdth_pxl, p);
+%-------------------------------------------------------------------------%
+%% eye calibration
+if(p.trial.behavior.fixation.useCalibration)    
+    p = pds.eyecalib.setup(p);
+end
 
 %-------------------------------------------------------------------------%
 %% Setup Photodiode stimuli
@@ -123,6 +130,7 @@ end
 if(p.trial.sound.use)
     p = pds.audio.setupAudio(p);
 end
+
 
 %-------------------------------------------------------------------------%
 %% REWARD

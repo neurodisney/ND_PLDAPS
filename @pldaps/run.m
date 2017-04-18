@@ -157,10 +157,6 @@ try
             end
             p.data{trialNr}=dTrialStruct;
 
-            if(~p.defaultParameters.datapixx.use && p.defaultParameters.display.useOverlay)
-                glDeleteTextures(2,glGenTextures(1));
-            end
-
             % ----------------------------------------------------------------%
             %% make online plots
             if(p.defaultParameters.plot.do_online)

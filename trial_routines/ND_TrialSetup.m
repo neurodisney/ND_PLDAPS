@@ -6,7 +6,8 @@ function p = ND_TrialSetup(p)
 % wolf zinke, Dec. 2016
 
 
-p.trial.timing.flipTimes           = zeros(4,p.trial.pldaps.maxFrames);
+% p.trial.timing.flipTimes = zeros(4,p.trial.pldaps.maxFrames);
+p.trial.timing.flipTimes = zeros(5,p.trial.pldaps.maxFrames);
 
 if(p.trial.pldaps.GetTrialStateTimes)
     p.trial.timing.frameStateChangeTimes = nan(9,p.trial.pldaps.maxFrames);

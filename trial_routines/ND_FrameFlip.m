@@ -11,7 +11,10 @@ function ND_FrameFlip(p)
 % TODO: WZ: Set a flag that screen synch is required, otherwise use the
 %           'dontsync' argument and set it to 0
 
-p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
+%p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
+ft=cell(5,1);
+[ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
+p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
 
 p.trial.stimulus.timeLastFrame = p.trial.timing.flipTimes(1, p.trial.iFrame) - p.trial.trstart;
 

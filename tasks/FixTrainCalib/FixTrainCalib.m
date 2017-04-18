@@ -1,4 +1,4 @@
-function p = justfix(p, state)
+function p = FixTrainCalib(p, state)
 % Main trial function for initial fixation training.
 %
 %
@@ -48,7 +48,6 @@ if(isempty(state))
     ND_DefineCol(p, 'Fix_M',  33, [1.00, 0.00, 1.00]);
 
     p.trial.task.Color_list = Shuffle({'Fix_W', 'Fix_R', 'Fix_G', 'Fix_B', 'Fix_O', 'Fix_Y', 'Fix_C', 'Fix_M'});  
-    p.trial.task.Color_list = Shuffle({'Fix_W'});  
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -91,8 +90,7 @@ if(isempty(state))
     c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     
-    conditions = {c1, c2};
-    %conditions = {c1, c2, c3, c4};
+    conditions = {c1, c2, c3, c4};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
@@ -156,8 +154,6 @@ function TaskSetUp(p)
     p.trial.task.CurRewDelay = ND_GetITI(p.trial.task.Reward.MinWaitInitial,  ...
                                          p.trial.task.Reward.MaxWaitInitial,  [], [], 1, 0.001);
 
-    p.trial.task.InitRewDelay = p.trial.task.InitRewDelay;  
-    
     p.trial.CurrEpoch = p.trial.epoch.TrialStart;
         
     p.trial.task.Reward.Curr = p.trial.task.Reward.InitialRew; % determine reward amount based on number of previous correct trials
@@ -325,6 +321,8 @@ function TaskDraw(p)
 % go through the task epochs as defined in TaskDesign and draw the stimulus
 % content that needs to be shown during this epoch.
 
+%% TODO: draw predicted eye pos for calibration grid, draw indicator for random posiiton vs. fix, indicate current position
+
     switch p.trial.CurrEpoch
 
         % ----------------------------------------------------------------%
@@ -343,55 +341,73 @@ function KeyAction(p)
         grdY = p.trial.behavior.fixation.FixGridStp(2);
 
         switch p.trial.LastKeyPress
-
+            
+            
+            %% TODO: accept eye position, random target position, save current calibration, update current calibration
+            
             % grid positions
             case KbName('1')
-                p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
+            p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
+            MoveFix(p);
             
             case KbName('2')
-                p.trial.behavior.fixation.FixPos = [    0,  grdY];
+            p.trial.behavior.fixation.FixPos = [    0,  grdY];
+            MoveFix(p);
             
             case KbName('3')
-                p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
+            p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
+            MoveFix(p);
             
             case KbName('4')
-                p.trial.behavior.fixation.FixPos = [-grdX,     0];
+            p.trial.behavior.fixation.FixPos = [-grdX,     0];
+            MoveFix(p);
             
             case KbName('5')
-                p.trial.behavior.fixation.FixPos = [    0,     0];
+            p.trial.behavior.fixation.FixPos = [    0,     0];
+            MoveFix(p);
             
             case KbName('6')
-                p.trial.behavior.fixation.FixPos = [ grdX,    0];
+            p.trial.behavior.fixation.FixPos = [ grdX,    0];
+            MoveFix(p);
             
             case KbName('7')
-                p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
+            p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
+            MoveFix(p);
             
             case KbName('8')
-                p.trial.behavior.fixation.FixPos = [    0, -grdY];
+            p.trial.behavior.fixation.FixPos = [    0, -grdY];
+            MoveFix(p);
             
             case KbName('9')
-                p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
+            p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
+            MoveFix(p);
             
             % steps
             case KbName('RightArrow')
-                p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
-                                                      p.trial.behavior.fixation.FixWinStp;   
+            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
+                                                  p.trial.behavior.fixation.FixWinStp;   
+            MoveFix(p);
+            
             case KbName('LeftArrow')
-                p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
-                                                      p.trial.behavior.fixation.FixWinStp;
+            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
+                                                  p.trial.behavior.fixation.FixWinStp;
+            MoveFix(p);
+            
             case KbName('UpArrow')
-                p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
-                                                      p.trial.behavior.fixation.FixWinStp;
+            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
+                                                  p.trial.behavior.fixation.FixWinStp;
+            MoveFix(p);
+            
             case KbName('DownArrow')
-                p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
-                                                      p.trial.behavior.fixation.FixWinStp;
+            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
+                                                  p.trial.behavior.fixation.FixWinStp;
+            MoveFix(p);
+            
             case KbName('g')
                 
                 fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
                         p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
         end
-        
-        MoveFix(p);
     end
 
 % ####################################################################### %
