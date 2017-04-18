@@ -185,7 +185,7 @@ if isfield(p.defaultParameters.display, 'useDegreeUnits') && p.defaultParameters
     % If useDegreeUnits == 1, scale uniformly prioritizing accuracy in center of screen (may be slightly inaccurate)
     if p.defaultParameters.display.useDegreeUnits == 1
         xScaleFactor = p.defaultParameters.display.ppdCentral(1);
-        yScaleFactor = p.defaultParameters.display.ppdCentral(2);
+        yScaleFactor = -p.defaultParameters.display.ppdCentral(2); % minus because we want + to be up
         
         Screen('glScale', p.defaultParameters.display.ptr, xScaleFactor, yScaleFactor)
         p.defaultParameters.display.winRect = p.defaultParameters.display.winRect ./ [xScaleFactor, yScaleFactor, xScaleFactor, yScaleFactor];
