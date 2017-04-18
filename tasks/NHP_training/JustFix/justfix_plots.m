@@ -15,7 +15,7 @@ hit_col   = [0, 0.65, 0];
 early_col = [0.65, 0, 0];
 late_col  = [0, 0, 0.65];
 
-fig_sz = [100, 100, 1200, 800];
+fig_sz = [100, 100, 1600, 960];
 
 %% optional offline analysis
 if(~exist('offln', 'var'))
@@ -44,27 +44,41 @@ fp = Results ~= p.trial.outcome.NoFix;
 try
     if(sum(fp) > 4)
         
-        
         %% get relevant data
         
         TaskStart = cellfun(@(x) x.EV.TaskStart, p.data);
         Trial_tm = (TaskStart - TaskStart(1)) / 60; % first trial defines zero, convert to minutes
+        
+        ITI = [NaN, diff(Trial_tm)];
         
         FixStart  = cellfun(@(x) x.EV.FixStart, p.data);
         FixRT     = (FixStart - TaskStart) * 1000;
         
         FixBreak  = cellfun(@(x) x.EV.FixBreak, p.data);
         FixDur    = (FixBreak - FixStart);
+
+        CurrRew   = cellfun(@(x) x.task.CurRewDelay, p.data);
+        RewCnt    = cellfun(@(x) x.reward.iReward,   p.data);
+
+        for(i=Ntrials)
+            cp = DT.TrialNo(i);
+
+            % get reward occurences during trials
+            InitRew(i) = PDS.data{cp}.reward.timeReward(1,1);
+        end
+        InitRew(RewCnt==0) = CurrRew(RewCnt==0);
         
+        Tm      = Trial_tm(fp);
+        RT      = FixRT(fp);
+        Dur     = FixDur(fp);
+        medRT   = nanmedian(RT);
+        medDur  = nanmedian(Dur);
+        FrstRew = InitRew(fp);
+        ITI     = ITI(fp);
         
         %% get plots
-        
-        Tm  = Trial_tm(fp);
-        RT  = FixRT(fp);
-        Dur = FixDur(fp);
-        
-        % fixation durations over session time
-        subplot(3,3,1);
+        % time to start fixatio
+        subplot(3,5,1);
         
         bv = min(RT)-resp_bin : resp_bin : max(RT)+resp_bin;
         
@@ -77,11 +91,11 @@ try
         
         hold on;
         yl = ylim;
-        medRT = nanmedian(RT);
         plot([medRT,medRT], yl,'-r','LineWidth', 2.5);
         hold off
         
-        subplot(3,3,2);
+        % duration of fixation
+        subplot(3,5,2);
         
         rb = resp_bin/1000;
         bv = min(Dur)-rb : rb : max(Dur)+rb;
@@ -95,16 +109,44 @@ try
         
         hold on;
         yl = ylim;
-        medRT = nanmedian(Dur);
-        plot([medRT,medRT], yl,'-r','LineWidth', 2.5);
+        plot([medDur,medDur], yl,'-r','LineWidth', 2.5);
+        hold off
+        
+        % duration of fixation depending on RT
+        subplot(3,5,3);
+        hold on;
+        plot(RT, Dur, '.k');
+        plot([medRT,medRT], yl,':r','LineWidth', 1);
+        plot(xlim, [medDur,medDur], ':r','LineWidth', 1);
+        
+        title('RT dependent fix duration')
+        ylabel('duration [s]');
+        xlabel('RT [ms]')
+        xlim([0,max(RT)]);
+        ylim([0,max(Dur)]);
+        axis tight
+        hold off
+       
+        % fixation duration depending on initial reward time
+        subplot(3,5,3);
+        hold on;
+        plot(FrstRew(RewCnt>0),  Dur(RewCnt>0),  '.', 'color', hit_col);
+        plot(FrstRew(RewCnt==0), Dur(RewCnt==0), '.', 'color', hit_col);
+        
+        title('fix duration depneding on first reward')
+        ylabel('duration [s]');
+        xlabel('RT [ms]')
+        xlim([0,max(RT)]);
+        ylim([0,max(Dur)]);
+        axis tight
         hold off
         
         % fixation durations over session time
         subplot(3,1,2);
-        
-        plot(Tm, RT, 'o', 'MarkerSize', 6, ...
-            'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
         hold on;
+        
+        plot(Tm(RewCnt>0), RT(RewCnt>0), 'o', 'MarkerSize', 6, ...
+            'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
         
         if(Ntrials > 4)
             
@@ -129,10 +171,10 @@ try
         
         % fixation durations over session time
         subplot(3,1,3);
+        hold on;
         
         plot(Tm, Dur, 'o', 'MarkerSize', 6, ...
             'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
-        hold on;
         
         if(Ntrials > 4)
             

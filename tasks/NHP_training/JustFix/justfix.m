@@ -154,6 +154,8 @@ function TaskSetUp(p)
     p.trial.task.CurRewDelay = ND_GetITI(p.trial.task.Reward.MinWaitInitial,  ...
                                          p.trial.task.Reward.MaxWaitInitial,  [], [], 1, 0.001);
 
+    p.trial.task.InitRewDelay = p.trial.task.InitRewDelay;  
+    
     p.trial.CurrEpoch = p.trial.epoch.TrialStart;
         
     p.trial.task.Reward.Curr = p.trial.task.Reward.InitialRew; % determine reward amount based on number of previous correct trials
