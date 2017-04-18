@@ -172,8 +172,9 @@ function MouseInput(p)
         
         barPos = p.trial.task.rfbar.pos;
         
-        % Check how far the mouse has moved from the lock position
-        delta = [ xPos - xLock, yPos - yLock];
+        % Check how far the mouse has moved from the lock position (flip y
+        % direction for differing coodinate frames)
+        delta = [ xPos - xLock, -1 * (yPos - yLock)];
 
         % Move the position of the bar by the delta * some scaling
         % coefficient
