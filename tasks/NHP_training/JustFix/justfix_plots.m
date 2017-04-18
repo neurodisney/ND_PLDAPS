@@ -15,7 +15,7 @@ hit_col   = [0, 0.65, 0];
 early_col = [0.65, 0, 0];
 late_col  = [0, 0, 0.65];
 
-fig_sz = [50, 50, 1600, 1200];
+fig_sz = [25, 25, 1600, 980];
 
 %% optional offline analysis
 if(~exist('offln', 'var'))
@@ -38,7 +38,7 @@ Ntrials  = length(p.data);
 Cond     = cellfun(@(x) x.Nr, p.data);
 Results  = cellfun(@(x) x.outcome.CurrOutcome, p.data);
 
-fp = Results ~= p.trial.outcome.NoFix;
+fp = Results ~= p.data{1}.outcome.NoFix;
 
 % try
     if(sum(fp) > 4)
@@ -56,23 +56,23 @@ fp = Results ~= p.trial.outcome.NoFix;
         FixBreak  = cellfun(@(x) x.EV.FixBreak, p.data);
         FixDur    = (FixBreak - FixStart);
 
-        CurrRew   = cellfun(@(x) x.task.CurRewDelay, p.data);
-        RewCnt    = cellfun(@(x) x.reward.iReward,   p.data);
+        CurrRew   = cellfun(@(x) x.task.CurRewDelay, p.data) / 1000;
+        RewCnt    = cellfun(@(x) x.reward.iReward,   p.data);        
 
-        InitRew = zeros(Ntrials,1);
-        for(i=Ntrials)
-            % get reward occurences during trials
-            InitRew(i) = p.data{i}.reward.timeReward(1,1);
-        end
-        
-        InitRew(RewCnt==0) = CurrRew(RewCnt==0);
+%         InitRew = zeros(Ntrials,1);
+%         for(i=Ntrials)
+%             % get reward occurences during trials
+%             InitRew(i) = p.data{i}.reward.timeReward(1,1);
+%         end
+%         
+%         InitRew(RewCnt==0) = CurrRew(RewCnt==0);
         
         Tm      = Trial_tm(fp);
         RT      = FixRT(fp);
         Dur     = FixDur(fp);
         medRT   = nanmedian(RT);
         medDur  = nanmedian(Dur);
-        FrstRew = InitRew(fp);
+        FrstRew = CurrRew(fp);
         ITI     = ITI(fp);
         
         %% get plots
@@ -86,7 +86,7 @@ fp = Results ~= p.trial.outcome.NoFix;
         title('Reaction times')
         ylabel('count');
         xlabel('time from target onset [ms]')
-        xlim([0,prctile(RT,90)]);
+        xlim([0, prctile(RT,90)]);
         axis tight
         
         hold on;
@@ -123,7 +123,7 @@ fp = Results ~= p.trial.outcome.NoFix;
         title('RT dependent fix duration')
         ylabel('duration [s]');
         xlabel('RT [ms]')
-        xlim([0,max(RT)]);
+        xlim([0,prctile(RT,90)]);
         ylim([0,max(Dur)]);
         axis tight
         hold off
@@ -134,25 +134,25 @@ fp = Results ~= p.trial.outcome.NoFix;
         hold on;
         plot(FrstRew(RewCnt(fp)==0), Dur(RewCnt(fp)==0), '.', 'color', early_col);
         
-        title('fix duration depneding on first reward')
-        ylabel('duration [s]');
-        xlabel('RT [ms]')
-        xlim([0,max(RT)]);
-        ylim([0,max(Dur)]);
+        title('fix duration depending on first reward')
+        Xlabel('time of first reward [ms]');
+        ylabel('fixation duration [s]')
+        xlim([0,prctile(RT,90)]);
+        ylim([0,prctile(Dur,98)]);
         axis tight
         hold off
         
         % fixation duration depending on initial reward time
         subplot(3,5,4);
-        plot(ITI(RewCnt(fp)>0),  Dur(RT(fp)>0),  '.', 'color', hit_col);
+        plot(ITI(RewCnt(fp) >0), Dur(RewCnt(fp) >0), '.', 'color', hit_col);
         hold on;
-        plot(ITI(RewCnt(fp)==0), Dur(RT(fp)==0), '.', 'color', early_col);
+        plot(ITI(RewCnt(fp)==0), Dur(RewCnt(fp)==0), '.', 'color', early_col);
         
         title('RT depending on ITI')
         ylabel('RT [ms]');
         xlabel('ITI [s]')
-        xlim([0,max(ITI)]);
-        ylim([0,max(RT)]);
+        xlim([0, max(ITI)]);
+        ylim([0, prctile(RT,90)]);
         axis tight
         hold off
         
