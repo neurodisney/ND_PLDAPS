@@ -50,9 +50,9 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
-SS.display.viewdist                             = 114;     % screen distance to the observer                            !!!
-SS.display.heightcm                             = 35;   % height of the visible screen in cm                         !!!
-SS.display.widthcm                              = 64;   % width  of the visible screen in cm                         !!!
+SS.display.viewdist                             = 114;    % screen distance to the observer                            !!!
+SS.display.heightcm                             = 35;     % height of the visible screen in cm                         !!!
+SS.display.widthcm                              = 64;     % width  of the visible screen in cm                         !!!
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -78,8 +78,8 @@ SS.display.movie.width                          = [];    % width of the movie.
 SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encoding parameters
 
 % Use the coordinate frame transformations
-SS.display.useCustomOrigin                      = 1;    % 0 is off (use PTB standard origin in corner), 1 uses central origin, [x,y] uses custom pixel location as origin
-SS.display.useDegreeUnits                       = 1;    % 0 uses pixels, 1 uses uniform scaling to degrees priortizing accuracy near the center of the screen
+SS.display.useCustomOrigin                      = 1;     % 0 is off (use PTB standard origin in corner), 1 uses central origin, [x,y] uses custom pixel location as origin
+SS.display.useDegreeUnits                       = 1;     % 0 uses pixels, 1 uses uniform scaling to degrees priortizing accuracy near the center of the screen
 
 % ------------------------------------------------------------------------%
 %% EyeLink settings: Eyelink specific parameters
@@ -104,6 +104,7 @@ SS.sound.datapixxInternalSpeakerVolume          = 0;
 
 SS.sound.usePsychPortAudio                      = 1;
 SS.sound.psychPortVolume                        = 0.9;
+
 % ------------------------------------------------------------------------%
 %% Plexon settings: interact with plexon MAP or Omniplex
 % spikeserver: configure our plexon spike server.
@@ -112,8 +113,8 @@ SS.sound.psychPortVolume                        = 0.9;
 % ------------------------------------------------------------------------%
 %% PLDAPS settings: pldaps core parameters
 SS.pldaps.finish                                = inf;   % Number of trials to run. Can be changed dynamically
-%SS.pldaps.goodtrial                             = 0;     % indicator whether the trial was good. Not used by pldaps itself
-%SS.pldaps.iTrial                                = 1;     % trial number. cannot be changed by the user
+%SS.pldaps.goodtrial                             = 0;    % indicator whether the trial was good. Not used by pldaps itself
+%SS.pldaps.iTrial                                = 1;    % trial number. cannot be changed by the user
 SS.pldaps.maxPriority                           = 1;     % Switch to PTB to maxpriority during the trial? See MaxPriority('?')
 SS.pldaps.maxTrialLength                        = 25;    % Maximum duration of a trial in seconds. Used to allocate memory.
 SS.pldaps.nosave                                = 0;     % disables saving of data when true. see .pldaps.save for more control
@@ -126,7 +127,7 @@ SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be call
 SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
 
 % dirs: configure pldaps' built-in drawing options
-SS.pldaps.dirs.data                             = '~/Data/ExpData';   % data directory.
+SS.pldaps.dirs.data                             = '/DATA/ExpData';   % data directory.
 SS.pldaps.dirs.wavfiles                         = './beepsounds';  % directory for sound files
 
 % cursor: control drawing of the mouse cursor
@@ -180,40 +181,39 @@ SS.pldaps.GetTrialStateTimes = 0;  % create a 2D matrix (trialstate, frame) with
 
 % ------------------------------------------------------------------------%
 %% Reward settings
-SS.reward.defaultAmount   = 0.05;  % Default amount of reward.=0; [in seconds]
-SS.reward.Lag             = 0.15;  % Delay between response and reward onset
-SS.datapixx.useForReward  = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
-SS.datapixx.adc.RewardChannel = 3; % Default ADC output channel
+SS.datapixx.useForReward      = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
+SS.reward.defaultAmount       = 0.05;  % Default amount of reward.=0; [in seconds]
+SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
+SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
 SS.datapixx.useAsEyepos         = 0;
 
-% default ADC channels to use (set up later in ND_InitSession)
+% Default ADC channels to use (set up later in ND_InitSession)
 SS.datapixx.adc.XEyeposChannel  = 0;
 SS.datapixx.adc.YEyeposChannel  = 1;
 SS.datapixx.adc.PupilChannel    = 2;
 
 % Saccade parameters
-SS.behavior.fixation.use       =  0;      % does this task require control of eye position
+SS.behavior.fixation.use        =  0;     % does this task require control of eye position
 
-SS.behavior.fixation.required  =  0;      % If not required, fixation states will be ignored
+SS.behavior.fixation.required   =  0;     % If not required, fixation states will be ignored
 
-SS.behavior.fixation.FixWin    =  4;      % diameter of fixation window in dva
-SS.behavior.fixation.FixWinStp = 0.25;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixWin     =  4;     % diameter of fixation window in dva
+SS.behavior.fixation.FixWinStp  = 0.25;   % change of the size of the fixation window upon key press
 SS.behavior.fixation.FixGridStp = [2, 2]; % x,y coordinates in a 9pt grid
 
 SS.behavior.fixation.Offset    = [0 ,0];  % offset to get current position signal to FixPos
 SS.behavior.fixation.FixPos    = [0 ,0];  % center position of fixation window [dva]
 
 SS.behavior.fixation.Sample    = 20;      % how many data points to use for determining fixation state.
-SS.behavior.fixation.FixScale  = [1 , 1]; % scaling factor to match screen/dva [TODO: get from calibration]
 
 SS.behavior.fixation.BreakTime = 50;      % minimum time [ms] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;       % minimum time [ms] to identify a fixation break
 
-SS.pldaps.draw.eyepos.history    = 40;    % show eye position of the previous n frames in addition to current one
-SS.pldaps.draw.eyepos.sz         = 8;     % size in pixels of the eye pos indicator
+SS.pldaps.draw.eyepos.history  = 40;      % show eye position of the previous n frames in addition to current one
+SS.pldaps.draw.eyepos.sz       = 8;       % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2; % frame width of the fixation window in pixels
 
 % Define fixation states
@@ -222,11 +222,18 @@ SS.FixState.FixIn      =   1;  % Gaze within fixation window
 SS.FixState.FixOut     =   0;  % Gaze out of fixation window
 SS.FixState.FixBreak   =  -1;  % Gaze out of fixation window
 
+% Calibration of eye position
+SS.behavior.fixation.useCalibration = 0; % load mat file for eye calibration
+SS.behavior.fixation.CalibMat = [];
+SS.behavior.fixation.FixScale = [1 , 1]; % scaling factor to match screen/dva [TODO: get from calibration]
+
+SS.behavior.fixation.NumSmplCtr = 10;  % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
+
 % ------------------------------------------------------------------------%
 %% Joystick
 SS.datapixx.useJoystick       = 0;
 
-% default ADC channels to use (set up later in ND_InitSession)
+% Default ADC channels to use (set up later in ND_InitSession)
 SS.datapixx.adc.XJoyChannel   = 3;
 SS.datapixx.adc.YJoyChannel   = 4;
 
@@ -269,7 +276,7 @@ SS.key.FixReq = 'f';  % disable/enable fixation control
 SS.key.CtrJoy = 'j';  % set current joystick position as zero
 
 SS.key.FixInc = '=+'; % increase size of fixation window
-SS.key.FixDec = '-_'; % Decrease size of fixation window
+SS.key.FixDec = '-_'; % decrease size of fixation window
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables

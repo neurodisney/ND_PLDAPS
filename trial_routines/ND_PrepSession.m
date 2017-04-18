@@ -93,14 +93,20 @@ if(~p.defaultParameters.mouse.useAsEyepos && ~p.defaultParameters.datapixx.useAs
     p.defaultParameters.pldaps.draw.eyepos.use = 0;
 end
 
+% if fixation is needed make sure datapixx provides the eye signal
+if(p.defaultParameters.behavior.fixation.use)
+    if(~p.defaultParameters.datapixx.useAsEyepos)
+        p.defaultParameters.datapixx.useAsEyepos = 1;
+    end
+    
+    if( p.defaultParameters.behavior.fixation.NumSmplCtr > p.defaultParameters.pldaps.draw.eyepos.history)
+        p.defaultParameters.behavior.fixation.NumSmplCtr = p.defaultParameters.pldaps.draw.eyepos.history;
+    end
+end
+
 % if joystick is needed make sure datapixx provides the signal
 if(p.defaultParameters.behavior.joystick.use && ~p.defaultParameters.datapixx.useJoystick)
     p.defaultParameters.datapixx.useJoystick = 1;
-end
-
-% if fixation is needed make sure datapixx provides the eye signal
-if(p.defaultParameters.behavior.fixation.use && ~p.defaultParameters.datapixx.useAsEyepos)
-    p.defaultParameters.datapixx.useAsEyepos = 1;
 end
 
 % don't enable online plots if no function is specified

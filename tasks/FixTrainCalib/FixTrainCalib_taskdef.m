@@ -1,4 +1,4 @@
-function p = justfix_taskdef(p)
+function p = FixTrainCalib_taskdef(p)
 % define task parameters for the joystick training task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
@@ -40,8 +40,8 @@ p.trial.task.Timing.WaitFix     =  2;   % time window to allow gaze to get into 
 p.trial.task.Timing.MaxFix      = 12;   % maximal time for fixation (avoid matlab buffer overflows)
 
 % inter-trial interval
-p.trial.task.Timing.MinITI      = 1;   % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI      = 2.5;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI      = 1.5;   % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI      = 3.0;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
