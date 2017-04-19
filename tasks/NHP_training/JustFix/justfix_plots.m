@@ -81,7 +81,7 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         
         bv = min(RT)-resp_bin : resp_bin : max(RT)+resp_bin;
         
-        hist(RT, bv, 'FaceColor','k', 'EdgeColor','k');
+        histogram(RT, bv, 'FaceColor','k', 'EdgeColor','k');
         hold on;
         title('Reaction times')
         ylabel('count');
@@ -100,7 +100,7 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         rb = resp_bin/1000;
         bv = min(Dur)-rb : rb : max(Dur)+rb;
         
-        hist(Dur, bv, 'FaceColor','k', 'EdgeColor','k');
+        histogram(Dur, bv, 'FaceColor','k', 'EdgeColor','k');
         hold on;
         title('fixation duration')
         ylabel('count');
@@ -135,7 +135,7 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         plot(FrstRew(RewCnt(fp)==0), Dur(RewCnt(fp)==0), '.', 'color', early_col);
         
         title('fix duration depending on first reward')
-        Xlabel('time of first reward [ms]');
+        xlabel('time of first reward [ms]');
         ylabel('fixation duration [s]')
         xlim([0,prctile(RT,90)]);
         ylim([0,prctile(Dur,98)]);
@@ -166,7 +166,7 @@ fp = Results ~= p.data{1}.outcome.NoFix;
             'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
         hold on;
         plot(Tm(RewCnt(fp)==0), RT(RewCnt(fp)==0), 'o', 'MarkerSize', 6, ...
-            'MarkerEdgeColor', hit_col,'MarkerFaceColor',early_col)
+            'MarkerEdgeColor', early_col,'MarkerFaceColor',early_col)
         
         if(Ntrials > 4)
             
@@ -196,16 +196,18 @@ fp = Results ~= p.data{1}.outcome.NoFix;
             'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
         hold on;
         plot(Tm(RewCnt(fp)==0), Dur(RewCnt(fp)==0), 'o', 'MarkerSize', 6, ...
-            'MarkerEdgeColor', hit_col,'MarkerFaceColor',early_col)
+            'MarkerEdgeColor', early_col,'MarkerFaceColor',early_col)
         
         
         if(Ntrials > 4)
-            
-            X = [ones(length(Tm),1) Tm(:)];
-            cFit = X\Dur(:);
+            vpos = isfinite(Dur);
+            vTm = Tm(vpos);
+            vDur = Dur(vpos);
+            X = [ones(sum(vpos),1) vTm(:)];
+            cFit = X\vDur(:);
             cFitln = X*cFit;
             
-            plot(Tm,cFitln,'-g', 'LineWidth', 2);
+            plot(vTm,cFitln,'-g', 'LineWidth', 2);
         end
         
         if(Ntrials > smPT)
