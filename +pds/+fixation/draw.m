@@ -3,8 +3,11 @@ function p = draw(p)
 %
 % wolf zinke, april 2017
 
+
+
 %% fixation target
-switch  Ftype
+
+switch  p.trial.behavior.fixation.FixType
     case 'disc'
         Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(p.trial.behavior.fixation.FixCol), p.trial.behavior.fixation.FixRect);
         

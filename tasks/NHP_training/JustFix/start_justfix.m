@@ -49,6 +49,8 @@ SS.behavior.fixation.required = 1; % fixation required for this task
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
+SS.behavior.fixation.FixType  = 'off';
+
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
 % If there are modification from the default settings needed, copy the

@@ -392,6 +392,7 @@ function KeyAction(p)
             end
 
             MoveFix(p);
+            pds.fixation.move(p);
         end
     end
 

@@ -8,14 +8,14 @@ function p = justfix_plots(p, offln)
 % wolf zinke, March 2017
 
 %% plot parameters
-resp_bin = 100;
+resp_bin = 25;
 smPT = 50;
 
 hit_col   = [0, 0.65, 0];
 early_col = [0.65, 0, 0];
 late_col  = [0, 0, 0.65];
 
-fig_sz = [25, 25, 1600, 980];
+fig_sz = [25, 25, 1800, 980];
 
 %% optional offline analysis
 if(~exist('offln', 'var'))
@@ -59,14 +59,6 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         CurrRew   = cellfun(@(x) x.task.CurRewDelay, p.data) / 1000;
         RewCnt    = cellfun(@(x) x.reward.iReward,   p.data);        
 
-%         InitRew = zeros(Ntrials,1);
-%         for(i=Ntrials)
-%             % get reward occurences during trials
-%             InitRew(i) = p.data{i}.reward.timeReward(1,1);
-%         end
-%         
-%         InitRew(RewCnt==0) = CurrRew(RewCnt==0);
-        
         Tm      = Trial_tm(fp);
         RT      = FixRT(fp);
         Dur     = FixDur(fp);
@@ -155,9 +147,6 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         ylim([0, prctile(RT,90)]);
         axis tight
         hold off
-        
-        
-        
         
         % fixation durations over session time
         subplot(3,1,2);
