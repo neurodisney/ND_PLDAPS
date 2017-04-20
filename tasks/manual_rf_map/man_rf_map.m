@@ -34,22 +34,27 @@ p = ND_GeneralTrialRoutines(p, state);
 % file. In this case p.defaultParameters.pldaps.trialFunction needs to be defined
 % here to refer to the file with the actual trial
 if(isempty(state))
-
+    
     % --------------------------------------------------------------------%
     %% Set initial parameters for the rf bar
     
-    p.trial.task.rfbarLength_dva   =   6; % Length of the bar in degrees of visual angle
-    p.trial.task.rfbarWidth_dva    =   3;
-    p.trial.task.rfbarPos_dva      =   [0, 0];
+    p.trial.task.rfbar.length       =   8; % Length of the bar in degrees of visual angle
+    p.trial.task.rfbar.width        =   0.5;
+    p.trial.task.rfbar.pos          =   [0, 0];
+    p.trial.task.rfbar.angle        =   0;
     
-    % Convert these to pixels
-    p.trial.task.rfbarLength_pxl   =   ND_dva2pxl(p.trial.task.rfbarLength_dva, p);
-    p.trial.task.rfbarWidth_pxl    =   ND_dva2pxl(p.trial.task.rfbarWidth_dva, p);
-    p.trial.task.rfbarPos_pxl      =   ND_cart2ptb(p, p.trial.task.rfbarPos_dva;
+    %% Setup mouse to move the bar manually
+    
+    % User will click to enable/diable moving 
+    p.trial.mouse.moveBar   = 1;
+    
+    % Lock the mouse to the center of the screen
+    p.trial.mouse.xLock     = 500; %p.trial.display.ctr(1);
+    p.trial.mouse.yLock     = 500; %p.trial.display.ctr(2);
+    SetMouse(p.trial.mouse.xLock,p.trial.mouse.yLock,0);
     
     
-
-
+    
     %% Color definitions of stuff shown during the trial
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
@@ -75,55 +80,173 @@ if(isempty(state))
         ND_DefineCol(p, colorName, 30 + index, colorValue);
         colorArray{index + 1} = colorName;
     end
-
+    
+    % Initial Color is black
+    p.trial.task.rfbar.color = p.trial.display.clut.Black;
+    
     %% define ascii output file
     % call this after ND_InitSession to be sure that output directory exists!
     
     %Trial2Ascii(p, 'init'); TODO: Save bar parameters to file every frame
-
+    
+    
+    %% Set up conditions
+    % For now, just one condition, because ust one trial happens
+    c1.Nr = 1;
+    
+    conditions = {c1};
+    p = ND_GetConditionList(p, conditions, 1, 1);
+    
     % --------------------------------------------------------------------%
-
-% ####################################################################### %
+    
+    % ####################################################################### %
 else
     %% Subsequent calls during actual trials
+    
+    switch state
+        
+        %################################################################%
+        % Done before main trail loop:
+        
+        case p.trial.pldaps.trialStates.trialSetup
+            % Prepare everything for the trial, especially the time
+            % demanding stuff
+            TaskSetup(p)
+            
+        case p.trial.pldaps.trialStates.trialPrepare
+            % Just prior to acutal trial start
+            p.trial.EV.TrialStart = p.trial.CurTime;
+            
+            %################################################################%
+            % Done during main trial loop:
+            
+        case p.trial.pldaps.trialStates.framePrepareDrawing
+            %% Get ready to display
+            % prepare the stimuli that should be shown, do some required calculations
+            
+            MouseInput(p);
+            TaskDesign(p);
+            
+            % ----------------------------------------------------------------%
+        case p.trial.pldaps.trialStates.frameDraw
+            %% Display stuff on the screen
+            % Just call graphic routines, avoid any computations
+            
+            TaskDraw(p)
+            
+            % ####################################################################### %
+            % DONE AFTER THE MAIN TRIAL LOOP:
+            
+        case p.trial.pldaps.trialStates.trialCleanUpandSave
+            disp('Task finished')
+            %Task_Finish(p)
+    end
     
 end
 
 end
 
-% function Trial2Ascii(p, act)
-% %% Save trial progress in an ASCII table
-% % 'init' creates the file with a header defining all columns
-% % 'save' adds a line with the information for the current trial
-% %
-% % make sure that number of header names is the same as the number of entries
-% % to write, also that the position matches.
-% 
-%     switch act
-%         case 'init'
-%             p.trial.session.asciitbl = [datestr(now,'yyyy_mm_dd_HHMM'),'.dat'];
-%             tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'w');
-% 
-%             fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  JPress  GoCue  JRelease  Reward  RewDur  ',...
-%                              'Result  Outcome  StartRT  RT  ChangeTime \n']);
-%             fclose(tblptr);
-% 
-%         case 'save'
-%             if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart)  % we might loose the last trial when pressing esc.
-%                 trltm = p.trial.task.EV.TaskStart - p.trial.timing.datapixxSessionStart;
-% 
-%                 cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-% 
-%                 tblptr = fopen(fullfile(p.trial.pldaps.dirs.data, p.trial.session.asciitbl) , 'a');
-% 
-%                 fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s  %.5f  %.5f  %.5f\n' , ...
-%                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.task.EV.TaskStartTime, ...
-%                                 p.trial.task.EV.TaskStart, p.trial.session.subject, ...
-%                                 p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
-%                                 trltm, p.trial.task.EV.JoyPress, ...
-%                                 p.trial.task.EV.GoCue, p.trial.task.EV.JoyRelease, p.trial.task.EV.Reward, ...
-%                                 p.trial.task.Reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
-%                                 p.trial.task.EV.StartRT, p.trial.task.EV.RespRT, p.trial.task.Timing.HoldTime);
-%                fclose(tblptr);
-%             end
-%     end
+function TaskSetup(p)
+%% main task outline
+% Determine everything here that can be specified/calculated before the actual trial start
+p.trial.CurrEpoch = p.trial.epoch.WaitExperimenter;
+end
+
+function MouseInput(p)
+    % Processes the mouse input.
+    % In this case, change in mouse x y is used to change the position of
+    % the rf bar
+    
+    % Check if mouse binding is currently enabled
+    if p.trial.mouse.moveBar
+        
+        % Load in variables from p
+        iSample = p.trial.mouse.samples;
+        
+        mousePos = p.trial.mouse.cursorSamples(:,iSample)';
+        xPos = mousePos(1);
+        yPos = mousePos(2);
+        
+        xLock = p.trial.mouse.xLock;
+        yLock = p.trial.mouse.yLock;
+        
+        barPos = p.trial.task.rfbar.pos;
+        
+        % Check how far the mouse has moved from the lock position (flip y
+        % direction for differing coodinate frames)
+        delta = [ xPos - xLock, -1 * (yPos - yLock)];
+
+        % Move the position of the bar by the delta * some scaling
+        % coefficient
+        % Right now coefficient hard coded
+        p.trial.task.rfbar.pos = barPos + delta * 0.01;
+        
+        % Reset mouse postion to the lock position
+        SetMouse(xLock,yLock,0);
+        
+        % If a click occurs unlock the bar from the mouse
+        if p.trial.mouse.newButtons(1) == 1
+            p.trial.mouse.moveBar = 0;
+            ShowCursor;
+        end
+        
+    else
+        % If click occurs, reenable locking bar position to mouse
+        iSample = p.trial.mouse.samples;
+        if p.trial.mouse.newButtons(1) == 1
+            
+            p.trial.mouse.moveBar = 1;
+            HideCursor;
+            
+            % And lock the mouse back to the center
+            xLock = p.trial.mouse.xLock;
+            yLock = p.trial.mouse.yLock;
+            SetMouse(xLock,yLock,0);
+            
+        end
+    end   
+end
+
+function TaskDesign(p)
+%% main task outline
+% This defines the behavior of the task. Controls the flow of the state
+% machine and determines the next epoch based off of the current epoch and
+% incoming data.
+switch p.trial.CurrEpoch
+    
+    case p.trial.epoch.WaitExperimenter
+%         if p.trial.CurTime > p.trial.EV.TrialStart + 10
+%             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+%         end
+        
+    case p.trial.epoch.TaskEnd
+        p.trial.pldaps.quit = 1;
+end
+end
+
+function TaskDraw(p)
+%% Draws the appropriate stimuli for each epoch
+window = p.trial.display.overlayptr;
+rfbar = p.trial.task.rfbar;
+
+switch p.trial.CurrEpoch
+    
+    case p.trial.epoch.WaitExperimenter
+        % Draw the bar stimuli by creating a custom coordinate frame
+        % for it. Then translate and rotate the correct amounts
+        Screen('glPushMatrix', window);
+        Screen('glTranslate', window, rfbar.pos(1), rfbar.pos(2) );
+        Screen('glRotate', window, rfbar.angle);
+        
+        DrawBar(window,rfbar.width,rfbar.length,rfbar.color);
+        
+        Screen('glPopMatrix',window);
+        
+    case p.trial.epoch.TaskEnd
+        
+end
+end
+
+function DrawBar(window,width,length,color)
+Screen('FillRect', window, color, [-width/2.0, -length/2.0, width/2.0, length/2.0])
+end

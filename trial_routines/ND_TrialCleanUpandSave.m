@@ -2,7 +2,7 @@ function p = ND_TrialCleanUpandSave(p)
 % Finish up the trial.
 % in part taken from cleanUpandSave in the PLDAPS pldapsDefaultTrialFunction
 %
-% TODO: watch PLDAPS future development for changes in hardware cleanUpandSave 
+% TODO: watch PLDAPS future development for changes in hardware cleanUpandSave
 %       methods that will include part of this functionality. Avoid duplication!
 %
 % wolf zinke, Dec. 2016
@@ -14,7 +14,10 @@ if(~p.trial.pldaps.quit) % skip if trial was interrupted (WZ: this will loose la
 end
 
 % might be moved to pds.datapixx.cleanUpandSave
-[p.trial.timing.flipTimes(:,p.trial.iFrame)] = deal(Screen('Flip', p.trial.display.ptr));
+%p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
+ft=cell(5,1);
+[ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
+p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
 
 %-------------------------------------------------------------------------%
 %% Ensure correct background color and determine trial end and duration
@@ -24,23 +27,17 @@ p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
 
 vblTime = Screen('Flip', p.trial.display.ptr,0);
 
-p.trial.trialend                = vblTime;
-p.trial.trialduration           = vblTime - p.trial.trstart;
-
-p.trial.timing.datapixxTrialEnd = PsychDataPixx('GetPreciseTime');
+p.trial.trialend      = vblTime;
+p.trial.trialduration = vblTime - p.trial.trstart;
 
 %-------------------------------------------------------------------------%
 %% end DataPixx ( since we use it no if querry needed
-if(p.trial.datapixx.use)
-    p.trial.datapixx.datapixxstoptime = Datapixx('GetTime'); % WZ: Does this need to be called first or could it be combined with the following if block?
-end
+p.trial.datapixx.datapixxstoptime = Datapixx('GetTime'); % WZ: Does this need to be called first or could it be combined with the following if block?
 
 pds.datapixx.adc.cleanUpandSave(p);
 
 % send event code for trial end
-if(p.trial.datapixx.use)
-    p.trial.timing.datapixxTRIALEND = pds.datapixx.flipBit(p.trial.event.TRIALEND);  % end of trial
-end
+p.trial.timing.datapixxTRIALEND = pds.datapixx.flipBit(p.trial.event.TRIALEND);  % end of trial
 
 %-------------------------------------------------------------------------%
 %% End Photo Diode
@@ -73,16 +70,12 @@ end
 %% Trial information
 
 % system timing
-p.trial.timing.flipTimes             = p.trial.timing.flipTimes(:, 1:p.trial.iFrame);  % WZ: Why here again? Was defined at the function start...
-p.trial.timing.frameStateChangeTimes = p.trial.timing.frameStateChangeTimes(:, 1:p.trial.iFrame - 1);
+% p.trial.timing.flipTimes             = p.trial.timing.flipTimes(:, 1:p.trial.iFrame);  % WZ: Why here again? Was defined at the function start...
+% p.trial.timing.frameStateChangeTimes = p.trial.timing.frameStateChangeTimes(:, 1:p.trial.iFrame - 1);
 
 %-------------------------------------------------------------------------%
 %%  clean up data
 % TODO: remove entries in the trial struct that need not to be written but
 % might occupy a lot of disk space.
 
-%-------------------------------------------------------------------------%
-%%  reward system
-% TODO: Is this needed?
-pds.behavior.reward.cleanUpandSave(p);
 

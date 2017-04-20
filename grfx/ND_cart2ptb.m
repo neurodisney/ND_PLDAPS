@@ -1,36 +1,18 @@
-function [ptb_x, ptb_y] = ND_cart2ptb(p, xc, yc, scrctr, scres)
+function [xyp] = ND_cart2ptb(p, xyc)
 % convert cartesian pixel coordinates (origin is screen center) into coordinates
 % used by the psychtoolbox, see http://docs.psychtoolbox.org/Screen:
 % "All screen and window coordinates follow Apple Macintosh conventions".
 %
+% 
 %
 % wolf zinke, Jan. 2017
-
-% allow specification of xy coordinate array (not recommended use)
-if (~exist('yc','var')  )
-    yc = [];
-end
-
-if(min(size(xc)) > 1 || isempty(yc))
-    if(exist('yc','var') && ~isempty(yc) )
-        warning('ARGUMENT CONFLICT: Two dimensional matrix supplied as coordinates, but also y coordinate specified!');
-    end
-    yc = xc(:,2);
-    xc = xc(:,1);
-end
-
-if (~exist('scres','var') || isempty(scres) )
-    scres = [p.trial.display.pWidth, p.trial.display.pHeight];
-end
-
-if (~exist('scrctr','var') || isempty(scrctr) )
-    scrctr = p.trial.display.ctr;
-end
-
-ptb_x = round(scres(1)/2 + xc(:) + scrctr(1) - scres(1)/2 );
-ptb_y = round(scres(2)/2 - yc(:) + scrctr(2) - scres(2)/2 );
+% 
+% modified:
+%
+% 03/15/17 - wz: fully tailored to ND_PLDAPS without previous flexibility to increase performance
 
 
-if(nargout < 2)
-    ptb_x = [ptb_x(:), ptb_y(:)];
-end
+ptb_x = round(p.trial.display.pWidth/2  + xyc(:, 1) + p.trial.display.ctr(1) - p.trial.display.pWidth/2 );
+ptb_y = round(p.trial.display.pHeight/2 - xyc(:, 2) + p.trial.display.ctr(2) - p.trial.display.pHeight/2 );
+
+xyp = [ptb_x(:), ptb_y(:)];

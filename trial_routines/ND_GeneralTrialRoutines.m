@@ -15,7 +15,7 @@ function p = ND_GeneralTrialRoutines(p, state)
 if(isempty(state))
     % --------------------------------------------------------------------%
     %% Initialise session
-    p = ND_InitSession(p);
+    % p = ND_PrepSession(p);  % Do init
     % p.defaultParameters.(task).randomNumberGenerater = 'mt19937ar'; % WZ: just copied from the pldaps plain function, can not find an instance where it is used...
 
 else
@@ -44,23 +44,8 @@ else
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameUpdate
         %% collect data (i.e. a hardware module) and store it
-            if(p.trial.mouse.use)
-              ND_CheckMouse(p);   % check mouse position if needed
-            end
-
-            ND_CheckKey(p);   % check for key hits
-
-            if(p.trial.datapixx.use || ~isempty(p.trial.datapixx.adc.channels))
-                pds.datapixx.adc.getData(p); % get analogData from Datapixx, including eye position and joystick
-            end
-
-            if(p.trial.datapixx.useJoystick)
-                ND_CheckJoystick(p);         % needs to be called after pds.datapixx.adc.getData
-            end
-
-            if(p.trial.datapixx.useAsEyepos ||  p.trial.mouse.useAsEyepos)    
-                ND_CheckFixation(p,task);   % needs to be called after pds.datapixx.adc.getData
-            end
+            ND_FrameUpdate(p);
+            
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
@@ -77,7 +62,6 @@ else
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
         %% trial end
-
             p = ND_TrialCleanUpandSave(p); % end all trial related processes
 
 % ####################################################################### %
@@ -86,8 +70,13 @@ else
         case p.trial.pldaps.trialStates.experimentAfterTrials
         %% AfterTrial
         % pass on information between trials
-            p = ND_AfterTrial(p);
-            ND_CtrlMsg(p, 'AfterTrial');
+%              p = ND_AfterTrial(p);
 
     end  %/ switch state
+
+    %% get the current time
+    % Define it here at a clear time point and use it later on whenever the 
+    % current time is needed instead of calling GetSecs every time.
+    p.trial.CurTime = GetSecs;  
+
 end  %/  if(nargin == 1) [...] else [...]

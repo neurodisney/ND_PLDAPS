@@ -10,7 +10,11 @@ function ND_FrameFlip(p)
 %% Flip the screen and keep track of frame timings
 % TODO: WZ: Set a flag that screen synch is required, otherwise use the
 %           'dontsync' argument and set it to 0
-p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
+
+%p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
+ft=cell(5,1);
+[ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
+p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
 
 p.trial.stimulus.timeLastFrame = p.trial.timing.flipTimes(1, p.trial.iFrame) - p.trial.trstart;
 
@@ -18,14 +22,14 @@ p.trial.stimulus.timeLastFrame = p.trial.timing.flipTimes(1, p.trial.iFrame) - p
 % %% Create movie (WZ: do we need this for now?)
 %
 % if(p.trial.display.movie.create)
-%  % we should skip every nth frame depending on the ration of frame rates, 
+%  % we should skip every nth frame depending on the ration of frame rates,
 %  % or increase every nth frame duration by 1 every nth frame
 %     if(p.trial.display.frate > p.trial.display.movie.frameRate)
 %         thisframe = mod(p.trial.iFrame, p.trial.display.frate / p.trial.display.movie.frameRate) > 0;
 %     else
 %         thisframe = true;
 %     end
-% 
+%
 %     if thisframe
 %         frameDuration = 1;
 %         Screen('AddFrameToMovie', p.trial.display.ptr, [], [], p.trial.display.movie.ptr, frameDuration);
@@ -43,12 +47,12 @@ p.trial.stimulus.timeLastFrame = p.trial.timing.flipTimes(1, p.trial.iFrame) - p
 % we could trust users not to draw before frameDraw, but we'll check again at frameDraw to be sure
 
 if(any(p.trial.pldaps.lastBgColor ~= p.trial.display.bgColor))
-    Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor);
+    Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor, p.trial.display.winRect);
     p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
 end
 
 if(p.trial.display.overlayptr ~= p.trial.display.ptr)
-    Screen('FillRect', p.trial.display.overlayptr, 0);
+    Screen('FillRect', p.trial.display.overlayptr, 0, p.trial.display.winRect);
 end
 
 %-------------------------------------------------------------------------%
