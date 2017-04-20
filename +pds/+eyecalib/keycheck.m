@@ -15,32 +15,38 @@ if(~isempty(p.trial.LastKeyPress))
 
         case p.trial.Calib.GridKeyCell
 
-            p.trial.behavior.fixation.GridPos = find(p.trial.Calib.GridKey == p.trial.LastKeyPress(1));
+            gpos = find(p.trial.Calib.GridKey == p.trial.LastKeyPress(1));
+            p.trial.behavior.fixation.GridPos = gpos;
             
-            p.trial.behavior.fixation.FixPos   = [-grdX,  grdY];
+            p.trial.behavior.fixation.FixPos   = [p.trial.Calib.Grid_X(gpos),  [p.trial.Calib.Grid_Y(gpos)];
 
-
+            pds.fixation.move(p);
 
         % accept current fixation
-        case KbName('return')        
+        case KbName('return')      
+        
+        
         
         % move target by steps
         case KbName('RightArrow')
             p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
                                                   p.trial.behavior.fixation.FixWinStp;               
+            pds.fixation.move(p);
+            
         case KbName('LeftArrow')
             p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
                                                   p.trial.behavior.fixation.FixWinStp;
+            pds.fixation.move(p);
+            
         case KbName('UpArrow')
             p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
                                                   p.trial.behavior.fixation.FixWinStp;
+            pds.fixation.move(p);
+            
         case KbName('DownArrow')
             p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
                                                   p.trial.behavior.fixation.FixWinStp;
-        case KbName('g')
-
-            fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
-                    p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
+            pds.fixation.move(p);
     end
-    pds.fixation.move(p);
+    
 end
