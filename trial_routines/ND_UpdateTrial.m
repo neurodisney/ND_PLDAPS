@@ -44,11 +44,11 @@ if(p.trial.behavior.fixation.use)
     p.defaultParameters.behavior.fixation.FixSz      = p.trial.behavior.fixation.FixSz;
     p.defaultParameters.behavior.fixation.FixRect    = p.trial.behavior.fixation.FixRect;
     p.defaultParameters.behavior.fixation.FixWinRect = p.trial.behavior.fixation.FixWinRect;
+    p.defaultParameters.behavior.fixation.GridPos    = p.trial.behavior.fixation.GridPos;
 end
 
 %% keep calibration information for eye position
 if(p.trial.datapixx.useAsEyepos)
-    p.defaultParameters.behavior.fixation.CalibPos = p.trial.behavior.fixation.CalibPos;
 end
 
 %% editable variables

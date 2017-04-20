@@ -192,16 +192,17 @@ SS.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined
 SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % Calibration of eye position
-SS.behavior.fixation.useCalibration = 0;    % load mat file for eye calibration
-SS.behavior.fixation.CalibMat       = [];
-SS.behavior.fixation.CalibGridStp   = [2, 2]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.CalibPos       = 0;
+SS.behavior.fixation.useCalibration  = 0;    % load mat file for eye calibration
+SS.behavior.fixation.CalibMat        = [];
 
-SS.behavior.fixation.FixWinStp  = 0.25;     % change of the size of the fixation window upon key press
-SS.behavior.fixation.FixScale = [1 , 1];    % scaling factor to match screen/dva [TODO: get from calibration]
-SS.behavior.fixation.Offset   = [0 ,0];     % offset to get current position signal to FixPos
+SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
+SS.behavior.fixation.GridPos         = 0;
 
-SS.behavior.fixation.NumSmplCtr = 10;       % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
+SS.behavior.fixation.FixWinStp       = 0.25;     % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixScale        = [1 , 1];    % scaling factor to match screen/dva [TODO: get from calibration]
+SS.behavior.fixation.Offset          = [0 ,0];     % offset to get current position signal to FixPos
+
+SS.behavior.fixation.NumSmplCtr      = 10;       % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
 
 % fixation window
 SS.behavior.fixation.FixWin          =  4;  % diameter of fixation window in dva

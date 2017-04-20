@@ -121,7 +121,10 @@ else
         case p.trial.pldaps.trialStates.framePrepareDrawing
         %% Get ready to display
         % prepare the stimuli that should be shown, do some required calculations
-            KeyAction(p);
+            if(~isempty(p.trial.LastKeyPress))
+                KeyAction(p);
+                pds.eyecalib.keycheck(p);
+            end
             TaskDesign(p);
             
         % ----------------------------------------------------------------%
@@ -154,17 +157,16 @@ function TaskSetUp(p)
     p.trial.task.CurRewDelay = ND_GetITI(p.trial.task.Reward.MinWaitInitial,  ...
                                          p.trial.task.Reward.MaxWaitInitial,  [], [], 1, 0.001);
 
-    p.trial.CurrEpoch = p.trial.epoch.TrialStart;
+    p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
         
     p.trial.task.Reward.Curr = p.trial.task.Reward.InitialRew; % determine reward amount based on number of previous correct trials
         
-    p.trial.task.Good = 1;
-    p.trial.task.Reward.cnt = 0;  % counter for received rewardsw
+    p.trial.task.Good                = 1;  % assume no error untill error occurs
+    p.trial.task.Reward.cnt          = 0;  % counter for received rewardsw
     p.trial.behavior.fixation.GotFix = 0;
      
     p.trial.task.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
     %p.trial.task.FixCol = 'Fix_W';
-    
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -337,90 +339,15 @@ function KeyAction(p)
 %% task specific action upon key press
     if(~isempty(p.trial.LastKeyPress))
 
-        grdX = p.trial.behavior.fixation.FixGridStp(1);
-        grdY = p.trial.behavior.fixation.FixGridStp(2);
-
-        switch p.trial.LastKeyPress
+        switch p.trial.LastKeyPress(1)
             
-            
-            %% TODO: accept eye position, random target position, save current calibration, update current calibration
-            
-            % grid positions
-            case KbName('1')
-            p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
-            MoveFix(p);
-            
-            case KbName('2')
-            p.trial.behavior.fixation.FixPos = [    0,  grdY];
-            MoveFix(p);
-            
-            case KbName('3')
-            p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
-            MoveFix(p);
-            
-            case KbName('4')
-            p.trial.behavior.fixation.FixPos = [-grdX,     0];
-            MoveFix(p);
-            
-            case KbName('5')
-            p.trial.behavior.fixation.FixPos = [    0,     0];
-            MoveFix(p);
-            
-            case KbName('6')
-            p.trial.behavior.fixation.FixPos = [ grdX,    0];
-            MoveFix(p);
-            
-            case KbName('7')
-            p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
-            MoveFix(p);
-            
-            case KbName('8')
-            p.trial.behavior.fixation.FixPos = [    0, -grdY];
-            MoveFix(p);
-            
-            case KbName('9')
-            p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
-            MoveFix(p);
-            
-            % steps
-            case KbName('RightArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
-                                                  p.trial.behavior.fixation.FixWinStp;   
-            MoveFix(p);
-            
-            case KbName('LeftArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
-                                                  p.trial.behavior.fixation.FixWinStp;
-            MoveFix(p);
-            
-            case KbName('UpArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
-                                                  p.trial.behavior.fixation.FixWinStp;
-            MoveFix(p);
-            
-            case KbName('DownArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
-                                                  p.trial.behavior.fixation.FixWinStp;
-            MoveFix(p);
-            
-            case KbName('g')
-                
-                fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
-                        p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
+            case KbName('p')  % change color ('paint')
+                 p.trial.task.Color_list = Shuffle(p.trial.task.Color_list);
+                 p.trial.task.FixCol     = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), ...
+                                           length(p.trial.task.Color_list))+1};
         end
+        pds.fixation.move(p);
     end
-
-% ####################################################################### %
-function MoveFix(p)
-%% displace fixation window and fixation target
-p.trial.task.fixrect    = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
-                                     p.trial.behavior.fixation.FixWin);  
-% target item
-p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;   % Stimulus diameter in dva
-
-% get dva values into psychtoolbox pixel values/coordinates
-p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;
-p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
 
 % ####################################################################### %
 %% additional inline functions that

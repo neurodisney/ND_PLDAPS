@@ -89,9 +89,25 @@ if(p.trial.pldaps.draw.photodiode.use)
 end
 
 %-------------------------------------------------------------------------%
-%% Tick Marks
+%% reference dva grid
 if(p.trial.pldaps.draw.grid.use)
-    p = initTicks(p);
+    % set up grid
+    Xrng = floor(min(abs(p.trial.display.winRect([1,3]))));
+    Yrng = floor(min(abs(p.trial.display.winRect([2,4]))));
+    
+    p.trial.pldaps.draw.grid.tick_line_matrix = nan(2, 4*(Xrng+Yrng+1));
+    
+    % x lines
+    cnt = 1;
+    for(i=-Xrng:Xrng)
+        p.trial.pldaps.draw.grid.tick_line_matrix(:,[cnt, cnt+1]) = [i, i; p.trial.display.winRect([2,4])];
+        cnt = cnt + 2;
+    end
+        
+    for(i=-Yrng:Yrng)
+        p.trial.pldaps.draw.grid.tick_line_matrix(:,[cnt, cnt+1]) = [p.trial.display.winRect([1,3]); i, i];
+        cnt = cnt + 2;
+    end
 end
 
 %-------------------------------------------------------------------------%

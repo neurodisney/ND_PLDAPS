@@ -24,8 +24,8 @@ end
 % ------------------------------------------------------------------------%
 %% grid lines
 if(p.trial.pldaps.draw.grid.use)
-    Screen('DrawLines',p.trial.display.overlayptr,  p.trial.pldaps.draw.grid.tick_line_matrix ,1, ...
-                       p.trial.display.clut.window, p.trial.display.ctr(1:2));
+    Screen('DrawLines',p.trial.display.overlayptr,  p.trial.pldaps.draw.grid.tick_line_matrix, 1,  ...
+                       p.trial.display.clut.grid, [0,0]);
 end
 
 % ------------------------------------------------------------------------%

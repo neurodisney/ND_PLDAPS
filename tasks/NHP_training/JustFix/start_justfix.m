@@ -40,6 +40,8 @@ SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
 SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
 SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
+ 
+SS.pldaps.draw.grid.use       = 1;
 
 SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;

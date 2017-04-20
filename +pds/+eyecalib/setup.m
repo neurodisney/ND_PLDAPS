@@ -34,7 +34,11 @@ grdY = p.trial.behavior.fixation.FixGridStp(2);
 
 p.trial.Calib.Grid_X = [-grdX;     0;  grdX; -grdX; 0; grdX; -grdX;    0; grdX];
 p.trial.Calib.Grid_Y = [-grdY; -grdY; -grdY;     0; 0;    0;  grdY; grdY; grdY];
-            
+   
+p.trial.Calib.GridKey     = KbName(arrayfun(@num2str, 1:9, 'unif', 0));
+p.trial.Calib.GridKeyCell = num2cell(p.trial.Calib.GridKey);
+
 % save calibration file
 pds.eyecalib.save(p);
+
 
