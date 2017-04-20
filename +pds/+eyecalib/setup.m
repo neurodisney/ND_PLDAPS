@@ -38,6 +38,9 @@ p.trial.Calib.Grid_Y = [-grdY; -grdY; -grdY;     0; 0;    0;  grdY; grdY; grdY];
 p.trial.Calib.GridKey     = KbName(arrayfun(@num2str, 1:9, 'unif', 0));
 p.trial.Calib.GridKeyCell = num2cell(p.trial.Calib.GridKey);
 
+p.trial.Calib.EyePos_X = nan(1, 9);
+p.trial.Calib.EyePos_Y = nan(1, 9);
+
 % save calibration file
 pds.eyecalib.save(p);
 

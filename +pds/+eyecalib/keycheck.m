@@ -18,15 +18,19 @@ if(~isempty(p.trial.LastKeyPress))
             gpos = find(p.trial.Calib.GridKey == p.trial.LastKeyPress(1));
             p.trial.behavior.fixation.GridPos = gpos;
             
-            p.trial.behavior.fixation.FixPos   = [p.trial.Calib.Grid_X(gpos),  [p.trial.Calib.Grid_Y(gpos)];
+            p.trial.behavior.fixation.FixPos   = [p.trial.Calib.Grid_X(gpos),  p.trial.Calib.Grid_Y(gpos)];
 
             pds.fixation.move(p);
 
         % accept current fixation
         case KbName('return')      
+            p.trial.Calib.EyePos_X(p.trial.behavior.fixation.GridPos) = nanmedian(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr));
+            p.trial.Calib.EyePos_Y(p.trial.behavior.fixation.GridPos) = nanmedian(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr));
         
-        
-        
+        % update calibration with current eye positions    
+        case KbName('End')  
+            pds.eyecalib.update(p);
+            
         % move target by steps
         case KbName('RightArrow')
             p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...

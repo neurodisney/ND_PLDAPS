@@ -48,7 +48,9 @@ if(p.trial.behavior.fixation.use)
 end
 
 %% keep calibration information for eye position
-if(p.trial.datapixx.useAsEyepos)
+if(p.trial.behavior.fixation.useCalibration)
+    p.defaultParameters.Calib.EyePos_X = p.trial.Calib.EyePos_X;
+    p.defaultParameters.Calib.EyePos_Y = p.trial.Calib.EyePos_Y;
 end
 
 %% editable variables
