@@ -9,10 +9,12 @@ function p = draw(p)
 
 switch  p.trial.behavior.fixation.FixType
     case 'disc'
-        Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(p.trial.behavior.fixation.FixCol), p.trial.behavior.fixation.FixRect);
+        Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(p.trial.behavior.fixation.FixCol), ...
+                            p.trial.behavior.fixation.FixRect);
         
     case 'rect'
-        Screen('FillRect',  p.trial.display.overlayptr, p.trial.display.clut.(p.trial.behavior.fixation.FixCol), p.trial.behavior.fixation.FixRect);
+        Screen('FillRect',  p.trial.display.overlayptr, p.trial.display.clut.(p.trial.behavior.fixation.FixCol), ... 
+                            p.trial.behavior.fixation.FixRect);
         
     case 'off'
         % no fixation spot shown, fixation window likely bound to another item

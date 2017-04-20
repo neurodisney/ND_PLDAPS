@@ -48,7 +48,7 @@ if(isempty(state))
     ND_DefineCol(p, 'Fix_M',  33, [1.00, 0.00, 1.00]);
 
     p.trial.task.Color_list = Shuffle({'Fix_W', 'Fix_R', 'Fix_G', 'Fix_B', 'Fix_O', 'Fix_Y', 'Fix_C', 'Fix_M'});  
-    p.trial.task.Color_list = Shuffle({'Fix_W'});  
+    %p.trial.task.Color_list = Shuffle({'Fix_W'});  
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence

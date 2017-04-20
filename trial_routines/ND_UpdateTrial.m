@@ -17,7 +17,7 @@ else
     p.defaultParameters.LastHits = 0;     % how many correct trials since last error
 
     if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && ...
-        p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)
+       p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)
         p.defaultParameters.NCompleted = p.defaultParameters.NCompleted + 1; % number of started trials (excluding not started trials)
     end
 end
@@ -38,9 +38,18 @@ end
 
 %% keep fixation requirements
 if(p.trial.behavior.fixation.use)
-    p.defaultParameters.behavior.fixation.required = p.trial.behavior.fixation.required;
+    p.defaultParameters.behavior.fixation.required   = p.trial.behavior.fixation.required;
+    p.defaultParameters.behavior.fixation.FixPos     = p.trial.behavior.fixation.FixPos;
+    p.defaultParameters.behavior.fixation.FixWin     = p.trial.behavior.fixation.FixWin;
+    p.defaultParameters.behavior.fixation.FixSz      = p.trial.behavior.fixation.FixSz;
+    p.defaultParameters.behavior.fixation.FixRect    = p.trial.behavior.fixation.FixRect;
+    p.defaultParameters.behavior.fixation.FixWinRect = p.trial.behavior.fixation.FixWinRect;
 end
 
+%% keep calibration information for eye position
+if(p.trial.datapixx.useAsEyepos)
+    p.defaultParameters.behavior.fixation.CalibPos = p.trial.behavior.fixation.CalibPos;
+end
 
 %% editable variables
 if(isfield(p.trial, 'editable') && ~ isempty(p.trial.editable))

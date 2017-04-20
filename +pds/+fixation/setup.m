@@ -3,8 +3,6 @@ function p = setup(p)
 %
 % wolf zinke, april 2017
 
-
-
 pds.fixation.move(p);
 
 
