@@ -37,16 +37,42 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             case KbName(p.trial.key.CtrFix)
             %% Center fixation
             % set current eye position as expected fixation position
-            if(p.trial.datapixx.useAsEyepos)
-%                 p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.FixPos_pxl - ( [p.trial.eyeX, p.trial.eyeY] - p.trial.behavior.fixation.Offset);
+                if(p.trial.datapixx.useAsEyepos && p.trial.behavior.fixation.use)
 
-                p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset + p.trial.behavior.fixation.FixPos - ...
-                                                  [nanmedian(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr)), ...
-                                                   nanmedian(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr))];
-                                                   
-                ND_CtrlMsg(p, ['fixation offset changed to ', num2str(p.trial.behavior.fixation.Offset)]);
-            end
+                    % use a median for recent samples in order to be more robust and not biased by shot noise
+                    cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+                    cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+                    
+                    p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset + p.trial.behavior.fixation.FixPos - [cX,cY]; 
 
+                    ND_CtrlMsg(p, ['fixation offset changed to ', num2str(p.trial.behavior.fixation.Offset)]);
+                end
+
+            
+            case KbName(p.trial.key.FixGain)
+            %% adjust fixation gain
+                if(p.trial.datapixx.useAsEyepos && p.trial.behavior.fixation.use)
+                    
+                    % only adjust if at least 1 dva away from 0
+                    
+                    if(p.trial.behavior.fixation.FixPos(1) > 1) % adjust X
+                        cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+                        
+                    end
+                    
+                    if(p.trial.behavior.fixation.FixPos(2) > 1) % adjust Y
+                        cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+                        
+                    end
+                    
+            
+                end
+    p.trial.eyeX   = -p.trial.behavior.fixation.FixScale(1) * p.trial.behavior.fixation.FixGain(1) *  ...
+                      prctile(p.trial.AI.Eye.X(sIdx), 50)   + p.trial.behavior.fixation.Offset(1);
+                  
+    p.trial.eyeY   = -p.trial.behavior.fixation.FixScale(2) * p.trial.behavior.fixation.FixGain(2) *  ...
+                      prctile(p.trial.AI.Eye.Y(sIdx), 50)   + p.trial.behavior.fixation.Offset(2);
+            
             % ----------------------------------------------------------------%
             case KbName(p.trial.key.FixReq)
             %% Fixation request

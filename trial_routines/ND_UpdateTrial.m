@@ -2,11 +2,7 @@ function p = ND_UpdateTrial(p)
 % pass on specific parameters to next trial 
 %
 % wolf zinke, March 2017
-%
-% Todo: - Maybe create a trial update function for easier control
-%       - define 'editables', either as 2D cell array (variable
-%         name and value) or text file for task parameters that
-%         have to be updated between trials.
+
 
 
 %% The old trial struct is still in memory
@@ -33,7 +29,9 @@ end
 
 %% keep offset correction for eye position
 if(p.trial.datapixx.useAsEyepos)
-    p.defaultParameters.behavior.fixation.Offset = p.trial.behavior.fixation.Offset;
+    p.defaultParameters.behavior.fixation.Offset   = p.trial.behavior.fixation.Offset;
+    p.defaultParameters.behavior.fixation.FixScale = p.trial.behavior.fixation.FixScale;
+    p.defaultParameters.behavior.fixation.FixGain  = p.trial.behavior.fixation.FixGain;
 end
 
 %% keep fixation requirements

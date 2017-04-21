@@ -199,8 +199,9 @@ SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.GridPos         = 0;
 
 SS.behavior.fixation.FixWinStp       = 0.25;     % change of the size of the fixation window upon key press
-SS.behavior.fixation.FixScale        = [1 , 1];    % scaling factor to match screen/dva [TODO: get from calibration]
-SS.behavior.fixation.Offset          = [0 ,0];     % offset to get current position signal to FixPos
+SS.behavior.fixation.FixScale        = [1 , 1];  % general scaling factor to match get the eye position within the dva range
+SS.behavior.fixation.FixGain         = [1 , 1];  % additional fine scale adjustment of the eye position signal to scale it to dva
+SS.behavior.fixation.Offset          = [0 ,0];   % offset to get current position signal to FixPos
 
 SS.behavior.fixation.NumSmplCtr      = 10;       % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
 
@@ -252,18 +253,20 @@ SS.datapixx.TTL_trialOnChan = 1;   % DIO channel used for trial state TTL
 % assign keys to specific functions here and utilize these in the
 % ND_CheckKey function to trigger defined actions.
 
-SS.key.reward = 'space';    % trigger reward
-SS.key.pause  = 'p';
-SS.key.quit   = 'ESCAPE';   % end experiment
-SS.key.debug  = 'd';
-SS.key.exe    = 'x';
+SS.key.reward  = 'space';    % trigger reward
+SS.key.pause   = 'p';
+SS.key.quit    = 'ESCAPE';   % end experiment
+SS.key.debug   = 'd';
+SS.key.exe     = 'x';
 
-SS.key.CtrFix = 'z';  % set current eye position as center
-SS.key.FixReq = 'f';  % disable/enable fixation control
-SS.key.CtrJoy = 'j';  % set current joystick position as zero
+SS.key.CtrFix  = 'z';  % set current eye position as center
 
-SS.key.FixInc = '=+'; % increase size of fixation window
-SS.key.FixDec = '-_'; % decrease size of fixation window
+SS.key.FixReq  = 'f';  % disable/enable fixation control
+SS.key.FixGain = 'g';  % adjust fixation gain
+SS.key.CtrJoy  = 'j';  % set current joystick position as zero
+
+SS.key.FixInc  = '=+'; % increase size of fixation window
+SS.key.FixDec  = '-_'; % decrease size of fixation window
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables

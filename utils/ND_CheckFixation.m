@@ -3,15 +3,16 @@ function p = ND_CheckFixation(p)
 % Read in the eye position signal and check how much it deviates from a
 % defined position.
 %
-% TODO: right now, fixation detection is based on some arbitrary pixel
-% values, needs to be changed to dva.
+% Currently, it is hard coded to calculate the median for a defined number
+% of recent samples in order to determine a more robust eye position.
 %
+%
+% TODO: Define sample based on a time period not number of samples.
 %
 % wolf zinke, Jan. 2017
 
 %% get eye position data
 if(p.trial.mouse.useAsEyepos)
-    % TODO: Define sample based on a time period.
     sIdx = (p.trial.mouse.samples - p.trial.behavior.fixation.Sample + 1) : p.trial.mouse.samples;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
     % calculate amplitude for each time point in the current sample
@@ -23,14 +24,14 @@ if(p.trial.mouse.useAsEyepos)
     p.trial.eyeY   = mean(p.trial.mouse.Y(  sIdx));
     p.trial.eyeAmp = mean(p.trial.mouse.Amp(sIdx));
 else
-    % TODO: Define sample based on a time period.
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
     % calculate a moving average of the eye position for display reasons
-    p.trial.eyeX   = p.trial.behavior.fixation.FixScale(1) * nanmean(p.trial.AI.Eye.X(sIdx)) + ...
-                     p.trial.behavior.fixation.Offset(1);
-    p.trial.eyeY   = p.trial.behavior.fixation.FixScale(2) * nanmean(p.trial.AI.Eye.Y(sIdx)) + ...
-                     p.trial.behavior.fixation.Offset(2);
+    p.trial.eyeX   = -p.trial.behavior.fixation.FixScale(1) * p.trial.behavior.fixation.FixGain(1) *  ...
+                      prctile(p.trial.AI.Eye.X(sIdx), 50)   + p.trial.behavior.fixation.Offset(1);
+                  
+    p.trial.eyeY   = -p.trial.behavior.fixation.FixScale(2) * p.trial.behavior.fixation.FixGain(2) *  ...
+                      prctile(p.trial.AI.Eye.Y(sIdx), 50)   + p.trial.behavior.fixation.Offset(2);
 
     p.trial.eyeAmp = sqrt((p.trial.behavior.fixation.FixPos(1) - p.trial.eyeX)^2 + ...
                           (p.trial.behavior.fixation.FixPos(2) - p.trial.eyeY)^2 );
