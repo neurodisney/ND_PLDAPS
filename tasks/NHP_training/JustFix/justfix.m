@@ -91,7 +91,7 @@ if(isempty(state))
     c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     
-    conditions = {c1, c2, c3};
+    conditions = {c2, c3, c4, c5};
     %conditions = {c1, c2, c3, c4};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
@@ -383,10 +383,6 @@ function KeyAction(p)
         case KbName('DownArrow')
             p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
                                                   p.trial.behavior.fixation.FixWinStp;
-        case KbName('g')
-
-            fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
-                    p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
     end
 
     MoveFix(p);
