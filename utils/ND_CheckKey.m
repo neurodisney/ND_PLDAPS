@@ -45,8 +45,8 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     
                     p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset + p.trial.behavior.fixation.FixPos - [cX,cY]; 
 
-                    fprintf('\n >>> fixation offset changed to [%.4f; %.4f] -- current zero position: [%.4f; %.4f]\n\n', ...
-                             p.trial.behavior.fixation.Offset, p.trial.behavior.fixation.Zero);
+                    fprintf('\n >>> fixation offset changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
+                             p.trial.behavior.fixation.Offset, cX,cY);
                 end
 
             case KbName(p.trial.key.FixGain)
@@ -58,13 +58,13 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     
                     % only adjust if at least 1 dva away from 0
                     if(p.trial.behavior.fixation.FixPos(1) > 1) % adjust X
-                        p.trial.behavior.fixation.FixGain(1) = p.trial.behavior.fixation.FixPos(1)  / ...
-                                                               (cX - p.trial.behavior.fixation.Zero(1));
+                        p.trial.behavior.fixation.FixGain(1) = (cX - p.trial.behavior.fixation.Offset(1)) / ...
+                                                                p.trial.behavior.fixation.FixPos(1);
                     end
                              
                     if(p.trial.behavior.fixation.FixPos(2) > 1) % adjust Y
-                        p.trial.behavior.fixation.FixGain(2) = p.trial.behavior.fixation.FixPos(1)  / ...
-                                                               (cY - p.trial.behavior.fixation.Zero(2));
+                        p.trial.behavior.fixation.FixGain(2) = (cY - p.trial.behavior.fixation.Offset(2)) / ...
+                                                                p.trial.behavior.fixation.FixPos(2) ;
                     end
                     
                     fprintf('\n >>> fixation gain changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
