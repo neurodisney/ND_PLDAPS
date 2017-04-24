@@ -44,11 +44,10 @@ if(isempty(state))
     ND_DefineCol(p, 'Fix_B',  29, [0.00, 0.00, 1.00]);
     ND_DefineCol(p, 'Fix_O',  30, [1.00, 0.40, 0.00]);
     ND_DefineCol(p, 'Fix_Y',  31, [1.00, 1.00, 0.00]);
-    ND_DefineCol(p, 'Fix_C',  32, [0.00, 1.00, 1.00]);
-    ND_DefineCol(p, 'Fix_M',  33, [1.00, 0.00, 1.00]);
+    ND_DefineCol(p, 'Fix_C',  24, [0.00, 1.00, 1.00]);
+    ND_DefineCol(p, 'Fix_M',  25, [1.00, 0.00, 1.00]);
 
     p.trial.task.Color_list = Shuffle({'Fix_W', 'Fix_R', 'Fix_G', 'Fix_B', 'Fix_O', 'Fix_Y', 'Fix_C', 'Fix_M'});  
-    %p.trial.task.Color_list = Shuffle({'Fix_W'});  
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence

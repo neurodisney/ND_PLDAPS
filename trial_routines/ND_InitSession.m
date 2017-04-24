@@ -116,7 +116,6 @@ if(p.trial.sound.use)
     p = pds.audio.setupAudio(p);
 end
 
-
 %-------------------------------------------------------------------------%
 %% REWARD
 p = pds.reward.setup(p);
