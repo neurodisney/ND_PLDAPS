@@ -140,8 +140,11 @@ SS.pldaps.draw.grid.use                         = 0;     % enable drawing of the
 
 % photo diode: control drawing of a flashing photo diode square.
 SS.pldaps.draw.photodiode.use                   = 0;     % enable drawing the photo diode square
-SS.pldaps.draw.photodiode.everyXFrames          = 10;    % will be shown every nth frame
-SS.pldaps.draw.photodiode.location              = 1;     % location of the square as an index: 1-4 for the different corners of the screen
+SS.pldaps.draw.photodiode.XFrames               = 4;     % for how many frames should the PD signal be shown
+SS.pldaps.draw.photodiode.location              = 3;     % location of the square as an index: 1-4 for the different corners of the screen
+SS.pldaps.draw.photodiode.size                  = 1.5;   % next screen shows update of PD signal state
+SS.pldaps.draw.photodiode.state                 = 0;     % is PD signal on?
+SS.pldaps.draw.photodiode.cnt                   = 0;     % counter for PD signals
 
 % pause: control pausing behavior of pldaps
 SS.pldaps.pause.preExperiment                   = 0;     % pause before experiment starts: 0=don't; 1 = debugger; 2 = pause loop
@@ -160,6 +163,7 @@ SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with 
 % ------------------------------------------------------------------------%
 %% Debugging
 SS.pldaps.GetTrialStateTimes = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
+SS.pldaps.GetScreenFlipTimes = 0;  % get each screen refresh time, i.e. wait for synch for each screen update
 
 % ------------------------------------------------------------------------%
 %% Reward settings
@@ -247,6 +251,11 @@ SS.datapixx.EVdur           = [];  % depending on the DAQ sampling rate it might
 
 SS.datapixx.TTL_trialOn     = 1;   % if 1 set a digital output high while trial is active
 SS.datapixx.TTL_trialOnChan = 1;   % DIO channel used for trial state TTL
+
+% ------------------------------------------------------------------------%
+%% Control screen flips
+SS.pldaps.draw.ScreenEvent     = 0;       % no event awaiting, otherwise use event code to be sent to TDT
+SS.pldaps.draw.ScreenEventName = 'NULL';  % keep track of times in pldaps data file
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments

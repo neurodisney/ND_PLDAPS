@@ -33,7 +33,7 @@ function p = ND_runTrial(p)
         % Save the times each state is finished.
 
         %time of the estimated next flip
-        p.trial.nextFrameTime = p.trial.stimulus.timeLastFrame + p.trial.display.ifi;
+%        p.trial.nextFrameTime = p.trial.display.timeLastFrame + p.trial.display.ifi;
 
         % Frame Update
         if(p.trial.pldaps.GetTrialStateTimes)
@@ -80,7 +80,7 @@ end %runTrial
     
 function setTimeAndFrameState(p, state)
         p.trial.ttime = GetSecs - p.trial.trstart;
-        p.trial.remainingFrameTime = p.trial.nextFrameTime - p.trial.ttime;
+%        p.trial.remainingFrameTime = p.trial.nextFrameTime - p.trial.ttime;
         p.trial.timing.frameStateChangeTimes(state, p.trial.iFrame) = ...
                            p.trial.ttime - p.trial.nextFrameTime + p.trial.display.ifi;
 end

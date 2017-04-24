@@ -21,16 +21,22 @@ disp('');
 
 p.defaultParameters.EV.TrialStart  = NaN; % Trial start time
 p.defaultParameters.EV.TaskStart   = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
-p.defaultParameters.EV.TaskEnd     = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
+p.defaultParameters.EV.TaskEnd     = NaN; % actual task end 
 p.defaultParameters.EV.Initiated   = NaN; % animal intiated the task
+p.defaultParameters.EV.StimOn      = NaN; % Stimulus Onset 
+p.defaultParameters.EV.StimOff     = NaN; % Stimulus Offset 
+p.defaultParameters.EV.FixOn       = NaN; % Onset of fixation spot
+p.defaultParameters.EV.FixOff      = NaN; % Offset of fixation spot
+p.defaultParameters.EV.PDOn        = NaN; % Photo diode onset
+p.defaultParameters.EV.PDOff       = NaN; % Photo diode offset
 p.defaultParameters.EV.GoCue       = NaN; % Onset of Go-signal
 p.defaultParameters.EV.Reward      = NaN; % time of reward delivery
 p.defaultParameters.EV.StartRT     = NaN; % response time to start trial after active cue
 p.defaultParameters.EV.RespRT      = NaN; % reaction time
 p.defaultParameters.EV.DPX_TaskOn  = NaN; % Synch time with datapixx for task on
 p.defaultParameters.EV.DPX_TaskOff = NaN; % Synch time with datapixx for task off
-p.defaultParameters.EV.TDT_TaskOn  = NaN; % Synch time with datapixx for task on
-p.defaultParameters.EV.TDT_TaskOff = NaN; % Synch time with datapixx for task off
+p.defaultParameters.EV.TDT_TaskOn  = NaN; % Synch time with TDT for task on
+p.defaultParameters.EV.TDT_TaskOff = NaN; % Synch time with TDT for task off
 
 % if joystick is used for behavior
 if(p.defaultParameters.behavior.joystick.use)
@@ -123,7 +129,9 @@ p.defaultParameters.event.FIX_OUT    = 2001;      % gaze leaves fixation window
 p.defaultParameters.event.JOY_ON     = 2110;      % joystick elevation above pressing threshold
 p.defaultParameters.event.JOY_OFF    = 2111;      % joystick elevation below releasing threshold
 
-p.defaultParameters.event.PDFLASH    = 2010;      % onset of photo diode flash
+p.defaultParameters.event.PD_FLASH   = 2010;      % onset of photo diode flash
+p.defaultParameters.event.PD_ON      = 2011;      % onset of photo diode flash
+p.defaultParameters.event.PD_OFF     = 2012;      % onset of photo diode flash
 
 % feedback
 p.defaultParameters.event.REWARD     = 1005;      % reward delivery, irrespective if earned in task or manually given by experimenter

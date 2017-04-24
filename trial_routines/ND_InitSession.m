@@ -83,12 +83,6 @@ if(p.trial.behavior.fixation.useCalibration)
 end
 
 %-------------------------------------------------------------------------%
-%% Setup Photodiode stimuli
-if(p.trial.pldaps.draw.photodiode.use)
-    makePhotodiodeRect(p);
-end
-
-%-------------------------------------------------------------------------%
 %% reference dva grid
 if(p.trial.pldaps.draw.grid.use)
     % set up grid
@@ -119,6 +113,27 @@ end
 %-------------------------------------------------------------------------%
 %% REWARD
 p = pds.reward.setup(p);
+
+%-------------------------------------------------------------------------%
+%% Setup Photodiode stimuli
+if(p.trial.pldaps.draw.photodiode.use)    
+    szstep = p.trial.pldaps.draw.photodiode.size / 2; % move PD away from edge
+    
+    switch p.trial.pldaps.draw.photodiode.location
+        case 1 % upper left corner
+            PDpos = [p.trial.display.winRect(1) + szstep, p.trial.display.winRect(4) - szstep];
+        case 2
+            PDpos = [p.trial.display.winRect(3) - szstep, p.trial.display.winRect(4) - szstep];
+        case 3
+            PDpos = [p.trial.display.winRect(1) + szstep, p.trial.display.winRect(2) + szstep];
+        case 4
+            PDpos = [p.trial.display.winRect(3) - szstep, p.trial.display.winRect(2) + szstep];
+    end
+        
+    p.trial.pldaps.draw.photodiode.rect = ND_GetRect(PDpos, p.trial.pldaps.draw.photodiode.size);
+    
+    
+end
 
 %-------------------------------------------------------------------------%
 %% Initialize Datapixx including dual CLUTS and timestamp logging

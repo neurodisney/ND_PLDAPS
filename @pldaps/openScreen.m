@@ -126,11 +126,11 @@ if p.defaultParameters.display.useOverlay==2
 end
 
 %% Set some basic variables about the display
-p.defaultParameters.display.ppd = p.defaultParameters.display.winRect(3)/p.defaultParameters.display.width; % calculate pixels per degree
+p.defaultParameters.display.ppd   = p.defaultParameters.display.winRect(3)/p.defaultParameters.display.width; % calculate pixels per degree
 p.defaultParameters.display.frate = round(1/Screen('GetFlipInterval',p.defaultParameters.display.ptr));   % frame rate (in Hz)
-p.defaultParameters.display.ifi=Screen('GetFlipInterval', p.defaultParameters.display.ptr);               % Inter-frame interval (frame rate in seconds)
-p.defaultParameters.display.ctr = [p.defaultParameters.display.winRect(3:4),p.defaultParameters.display.winRect(3:4)]./2 - 0.5;          % Rect defining screen center
-p.defaultParameters.display.info = Screen('GetWindowInfo', p.defaultParameters.display.ptr);              % Record a bunch of general display settings
+p.defaultParameters.display.ifi   = Screen('GetFlipInterval', p.defaultParameters.display.ptr);               % Inter-frame interval (frame rate in seconds)
+p.defaultParameters.display.ctr   = [p.defaultParameters.display.winRect(3:4),p.defaultParameters.display.winRect(3:4)]./2 - 0.5;          % Rect defining screen center
+p.defaultParameters.display.info  = Screen('GetWindowInfo', p.defaultParameters.display.ptr);              % Record a bunch of general display settings
 
 %% some more
 p.defaultParameters.display.pWidth=p.defaultParameters.display.winRect(3)-p.defaultParameters.display.winRect(1);

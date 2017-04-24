@@ -6,35 +6,66 @@ function ND_FrameFlip(p)
 %
 % wolf zinke, Jan. 2017
 
+
+%-------------------------------------------------------------------------%
+%% check if photo diode signal needs to be shown or remains on
+PDoff = 0;
+
+if(p.trial.pldaps.draw.photodiode.use)    
+    if(p.trial.pldaps.draw.photodiode.state == 1)
+        if(GetSecs < p.trial.Timer.PhD)
+            Screen('FillRect',  p.trial.display.ptr, [1 1 1], p.trial.pldaps.draw.photodiode.rect);
+        else
+            PDoff = 1;
+        end
+    elseif(p.trial.pldaps.draw.ScreenEvent > 0)
+        Screen('FillRect',  p.trial.display.ptr, [1 1 1], p.trial.pldaps.draw.photodiode.rect);
+    end
+end
+
 %-------------------------------------------------------------------------%
 %% Flip the screen and keep track of frame timings
-% TODO: WZ: Set a flag that screen synch is required, otherwise use the
-%           'dontsync' argument and set it to 0
+if(p.trial.pldaps.GetScreenFlipTimes || p.trial.pldaps.draw.ScreenEvent > 0)
+    ft=cell(5,1);
+    [ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
+    
+    if(p.trial.pldaps.draw.ScreenEvent > 0)
+        pds.tdt.strobe(p.trial.pldaps.draw.ScreenEvent);
+        
+        if(p.trial.pldaps.draw.photodiode.use) 
+            if(p.trial.pldaps.draw.photodiode.state == 0)
+                pds.tdt.strobe(p.trial.event.PD_ON);    
 
-%p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
-ft=cell(5,1);
-[ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
-p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
+                p.trial.Timer.PhD = ft{1} + (p.trial.pldaps.draw.photodiode.XFrames * p.trial.display.ifi) - p.trial.display.ifi/2; % subtract hal a frame rate to make sure to catch the correct one
 
-p.trial.stimulus.timeLastFrame = p.trial.timing.flipTimes(1, p.trial.iFrame) - p.trial.trstart;
+                p.trial.pldaps.draw.photodiode.cnt = p.trial.pldaps.draw.photodiode.cnt + 1;
+                p.trial.timing.photodiodeTimes(1, p.trial.pldaps.draw.photodiode.cnt) = ft{1};
 
-% %-------------------------------------------------------------------------%
-% %% Create movie (WZ: do we need this for now?)
-%
-% if(p.trial.display.movie.create)
-%  % we should skip every nth frame depending on the ration of frame rates,
-%  % or increase every nth frame duration by 1 every nth frame
-%     if(p.trial.display.frate > p.trial.display.movie.frameRate)
-%         thisframe = mod(p.trial.iFrame, p.trial.display.frate / p.trial.display.movie.frameRate) > 0;
-%     else
-%         thisframe = true;
-%     end
-%
-%     if thisframe
-%         frameDuration = 1;
-%         Screen('AddFrameToMovie', p.trial.display.ptr, [], [], p.trial.display.movie.ptr, frameDuration);
-%     end
-% end
+                p.trial.pldaps.draw.photodiode.state = 1;
+            end
+        end
+        p.trial.EV.(p.trial.pldaps.draw.ScreenEventName) = ft{1};
+        
+        % reset
+        p.trial.pldaps.draw.ScreenEvent     = 0;       
+        p.trial.pldaps.draw.ScreenEventName = 'NULL';  
+    end
+    
+    % turn photo diode signal off
+    if(p.trial.pldaps.draw.photodiode.use && PDoff == 1) 
+        pds.tdt.strobe(p.trial.event.PD_OFF);    
+
+        p.trial.timing.photodiodeTimes(2, p.trial.pldaps.draw.photodiode.cnt) = ft{1};
+
+        p.trial.pldaps.draw.photodiode.state = 0;
+    end
+    
+    p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
+    
+    % p.trial.display.timeLastFrame = ft{1} - p.trial.trstart;
+else
+    Screen('Flip', p.trial.display.ptr, 0, 0, 1);  % do not wait for next screen refresh
+end
 
 %-------------------------------------------------------------------------%
 %% Draw background
