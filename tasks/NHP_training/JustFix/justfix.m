@@ -90,8 +90,8 @@ if(isempty(state))
     c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     
-    conditions = {c2, c3, c4, c5};
-    %conditions = {c1, c2, c3, c4};
+    %conditions = {c2, c3, c4, c5};
+    conditions = {c1, c1, c1, c2, c2, c3, c4};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
@@ -347,55 +347,77 @@ function KeyAction(p)
 %% task specific action upon key press
     grdX = p.trial.behavior.fixation.FixGridStp(1);
     grdY = p.trial.behavior.fixation.FixGridStp(2);
+    
+    FixPos = p.trial.behavior.fixation.FixPos;
 
     switch p.trial.LastKeyPress(1)
 
         % grid positions
         case KbName('1')
-            p.trial.behavior.fixation.FixPos = [-grdX,  -grdY];
+            FixPos = [-grdX,  -grdY];
 
         case KbName('2')
-            p.trial.behavior.fixation.FixPos = [    0,  -grdY];
+            FixPos = [    0,  -grdY];
 
         case KbName('3')
-            p.trial.behavior.fixation.FixPos = [ grdX,  -grdY];
+            FixPos = [ grdX,  -grdY];
 
         case KbName('4')
-            p.trial.behavior.fixation.FixPos = [-grdX,     0];
+            FixPos = [-grdX,     0];
 
         case KbName('5')
-            p.trial.behavior.fixation.FixPos = [    0,     0];
+            FixPos = [    0,     0];
 
         case KbName('6')
-            p.trial.behavior.fixation.FixPos = [ grdX,    0];
+            FixPos = [ grdX,    0];
 
         case KbName('7')
-            p.trial.behavior.fixation.FixPos = [-grdX, grdY];
+            FixPos = [-grdX, grdY];
 
         case KbName('8')
-            p.trial.behavior.fixation.FixPos = [    0, grdY];
+            FixPos = [    0, grdY];
 
         case KbName('9')
-            p.trial.behavior.fixation.FixPos = [ grdX, grdY];
+            FixPos = [ grdX, grdY];
 
         % steps
         case KbName('RightArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
-                                                  p.trial.behavior.fixation.FixWinStp;   
+            FixPos(1) = FixPos(1) + p.trial.behavior.fixation.FixWinStp;   
         case KbName('LeftArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
-                                                  p.trial.behavior.fixation.FixWinStp;
+            FixPos(1) = FixPos(1) - p.trial.behavior.fixation.FixWinStp;
         case KbName('UpArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
-                                                  p.trial.behavior.fixation.FixWinStp;
+            FixPos(2) = FixPos(2) + p.trial.behavior.fixation.FixWinStp;
         case KbName('DownArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
-                                                  p.trial.behavior.fixation.FixWinStp;
+            FixPos(2) = FixPos(2) - p.trial.behavior.fixation.FixWinStp;
+            
+        % Center fixation (define zero)
+        case KbName('z')
+        % Center fixation (define zero)
+        % set current eye position as expected fixation position
+
+            % use a median for recent samples in order to be more robust and not biased by shot noise
+            cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+            cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+
+            p.trial.behavior.fixation.PrevOffset = p.trial.behavior.fixation.Offset;
+
+            p.trial.behavior.fixation.Offset    = p.trial.behavior.fixation.Offset + FixPos - [cX,cY]; 
+
+            fprintf('\n >>> fixation offset changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
+                     p.trial.behavior.fixation.Offset, cX,cY);
+            
+        case KbName('BackSpace')
+        % update calibration with current eye positions    
+            p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.PrevOffset;
+            
+    end
+    
+    if(any((p.trial.behavior.fixation.FixPos == FixPos) == 0))
+        p.trial.behavior.fixation.FixPos = FixPos;
+        MoveFix(p);
+        pds.fixation.move(p);
     end
 
-    MoveFix(p);
-    pds.fixation.move(p);
- 
 % ####################################################################### %
 function MoveFix(p)
 %% displace fixation window and fixation target

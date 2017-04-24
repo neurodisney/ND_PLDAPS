@@ -28,51 +28,13 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
         switch p.trial.LastKeyPress(i)
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.reward)
+            case p.trial.key.reward
             %% reward
             % check for manual reward delivery via keyboard
                 pds.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
-
-            % ----------------------------------------------------------------%
-            case KbName(p.trial.key.CtrFix)
-            %% Center fixation (define zero)
-            % set current eye position as expected fixation position
-                if(p.trial.datapixx.useAsEyepos && p.trial.behavior.fixation.use)
-
-                    % use a median for recent samples in order to be more robust and not biased by shot noise
-                    cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
-                    cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
-                    
-                    p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset + p.trial.behavior.fixation.FixPos - [cX,cY]; 
-
-                    fprintf('\n >>> fixation offset changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
-                             p.trial.behavior.fixation.Offset, cX,cY);
-                end
-
-            case KbName(p.trial.key.FixGain)
-            %% adjust fixation gain
-                if(p.trial.datapixx.useAsEyepos && p.trial.behavior.fixation.use)
-                    
-                    cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
-                    cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
-                    
-                    % only adjust if at least 1 dva away from 0
-                    if(p.trial.behavior.fixation.FixPos(1) > 1) % adjust X
-                        p.trial.behavior.fixation.FixGain(1) = (cX - p.trial.behavior.fixation.Offset(1)) / ...
-                                                                p.trial.behavior.fixation.FixPos(1);
-                    end
-                             
-                    if(p.trial.behavior.fixation.FixPos(2) > 1) % adjust Y
-                        p.trial.behavior.fixation.FixGain(2) = (cY - p.trial.behavior.fixation.Offset(2)) / ...
-                                                                p.trial.behavior.fixation.FixPos(2) ;
-                    end
-                    
-                    fprintf('\n >>> fixation gain changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
-                             p.trial.behavior.fixation.FixGain, cX, cY);
-                end
             
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.FixReq)
+            case p.trial.key.FixReq
             %% Fixation request
             % disable/enable requirement of fixation for the task
                 if(p.trial.behavior.fixation.use)
@@ -86,7 +48,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 end
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.FixInc)
+            case p.trial.key.FixInc
             %% Fixation Window increase
                 if(p.trial.behavior.fixation.use)
                     p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin + ...
@@ -95,8 +57,9 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
                                                       p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
                 end
+                
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.FixDec)
+            case p.trial.key.FixDec
             %% Fixation Window increase
                 if(p.trial.behavior.fixation.use)
                     p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin - ...
@@ -107,7 +70,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 end
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.CtrJoy)
+            case p.trial.key.CtrJoy
             %% Center joystick
             % set current eye position as expected fixation position
             if(p.trial.datapixx.useJoystick)
@@ -115,19 +78,19 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             end
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.pause)
+            case p.trial.key.pause
             %% pause trial
                 p.trial.pldaps.quit = 1;
                 ShowCursor;
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.quit)
+            case p.trial.key.quit
             %% quit experiment
                 p.trial.pldaps.quit = 2;
                 ShowCursor;
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.quit)
+            case p.trial.key.quit
             %%  go into debug mode
                 disp('stepped into debugger. Type return to start first trial...')
                 keyboard %#ok<MCKBD>

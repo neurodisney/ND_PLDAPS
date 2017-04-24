@@ -174,44 +174,46 @@ SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
-SS.datapixx.useAsEyepos         = 0;
+SS.datapixx.useAsEyepos        = 0;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XEyeposChannel  = 0;
-SS.datapixx.adc.YEyeposChannel  = 1;
-SS.datapixx.adc.PupilChannel    = 2;
+SS.datapixx.adc.XEyeposChannel = 0;
+SS.datapixx.adc.YEyeposChannel = 1;
+SS.datapixx.adc.PupilChannel   = 2;
 
 % Saccade parameters
-SS.behavior.fixation.use        =  0;       % does this task require control of eye position
+SS.behavior.fixation.use       =  0;       % does this task require control of eye position
 
-SS.behavior.fixation.required   =  0;       % If not required, fixation states will be ignored
-SS.behavior.fixation.Sample     = 20;       % how many data points to use for determining fixation state.
-SS.behavior.fixation.BreakTime  = 50;       % minimum time [ms] to identify a fixation break
-SS.behavior.fixation.GotFix     = 0;        % state indicating if currently fixation is acquired
+SS.behavior.fixation.required  =  0;       % If not required, fixation states will be ignored
+SS.behavior.fixation.Sample    = 20;       % how many data points to use for determining fixation state.
+SS.behavior.fixation.BreakTime = 50;       % minimum time [ms] to identify a fixation break
+SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
 
 % fixation target parameters
-SS.behavior.fixation.FixPos    = [0 ,0];    % center position of fixation window [dva]
+SS.behavior.fixation.FixPos    = [0, 0];    % center position of fixation window [dva]
 SS.behavior.fixation.FixType   = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 SS.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
 SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 0;    % load mat file for eye calibration
+SS.behavior.fixation.enableCalib     = 0;    % allow changing the current eye calibration parameters
 SS.behavior.fixation.CalibMat        = [];
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.GridPos         = 0;
 
-SS.behavior.fixation.FixWinStp       = 0.25;     % change of the size of the fixation window upon key press
-SS.behavior.fixation.FixScale        = [1 , 1];  % general scaling factor to match get the eye position within the dva range
-SS.behavior.fixation.FixGain         = [1 , 1];  % additional fine scale adjustment of the eye position signal to scale it to dva
-SS.behavior.fixation.Offset          = [0 ,0];   % offset to get current position signal to FixPos
+SS.behavior.fixation.FixWinStp       = 0.25;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixScale        = [1, 1];  % general scaling factor to match get the eye position within the dva range
+SS.behavior.fixation.FixGain         = [1, 1];  % additional fine scale adjustment of the eye position signal to scale it to dva
+SS.behavior.fixation.Offset          = [0, 0];  % offset to get current position signal to FixPos
+SS.behavior.fixation.PrevOffset      = [0, 0];  % keep track of previous offset to change back from the one
 
-SS.behavior.fixation.NumSmplCtr      = 10;       % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
+SS.behavior.fixation.NumSmplCtr      = 10;      % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
 
 % fixation window
 SS.behavior.fixation.FixWin          =  4;  % diameter of fixation window in dva
-SS.pldaps.draw.eyepos.history        = 40;  % show eye position of the previous n frames in addition to current one
+SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
@@ -261,21 +263,18 @@ SS.pldaps.draw.ScreenEventName = 'NULL';  % keep track of times in pldaps data f
 %% Keyboard assignments
 % assign keys to specific functions here and utilize these in the
 % ND_CheckKey function to trigger defined actions.
+KbName('UnifyKeyNames');
+SS.key.reward  = KbName('space');    % trigger reward
+SS.key.pause   = KbName('p');
+SS.key.quit    = KbName('ESCAPE');   % end experiment
+SS.key.debug   = KbName('d');
+SS.key.exe     = KbName('x');
 
-SS.key.reward  = 'space';    % trigger reward
-SS.key.pause   = 'p';
-SS.key.quit    = 'ESCAPE';   % end experiment
-SS.key.debug   = 'd';
-SS.key.exe     = 'x';
+SS.key.FixReq  = KbName('f');  % disable/enable fixation control
+SS.key.CtrJoy  = KbName('j');  % set current joystick position as zero
 
-SS.key.CtrFix  = 'z';  % set current eye position as center
-
-SS.key.FixReq  = 'f';  % disable/enable fixation control
-SS.key.FixGain = 'g';  % adjust fixation gain
-SS.key.CtrJoy  = 'j';  % set current joystick position as zero
-
-SS.key.FixInc  = '=+'; % increase size of fixation window
-SS.key.FixDec  = '-_'; % decrease size of fixation window
+SS.key.FixInc  = KbName('=+'); % increase size of fixation window
+SS.key.FixDec  = KbName('-_'); % decrease size of fixation window
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables
