@@ -13,13 +13,13 @@ centerEye = p.trial.Calib.rawEye(1,:);
 centerFix = p.trial.Calib.fixPos(1,:);
 
 if centerFix ~= [0 0]
-    warn('First calibration point must be in the center, clearing calibration points')
+    warning('First calibration point must be in the center, clearing calibration points')
     p.trial.Calib.rawEye = [];
     p.trial.Calib.fixPos = [];
     return
 end
 
-p.trial.fixation.Offset = centerEye;
+p.trial.behavior.fixation.Offset = centerEye;
 
 % Only calculate gain if more than one calibration point has been collected
 nCalib = size(p.trial.Calib.rawEye,1);
@@ -55,5 +55,5 @@ if nCalib > 1
     end
 
 else
-    fprintf('\n >>> Fixation offset set to [%.4f, %.4f]\n', centerEye)
+    fprintf('/n >>> Fixation offset set to [%.4f, %.4f]\n', centerEye)
 end
