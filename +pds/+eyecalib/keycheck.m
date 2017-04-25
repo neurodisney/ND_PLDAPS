@@ -43,11 +43,6 @@ if(~isempty(p.trial.LastKeyPress))
             end
         
         % ----------------------------------------------------------------%
-        case p.trial.key.updateCalib 
-        %% update calibration with current eye positions    
-            pds.eyecalib.update(p);
-        
-        % ----------------------------------------------------------------%
         case p.trial.key.resetCalib
         %% Clear the calibration matrix and reset to default values
         pds.eyecalib.reset(p);
@@ -68,30 +63,6 @@ if(~isempty(p.trial.LastKeyPress))
                 end
                         
             end
-            
-        % ----------------------------------------------------------------%
-%         case p.trial.key.FixGain
-%         %% adjust fixation gain
-%             if(p.trial.behavior.fixation.enableCalib)
-%                 cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
-%                 cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
-% 
-%                 % only adjust if at least 1 dva away from 0
-%                 if(p.trial.behavior.fixation.FixPos(1) > 1) % adjust X
-%                     p.trial.behavior.fixation.FixGain(1) =      p.trial.behavior.fixation.FixGain(1) * ...
-%                                                           (cX - p.trial.behavior.fixation.Offset(1)) / ...
-%                                                                 p.trial.behavior.fixation.FixPos(1);
-%                 end
-% 
-%                 if(p.trial.behavior.fixation.FixPos(2) > 1) % adjust Y
-%                     p.trial.behavior.fixation.FixGain(2) =      p.trial.behavior.fixation.FixGain(2) * ...
-%                                                           (cY - p.trial.behavior.fixation.Offset(2)) / ...
-%                                                                 p.trial.behavior.fixation.FixPos(2) ;
-%                 end
-% 
-%                 fprintf('\n >>> fixation gain changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
-%                          p.trial.behavior.fixation.FixGain, cX, cY);
-%             end
             
         % ----------------------------------------------------------------%
         case p.trial.key.enableCalib 
