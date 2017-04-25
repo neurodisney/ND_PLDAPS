@@ -2,11 +2,7 @@ function p = ND_UpdateTrial(p)
 % pass on specific parameters to next trial 
 %
 % wolf zinke, March 2017
-%
-% Todo: - Maybe create a trial update function for easier control
-%       - define 'editables', either as 2D cell array (variable
-%         name and value) or text file for task parameters that
-%         have to be updated between trials.
+
 
 
 %% The old trial struct is still in memory
@@ -33,7 +29,10 @@ end
 
 %% keep offset correction for eye position
 if(p.trial.datapixx.useAsEyepos)
-    p.defaultParameters.behavior.fixation.Offset = p.trial.behavior.fixation.Offset;
+    p.defaultParameters.behavior.fixation.Offset     = p.trial.behavior.fixation.Offset;
+    p.defaultParameters.behavior.fixation.PrevOffset = p.trial.behavior.fixation.PrevOffset;
+    p.defaultParameters.behavior.fixation.FixScale   = p.trial.behavior.fixation.FixScale;
+    p.defaultParameters.behavior.fixation.FixGain    = p.trial.behavior.fixation.FixGain;
 end
 
 %% keep fixation requirements
@@ -44,13 +43,14 @@ if(p.trial.behavior.fixation.use)
     p.defaultParameters.behavior.fixation.FixSz      = p.trial.behavior.fixation.FixSz;
     p.defaultParameters.behavior.fixation.FixRect    = p.trial.behavior.fixation.FixRect;
     p.defaultParameters.behavior.fixation.FixWinRect = p.trial.behavior.fixation.FixWinRect;
-    p.defaultParameters.behavior.fixation.GridPos    = p.trial.behavior.fixation.GridPos;
 end
 
 %% keep calibration information for eye position
 if(p.trial.behavior.fixation.useCalibration)
-    p.defaultParameters.Calib.EyePos_X = p.trial.Calib.EyePos_X;
-    p.defaultParameters.Calib.EyePos_Y = p.trial.Calib.EyePos_Y;
+    p.defaultParameters.behavior.fixation.GridPos     = p.trial.behavior.fixation.GridPos;
+    p.defaultParameters.Calib.EyePos_X                = p.trial.Calib.EyePos_X;
+    p.defaultParameters.Calib.EyePos_Y                = p.trial.Calib.EyePos_Y;
+    p.defaultParameters.behavior.fixation.enableCalib = p.trial.behavior.fixation.enableCalib;
 end
 
 %% editable variables

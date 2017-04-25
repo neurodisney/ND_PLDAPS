@@ -13,11 +13,30 @@ smPT = 50;
 
 hit_col   = [0, 0.65, 0];
 early_col = [0.65, 0, 0];
-late_col  = [0, 0, 0.65];
+%late_col  = [0, 0, 0.65];
 
 fig_sz = [25, 25, 1800, 980];
 
 %% optional offline analysis
+if(~exist('p', 'var'))
+    [pdsnm, PathName] = uigetfile({'*.pds;*.PDS'},'Load pldaps data file');
+    p = fullfile(PathName, pdsnm);
+end
+
+if(ischar(p))    
+    % load the data file, it should give a struct called PDS
+    load(p,'-mat');
+    
+    if(~exist('PDS','var'))
+        error([pdsnm, ' does not contain a PDS variable1']);
+    else
+        p = PDS;
+        clear PDS;
+    end
+    
+    offln = 1;
+end
+
 if(~exist('offln', 'var'))
     offln = 0;
 end
@@ -35,7 +54,7 @@ end
 
 Ntrials  = length(p.data);
 
-Cond     = cellfun(@(x) x.Nr, p.data);
+%Cond     = cellfun(@(x) x.Nr, p.data);
 Results  = cellfun(@(x) x.outcome.CurrOutcome, p.data);
 
 fp = Results ~= p.data{1}.outcome.NoFix;
@@ -158,7 +177,6 @@ fp = Results ~= p.data{1}.outcome.NoFix;
             'MarkerEdgeColor', early_col,'MarkerFaceColor',early_col)
         
         if(Ntrials > 4)
-            
             X = [ones(length(Tm),1) Tm(:)];
             cFit = X\RT(:);
             cFitln = X*cFit;
@@ -177,7 +195,6 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         axis tight
         hold off
         
-        
         % fixation durations over session time
         subplot(3,1,3);
         
@@ -186,7 +203,6 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         hold on;
         plot(Tm(RewCnt(fp)==0), Dur(RewCnt(fp)==0), 'o', 'MarkerSize', 6, ...
             'MarkerEdgeColor', early_col,'MarkerFaceColor',early_col)
-        
         
         if(Ntrials > 4)
             vpos = isfinite(Dur);
@@ -209,7 +225,6 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         xlabel('trial time [min]');
         axis tight
         hold off
-        
         
         %% update plot
         drawnow

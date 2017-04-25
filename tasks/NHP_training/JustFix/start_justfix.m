@@ -48,10 +48,11 @@ SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
 SS.behavior.fixation.required = 1; % fixation required for this task
+SS.behavior.fixation.FixType  = 'off';
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
+SS.pldaps.GetScreenFlipTimes  = 0; % for debugging, save times when trial states are called
 
-SS.behavior.fixation.FixType  = 'off';
 
 % ------------------------------------------------------------------------%
 %% make modifications of default settings

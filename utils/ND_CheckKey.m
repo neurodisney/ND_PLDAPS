@@ -28,27 +28,13 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
         switch p.trial.LastKeyPress(i)
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.reward)
+            case p.trial.key.reward
             %% reward
             % check for manual reward delivery via keyboard
                 pds.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
-
+            
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.CtrFix)
-            %% Center fixation
-            % set current eye position as expected fixation position
-            if(p.trial.datapixx.useAsEyepos)
-%                 p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.FixPos_pxl - ( [p.trial.eyeX, p.trial.eyeY] - p.trial.behavior.fixation.Offset);
-
-                p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset + p.trial.behavior.fixation.FixPos - ...
-                                                  [nanmedian(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr)), ...
-                                                   nanmedian(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr))];
-                                                   
-                ND_CtrlMsg(p, ['fixation offset changed to ', num2str(p.trial.behavior.fixation.Offset)]);
-            end
-
-            % ----------------------------------------------------------------%
-            case KbName(p.trial.key.FixReq)
+            case p.trial.key.FixReq
             %% Fixation request
             % disable/enable requirement of fixation for the task
                 if(p.trial.behavior.fixation.use)
@@ -62,7 +48,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 end
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.FixInc)
+            case p.trial.key.FixInc
             %% Fixation Window increase
                 if(p.trial.behavior.fixation.use)
                     p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin + ...
@@ -71,8 +57,9 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
                                                       p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
                 end
+                
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.FixDec)
+            case p.trial.key.FixDec
             %% Fixation Window increase
                 if(p.trial.behavior.fixation.use)
                     p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin - ...
@@ -83,7 +70,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 end
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.CtrJoy)
+            case p.trial.key.CtrJoy
             %% Center joystick
             % set current eye position as expected fixation position
             if(p.trial.datapixx.useJoystick)
@@ -91,19 +78,19 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             end
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.pause)
-            %% pause trial
-                p.trial.pldaps.quit = 1;
-                ShowCursor;
+%             case p.trial.key.pause
+%             %% pause trial
+%                 p.trial.pldaps.quit = 1;
+%                 ShowCursor;
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.quit)
+            case p.trial.key.quit
             %% quit experiment
                 p.trial.pldaps.quit = 2;
                 ShowCursor;
 
             % ----------------------------------------------------------------%
-            case KbName(p.trial.key.quit)
+            case p.trial.key.quit
             %%  go into debug mode
                 disp('stepped into debugger. Type return to start first trial...')
                 keyboard %#ok<MCKBD>

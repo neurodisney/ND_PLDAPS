@@ -97,21 +97,6 @@ end
 %                         p.trial.pldaps.draw.cursor.sz, p.trial.display.clut.cursor, [0 0],0);
 % end
 
-% ------------------------------------------------------------------------%
-%% draw photodiode
-% this is displayed as mono-chromatic (white) element on p.trial.display.ptr
-% TODO: WZ: use a combination of state and timer instead of calling mod.
-%           Whenever timer expires and state changes require a screen synch
-if(p.trial.pldaps.draw.photodiode.use && ...
-   mod(p.trial.iFrame, p.trial.pldaps.draw.photodiode.everyXFrames) == 0 )
-
-    pds.tdt.strobe(p.trial.event.PDFLASH);
-
-    p.trial.timing.photodiodeTimes(:, p.trial.pldaps.draw.photodiode.dataEnd) = [p.trial.ttime, p.trial.iFrame];
-    p.trial.pldaps.draw.photodiode.dataEnd = p.trial.pldaps.draw.photodiode.dataEnd + 1;
-
-    Screen('FillRect',  p.trial.display.ptr, [1 1 1], p.trial.pldaps.draw.photodiode.rect');
-end
 
 % ------------------------------------------------------------------------%
 %% Write trial information to control screen

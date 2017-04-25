@@ -57,14 +57,11 @@ p.trial.behavior.fixation.BreakTime = 0.05;  % minimum time [ms] to identify a f
 p.trial.behavior.fixation.EnsureFix = 0.05;  % minimum time to stay within fixation window to detect initial fixation start
 
 % ------------------------------------------------------------------------%
-%% Stimulus parameters
-
-% target item
-p.trial.task.TargetSz  = 0.5;   % Stimulus diameter in dva
-p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
-
-% get dva values into psychtoolbox pixel values/coordinates
-p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
+%% fixation spot parameters
+p.trial.behavior.fixation.FixPos    = [0, 0];    % center position of fixation window [dva]
+p.trial.behavior.fixation.FixType   = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
+p.trial.behavior.fixation.FixSz     = 0.5;      % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Trial duration

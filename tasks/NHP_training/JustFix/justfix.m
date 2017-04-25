@@ -44,11 +44,10 @@ if(isempty(state))
     ND_DefineCol(p, 'Fix_B',  29, [0.00, 0.00, 1.00]);
     ND_DefineCol(p, 'Fix_O',  30, [1.00, 0.40, 0.00]);
     ND_DefineCol(p, 'Fix_Y',  31, [1.00, 1.00, 0.00]);
-    ND_DefineCol(p, 'Fix_C',  32, [0.00, 1.00, 1.00]);
-    ND_DefineCol(p, 'Fix_M',  33, [1.00, 0.00, 1.00]);
+    ND_DefineCol(p, 'Fix_C',  24, [0.00, 1.00, 1.00]);
+    ND_DefineCol(p, 'Fix_M',  25, [1.00, 0.00, 1.00]);
 
     p.trial.task.Color_list = Shuffle({'Fix_W', 'Fix_R', 'Fix_G', 'Fix_B', 'Fix_O', 'Fix_Y', 'Fix_C', 'Fix_M'});  
-    %p.trial.task.Color_list = Shuffle({'Fix_W'});  
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -91,8 +90,8 @@ if(isempty(state))
     c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     
-    conditions = {c1, c2, c3};
-    %conditions = {c1, c2, c3, c4};
+    %conditions = {c2, c3, c4, c5};
+    conditions = {c1, c1, c1, c2, c2, c3, c4};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
@@ -191,7 +190,10 @@ function TaskDesign(p)
             end
         
             p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.WaitFix;
-            p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
+            p.trial.CurrEpoch  = p.trial.epoch.WaitFix;            
+            
+            p.trial.pldaps.draw.ScreenEvent     = p.trial.event.FIXSPOT_ON;       
+            p.trial.pldaps.draw.ScreenEventName = 'FixOn';  
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
@@ -230,6 +232,8 @@ function TaskDesign(p)
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;  % Go directly to TaskEnd, do not start task, do not collect reward
                 p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
                 
+                p.trial.pldaps.draw.ScreenEvent     = p.trial.event.FIXSPOT_OFF;       
+                p.trial.pldaps.draw.ScreenEventName = 'FixOff';  
             end
             
         % ----------------------------------------------------------------%
@@ -255,6 +259,10 @@ function TaskDesign(p)
                     p.trial.EV.FixBreak = p.trial.CurTime - p.trial.behavior.fixation.BreakTime;
                     p.trial.CurrEpoch   = p.trial.epoch.TaskEnd; % Go directly to TaskEnd, do not continue task, do not collect reward
                     
+
+                    p.trial.pldaps.draw.ScreenEvent     = p.trial.event.FIXSPOT_OFF;       
+                    p.trial.pldaps.draw.ScreenEventName = 'FixOff';  
+                    
                     if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.Correct)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; % only consider break before first reward
                     end
@@ -265,6 +273,9 @@ function TaskDesign(p)
             elseif(p.trial.CurTime  > p.trial.Timer.Wait)
                 pds.reward.give(p,  p.trial.task.Reward.JackPot);  % long term fixation, deserves something big
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                
+                p.trial.pldaps.draw.ScreenEvent     = p.trial.event.FIXSPOT_OFF;       
+                p.trial.pldaps.draw.ScreenEventName = 'FixOff';  
             end
             
             % reward if it is about time
@@ -326,12 +337,9 @@ function TaskDraw(p)
 % content that needs to be shown during this epoch.
 
     switch p.trial.CurrEpoch
-
-        % ----------------------------------------------------------------%
         case {p.trial.epoch.TrialStart, p.trial.epoch.WaitFix, p.trial.epoch.Fixating}
         %% delay before response is needed
             Target(p, p.trial.task.FixCol);
-
     end
     
 % ####################################################################### %
@@ -339,59 +347,77 @@ function KeyAction(p)
 %% task specific action upon key press
     grdX = p.trial.behavior.fixation.FixGridStp(1);
     grdY = p.trial.behavior.fixation.FixGridStp(2);
+    
+    FixPos = p.trial.behavior.fixation.FixPos;
 
     switch p.trial.LastKeyPress(1)
 
         % grid positions
         case KbName('1')
-            p.trial.behavior.fixation.FixPos = [-grdX,  -grdY];
+            FixPos = [-grdX,  -grdY];
 
         case KbName('2')
-            p.trial.behavior.fixation.FixPos = [    0,  -grdY];
+            FixPos = [    0,  -grdY];
 
         case KbName('3')
-            p.trial.behavior.fixation.FixPos = [ grdX,  -grdY];
+            FixPos = [ grdX,  -grdY];
 
         case KbName('4')
-            p.trial.behavior.fixation.FixPos = [-grdX,     0];
+            FixPos = [-grdX,     0];
 
         case KbName('5')
-            p.trial.behavior.fixation.FixPos = [    0,     0];
+            FixPos = [    0,     0];
 
         case KbName('6')
-            p.trial.behavior.fixation.FixPos = [ grdX,    0];
+            FixPos = [ grdX,    0];
 
         case KbName('7')
-            p.trial.behavior.fixation.FixPos = [-grdX, grdY];
+            FixPos = [-grdX, grdY];
 
         case KbName('8')
-            p.trial.behavior.fixation.FixPos = [    0, grdY];
+            FixPos = [    0, grdY];
 
         case KbName('9')
-            p.trial.behavior.fixation.FixPos = [ grdX, grdY];
+            FixPos = [ grdX, grdY];
 
         % steps
         case KbName('RightArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
-                                                  p.trial.behavior.fixation.FixWinStp;   
+            FixPos(1) = FixPos(1) + p.trial.behavior.fixation.FixWinStp;   
         case KbName('LeftArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
-                                                  p.trial.behavior.fixation.FixWinStp;
+            FixPos(1) = FixPos(1) - p.trial.behavior.fixation.FixWinStp;
         case KbName('UpArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
-                                                  p.trial.behavior.fixation.FixWinStp;
+            FixPos(2) = FixPos(2) + p.trial.behavior.fixation.FixWinStp;
         case KbName('DownArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
-                                                  p.trial.behavior.fixation.FixWinStp;
-        case KbName('g')
+            FixPos(2) = FixPos(2) - p.trial.behavior.fixation.FixWinStp;
+            
+        % Center fixation (define zero)
+        case KbName('z')
+        % Center fixation (define zero)
+        % set current eye position as expected fixation position
 
-            fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
-                    p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
+            % use a median for recent samples in order to be more robust and not biased by shot noise
+            cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+            cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+
+            p.trial.behavior.fixation.PrevOffset = p.trial.behavior.fixation.Offset;
+
+            p.trial.behavior.fixation.Offset    = p.trial.behavior.fixation.Offset + FixPos - [cX,cY]; 
+
+            fprintf('\n >>> fixation offset changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
+                     p.trial.behavior.fixation.Offset, cX,cY);
+            
+        case KbName('BackSpace')
+        % update calibration with current eye positions    
+            p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.PrevOffset;
+            
+    end
+    
+    if(any((p.trial.behavior.fixation.FixPos == FixPos) == 0))
+        p.trial.behavior.fixation.FixPos = FixPos;
+        MoveFix(p);
+        pds.fixation.move(p);
     end
 
-    MoveFix(p);
-    pds.fixation.move(p);
- 
 % ####################################################################### %
 function MoveFix(p)
 %% displace fixation window and fixation target
@@ -426,8 +452,9 @@ function Trial2Ascii(p, act)
         case 'init'
             tblptr = fopen(p.trial.session.asciitbl , 'w');
 
-            fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  FixRT  ',...
-                             'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI FixWin  FixPos_X  FixPos_Y \n']);
+            fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  FixRT  ', ...
+                             'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI  ',   ...
+                             'FixWin  FixPos_X  FixPos_Y  FixOn  FixOff\n']);
             fclose(tblptr);
 
         case 'save'
@@ -439,13 +466,14 @@ function Trial2Ascii(p, act)
 
                 tblptr = fopen(p.trial.session.asciitbl, 'a');
 
-                fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f  %.5f  %.5f  %d  %d  %s  %.5f  %s  %.5f  %.2f  %.2f  %.2f \n' , ...
+                fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f  %.5f  %.5f  %d  %d  %s  %.5f  %s  %.5f  %.2f  %.2f  %.2f  %.2f  %.2f \n' , ...
                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
                                 p.trial.EV.DPX_TaskOn, p.trial.session.subject, p.trial.session.experimentSetupFile, ...
                                 p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
                                 p.trial.task.InitRewDelay, p.trial.task.Reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.task.FixCol, p.trial.task.Timing.ITI, ...
-                                p.trial.behavior.fixation.FixWin, p.trial.task.TargetPos(1), p.trial.task.TargetPos(2));
+                                p.trial.behavior.fixation.FixWin, p.trial.task.TargetPos(1), p.trial.task.TargetPos(2), ...
+                                p.trial.EV.FixOn, p.trial.EV.FixOff);
                fclose(tblptr);
             end
     end

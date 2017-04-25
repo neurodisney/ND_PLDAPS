@@ -24,7 +24,7 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 % p.trial.task.Reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
 % p.trial.task.Reward.InitialRew      = 0.1;  % duration for initial reward pulse
 
-p.trial.task.Reward.JackPot         = 1.5;  % unlikely he gets here
+p.trial.task.Reward.JackPot         = 0.75;  % unlikely he gets here
 
 % reward series for continous fixation
 p.trial.task.Reward.WaitNext = [0.75, 0.5, 0.25];  % wait period until next reward
@@ -36,12 +36,12 @@ p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.task.Timing.WaitFix     =  2;   % time window to allow gaze to get into fixation window in order to continue trial
-p.trial.task.Timing.MaxFix      = 12;   % maximal time for fixation (avoid matlab buffer overflows)
+p.trial.task.Timing.WaitFix     = 1.5;  % time window to allow gaze to get into fixation window in order to continue trial
+p.trial.task.Timing.MaxFix      = 8;   % maximal time for fixation (avoid matlab buffer overflows)
 
 % inter-trial interval
 p.trial.task.Timing.MinITI      = 1;   % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI      = 2.5;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses

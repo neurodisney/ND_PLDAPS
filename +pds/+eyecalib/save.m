@@ -3,6 +3,6 @@ function p = save(p)
 %
 % wolf zinke, april 2017
 
-ceye = p.trial.Calib.Eye;
-
-save(p.trial.behavior.fixation.CalibMat, '-struct', 'ceye')
+% ceye = p.trial.Calib.Eye;
+% 
+% save(p.trial.behavior.fixation.CalibMat, '-struct', 'ceye')

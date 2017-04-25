@@ -140,8 +140,11 @@ SS.pldaps.draw.grid.use                         = 0;     % enable drawing of the
 
 % photo diode: control drawing of a flashing photo diode square.
 SS.pldaps.draw.photodiode.use                   = 0;     % enable drawing the photo diode square
-SS.pldaps.draw.photodiode.everyXFrames          = 10;    % will be shown every nth frame
-SS.pldaps.draw.photodiode.location              = 1;     % location of the square as an index: 1-4 for the different corners of the screen
+SS.pldaps.draw.photodiode.XFrames               = 4;     % for how many frames should the PD signal be shown
+SS.pldaps.draw.photodiode.location              = 3;     % location of the square as an index: 1-4 for the different corners of the screen
+SS.pldaps.draw.photodiode.size                  = 1.5;   % next screen shows update of PD signal state
+SS.pldaps.draw.photodiode.state                 = 0;     % is PD signal on?
+SS.pldaps.draw.photodiode.cnt                   = 0;     % counter for PD signals
 
 % pause: control pausing behavior of pldaps
 SS.pldaps.pause.preExperiment                   = 0;     % pause before experiment starts: 0=don't; 1 = debugger; 2 = pause loop
@@ -160,6 +163,7 @@ SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with 
 % ------------------------------------------------------------------------%
 %% Debugging
 SS.pldaps.GetTrialStateTimes = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
+SS.pldaps.GetScreenFlipTimes = 0;  % get each screen refresh time, i.e. wait for synch for each screen update
 
 % ------------------------------------------------------------------------%
 %% Reward settings
@@ -170,43 +174,47 @@ SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
-SS.datapixx.useAsEyepos         = 0;
+SS.datapixx.useAsEyepos        = 0;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XEyeposChannel  = 0;
-SS.datapixx.adc.YEyeposChannel  = 1;
-SS.datapixx.adc.PupilChannel    = 2;
+SS.datapixx.adc.XEyeposChannel = 0;
+SS.datapixx.adc.YEyeposChannel = 1;
+SS.datapixx.adc.PupilChannel   = 2;
 
 % Saccade parameters
-SS.behavior.fixation.use        =  0;       % does this task require control of eye position
+SS.behavior.fixation.use       =  0;       % does this task require control of eye position
 
-SS.behavior.fixation.required   =  0;       % If not required, fixation states will be ignored
-SS.behavior.fixation.Sample     = 20;       % how many data points to use for determining fixation state.
-SS.behavior.fixation.BreakTime  = 50;       % minimum time [ms] to identify a fixation break
-SS.behavior.fixation.GotFix     = 0;        % state indicating if currently fixation is acquired
+SS.behavior.fixation.required  =  0;       % If not required, fixation states will be ignored
+SS.behavior.fixation.Sample    = 20;       % how many data points to use for determining fixation state.
+SS.behavior.fixation.BreakTime = 50;       % minimum time [ms] to identify a fixation break
+SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
 
 % fixation target parameters
-SS.behavior.fixation.FixPos    = [0 ,0];    % center position of fixation window [dva]
+SS.behavior.fixation.FixPos    = [0, 0];    % center position of fixation window [dva]
 SS.behavior.fixation.FixType   = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 SS.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
 SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 0;    % load mat file for eye calibration
+SS.behavior.fixation.enableCalib     = 0;    % allow changing the current eye calibration parameters
 SS.behavior.fixation.CalibMat        = [];
+SS.behavior.fixation.CalibMethod     = [];
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.GridPos         = 0;
 
-SS.behavior.fixation.FixWinStp       = 0.25;     % change of the size of the fixation window upon key press
-SS.behavior.fixation.FixScale        = [1 , 1];    % scaling factor to match screen/dva [TODO: get from calibration]
-SS.behavior.fixation.Offset          = [0 ,0];     % offset to get current position signal to FixPos
+SS.behavior.fixation.FixWinStp       = 0.25;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixScale        = [1, 1];  % general scaling factor to match get the eye position within the dva range
+SS.behavior.fixation.FixGain         = [1, 1];  % additional fine scale adjustment of the eye position signal to scale it to dva
+SS.behavior.fixation.Offset          = [0, 0];  % offset to get current position signal to FixPos
+SS.behavior.fixation.PrevOffset      = [0, 0];  % keep track of previous offset to change back from the one
 
-SS.behavior.fixation.NumSmplCtr      = 10;       % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
+SS.behavior.fixation.NumSmplCtr      = 10;      % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
 
 % fixation window
 SS.behavior.fixation.FixWin          =  4;  % diameter of fixation window in dva
-SS.pldaps.draw.eyepos.history        = 40;  % show eye position of the previous n frames in addition to current one
+SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
@@ -248,22 +256,23 @@ SS.datapixx.TTL_trialOn     = 1;   % if 1 set a digital output high while trial 
 SS.datapixx.TTL_trialOnChan = 1;   % DIO channel used for trial state TTL
 
 % ------------------------------------------------------------------------%
+%% Control screen flips
+SS.pldaps.draw.ScreenEvent     = 0;       % no event awaiting, otherwise use event code to be sent to TDT
+SS.pldaps.draw.ScreenEventName = 'NULL';  % keep track of times in pldaps data file
+
+% ------------------------------------------------------------------------%
 %% Keyboard assignments
 % assign keys to specific functions here and utilize these in the
 % ND_CheckKey function to trigger defined actions.
+KbName('UnifyKeyNames');
+SS.key.reward  = KbName('space');    % trigger reward
+SS.key.quit    = KbName('ESCAPE');   % end experiment
 
-SS.key.reward = 'space';    % trigger reward
-SS.key.pause  = 'p';
-SS.key.quit   = 'ESCAPE';   % end experiment
-SS.key.debug  = 'd';
-SS.key.exe    = 'x';
+SS.key.FixReq  = KbName('f');  % disable/enable fixation control
+SS.key.CtrJoy  = KbName('j');  % set current joystick position as zero
 
-SS.key.CtrFix = 'z';  % set current eye position as center
-SS.key.FixReq = 'f';  % disable/enable fixation control
-SS.key.CtrJoy = 'j';  % set current joystick position as zero
-
-SS.key.FixInc = '=+'; % increase size of fixation window
-SS.key.FixDec = '-_'; % decrease size of fixation window
+SS.key.FixInc  = KbName('=+'); % increase size of fixation window
+SS.key.FixDec  = KbName('-_'); % decrease size of fixation window
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables

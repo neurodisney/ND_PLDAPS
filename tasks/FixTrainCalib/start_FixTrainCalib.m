@@ -24,7 +24,7 @@ SS.plot.routine  = 'FixTrainCalib_plots';    % function for online plotting of s
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'behavior.fixation.FixWin'; 'behavior.fixation.FixPos'};
+SS.editable = {'task.RandomPos', 'task.Color_list'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed

@@ -18,8 +18,8 @@ function p = give(p, amount)
         pds.datapixx.analogOut(amount, p.trial.datapixx.adc.RewardChannel, p.trial.datapixx.adc.TTLamp);
     end
 
-   % send event code for reward
-   pds.tdt.strobe(p.trial.event.REWARD);
+    % send event code for reward
+    pds.tdt.strobe(p.trial.event.REWARD);
 
     %%sound
     if(p.trial.sound.use && p.trial.sound.useForReward)
