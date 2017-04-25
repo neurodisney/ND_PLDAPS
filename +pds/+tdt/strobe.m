@@ -36,10 +36,26 @@ if(nargin < 2)
     dur = 0.001; % a minimal time delay might be required to be detected by the TDT system
 end
 
+%% Calculate the waveform needed
+% Datapixx doesn't allow hardware level bit masking when using schedules,
+% so do it manually, by getting the current dout values.
+currDout = sprintf('%07X',Datapixx('GetDoutValues'));
+
+% Also get the hexadecimal value for the event code
+hexEV = sprintf('%04X',EV);
+
+% Combine the biggest 3 bits of currDout with the 4 smallest bits of EV
+strobeOn = hex2dec([currDout(1:3) hexEV(end-3:end)]);
+
+% When strobe turns off, maintain the biggest 3 bits still
+strobeOff = hex2dec([currDout(1:3), '0000']);
+
 % Create the pulse waveform (2 values ON and then OFF again)
-waveform = [EV, 0, 0];
+waveform = [strobeOn, strobeOff, strobeOff];
 Datapixx('WriteDoutBuffer', waveform);
 
+
+%% Schedule waveform
 % Now, schedule it. The 3 in [dur 3] means that it plays at dur seconds per
 % sample
 Datapixx('SetDoutSchedule', 0, [dur 3], size(waveform,2));
@@ -69,8 +85,6 @@ else
     % GO
     Datapixx('RegWrRd');
 end
-    
-% WaitSecs(dur); 
 
 % Wait for waveform to finish playing before returning control
 Datapixx('RegWrRd');
