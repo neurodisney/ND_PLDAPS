@@ -47,8 +47,7 @@ p.trial.Calib.EyePos_Y_raw = nan(1, 9);
 KbName('UnifyKeyNames');
 p.trial.Calib.GridKey     = KbName(arrayfun(@num2str, 1:9, 'unif', 0));
 p.trial.Calib.GridKeyCell = num2cell(p.trial.Calib.GridKey);
-p.trial.key.CtrFix        = KbName('z');         % set current eye position as center (i.e. change offset)
-% p.trial.key.FixGain       = KbName('g');         % adjust fixation gain
+p.trial.key.resetCalib    = KbName('z');  % Clear the calibration matrices and start over
 p.trial.key.OffsetReset   = KbName('BackSpace'); % reset offset to previous one
 p.trial.key.enableCalib   = KbName('Insert');    % allow changing calibration parameters
 p.trial.key.acceptCalPos  = 37; % KbName('Return') returns two numbers;    % accept current fixation

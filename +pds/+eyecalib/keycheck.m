@@ -48,21 +48,17 @@ if(~isempty(p.trial.LastKeyPress))
             pds.eyecalib.update(p);
         
         % ----------------------------------------------------------------%
-        case p.trial.key.CtrFix
-        %% Center fixation (define zero)
-        % set current eye position as expected fixation position
+        case p.trial.key.resetCalib
+        %% Clear the calibration matrix and reset to default values
 
             if(p.trial.behavior.fixation.enableCalib)
-                % use a median for recent samples in order to be more robust and not biased by shot noise
-                cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
-                cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+                p.trial.Calib.rawEye = [];
+                p.trial.Calib.fixPos = [];
+                p.trial.behavior.fixation.Offset = [0 0];
+                p.trial.behavior.fixation.FixGain = [-5 -5]; % Hard coded, won't be defualt if ND_RigDefaults value is changed
 
-                p.trial.behavior.fixation.PrevOffset = p.trial.behavior.fixation.Offset;
-
-                p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.Offset + FixPos - [cX,cY]; 
-
-                fprintf('\n >>> fixation offset changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
-                         p.trial.behavior.fixation.Offset, cX,cY);
+                fprintf('\n >>> fixation offset changed to [%.4f %.4f] -- gain to: [%.4f %.4f]\n\n', ...
+                         p.trial.behavior.fixation.Offset, p,trial.behavior.fixation.FixGain);
             end
         
         % ----------------------------------------------------------------%
