@@ -78,10 +78,10 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             end
 
             % ----------------------------------------------------------------%
-            case p.trial.key.pause
-            %% pause trial
-                p.trial.pldaps.quit = 1;
-                ShowCursor;
+%             case p.trial.key.pause
+%             %% pause trial
+%                 p.trial.pldaps.quit = 1;
+%                 ShowCursor;
 
             % ----------------------------------------------------------------%
             case p.trial.key.quit

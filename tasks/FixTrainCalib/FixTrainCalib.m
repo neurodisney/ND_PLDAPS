@@ -44,10 +44,14 @@ if(isempty(state))
     ND_DefineCol(p, 'Fix_B',  29, [0.00, 0.00, 1.00]);
     ND_DefineCol(p, 'Fix_O',  30, [1.00, 0.40, 0.00]);
     ND_DefineCol(p, 'Fix_Y',  31, [1.00, 1.00, 0.00]);
-    ND_DefineCol(p, 'Fix_C',  32, [0.00, 1.00, 1.00]);
-    ND_DefineCol(p, 'Fix_M',  33, [1.00, 0.00, 1.00]);
+    ND_DefineCol(p, 'Fix_C',  24, [0.00, 1.00, 1.00]);
+    ND_DefineCol(p, 'Fix_M',  25, [1.00, 0.00, 1.00]);
 
     p.trial.task.Color_list = Shuffle({'Fix_W', 'Fix_R', 'Fix_G', 'Fix_B', 'Fix_O', 'Fix_Y', 'Fix_C', 'Fix_M'});  
+    
+    % --------------------------------------------------------------------%
+    %% Enable random positions
+    p.trial.task.RandomPos = 0;
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -89,8 +93,8 @@ if(isempty(state))
     c5.task.Reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
     c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
-    
-    conditions = {c1, c2, c3, c4};
+    %conditions = {c1, c2, c3, c4};
+    conditions = {c1, c1, c1, c2, c2, c3, c4};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
@@ -164,9 +168,14 @@ function TaskSetUp(p)
     p.trial.task.Good                = 1;  % assume no error untill error occurs
     p.trial.task.Reward.cnt          = 0;  % counter for received rewardsw
     p.trial.behavior.fixation.GotFix = 0;
-     
-    p.trial.task.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
-    %p.trial.task.FixCol = 'Fix_W';
+    
+    % if random position is required pick one and move fix spot
+    if(p.trial.task.RandomPos == 1)
+        p.trial.behavior.fixation.FixPos = p.trial.Calib.Grid_XY(randi(size(p.trial.Calib.Grid_XY)), :);
+    end
+    pds.fixation.move(p);
+    
+    p.trial.behavior.fixation.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -227,7 +236,6 @@ function TaskDesign(p)
                 p.trial.task.Good = 0;
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;  % Go directly to TaskEnd, do not start task, do not collect reward
                 p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
-                
             end
             
         % ----------------------------------------------------------------%
@@ -259,6 +267,7 @@ function TaskDesign(p)
                     
                     p.trial.task.Good = 0;
                 end
+                
             % fixation time expired    
             elseif(p.trial.CurTime  > p.trial.Timer.Wait)
                 pds.reward.give(p,  p.trial.task.Reward.JackPot);  % long term fixation, deserves something big
@@ -267,7 +276,7 @@ function TaskDesign(p)
             
             % reward if it is about time
             if(p.trial.task.Good == 1 && p.trial.behavior.fixation.GotFix == 1 && ...
-               p.trial.CurTime > p.trial.Timer.Reward)
+                p.trial.CurTime > p.trial.Timer.Reward)
                 
                 pds.reward.give(p, p.trial.task.Reward.Curr);
                 p.trial.task.Reward.cnt = p.trial.task.Reward.cnt + 1;
@@ -326,11 +335,10 @@ function TaskDraw(p)
 %% TODO: draw predicted eye pos for calibration grid, draw indicator for random posiiton vs. fix, indicate current position
 
     switch p.trial.CurrEpoch
-
         % ----------------------------------------------------------------%
         case {p.trial.epoch.TrialStart, p.trial.epoch.WaitFix, p.trial.epoch.Fixating}
         %% delay before response is needed
-            Target(p, p.trial.task.FixCol);
+            pds.fixation.draw(p);
 
     end
     
@@ -345,18 +353,21 @@ function KeyAction(p)
                  p.trial.task.Color_list = Shuffle(p.trial.task.Color_list);
                  p.trial.task.FixCol     = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), ...
                                            length(p.trial.task.Color_list))+1};
+                                       
+            case KbName('r')  % random position on each trial
+                 if(p.trial.task.RandomPos == 0)
+                    p.trial.task.RandomPos = 1;
+                 else
+                    p.trial.task.RandomPos = 0;
+                 end
         end
+        
         pds.fixation.move(p);
     end
 
 % ####################################################################### %
 %% additional inline functions that
 % ####################################################################### %
-
-% ####################################################################### %
-function Target(p, colstate)
-%% show the target item with the given color
-    Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(colstate), p.trial.task.TargetRect);
 
 % ####################################################################### %
 function Trial2Ascii(p, act)
@@ -389,8 +400,9 @@ function Trial2Ascii(p, act)
                                 p.trial.EV.DPX_TaskOn, p.trial.session.subject, p.trial.session.experimentSetupFile, ...
                                 p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
                                 p.trial.task.CurRewDelay, p.trial.task.Reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
-                                p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.task.FixCol, p.trial.task.Timing.ITI, ...
-                                p.trial.behavior.fixation.FixWin, p.trial.task.TargetPos(1), p.trial.task.TargetPos(2));
+                                p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.behavior.fixation.FixCol, p.trial.task.Timing.ITI, ...
+                                p.trial.behavior.fixation.FixWin, p.trial.behavior.fixation.FixPos(1), p.trial.behavior.fixation.FixPos(2));
                fclose(tblptr);
             end
     end
+        

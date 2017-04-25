@@ -199,6 +199,7 @@ SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 SS.behavior.fixation.useCalibration  = 0;    % load mat file for eye calibration
 SS.behavior.fixation.enableCalib     = 0;    % allow changing the current eye calibration parameters
 SS.behavior.fixation.CalibMat        = [];
+SS.behavior.fixation.CalibMethod     = [];
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.GridPos         = 0;
@@ -265,10 +266,7 @@ SS.pldaps.draw.ScreenEventName = 'NULL';  % keep track of times in pldaps data f
 % ND_CheckKey function to trigger defined actions.
 KbName('UnifyKeyNames');
 SS.key.reward  = KbName('space');    % trigger reward
-SS.key.pause   = KbName('p');
 SS.key.quit    = KbName('ESCAPE');   % end experiment
-SS.key.debug   = KbName('d');
-SS.key.exe     = KbName('x');
 
 SS.key.FixReq  = KbName('f');  % disable/enable fixation control
 SS.key.CtrJoy  = KbName('j');  % set current joystick position as zero

@@ -18,6 +18,25 @@ early_col = [0.65, 0, 0];
 fig_sz = [25, 25, 1800, 980];
 
 %% optional offline analysis
+if(~exist('p', 'var'))
+    [pdsnm, PathName] = uigetfile({'*.pds;*.PDS'},'Load pldaps data file');
+    p = fullfile(PathName, pdsnm);
+end
+
+if(ischar(p))    
+    % load the data file, it should give a struct called PDS
+    load(p,'-mat');
+    
+    if(~exist('PDS','var'))
+        error([pdsnm, ' does not contain a PDS variable1']);
+    else
+        p = PDS;
+        clear PDS;
+    end
+    
+    offln = 1;
+end
+
 if(~exist('offln', 'var'))
     offln = 0;
 end

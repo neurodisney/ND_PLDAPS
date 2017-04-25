@@ -316,16 +316,16 @@ while(true)
                 pds.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
 
                 %D: Debugger
-            case KbName(p.trial.key.debug)
-                disp('stepped into debugger. Type return to start first trial...')
-                keyboard %#ok<MCKBD>
-                
-                %P: PAUSE (end the pause)
-            case KbName(p.trial.key.pause)
-                dv.trial.pldaps.quit = 0;
-                ListenChar(2);
-                HideCursor;
-                break;
+%             case KbName(p.trial.key.debug)
+%                 disp('stepped into debugger. Type return to start first trial...')
+%                 keyboard %#ok<MCKBD>
+%                 
+%                 %P: PAUSE (end the pause)
+%             case KbName(p.trial.key.pause)
+%                 dv.trial.pldaps.quit = 0;
+%                 ListenChar(2);
+%                 HideCursor;
+%                 break;
                 
                 %Q: QUIT
             case KbName(p.trial.key.quit)
@@ -333,21 +333,21 @@ while(true)
                 break;
                 
                 %X: Execute text selected in Matlab editor
-            case KbName(p.trial.key.exe)
-                activeEditor=matlab.desktop.editor.getActive;
-                if isempty(activeEditor)
-                    display('No Matlab editor open -> Nothing to execute');
-                else
-                    if isempty(activeEditor.SelectedText)
-                        display('Nothing selected in the active editor Widnow -> Nothing to execute');
-                    else
-                        try
-                            eval(activeEditor.SelectedText)
-                        catch ME
-                            display(ME);
-                        end
-                    end
-                end
+%             case KbName(p.trial.key.exe)
+%                 activeEditor=matlab.desktop.editor.getActive;
+%                 if isempty(activeEditor)
+%                     display('No Matlab editor open -> Nothing to execute');
+%                 else
+%                     if isempty(activeEditor.SelectedText)
+%                         display('Nothing selected in the active editor Widnow -> Nothing to execute');
+%                     else
+%                         try
+%                             eval(activeEditor.SelectedText)
+%                         catch ME
+%                             display(ME);
+%                         end
+%                     end
+%                 end
         end  %  switch qp
     end  % if(any(p.trial.keyboard.firstPressQ))
     pause(0.1);

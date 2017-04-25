@@ -18,7 +18,7 @@ if(~isempty(p.trial.LastKeyPress))
             gpos = find(p.trial.Calib.GridKey == p.trial.LastKeyPress(1));
             p.trial.behavior.fixation.GridPos = gpos;
             
-            FixPos = [p.trial.Calib.Grid_X(gpos),  p.trial.Calib.Grid_Y(gpos)];
+            FixPos = p.trial.Calib.Grid_XY(gpos, :);
 
         % ----------------------------------------------------------------%
         case p.trial.key.acceptCalPos     

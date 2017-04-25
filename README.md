@@ -11,6 +11,8 @@ Modifications to the original PLDAPS code include removal of hardware related ro
 
 We modified the initialization of the screen in a way that the reference coordinates are using degree visual angle as unit with [0,0] defined as the center of the screen. This implementation eases the way to determine the position of items that are shown on the screen and avoids unnecessary conversions from dva to pixel coordinates.
 
+Instead of trying to get each single screen refresh we use two options depending on whether new stuff will be shown on the experimenter screen only or also on the animal screen (i.e. visual stimulus onset or changes of the stimuli). In the first case, we do not wait for the screen synch, for the second case we get the exact screen flip timings and also use a photo diode flash in addition.
+
 
 __**Be aware that this is work in progress and we update the code frequently at the moment. Use this code at your own risk, we can not promise that it will function without problems!**__
 
