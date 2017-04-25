@@ -171,7 +171,7 @@ function TaskSetUp(p)
     
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
-        p.trial.behavior.fixation.FixPos = p.trial.Calib.Grid_XY(randi(size(p.trial.Calib.Grid_XY)), :);
+        p.trial.behavior.fixation.FixPos = p.trial.Calib.Grid_XY(randi(size(p.trial.Calib.Grid_XY,1)), :);
     end
     pds.fixation.move(p);
     
@@ -285,7 +285,7 @@ function TaskDesign(p)
 
                 p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.Dur + p.trial.task.Reward.WaitNext(rs);
                 
-                fprintf('reward cound: %d  --> next reward: %.4f \n', p.trial.task.Reward.cnt, p.trial.task.CurRewDelay);
+                fprintf('reward count: %d  --> next reward: %.4f \n', p.trial.task.Reward.cnt, p.trial.task.CurRewDelay);
                 
                 p.trial.task.Reward.Curr = p.trial.task.Reward.Dur;
             end

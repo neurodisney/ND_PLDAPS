@@ -31,7 +31,6 @@ end
 if(p.trial.datapixx.useAsEyepos)
     p.defaultParameters.behavior.fixation.Offset     = p.trial.behavior.fixation.Offset;
     p.defaultParameters.behavior.fixation.PrevOffset = p.trial.behavior.fixation.PrevOffset;
-    p.defaultParameters.behavior.fixation.FixScale   = p.trial.behavior.fixation.FixScale;
     p.defaultParameters.behavior.fixation.FixGain    = p.trial.behavior.fixation.FixGain;
 end
 
@@ -50,6 +49,8 @@ if(p.trial.behavior.fixation.useCalibration)
     p.defaultParameters.behavior.fixation.GridPos     = p.trial.behavior.fixation.GridPos;
     p.defaultParameters.Calib.EyePos_X                = p.trial.Calib.EyePos_X;
     p.defaultParameters.Calib.EyePos_Y                = p.trial.Calib.EyePos_Y;
+    p.defaultParameters.Calib.EyePos_X_raw            = p.trial.Calib.EyePos_X_raw;
+    p.defaultParameters.Calib.EyePos_Y_raw            = p.trial.Calib.EyePos_Y_raw;
     p.defaultParameters.behavior.fixation.enableCalib = p.trial.behavior.fixation.enableCalib;
 end
 

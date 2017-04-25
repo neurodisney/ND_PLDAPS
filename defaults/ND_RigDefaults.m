@@ -197,16 +197,17 @@ SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 0;    % load mat file for eye calibration
-SS.behavior.fixation.enableCalib     = 0;    % allow changing the current eye calibration parameters
+SS.behavior.fixation.enableCalib     = 1;    % allow changing the current eye calibration parameters
 SS.behavior.fixation.CalibMat        = [];
-SS.behavior.fixation.CalibMethod     = [];
+SS.behavior.fixation.CalibMethod     = 'gain'; % method used for calibration, currently only gain adjustment
+SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.GridPos         = 0;
+SS.behavior.fixation.GridPos         = 5;
 
 SS.behavior.fixation.FixWinStp       = 0.25;    % change of the size of the fixation window upon key press
-SS.behavior.fixation.FixScale        = [1, 1];  % general scaling factor to match get the eye position within the dva range
-SS.behavior.fixation.FixGain         = [1, 1];  % additional fine scale adjustment of the eye position signal to scale it to dva
+%SS.behavior.fixation.FixScale        = [1, 1];  % general scaling factor to match get the eye position within the dva range
+SS.behavior.fixation.FixGain         = [5, 5];  % additional fine scale adjustment of the eye position signal to scale it to dva
 SS.behavior.fixation.Offset          = [0, 0];  % offset to get current position signal to FixPos
 SS.behavior.fixation.PrevOffset      = [0, 0];  % keep track of previous offset to change back from the one
 

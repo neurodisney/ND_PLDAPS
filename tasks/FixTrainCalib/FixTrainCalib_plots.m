@@ -59,7 +59,7 @@ Results  = cellfun(@(x) x.outcome.CurrOutcome, p.data);
 
 fp = Results ~= p.data{1}.outcome.NoFix;
 
-% try
+try
     if(sum(fp) > 4)
         
         %% get relevant data
@@ -229,7 +229,7 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         %% update plot
         drawnow
     end
-% catch me
-%     disp('Online plot failed!');
-%     disp(me.message);
+catch me
+     disp('Online plot failed!');
+     disp(me.message);
 end

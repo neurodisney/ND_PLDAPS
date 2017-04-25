@@ -27,8 +27,17 @@ if(~isempty(p.trial.LastKeyPress))
                 gpos = p.trial.behavior.fixation.GridPos;
                 NumSmplCtr = p.trial.behavior.fixation.NumSmplCtr;
                 
-                p.trial.Calib.EyePos_X(gpos) = nanmedian(p.trial.eyeX_hist(1:NumSmplCtr));
-                p.trial.Calib.EyePos_Y(gpos) = nanmedian(p.trial.eyeY_hist(1:NumSmplCtr));
+                % get the adjusted eye position
+                p.trial.Calib.EyePos_X(gpos) = prctile(p.trial.eyeX_hist(1:NumSmplCtr), 50);
+                p.trial.Calib.EyePos_Y(gpos) = prctile(p.trial.eyeY_hist(1:NumSmplCtr), 50);
+                
+                % get the raw analog voltage
+                sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.NSmpls + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
+
+                p.trial.Calib.EyePos_X_raw(gpos) = prctile(p.trial.AI.Eye.X(sIdx), 50);
+                p.trial.Calib.EyePos_Y_raw(gpos) = prctile(p.trial.AI.Eye.Y(sIdx), 50);
+                
+                pds.eyecalib.update(p);
             end
         
         % ----------------------------------------------------------------%
@@ -62,28 +71,28 @@ if(~isempty(p.trial.LastKeyPress))
             end
             
         % ----------------------------------------------------------------%
-        case p.trial.key.FixGain
-        %% adjust fixation gain
-            if(p.trial.behavior.fixation.enableCalib)
-                cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
-                cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
-
-                % only adjust if at least 1 dva away from 0
-                if(p.trial.behavior.fixation.FixPos(1) > 1) % adjust X
-                    p.trial.behavior.fixation.FixGain(1) =      p.trial.behavior.fixation.FixGain(1) * ...
-                                                          (cX - p.trial.behavior.fixation.Offset(1)) / ...
-                                                                p.trial.behavior.fixation.FixPos(1);
-                end
-
-                if(p.trial.behavior.fixation.FixPos(2) > 1) % adjust Y
-                    p.trial.behavior.fixation.FixGain(2) =      p.trial.behavior.fixation.FixGain(2) * ...
-                                                          (cY - p.trial.behavior.fixation.Offset(2)) / ...
-                                                                p.trial.behavior.fixation.FixPos(2) ;
-                end
-
-                fprintf('\n >>> fixation gain changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
-                         p.trial.behavior.fixation.FixGain, cX, cY);
-            end
+%         case p.trial.key.FixGain
+%         %% adjust fixation gain
+%             if(p.trial.behavior.fixation.enableCalib)
+%                 cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+%                 cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
+% 
+%                 % only adjust if at least 1 dva away from 0
+%                 if(p.trial.behavior.fixation.FixPos(1) > 1) % adjust X
+%                     p.trial.behavior.fixation.FixGain(1) =      p.trial.behavior.fixation.FixGain(1) * ...
+%                                                           (cX - p.trial.behavior.fixation.Offset(1)) / ...
+%                                                                 p.trial.behavior.fixation.FixPos(1);
+%                 end
+% 
+%                 if(p.trial.behavior.fixation.FixPos(2) > 1) % adjust Y
+%                     p.trial.behavior.fixation.FixGain(2) =      p.trial.behavior.fixation.FixGain(2) * ...
+%                                                           (cY - p.trial.behavior.fixation.Offset(2)) / ...
+%                                                                 p.trial.behavior.fixation.FixPos(2) ;
+%                 end
+% 
+%                 fprintf('\n >>> fixation gain changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
+%                          p.trial.behavior.fixation.FixGain, cX, cY);
+%             end
             
         % ----------------------------------------------------------------%
         case p.trial.key.enableCalib 

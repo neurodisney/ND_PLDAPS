@@ -48,8 +48,6 @@ p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
-p.trial.behavior.fixation.FixScale = [5, 5];  % scaling factor to match screen/dva [TODO: get from calibration]
-
 p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
                                   p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
 
@@ -58,7 +56,7 @@ p.trial.behavior.fixation.EnsureFix = 0.05;  % minimum time to stay within fixat
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
-p.trial.behavior.fixation.FixPos    = [0, 0];    % center position of fixation window [dva]
+%p.trial.behavior.fixation.FixPos    = [0, 0];    % center position of fixation window [dva]
 p.trial.behavior.fixation.FixType   = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixSz     = 0.5;      % size of the fixation spot
