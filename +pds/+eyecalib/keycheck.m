@@ -24,18 +24,20 @@ if(~isempty(p.trial.LastKeyPress))
         case p.trial.key.acceptCalPos     
         %% accept current fixation
             if(p.trial.behavior.fixation.enableCalib)
-                gpos = p.trial.behavior.fixation.GridPos;
-                NumSmplCtr = p.trial.behavior.fixation.NumSmplCtr;
+                iCalib = size(p.trial.Calib.rawEye, 1) + 1;
                 
-                % get the adjusted eye position
-                p.trial.Calib.EyePos_X(gpos) = prctile(p.trial.eyeX_hist(1:NumSmplCtr), 50);
-                p.trial.Calib.EyePos_Y(gpos) = prctile(p.trial.eyeY_hist(1:NumSmplCtr), 50);
+                % Position of the fixation target
+                fixPos = p.trial.behavior.fixation.FixPos;
                 
-                % get the raw analog voltage
-                sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.NSmpls + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
-
-                p.trial.Calib.EyePos_X_raw(gpos) = prctile(p.trial.AI.Eye.X(sIdx), 50);
-                p.trial.Calib.EyePos_Y_raw(gpos) = prctile(p.trial.AI.Eye.Y(sIdx), 50);
+                % Position of eye. Gets the median X and Y values over a
+                % range of samples to get a better estimate
+                sampleRange = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.NSmpls + 1) : p.trial.datapixx.adc.dataSampleCount;
+                rawEye = [prctile(p.trial.AI.Eye.X(sampleRange), 50)  prctile(p.trial.AI.Eye.Y(sampleRange), 50)];
+                
+                % Add these samples to the list of calibration points,
+                % which will be processed in pds.eyecalib.update
+                p.trial.Calib.fixPos(iCalib,:) = fixPos;
+                p.trial.Calib.rawEye(iCalib,:) = rawEye;
                 
                 pds.eyecalib.update(p);
             end

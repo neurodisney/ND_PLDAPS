@@ -27,9 +27,9 @@ else
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
     % calculate a moving average of the eye position for display reasons
-    p.trial.eyeX   = -p.trial.behavior.fixation.FixGain(1) * prctile(p.trial.AI.Eye.X(sIdx), 50) + p.trial.behavior.fixation.Offset(1);
+    p.trial.eyeX   = p.trial.behavior.fixation.FixGain(1) * (prctile(p.trial.AI.Eye.X(sIdx), 50) - p.trial.behavior.fixation.Offset(1));
                   
-    p.trial.eyeY   = -p.trial.behavior.fixation.FixGain(2) * prctile(p.trial.AI.Eye.Y(sIdx), 50) + p.trial.behavior.fixation.Offset(2);
+    p.trial.eyeY   = p.trial.behavior.fixation.FixGain(2) * (prctile(p.trial.AI.Eye.Y(sIdx), 50) - p.trial.behavior.fixation.Offset(2));
 
     p.trial.eyeAmp = sqrt((p.trial.behavior.fixation.FixPos(1) - p.trial.eyeX)^2 + ...
                           (p.trial.behavior.fixation.FixPos(2) - p.trial.eyeY)^2 );
