@@ -50,22 +50,23 @@ if(~isempty(p.trial.LastKeyPress))
         % ----------------------------------------------------------------%
         case p.trial.key.resetCalib
         %% Clear the calibration matrix and reset to default values
-
-            if(p.trial.behavior.fixation.enableCalib)
-                p.trial.Calib.rawEye = [];
-                p.trial.Calib.fixPos = [];
-                p.trial.behavior.fixation.Offset = [0 0];
-                p.trial.behavior.fixation.FixGain = [-5 -5]; % Hard coded, won't be defualt if ND_RigDefaults value is changed
-
-                fprintf('\n >>> fixation offset changed to [%.4f %.4f] -- gain to: [%.4f %.4f]\n\n', ...
-                         p.trial.behavior.fixation.Offset, p,trial.behavior.fixation.FixGain);
-            end
+        pds.eyecalib.reset(p);
         
         % ----------------------------------------------------------------%
-        case p.trial.key.OffsetReset 
-        %% update calibration with current eye positions    
+        case p.trial.key.rmLastCalib 
+        %% Remove the last calibration point from the calculation    
             if(p.trial.behavior.fixation.enableCalib)
-                p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.PrevOffset;
+                
+                if size(p.trial.Calib.rawEye,1) <= 1
+                    % Reset to defualts if removing one would completely clear
+                    % all calibration points
+                    pds.eyecalib.reset(p)
+                else
+                    p.trial.Calib.rawEye = p.trial.Calib.rawEye(1:end-1,:);
+                    p.trial.Calib.fixPos = p.trial.Calib.fixPos(1:end-1,:);
+                    pds.eyecalib.update(p);
+                end
+                        
             end
             
         % ----------------------------------------------------------------%
