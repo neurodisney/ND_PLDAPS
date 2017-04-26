@@ -7,5 +7,5 @@ if(p.trial.behavior.fixation.enableCalib)
     p.trial.behavior.fixation.FixGain = [-5 -5]; % Hard coded, won't be defualt if ND_RigDefaults value is changed
     
     fprintf('\n >>> fixation offset changed to [%.4f %.4f] -- gain to: [%.4f %.4f]\n\n', ...
-        p.trial.behavior.fixation.Offset, p,trial.behavior.fixation.FixGain);
+        p.trial.behavior.fixation.Offset, p.trial.behavior.fixation.FixGain);
 end
