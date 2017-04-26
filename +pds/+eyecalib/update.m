@@ -34,8 +34,8 @@ p.trial.behavior.fixation.Offset = newOffset;
 
 %% Calculate Gain
 % Transform the eye and fixation postions relative to this center
-relativeEye = bsxfun(@minus,p.trial.Calib.rawEye(2:end,:), centerEye);
-relativeFix = bsxfun(@minus,p.trial.Calib.fixPos(2:end,:), centerFix);
+relativeEye = bsxfun(@minus,p.trial.Calib.rawEye, centerEye);
+relativeFix = bsxfun(@minus,p.trial.Calib.fixPos, centerFix);
 
 % When calculating x and y gains, only use points where the fixation
 % position was not at 0
