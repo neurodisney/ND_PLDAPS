@@ -60,7 +60,7 @@ if(isempty(state))
     % control of trials, especially the use of blocks, i.e. the repetition
     % of a defined number of trials per condition, needs to be clarified.
 
-    maxTrials_per_BlockCond = 10;
+    maxTrials_per_BlockCond = 4;
     maxBlocks = 1000;
 
     % condition 1
@@ -94,7 +94,7 @@ if(isempty(state))
     c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     %conditions = {c1, c2, c3, c4};
-    conditions = {c1, c1, c1, c2, c2, c3, c4};
+    conditions = {c1, c1, c2, c2, c2, c3, c4};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
@@ -209,14 +209,11 @@ function TaskDesign(p)
                 if(p.trial.behavior.fixation.GotFix == 0) % starts to fixate
                     p.trial.behavior.fixation.GotFix = 1;
                     p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.EnsureFix; % start timer to check if it is robust fixation
-                    fprintf('Fix in \n');
                     
                 elseif(p.trial.FixState.Current == p.trial.FixState.FixOut)
                     p.trial.behavior.fixation.GotFix = 0;
-                    fprintf('Fix out \n');
                     
                 elseif(p.trial.CurTime > p.trial.Timer.FixBreak) % long enough within FixWin
-                    fprintf('Fixating \n');
                     pds.tdt.strobe(p.trial.event.FIXATION);
 
                     p.trial.EV.FixStart = p.trial.CurTime - p.trial.behavior.fixation.EnsureFix;
@@ -227,8 +224,6 @@ function TaskDesign(p)
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION; % at least fixation was achieved
                     
                     p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.CurRewDelay; % timer for initial reward
-                    
-                    fprintf('initial reward: %.4f \n', p.trial.task.CurRewDelay);
                 end
                 
             elseif(p.trial.CurTime  > p.trial.Timer.Wait)
@@ -284,16 +279,14 @@ function TaskDesign(p)
                 rs = find(~(p.trial.task.Reward.Step >= p.trial.task.Reward.cnt), 1, 'last');
 
                 p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.Dur + p.trial.task.Reward.WaitNext(rs);
-                
-                fprintf('reward count: %d  --> next reward: %.4f \n', p.trial.task.Reward.cnt, p.trial.task.CurRewDelay);
-                
+                                
                 p.trial.task.Reward.Curr = p.trial.task.Reward.Dur;
             end
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
-            fprintf('TaskEnd \n');
+            
         % set timer for intertrial interval            
             tms = pds.tdt.strobe(p.trial.event.TASK_OFF); 
             p.trial.EV.DPX_TaskOff = tms(1);

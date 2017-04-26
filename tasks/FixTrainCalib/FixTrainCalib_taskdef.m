@@ -28,20 +28,20 @@ p.trial.task.Reward.JackPot         = 1.5;  % unlikely he gets here
 
 % reward series for continous fixation
 p.trial.task.Reward.WaitNext = [0.75, 0.5, 0.25];  % wait period until next reward
-p.trial.task.Reward.Dur      = 0.15;              % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step     = [0, 3, 6];        % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.task.Reward.Dur      = 0.15;               % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.task.Reward.Step     = [0, 3, 6];          % define the number of subsequent rewards after that the next delay period should be used.
 
 % manual reward from experimenter
 p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.task.Timing.WaitFix     =  2;   % time window to allow gaze to get into fixation window in order to continue trial
+p.trial.task.Timing.WaitFix     = 1.5;  % time window to allow gaze to get into fixation window in order to continue trial
 p.trial.task.Timing.MaxFix      = 12;   % maximal time for fixation (avoid matlab buffer overflows)
 
 % inter-trial interval
 p.trial.task.Timing.MinITI      = 1.5;   % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI      = 3.0;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI      = 3;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
@@ -51,15 +51,15 @@ p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
 p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
                                   p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
 
-p.trial.behavior.fixation.BreakTime = 0.05;  % minimum time [ms] to identify a fixation break
-p.trial.behavior.fixation.EnsureFix = 0.05;  % minimum time to stay within fixation window to detect initial fixation start
+p.trial.behavior.fixation.BreakTime = 0.025;  % minimum time [ms] to identify a fixation break
+p.trial.behavior.fixation.EnsureFix = 0.025;  % minimum time to stay within fixation window to detect initial fixation start
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 %p.trial.behavior.fixation.FixPos    = [0, 0];    % center position of fixation window [dva]
 p.trial.behavior.fixation.FixType   = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
-p.trial.behavior.fixation.FixSz     = 0.5;      % size of the fixation spot
+p.trial.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Trial duration
