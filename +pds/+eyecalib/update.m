@@ -3,21 +3,28 @@ function p = update(p)
 % information about eye positions
 %
 % Nate Faber, april 2017
-
+%
 % This function calculates the offset and gain to best match the raw eye signal
 % with the fixation points recorded
 
-% The first point in the calibration series will be used to determine the
-% offset, MUST do the first calibration point in the center
-centerEye = p.trial.Calib.rawEye(1,:);
-centerFix = p.trial.Calib.fixPos(1,:);
+rawEye = p.trial.Calib.rawEye;
+fixPos = p.trial.Calib.fixPos;
 
-if centerFix ~= [0 0]
-    warning('First calibration point must be in the center, clearing calibration points')
-    p.trial.Calib.rawEye = [];
-    p.trial.Calib.fixPos = [];
+% Any calibration points taken at 0,0 (the center of the screen), will be
+% averaged together to determine the offset.
+
+% Find the indices where the fixPos is 0,0
+centerIndices = find(~any(fixPos'));
+
+% If offset can't be established return without changing gain.
+if isempty(centerIndices)
+    warning('Central calibration point must be taken')
     return
 end
+
+% Average the eye signals taken at the center to get the Offset
+centerEye =  mean(rawEye(centerIndices,:), 1);
+centerFix = [0,0];
 
 p.trial.behavior.fixation.Offset = centerEye;
 
@@ -35,8 +42,8 @@ if nCalib > 1
     yIndices = find(relativeFix(:,2));
     
     % Get the exact gain for each point and average them together to get experimental gain.
-    xGain = nanmean( relativeFix(xIndices,1) ./ relativeEye(xIndices,1) );
-    yGain = nanmean( relativeFix(yIndices,2) ./ relativeEye(yIndices,2) );
+    xGain = nanmean( relativeFix(xIndices,1) ./ relativeEye(xIndices,1) , 1);
+    yGain = nanmean( relativeFix(yIndices,2) ./ relativeEye(yIndices,2) , 1);
     
     % Update the p struct (only if the new gain is not nan)
     oldGain = p.trial.behavior.fixation.FixGain;
