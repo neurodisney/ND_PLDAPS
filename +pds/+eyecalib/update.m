@@ -10,6 +10,7 @@ function p = update(p)
 rawEye = p.trial.Calib.rawEye;
 fixPos = p.trial.Calib.fixPos;
 
+%% Calculate Offset
 % Any calibration points taken at 0,0 (the center of the screen), will be
 % averaged together to determine the offset.
 
@@ -26,41 +27,58 @@ end
 centerEye =  mean(rawEye(centerIndices,:), 1);
 centerFix = [0,0];
 
-p.trial.behavior.fixation.Offset = centerEye;
+oldOffset = p.trial.behavior.fixation.Offset;
+newOffset = centerEye;
+p.trial.behavior.fixation.Offset = newOffset;
 
-% Only calculate gain if more than one calibration point has been collected
-nCalib = size(p.trial.Calib.rawEye,1);
-if nCalib > 1
-    
-    % Transform the eye and fixation postions relative to this center
-    relativeEye = bsxfun(@minus,p.trial.Calib.rawEye(2:end,:), centerEye);
-    relativeFix = bsxfun(@minus,p.trial.Calib.fixPos(2:end,:), centerFix);
-    
-    % When calculating x and y gains, only use points where the fixation
-    % position was not at 0
-    xIndices = find(relativeFix(:,1));
-    yIndices = find(relativeFix(:,2));
-    
-    % Get the exact gain for each point and average them together to get experimental gain.
-    xGain = nanmean( relativeFix(xIndices,1) ./ relativeEye(xIndices,1) , 1);
-    yGain = nanmean( relativeFix(yIndices,2) ./ relativeEye(yIndices,2) , 1);
-    
-    % Update the p struct (only if the new gain is not nan)
-    oldGain = p.trial.behavior.fixation.FixGain;
-    if isnan(xGain)
-        xGain = oldGain(1);
-    end
-    if isnan(yGain)
-        yGain = oldGain(2);
-    end
-    
-    p.trial.behavior.fixation.FixGain = [xGain, yGain];
-    
-    if(any((p.trial.behavior.fixation.FixGain == oldGain) == 0))
-        fprintf('/n >>> Fixation gain changed to [%.4f, %.4f] (was before [%.4f, %.4f]\n', ...
-            p.trial.behavior.fixation.FixGain, oldGain);
-    end
 
-else
-    fprintf('/n >>> Fixation offset set to [%.4f, %.4f]\n', centerEye)
+%% Calculate Gain
+% Transform the eye and fixation postions relative to this center
+relativeEye = bsxfun(@minus,p.trial.Calib.rawEye(2:end,:), centerEye);
+relativeFix = bsxfun(@minus,p.trial.Calib.fixPos(2:end,:), centerFix);
+
+% When calculating x and y gains, only use points where the fixation
+% position was not at 0
+xIndices = find(relativeFix(:,1));
+yIndices = find(relativeFix(:,2));
+
+% Get the exact gain for each point and average them together to get experimental gain.
+xGain = nanmean( relativeFix(xIndices,1) ./ relativeEye(xIndices,1) , 1);
+yGain = nanmean( relativeFix(yIndices,2) ./ relativeEye(yIndices,2) , 1);
+
+% Update the p struct (only if the new gain is not nan)
+oldGain = p.trial.behavior.fixation.FixGain;
+if isnan(xGain)
+    xGain = oldGain(1);
 end
+if isnan(yGain)
+    yGain = oldGain(2);
+end
+
+newGain = [xGain, yGain];
+p.trial.behavior.fixation.FixGain = newGain;
+
+%% Display info
+disp('Current Calibration:')
+
+% Offset
+if all(oldOffset == newOffset)
+    % Nothing changed, just display the offset
+    fprintf('Offset = [%.4f, %.4f]\n',newOffset);
+else
+    % Offset changed, display the change
+    fprintf('Offset = [%.4f, %.4f] <- [%.4f, %.4f]\n', newOffset, oldOffset);
+end
+
+% Gain
+if all(oldGain == newGain)
+    % Nothing changed, just display the gain
+    fprintf('Gain   = [%.4f, %.4f]\n\n',newGain);
+else
+    % Offset changed, display the change
+    fprintf('Gain   = [%.4f, %.4f] <- [%.4f, %.4f]\n\n', newGain, oldGain);
+end
+
+% Calibration Table
+fprintf('Calibration Table\n');
+disp([rawEye fixPos]);
