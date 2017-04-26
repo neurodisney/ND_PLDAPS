@@ -99,8 +99,8 @@ try
         xlabel('time from target onset [ms]')
         xlim([0, prctile(RT,90)]);
         axis tight
+        set(gca, 'TickDir', 'out');
         
-        hold on;
         yl = ylim;
         plot([medRT,medRT], yl,'-r','LineWidth', 2.5);
         hold off
@@ -118,8 +118,8 @@ try
         xlabel('time from fixation onset [s]')
         xlim([0,prctile(Dur,98)]);
         axis tight
-        
-        hold on;
+        set(gca, 'TickDir', 'out');
+
         yl = ylim;
         plot([medDur,medDur], yl,'-r','LineWidth', 2.5);
         hold off
@@ -137,6 +137,7 @@ try
         xlim([0,prctile(RT,90)]);
         ylim([0,max(Dur)]);
         axis tight
+        set(gca, 'TickDir', 'out');
         hold off
        
         % fixation duration depending on initial reward time
@@ -151,6 +152,7 @@ try
         xlim([0,prctile(RT,90)]);
         ylim([0,prctile(Dur,98)]);
         axis tight
+        set(gca, 'TickDir', 'out');
         hold off
         
         % fixation duration depending on initial reward time
@@ -165,6 +167,7 @@ try
         xlim([0, max(ITI)]);
         ylim([0, prctile(RT,90)]);
         axis tight
+        set(gca, 'TickDir', 'out');
         hold off
         
         % fixation durations over session time
@@ -193,6 +196,7 @@ try
         ylabel('RT [ms]');
         xlabel('trial time [min]');
         axis tight
+        set(gca, 'TickDir', 'out');
         hold off
         
         % fixation durations over session time
@@ -224,6 +228,7 @@ try
         ylabel('fix duration [ms]');
         xlabel('trial time [min]');
         axis tight
+        set(gca, 'TickDir', 'out');
         hold off
         
         %% update plot

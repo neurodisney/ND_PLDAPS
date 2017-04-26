@@ -58,7 +58,6 @@ SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states
 
 SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
-SS.behavior.fixation.FixGain = [5, 5]; 
 
 SS.behavior.fixation.FixWin     = 8;
 SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid

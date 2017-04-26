@@ -28,7 +28,6 @@ else
 
     % calculate a moving average of the eye position for display reasons
     p.trial.eyeX   = p.trial.behavior.fixation.FixGain(1) * (prctile(p.trial.AI.Eye.X(sIdx), 50) - p.trial.behavior.fixation.Offset(1));
-                  
     p.trial.eyeY   = p.trial.behavior.fixation.FixGain(2) * (prctile(p.trial.AI.Eye.Y(sIdx), 50) - p.trial.behavior.fixation.Offset(2));
 
     p.trial.eyeAmp = sqrt((p.trial.behavior.fixation.FixPos(1) - p.trial.eyeX)^2 + ...

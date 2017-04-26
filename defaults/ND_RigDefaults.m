@@ -189,8 +189,8 @@ SS.datapixx.adc.PupilChannel   = 2;
 SS.behavior.fixation.use       =  0;       % does this task require control of eye position
 
 SS.behavior.fixation.required  =  0;       % If not required, fixation states will be ignored
-SS.behavior.fixation.Sample    = 20;       % how many data points to use for determining fixation state.
-SS.behavior.fixation.BreakTime = 50;       % minimum time [ms] to identify a fixation break
+SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
+SS.behavior.fixation.BreakTime = 0.05;     % minimum time [ms] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
 
 % fixation target parameters
@@ -212,7 +212,6 @@ SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.GridPos         = 5;
 
 SS.behavior.fixation.FixWinStp       = 0.25;    % change of the size of the fixation window upon key press
-%SS.behavior.fixation.FixScale        = [1, 1];  % general scaling factor to match get the eye position within the dva range
 SS.behavior.fixation.FixGain         = [-5, -5];  % additional fine scale adjustment of the eye position signal to scale it to dva
 SS.behavior.fixation.Offset          = [0, 0];  % offset to get current position signal to FixPos
 SS.behavior.fixation.PrevOffset      = [0, 0];  % keep track of previous offset to change back from the one
