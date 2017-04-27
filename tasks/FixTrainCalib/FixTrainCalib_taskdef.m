@@ -59,7 +59,7 @@ p.trial.behavior.fixation.EnsureFix = 0.025;  % minimum time to stay within fixa
 %p.trial.behavior.fixation.FixPos    = [0, 0];    % center position of fixation window [dva]
 p.trial.behavior.fixation.FixType   = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
-p.trial.behavior.fixation.FixSz     = 0.35;      % size of the fixation spot
+p.trial.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Trial duration
