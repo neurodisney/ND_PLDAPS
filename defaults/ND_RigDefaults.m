@@ -205,6 +205,8 @@ SS.behavior.fixation.enableCalib     = 1;    % allow changing the current eye ca
 SS.behavior.fixation.CalibMat        = [];
 SS.Calib.rawEye    = [];
 SS.Calib.fixPos    = [];
+SS.Calib.medRawEye = [];
+SS.Calib.medFixPos = [];
 SS.behavior.fixation.CalibMethod     = 'gain'; % method used for calibration, currently only gain adjustment
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 

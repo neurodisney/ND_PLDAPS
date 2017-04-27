@@ -10,21 +10,53 @@ function p = update(p)
 rawEye = p.trial.Calib.rawEye;
 fixPos = p.trial.Calib.fixPos;
 
+%% Median of rawEye point cloud for each unique fixPos
+% For the calibration points collected at each individual fixPos on the
+% screen, calculate the median, and then use these medians in the future
+% calibration calculations. This allows multiple points to be collected
+% rapidly and used in a robust manner.
+
+% Find all the fixPos positions that exist in the calibration array
+medFixPos = unique(fixPos, 'rows');
+nFixPos = size(medFixPos,1);
+
+% Preallocate the array to store the medians of the rawEye point clouds
+medRawEye = zeros(nFixPos,2);
+
+% Iterate over all the fix positions
+for iFixPos = 1:nFixPos
+    thisFixPos = medFixPos(iFixPos);
+    
+    % Get the indices of the calibration table that correspond to this
+    % fixPos
+    calibIndices = find(ismember(fixPos,thisFixPos,'rows'));
+    
+    % Calculate the spatial median of the rawEye signals at this fixPos
+    medianX = prctile(rawEye(calibIndices,1));
+    medianY = prctile(rawEye(calibIndices,2));
+    
+    medRawEye(iFixPos,:) = [medianX medianY];
+end
+
+% Store the median values in p for drawing later
+p.trial.Calib.medFixPos = medFixPos;
+p.trial.Calib.medRawEye = medRawEye;
+
 %% Calculate Offset
 % Any calibration points taken at 0,0 (the center of the screen), will be
 % averaged together to determine the offset.
 
-% Find the indices where the fixPos is 0,0
-centerIndices = find(~any(fixPos'));
+% Find the index of the median values where the fixPos is 0,0
+centerIndex = find(ismember(medFixPos,[0 0],'rows'));
 
 % If offset can't be established return without changing gain.
-if isempty(centerIndices)
+if isempty(centerIndex)
     warning('Central calibration point must be taken')
     return
 end
 
-% Average the eye signals taken at the center to get the Offset
-centerEye =  mean(rawEye(centerIndices,:), 1);
+% Set the offset to the median rawEye signal taken at [0 0]
+centerEye = medRawEye(centerIndex,:);
 centerFix = [0,0];
 
 oldOffset = p.trial.behavior.fixation.Offset;
@@ -34,8 +66,8 @@ p.trial.behavior.fixation.Offset = newOffset;
 
 %% Calculate Gain
 % Transform the eye and fixation postions relative to this center
-relativeEye = bsxfun(@minus,p.trial.Calib.rawEye, centerEye);
-relativeFix = bsxfun(@minus,p.trial.Calib.fixPos, centerFix);
+relativeEye = bsxfun(@minus,medRawEye, centerEye);
+relativeFix = bsxfun(@minus,medFixPos, centerFix);
 
 % When calculating x and y gains, only use points where the fixation
 % position was not at 0
