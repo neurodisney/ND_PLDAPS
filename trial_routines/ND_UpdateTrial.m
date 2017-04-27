@@ -53,6 +53,8 @@ if(p.trial.behavior.fixation.useCalibration)
     p.defaultParameters.Calib.EyePos_Y_raw            = p.trial.Calib.EyePos_Y_raw;
     p.defaultParameters.Calib.rawEye                  = p.trial.Calib.rawEye;
     p.defaultParameters.Calib.fixPos                  = p.trial.Calib.fixPos;
+    p.defaultParameters.Calib.medRawEye               = p.trial.Calib.medRawEye;
+    p.defaultParameters.Calib.medFixPos              = p.trial.Calib.medFixPos;
     p.defaultParameters.behavior.fixation.enableCalib = p.trial.behavior.fixation.enableCalib;
 end
 

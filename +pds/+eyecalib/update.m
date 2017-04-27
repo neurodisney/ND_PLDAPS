@@ -25,15 +25,15 @@ medRawEye = zeros(nFixPos,2);
 
 % Iterate over all the fix positions
 for iFixPos = 1:nFixPos
-    thisFixPos = medFixPos(iFixPos);
+    thisFixPos = medFixPos(iFixPos,:);
     
     % Get the indices of the calibration table that correspond to this
     % fixPos
     calibIndices = find(ismember(fixPos,thisFixPos,'rows'));
     
     % Calculate the spatial median of the rawEye signals at this fixPos
-    medianX = prctile(rawEye(calibIndices,1));
-    medianY = prctile(rawEye(calibIndices,2));
+    medianX = prctile(rawEye(calibIndices,1), 50);
+    medianY = prctile(rawEye(calibIndices,2), 50);
     
     medRawEye(iFixPos,:) = [medianX medianY];
 end

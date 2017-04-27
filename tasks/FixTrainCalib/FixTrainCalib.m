@@ -54,10 +54,10 @@ if(isempty(state))
     bgColor = p.trial.display.bgColor; % For making things invisible on the monkey screen;
     ND_DefineCol(p, 'Calib_LG', 70, [0.69, 1.00, 0.69], bgColor); % Light Green
     ND_DefineCol(p, 'Calib_G',  71, [0.00, 1.00, 0.00], bgColor); % Green
-    ND_DefineCol(p, 'Calib_DG', 72, [0.00, 0.50, 0.00], bgColor); % Dark Green
+    ND_DefineCol(p, 'Calib_DG', 72, [0.00, 0.69, 0.00], bgColor); % Dark Green
     ND_DefineCol(p, 'Calib_LR', 73, [1.00, 0.69, 0.69], bgColor); % Light Red
     ND_DefineCol(p, 'Calib_R',  74, [1.00, 0.00, 0.00], bgColor); % Red
-    ND_DefineCol(p, 'Calib_DR', 75, [0.50, 0.00, 0.00], bgColor); % Dark Red
+    ND_DefineCol(p, 'Calib_DR', 75, [0.69, 0.00, 0.00], bgColor); % Dark Red
     ND_DefineCol(p, 'Calib_Y',  76, [1.00, 1.00, 0.00], bgColor); % Yellow
     
     % --------------------------------------------------------------------%
@@ -337,6 +337,10 @@ function TaskDraw(p)
 % content that needs to be shown during this epoch.
 
 %% TODO: draw predicted eye pos for calibration grid, draw indicator for random posiiton vs. fix, indicate current position
+
+    if p.trial.behavior.fixation.enableCalib
+        pds.eyecalib.draw(p)
+    end
 
     switch p.trial.CurrEpoch
         % ----------------------------------------------------------------%
