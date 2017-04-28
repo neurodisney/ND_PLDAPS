@@ -64,6 +64,8 @@ if(isempty(state))
     %% Enable random positions
     p.trial.task.RandomPos = 0;
     
+    p.trial.task.RandomPosRange = [5, 5];  % range of x and y dva for random position
+    
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
     % define conditions (conditions could be passed to the pldaps call as
@@ -76,36 +78,61 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.task.Reward.MinWaitInitial  = 0.05; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.InitialRew      = 0.1;  % duration for initial reward pulse
+    c1.task.Reward.MinWaitInitial = 0.25; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.task.Reward.MaxWaitInitial = 0.5;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.task.Reward.InitialRew     = 0.1;  % duration for initial reward pulse
     
     % condition 2
     c2.Nr = 2;
-    c2.task.Reward.MinWaitInitial  = 0.1;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.MaxWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.InitialRew      = 0.2;  % duration for initial reward pulse
+    c2.task.Reward.MinWaitInitial = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c2.task.Reward.MaxWaitInitial = 0.75; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c2.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
 
     % condition 3
     c3.Nr = 3;
-    c3.task.Reward.MinWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.MaxWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.InitialRew      = 0.4;  % duration for initial reward pulse
+    c3.task.Reward.MinWaitInitial = 0.75; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c3.task.Reward.MaxWaitInitial = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c3.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
 
     % condition 4
     c4.Nr = 4;
-    c4.task.Reward.MinWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.MaxWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.InitialRew      = 0.6;  % duration for initial reward pulse
+    c4.task.Reward.MinWaitInitial = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c4.task.Reward.MaxWaitInitial = 1.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c4.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
 
     % condition 5
     c5.Nr = 5;
-    c5.task.Reward.MinWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
+    c5.task.Reward.MinWaitInitial = 1.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c5.task.Reward.MaxWaitInitial = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c5.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    
+    % condition 6
+    c6.Nr = 6;
+    c6.task.Reward.MinWaitInitial = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c6.task.Reward.MaxWaitInitial = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c6.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    
+    % condition 7
+    c7.Nr = 7;
+    c7.task.Reward.MinWaitInitial = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c7.task.Reward.MaxWaitInitial = 2.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c7.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    
+    % condition 8
+    c8.Nr = 8;
+    c8.task.Reward.MinWaitInitial = 2.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c8.task.Reward.MaxWaitInitial = 2.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c8.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    
+    % condition 9
+    c9.Nr = 9;
+    c9.task.Reward.MinWaitInitial  = 2.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c9.task.Reward.MaxWaitInitial  = 2.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c9.task.Reward.InitialRew      = 0.2;  % duration for initial reward pulse
     
     %conditions = {c1, c2, c3, c4};
-    conditions = {c1, c1, c2, c2, c2, c3, c4};
+    conditions = {c1, c1, c2, c2, c2, c3, c4, c5, c6, c7, c8, c9};
+    conditions = {c1, c2, c2, c3, c3, c3, c4, c4, c5};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
@@ -183,6 +210,10 @@ function TaskSetUp(p)
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
         p.trial.behavior.fixation.FixPos = p.trial.Calib.Grid_XY(randi(size(p.trial.Calib.Grid_XY,1)), :);
+        
+         Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
+         Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
+         p.trial.behavior.fixation.FixPos = [Xpos, Ypos];
     end
     pds.fixation.move(p);
     
@@ -273,15 +304,15 @@ function TaskDesign(p)
                     
                     p.trial.task.Good = 0;
                 end
-                
-            % fixation time expired    
-            elseif(p.trial.CurTime  > p.trial.Timer.Wait)
-                pds.reward.give(p,  p.trial.task.Reward.JackPot);  % long term fixation, deserves something big
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             end
             
+            % fixation time expired    
+            if(p.trial.CurTime  > p.trial.Timer.Wait)
+                pds.reward.give(p,  p.trial.task.Reward.JackPot);  % long term fixation, deserves something big
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                        
             % reward if it is about time
-            if(p.trial.task.Good == 1 && p.trial.behavior.fixation.GotFix == 1 && ...
+            elseif(p.trial.task.Good == 1 && p.trial.behavior.fixation.GotFix == 1 && ...
                 p.trial.CurTime > p.trial.Timer.Reward)
                 
                 pds.reward.give(p, p.trial.task.Reward.Curr);

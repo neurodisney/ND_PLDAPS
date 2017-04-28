@@ -9,9 +9,10 @@ function p = draw(p)
 
 switch  p.trial.behavior.fixation.FixType
     case 'disc'
-        Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(p.trial.behavior.fixation.FixCol), ...
-                            p.trial.behavior.fixation.FixRect);
-        
+%         Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(p.trial.behavior.fixation.FixCol), ...
+%                             p.trial.behavior.fixation.FixRect);
+        Screen('gluDisk', p.trial.display.overlayptr, p.trial.display.clut.(p.trial.behavior.fixation.FixCol), ...
+                          p.trial.behavior.fixation.FixPos(1), p.trial.behavior.fixation.FixPos(2), p.trial.behavior.fixation.FixSz);
     case 'rect'
         Screen('FillRect',  p.trial.display.overlayptr, p.trial.display.clut.(p.trial.behavior.fixation.FixCol), ... 
                             p.trial.behavior.fixation.FixRect);

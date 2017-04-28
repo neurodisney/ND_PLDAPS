@@ -4,7 +4,7 @@ function p = move(p)
 %% define fixation window
 p.trial.behavior.fixation.FixWinRect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
                                                   p.trial.behavior.fixation.FixWin);  
-%% define fixation target
-p.trial.behavior.fixation.FixRect    = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
-                                                  p.trial.behavior.fixation.FixSz);
+% %% define fixation target
+% p.trial.behavior.fixation.FixRect    = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+%                                                   p.trial.behavior.fixation.FixSz);
 
