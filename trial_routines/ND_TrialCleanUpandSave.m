@@ -37,7 +37,7 @@ p.trial.datapixx.datapixxstoptime = Datapixx('GetTime'); % WZ: Does this need to
 pds.datapixx.adc.cleanUpandSave(p);
 
 % send event code for trial end
-p.trial.timing.datapixxTRIALEND = pds.datapixx.flipBit(p.trial.event.TRIALEND);  % end of trial
+p.trial.timing.datapixxTRIALEND = pds.tdt.strobe(p.trial.event.TRIALEND);  % end of trial
 
 %-------------------------------------------------------------------------%
 %% End Photo Diode

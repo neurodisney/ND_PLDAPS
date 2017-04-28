@@ -50,7 +50,7 @@ if(p.trial.behavior.fixation.use)
         case p.trial.FixState.FixOut
             % all below threshold?
             if(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin/2 )
-                pds.datapixx.flipBit(p.trial.event.FIX_IN);
+                pds.tdt.strobe(p.trial.event.FIX_IN);
                 p.trial.FixState.Current = p.trial.FixState.FixIn;
             end
 
@@ -59,7 +59,7 @@ if(p.trial.behavior.fixation.use)
 
             % all above threshold?
             if(p.trial.eyeAmp > p.trial.behavior.fixation.FixWin/2)
-                pds.datapixx.flipBit(p.trial.event.FIX_OUT);
+                pds.tdt.strobe(p.trial.event.FIX_OUT);
                 p.trial.FixState.Current = p.trial.FixState.FixOut;
             end
 
