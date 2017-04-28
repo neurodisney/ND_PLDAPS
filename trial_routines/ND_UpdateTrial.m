@@ -40,7 +40,7 @@ if(p.trial.behavior.fixation.use)
     p.defaultParameters.behavior.fixation.FixPos     = p.trial.behavior.fixation.FixPos;
     p.defaultParameters.behavior.fixation.FixWin     = p.trial.behavior.fixation.FixWin;
     p.defaultParameters.behavior.fixation.FixSz      = p.trial.behavior.fixation.FixSz;
-    p.defaultParameters.behavior.fixation.FixRect    = p.trial.behavior.fixation.FixRect;
+    %p.defaultParameters.behavior.fixation.FixRect    = p.trial.behavior.fixation.FixRect;
     p.defaultParameters.behavior.fixation.FixWinRect = p.trial.behavior.fixation.FixWinRect;
 end
 
