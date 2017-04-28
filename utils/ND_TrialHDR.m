@@ -13,13 +13,13 @@ function ND_TrialHDR(p)
 
 % ------------------------------------------------------------------------%
 %% encode begin of header/tail
-pds.tdt.strobe(p.trial.event.TRIAL_HDR_ON);
+pds.datapixx.strobe(p.trial.event.TRIAL_HDR_ON);
 
 % ------------------------------------------------------------------------%
 %% default information
 % this should be minimal information that is valid/applicable for all tasks.
 
-pds.tdt.strobe(p.trial.pldaps.iTrial);  % trial number
+pds.datapixx.strobe(p.trial.pldaps.iTrial);  % trial number
 
 % get time stamp as encoded for trial start
 cpos = find(p.trial.TrialStart == ':');
@@ -32,14 +32,14 @@ else
     SS = str2num(p.trial.TrialStart(cpos(2)+1:cpos(3)-1)) +1; % seconds
     MS = str2num(p.trial.TrialStart(cpos(3)+1:end)) +1;       % milliseconds
 
-    pds.tdt.strobe(HH);   % hour
-    pds.tdt.strobe(MM);   % minutes
-    pds.tdt.strobe(SS);   % seconds
-    pds.tdt.strobe(MS);   % milliseconds
+    pds.datapixx.strobe(HH);   % hour
+    pds.datapixx.strobe(MM);   % minutes
+    pds.datapixx.strobe(SS);   % seconds
+    pds.datapixx.strobe(MS);   % milliseconds
 end
 
-pds.tdt.strobe(p.trial.Nr);                  % condition number
-pds.tdt.strobe(p.trial.outcome.CurrOutcome); % outcome
+pds.datapixx.strobe(p.trial.Nr);                  % condition number
+pds.datapixx.strobe(p.trial.outcome.CurrOutcome); % outcome
 
 % ------------------------------------------------------------------------%
 %% task dependent information
@@ -47,6 +47,6 @@ pds.tdt.strobe(p.trial.outcome.CurrOutcome); % outcome
 
 % ------------------------------------------------------------------------%
 %% encode end of header/tail
-pds.tdt.strobe(p.trial.event.TRIAL_HDR_OFF);
+pds.datapixx.strobe(p.trial.event.TRIAL_HDR_OFF);
 
 

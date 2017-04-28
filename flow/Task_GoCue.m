@@ -4,7 +4,7 @@ function p = Task_GoCue(p)
 %
 % wolf zinke, March 2017
 
-pds.tdt.strobe(p.trial.event.GOCUE);
+pds.datapixx.strobe(p.trial.event.GOCUE);
 
 p.trial.EV.GoCue   = p.trial.CurTime;
 

@@ -6,5 +6,5 @@ function p = Response_JoyPress(p)
 
 p.trial.EV.JoyPress = p.trial.CurTime;
 
-pds.tdt.strobe(p.trial.event.JOY_PRESS);
+pds.datapixx.strobe(p.trial.event.JOY_PRESS);
 

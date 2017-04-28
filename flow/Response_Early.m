@@ -4,7 +4,7 @@ function p = Response_Early(p)
 %
 % wolf zinke, March 2017
 
-pds.tdt.strobe(p.trial.event.RESP_EARLY);
+pds.datapixx.strobe(p.trial.event.RESP_EARLY);
 
 p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
 

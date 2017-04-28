@@ -1,5 +1,5 @@
 function timings = strobe(EV, dur)
-% pds.tdt.strobe   strobes 16 bit integer event marker to the Tucker Davis system.
+% pds.datapixx.strobe   strobes 16 bit integer event marker to the Tucker Davis system.
 %
 % This function is a modification of the pds.datapixx.strobe function included in PLDAPS
 % (moved to pds.plexon.strobe) to make it work with the Tucker Davis system.

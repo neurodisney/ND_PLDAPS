@@ -178,7 +178,7 @@ function TaskDesign(p)
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
             
-            tms = pds.tdt.strobe(p.trial.event.TASK_ON); 
+            tms = pds.datapixx.strobe(p.trial.event.TASK_ON); 
             p.trial.EV.DPX_TaskOn = tms(1);
             p.trial.EV.TDT_TaskOn = tms(2);
 
@@ -212,7 +212,7 @@ function TaskDesign(p)
                     
                 elseif(p.trial.CurTime > p.trial.Timer.FixBreak) % long enough within FixWin
                     fprintf('Fixating \n');
-                    pds.tdt.strobe(p.trial.event.FIXATION);
+                    pds.datapixx.strobe(p.trial.event.FIXATION);
 
                     p.trial.EV.FixStart = p.trial.CurTime - p.trial.behavior.fixation.EnsureFix;
                     
@@ -254,7 +254,7 @@ function TaskDesign(p)
 
                 elseif(p.trial.CurTime > p.trial.Timer.FixBreak)
                 % out too long, it's a break    
-                    pds.tdt.strobe(p.trial.event.FIX_BREAK);
+                    pds.datapixx.strobe(p.trial.event.FIX_BREAK);
                     
                     p.trial.EV.FixBreak = p.trial.CurTime - p.trial.behavior.fixation.BreakTime;
                     p.trial.CurrEpoch   = p.trial.epoch.TaskEnd; % Go directly to TaskEnd, do not continue task, do not collect reward
@@ -299,7 +299,7 @@ function TaskDesign(p)
         %% finish trial and error handling
             fprintf('TaskEnd \n');
         % set timer for intertrial interval            
-            tms = pds.tdt.strobe(p.trial.event.TASK_OFF); 
+            tms = pds.datapixx.strobe(p.trial.event.TASK_OFF); 
             p.trial.EV.DPX_TaskOff = tms(1);
             p.trial.EV.TDT_TaskOff = tms(2);
 

@@ -30,11 +30,11 @@ if(p.trial.pldaps.GetScreenFlipTimes || p.trial.pldaps.draw.ScreenEvent > 0)
     [ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
     
     if(p.trial.pldaps.draw.ScreenEvent > 0)
-        pds.tdt.strobe(p.trial.pldaps.draw.ScreenEvent);
+        pds.datapixx.strobe(p.trial.pldaps.draw.ScreenEvent);
         
         if(p.trial.pldaps.draw.photodiode.use) 
             if(p.trial.pldaps.draw.photodiode.state == 0)
-                pds.tdt.strobe(p.trial.event.PD_ON);    
+                pds.datapixx.strobe(p.trial.event.PD_ON);    
 
                 p.trial.Timer.PhD = ft{1} + (p.trial.pldaps.draw.photodiode.XFrames * p.trial.display.ifi) - p.trial.display.ifi/2; % subtract hal a frame rate to make sure to catch the correct one
 
@@ -53,7 +53,7 @@ if(p.trial.pldaps.GetScreenFlipTimes || p.trial.pldaps.draw.ScreenEvent > 0)
     
     % turn photo diode signal off
     if(p.trial.pldaps.draw.photodiode.use && PDoff == 1) 
-        pds.tdt.strobe(p.trial.event.PD_OFF);    
+        pds.datapixx.strobe(p.trial.event.PD_OFF);    
 
         p.trial.timing.photodiodeTimes(2, p.trial.pldaps.draw.photodiode.cnt) = ft{1};
 

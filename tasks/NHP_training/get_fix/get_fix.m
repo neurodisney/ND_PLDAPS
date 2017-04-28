@@ -188,7 +188,7 @@ function TaskDesign(p)
                 Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
             elseif(p.trial.FixState.Current == p.trial.FixState.FixIn)
             % got fixation
-                pds.tdt.strobe(p.trial.event.FIXATION);
+                pds.datapixx.strobe(p.trial.event.FIXATION);
                 p.trial.Timer.Wait  = p.trial.CurTime + p.trial.task.Timing.HoldTime;
                 p.trial.EV.FixStart = p.trial.CurTime;
                 p.trial.CurrEpoch   = p.trial.epoch.Fixating;
@@ -222,7 +222,7 @@ function TaskDesign(p)
                     
                     elseif(p.trial.CurTime > p.trial.Timer.FixBreak)
                     % out too long, it's a break    
-                        pds.tdt.strobe(p.trial.event.FIX_BREAK);
+                        pds.datapixx.strobe(p.trial.event.FIX_BREAK);
                         p.trial.EV.FixBreak = p.trial.CurTime - p.trial.behavior.fixation.BreakTime;
                         p.trial.CurrEpoch   = p.trial.epoch.TaskEnd; % Go directly to TaskEnd, do not continue task, do not collect reward
                         p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;

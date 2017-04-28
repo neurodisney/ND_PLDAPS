@@ -190,7 +190,7 @@ function RandRew(p)
             if(p.trial.task.Good)
                 p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;
                 p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
-                pds.tdt.strobe(p.trial.event.STIM_ON);
+                pds.datapixx.strobe(p.trial.event.STIM_ON);
 
                 if(p.trial.task.Reward.Pull)
                     pds.reward.give(p, p.trial.task.Reward.PullRew);
@@ -213,7 +213,7 @@ function RandRew(p)
                 
             elseif(p.trial.behavior.fixation.GotFix == 0 && p.trial.FixState.Current == p.trial.FixState.FixIn)
             % got fixation
-                pds.tdt.strobe(p.trial.event.FIXATION);
+                pds.datapixx.strobe(p.trial.event.FIXATION);
                 p.trial.behavior.fixation.GotFix = 1;
                 p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.Lag; 
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION;
@@ -221,7 +221,7 @@ function RandRew(p)
             elseif(p.trial.behavior.fixation.GotFix == 1 && p.trial.FixState.Current == p.trial.FixState.FixOut)
                 % first time break detected
                 p.trial.behavior.fixation.GotFix = 0;
-                pds.tdt.strobe(p.trial.event.FIX_BREAK);
+                pds.datapixx.strobe(p.trial.event.FIX_BREAK);
 
             elseif(p.trial.CurTime  > p.trial.Timer.Wait)
             % end of time

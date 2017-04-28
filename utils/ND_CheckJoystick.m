@@ -38,7 +38,7 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
                 
                 % all below threshold?
                 if(~any(jchk))
-                    pds.tdt.strobe(p.trial.event.JOY_OFF);
+                    pds.datapixx.strobe(p.trial.event.JOY_OFF);
                     p.trial.JoyState.Current = p.trial.JoyState.JoyRest;
                     %ND_CtrlMsg(p, 'Joystick Released...');
                 end
@@ -50,7 +50,7 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
                 
                 % all above threshold?
                 if(~any(jchk))
-                    pds.tdt.strobe(p.trial.event.JOY_ON);
+                    pds.datapixx.strobe(p.trial.event.JOY_ON);
                     p.trial.JoyState.Current = p.trial.JoyState.JoyHold;
                     %ND_CtrlMsg(p, 'Joystick Pressed...');
                 end
