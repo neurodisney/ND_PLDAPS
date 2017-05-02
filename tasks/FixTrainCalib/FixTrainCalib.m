@@ -280,7 +280,7 @@ function TaskDesign(p)
         %% Animal maintains fixation 
         
             % check current fixation
-            if(p.trial.FixState.Current == p.trial.FixState.FixOut) % fixation break          
+            if(p.trial.FixState.Current == p.trial.FixState.FixOut || p.trial.behavior.fixation.GotFix == 0) % fixation break          
                 
                 if(p.trial.behavior.fixation.GotFix == 1)
                 % first time break detected    
