@@ -1,4 +1,4 @@
-function p = FixTrainCalib_plots(p, offln)
+function p = EyeCalib_plots(p, offln)
 %% online analysis for joystick training task
 %
 % TODO: - For offline analysis, allow specification of pds file, or open file selector if p is empty.

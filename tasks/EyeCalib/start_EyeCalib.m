@@ -1,4 +1,4 @@
-function p = start_FixTrainCalib(subjname, rig, experimenter)
+function p = start_EyeCalib(subjname, rig, experimenter)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,

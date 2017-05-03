@@ -1,4 +1,4 @@
-function p = FixTrainCalib(p, state)
+function p = EyeCalib(p, state)
 % Main trial function for initial fixation training.
 %
 %
@@ -27,11 +27,6 @@ p = ND_GeneralTrialRoutines(p, state);
 % At this stage, p.trial is not yet defined. All assignments need
 % to go to p.defaultparameters
 if(isempty(state))
-
-    % --------------------------------------------------------------------%
-    %% define ascii output file
-    % call this after ND_InitSession to be sure that output directory exists!
-    Trial2Ascii(p, 'init');
 
     % --------------------------------------------------------------------%
     %% Color definitions of stuff shown during the trial
@@ -130,9 +125,7 @@ else
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
         %% trial end
-            Task_Finish(p);
-            Trial2Ascii(p, 'save');
-                        
+            Task_Finish(p);                      
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
 
@@ -353,45 +346,3 @@ function KeyAction(p)
         
         pds.fixation.move(p);
     end
-
-% ####################################################################### %
-%% additional inline functions that
-% ####################################################################### %
-
-% ####################################################################### %
-function Trial2Ascii(p, act)
-%% Save trial progress in an ASCII table
-% 'init' creates the file with a header defining all columns
-% 'save' adds a line with the information for the current trial
-%
-% make sure that number of header names is the same as the number of entries
-% to write, also that the position matches.
-
-    switch act
-        case 'init'
-            tblptr = fopen(p.trial.session.asciitbl , 'w');
-
-            fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  FixRT  ',...
-                             'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI FixWin  FixPos_X  FixPos_Y \n']);
-            fclose(tblptr);
-
-        case 'save'
-            if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoFix)  % we might loose the last trial when pressing esc.
-                                
-                trltm = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
-
-                cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-
-                tblptr = fopen(p.trial.session.asciitbl, 'a');
-
-                fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f  %.5f  %.5f  %d  %d  %s  %.5f  %s  %.5f  %.2f  %.2f  %.2f \n' , ...
-                                datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
-                                p.trial.EV.DPX_TaskOn, p.trial.session.subject, p.trial.session.experimentSetupFile, ...
-                                p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
-                                p.trial.task.CurRewDelay, p.trial.task.Reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
-                                p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.behavior.fixation.FixCol, p.trial.task.Timing.ITI, ...
-                                p.trial.behavior.fixation.FixWin, p.trial.behavior.fixation.FixPos(1), p.trial.behavior.fixation.FixPos(2));
-               fclose(tblptr);
-            end
-    end
-        
