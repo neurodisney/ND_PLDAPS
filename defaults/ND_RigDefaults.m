@@ -200,10 +200,10 @@ SS.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined
 SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % Calibration of eye position
-SS.behavior.fixation.useCalibration  = 0;         % load mat file for eye calibration
-SS.behavior.fixation.enableCalib     = 1;         % allow changing the current eye calibration parameters
-SS.eyeCalib.gain                        = [-5, -5];  % default gain, used if no calibration points are entered
-SS.eyeCalib.offset                      = [0, 0];    % default offset, used if no calibration points are entered
+SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibration
+SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
+SS.eyeCalib.gain                     = [-5, -5];  % default gain, used if no calibration points are entered
+SS.eyeCalib.offset                   = [0, 0];    % default offset, used if no calibration points are entered
 SS.behavior.fixation.CalibMat        = [];
 SS.eyeCalib.rawEye    = [];
 SS.eyeCalib.fixPos    = [];
