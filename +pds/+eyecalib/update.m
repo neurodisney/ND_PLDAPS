@@ -114,3 +114,6 @@ end
 % Calibration Table
 fprintf('Calibration Table\n');
 disp([rawEye fixPos]);
+
+% save the new calibration to file
+pds.eyecalib.save(p);
