@@ -29,9 +29,9 @@ end
 
 %% keep offset correction for eye position
 if(p.trial.datapixx.useAsEyepos)
-    p.defaultParameters.behavior.fixation.Offset     = p.trial.behavior.fixation.Offset;
+    p.defaultParameters.Calib.offset     = p.trial.Calib.offset;
     p.defaultParameters.behavior.fixation.PrevOffset = p.trial.behavior.fixation.PrevOffset;
-    p.defaultParameters.behavior.fixation.FixGain    = p.trial.behavior.fixation.FixGain;
+    p.defaultParameters.Calib.gain    = p.trial.Calib.gain;
 end
 
 %% keep fixation requirements

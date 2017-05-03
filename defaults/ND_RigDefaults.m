@@ -214,8 +214,8 @@ SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.GridPos         = 5;
 
 SS.behavior.fixation.FixWinStp       = 0.25;    % change of the size of the fixation window upon key press
-SS.behavior.fixation.FixGain         = [-5, -5];  % additional fine scale adjustment of the eye position signal to scale it to dva
-SS.behavior.fixation.Offset          = [0, 0];  % offset to get current position signal to FixPos
+SS.Calib.gain         = [-5, -5];  % additional fine scale adjustment of the eye position signal to scale it to dva
+SS.Calib.offset          = [0, 0];  % offset to get current position signal to FixPos
 SS.behavior.fixation.PrevOffset      = [0, 0];  % keep track of previous offset to change back from the one
 
 SS.behavior.fixation.NumSmplCtr      = 10;      % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)

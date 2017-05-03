@@ -59,9 +59,9 @@ end
 centerEye = medRawEye(centerIndex,:);
 centerFix = [0,0];
 
-oldOffset = p.trial.behavior.fixation.Offset;
+oldOffset = p.trial.Calib.offset;
 newOffset = centerEye;
-p.trial.behavior.fixation.Offset = newOffset;
+p.trial.Calib.offset = newOffset;
 
 
 %% Calculate Gain
@@ -79,7 +79,7 @@ xGain = nanmean( relativeFix(xIndices,1) ./ relativeEye(xIndices,1) , 1);
 yGain = nanmean( relativeFix(yIndices,2) ./ relativeEye(yIndices,2) , 1);
 
 % Update the p struct (only if the new gain is not nan)
-oldGain = p.trial.behavior.fixation.FixGain;
+oldGain = p.trial.Calib.gain;
 if isnan(xGain)
     xGain = oldGain(1);
 end
@@ -88,7 +88,7 @@ if isnan(yGain)
 end
 
 newGain = [xGain, yGain];
-p.trial.behavior.fixation.FixGain = newGain;
+p.trial.Calib.gain = newGain;
 
 %% Display info
 disp('Current Calibration:')

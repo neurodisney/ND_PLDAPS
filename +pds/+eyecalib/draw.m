@@ -49,8 +49,8 @@ medRawEye = p.trial.Calib.medRawEye;
 if ~isempty(medRawEye)
     currentFixPosIndex = find(ismember(medFixPos,currFixPos,'rows'));
     
-    gain = p.trial.behavior.fixation.FixGain;
-    offset = p.trial.behavior.fixation.Offset;
+    gain = p.trial.Calib.gain;
+    offset = p.trial.Calib.offset;
     
     for iMedian = 1:size(medRawEye,1)
         if iMedian == currentFixPosIndex

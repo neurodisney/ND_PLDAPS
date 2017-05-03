@@ -5,9 +5,9 @@ if(p.trial.behavior.fixation.enableCalib)
     p.trial.Calib.fixPos = [];
     p.trial.Calib.medRawEye = [];
     p.trial.Calib.medFixPos = [];
-    p.trial.behavior.fixation.Offset = [0 0];
-    p.trial.behavior.fixation.FixGain = [-5 -5]; % Hard coded, won't be defualt if ND_RigDefaults value is changed
+    p.trial.Calib.offset = [0 0];
+    p.trial.Calib.gain = [-5 -5]; % Hard coded, won't be defualt if ND_RigDefaults value is changed
     
     fprintf('\n >>> fixation offset changed to [%.4f %.4f] -- gain to: [%.4f %.4f]\n\n', ...
-        p.trial.behavior.fixation.Offset, p.trial.behavior.fixation.FixGain);
+        p.trial.Calib.offset, p.trial.Calib.gain);
 end
