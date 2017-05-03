@@ -2,6 +2,7 @@ function p = setup(p)
 % pds.eyecalib.setup(p) setup calibration for eye position
 %
 % wolf zinke, april 2017
+% Nate Faber, may 2017
 
 %% existing calibration data
 % refer to default struct with calibration information
@@ -16,32 +17,6 @@ function p = setup(p)
 % update name for calibration file
 p.trial.behavior.fixation.CalibMat = [p.defaultParameters.session.dir,filesep,'FixCal.mat'];
 
-%% set up positions for the 9-point calibration grid
-% grid ID's follow numpad scheme:
-%
-%  -------------
-%  | 7 | 8 | 9 |
-%  -------------
-%  | 4 | 5 | 6 |
-%  -------------
-%  | 1 | 2 | 3 |
-%  -------------
-
-% TODO: Check! currently the ID's do not match screen coordinates!
-
-grdX = p.trial.behavior.fixation.FixGridStp(1);
-grdY = p.trial.behavior.fixation.FixGridStp(2);
-
-X = [-grdX;     0;  grdX; -grdX; 0; grdX; -grdX;    0; grdX];
-Y = [-grdY; -grdY; -grdY;     0; 0;    0;  grdY; grdY; grdY];
-
-p.trial.eyeCalib.Grid_XY = [X, Y];
-
-p.trial.eyeCalib.EyePos_X = nan(1, 9);
-p.trial.eyeCalib.EyePos_Y = nan(1, 9);
-
-p.trial.eyeCalib.EyePos_X_raw = nan(1, 9);
-p.trial.eyeCalib.EyePos_Y_raw = nan(1, 9);
 
 % define keys used for eye calibration
 KbName('UnifyKeyNames');
