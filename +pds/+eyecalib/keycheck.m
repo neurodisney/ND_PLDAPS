@@ -21,7 +21,7 @@ if(~isempty(p.trial.LastKeyPress))
             FixPos = p.trial.eyeCalib.Grid_XY(gpos, :);
 
         % ----------------------------------------------------------------%
-        case p.trial.key.acceptCalPos     
+        case p.trial.key.addCalibPoint     
         %% accept current fixation
             if(p.trial.behavior.fixation.enableCalib)
                 iCalib = size(p.trial.eyeCalib.rawEye, 1) + 1;
