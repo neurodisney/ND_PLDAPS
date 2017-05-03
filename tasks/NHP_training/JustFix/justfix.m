@@ -399,16 +399,16 @@ function KeyAction(p)
             cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
             cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
 
-            p.trial.behavior.fixation.PrevOffset = p.trial.Calib.offset;
+            p.trial.behavior.fixation.PrevOffset = p.trial.eyeCalib.offset;
 
-            p.trial.Calib.offset    = p.trial.Calib.offset + FixPos - [cX,cY]; 
+            p.trial.eyeCalib.offset    = p.trial.eyeCalib.offset + FixPos - [cX,cY]; 
 
             fprintf('\n >>> fixation offset changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
-                     p.trial.Calib.offset, cX,cY);
+                     p.trial.eyeCalib.offset, cX,cY);
             
         case KbName('BackSpace')
         % update calibration with current eye positions    
-            p.trial.Calib.offset = p.trial.behavior.fixation.PrevOffset;
+            p.trial.eyeCalib.offset = p.trial.behavior.fixation.PrevOffset;
             
     end
     

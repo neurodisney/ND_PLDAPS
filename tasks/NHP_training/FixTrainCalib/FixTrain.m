@@ -209,7 +209,7 @@ function TaskSetUp(p)
     
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
-        p.trial.behavior.fixation.FixPos = p.trial.Calib.Grid_XY(randi(size(p.trial.Calib.Grid_XY,1)), :);
+        p.trial.behavior.fixation.FixPos = p.trial.eyeCalib.Grid_XY(randi(size(p.trial.eyeCalib.Grid_XY,1)), :);
         
          Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
          Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);

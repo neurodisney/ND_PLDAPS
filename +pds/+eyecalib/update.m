@@ -7,8 +7,8 @@ function p = update(p)
 % This function calculates the offset and gain to best match the raw eye signal
 % with the fixation points recorded
 
-rawEye = p.trial.Calib.rawEye;
-fixPos = p.trial.Calib.fixPos;
+rawEye = p.trial.eyeCalib.rawEye;
+fixPos = p.trial.eyeCalib.fixPos;
 
 %% Median of rawEye point cloud for each unique fixPos
 % For the calibration points collected at each individual fixPos on the
@@ -39,8 +39,8 @@ for iFixPos = 1:nFixPos
 end
 
 % Store the median values in p for drawing later
-p.trial.Calib.medFixPos = medFixPos;
-p.trial.Calib.medRawEye = medRawEye;
+p.trial.eyeCalib.medFixPos = medFixPos;
+p.trial.eyeCalib.medRawEye = medRawEye;
 
 %% Calculate Offset
 % Any calibration points taken at 0,0 (the center of the screen), will be
@@ -59,9 +59,9 @@ end
 centerEye = medRawEye(centerIndex,:);
 centerFix = [0,0];
 
-oldOffset = p.trial.Calib.offset;
+oldOffset = p.trial.eyeCalib.offset;
 newOffset = centerEye;
-p.trial.Calib.offset = newOffset;
+p.trial.eyeCalib.offset = newOffset;
 
 
 %% Calculate Gain
@@ -79,7 +79,7 @@ xGain = nanmean( relativeFix(xIndices,1) ./ relativeEye(xIndices,1) , 1);
 yGain = nanmean( relativeFix(yIndices,2) ./ relativeEye(yIndices,2) , 1);
 
 % Update the p struct (only if the new gain is not nan)
-oldGain = p.trial.Calib.gain;
+oldGain = p.trial.eyeCalib.gain;
 if isnan(xGain)
     xGain = oldGain(1);
 end
@@ -88,7 +88,7 @@ if isnan(yGain)
 end
 
 newGain = [xGain, yGain];
-p.trial.Calib.gain = newGain;
+p.trial.eyeCalib.gain = newGain;
 
 %% Display info
 disp('Current Calibration:')

@@ -29,9 +29,9 @@ end
 
 %% keep offset correction for eye position
 if(p.trial.datapixx.useAsEyepos)
-    p.defaultParameters.Calib.offset     = p.trial.Calib.offset;
+    p.defaultParameters.eyeCalib.offset     = p.trial.eyeCalib.offset;
     p.defaultParameters.behavior.fixation.PrevOffset = p.trial.behavior.fixation.PrevOffset;
-    p.defaultParameters.Calib.gain    = p.trial.Calib.gain;
+    p.defaultParameters.eyeCalib.gain    = p.trial.eyeCalib.gain;
 end
 
 %% keep fixation requirements
@@ -47,14 +47,14 @@ end
 %% keep calibration information for eye position
 if(p.trial.behavior.fixation.useCalibration)
     p.defaultParameters.behavior.fixation.GridPos     = p.trial.behavior.fixation.GridPos;
-    p.defaultParameters.Calib.EyePos_X                = p.trial.Calib.EyePos_X;
-    p.defaultParameters.Calib.EyePos_Y                = p.trial.Calib.EyePos_Y;
-    p.defaultParameters.Calib.EyePos_X_raw            = p.trial.Calib.EyePos_X_raw;
-    p.defaultParameters.Calib.EyePos_Y_raw            = p.trial.Calib.EyePos_Y_raw;
-    p.defaultParameters.Calib.rawEye                  = p.trial.Calib.rawEye;
-    p.defaultParameters.Calib.fixPos                  = p.trial.Calib.fixPos;
-    p.defaultParameters.Calib.medRawEye               = p.trial.Calib.medRawEye;
-    p.defaultParameters.Calib.medFixPos              = p.trial.Calib.medFixPos;
+    p.defaultParameters.eyeCalib.EyePos_X                = p.trial.eyeCalib.EyePos_X;
+    p.defaultParameters.eyeCalib.EyePos_Y                = p.trial.eyeCalib.EyePos_Y;
+    p.defaultParameters.eyeCalib.EyePos_X_raw            = p.trial.eyeCalib.EyePos_X_raw;
+    p.defaultParameters.eyeCalib.EyePos_Y_raw            = p.trial.eyeCalib.EyePos_Y_raw;
+    p.defaultParameters.eyeCalib.rawEye                  = p.trial.eyeCalib.rawEye;
+    p.defaultParameters.eyeCalib.fixPos                  = p.trial.eyeCalib.fixPos;
+    p.defaultParameters.eyeCalib.medRawEye               = p.trial.eyeCalib.medRawEye;
+    p.defaultParameters.eyeCalib.medFixPos              = p.trial.eyeCalib.medFixPos;
     p.defaultParameters.behavior.fixation.enableCalib = p.trial.behavior.fixation.enableCalib;
 end
 

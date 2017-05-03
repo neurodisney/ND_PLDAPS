@@ -24,7 +24,7 @@ crossPenWidth = 2;
 dotSize = 5;
 
 %% Draw calibrated fixation positions (Light Red Boxes)
-medFixPos = p.trial.Calib.medFixPos;
+medFixPos = p.trial.eyeCalib.medFixPos;
 
 for iFixPos = 1:size(medFixPos,1)
     fixPos = medFixPos(iFixPos,:);
@@ -44,13 +44,13 @@ Screen('FrameRect', window, p.trial.display.clut.Calib_LG, fixPosRect, boxPenWid
 
 
 %% Draw the median calibration point (Red/Green X)
-medRawEye = p.trial.Calib.medRawEye;
+medRawEye = p.trial.eyeCalib.medRawEye;
 
 if ~isempty(medRawEye)
     currentFixPosIndex = find(ismember(medFixPos,currFixPos,'rows'));
     
-    gain = p.trial.Calib.gain;
-    offset = p.trial.Calib.offset;
+    gain = p.trial.eyeCalib.gain;
+    offset = p.trial.eyeCalib.offset;
     
     for iMedian = 1:size(medRawEye,1)
         if iMedian == currentFixPosIndex
@@ -67,8 +67,8 @@ if ~isempty(medRawEye)
     end
     
     %% Draw all the calibration points mapped with current gain and offset values (Dark Red/Dark Green Dots)
-    calibPointsRaw = p.trial.Calib.rawEye;
-    allFixPos = p.trial.Calib.fixPos;
+    calibPointsRaw = p.trial.eyeCalib.rawEye;
+    allFixPos = p.trial.eyeCalib.fixPos;
     
     
     

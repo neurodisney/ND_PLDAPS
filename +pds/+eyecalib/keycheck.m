@@ -13,18 +13,18 @@ if(~isempty(p.trial.LastKeyPress))
         %% TODO: accept eye position, random target position, save current calibration, update current calibration
 
         % ----------------------------------------------------------------%
-        case p.trial.Calib.GridKeyCell
+        case p.trial.eyeCalib.GridKeyCell
         %% move target to grid positions
-            gpos = find(p.trial.Calib.GridKey == p.trial.LastKeyPress(1));
+            gpos = find(p.trial.eyeCalib.GridKey == p.trial.LastKeyPress(1));
             p.trial.behavior.fixation.GridPos = gpos;
             
-            FixPos = p.trial.Calib.Grid_XY(gpos, :);
+            FixPos = p.trial.eyeCalib.Grid_XY(gpos, :);
 
         % ----------------------------------------------------------------%
         case p.trial.key.acceptCalPos     
         %% accept current fixation
             if(p.trial.behavior.fixation.enableCalib)
-                iCalib = size(p.trial.Calib.rawEye, 1) + 1;
+                iCalib = size(p.trial.eyeCalib.rawEye, 1) + 1;
                 
                 % Position of the fixation target
                 fixPos = p.trial.behavior.fixation.FixPos;
@@ -36,8 +36,8 @@ if(~isempty(p.trial.LastKeyPress))
                 
                 % Add these samples to the list of calibration points,
                 % which will be processed in pds.eyecalib.update
-                p.trial.Calib.fixPos(iCalib,:) = fixPos;
-                p.trial.Calib.rawEye(iCalib,:) = rawEye;
+                p.trial.eyeCalib.fixPos(iCalib,:) = fixPos;
+                p.trial.eyeCalib.rawEye(iCalib,:) = rawEye;
                 
                 pds.eyecalib.update(p);
             end
@@ -52,13 +52,13 @@ if(~isempty(p.trial.LastKeyPress))
         %% Remove the last calibration point from the calculation    
             if(p.trial.behavior.fixation.enableCalib)
                 
-                if size(p.trial.Calib.rawEye,1) <= 1
+                if size(p.trial.eyeCalib.rawEye,1) <= 1
                     % Reset to defualts if removing one would completely clear
                     % all calibration points
                     pds.eyecalib.reset(p)
                 else
-                    p.trial.Calib.rawEye = p.trial.Calib.rawEye(1:end-1,:);
-                    p.trial.Calib.fixPos = p.trial.Calib.fixPos(1:end-1,:);
+                    p.trial.eyeCalib.rawEye = p.trial.eyeCalib.rawEye(1:end-1,:);
+                    p.trial.eyeCalib.fixPos = p.trial.eyeCalib.fixPos(1:end-1,:);
                     pds.eyecalib.update(p);
                 end
                         

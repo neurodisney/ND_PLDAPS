@@ -202,13 +202,13 @@ SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 0;         % load mat file for eye calibration
 SS.behavior.fixation.enableCalib     = 1;         % allow changing the current eye calibration parameters
-SS.Calib.gain                        = [-5, -5];  % default gain, used if no calibration points are entered
-SS.Calib.offset                      = [0, 0];    % default offset, used if no calibration points are entered
+SS.eyeCalib.gain                        = [-5, -5];  % default gain, used if no calibration points are entered
+SS.eyeCalib.offset                      = [0, 0];    % default offset, used if no calibration points are entered
 SS.behavior.fixation.CalibMat        = [];
-SS.Calib.rawEye    = [];
-SS.Calib.fixPos    = [];
-SS.Calib.medRawEye = [];
-SS.Calib.medFixPos = [];
+SS.eyeCalib.rawEye    = [];
+SS.eyeCalib.fixPos    = [];
+SS.eyeCalib.medRawEye = [];
+SS.eyeCalib.medFixPos = [];
 SS.behavior.fixation.CalibMethod     = 'gain'; % method used for calibration, currently only gain adjustment
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 
