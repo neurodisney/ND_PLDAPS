@@ -200,8 +200,10 @@ SS.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined
 SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % Calibration of eye position
-SS.behavior.fixation.useCalibration  = 0;    % load mat file for eye calibration
-SS.behavior.fixation.enableCalib     = 1;    % allow changing the current eye calibration parameters
+SS.behavior.fixation.useCalibration  = 0;         % load mat file for eye calibration
+SS.behavior.fixation.enableCalib     = 1;         % allow changing the current eye calibration parameters
+SS.Calib.gain                        = [-5, -5];  % default gain, used if no calibration points are entered
+SS.Calib.offset                      = [0, 0];    % default offset, used if no calibration points are entered
 SS.behavior.fixation.CalibMat        = [];
 SS.Calib.rawEye    = [];
 SS.Calib.fixPos    = [];
@@ -214,8 +216,6 @@ SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.GridPos         = 5;
 
 SS.behavior.fixation.FixWinStp       = 0.25;    % change of the size of the fixation window upon key press
-SS.Calib.gain         = [-5, -5];  % additional fine scale adjustment of the eye position signal to scale it to dva
-SS.Calib.offset          = [0, 0];  % offset to get current position signal to FixPos
 SS.behavior.fixation.PrevOffset      = [0, 0];  % keep track of previous offset to change back from the one
 
 SS.behavior.fixation.NumSmplCtr      = 10;      % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
