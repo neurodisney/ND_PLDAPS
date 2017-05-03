@@ -78,61 +78,11 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.task.Reward.MinWaitInitial = 0.25; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.MaxWaitInitial = 0.5;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.InitialRew     = 0.1;  % duration for initial reward pulse
+    c1.task.Reward.MinWaitInitial = 0.15; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.task.Reward.MaxWaitInitial = 0.15;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
     
-    % condition 2
-    c2.Nr = 2;
-    c2.task.Reward.MinWaitInitial = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.MaxWaitInitial = 0.75; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-
-    % condition 3
-    c3.Nr = 3;
-    c3.task.Reward.MinWaitInitial = 0.75; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.MaxWaitInitial = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-
-    % condition 4
-    c4.Nr = 4;
-    c4.task.Reward.MinWaitInitial = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.MaxWaitInitial = 1.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-
-    % condition 5
-    c5.Nr = 5;
-    c5.task.Reward.MinWaitInitial = 1.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.MaxWaitInitial = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-    
-    % condition 6
-    c6.Nr = 6;
-    c6.task.Reward.MinWaitInitial = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c6.task.Reward.MaxWaitInitial = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c6.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-    
-    % condition 7
-    c7.Nr = 7;
-    c7.task.Reward.MinWaitInitial = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c7.task.Reward.MaxWaitInitial = 2.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c7.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-    
-    % condition 8
-    c8.Nr = 8;
-    c8.task.Reward.MinWaitInitial = 2.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c8.task.Reward.MaxWaitInitial = 2.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c8.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-    
-    % condition 9
-    c9.Nr = 9;
-    c9.task.Reward.MinWaitInitial  = 2.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c9.task.Reward.MaxWaitInitial  = 2.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c9.task.Reward.InitialRew      = 0.2;  % duration for initial reward pulse
-    
-    %conditions = {c1, c2, c3, c4};
-    conditions = {c1, c1, c2, c2, c2, c3, c4, c5, c6, c7, c8, c9};
-    conditions = {c1, c2, c2, c3, c3, c3, c4, c4, c5};
+    conditions = {c1};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
