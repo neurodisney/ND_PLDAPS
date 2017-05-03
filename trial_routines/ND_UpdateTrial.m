@@ -47,10 +47,6 @@ end
 %% keep calibration information for eye position
 if(p.trial.behavior.fixation.useCalibration)
     p.defaultParameters.behavior.fixation.GridPos     = p.trial.behavior.fixation.GridPos;
-    p.defaultParameters.eyeCalib.EyePos_X                = p.trial.eyeCalib.EyePos_X;
-    p.defaultParameters.eyeCalib.EyePos_Y                = p.trial.eyeCalib.EyePos_Y;
-    p.defaultParameters.eyeCalib.EyePos_X_raw            = p.trial.eyeCalib.EyePos_X_raw;
-    p.defaultParameters.eyeCalib.EyePos_Y_raw            = p.trial.eyeCalib.EyePos_Y_raw;
     p.defaultParameters.eyeCalib.rawEye                  = p.trial.eyeCalib.rawEye;
     p.defaultParameters.eyeCalib.fixPos                  = p.trial.eyeCalib.fixPos;
     p.defaultParameters.eyeCalib.medRawEye               = p.trial.eyeCalib.medRawEye;
