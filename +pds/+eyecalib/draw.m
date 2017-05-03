@@ -11,6 +11,8 @@ function draw(p)
 %    Red Dots     - Calibration points for inactive fix positions
 %    Dark Red X   - Median of calibration point clouds
 
+% Nate Faber, April 2017
+
 % pointer to the screen
 window = p.trial.display.overlayptr;
 
