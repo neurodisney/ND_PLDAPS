@@ -246,7 +246,7 @@ function TaskDesign(p)
         case p.trial.epoch.WaitFix
         %% Fixation target shown, wait until gaze gets in there
         
-            if(p.trial.FixState.Current == p.trial.FixState.FixIn)
+            if(p.trial.FixState.Current == p.trial.FixState.FixIn || p.trial.behavior.fixation.GotFix == 1)
             % got fixation
                 if(p.trial.behavior.fixation.GotFix == 0) % starts to fixate
                     p.trial.behavior.fixation.GotFix = 1;
@@ -280,7 +280,7 @@ function TaskDesign(p)
         %% Animal maintains fixation 
         
             % check current fixation
-            if(p.trial.FixState.Current == p.trial.FixState.FixOut) % fixation break          
+            if(p.trial.FixState.Current == p.trial.FixState.FixOut || p.trial.behavior.fixation.GotFix == 0) % fixation break          
                 
                 if(p.trial.behavior.fixation.GotFix == 1)
                 % first time break detected    
