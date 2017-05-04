@@ -10,17 +10,6 @@ if(~isempty(p.trial.LastKeyPress))
     
     switch p.trial.LastKeyPress(1)
 
-        %% TODO: accept eye position, random target position, save current calibration, update current calibration
-
-        % ----------------------------------------------------------------%
-        case p.trial.eyeCalib.GridKeyCell
-        %% move target to grid positions
-            gpos = find(p.trial.eyeCalib.GridKey == p.trial.LastKeyPress(1));
-            p.trial.behavior.fixation.GridPos = gpos;
-            
-            FixPos = p.trial.eyeCalib.Grid_XY(gpos, :);
-
-        % ----------------------------------------------------------------%
         case p.trial.key.addCalibPoint     
         %% accept current fixation
             if(p.trial.behavior.fixation.enableCalib)
@@ -74,22 +63,7 @@ if(~isempty(p.trial.LastKeyPress))
             end
                         
         % ----------------------------------------------------------------%
-        case KbName('RightArrow')
-        %% move target by steps
-            FixPos(1) = FixPos(1) +  p.trial.behavior.fixation.FixWinStp;               
-            
-        case KbName('LeftArrow')
-            FixPos(1) = FixPos(1) - p.trial.behavior.fixation.FixWinStp;
-            
-        case KbName('UpArrow')
-            FixPos(2) = FixPos(2) + p.trial.behavior.fixation.FixWinStp;
-            
-        case KbName('DownArrow')
-            FixPos(2) = FixPos(2) - p.trial.behavior.fixation.FixWinStp;
-    end
+
     
-    if(any((p.trial.behavior.fixation.FixPos == FixPos) == 0))
-        p.trial.behavior.fixation.FixPos = FixPos;
-        pds.fixation.move(p);
-    end
+
 end

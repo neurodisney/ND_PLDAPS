@@ -12,23 +12,6 @@ function p = setup(p)
 if p.trial.behavior.fixation.enableCalib
     %% Prepare to calibrate the eye position
 
-    % Allow using the numpad to set the fixation point:
-    %
-    %  -------------
-    %  | 7 | 8 | 9 |
-    %  -------------
-    %  | 4 | 5 | 6 |
-    %  -------------
-    %  | 1 | 2 | 3 |
-    %  -------------
-    
-    grdX = p.trial.behavior.fixation.FixGridStp(1);
-    grdY = p.trial.behavior.fixation.FixGridStp(2);
-    
-    X = [-grdX;     0;  grdX; -grdX; 0; grdX; -grdX;    0; grdX];
-    Y = [-grdY; -grdY; -grdY;     0; 0;    0;  grdY; grdY; grdY];
-    
-    p.trial.eyeCalib.Grid_XY = [X, Y];
     % TODO: Allow for loading of previous calibrations as a starting point
     
     % Name of calibration setup (uses the current time to differentiate different calibrations taken on the same day
@@ -37,8 +20,6 @@ if p.trial.behavior.fixation.enableCalib
     
     % define keys used for eye calibration
     KbName('UnifyKeyNames');
-    p.trial.eyeCalib.GridKey     = KbName(arrayfun(@num2str, 1:9, 'unif', 0));
-    p.trial.eyeCalib.GridKeyCell = num2cell(p.trial.eyeCalib.GridKey);
     p.trial.key.resetCalib    = KbName('z');  % Clear the calibration matrices and start over
     p.trial.key.rmLastCalib   = KbName('BackSpace'); % reset offset to previous one
     p.trial.key.enableCalib   = KbName('Insert');    % allow changing calibration parameters
