@@ -105,6 +105,7 @@ else
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
                 pds.eyecalib.keycheck(p);
+                pds.fixation.keycheck(p);
             end
             TaskDesign(p);
             
