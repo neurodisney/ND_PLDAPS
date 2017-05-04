@@ -7,6 +7,8 @@ function p = keycheck(p)
 
 if(~isempty(p.trial.LastKeyPress))
     
+    fixPos = p.trial.behavior.fixation.fixPos;
+    
     switch p.trial.LastKeyPress(1)
         
         
