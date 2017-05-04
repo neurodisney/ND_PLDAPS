@@ -1,4 +1,4 @@
-function p = start_FixTrainCalib(subjname, rig, experimenter)
+function p = start_FixTrain(subjname, rig, experimenter)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,
@@ -15,12 +15,12 @@ SS = ND_RigDefaults;    % load default settings according to the current rig set
 %% Define task related functions
 
 % function to set up experiment (and maybe also including the trial function)
-exp_fun = 'FixTrainCalib';
+exp_fun = 'FixTrain';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef  = 'FixTrainCalib_taskdef';  % function that provides task specific parameter definitions
-SS.plot.routine  = 'FixTrainCalib_plots';    % function for online plotting of session progress
+SS.task.TaskDef  = 'FixTrain_taskdef';  % function that provides task specific parameter definitions
+SS.plot.routine  = 'FixTrain_plots';    % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial

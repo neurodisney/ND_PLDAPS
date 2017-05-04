@@ -1,4 +1,4 @@
-function p = FixTrainCalib(p, state)
+function p = FixTrain(p, state)
 % Main trial function for initial fixation training.
 %
 %
