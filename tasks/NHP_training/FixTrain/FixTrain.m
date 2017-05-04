@@ -154,7 +154,6 @@ else
         % prepare the stimuli that should be shown, do some required calculations
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
-                pds.eyecalib.keycheck(p);
             end
             TaskDesign(p);
             
@@ -198,11 +197,11 @@ function TaskSetUp(p)
     
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
-        p.trial.behavior.fixation.FixPos = p.trial.eyeCalib.Grid_XY(randi(size(p.trial.eyeCalib.Grid_XY,1)), :);
+        p.trial.behavior.fixation.fixPos = p.trial.eyeCalib.Grid_XY(randi(size(p.trial.eyeCalib.Grid_XY,1)), :);
         
          Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
          Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
-         p.trial.behavior.fixation.FixPos = [Xpos, Ypos];
+         p.trial.behavior.fixation.fixPos = [Xpos, Ypos];
     end
     pds.fixation.move(p);
     
@@ -411,7 +410,7 @@ function Trial2Ascii(p, act)
             tblptr = fopen(p.trial.session.asciitbl , 'w');
 
             fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  FixRT  ',...
-                             'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI FixWin  FixPos_X  FixPos_Y \n']);
+                             'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI FixWin  fixPos_X  fixPos_Y \n']);
             fclose(tblptr);
 
         case 'save'
@@ -429,7 +428,7 @@ function Trial2Ascii(p, act)
                                 p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
                                 p.trial.task.CurRewDelay, p.trial.task.Reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.behavior.fixation.FixCol, p.trial.task.Timing.ITI, ...
-                                p.trial.behavior.fixation.FixWin, p.trial.behavior.fixation.FixPos(1), p.trial.behavior.fixation.FixPos(2));
+                                p.trial.behavior.fixation.FixWin, p.trial.behavior.fixation.fixPos(1), p.trial.behavior.fixation.fixPos(2));
                fclose(tblptr);
             end
     end

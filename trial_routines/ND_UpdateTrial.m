@@ -37,7 +37,7 @@ end
 %% keep fixation requirements
 if(p.trial.behavior.fixation.use)
     p.defaultParameters.behavior.fixation.required   = p.trial.behavior.fixation.required;
-    p.defaultParameters.behavior.fixation.FixPos     = p.trial.behavior.fixation.FixPos;
+    p.defaultParameters.behavior.fixation.fixPos     = p.trial.behavior.fixation.fixPos;
     p.defaultParameters.behavior.fixation.FixWin     = p.trial.behavior.fixation.FixWin;
     p.defaultParameters.behavior.fixation.FixSz      = p.trial.behavior.fixation.FixSz;
     %p.defaultParameters.behavior.fixation.FixRect    = p.trial.behavior.fixation.FixRect;

@@ -42,7 +42,7 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
-p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
                                   p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
 
 p.trial.behavior.fixation.BreakTime = 0.025;  % minimum time [ms] to identify a fixation break

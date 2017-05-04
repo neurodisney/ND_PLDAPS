@@ -26,7 +26,7 @@ SS.plot.routine  = 'justfix_plots';    % function for online plotting of session
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'behavior.fixation.FixWin'; 'behavior.fixation.FixPos'};
+SS.editable = {'behavior.fixation.FixWin'; 'behavior.fixation.fixPos'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed

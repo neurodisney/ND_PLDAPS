@@ -16,26 +16,26 @@ if(~isempty(p.trial.LastKeyPress))
             gpos = find(p.trial.key.GridKey == p.trial.LastKeyPress(1));
             p.trial.behavior.fixation.GridPos = gpos;
             
-            FixPos = p.trial.eyeCalib.Grid_XY(gpos, :);
+            fixPos = p.trial.eyeCalib.Grid_XY(gpos, :);
             
             %% move target by steps
         case KbName('RightArrow')
-            FixPos(1) = FixPos(1) +  p.trial.behavior.fixation.FixWinStp;
+            fixPos(1) = fixPos(1) +  p.trial.behavior.fixation.FixWinStp;
             
         case KbName('LeftArrow')
-            FixPos(1) = FixPos(1) - p.trial.behavior.fixation.FixWinStp;
+            fixPos(1) = fixPos(1) - p.trial.behavior.fixation.FixWinStp;
             
         case KbName('UpArrow')
-            FixPos(2) = FixPos(2) + p.trial.behavior.fixation.FixWinStp;
+            fixPos(2) = fixPos(2) + p.trial.behavior.fixation.FixWinStp;
             
         case KbName('DownArrow')
-            FixPos(2) = FixPos(2) - p.trial.behavior.fixation.FixWinStp;
+            fixPos(2) = fixPos(2) - p.trial.behavior.fixation.FixWinStp;
             
     end
     
     %% Update fixation position if it has changed
-    if any(p.trial.behavior.fixation.FixPos ~= FixPos)
-        p.trial.behavior.fixation.FixPos = FixPos;
+    if any(p.trial.behavior.fixation.fixPos ~= fixPos)
+        p.trial.behavior.fixation.fixPos = fixPos;
         pds.fixation.move(p);
     end
 end

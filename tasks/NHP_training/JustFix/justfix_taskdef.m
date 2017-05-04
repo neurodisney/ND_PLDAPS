@@ -50,7 +50,7 @@ p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
 %% Fixation parameters
 p.trial.behavior.fixation.FixScale = [5, 5];  % scaling factor to match screen/dva [TODO: get from calibration]
 
-p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
                                   p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
 
 p.trial.behavior.fixation.BreakTime = 0.05;  % minimum time [ms] to identify a fixation break
@@ -61,7 +61,7 @@ p.trial.behavior.fixation.EnsureFix = 0.05;  % minimum time to stay within fixat
 
 % target item
 p.trial.task.TargetSz  = 0.5;   % Stimulus diameter in dva
-p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
+p.trial.task.TargetPos = p.trial.behavior.fixation.fixPos;    % Stimulus diameter in dva25seconds
 
 % get dva values into psychtoolbox pixel values/coordinates
 p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);

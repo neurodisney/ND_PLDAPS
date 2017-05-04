@@ -5,8 +5,6 @@ function p = keycheck(p)
 % wolf zinke, april 2017
 
 if(~isempty(p.trial.LastKeyPress))
-
-    FixPos = p.trial.behavior.fixation.FixPos;
     
     switch p.trial.LastKeyPress(1)
 
@@ -16,7 +14,7 @@ if(~isempty(p.trial.LastKeyPress))
                 iCalib = size(p.trial.eyeCalib.rawEye, 1) + 1;
                 
                 % Position of the fixation target
-                fixPos = p.trial.behavior.fixation.FixPos;
+                fixPos = p.trial.behavior.fixation.fixPos;
                 
                 % Position of eye. Gets the median X and Y values over a
                 % range of samples to get a better estimate

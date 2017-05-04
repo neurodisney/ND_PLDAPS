@@ -194,7 +194,7 @@ SS.behavior.fixation.BreakTime = 0.05;     % minimum time [ms] to identify a fix
 SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
 
 % fixation target parameters
-SS.behavior.fixation.FixPos    = [0, 0];    % center position of fixation window [dva]
+SS.behavior.fixation.fixPos    = [0, 0];    % center position of fixation window [dva]
 SS.behavior.fixation.FixType   = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 SS.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
 SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot

@@ -36,7 +36,7 @@ end
 
 
 %% Draw current fixation position (Light Green Box)
-currFixPos = p.trial.behavior.fixation.FixPos;
+currFixPos = p.trial.behavior.fixation.fixPos;
 fixPosRect = ND_GetRect(currFixPos,boxSize);
 
 % Draw the box
@@ -81,7 +81,7 @@ if ~isempty(medRawEye)
     % Get the colors
     % Most are dark red so start with that
     dotColors = repmat(p.trial.display.clut.Calib_R,nPoints,3);
-    % Make the ones corresponding to the current FixPos dark green
+    % Make the ones corresponding to the current fixPos dark green
     dotColors(ismember(allFixPos,currFixPos,'rows'),:) = p.trial.display.clut.Calib_G;
     % Make the most recent calibration point yellow
     dotColors(end,:) = p.trial.display.clut.Calib_Y;

@@ -348,47 +348,47 @@ function KeyAction(p)
     grdX = p.trial.behavior.fixation.FixGridStp(1);
     grdY = p.trial.behavior.fixation.FixGridStp(2);
     
-    FixPos = p.trial.behavior.fixation.FixPos;
+    fixPos = p.trial.behavior.fixation.fixPos;
 
     switch p.trial.LastKeyPress(1)
 
         % grid positions
         case KbName('1')
-            FixPos = [-grdX,  -grdY];
+            fixPos = [-grdX,  -grdY];
 
         case KbName('2')
-            FixPos = [    0,  -grdY];
+            fixPos = [    0,  -grdY];
 
         case KbName('3')
-            FixPos = [ grdX,  -grdY];
+            fixPos = [ grdX,  -grdY];
 
         case KbName('4')
-            FixPos = [-grdX,     0];
+            fixPos = [-grdX,     0];
 
         case KbName('5')
-            FixPos = [    0,     0];
+            fixPos = [    0,     0];
 
         case KbName('6')
-            FixPos = [ grdX,    0];
+            fixPos = [ grdX,    0];
 
         case KbName('7')
-            FixPos = [-grdX, grdY];
+            fixPos = [-grdX, grdY];
 
         case KbName('8')
-            FixPos = [    0, grdY];
+            fixPos = [    0, grdY];
 
         case KbName('9')
-            FixPos = [ grdX, grdY];
+            fixPos = [ grdX, grdY];
 
         % steps
         case KbName('RightArrow')
-            FixPos(1) = FixPos(1) + p.trial.behavior.fixation.FixWinStp;   
+            fixPos(1) = fixPos(1) + p.trial.behavior.fixation.FixWinStp;   
         case KbName('LeftArrow')
-            FixPos(1) = FixPos(1) - p.trial.behavior.fixation.FixWinStp;
+            fixPos(1) = fixPos(1) - p.trial.behavior.fixation.FixWinStp;
         case KbName('UpArrow')
-            FixPos(2) = FixPos(2) + p.trial.behavior.fixation.FixWinStp;
+            fixPos(2) = fixPos(2) + p.trial.behavior.fixation.FixWinStp;
         case KbName('DownArrow')
-            FixPos(2) = FixPos(2) - p.trial.behavior.fixation.FixWinStp;
+            fixPos(2) = fixPos(2) - p.trial.behavior.fixation.FixWinStp;
             
         % Center fixation (define zero)
         case KbName('z')
@@ -401,7 +401,7 @@ function KeyAction(p)
 
             p.trial.behavior.fixation.PrevOffset = p.trial.eyeCalib.offset;
 
-            p.trial.eyeCalib.offset    = p.trial.eyeCalib.offset + FixPos - [cX,cY]; 
+            p.trial.eyeCalib.offset    = p.trial.eyeCalib.offset + fixPos - [cX,cY]; 
 
             fprintf('\n >>> fixation offset changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
                      p.trial.eyeCalib.offset, cX,cY);
@@ -412,8 +412,8 @@ function KeyAction(p)
             
     end
     
-    if(any((p.trial.behavior.fixation.FixPos == FixPos) == 0))
-        p.trial.behavior.fixation.FixPos = FixPos;
+    if(any((p.trial.behavior.fixation.fixPos == fixPos) == 0))
+        p.trial.behavior.fixation.fixPos = fixPos;
         MoveFix(p);
         pds.fixation.move(p);
     end
@@ -421,13 +421,13 @@ function KeyAction(p)
 % ####################################################################### %
 function MoveFix(p)
 %% displace fixation window and fixation target
-p.trial.task.fixrect    = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+p.trial.task.fixrect    = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
                                      p.trial.behavior.fixation.FixWin);  
 % target item
-p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;   % Stimulus diameter in dva
+p.trial.task.TargetPos  = p.trial.behavior.fixation.fixPos;   % Stimulus diameter in dva
 
 % get dva values into psychtoolbox pixel values/coordinates
-p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;
+p.trial.task.TargetPos  = p.trial.behavior.fixation.fixPos;
 p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
 
 % ####################################################################### %
@@ -454,7 +454,7 @@ function Trial2Ascii(p, act)
 
             fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  FixRT  ', ...
                              'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI  ',   ...
-                             'FixWin  FixPos_X  FixPos_Y  FixOn  FixOff\n']);
+                             'FixWin  fixPos_X  fixPos_Y  FixOn  FixOff\n']);
             fclose(tblptr);
 
         case 'save'

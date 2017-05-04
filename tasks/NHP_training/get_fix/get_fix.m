@@ -322,66 +322,66 @@ function KeyAction(p)
 
             % grid positions
             case KbName('1')
-            p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
+            p.trial.behavior.fixation.fixPos = [-grdX, -grdY];
             MoveFix(p);
             
             case KbName('2')
-            p.trial.behavior.fixation.FixPos = [    0, -grdY];
+            p.trial.behavior.fixation.fixPos = [    0, -grdY];
             MoveFix(p);
             
             case KbName('3')
-            p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
+            p.trial.behavior.fixation.fixPos = [ grdX, -grdY];
             MoveFix(p);
             
             case KbName('4')
-            p.trial.behavior.fixation.FixPos = [-grdX,     0];
+            p.trial.behavior.fixation.fixPos = [-grdX,     0];
             MoveFix(p);
             
             case KbName('5')
-            p.trial.behavior.fixation.FixPos = [    0,     0];
+            p.trial.behavior.fixation.fixPos = [    0,     0];
             MoveFix(p);
             
             case KbName('6')
-            p.trial.behavior.fixation.FixPos = [ grdX,    0];
+            p.trial.behavior.fixation.fixPos = [ grdX,    0];
             MoveFix(p);
             
             case KbName('7')
-            p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
+            p.trial.behavior.fixation.fixPos = [-grdX,  grdY];
             MoveFix(p);
             
             case KbName('8')
-            p.trial.behavior.fixation.FixPos = [    0,  grdY];
+            p.trial.behavior.fixation.fixPos = [    0,  grdY];
             MoveFix(p);
             
             case KbName('9')
-            p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
+            p.trial.behavior.fixation.fixPos = [ grdX,  grdY];
             MoveFix(p);
             
             % steps
             case KbName('RightArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
+            p.trial.behavior.fixation.fixPos(1) = p.trial.behavior.fixation.fixPos(1) + ...
                                                   p.trial.behavior.fixation.FixWinStp;   
             MoveFix(p);
             
             case KbName('LeftArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
+            p.trial.behavior.fixation.fixPos(1) = p.trial.behavior.fixation.fixPos(1) - ...
                                                   p.trial.behavior.fixation.FixWinStp;
             MoveFix(p);
             
             case KbName('UpArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
+            p.trial.behavior.fixation.fixPos(2) = p.trial.behavior.fixation.fixPos(2) + ...
                                                   p.trial.behavior.fixation.FixWinStp;
             MoveFix(p);
             
             case KbName('DownArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
+            p.trial.behavior.fixation.fixPos(2) = p.trial.behavior.fixation.fixPos(2) - ...
                                                   p.trial.behavior.fixation.FixWinStp;
             MoveFix(p);
             
             case KbName('g')
                 
                 fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
-                        p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
+                        p.trial.behavior.fixation.fixPos, p.trial.behavior.fixation.FixScale);
         end
     end
 
@@ -389,13 +389,13 @@ function KeyAction(p)
 % ####################################################################### %
 function MoveFix(p)
 %% displace fixation window and fixation target
-p.trial.task.fixrect       = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+p.trial.task.fixrect       = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
                                         p.trial.behavior.fixation.FixWin);  
 % target item
-p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
+p.trial.task.TargetPos = p.trial.behavior.fixation.fixPos;    % Stimulus diameter in dva25seconds
 
 % get dva values into psychtoolbox pixel values/coordinates
-p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;
+p.trial.task.TargetPos  = p.trial.behavior.fixation.fixPos;
 p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
 
 
