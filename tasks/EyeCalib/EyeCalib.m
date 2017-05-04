@@ -32,18 +32,7 @@ if(isempty(state))
     %% Color definitions of stuff shown during the trial
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
-    % colors, use entries later in the lookup table for the definition of task related colors.
-    ND_DefineCol(p, 'Fix_W',  26, [1.00, 1.00, 1.00]);
-    ND_DefineCol(p, 'Fix_R',  27, [1.00, 0.00, 0.00]);
-    ND_DefineCol(p, 'Fix_G',  28, [0.00, 1.00, 0.00]);
-    ND_DefineCol(p, 'Fix_B',  29, [0.00, 0.00, 1.00]);
-    ND_DefineCol(p, 'Fix_O',  30, [1.00, 0.40, 0.00]);
-    ND_DefineCol(p, 'Fix_Y',  31, [1.00, 1.00, 0.00]);
-    ND_DefineCol(p, 'Fix_C',  24, [0.00, 1.00, 1.00]);
-    ND_DefineCol(p, 'Fix_M',  25, [1.00, 0.00, 1.00]);
-
-    p.trial.task.Color_list = Shuffle({'Fix_W', 'Fix_R', 'Fix_G', 'Fix_B', 'Fix_O', 'Fix_Y', 'Fix_C', 'Fix_M'});  
-    
+    % colors, use entries later in the lookup table for the definition of task related colors.  
     
     % Colors used for calibration points
     bgColor = p.trial.display.bgColor; % For making things invisible on the monkey screen;
@@ -54,6 +43,11 @@ if(isempty(state))
     ND_DefineCol(p, 'Calib_R',  74, [1.00, 0.00, 0.00], bgColor); % Red
     ND_DefineCol(p, 'Calib_DR', 75, [0.69, 0.00, 0.00], bgColor); % Dark Red
     ND_DefineCol(p, 'Calib_Y',  76, [1.00, 1.00, 0.00], bgColor); % Yellow
+    
+    % Always use light blue for fixation spot during calibration
+    ND_DefineCol(p, 'Fix_LB',  77, [0.69, 0.69, 1.00]);
+    
+    p.trial.behavior.fixation.FixCol = 'Fix_LB';
     
     % --------------------------------------------------------------------%
     %% Enable random positions
@@ -159,8 +153,6 @@ function TaskSetUp(p)
          p.trial.behavior.fixation.FixPos = [Xpos, Ypos];
     end
     pds.fixation.move(p);
-    
-    p.trial.behavior.fixation.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -330,11 +322,6 @@ function KeyAction(p)
     if(~isempty(p.trial.LastKeyPress))
 
         switch p.trial.LastKeyPress(1)
-            
-            case KbName('p')  % change color ('paint')
-                 p.trial.task.Color_list = Shuffle(p.trial.task.Color_list);
-                 p.trial.task.FixCol     = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), ...
-                                           length(p.trial.task.Color_list))+1};
                                        
             case KbName('r')  % random position on each trial
                  if(p.trial.task.RandomPos == 0)
