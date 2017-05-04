@@ -62,68 +62,79 @@ if(isempty(state))
     % control of trials, especially the use of blocks, i.e. the repetition
     % of a defined number of trials per condition, needs to be clarified.
 
-    maxTrials_per_BlockCond = 4;
-    maxBlocks = 1000;
+    
+    % reward series for continous fixation
+    p.trial.task.Reward.WaitNext = [0.75, 0.5, 0.25];  % wait period until next reward
+    p.trial.task.Reward.Dur      = 0.1;               % reward duration [s], user vector to specify values used for incremental reward scheme
+    p.trial.task.Reward.Step     = [0, 4, 6];          % define the number of subsequent rewards after that the next delay period should be used.
 
     % condition 1
     c1.Nr = 1;
-    c1.task.Reward.MinWaitInitial = 0.25; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.MaxWaitInitial = 0.5;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.InitialRew     = 0.1;  % duration for initial reward pulse
+    c1.task.Reward.MinWaitInitial = 0.15;        % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.task.Reward.MaxWaitInitial = 0.15;        % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.task.Reward.InitialRew     = 0.1;         % duration for initial reward pulse
+    c1.task.Reward.Dur            = 0.1;         % reward duration [s], user vector to specify values used for incremental reward scheme
+    c1.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
+    c1.task.Reward.WaitNext       = 0.75;         % wait period until next reward
+    
+    c1.nTrials = 4;
+    
     
     % condition 2
     c2.Nr = 2;
-    c2.task.Reward.MinWaitInitial = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.MaxWaitInitial = 0.75; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-
+    c2.task.Reward.MinWaitInitial = 0.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c2.task.Reward.MaxWaitInitial = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c2.task.Reward.InitialRew     = 0.15;  % duration for initial reward pulse
+    c2.task.Reward.Dur            = 0.15;         % reward duration [s], user vector to specify values used for incremental reward scheme
+    c2.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
+    c2.task.Reward.WaitNext       = 0.5;         % wait period until next reward
+    c2.nTrials = 4;
+    
+    
     % condition 3
     c3.Nr = 3;
-    c3.task.Reward.MinWaitInitial = 0.75; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.MaxWaitInitial = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c3.task.Reward.MinWaitInitial = 0.5; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c3.task.Reward.MaxWaitInitial = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
     c3.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-
+    c3.task.Reward.Dur            = 0.2;         % reward duration [s], user vector to specify values used for incremental reward scheme
+    c3.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
+    c3.task.Reward.WaitNext       = 0.25;         % wait period until next reward
+    c3.nTrials = 100;
+    
     % condition 4
     c4.Nr = 4;
-    c4.task.Reward.MinWaitInitial = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.MaxWaitInitial = 1.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-
-    % condition 5
-    c5.Nr = 5;
-    c5.task.Reward.MinWaitInitial = 1.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.MaxWaitInitial = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    c4.task.Reward.MinWaitInitial = 0.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c4.task.Reward.MaxWaitInitial = 0.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c4.task.Reward.InitialRew     = 0.25;  % duration for initial reward pulse
+    c4.task.Reward.Dur            = 0.25;         % reward duration [s], user vector to specify values used for incremental reward scheme
+    c4.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
+    c4.task.Reward.WaitNext       = 0.1;         % wait period until next reward
+    c4.nTrials = 1000;
     
-    % condition 6
-    c6.Nr = 6;
-    c6.task.Reward.MinWaitInitial = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c6.task.Reward.MaxWaitInitial = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c6.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    % Fill a conditions list with n of each kind of condition sequentially
+    conditions = cell(1,5000);
+    blocks = nan(1,5000);
+    totalTrials = 0;
     
-    % condition 7
-    c7.Nr = 7;
-    c7.task.Reward.MinWaitInitial = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c7.task.Reward.MaxWaitInitial = 2.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c7.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    % Iterate through each condition to fill conditions
+    conditionsIterator = {c1,c2,c3,c4};
     
-    % condition 8
-    c8.Nr = 8;
-    c8.task.Reward.MinWaitInitial = 2.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c8.task.Reward.MaxWaitInitial = 2.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c8.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    for iCond = 1:size(conditionsIterator,2)
+        cond = conditionsIterator(iCond);
+        nTrials = cond{1}.nTrials;
+        conditions(1, totalTrials+1:totalTrials+nTrials) = repmat(cond,1,nTrials);
+        blocks(1, totalTrials+1:totalTrials+nTrials) = repmat(iCond,1,nTrials);
+        totalTrials = totalTrials + nTrials;
+    end
     
-    % condition 9
-    c9.Nr = 9;
-    c9.task.Reward.MinWaitInitial  = 2.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c9.task.Reward.MaxWaitInitial  = 2.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c9.task.Reward.InitialRew      = 0.2;  % duration for initial reward pulse
+    % Truncate the conditions cell array to it's actualy size
+    conditions = conditions(1:totalTrials);
+    blocks = blocks(1:totalTrials);
     
-    %conditions = {c1, c2, c3, c4};
-    conditions = {c1, c1, c2, c2, c2, c3, c4, c5, c6, c7, c8, c9};
-    conditions = {c1, c2, c2, c3, c3, c3, c4, c4, c5};
-
-    p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
+    p.conditions = conditions;  
+    p.trial.blocks = blocks;
+    
+    p.defaultParameters.pldaps.finish = totalTrials;
 
 else
 % ####################################################################### %
