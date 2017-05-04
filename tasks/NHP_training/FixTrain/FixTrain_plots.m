@@ -15,7 +15,7 @@ hit_col   = [0, 0.65, 0];
 early_col = [0.65, 0, 0];
 %late_col  = [0, 0, 0.65];
 
-fig_sz = [900,80,1910,1048];
+fig_sz = [25, 25, 1800, 980];
 
 %% optional offline analysis
 if(~exist('p', 'var'))
