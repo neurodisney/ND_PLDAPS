@@ -77,7 +77,7 @@ if(isempty(state))
     c1.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
     c1.task.Reward.WaitNext       = 0.75;         % wait period until next reward
     
-    c1.nTrials = 4;
+    c1.nTrials = 50;
     
     
     % condition 2
@@ -88,7 +88,7 @@ if(isempty(state))
     c2.task.Reward.Dur            = 0.15;         % reward duration [s], user vector to specify values used for incremental reward scheme
     c2.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
     c2.task.Reward.WaitNext       = 0.5;         % wait period until next reward
-    c2.nTrials = 4;
+    c2.nTrials = 100;
     
     
     % condition 3
