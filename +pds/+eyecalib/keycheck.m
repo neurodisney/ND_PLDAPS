@@ -7,9 +7,9 @@ function p = keycheck(p)
 if(~isempty(p.trial.LastKeyPress))
     
     switch p.trial.LastKeyPress(1)
-
-        case p.trial.key.addCalibPoint     
-        %% accept current fixation
+        
+        case p.trial.key.addCalibPoint
+            %% accept current fixation
             if(p.trial.behavior.fixation.enableCalib)
                 iCalib = size(p.trial.eyeCalib.rawEye, 1) + 1;
                 
@@ -28,15 +28,15 @@ if(~isempty(p.trial.LastKeyPress))
                 
                 pds.eyecalib.update(p);
             end
-        
-        % ----------------------------------------------------------------%
+            
+            % ----------------------------------------------------------------%
         case p.trial.key.resetCalib
-        %% Clear the calibration matrix and reset to default values
-        pds.eyecalib.reset(p);
-        
-        % ----------------------------------------------------------------%
-        case p.trial.key.rmLastCalib 
-        %% Remove the last calibration point from the calculation    
+            %% Clear the calibration matrix and reset to default values
+            pds.eyecalib.reset(p);
+            
+            % ----------------------------------------------------------------%
+        case p.trial.key.rmLastCalib
+            %% Remove the last calibration point from the calculation
             if(p.trial.behavior.fixation.enableCalib)
                 
                 if size(p.trial.eyeCalib.rawEye,1) <= 1
@@ -48,20 +48,20 @@ if(~isempty(p.trial.LastKeyPress))
                     p.trial.eyeCalib.fixPos = p.trial.eyeCalib.fixPos(1:end-1,:);
                     pds.eyecalib.update(p);
                 end
-                        
+                
             end
             
-        % ----------------------------------------------------------------%
-        case p.trial.key.enableCalib 
-        %% enable the option to calibrate/correct current eye position
+            % ----------------------------------------------------------------%
+        case p.trial.key.enableCalib
+            %% enable the option to calibrate/correct current eye position
             if(p.trial.behavior.fixation.enableCalib == 1)
                 p.trial.behavior.fixation.enableCalib = 0;
             else
                 p.trial.behavior.fixation.enableCalib = 1;
             end
-                        
-        % ----------------------------------------------------------------%
-
+            
+            % ----------------------------------------------------------------%
+    end
     
-
+    
 end
