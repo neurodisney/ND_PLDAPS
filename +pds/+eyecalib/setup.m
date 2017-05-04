@@ -15,7 +15,7 @@ if p.trial.behavior.fixation.enableCalib
     % TODO: Allow for loading of previous calibrations as a starting point
     
     % Name of calibration setup (uses the current time to differentiate different calibrations taken on the same day
-    p.trial.eyeCalib.name = [p.trial.session.subject, datestr(now,'yyyymmdd') '_EyeCalib_' , datestr(now,'HHMM')];
+    p.trial.eyeCalib.name = [p.trial.session.subject, '_', datestr(now,'yyyymmdd') '_EyeCalib_' , datestr(now,'HHMM')];
     p.trial.eyeCalib.file = [p.trial.session.dir, filesep, p.trial.eyeCalib.name, '.mat'];    
     
     % define keys used for eye calibration
