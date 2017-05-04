@@ -44,6 +44,7 @@ SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
+SS.behavior.fixation.enableCalib = 1;
 SS.behavior.fixation.useCalibration = 1;
 
 SS.behavior.fixation.required = 1; % fixation required for this task
