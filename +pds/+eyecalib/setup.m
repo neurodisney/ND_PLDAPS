@@ -59,11 +59,8 @@ else
     end
     
     % Load the most recent calibration file
-    calibrationFileName = [eyeCalibDir, filesep, dailyCalibs(end).name];
-    eyeCalib = load(calibrationFileName);
-    p.trial.eyeCalib = eyeCalib;
-    
-    disp(['\n >>> Eye Calibration loaded: ', dailyCalibs(end).name])
+    calibFileName = [eyeCalibDir, filesep, dailyCalibs(end).name];
+    pds.eyecalib.load(p, calibFileName);
     
 end
 
