@@ -33,7 +33,7 @@ if p.trial.behavior.fixation.enableCalib
     
     % Name of calibration setup (uses the current time to differentiate different calibrations taken on the same day
     p.trial.eyeCalib.name = [p.trial.session.subject, datestr(now,'yyyymmdd') '_EyeCalib_' , datestr(now,'HHMM')];
-    p.trial.eyeCalib.file = [p.trial.session.dir, filesep, p.trial.eyeCalib.name, '.cal'];    
+    p.trial.eyeCalib.file = [p.trial.session.dir, filesep, p.trial.eyeCalib.name, '.mat'];    
     
     % define keys used for eye calibration
     KbName('UnifyKeyNames');
@@ -50,7 +50,7 @@ if p.trial.behavior.fixation.enableCalib
 else
     %% Load the most recent eye position of the day
     eyeCalibDir = fullfile(p.trial.pldaps.dirs.data, p.trial.session.subject, 'EyeCalib', datestr(now,'yyyy_mm_dd'));
-    dailyCalibs = dir([eyeCalibDir,filesep,'*.cal']);
+    dailyCalibs = dir([eyeCalibDir,filesep,'*.mat']);
     
     % Warn the user if no calibration files exist
     if isempty(dailyCalibs)

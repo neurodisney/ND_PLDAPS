@@ -3,6 +3,6 @@ function p = save(p)
 %
 % Nate Faber, May 2017
  
-eyeCalibStruct = p.trial.eyeCalib;
+eyeCalib = p.trial.eyeCalib;
 
-save(eyeCalibStruct.file,eyeCalibStruct);
+save(eyeCalib.file,'eyeCalib');
