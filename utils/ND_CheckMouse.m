@@ -20,7 +20,6 @@ p.trial.mouse.cursorPxSamples(:, iSamples) = [cursorX; cursorY];
 coordFrame = p.trial.display.coordMatrix;
 transformedMouse = (coordFrame \ [cursorX; cursorY; 1])';
 p.trial.mouse.cursorSamples(:, iSamples) = transformedMouse(1:2);
-fprintf('\n[%i %i] [%.2f %.2f]', cursorX, cursorY, transformedMouse(1:2))
 
 %% Process Mouse buttons
 
@@ -32,15 +31,3 @@ p.trial.mouse.buttonPressSamples( :, iSamples) = buttons';
 % Store this in mouse.newButtons. 1 = newly pressed, 0 = no change, -1 = newly released
 lastButtons = p.trial.mouse.buttonPressSamples(:, max(iSamples - 1, 1));
 p.trial.mouse.newButtons = buttons' - lastButtons;
-
-
-%if(p.trial.mouse.useAsEyepos)
-%    if(p.trial.pldaps.eyeposMovAv == 1) % just take a single sample
-%        p.trial.eyeX = p.trial.mouse.cursorSamples(1,p.trial.mouse.samples);
-%        p.trial.eyeY = p.trial.mouse.cursorSamples(2,p.trial.mouse.samples);
-%    else % Do moving average:  calculate mean over as many samples as the number in eyeposMovAv specifies
-%        mInds = (p.trial.mouse.samples-p.trial.pldaps.eyeposMovAv+1):p.trial.mouse.samples;
-%        p.trial.eyeX = mean(p.trial.mouse.cursorSamples(1,mInds));
-%        p.trial.eyeY = mean(p.trial.mouse.cursorSamples(2,mInds));
-%    end
-%end  %/ if(p.trial.mouse.useAsEyepos)
