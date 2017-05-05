@@ -16,7 +16,7 @@ if(p.trial.mouse.useAsEyepos)
     nSamples = p.trial.behavior.fixation.Sample;
     
     % Get the last mouse position
-    mousePos = p.mouse.cursorSamples(:,end);   
+    mousePos = p.trial.mouse.cursorSamples(:,end);   
     
     p.trial.eyeX = mousePos(1);
     p.trial.eyeY = mousePos(2);

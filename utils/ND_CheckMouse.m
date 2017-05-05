@@ -18,8 +18,9 @@ p.trial.mouse.cursorPxSamples(:, iSamples) = [cursorX; cursorY];
 
 % Also get the mouse position in screen coordinates (if transformed with a coordinate frame)
 coordFrame = p.trial.display.coordMatrix;
-transformedMouse = (coorFrame * [cursorX; cursorY; 1])';
-p.trial.mouse.cursorSamples(:, iSamples) = transformedMouse;
+transformedMouse = (coordFrame \ [cursorX; cursorY; 1])';
+p.trial.mouse.cursorSamples(:, iSamples) = transformedMouse(1:2);
+fprintf('\n[%i %i] [%.2f %.2f]', cursorX, cursorY, transformedMouse(1:2))
 
 %% Process Mouse buttons
 
