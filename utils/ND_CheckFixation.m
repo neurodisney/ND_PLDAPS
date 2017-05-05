@@ -16,7 +16,8 @@ function p = ND_CheckFixation(p)
 if(p.trial.mouse.useAsEyepos)
     
     % Get the last mouse position
-    mousePos = p.trial.mouse.cursorSamples(:,end);   
+    iSample = p.trial.mouse.samples;
+    mousePos = p.trial.mouse.cursorSamples(:,iSample);   
     
     p.trial.eyeX = mousePos(1);
     p.trial.eyeY = mousePos(2);
