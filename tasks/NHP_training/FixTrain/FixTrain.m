@@ -112,14 +112,14 @@ if(isempty(state))
     c4.nTrials = 300;
     
     % condition 4
-    c4.Nr = 5;
-    c4.task.Reward.MinWaitInitial = 0.98;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.MaxWaitInitial = 1.02;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.InitialRew     = 0.25;  % duration for initial reward pulse
-    c4.task.Reward.Dur            = 0.25;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c4.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c4.task.Reward.WaitNext       = 0.1;         % wait period until next reward
-    c4.nTrials = 1000;
+    c5.Nr = 5;
+    c5.task.Reward.MinWaitInitial = 0.98;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c5.task.Reward.MaxWaitInitial = 1.02;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c5.task.Reward.InitialRew     = 0.25;  % duration for initial reward pulse
+    c5.task.Reward.Dur            = 0.25;         % reward duration [s], user vector to specify values used for incremental reward scheme
+    c5.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
+    c5.task.Reward.WaitNext       = 0.1;         % wait period until next reward
+    c5.nTrials = 1000;
     
     
     % Fill a conditions list with n of each kind of condition sequentially
