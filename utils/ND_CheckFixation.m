@@ -13,14 +13,16 @@ function p = ND_CheckFixation(p)
 
 %% get eye position data
 if(p.trial.mouse.useAsEyepos)
-    sIdx = (p.trial.mouse.samples - p.trial.behavior.fixation.Sample + 1) : p.trial.mouse.samples;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
-
-    % Multiply the mouse position by the coordinate frame to change pixels to dva
-    coordFrame = p.trial.display.coordMatrix;
-    p.trial.eyeX   = coordFrame * mean(p.trial.mouse.X(  sIdx));
-    p.trial.eyeY   = coordFrame * mean(p.trial.mouse.Y(  sIdx));
+    nSamples = p.trial.behavior.fixation.Sample;
+    
+    % Get the last mouse position
+    mousePos = p.mouse.cursorSamples(:,end);   
+    
+    p.trial.eyeX = mousePos(1);
+    p.trial.eyeY = mousePos(2);
     
 else
+    
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
     % calculate a moving average of the eye position for display reasons

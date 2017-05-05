@@ -5,13 +5,21 @@ function p = ND_CheckMouse(p)
 %
 %
 % wolf zinke, Feb 2017
+% Nate Faber, May 2017
 
 [cursorX, cursorY,buttons] = GetMouse();
 
 iSamples =    p.trial.mouse.samples+1;
 p.trial.mouse.samples = iSamples;
 p.trial.mouse.samplesTimes(iSamples) = GetSecs;
-p.trial.mouse.cursorSamples(:, iSamples) = [cursorX; cursorY];
+
+% Store the pixel mouse position
+p.trial.mouse.cursorPxSamples(:, iSamples) = [cursorX; cursorY];
+
+% Also get the mouse position in screen coordinates (if transformed with a coordinate frame)
+coordFrame = p.trial.display.coordMatrix;
+transformedMouse = (coorFrame * [cursorX; cursorY; 1])';
+p.trial.mouse.cursorSamples(:, iSamples) = transformedMouse;
 
 %% Process Mouse buttons
 
