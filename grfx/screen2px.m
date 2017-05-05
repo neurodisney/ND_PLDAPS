@@ -12,7 +12,7 @@ if nargin == 2
     end
 end
 
-coordFrame = p.defaultParameters.display.coordMatrix;
+coordFrame = p.trial.display.coordMatrix;
 
 transformedPoint = coordFrame * [xScreen; yScreen; 1];
 
