@@ -175,7 +175,15 @@ if isfield(p.defaultParameters.display, 'useCustomOrigin') && p.defaultParameter
         error('pldaps:openScreen', 'Bad origin specified in p.defaultParameters.display.useCustomOrigin')
     end
     
+    % Apply the transformation
     Screen('glTranslate', p.defaultParameters.display.ptr, xTrans, yTrans)
+    
+    %Update the coordinate matrix
+    p.defaultParameters.display.coordMatrix = p.defaultParameters.display.coordMatrix * (eye(3) + [0 0 xTrans; ...
+                                                                                                   0 0 yTrans; ...
+                                                                                                   0 0  0    ]); 
+    
+    % Update the winRect to the new coordinates
     p.defaultParameters.display.winRect = p.defaultParameters.display.winRect - [xTrans, yTrans, xTrans, yTrans];
 end
 
@@ -187,7 +195,15 @@ if isfield(p.defaultParameters.display, 'useDegreeUnits') && p.defaultParameters
         xScaleFactor = p.defaultParameters.display.ppdCentral(1);
         yScaleFactor = -p.defaultParameters.display.ppdCentral(2); % minus because we want + to be up
         
+        % Apply the transformation
         Screen('glScale', p.defaultParameters.display.ptr, xScaleFactor, yScaleFactor)
+        
+        % Update the coordinate matrix
+        p.defaultParameters.display.coordMatrix =  p.defaultParameters.display.coordMatrix * [xScaleFactor  0              0; ...
+                                                                                              0             yScaleFactor   0; ...
+                                                                                              0             0              1];
+        
+        % Update the winRect
         p.defaultParameters.display.winRect = p.defaultParameters.display.winRect ./ [xScaleFactor, yScaleFactor, xScaleFactor, yScaleFactor];
         
         % FillRect (and possibly other PTB functions) requires that a rect [x1 y1 x2 y2] satisfy x1 < x2 and y1 < y2. Therfore, flip the y values to satisfy this condition

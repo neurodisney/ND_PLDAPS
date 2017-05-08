@@ -64,9 +64,17 @@ ND_DefineCol(p, 'whitebg',    17, [1.00, 1.00, 1.00], bgcol);
 ND_DefineCol(p, 'red',        18, [1.00, 0.00, 0.00]);
 ND_DefineCol(p, 'redbg',      19, [1.00, 0.00, 0.00], bgcol);
 ND_DefineCol(p, 'blue',       20, [0.00, 0.00, 1.00]);
-ND_DefineCol(p, 'green',      21, [0.00, 1.00, 0.00]);
-ND_DefineCol(p, 'greenbg',    22, [0.00, 1.00, 0.00], bgcol);
-
+ND_DefineCol(p, 'bluebg',     21, [0.00, 0.00, 1.00], bgcol);
+ND_DefineCol(p, 'green',      22, [0.00, 1.00, 0.00]);
+ND_DefineCol(p, 'greenbg',    23, [0.00, 1.00, 0.00], bgcol);
+ND_DefineCol(p, 'orange',     24, [1.00, 0.40, 0.00]);
+ND_DefineCol(p, 'orangebg',   25, [1.00, 0.40, 0.00], bgcol);
+ND_DefineCol(p, 'yellow',     26, [1.00, 1.00, 0.00]);
+ND_DefineCol(p, 'yellowbg',   27, [1.00, 1.00, 0.00], bgcol);
+ND_DefineCol(p, 'cyan',       28, [0.00, 1.00, 1.00]);
+ND_DefineCol(p, 'cyanbg',     29, [0.00, 1.00, 1.00], bgcol);
+ND_DefineCol(p, 'magenta',    30, [1.00, 0.00, 1.00]);
+ND_DefineCol(p, 'magentabg',  31, [1.00, 0.00, 1.00], bgcol);
 
 %ND_DefineCol(p, 'text',       32, [1.00, 1.00, 1.00], bgcol);
 

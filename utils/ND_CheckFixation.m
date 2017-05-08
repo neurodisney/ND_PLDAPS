@@ -10,29 +10,29 @@ function p = ND_CheckFixation(p)
 % TODO: Define sample based on a time period not number of samples.
 %
 % wolf zinke, Jan. 2017
+% Nate Faber, May 2017
 
 %% get eye position data
 if(p.trial.mouse.useAsEyepos)
-    sIdx = (p.trial.mouse.samples - p.trial.behavior.fixation.Sample + 1) : p.trial.mouse.samples;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
-
-    % calculate amplitude for each time point in the current sample
-    p.trial.mouse.Amp(sIdx) = sqrt((p.trial.mouse.X(sIdx) - p.trial.behavior.fixation.fixPos(1) - p.trial.eyeCalib.offset(1)).^2 + ...
-                                   (p.trial.mouse.Y(sIdx) - p.trial.behavior.fixation.fixPos(2) - p.trial.eyeCalib.offset(2)).^2);
-
-    % calculate a moving average of the eye position for display reasons
-    p.trial.eyeX   = mean(p.trial.mouse.X(  sIdx));
-    p.trial.eyeY   = mean(p.trial.mouse.Y(  sIdx));
-    p.trial.eyeAmp = mean(p.trial.mouse.Amp(sIdx));
+    
+    % Get the last mouse position
+    iSample = p.trial.mouse.samples;
+    mousePos = p.trial.mouse.cursorSamples(:,iSample);   
+    
+    p.trial.eyeX = mousePos(1);
+    p.trial.eyeY = mousePos(2);
+    
 else
-    sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
-
+    % Avoid taking too many samples during the first trial by accident
+    sIdx = min(p.trial.datapixx.adc.dataSampleCount,p.trial.behavior.fixation.Sample) - 1;
+    
     % calculate a moving average of the eye position for display reasons
-    p.trial.eyeX   = p.trial.eyeCalib.gain(1) * (prctile(p.trial.AI.Eye.X(sIdx), 50) - p.trial.eyeCalib.offset(1));
-    p.trial.eyeY   = p.trial.eyeCalib.gain(2) * (prctile(p.trial.AI.Eye.Y(sIdx), 50) - p.trial.eyeCalib.offset(2));
-
-    p.trial.eyeAmp = sqrt((p.trial.behavior.fixation.fixPos(1) - p.trial.eyeX)^2 + ...
-                          (p.trial.behavior.fixation.fixPos(2) - p.trial.eyeY)^2 );
+    p.trial.eyeX   = p.trial.eyeCalib.gain(1) * (prctile(p.trial.AI.Eye.X(end-sIdx:end), 50) - p.trial.eyeCalib.offset(1));
+    p.trial.eyeY   = p.trial.eyeCalib.gain(2) * (prctile(p.trial.AI.Eye.Y(end-sIdx:end), 50) - p.trial.eyeCalib.offset(2));
 end
+
+p.trial.eyeAmp = sqrt((p.trial.behavior.fixation.fixPos(1) - p.trial.eyeX)^2 + ...
+    (p.trial.behavior.fixation.fixPos(2) - p.trial.eyeY)^2 );
 
 %% update eye position history (per frame)
 if(p.trial.pldaps.draw.eyepos.use)
