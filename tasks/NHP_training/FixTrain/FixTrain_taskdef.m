@@ -18,9 +18,6 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % ------------------------------------------------------------------------%
 %% Reward
-p.trial.task.Reward.JackPot         = 0.75;  % unlikely he gets here
-
-
 
 % manual reward from experimenter
 p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
