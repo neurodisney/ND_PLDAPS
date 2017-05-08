@@ -69,7 +69,7 @@ if(p.trial.behavior.fixation.use)
                 
             % Gaze is robustly within the fixation window
             elseif p.trial.CurTime >= p.trial.Timer.fixEntry + p.trial.behavior.fixation.entryTime
-                pds.datapixx.strobe(p.trial.event.FIX_TRUE);
+                pds.datapixx.strobe(p.trial.event.FIXATION);
                 p.trial.FixState.Current = p.trial.FixState.FixIn;
                 p.trial.Timer.fixStart = p.trial.Timer.fixEntry;
                 
