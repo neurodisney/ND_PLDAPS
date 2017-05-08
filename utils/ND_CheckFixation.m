@@ -46,25 +46,49 @@ end
 if(p.trial.behavior.fixation.use)
 
     switch p.trial.FixState.Current
-        %% currently not fixating
+        
+        
         case p.trial.FixState.FixOut
-            % all below threshold?
+            %% currently not fixating
+            
+            % Eye enters the fixation window
             if(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin/2 )
                 pds.datapixx.strobe(p.trial.event.FIX_IN);
                 p.trial.FixState.Current = p.trial.FixState.FixIn;
             end
-
-        %% gaze within fixation window
+            
+            
+            
         case p.trial.FixState.FixIn
+            %% gaze within fixation window
 
-            % all above threshold?
+            % Eye leaves the fixation window
             if(p.trial.eyeAmp > p.trial.behavior.fixation.FixWin/2)
                 pds.datapixx.strobe(p.trial.event.FIX_OUT);
-                p.trial.FixState.Current = p.trial.FixState.FixOut;
+                
+                % Set state to fixbreak to ascertain if this is just jitter (time out of fixation window is very short)
+                p.trial.FixState.Current = p.trial.FixState.FixBreak;
+                p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.BreakTime;
             end
+            
+        
+        case p.trial.FixState.FixBreak
+            %% gaze has momentarily left fixation window    
+            
+            % Eye has re-entered fixation window
+            if p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin/2
+                pds.datapixx.strobe(p.trial.event.FIX_IN);
+                p.trial.FixState.Current = p.trial.FixState.FixIn;
+            
+            % Eye has not re-entered fix window in time
+            elseif p.trail.CurTime > p.trial.Timer.FixBreak
+                pds.datapixx.strobe(p.trail.event.FIX_BREAK);
+                p.trail.FixState.Current = p.trial.FixState.FixOut;
+            end
+       
 
-        %% if it is nan, so just get the current state
         otherwise
+            %% Initially nan, just get the current state
             if(isnan(p.trial.FixState.Current))
                 if(p.trial.eyeAmp > p.trial.behavior.fixation.FixWin/2)
                     p.trial.FixState.Current = p.trial.FixState.FixOut;
