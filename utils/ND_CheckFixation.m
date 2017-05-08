@@ -97,8 +97,8 @@ if(p.trial.behavior.fixation.use)
                 p.trial.FixState.Current = p.trial.FixState.FixIn;
             
             % Eye has not re-entered fix window in time
-            elseif p.trail.CurTime > p.trial.Timer.fixLeave + p.trial.behavior.fixation.BreakTime
-                pds.datapixx.strobe(p.trail.event.FIX_BREAK);
+            elseif p.trial.CurTime > p.trial.Timer.fixLeave + p.trial.behavior.fixation.BreakTime
+                pds.datapixx.strobe(p.trial.event.FIX_BREAK);
                 p.trial.FixState.Current = p.trial.FixState.FixOut;
                 p.trial.Timer.FixBreak = p.trial.Timer.fixLeave;
             end
