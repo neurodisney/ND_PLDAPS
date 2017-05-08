@@ -74,16 +74,8 @@ try
     p.trial.flagNextTrial  = 0; % flag for ending the trial
     p.trial.iFrame         = 1; % frame index
 
-    %save defaultParameters as trial 0
     trialNr = 0;
-
     p.trial.pldaps.iTrial = 0;
-    p.trial = mergeToSingleStruct(p.defaultParameters);
-    result = saveTempFile(p);
-
-    if(~isempty(result))
-        disp(result.message)
-    end
 
     % --------------------------------------------------------------------%
     %% prepare first trial
@@ -118,23 +110,25 @@ try
             % create temporary trial struct
             tmpts = mergeToSingleStruct(p.defaultParameters);
 
-            % save default parameters to TEMP directory
-            if(trialNr == 1)
-                save(fullfile(p.defaultParameters.session.tmpdir, ...
-                     [p.defaultParameters.session.filestem,'_defaultParameters.mat']), 'tmpts');
-            end
-
             % quick and nasty fix to avoid saving of online plots
             if(p.defaultParameters.plot.do_online)
                tmpts.plot.fig = [];
             end
 
+            % save default parameters to trial data directory
+            if(trialNr == 1)
+                save(fullfile(p.defaultParameters.session.trialdir, ...
+                             [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds']), 'tmpts');
+            end
+
             % easiest (and quickest) way to create a deep copy is to save it as mat file and load it again
-            save(fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct'), 'tmpts');
+            tmp_ptrial = fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct');
+            save(tmp_ptrial, 'tmpts');
             clear tmpts
-            load(fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct'));
+            load(tmp_ptrial);
             p.trial = tmpts;
             clear tmpts;
+            delete(tmp_ptrial);
 
             % ----------------------------------------------------------------%
             %% lock defaultsParameters and run current trial
@@ -147,23 +141,12 @@ try
             p.defaultParameters.setLock(false);
 
             % ----------------------------------------------------------------%
-            %% complete trial: plot and save data
-            % save tmp data
-            result = saveTempFile(p);
-            
+            %% complete trial: save trial data
+            result = saveTrialFile(p);
+
             if(~isempty(result))
                 disp(result.message)
             end
-
-            if p.defaultParameters.pldaps.save.mergedData
-                %store the complete trial struct to .data
-                dTrialStruct = p.trial;
-            else
-                %store the difference of the trial struct to .data
-                dTrialStruct = getDifferenceFromStruct(p.defaultParameters, p.trial);
-            end
-            
-            p.data{trialNr} = dTrialStruct;
 
             % ----------------------------------------------------------------%
             %% make online plots
@@ -245,29 +228,6 @@ try
         ND_fig2pdf(p.defaultParameters.plot.fig, [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pdf']);
         p.defaultParameters.plot.fig = []; % avoid saving the figure to data
         %hgexport(gcf, [p.defaultParameters.session.filestem, '.pdf'], hgexport('factorystyle'), 'Format', 'pdf');
-    end
-
-    % save data as pds file
-    if(~p.defaultParameters.pldaps.nosave)
-        [structs,structNames] = p.defaultParameters.getAllStructs();
-
-        PDS = struct;
-        PDS.initialParameters     = structs(levelsPreTrials);
-        PDS.initialParameterNames = structNames(levelsPreTrials);
-
-        if(p.defaultParameters.pldaps.save.initialParametersMerged)
-            PDS.initialParametersMerged=mergeToSingleStruct(p.defaultParameters); %too redundant?
-        end
-
-        levelsCondition = 1:length(structs);
-        levelsCondition(ismember(levelsCondition,levelsPreTrials)) = [];
-
-        PDS.conditions = structs(levelsCondition);
-        PDS.conditionNames = structNames(levelsCondition);
-        PDS.data = p.data;
-        PDS.functionHandles = p.functionHandles;
-
-        save(p.defaultParameters.session.file, 'PDS','-mat','-v7.3')
     end
 
 % ----------------------------------------------------------------%
