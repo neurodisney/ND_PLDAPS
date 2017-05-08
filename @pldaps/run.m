@@ -120,7 +120,8 @@ try
 
             % save default parameters to TEMP directory
             if(trialNr == 1)
-                save(fullfile(p.defaultParameters.session.tmpdir, 'defaultParameters.mat'), 'tmpts');
+                save(fullfile(p.defaultParameters.session.tmpdir, ...
+                     [p.defaultParameters.session.filestem,'_defaultParameters.mat']), 'tmpts');
             end
 
             % quick and nasty fix to avoid saving of online plots
