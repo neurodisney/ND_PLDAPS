@@ -1,4 +1,3 @@
-% !!! right now just a placeholder !!!
 function p = ND_CheckFixation(p)
 % Read in the eye position signal and check how much it deviates from a
 % defined position.
@@ -85,7 +84,7 @@ if(p.trial.behavior.fixation.use)
                 
                 % Set state to fixbreak to ascertain if this is just jitter (time out of fixation window is very short)
                 p.trial.FixState.Current = p.trial.FixState.FixBreak;
-                p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.BreakTime;
+                p.trial.Timer.fixLeave = p.trial.CurTime;
             end
             
         
@@ -98,9 +97,10 @@ if(p.trial.behavior.fixation.use)
                 p.trial.FixState.Current = p.trial.FixState.FixIn;
             
             % Eye has not re-entered fix window in time
-            elseif p.trail.CurTime > p.trial.Timer.FixBreak
+            elseif p.trail.CurTime > p.trial.Timer.fixLeave + p.trial.behavior.fixation.BreakTime
                 pds.datapixx.strobe(p.trail.event.FIX_BREAK);
-                p.trail.FixState.Current = p.trial.FixState.FixOut;
+                p.trial.FixState.Current = p.trial.FixState.FixOut;
+                p.trial.Timer.FixBreak = p.trial.Timer.fixLeave;
             end
        
 
