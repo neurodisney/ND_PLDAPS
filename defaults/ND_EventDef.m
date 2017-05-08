@@ -73,10 +73,10 @@ p.defaultParameters.event.RESP_LATE     = 1114; % late response occurred
 % fixation related
 p.defaultParameters.event.FIXSPOT_ON    = 110;  % onset of fixation spot
 p.defaultParameters.event.FIXSPOT_OFF   = 111;  % offset of fixation spot
-p.defaultParameters.event.FIXATION      = 1000; % valid fixation acquired
-p.defaultParameters.event.EYE_GO        = 1001; % eye movement required, eye leaves current fixation window
-p.defaultParameters.event.TGT_FIX       = 1002; % fixation of target item
-p.defaultParameters.event.FIX_BREAK     = 1003; % fixation of target item
+p.defaultParameters.event.FIX_IN        = 2000;      % gaze enters fixation window
+p.defaultParameters.event.FIX_OUT       = 2001;      % gaze leaves fixation window
+p.defaultParameters.event.FIXATION      = 2002;      % gaze has been in the fix window long enought ot be considered a fix
+p.defaultParameters.event.FIX_BREAK     = 2003;      % gaze has left fix window for long enough to be considered a fix break
 
 % refinement of fixation break times
 % ToDo: WZ - need to check what encodes should/need to be used as events and
@@ -91,6 +91,9 @@ p.defaultParameters.event.FIX_BRK_SPEED = 3003;
 % joystick related
 p.defaultParameters.event.JOY_PRESS     = 2100;    % joystick press detected
 p.defaultParameters.event.JOY_RELEASE   = 2101;    % joystick release detected
+p.defaultParameters.event.JOY_ON        = 2110;      % joystick elevation above pressing threshold
+p.defaultParameters.event.JOY_OFF       = 2111;      % joystick elevation below releasing threshold
+
 
 % visual stimulus
 p.defaultParameters.event.STIM_ON       = 130;     % stimulus onset
@@ -122,14 +125,6 @@ p.defaultParameters.event.IONTO         = 668;     % start of iontophoretic drug
 % events have to be defined otherwise PLDAPS will produce errors!
 p.defaultParameters.event.TRIALSTART = 1;         % begin of a trial according to PLDAPS (could differ from task begin)
 p.defaultParameters.event.TRIALEND   = 2;         % end of a trial according to PLDAPS (could differ from task end)
-
-p.defaultParameters.event.FIX_IN     = 2000;      % gaze enters fixation window
-p.defaultParameters.event.FIX_OUT    = 2001;      % gaze leaves fixation window
-p.defaultParameters.event.FIX_TRUE   = 2002;      % gaze has been in the fix window long enought ot be considered a fix
-p.defaultParameters.event.FIX_BREAK  = 2003;      % gaze has left fix window for long enough to be considered a fix break
-
-p.defaultParameters.event.JOY_ON     = 2110;      % joystick elevation above pressing threshold
-p.defaultParameters.event.JOY_OFF    = 2111;      % joystick elevation below releasing threshold
 
 p.defaultParameters.event.PD_FLASH   = 2010;      % onset of photo diode flash
 p.defaultParameters.event.PD_ON      = 2011;      % onset of photo diode flash
