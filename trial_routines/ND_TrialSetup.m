@@ -41,7 +41,9 @@ p.trial.timing.datapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
 % ------------------------------------------------------------------------%
 %% Reward
 %%% prepare reward system and pre-allocate variables for reward timings
-pds.reward.setup(p)
+    p.trial.reward.iReward     = 0; % counter for reward times
+    totalRewards = sum(p.trial.reward.nRewards) + 1; % total number of rewards at each interval + 1 jackpot 
+    p.trial.reward.timeReward  = nan(2,totalRewards);
 % ------------------------------------------------------------------------%
 %% eye position
 
