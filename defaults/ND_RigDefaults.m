@@ -191,7 +191,8 @@ SS.behavior.fixation.use       =  0;       % does this task require control of e
 
 SS.behavior.fixation.required  =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
-SS.behavior.fixation.BreakTime = 0.05;     % minimum time [ms] to identify a fixation break
+SS.behavior.fixation.entryTime = 0.025;    % minimum time [s] before fixation is registered when gaze enters fixation window
+SS.behavior.fixation.BreakTime = 0.05;     % minimum time [s] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
 
 % fixation target parameters

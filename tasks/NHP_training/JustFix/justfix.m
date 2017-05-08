@@ -195,7 +195,7 @@ function TaskDesign(p)
             % got fixation
                 if(p.trial.behavior.fixation.GotFix == 0) % starts to fixate
                     p.trial.behavior.fixation.GotFix = 1;
-                    p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.EnsureFix; % start timer to check if it is robust fixation
+                    p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.entryTime; % start timer to check if it is robust fixation
                     fprintf('Fix in \n');
                     
                 elseif(p.trial.FixState.Current == p.trial.FixState.FixOut)
@@ -206,7 +206,7 @@ function TaskDesign(p)
                     fprintf('Fixating \n');
                     pds.datapixx.strobe(p.trial.event.FIXATION);
 
-                    p.trial.EV.FixStart = p.trial.CurTime - p.trial.behavior.fixation.EnsureFix;
+                    p.trial.EV.FixStart = p.trial.CurTime - p.trial.behavior.fixation.entryTime;
                     
                     p.trial.Timer.Wait  = p.trial.CurTime + p.trial.task.Timing.MaxFix;
                     p.trial.CurrEpoch   = p.trial.epoch.Fixating;

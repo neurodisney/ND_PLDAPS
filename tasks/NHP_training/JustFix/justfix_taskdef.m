@@ -54,7 +54,7 @@ p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
                                   p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
 
 p.trial.behavior.fixation.BreakTime = 0.05;  % minimum time [ms] to identify a fixation break
-p.trial.behavior.fixation.EnsureFix = 0.05;  % minimum time to stay within fixation window to detect initial fixation start
+p.trial.behavior.fixation.entryTime = 0.05;  % minimum time to stay within fixation window to detect initial fixation start
 
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
