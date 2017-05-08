@@ -150,6 +150,7 @@ try
             %% complete trial: plot and save data
             % save tmp data
             result = saveTempFile(p);
+            
             if(~isempty(result))
                 disp(result.message)
             end
@@ -161,7 +162,8 @@ try
                 %store the difference of the trial struct to .data
                 dTrialStruct = getDifferenceFromStruct(p.defaultParameters, p.trial);
             end
-            p.data{trialNr}=dTrialStruct;
+            
+            p.data{trialNr} = dTrialStruct;
 
             % ----------------------------------------------------------------%
             %% make online plots
