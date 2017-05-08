@@ -63,9 +63,6 @@ if(isempty(state))
     % c.task.Reward.Dur            -  array of how long each kind of reward lasts
     % c.task.Reward.Period         -  the period between one reward and the next NEEDS TO BE GREATER THAN Dur
     % c.task.Reward.jackpotDur     -  the jackpot is given after all other rewards
-    p.trial.task.Reward.WaitNext = [0.75, 0.5, 0.25];  % wait period until next reward
-    p.trial.task.Reward.Dur      = 0.1;               % reward duration [s], user vector to specify values used for incremental reward scheme
-    p.trial.task.Reward.Step     = [0, 4, 6];          % define the number of subsequent rewards after that the next delay period should be used.
 
     % condition 1
     c1.Nr = 1;
