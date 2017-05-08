@@ -157,8 +157,6 @@ SS.pldaps.pause.type                            = 1;     % Only type 1 is curren
 
 % save: control how pldaps saves data
 SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial parameters
-SS.pldaps.save.mergedData                       = 1;     % Save merged data. By default pldaps only saves changes to the trial struct in .data. When mergedData is enabled, the complete content of p.trial is saved to p.data. This can cause significantly larger files
-SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with the data from each trial?
 
 % ####################################################################### %
 %% Below follow definitions used in the Disney Lab
