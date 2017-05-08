@@ -83,12 +83,12 @@ if(p.trial.behavior.fixation.use)
                 pds.datapixx.strobe(p.trial.event.FIX_OUT);
                 
                 % Set state to fixbreak to ascertain if this is just jitter (time out of fixation window is very short)
-                p.trial.FixState.Current = p.trial.FixState.FixBreak;
+                p.trial.FixState.Current = p.trial.FixState.breakingFix;
                 p.trial.Timer.fixLeave = p.trial.CurTime;
             end
             
         
-        case p.trial.FixState.FixBreak
+        case p.trial.FixState.breakingFix
             %% gaze has momentarily left fixation window    
             
             % Eye has re-entered fixation window

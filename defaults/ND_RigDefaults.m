@@ -231,10 +231,11 @@ SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indi
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
 % Define fixation states
-SS.FixState.Current  = NaN;
-SS.FixState.FixIn    =   1;  % Gaze within fixation window
-SS.FixState.FixOut   =   0;  % Gaze out of fixation window
-SS.FixState.FixBreak =  -1;  % Gaze out of fixation window (temporarily, if stays out, then goes to FixOut, if it goes back in then goes back to FixIn)
+SS.FixState.Current     = NaN;
+SS.FixState.FixOut      =    0;  % Gaze out of fixation window
+SS.FixState.startingFix = 0.25;  % Gaze has momentarily entered fixation window
+SS.FixState.FixIn       =    1;  % Gaze robustly within fixation window
+SS.FixState.breakingFix = 0.75;  % Gaze has momentarily left fixation window
 
 % ------------------------------------------------------------------------%
 %% Joystick
