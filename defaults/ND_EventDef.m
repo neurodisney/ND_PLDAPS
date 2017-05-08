@@ -125,7 +125,8 @@ p.defaultParameters.event.TRIALEND   = 2;         % end of a trial according to 
 
 p.defaultParameters.event.FIX_IN     = 2000;      % gaze enters fixation window
 p.defaultParameters.event.FIX_OUT    = 2001;      % gaze leaves fixation window
-p.defaultParameters.event.FIX_BREAK  = 2002;      % gaze has left fix window for long enough to be considered a fix break
+p.defaultParameters.event.FIX_TRUE   = 2002;      % gaze has been in the fix window long enought ot be considered a fix
+p.defaultParameters.event.FIX_BREAK  = 2003;      % gaze has left fix window for long enough to be considered a fix break
 
 p.defaultParameters.event.JOY_ON     = 2110;      % joystick elevation above pressing threshold
 p.defaultParameters.event.JOY_OFF    = 2111;      % joystick elevation below releasing threshold

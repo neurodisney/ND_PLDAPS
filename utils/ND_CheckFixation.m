@@ -54,10 +54,27 @@ if(p.trial.behavior.fixation.use)
             % Eye enters the fixation window
             if(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin/2 )
                 pds.datapixx.strobe(p.trial.event.FIX_IN);
-                p.trial.FixState.Current = p.trial.FixState.FixIn;
+                p.trial.FixState.Current = p.trial.FixState.startingFix;
+                p.trial.Timer.fixEntry = p.trial.CurTime;
             end
             
             
+        
+        case p.trial.FixState.startingFix
+            %% gaze has momentarily entered fixation window
+            
+            % Gaze leaves again
+            if p.trial.eyeAmp > p.trial.behavior.fixation.FixWin/2
+                pds.datapixx.strobe(p.trial.event.FIX_OUT);
+                p.trial.FixState.Current = p.trial.FixState.FixOut;
+                
+            % Gaze is robustly within the fixation window
+            elseif p.trial.CurTime >= p.trial.Timer.fixEntry + p.trial.behavior.fixation.entryTime
+                pds.datapixx.strobe(p.trial.event.FIX_TRUE);
+                p.trial.FixState.Current = p.trial.FixState.FixIn;
+                p.trial.Timer.fixStart = p.trial.Timer.fixEntry;
+                
+            end
             
         case p.trial.FixState.FixIn
             %% gaze within fixation window
