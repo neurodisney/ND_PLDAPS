@@ -16,20 +16,20 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % ------------------------------------------------------------------------%
 %% Reward
-p.trial.task.Reward.Pull    = 0;          % If 1 then give reward for pulling the joystick
-p.trial.task.Reward.PullRew = 0.05;        % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
+p.trial.reward.Pull    = 0;          % If 1 then give reward for pulling the joystick
+p.trial.reward.PullRew = 0.05;        % reward amount for pulling joystick (if p.trial.reward.Pull == 1)
 
-p.trial.task.Reward.RewTrain  =   1;      % give a series of rewards during hold time
-p.trial.task.Reward.TrainRew  = 0.25;      % reward amount for during the burst train (if p.trial.task.Reward.RewTrain == 1)
-p.trial.task.Reward.RewGapMin = 0.25;     % spacing between subsequent reward pulses
-p.trial.task.Reward.RewGapMax = 1.0;     % spacing between subsequent reward pulses
-p.trial.task.Reward.Timer     = NaN;      % initialize timer to control subsequent rewards
+p.trial.reward.RewTrain  =   1;      % give a series of rewards during hold time
+p.trial.reward.TrainRew  = 0.25;      % reward amount for during the burst train (if p.trial.reward.RewTrain == 1)
+p.trial.reward.RewGapMin = 0.25;     % spacing between subsequent reward pulses
+p.trial.reward.RewGapMax = 1.0;     % spacing between subsequent reward pulses
+p.trial.reward.Timer     = NaN;      % initialize timer to control subsequent rewards
 
-p.trial.task.Reward.IncrConsecutive = 0;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.65, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step = [2, 4];        % define the number of trials when to increase reward. Vector length can not be longer than p.trial.task.Reward.Dur
+p.trial.reward.IncrConsecutive = 0;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
+p.trial.reward.Dur  = [0.65, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.reward.Step = [2, 4];        % define the number of trials when to increase reward. Vector length can not be longer than p.trial.reward.Dur
 
-p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings

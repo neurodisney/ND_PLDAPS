@@ -18,15 +18,15 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % ------------------------------------------------------------------------%
 %% Reward
-p.trial.task.Reward.JackPot         = 0.75;  % unlikely he gets here
+p.trial.reward.JackPot         = 0.75;  % unlikely he gets here
 
 % reward series for continous fixation
-p.trial.task.Reward.WaitNext = [0.75, 0.5, 0.25];  % wait period until next reward
-p.trial.task.Reward.Dur      = 0.1;               % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step     = [0, 4, 6];          % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.reward.WaitNext = [0.75, 0.5, 0.25];  % wait period until next reward
+p.trial.reward.Dur      = 0.1;               % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.reward.Step     = [0, 4, 6];          % define the number of subsequent rewards after that the next delay period should be used.
 
 % manual reward from experimenter
-p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings

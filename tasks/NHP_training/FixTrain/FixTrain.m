@@ -57,64 +57,64 @@ if(isempty(state))
 
     
     % reward series for continous fixation
-    % c.task.Reward.MinWaitInitial -  minimum latency to reward after fixation
-    % c.task.Reward.MaxWaitInitial -  maximum latency to reward after fixation
-    % c.task.Reward.nRewards       -  array of how many of each kind of reward
-    % c.task.Reward.Dur            -  array of how long each kind of reward lasts
-    % c.task.Reward.Period         -  the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-    % c.task.Reward.jackpotDur     -  the jackpot is given after all other rewards
+    % c.reward.MinWaitInitial -  minimum latency to reward after fixation
+    % c.reward.MaxWaitInitial -  maximum latency to reward after fixation
+    % c.reward.nRewards       -  array of how many of each kind of reward
+    % c.reward.Dur            -  array of how long each kind of reward lasts
+    % c.reward.Period         -  the period between one reward and the next NEEDS TO BE GREATER THAN Dur
+    % c.reward.jackpotDur     -  the jackpot is given after all other rewards
 
     % condition 1
     c1.Nr = 1;
-    c1.task.Reward.MinWaitInitial = 0.13;        % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.MaxWaitInitial = 0.17;        % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.InitialRew     = 0.1;         % duration for initial reward pulse
-    c1.task.Reward.Dur            = 0.1;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c1.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c1.task.Reward.WaitNext       = 0.75;         % wait period until next reward
+    c1.reward.MinWaitInitial = 0.13;        % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.reward.MaxWaitInitial = 0.17;        % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.reward.InitialRew     = 0.1;         % duration for initial reward pulse
+    c1.reward.Dur            = 0.1;         % reward duration [s], user vector to specify values used for incremental reward scheme
+    c1.reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
+    c1.reward.WaitNext       = 0.75;         % wait period until next reward
     
     c1.nTrials = 100;
     
     
     % condition 2
     c2.Nr = 2;
-    c2.task.Reward.MinWaitInitial = 0.23;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.MaxWaitInitial = 0.27; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.InitialRew     = 0.1;  % duration for initial reward pulse
-    c2.task.Reward.Dur            = 0.1;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c2.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c2.task.Reward.WaitNext       = 0.75;         % wait period until next reward
+    c2.reward.MinWaitInitial = 0.23;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c2.reward.MaxWaitInitial = 0.27; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c2.reward.InitialRew     = 0.1;  % duration for initial reward pulse
+    c2.reward.Dur            = 0.1;         % reward duration [s], user vector to specify values used for incremental reward scheme
+    c2.reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
+    c2.reward.WaitNext       = 0.75;         % wait period until next reward
     c2.nTrials = 100;
     
     
     % condition 3
     c3.Nr = 3;
-    c3.task.Reward.MinWaitInitial = 0.48; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.MaxWaitInitial = 0.52;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.InitialRew     = 0.15;  % duration for initial reward pulse
-    c3.task.Reward.Dur            = 0.15;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c3.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c3.task.Reward.WaitNext       = 0.50;         % wait period until next reward
+    c3.reward.MinWaitInitial = 0.48; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c3.reward.MaxWaitInitial = 0.52;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c3.reward.InitialRew     = 0.15;  % duration for initial reward pulse
+    c3.reward.Dur            = 0.15;         % reward duration [s], user vector to specify values used for incremental reward scheme
+    c3.reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
+    c3.reward.WaitNext       = 0.50;         % wait period until next reward
     c3.nTrials = 300;
     
     % condition 4
     c4.Nr = 4;
-    c4.task.Reward.MinWaitInitial = 0.73;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.MaxWaitInitial = 0.77;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
-    c4.task.Reward.Dur            = 0.2;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c4.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c4.task.Reward.WaitNext       = 0.25;         % wait period until next reward
+    c4.reward.MinWaitInitial = 0.73;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c4.reward.MaxWaitInitial = 0.77;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c4.reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    c4.reward.Dur            = 0.2;         % reward duration [s], user vector to specify values used for incremental reward scheme
+    c4.reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
+    c4.reward.WaitNext       = 0.25;         % wait period until next reward
     c4.nTrials = 300;
     
     % condition 4
     c5.Nr = 5;
-    c5.task.Reward.MinWaitInitial = 0.98;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.MaxWaitInitial = 1.02;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.InitialRew     = 0.25;  % duration for initial reward pulse
-    c5.task.Reward.Dur            = 0.25;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c5.task.Reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c5.task.Reward.WaitNext       = 0.1;         % wait period until next reward
+    c5.reward.MinWaitInitial = 0.98;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c5.reward.MaxWaitInitial = 1.02;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c5.reward.InitialRew     = 0.25;  % duration for initial reward pulse
+    c5.reward.Dur            = 0.25;         % reward duration [s], user vector to specify values used for incremental reward scheme
+    c5.reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
+    c5.reward.WaitNext       = 0.1;         % wait period until next reward
     c5.nTrials = 1000;
     
     
@@ -203,18 +203,18 @@ function TaskSetUp(p)
     p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
                                          p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
                                      
-    p.trial.task.CurRewDelay = ND_GetITI(p.trial.task.Reward.MinWaitInitial,  ...
-                                         p.trial.task.Reward.MaxWaitInitial,  [], [], 1, 0.001);
+    p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial,  ...
+                                         p.trial.reward.MaxWaitInitial,  [], [], 1, 0.001);
 
     p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
         
-    p.trial.task.Reward.Curr = p.trial.task.Reward.InitialRew; % determine reward amount based on number of previous correct trials
+    p.trial.reward.Curr = p.trial.reward.InitialRew; % determine reward amount based on number of previous correct trials
     
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
         
     p.trial.task.Good                = 1;  % assume no error untill error occurs
-    p.trial.task.Reward.cnt          = 0;  % counter for received rewardsw
+    p.trial.reward.cnt          = 0;  % counter for received rewardsw
     p.trial.behavior.fixation.GotFix = 0;
     
     % if random position is required pick one and move fix spot
@@ -296,8 +296,8 @@ function TaskDesign(p)
                     p.trial.EV.FixStart = p.trial.Timer.fixStart;
                     
                     % Reward the monkey
-                    pds.reward.give(p, p.trial.task.Reward.InitialRew);
-                    p.trial.task.Reward.cnt = p.trial.task.Reward.cnt + 1;
+                    pds.reward.give(p, p.trial.reward.InitialRew);
+                    p.trial.reward.cnt = p.trial.reward.cnt + 1;
                     
                     % Transition to the succesful fixation epoch
                     p.trial.epoch.CurrEpoch = p.trial.epoch.Fixating;
@@ -339,21 +339,21 @@ function TaskDesign(p)
             
             % fixation time expired    
             if(p.trial.CurTime  > p.trial.Timer.Wait)
-                pds.reward.give(p,  p.trial.task.Reward.JackPot);  % long term fixation, deserves something big
+                pds.reward.give(p,  p.trial.reward.JackPot);  % long term fixation, deserves something big
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                         
             % reward if it is about time
             elseif(p.trial.task.Good == 1 && p.trial.behavior.fixation.GotFix == 1 && ...
                 p.trial.CurTime > p.trial.Timer.Reward)
                 
-                pds.reward.give(p, p.trial.task.Reward.Curr);
-                p.trial.task.Reward.cnt = p.trial.task.Reward.cnt + 1;
+                pds.reward.give(p, p.trial.reward.Curr);
+                p.trial.reward.cnt = p.trial.reward.cnt + 1;
                 
-                rs = find(~(p.trial.task.Reward.Step >= p.trial.task.Reward.cnt), 1, 'last');
+                rs = find(~(p.trial.reward.Step >= p.trial.reward.cnt), 1, 'last');
 
-                p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.Dur + p.trial.task.Reward.WaitNext(rs);
+                p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.Dur + p.trial.reward.WaitNext(rs);
                                 
-                p.trial.task.Reward.Curr = p.trial.task.Reward.Dur;
+                p.trial.reward.Curr = p.trial.reward.Dur;
             end
             
         % ----------------------------------------------------------------%
@@ -371,7 +371,7 @@ function TaskDesign(p)
                 pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
             end
             
-            if(p.trial.task.Reward.cnt > 0)
+            if(p.trial.reward.cnt > 0)
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Correct; % received a reward, hence correct
             end
 
@@ -469,7 +469,7 @@ function Trial2Ascii(p, act)
                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
                                 p.trial.EV.DPX_TaskOn, p.trial.session.subject, p.trial.session.experimentSetupFile, ...
                                 p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
-                                p.trial.task.CurRewDelay, p.trial.task.Reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
+                                p.trial.task.CurRewDelay, p.trial.reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.behavior.fixation.FixCol, p.trial.task.Timing.ITI, ...
                                 p.trial.behavior.fixation.FixWin, p.trial.behavior.fixation.fixPos(1), p.trial.behavior.fixation.fixPos(2));
                fclose(tblptr);

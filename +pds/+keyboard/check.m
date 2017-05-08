@@ -28,7 +28,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
 
         case KbName(p.trial.key.reward)
         % check for manual reward delivery via keyboard
-            pds.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
+            pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
         
         case KbName(p.trial.key.CtrJoy)
         % set current eye position as expected fixation position

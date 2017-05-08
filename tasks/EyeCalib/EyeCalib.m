@@ -67,9 +67,9 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.task.Reward.MinWaitInitial = 0.15; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.MaxWaitInitial = 0.15;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    c1.reward.MinWaitInitial = 0.15; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.reward.MaxWaitInitial = 0.15;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.reward.InitialRew     = 0.2;  % duration for initial reward pulse
     
     conditions = {c1};
 
@@ -134,15 +134,15 @@ function TaskSetUp(p)
     p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
                                          p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
                                      
-    p.trial.task.CurRewDelay = ND_GetITI(p.trial.task.Reward.MinWaitInitial,  ...
-                                         p.trial.task.Reward.MaxWaitInitial,  [], [], 1, 0.001);
+    p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial,  ...
+                                         p.trial.reward.MaxWaitInitial,  [], [], 1, 0.001);
 
     p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
         
-    p.trial.task.Reward.Curr = p.trial.task.Reward.InitialRew; % determine reward amount based on number of previous correct trials
+    p.trial.reward.Curr = p.trial.reward.InitialRew; % determine reward amount based on number of previous correct trials
         
     p.trial.task.Good                = 1;  % assume no error untill error occurs
-    p.trial.task.Reward.cnt          = 0;  % counter for received rewardsw
+    p.trial.reward.cnt          = 0;  % counter for received rewardsw
     p.trial.behavior.fixation.GotFix = 0;
     
     % if random position is required pick one and move fix spot
@@ -244,21 +244,21 @@ function TaskDesign(p)
             
             % fixation time expired    
             if(p.trial.CurTime  > p.trial.Timer.Wait)
-                pds.reward.give(p,  p.trial.task.Reward.JackPot);  % long term fixation, deserves something big
+                pds.reward.give(p,  p.trial.reward.JackPot);  % long term fixation, deserves something big
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                         
             % reward if it is about time
             elseif(p.trial.task.Good == 1 && p.trial.behavior.fixation.GotFix == 1 && ...
                 p.trial.CurTime > p.trial.Timer.Reward)
                 
-                pds.reward.give(p, p.trial.task.Reward.Curr);
-                p.trial.task.Reward.cnt = p.trial.task.Reward.cnt + 1;
+                pds.reward.give(p, p.trial.reward.Curr);
+                p.trial.reward.cnt = p.trial.reward.cnt + 1;
                 
-                rs = find(~(p.trial.task.Reward.Step >= p.trial.task.Reward.cnt), 1, 'last');
+                rs = find(~(p.trial.reward.Step >= p.trial.reward.cnt), 1, 'last');
 
-                p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.Dur + p.trial.task.Reward.WaitNext(rs);
+                p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.Dur + p.trial.reward.WaitNext(rs);
                                 
-                p.trial.task.Reward.Curr = p.trial.task.Reward.Dur;
+                p.trial.reward.Curr = p.trial.reward.Dur;
             end
             
         % ----------------------------------------------------------------%
@@ -276,7 +276,7 @@ function TaskDesign(p)
                 pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
             end
             
-            if(p.trial.task.Reward.cnt > 0)
+            if(p.trial.reward.cnt > 0)
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Correct; % received a reward, hence correct
             end
 

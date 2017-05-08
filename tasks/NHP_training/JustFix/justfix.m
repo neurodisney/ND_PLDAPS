@@ -53,33 +53,33 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.task.Reward.MinWaitInitial  = 0.05; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.InitialRew      = 0.1;  % duration for initial reward pulse
+    c1.reward.MinWaitInitial  = 0.05; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.reward.InitialRew      = 0.1;  % duration for initial reward pulse
     
     % condition 2
     c2.Nr = 2;
-    c2.task.Reward.MinWaitInitial  = 0.1;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.MaxWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.InitialRew      = 0.2;  % duration for initial reward pulse
+    c2.reward.MinWaitInitial  = 0.1;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c2.reward.MaxWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c2.reward.InitialRew      = 0.2;  % duration for initial reward pulse
 
     % condition 3
     c3.Nr = 3;
-    c3.task.Reward.MinWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.MaxWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.InitialRew      = 0.4;  % duration for initial reward pulse
+    c3.reward.MinWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c3.reward.MaxWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c3.reward.InitialRew      = 0.4;  % duration for initial reward pulse
 
     % condition 4
     c4.Nr = 4;
-    c4.task.Reward.MinWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.MaxWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.InitialRew      = 0.6;  % duration for initial reward pulse
+    c4.reward.MinWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c4.reward.MaxWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c4.reward.InitialRew      = 0.6;  % duration for initial reward pulse
 
     % condition 5
     c5.Nr = 5;
-    c5.task.Reward.MinWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
+    c5.reward.MinWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c5.reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c5.reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     
     %conditions = {c2, c3, c4, c5};
@@ -146,17 +146,17 @@ function TaskSetUp(p)
     p.trial.task.Timing.ITI   = ND_GetITI(p.trial.task.Timing.MinITI,  ...
                                           p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
                                      
-    p.trial.task.CurRewDelay  = ND_GetITI(p.trial.task.Reward.MinWaitInitial,  ...
-                                          p.trial.task.Reward.MaxWaitInitial,  [], [], 1, 0.001);
+    p.trial.task.CurRewDelay  = ND_GetITI(p.trial.reward.MinWaitInitial,  ...
+                                          p.trial.reward.MaxWaitInitial,  [], [], 1, 0.001);
 
     p.trial.task.InitRewDelay = p.trial.task.CurRewDelay;  
     
     p.trial.CurrEpoch         = p.trial.epoch.TrialStart;
         
-    p.trial.task.Reward.Curr  = p.trial.task.Reward.InitialRew; % determine reward amount based on number of previous correct trials
+    p.trial.reward.Curr  = p.trial.reward.InitialRew; % determine reward amount based on number of previous correct trials
         
     p.trial.task.Good                = 1;  % assume no error untill error occurs
-    p.trial.task.Reward.cnt          = 0;  % counter for received rewardsw
+    p.trial.reward.cnt          = 0;  % counter for received rewardsw
     p.trial.behavior.fixation.GotFix = 0;
      
     p.trial.task.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
@@ -263,7 +263,7 @@ function TaskDesign(p)
                 end
             % fixation time expired    
             elseif(p.trial.CurTime  > p.trial.Timer.Wait)
-                pds.reward.give(p,  p.trial.task.Reward.JackPot);  % long term fixation, deserves something big
+                pds.reward.give(p,  p.trial.reward.JackPot);  % long term fixation, deserves something big
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                 
                 p.trial.pldaps.draw.ScreenEvent     = p.trial.event.FIXSPOT_OFF;       
@@ -274,16 +274,16 @@ function TaskDesign(p)
             if(p.trial.task.Good == 1 && p.trial.behavior.fixation.GotFix == 1 && ...
                p.trial.CurTime > p.trial.Timer.Reward)
                 
-                pds.reward.give(p, p.trial.task.Reward.Curr);
-                p.trial.task.Reward.cnt = p.trial.task.Reward.cnt + 1;
+                pds.reward.give(p, p.trial.reward.Curr);
+                p.trial.reward.cnt = p.trial.reward.cnt + 1;
                 
-                rs = find(~(p.trial.task.Reward.Step >= p.trial.task.Reward.cnt), 1, 'last');
+                rs = find(~(p.trial.reward.Step >= p.trial.reward.cnt), 1, 'last');
 
-                p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.Dur + p.trial.task.Reward.WaitNext(rs);
+                p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.Dur + p.trial.reward.WaitNext(rs);
                 
-                fprintf('reward cound: %d  --> next reward: %.4f \n', p.trial.task.Reward.cnt, p.trial.task.Reward.WaitNext(rs));
+                fprintf('reward cound: %d  --> next reward: %.4f \n', p.trial.reward.cnt, p.trial.reward.WaitNext(rs));
                 
-                p.trial.task.Reward.Curr = p.trial.task.Reward.Dur;
+                p.trial.reward.Curr = p.trial.reward.Dur;
             end
             
         % ----------------------------------------------------------------%
@@ -301,7 +301,7 @@ function TaskDesign(p)
                 pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
             end
             
-            if(p.trial.task.Reward.cnt > 0)
+            if(p.trial.reward.cnt > 0)
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Correct; % received a reward, hence correct
             end
 
@@ -462,7 +462,7 @@ function Trial2Ascii(p, act)
                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
                                 p.trial.EV.DPX_TaskOn, p.trial.session.subject, p.trial.session.experimentSetupFile, ...
                                 p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
-                                p.trial.task.InitRewDelay, p.trial.task.Reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
+                                p.trial.task.InitRewDelay, p.trial.reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.task.FixCol, p.trial.task.Timing.ITI, ...
                                 p.trial.behavior.fixation.FixWin, p.trial.task.TargetPos(1), p.trial.task.TargetPos(2), ...
                                 p.trial.EV.FixOn, p.trial.EV.FixOff);

@@ -53,11 +53,11 @@ if(isempty(state))
 
     % condition 1  : Target shown, rewarded if fixating in random intervals
     c1.Nr = 1;
-    c1.task.Reward.RewGapMin = 0.25;   % spacing between subsequent reward pulses
-    c1.task.Reward.RewGapMax = 0.5;   % spacing between subsequent reward pulses
+    c1.reward.RewGapMin = 0.25;   % spacing between subsequent reward pulses
+    c1.reward.RewGapMax = 0.5;   % spacing between subsequent reward pulses
     c1.task.Timing.WaitFix   = 4;
     c1.reward.Lag            = 0.05;
-    c1.task.Reward.TrainRew  = 0.25;
+    c1.reward.TrainRew  = 0.25;
     c1.task.Timing.MinITI    = 0.5;   % minimum time period [s] between subsequent trials
     c1.task.Timing.MaxITI    = 1.0;   % maximum time period [s] between subsequent trials
     c1.task.Timing.MinHoldTime = 0.75;   % minimum time to keep fixation
@@ -65,14 +65,14 @@ if(isempty(state))
     
     % condition 2  : blank screen, reward at random when looking to center of screen
     c2.Nr = 2;
-    c2.task.Reward.RewGapMin = 0.4;   % spacing between subsequent reward pulses
-    c2.task.Reward.RewGapMax = 0.4;   % spacing between subsequent reward pulses
+    c2.reward.RewGapMin = 0.4;   % spacing between subsequent reward pulses
+    c2.reward.RewGapMax = 0.4;   % spacing between subsequent reward pulses
     c2.task.Timing.WaitFix   = 5;
     c2.reward.Lag            = 0.05;
-    c2.task.Reward.TrainRew  = 0.5;
+    c2.reward.TrainRew  = 0.5;
     c2.task.Timing.MinITI    = 0.2;    % minimum time period [s] between subsequent trials
     c2.task.Timing.MaxITI    = 0.2;    % maximum time period [s] between subsequent trials
-    c2.task.Reward.prob      = 0.25;   % probability of a random reward
+    c2.reward.prob      = 0.25;   % probability of a random reward
     c2.task.Timing.MinHoldTime = 2.5;    % minimum time to keep fixation
     c2.task.Timing.MaxHoldTime = 6;      % maximum time to keep fixation
 
@@ -192,8 +192,8 @@ function RandRew(p)
                 p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
                 pds.datapixx.strobe(p.trial.event.STIM_ON);
 
-                if(p.trial.task.Reward.Pull)
-                    pds.reward.give(p, p.trial.task.Reward.PullRew);
+                if(p.trial.reward.Pull)
+                    pds.reward.give(p, p.trial.reward.PullRew);
                 end
             end
             
@@ -235,14 +235,14 @@ function RandRew(p)
 
             if(p.trial.task.Good && p.trial.behavior.fixation.GotFix == 1 && p.trial.CurTime > p.trial.Timer.Reward)
                 
-                if(p.trial.Nr == 1 || rand < p.trial.task.Reward.prob)
-                    pds.reward.give(p, p.trial.task.Reward.TrainRew);
+                if(p.trial.Nr == 1 || rand < p.trial.reward.prob)
+                    pds.reward.give(p, p.trial.reward.TrainRew);
                 end
                 
-                cr_gap = ND_GetITI(p.trial.task.Reward.RewGapMin, ...
-                                   p.trial.task.Reward.RewGapMax,[],[],[], 0.01);
+                cr_gap = ND_GetITI(p.trial.reward.RewGapMin, ...
+                                   p.trial.reward.RewGapMax,[],[],[], 0.01);
 
-                p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.TrainRew  + cr_gap;
+                p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.TrainRew  + cr_gap;
             end
                         
         % ----------------------------------------------------------------%
@@ -355,7 +355,7 @@ function Trial2Ascii(p, act)
                                 p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
                                 trltm, p.trial.EV.JoyPress, ...
                                 p.trial.EV.GoCue, p.trial.EV.JoyRelease, p.trial.EV.Reward, ...
-                                p.trial.task.Reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
+                                p.trial.reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.StartRT, RT, p.trial.task.Timing.HoldTime);
                fclose(tblptr);
             end

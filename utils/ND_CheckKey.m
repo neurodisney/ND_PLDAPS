@@ -31,7 +31,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             case p.trial.key.reward
             %% reward
             % check for manual reward delivery via keyboard
-                pds.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
+                pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
             
             % ----------------------------------------------------------------%
             case p.trial.key.FixReq
