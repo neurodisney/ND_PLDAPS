@@ -66,55 +66,55 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.reward.MinWaitInitial = 0.13;        % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.reward.MaxWaitInitial = 0.17;        % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.reward.InitialRew     = 0.1;         % duration for initial reward pulse
-    c1.reward.Dur            = 0.1;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c1.reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c1.reward.WaitNext       = 0.75;         % wait period until next reward
+    c1.reward.MinWaitInitial = 0.13;
+    c1.reward.MaxWaitInitial = 0.17;
+    c1.reward.nRewards       = [1    8  ];
+    c1.reward.Dur            = [0.1  0.1];
+    c1.reward.Period         = [1    1  ];
+    c1.reward.jackpotDur     = 0.5;
     
     c1.nTrials = 100;
     
     
     % condition 2
     c2.Nr = 2;
-    c2.reward.MinWaitInitial = 0.23;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.reward.MaxWaitInitial = 0.27; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.reward.InitialRew     = 0.1;  % duration for initial reward pulse
-    c2.reward.Dur            = 0.1;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c2.reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c2.reward.WaitNext       = 0.75;         % wait period until next reward
+    c2.reward.MinWaitInitial = 0.23;
+    c2.reward.MaxWaitInitial = 0.27;
+    c2.reward.nRewards       = [1    8  ];
+    c2.reward.Dur            = [0.1  0.1];
+    c2.reward.Period         = [1    1  ];
+    c2.reward.jackpotDur     = 0.5;
     c2.nTrials = 100;
     
     
     % condition 3
     c3.Nr = 3;
-    c3.reward.MinWaitInitial = 0.48; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.reward.MaxWaitInitial = 0.52;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.reward.InitialRew     = 0.15;  % duration for initial reward pulse
-    c3.reward.Dur            = 0.15;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c3.reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c3.reward.WaitNext       = 0.50;         % wait period until next reward
+    c3.reward.MinWaitInitial = 0.48;
+    c3.reward.MaxWaitInitial = 0.52;
+    c3.reward.nRewards       = [1    8   ];
+    c3.reward.Dur            = [0.15 0.15];
+    c3.reward.Period         = [0.75 0.75];
+    c3.reward.jackpotDur     = 0.5;
     c3.nTrials = 300;
     
     % condition 4
     c4.Nr = 4;
-    c4.reward.MinWaitInitial = 0.73;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.reward.MaxWaitInitial = 0.77;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.reward.InitialRew     = 0.2;  % duration for initial reward pulse
-    c4.reward.Dur            = 0.2;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c4.reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c4.reward.WaitNext       = 0.25;         % wait period until next reward
+    c4.reward.MinWaitInitial = 0.73;
+    c4.reward.MaxWaitInitial = 0.77;
+    c4.reward.nRewards       = [1    8   ];
+    c4.reward.Dur            = [0.2  0.2 ]; 
+    c4.reward.Period         = [0.50 0.50];   
+    c4.reward.jackpotDur     = 0.5;
     c4.nTrials = 300;
     
     % condition 4
     c5.Nr = 5;
-    c5.reward.MinWaitInitial = 0.98;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.reward.MaxWaitInitial = 1.02;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.reward.InitialRew     = 0.25;  % duration for initial reward pulse
-    c5.reward.Dur            = 0.25;         % reward duration [s], user vector to specify values used for incremental reward scheme
-    c5.reward.Step           = 0;           % define the number of subsequent rewards after that the next delay period should be used.
-    c5.reward.WaitNext       = 0.1;         % wait period until next reward
+    c5.reward.MinWaitInitial = 0.98;
+    c5.reward.MaxWaitInitial = 1.02;
+    c5.reward.nRewards       = [1    8   ];
+    c5.reward.Dur            = [0.25 0.25];
+    c5.reward.Period         = [0.35 0.35];   
+    c5.reward.jackpotDur     = 0.5;
     c5.nTrials = 1000;
     
     
