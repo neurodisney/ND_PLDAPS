@@ -120,7 +120,8 @@ try
 
             % save default parameters to TEMP directory
             if(trialNr == 1)
-                save(fullfile(p.defaultParameters.session.tmpdir, 'defaultParameters.mat'), 'tmpts');
+                save(fullfile(p.defaultParameters.session.tmpdir, ...
+                     [p.defaultParameters.session.filestem,'_defaultParameters.mat']), 'tmpts');
             end
 
             % quick and nasty fix to avoid saving of online plots
@@ -149,6 +150,7 @@ try
             %% complete trial: plot and save data
             % save tmp data
             result = saveTempFile(p);
+            
             if(~isempty(result))
                 disp(result.message)
             end
@@ -160,7 +162,8 @@ try
                 %store the difference of the trial struct to .data
                 dTrialStruct = getDifferenceFromStruct(p.defaultParameters, p.trial);
             end
-            p.data{trialNr}=dTrialStruct;
+            
+            p.data{trialNr} = dTrialStruct;
 
             % ----------------------------------------------------------------%
             %% make online plots

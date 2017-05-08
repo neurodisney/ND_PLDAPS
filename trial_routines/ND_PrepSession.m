@@ -16,8 +16,8 @@ disp('');
 % --------------------------------------------------------------------%
 %% set output directories and file names
 p.defaultParameters.session.dir =  fullfile(p.defaultParameters.pldaps.dirs.data, ...
-                                   p.defaultParameters.session.subject, ...
-                                   p.defaultParameters.session.experimentSetupFile, datestr(now,'yyyy_mm_dd'));
+                                   p.defaultParameters.session.subject, datestr(now,'yyyy_mm_dd'), ...
+                                   p.defaultParameters.session.experimentSetupFile);
                                     
 % ensure that the data directory exists
 p.defaultParameters.session.tmpdir = fullfile(p.defaultParameters.session.dir,'TEMP');
