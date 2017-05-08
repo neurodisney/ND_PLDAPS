@@ -4,6 +4,7 @@ function p = FixTrain(p, state)
 %
 %
 % wolf zinke, Apr. 2017
+% Nate Faber, May 2017
 
 % ####################################################################### %
 %% define the task name that will be used to create a sub-structure in the trial struct
@@ -243,23 +244,53 @@ function TaskDesign(p)
             end
         
             p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.WaitFix;
+            p.trial.Timer.trialStart = p.trial.CurTime;
             p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
             %% Fixation target shown, waiting for a sufficiently held gaze
             
-            % If the eyes have been looking elsewhere
+            % If gaze is outside fixation window
             if p.trial.behavior.fixation.GotFix == 0
                
-                % Change the GotFix state
+                % Gaze enters fixation window
+                if p.trial.FixState.Current == p.trial.FixState.FixIn
+                    p.trial.behavior.fixation.GotFix = 1;
+                    p.trial.Timer.fixStart = p.trial.CurTime;
+                
+                % Time to fixate has expired
+                elseif p.trial.CurTime > p.trial.Timer.trialStart + p.trial.Timing.WaitFix
+                    
+                    % Long enough fixation did not occur, failed trial
+                    p.trial.task.Good = 0;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
+                    
+                    % Go directly to TaskEnd, do not start task, do not collect reward
+                    p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                    
+                end
+                
+                
+            % If gaze is inside fixation window
+            elseif p.trial.behavior.fixation.GotFix == 1
+                
+                % Gaze leaves fixation window (for sufficiently long)
+                if p.trial.FixState.Current == p.trial.FixState.FixOut
+                    p.trial.behavior.GotFix = 0;
+                
+                % Fixation has been held for long enough && not currently in the middle of breaking fixation
+                elseif (p.trial.CurTime > p.trial.fixStart + p.trial.task.CurRewDelay) && p.trial.FixState.Current == p.trial.FixState.FixIn
+                    % TODO: Reward and move to next epoch
+                end
+                
             end
             
             if(p.trial.FixState.Current == p.trial.FixState.FixIn || p.trial.behavior.fixation.GotFix == 1)
             % got fixation
                 if(p.trial.behavior.fixation.GotFix == 0) % starts to fixate
                     p.trial.behavior.fixation.GotFix = 1;
-                    p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.EnsureFix; % start timer to check if it is robust fixation
+                    p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.entryTime; % start timer to check if it is robust fixation
                     
                 elseif(p.trial.FixState.Current == p.trial.FixState.FixOut)
                     p.trial.behavior.fixation.GotFix = 0;
@@ -267,7 +298,7 @@ function TaskDesign(p)
                 elseif(p.trial.CurTime > p.trial.Timer.FixBreak) % long enough within FixWin
                     pds.datapixx.strobe(p.trial.event.FIXATION);
 
-                    p.trial.EV.FixStart = p.trial.CurTime - p.trial.behavior.fixation.EnsureFix;
+                    p.trial.EV.FixStart = p.trial.CurTime - p.trial.behavior.fixation.entryTime;
                     
                     p.trial.Timer.Wait  = p.trial.CurTime + p.trial.task.Timing.MaxFix;
                     p.trial.CurrEpoch   = p.trial.epoch.Fixating;
