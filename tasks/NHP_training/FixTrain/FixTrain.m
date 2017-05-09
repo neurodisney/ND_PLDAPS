@@ -261,8 +261,6 @@ function TaskDesign(p)
             p.trial.Timer.trialStart = p.trial.CurTime;
             p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
             
-            disp('TASK ON')
-            
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
             %% Fixation target shown, waiting for a sufficiently held gaze
@@ -272,7 +270,6 @@ function TaskDesign(p)
                
                 % Fixation has occured
                 if p.trial.FixState.Current == p.trial.FixState.FixIn
-                    disp('Fix In')
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; %Will become FullFixation upon holding long enough
                     p.trial.behavior.fixation.GotFix = 1;
                     p.trial.Timer.fixStart = p.trial.CurTime;
@@ -280,7 +277,6 @@ function TaskDesign(p)
                 % Time to fixate has expired
                 elseif p.trial.CurTime > p.trial.Timer.trialStart + p.trial.task.Timing.WaitFix
                     
-                    disp('Expire')
                     % Long enough fixation did not occur, failed trial
                     p.trial.task.Good = 0;
                     
@@ -295,14 +291,12 @@ function TaskDesign(p)
                 
                 % Fixation ceases
                 if p.trial.FixState.Current == p.trial.FixState.FixOut
-                    disp('Fix Out')
                     p.trial.EV.FixBreak = p.trial.CurTime;
                     p.trial.behavior.fixation.GotFix = 0;
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
                 elseif (p.trial.CurTime > p.trial.Timer.fixStart + p.trial.task.CurRewDelay) && p.trial.FixState.Current == p.trial.FixState.FixIn
                     
-                    disp('Full Fix')
                     % Succesful
                     p.trial.task.Good = 1;
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
@@ -315,7 +309,6 @@ function TaskDesign(p)
                     pds.reward.give(p, p.trial.reward.allDurs(1));
                     p.trial.Timer.lastReward = p.trial.CurTime;
                     
-                    disp('Reward 1')
                     % Transition to the succesful fixation epoch
                     p.trial.CurrEpoch = p.trial.epoch.Fixating;
 
@@ -340,11 +333,11 @@ function TaskDesign(p)
                     p.trial.reward.count = rewardCount;
                     
                     % Get the reward duration
-                    if rewardCount <= len(p.trial.reward.allDurs)
+                    if rewardCount <= length(p.trial.reward.allDurs)
                         rewardDuration = p.trial.reward.allDurs(rewardCount);                  
                     else
                         % Last reward has been reached, give the JACKPOT!
-                        rewardDuration = p.trial.reward.jackpotDur;
+                        rewardDuration = p.trial.reward.jackpotDur;                    
                         
                         % Best outcome
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
@@ -355,7 +348,6 @@ function TaskDesign(p)
                     
                     % Give the reward and update the lastReward time
                     pds.reward.give(p, rewardDuration);
-                    disp(['Reward: ' num2str(p.trial.reward.count)])
                     p.trial.Timer.lastReward = p.trial.CurTime;
                     
                 end
@@ -370,9 +362,6 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
-        
-            disp('Task End')
-            disp(['>>> Outcome:' num2str(p.trial.outcome.CurrOutcome)])
         
         % set timer for intertrial interval            
             tms = pds.datapixx.strobe(p.trial.event.TASK_OFF); 
