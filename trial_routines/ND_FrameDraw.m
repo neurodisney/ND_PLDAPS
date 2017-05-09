@@ -70,10 +70,6 @@ if(p.trial.pldaps.draw.eyepos.use)
                         p.trial.pldaps.draw.eyepos.sz, p.trial.display.clut.eyepos, [0 0], 0);
 end
 
-if(p.trial.behavior.fixation.use)
-    pds.fixation.draw(p); 
-end
-
 % ------------------------------------------------------------------------%
 %% draw joystick state
 % show a representation of the joystick elevation level
