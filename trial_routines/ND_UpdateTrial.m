@@ -6,7 +6,7 @@ function p = ND_UpdateTrial(p)
 
 
 %% The old trial struct is still in memory
-if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
+if p.trial.task.Good
     p.defaultParameters.LastHits = p.defaultParameters.LastHits + 1; % how many correct trials since last error
     p.defaultParameters.NHits    = p.defaultParameters.NHits    + 1; % how many correct trials in total
 else
