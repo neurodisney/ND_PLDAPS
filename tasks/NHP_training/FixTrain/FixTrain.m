@@ -92,10 +92,10 @@ if(isempty(state))
     c3.reward.MinWaitInitial = 0.48;
     c3.reward.MaxWaitInitial = 0.52;
     c3.reward.nRewards       = [1    8   ];
-    c3.reward.Dur            = [0.15 0.15];
-    c3.reward.Period         = [0.75 0.75];
-    c3.reward.jackpotDur     = 0.5;
-    c3.nTrials = 300;
+    c3.reward.Dur            = [0.10 0.10];
+    c3.reward.Period         = [1.00 1.00];
+    c3.reward.jackpotDur     = 0.3;
+    c3.nTrials = 100;
     
     % condition 4
     c4.Nr = 4;
@@ -103,20 +103,29 @@ if(isempty(state))
     c4.reward.MaxWaitInitial = 0.77;
     c4.reward.nRewards       = [1    8   ];
     c4.reward.Dur            = [0.2  0.2 ]; 
-    c4.reward.Period         = [0.50 0.50];   
+    c4.reward.Period         = [0.75 0.75];   
     c4.reward.jackpotDur     = 0.5;
     c4.nTrials = 300;
     
-    % condition 4
+    % condition 5
     c5.Nr = 5;
     c5.reward.MinWaitInitial = 0.98;
     c5.reward.MaxWaitInitial = 1.02;
     c5.reward.nRewards       = [1    8   ];
-    c5.reward.Dur            = [0.25 0.25];
-    c5.reward.Period         = [0.35 0.35];   
+    c5.reward.Dur            = [0.20 0.20];
+    c5.reward.Period         = [0.50 0.50];   
     c5.reward.jackpotDur     = 0.5;
-    c5.nTrials = 1000;
+    c5.nTrials = 300;
     
+    % condition 6
+    c6.Nr = 5;
+    c6.reward.MinWaitInitial = 1.23;
+    c6.reward.MaxWaitInitial = 1.27;
+    c6.reward.nRewards       = [1    8   ];
+    c6.reward.Dur            = [0.25 0.25];
+    c6.reward.Period         = [0.40 0.40];   
+    c6.reward.jackpotDur     = 0.5;
+    c6.nTrials = 300;
     
     % Fill a conditions list with n of each kind of condition sequentially
     conditions = cell(1,5000);
@@ -124,7 +133,7 @@ if(isempty(state))
     totalTrials = 0;
     
     % Iterate through each condition to fill conditions
-    conditionsIterator = {c5}%{c2,c3,c4,c5};
+    conditionsIterator = {c3,c4,c5,c6};
     
     for iCond = 1:size(conditionsIterator,2)
         cond = conditionsIterator(iCond);
