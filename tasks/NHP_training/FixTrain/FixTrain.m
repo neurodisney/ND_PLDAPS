@@ -296,8 +296,9 @@ function TaskDesign(p)
                     p.trial.EV.FixStart = p.trial.Timer.fixStart;
                     
                     % Reward the monkey
-                    pds.reward.give(p, p.trial.reward.InitialRew);
-                    p.trial.reward.cnt = p.trial.reward.cnt + 1;
+                    count = 1;
+                    p.trial.reward.count = count;
+                    pds.reward.give(p, p.trial.reward.allDurs(1);
                     
                     % Transition to the succesful fixation epoch
                     p.trial.epoch.CurrEpoch = p.trial.epoch.Fixating;
