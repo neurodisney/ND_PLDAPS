@@ -294,6 +294,7 @@ function TaskDesign(p)
                 
                 % Fixation ceases
                 if p.trial.FixState.Current == p.trial.FixState.FixOut
+                    p.trial.EV.FixBreak = p.trial.CurTime;
                     p.trial.behavior.GotFix = 0;
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
@@ -308,7 +309,7 @@ function TaskDesign(p)
                     
                     % Reward the monkey
                     p.trial.reward.count = 1;
-                    pds.reward.give(p, p.trial.reward.allDurs(p.trial.reward.count);
+                    pds.reward.give(p, p.trial.reward.allDurs(1));
                     p.trial.Timer.lastReward = p.trial.CurTime;
                     
                     % Transition to the succesful fixation epoch
@@ -473,7 +474,7 @@ function Trial2Ascii(p, act)
                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
                                 p.trial.EV.DPX_TaskOn, p.trial.session.subject, p.trial.session.experimentSetupFile, ...
                                 p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
-                                p.trial.task.CurRewDelay, p.trial.reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
+                                p.trial.task.CurRewDelay, p.trial.reward.count, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.behavior.fixation.FixCol, p.trial.task.Timing.ITI, ...
                                 p.trial.behavior.fixation.FixWin, p.trial.behavior.fixation.fixPos(1), p.trial.behavior.fixation.fixPos(2));
                fclose(tblptr);
