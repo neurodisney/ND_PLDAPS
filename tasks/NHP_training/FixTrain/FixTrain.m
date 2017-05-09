@@ -377,8 +377,11 @@ function TaskDesign(p)
             end
 
             % determine ITI
-            if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.Correct)
-                p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
+            switch p.trial.outcome.CurrOutcome
+                
+                case {p.trial.outcome.NoFix, p.trial.outcome.FixBreak}
+                    % Timeout if no fixation
+                    p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
             end
             
             p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
