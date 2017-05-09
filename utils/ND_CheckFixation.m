@@ -22,12 +22,11 @@ if(p.trial.mouse.useAsEyepos)
     p.trial.eyeY = mousePos(2);
     
 else
-    % Avoid taking too many samples during the first trial by accident
-    sIdx = min(p.trial.datapixx.adc.dataSampleCount,p.trial.behavior.fixation.Sample) - 1;
-    
+    sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
+
     % calculate a moving average of the eye position for display reasons
-    p.trial.eyeX   = p.trial.eyeCalib.gain(1) * (prctile(p.trial.AI.Eye.X(end-sIdx:end), 50) - p.trial.eyeCalib.offset(1));
-    p.trial.eyeY   = p.trial.eyeCalib.gain(2) * (prctile(p.trial.AI.Eye.Y(end-sIdx:end), 50) - p.trial.eyeCalib.offset(2));
+    p.trial.eyeX   = p.trial.eyeCalib.gain(1) * (prctile(p.trial.AI.Eye.X(sIdx), 50) - p.trial.eyeCalib.offset(1));
+    p.trial.eyeY   = p.trial.eyeCalib.gain(2) * (prctile(p.trial.AI.Eye.Y(sIdx), 50) - p.trial.eyeCalib.offset(2));
 end
 
 p.trial.eyeAmp = sqrt((p.trial.behavior.fixation.fixPos(1) - p.trial.eyeX)^2 + ...
