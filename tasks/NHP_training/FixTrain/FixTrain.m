@@ -210,6 +210,19 @@ function TaskSetUp(p)
         
     p.trial.reward.Curr = p.trial.reward.InitialRew; % determine reward amount based on number of previous correct trials
     
+    
+    % Reward
+    nRewards = p.trial.reward.nRewards;
+    % Reset the reward counter (separate from iReward to allow for manual rewards)
+    p.trial.reward.count = 0;
+    % Create arrays for direct reference during reward
+    p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
+    p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);   
+    % Calculate the jackpot time
+    p.trial.reward.jackpotTime = sum(p.trial.reward.allPeriods);
+    
+    
+    
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
         
