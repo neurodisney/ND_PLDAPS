@@ -29,16 +29,16 @@ if(~exist(p.defaultParameters.session.tmpdir,'dir'))
     mkdir(p.defaultParameters.session.tmpdir);
 end
 
+p.defaultParameters.session.filestem = [p.defaultParameters.session.subject, '_', ...
+                                        datestr(p.defaultParameters.session.initTime, 'yyyymmdd'), '_', ...
+                                        p.defaultParameters.session.experimentSetupFile, '_',  ...
+                                        datestr(p.defaultParameters.session.initTime, 'HHMM')];
+
 p.defaultParameters.session.trialdir = fullfile(p.defaultParameters.session.dir, p.defaultParameters.session.filestem);
 
 if(~exist(p.defaultParameters.session.trialdir,'dir'))
     mkdir(p.defaultParameters.session.trialdir);
 end
-
-p.defaultParameters.session.filestem = [p.defaultParameters.session.subject, '_', ...
-                                        datestr(p.defaultParameters.session.initTime, 'yyyymmdd'), '_', ...
-                                        p.defaultParameters.session.experimentSetupFile, '_',  ...
-                                        datestr(p.defaultParameters.session.initTime, 'HHMM')];
 
 p.defaultParameters.session.file     = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
 
