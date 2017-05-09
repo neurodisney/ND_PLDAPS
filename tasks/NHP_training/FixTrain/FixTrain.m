@@ -317,7 +317,7 @@ function TaskDesign(p)
                     
                     disp('Reward 1')
                     % Transition to the succesful fixation epoch
-                    p.trial.epoch.CurrEpoch = p.trial.epoch.Fixating;
+                    p.trial.CurrEpoch = p.trial.epoch.Fixating;
 
                 end
                 
