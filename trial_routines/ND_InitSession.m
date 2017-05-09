@@ -111,10 +111,6 @@ if(p.trial.sound.use)
 end
 
 %-------------------------------------------------------------------------%
-%% REWARD
-p = pds.reward.setup(p);
-
-%-------------------------------------------------------------------------%
 %% Setup Photodiode stimuli
 if(p.trial.pldaps.draw.photodiode.use)    
     szstep = p.trial.pldaps.draw.photodiode.size / 2; % move PD away from edge
