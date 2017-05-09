@@ -207,9 +207,6 @@ function TaskSetUp(p)
                                          p.trial.reward.MaxWaitInitial,  [], [], 1, 0.001);
 
     p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
-        
-    p.trial.reward.Curr = p.trial.reward.InitialRew; % determine reward amount based on number of previous correct trials
-    
     
     % Reward
     nRewards = p.trial.reward.nRewards;
@@ -298,7 +295,7 @@ function TaskDesign(p)
                     p.trial.behavior.GotFix = 0;
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
-                elseif (p.trial.CurTime > p.trial.fixStart + p.trial.task.CurRewDelay) && p.trial.FixState.Current == p.trial.FixState.FixIn
+                elseif (p.trial.CurTime > p.trial.Timer.fixStart + p.trial.task.CurRewDelay) && p.trial.FixState.Current == p.trial.FixState.FixIn
                     
                     % Succesful
                     p.trial.task.Good = 1;
