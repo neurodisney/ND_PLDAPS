@@ -40,6 +40,12 @@ pds.datapixx.adc.cleanUpandSave(p);
 p.trial.timing.datapixxTRIALEND = pds.datapixx.strobe(p.trial.event.TRIALEND);  % end of trial
 
 %-------------------------------------------------------------------------%
+%% Reward
+% Remove excess preallocated nans
+timeReward = p.trial.reward.timeReward;
+timeReward = timeReward(~any(isnan(timeReward),2),:);
+p.trial.reward.timeReward = timeReward;
+
 %% End Photo Diode
 if(p.trial.pldaps.draw.photodiode.use)
     p.trial.timing.photodiodeTimes(:, p.trial.pldaps.draw.photodiode.dataEnd:end) = [];
