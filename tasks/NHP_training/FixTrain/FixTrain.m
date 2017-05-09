@@ -375,10 +375,6 @@ function TaskDesign(p)
             if(p.trial.datapixx.TTL_trialOn)
                 pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
             end
-            
-            if(p.trial.reward.cnt > 0)
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Correct; % received a reward, hence correct
-            end
 
             % determine ITI
             if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.Correct)
