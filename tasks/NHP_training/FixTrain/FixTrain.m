@@ -273,7 +273,7 @@ function TaskDesign(p)
                
                 % Fixation has occured
                 if p.trial.FixState.Current == p.trial.FixState.FixIn
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.BriefFixation;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; %Will become FullFixation upon holding long enough
                     p.trial.behavior.fixation.GotFix = 1;
                     p.trial.Timer.fixStart = p.trial.CurTime;
                 
