@@ -202,6 +202,7 @@ SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibration
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
+SS.pldaps.draw.eyeCalib              = 0;         % Show the eye calibration points
 SS.eyeCalib.name                     = 'Default';        % Name of the calibration used. For back referencing in the data later
 SS.eyeCalib.file                     = 'nofile';   % THe file that stores the calibration information
 SS.eyeCalib.gain                     = [-5, -5];  % default gain, used if no calibration points are entered
@@ -213,6 +214,7 @@ SS.eyeCalib.medRawEye = [];
 SS.eyeCalib.medFixPos = [];
 SS.behavior.fixation.CalibMethod     = 'gain'; % method used for calibration, currently only gain adjustment
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
+
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.GridPos         = 5;
@@ -284,6 +286,8 @@ SS.key.CtrJoy  = KbName('j');  % set current joystick position as zero
 
 SS.key.FixInc  = KbName('=+'); % increase size of fixation window
 SS.key.FixDec  = KbName('-_'); % decrease size of fixation window
+
+SS.key.viewEyeCalib = KbName('insert'); % View the calibration points
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables

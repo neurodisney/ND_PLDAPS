@@ -85,6 +85,11 @@ if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
                        p.trial.pldaps.draw.joystick.levelrect);
 end
 
+%% draw current eye calibration
+if p.trial.pldaps.draw.eyeCalib
+    pds.eyecalib.draw(p);
+end
+
 % % ------------------------------------------------------------------------%
 % %% draw mouse state
 % TODO: Fix to match current mouse implementation
