@@ -22,11 +22,13 @@ p.defaultParameters.blocks = p.trial.blocks;
 
 % Define a set of variables that should be editable, i.e. pass on information by default
 
+% --------------------------------------------------------------------%
 %%  keep joystick center position
 if(p.trial.datapixx.useJoystick)
     p.defaultParameters.behavior.joystick.Zero = p.trial.behavior.joystick.Zero;
 end
 
+% --------------------------------------------------------------------%
 %% keep offset correction for eye position
 if(p.trial.datapixx.useAsEyepos)
     p.defaultParameters.eyeCalib.offset     = p.trial.eyeCalib.offset;
@@ -34,6 +36,7 @@ if(p.trial.datapixx.useAsEyepos)
     p.defaultParameters.eyeCalib.gain    = p.trial.eyeCalib.gain;
 end
 
+% --------------------------------------------------------------------%
 %% keep fixation requirements
 if(p.trial.behavior.fixation.use)
     p.defaultParameters.behavior.fixation.required   = p.trial.behavior.fixation.required;
@@ -44,6 +47,7 @@ if(p.trial.behavior.fixation.use)
     p.defaultParameters.behavior.fixation.FixWinRect = p.trial.behavior.fixation.FixWinRect;
 end
 
+% --------------------------------------------------------------------%
 %% keep calibration information for eye position
 if(p.trial.behavior.fixation.useCalibration)
     p.defaultParameters.behavior.fixation.GridPos     = p.trial.behavior.fixation.GridPos;
@@ -56,6 +60,7 @@ if(p.trial.behavior.fixation.useCalibration)
     p.defaultParameters.eyeCalib.file                   = p.trial.eyeCalib.file;
 end
 
+% --------------------------------------------------------------------%
 %% editable variables
 if(isfield(p.trial, 'editable') && ~ isempty(p.trial.editable))
     for(i=1:length(p.trial.editable))

@@ -100,10 +100,6 @@ try
 
             p.defaultParameters.pldaps.iTrial = trialNr;
 
-            if(trialNr > 1)
-                p = ND_UpdateTrial(p);
-            end
-
             % ----------------------------------------------------------------%
             %% create new trial struct
 
@@ -118,7 +114,8 @@ try
             % save default parameters to trial data directory
             if(trialNr == 1)
                 save(fullfile(p.defaultParameters.session.trialdir, ...
-                             [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds']), 'tmpts');
+                             [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds']), ...
+                             '-struct','-mat','-v7.3', 'tmpts');
             end
 
             % easiest (and quickest) way to create a deep copy is to save it as mat file and load it again
@@ -141,12 +138,9 @@ try
             p.defaultParameters.setLock(false);
 
             % ----------------------------------------------------------------%
-            %% complete trial: save trial data
-            result = saveTrialFile(p);
-
-            if(~isempty(result))
-                disp(result.message)
-            end
+            %% processes after trial
+            p = ND_UpdateTrial(p);
+            p = ND_AfterTrial(p);
 
             % ----------------------------------------------------------------%
             %% make online plots
@@ -154,7 +148,15 @@ try
                 feval(p.defaultParameters.plot.routine,  p);
                 p.trial.plot.fig = []; % avoid saving the figure to data
             end
+            
+            % ----------------------------------------------------------------%
+            %% complete trial: save trial data
+            result = saveTrialFile(p);
 
+            if(~isempty(result))
+                disp(result.message)
+            end
+            
         else %dbquit == 1 is meant to be pause. should we halt datapixx?
 
             %create a new level to store all changes in,
@@ -229,6 +231,13 @@ try
         p.defaultParameters.plot.fig = []; % avoid saving the figure to data
         %hgexport(gcf, [p.defaultParameters.session.filestem, '.pdf'], hgexport('factorystyle'), 'Format', 'pdf');
     end
+
+    % save defaultParameters as they are at the end of the session
+    tmpts = mergeToSingleStruct(p.defaultParameters);
+
+    save(fullfile(p.defaultParameters.session.trialdir, ...
+             [p.defaultParameters.session.filestem, '_FinalDefaultParameters.pds']), ...
+             '-struct','-mat','-v7.3', 'tmpts');
 
 % ----------------------------------------------------------------%
     %% close screens

@@ -71,8 +71,8 @@ CurrRew   = p.defaultParameters.plot.data.CurrRew;
 RewCnt    = p.defaultParameters.plot.data.RewCnt;
 
 fp = Results ~= p.defaultParameters.outcome.NoFix;
-FixRT     = (FixStart - TaskStart) * 1000;
-FixDur    = (FixBreak - FixStart);
+FixRT  = (FixStart - TaskStart) * 1000;
+FixDur = (FixBreak - FixStart);
 
 try
     if(sum(fp) > 4)
