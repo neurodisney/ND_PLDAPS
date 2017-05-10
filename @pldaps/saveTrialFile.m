@@ -13,7 +13,7 @@ if(~p.trial.pldaps.nosave)
             flnm = [p.defaultParameters.session.filestem, '_T', num2str(p.trial.pldaps.iTrial, '%.5d'), '.pds'];
         end
 
-        save(fullfile(p.defaultParameters.session.trialdir, flnm), '-struct','-mat','-v7.3', 'ctrial');
+        save(fullfile(p.defaultParameters.session.trialdir, flnm), '-struct','ctrial','-mat','-v7.3');
         
     catch result
          warning('pldaps:saveTrialFile','Failed to save temp file in %s', p.defaultParameters.session.trialdir)
