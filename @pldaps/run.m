@@ -99,7 +99,10 @@ try
             end
 
             p.defaultParameters.pldaps.iTrial = trialNr;
-
+            
+            if(trialNr > 1)
+                p = ND_UpdateTrial(p);
+            end
             % ----------------------------------------------------------------%
             %% create new trial struct
 
@@ -119,7 +122,7 @@ try
             end
 
             % easiest (and quickest) way to create a deep copy is to save it as mat file and load it again
-            tmp_ptrial = fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct');
+            tmp_ptrial = fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct.mat');
             save(tmp_ptrial, 'tmpts');
             clear tmpts
             load(tmp_ptrial);
@@ -139,8 +142,7 @@ try
 
             % ----------------------------------------------------------------%
             %% processes after trial
-            p = ND_UpdateTrial(p);
-            p = ND_AfterTrial(p);
+            ND_AfterTrial(p);
 
             % ----------------------------------------------------------------%
             %% make online plots

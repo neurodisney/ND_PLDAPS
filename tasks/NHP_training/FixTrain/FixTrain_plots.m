@@ -44,33 +44,33 @@ end
 %% initialize plot
 if(offln == 1)
     figure('Position', fig_sz, 'Units', 'normalized');
-elseif(isempty(p.defaultParameters.plot.fig ) || offln == 1)
-    p.defaultParameters.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
+elseif(isempty(p.trial.plot.fig ) || offln == 1)
+    p.trial.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
     drawnow
     return;
 else
-    figure(p.defaultParameters.plot.fig);
+    figure(p.trial.plot.fig);
 end
 
-Ntrials = p.defaultParameters.pldaps.iTrial;
+Ntrials = p.trial.pldaps.iTrial;
 
 % keep track of plot relevant trial data
-p.defaultParameters.plot.data.Outcome(  Ntrials, 1) = p.trial.outcome.CurrOutcome;
-p.defaultParameters.plot.data.TaskStart(Ntrials, 1) = p.trial.EV.TaskStart;
-p.defaultParameters.plot.data.FixStart( Ntrials, 1) = p.trial.EV.FixStart;
-p.defaultParameters.plot.data.FixBreak( Ntrials, 1) = p.trial.EV.FixBreak;
-p.defaultParameters.plot.data.CurrRew(  Ntrials, 1) = p.trial.task.CurRewDelay;
-p.defaultParameters.plot.data.RewCnt(   Ntrials, 1) = p.trial.reward.iReward;
+p.trial.plot.data.Outcome(  Ntrials, 1) = p.trial.outcome.CurrOutcome;
+p.trial.plot.data.TaskStart(Ntrials, 1) = p.trial.EV.TaskStart;
+p.trial.plot.data.FixStart( Ntrials, 1) = p.trial.EV.FixStart;
+p.trial.plot.data.FixBreak( Ntrials, 1) = p.trial.EV.FixBreak;
+p.trial.plot.data.CurrRew(  Ntrials, 1) = p.trial.task.CurRewDelay;
+p.trial.plot.data.RewCnt(   Ntrials, 1) = p.trial.reward.iReward;
 
 % for easier handling assign to local variables
-Results   = p.defaultParameters.plot.data.Outcome;
-TaskStart = p.defaultParameters.plot.data.TaskStart;
-FixStart  = p.defaultParameters.plot.data.FixStart;
-FixBreak  = p.defaultParameters.plot.data.FixBreak;
-CurrRew   = p.defaultParameters.plot.data.CurrRew;
-RewCnt    = p.defaultParameters.plot.data.RewCnt;
+Results   = p.trial.plot.data.Outcome;
+TaskStart = p.trial.plot.data.TaskStart;
+FixStart  = p.trial.plot.data.FixStart;
+FixBreak  = p.trial.plot.data.FixBreak;
+CurrRew   = p.trial.plot.data.CurrRew;
+RewCnt    = p.trial.plot.data.RewCnt;
 
-fp = Results ~= p.defaultParameters.outcome.NoFix;
+fp = Results ~= p.trial.outcome.NoFix;
 FixRT  = (FixStart - TaskStart) * 1000;
 FixDur = (FixBreak - FixStart);
 

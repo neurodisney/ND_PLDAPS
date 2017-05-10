@@ -62,6 +62,10 @@ if(p.trial.behavior.fixation.useCalibration)
     p.defaultParameters.pldaps.draw.eyeCalib            = p.trial.pldaps.draw.eyeCalib;
 end
 
+%% Keep Trial tracks
+p.defaultParameters.TrialTrack = p.trial.TrialTrack;
+
+
 % --------------------------------------------------------------------%
 %% editable variables
 if(isfield(p.trial, 'editable') && ~ isempty(p.trial.editable))
