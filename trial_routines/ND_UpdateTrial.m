@@ -58,6 +58,8 @@ if(p.trial.behavior.fixation.useCalibration)
     p.defaultParameters.behavior.fixation.enableCalib = p.trial.behavior.fixation.enableCalib;
     p.defaultParameters.eyeCalib.name                   = p.trial.eyeCalib.name;
     p.defaultParameters.eyeCalib.file                   = p.trial.eyeCalib.file;
+    
+    p.defaultParameters.pldaps.draw.eyeCalib            = p.trial.pldaps.draw.eyeCalib;
 end
 
 % --------------------------------------------------------------------%
