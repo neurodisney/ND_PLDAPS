@@ -115,7 +115,7 @@ try
             if(trialNr == 1)
                 save(fullfile(p.defaultParameters.session.trialdir, ...
                              [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds']), ...
-                             '-struct','-mat','-v7.3', 'tmpts');
+                             '-struct','tmpts','-mat','-v7.3');
             end
 
             % easiest (and quickest) way to create a deep copy is to save it as mat file and load it again
