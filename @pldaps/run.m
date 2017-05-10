@@ -237,7 +237,7 @@ try
 
     save(fullfile(p.defaultParameters.session.trialdir, ...
              [p.defaultParameters.session.filestem, '_FinalDefaultParameters.pds']), ...
-             '-struct','-mat','-v7.3', 'tmpts');
+             '-struct','tmpts','-mat','-v7.3');
 
 % ----------------------------------------------------------------%
     %% close screens
