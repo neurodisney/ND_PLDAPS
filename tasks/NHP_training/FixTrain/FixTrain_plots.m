@@ -52,31 +52,34 @@ else
     figure(p.defaultParameters.plot.fig);
 end
 
-Ntrials  = length(p.data);
+Ntrials = p.defaultParameters.pldaps.iTrial;
 
-%Cond     = cellfun(@(x) x.Nr, p.data);
-Results  = cellfun(@(x) x.outcome.CurrOutcome, p.data);
+% keep track of plot relevant trial data
+p.defaultParameters.plot.data.Outcome(  Ntrials, 1) = p.trial.outcome.CurrOutcome;
+p.defaultParameters.plot.data.TaskStart(Ntrials, 1) = p.trial.EV.TaskStart;
+p.defaultParameters.plot.data.FixStart( Ntrials, 1) = p.trial.EV.FixStart;
+p.defaultParameters.plot.data.FixBreak( Ntrials, 1) = p.trial.EV.FixBreak;
+p.defaultParameters.plot.data.CurrRew(  Ntrials, 1) = p.trial.task.CurRewDelay;
+p.defaultParameters.plot.data.RewCnt(   Ntrials, 1) = p.trial.reward.iReward;
 
-fp = Results ~= p.data{1}.outcome.NoFix;
+% for easier handling assign to local variables
+Results   = p.defaultParameters.plot.data.Outcome;
+TaskStart = p.defaultParameters.plot.data.TaskStart;
+FixStart  = p.defaultParameters.plot.data.FixStart;
+FixBreak  = p.defaultParameters.plot.data.FixBreak;
+CurrRew   = p.defaultParameters.plot.data.CurrRew;
+RewCnt    = p.defaultParameters.plot.data.RewCnt;
+
+fp = Results ~= p.defaultParameters.outcome.NoFix;
+FixRT  = (FixStart - TaskStart) * 1000;
+FixDur = (FixBreak - FixStart);
 
 try
     if(sum(fp) > 4)
         
         %% get relevant data
-        
-        TaskStart = cellfun(@(x) x.EV.TaskStart, p.data);
         Trial_tm = (TaskStart - TaskStart(1)) / 60; % first trial defines zero, convert to minutes
-        
         ITI = [NaN, diff(Trial_tm)];
-        
-        FixStart  = cellfun(@(x) x.EV.FixStart, p.data);
-        FixRT     = (FixStart - TaskStart) * 1000;
-        
-        FixBreak  = cellfun(@(x) x.EV.FixBreak, p.data);
-        FixDur    = (FixBreak - FixStart);
-
-        CurrRew   = cellfun(@(x) x.task.CurRewDelay, p.data) / 1000;
-        RewCnt    = cellfun(@(x) x.reward.iReward,   p.data);        
 
         Tm      = Trial_tm(fp);
         RT      = FixRT(fp);
