@@ -31,7 +31,7 @@ p.defaultParameters.TrialTrack.FixBreak(  Tnr, 1) = p.trial.EV.FixBreak;
 
 % --------------------------------------------------------------------%
 %% execute user after trial function
-if(~isfield(p.defaultParameters.task.AfterTrial))
+if ~isfield(p.defaultParameters.task, 'AfterTrial') 
     if(exist(p.defaultParameters.task.AfterTrial,'file'))
         feval(p.defaultParameters.task.AfterTrial,  p);
     end
