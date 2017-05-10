@@ -100,33 +100,62 @@ try
 
             p.defaultParameters.pldaps.iTrial = trialNr;
             
-            if(trialNr > 1)
+            % ----------------------------------------------------------------%
+            %% Update information between trials
+            % This is right now a very dirty and unsatisfying solution.
+            % PLDAPS seems to overwrite the defaultParameters in the
+            % previous blocks, therefore a bunch of variables are created
+            % that will be passed from p.trial to p.trial by modifying
+            % temporarily the defaultParameters. However, defaultParameters
+            % will be reset every new iteration of this trial loop.
+            % TODO: make the code more flexible to allow changes to the
+            % defaultParameters and maybe keep some additonal information
+            % in other sub-structs.
+            if(trialNr > 1) % this actually is supposed to happen after a trial, hence skip first in loop
+ 
+                % processes after trial
+                p = ND_AfterTrial(p);
+                
+                % make online plots
+                if(p.trial.plot.do_online)
+                    feval(p.trial.plot.routine, p);
+                end
+                
+               % pass some information from the previous trial to the next trial
                 p = ND_UpdateTrial(p);
+                
             end
+            
             % ----------------------------------------------------------------%
             %% create new trial struct
 
             % create temporary trial struct
+            if(p.defaultParameters.plot.do_online)
+                figh = p.defaultParameters.plot.fig;
+                p.defaultParameters.plot.fig = []; % avoid saving the figure to data
+            end
+            
             tmpts = mergeToSingleStruct(p.defaultParameters);
 
-            % quick and nasty fix to avoid saving of online plots
-            if(p.defaultParameters.plot.do_online)
-               tmpts.plot.fig = [];
-            end
 
             % save default parameters to trial data directory
             if(trialNr == 1)
                 save(fullfile(p.defaultParameters.session.trialdir, ...
                              [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds']), ...
-                             '-struct','tmpts','-mat','-v7.3');
+                             '-struct', 'tmpts', '-mat', '-v7.3');
             end
 
             % easiest (and quickest) way to create a deep copy is to save it as mat file and load it again
             tmp_ptrial = fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct.mat');
             save(tmp_ptrial, 'tmpts');
-            clear tmpts
+            clear tmpts;
             load(tmp_ptrial);
             p.trial = tmpts;
+            
+            if(p.defaultParameters.plot.do_online)
+                p.trial.plot.fig = figh; %dirty ad hoc fix to keep figure handle available
+            end
+            
             clear tmpts;
             delete(tmp_ptrial);
 
@@ -139,17 +168,6 @@ try
 
             % unlock the defaultParameters
             p.defaultParameters.setLock(false);
-
-            % ----------------------------------------------------------------%
-            %% processes after trial
-            ND_AfterTrial(p);
-
-            % ----------------------------------------------------------------%
-            %% make online plots
-            if(p.defaultParameters.plot.do_online)
-                feval(p.defaultParameters.plot.routine,  p);
-                p.trial.plot.fig = []; % avoid saving the figure to data
-            end
             
             % ----------------------------------------------------------------%
             %% complete trial: save trial data
@@ -163,7 +181,7 @@ try
 
             %create a new level to store all changes in,
             %load only non trial paraeters
-            pause = p.trial.pldaps.pause.type;
+            pause   = p.trial.pldaps.pause.type;
             p.trial = p.defaultParameters;
 
             p.defaultParameters.addLevels({struct}, {['PauseAfterTrial' num2str(trialNr) 'Parameters']});
@@ -229,17 +247,20 @@ try
 
     % save online plot
     if(p.defaultParameters.plot.do_online)
-        ND_fig2pdf(p.defaultParameters.plot.fig, [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pdf']);
+        ND_fig2pdf(p.trial.plot.fig, ...
+                  [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pdf']);
         p.defaultParameters.plot.fig = []; % avoid saving the figure to data
-        %hgexport(gcf, [p.defaultParameters.session.filestem, '.pdf'], hgexport('factorystyle'), 'Format', 'pdf');
     end
 
+    % final update of trial information
+    p = ND_AfterTrial(p);
+    
     % save defaultParameters as they are at the end of the session
     tmpts = mergeToSingleStruct(p.defaultParameters);
 
     save(fullfile(p.defaultParameters.session.trialdir, ...
              [p.defaultParameters.session.filestem, '_FinalDefaultParameters.pds']), ...
-             '-struct','tmpts','-mat','-v7.3');
+             '-struct', 'tmpts', '-mat', '-v7.3');
 
 % ----------------------------------------------------------------%
     %% close screens

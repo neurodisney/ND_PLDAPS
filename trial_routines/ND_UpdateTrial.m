@@ -33,7 +33,7 @@ end
 if(p.trial.datapixx.useAsEyepos)
     p.defaultParameters.eyeCalib.offset     = p.trial.eyeCalib.offset;
     p.defaultParameters.behavior.fixation.PrevOffset = p.trial.behavior.fixation.PrevOffset;
-    p.defaultParameters.eyeCalib.gain    = p.trial.eyeCalib.gain;
+    p.defaultParameters.eyeCalib.gain       = p.trial.eyeCalib.gain;
 end
 
 % --------------------------------------------------------------------%
@@ -62,9 +62,14 @@ if(p.trial.behavior.fixation.useCalibration)
     p.defaultParameters.pldaps.draw.eyeCalib            = p.trial.pldaps.draw.eyeCalib;
 end
 
-%% Keep Trial tracks
-p.defaultParameters.TrialTrack = p.trial.TrialTrack;
-
+% --------------------------------------------------------------------%
+%% figure handle for online plots
+if(p.trial.plot.do_online)
+    p.defaultParameters.plot.fig = p.trial.plot.fig;
+%     if(isfield(p.defaultParameters.plot, 'data'))
+%         p.defaultParameters.plot.data = p.trial.plot.data;
+%     end
+end
 
 % --------------------------------------------------------------------%
 %% editable variables

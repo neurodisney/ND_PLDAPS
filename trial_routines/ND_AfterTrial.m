@@ -10,24 +10,24 @@ function p = ND_AfterTrial(p)
 % wolf zinke, May 2017
 
 
-Tnr = p.trial.pldaps.iTrial;
-p.trial.TrialTrack.NumTrial = Tnr;
+Tnr = p.defaultParameters.pldaps.iTrial;
+p.defaultParameters.TrialTrack.NumTrial = Tnr;
 
-p.trial.TrialTrack.Condition(Tnr, 1) = p.trial.Nr;
-p.trial.TrialTrack.Good(    Tnr, 1)  = p.trial.task.Good;
+p.defaultParameters.TrialTrack.Condition(Tnr, 1) = p.trial.Nr;
+p.defaultParameters.TrialTrack.Good(    Tnr, 1)  = p.trial.task.Good;
 
 % --------------------------------------------------------------------%
 %% keep outcomes
-p.trial.TrialTrack.Outcomes(Tnr, 1) = p.trial.outcome.CurrOutcome;
-p.trial.TrialTrack.Good(    Tnr, 1) = p.trial.task.Good;
+p.defaultParameters.TrialTrack.Outcomes(Tnr, 1) = p.trial.outcome.CurrOutcome;
+p.defaultParameters.TrialTrack.Good(    Tnr, 1) = p.trial.task.Good;
 
 % --------------------------------------------------------------------%
 %% Keep basic timings
-p.trial.TrialTrack.TrialStart(Tnr, 1) = p.trial.EV.TrialStart;
-p.trial.TrialTrack.TaskStart( Tnr, 1) = p.trial.EV.TaskStart;
-p.trial.TrialTrack.TaskEnd(   Tnr, 1) = p.trial.EV.TaskEnd;
-p.trial.TrialTrack.FixStart(  Tnr, 1) = p.trial.EV.FixStart;
-p.trial.TrialTrack.FixBreak(  Tnr, 1) = p.trial.EV.FixBreak;
+p.defaultParameters.TrialTrack.TrialStart(Tnr, 1) = p.trial.EV.TrialStart;
+p.defaultParameters.TrialTrack.TaskStart( Tnr, 1) = p.trial.EV.TaskStart;
+p.defaultParameters.TrialTrack.TaskEnd(   Tnr, 1) = p.trial.EV.TaskEnd;
+p.defaultParameters.TrialTrack.FixStart(  Tnr, 1) = p.trial.EV.FixStart;
+p.defaultParameters.TrialTrack.FixBreak(  Tnr, 1) = p.trial.EV.FixBreak;
 
 % --------------------------------------------------------------------%
 %% execute user after trial function
@@ -39,7 +39,7 @@ end
 
 % --------------------------------------------------------------------%
 %% save trial overview
-ctrial = p.trial.TrialTrack;
+ctrial = p.defaultParameters.TrialTrack;
 
 save(fullfile(p.trial.session.trialdir, ...
              [p.trial.session.filestem, '_TrialTrack.pds']), ...

@@ -44,10 +44,8 @@ end
 %% initialize plot
 if(offln == 1)
     figure('Position', fig_sz, 'Units', 'normalized');
-elseif(isempty(p.trial.plot.fig ) || offln == 1)
+elseif(isempty(p.trial.plot.fig) || offln == 1)
     p.trial.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
-    drawnow
-    return;
 else
     figure(p.trial.plot.fig);
 end
@@ -55,20 +53,20 @@ end
 Ntrials = p.trial.pldaps.iTrial;
 
 % keep track of plot relevant trial data
-p.trial.plot.data.Outcome(  Ntrials, 1) = p.trial.outcome.CurrOutcome;
-p.trial.plot.data.TaskStart(Ntrials, 1) = p.trial.EV.TaskStart;
-p.trial.plot.data.FixStart( Ntrials, 1) = p.trial.EV.FixStart;
-p.trial.plot.data.FixBreak( Ntrials, 1) = p.trial.EV.FixBreak;
-p.trial.plot.data.CurrRew(  Ntrials, 1) = p.trial.task.CurRewDelay;
-p.trial.plot.data.RewCnt(   Ntrials, 1) = p.trial.reward.iReward;
+p.plotdata.Outcome(  Ntrials, 1) = p.trial.outcome.CurrOutcome;
+p.plotdata.TaskStart(Ntrials, 1) = p.trial.EV.TaskStart;
+p.plotdata.FixStart( Ntrials, 1) = p.trial.EV.FixStart;
+p.plotdata.FixBreak( Ntrials, 1) = p.trial.EV.FixBreak;
+p.plotdata.CurrRew(  Ntrials, 1) = p.trial.task.CurRewDelay;
+p.plotdata.RewCnt(   Ntrials, 1) = p.trial.reward.iReward;
 
 % for easier handling assign to local variables
-Results   = p.trial.plot.data.Outcome;
-TaskStart = p.trial.plot.data.TaskStart;
-FixStart  = p.trial.plot.data.FixStart;
-FixBreak  = p.trial.plot.data.FixBreak;
-CurrRew   = p.trial.plot.data.CurrRew;
-RewCnt    = p.trial.plot.data.RewCnt;
+Results   = p.plotdata.Outcome;
+TaskStart = p.plotdata.TaskStart;
+FixStart  = p.plotdata.FixStart;
+FixBreak  = p.plotdata.FixBreak;
+CurrRew   = p.plotdata.CurrRew;
+RewCnt    = p.plotdata.RewCnt;
 
 fp = Results ~= p.trial.outcome.NoFix;
 FixRT  = (FixStart - TaskStart) * 1000;
