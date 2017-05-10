@@ -13,6 +13,19 @@ function draw(p)
 
 % Nate Faber, April 2017
 
+
+% Colors
+currPointsCol = p.trial.display.clut.greenbg;
+currFixPosCol = p.trial.display.clut.lGreenbg;
+currMedianCol = p.trial.display.clut.dGreenbg;
+
+otherPointsCol = p.trial.display.clut.redbg;
+otherFixPosCol = p.trial.display.clut.lRedbg;
+otherMedianCol = p.trial.display.clut.dRedbg;
+
+recentPointCol = p.trial.display.clut.yellowbg;
+
+
 % pointer to the screen
 window = p.trial.display.overlayptr;
 
@@ -31,7 +44,7 @@ for iFixPos = 1:size(medFixPos,1)
     fixPosRect = ND_GetRect(fixPos,boxSize);
     
     % Draw the box
-    Screen('FrameRect', window, p.trial.display.clut.Calib_LR, fixPosRect, boxPenWidth)
+    Screen('FrameRect', window, otherFixPosCol, fixPosRect, boxPenWidth)
 end
 
 
@@ -40,7 +53,7 @@ currFixPos = p.trial.behavior.fixation.fixPos;
 fixPosRect = ND_GetRect(currFixPos,boxSize);
 
 % Draw the box
-Screen('FrameRect', window, p.trial.display.clut.Calib_LG, fixPosRect, boxPenWidth)
+Screen('FrameRect', window, currFixPosCol, fixPosRect, boxPenWidth)
 
 
 %% Draw the median calibration point (Red/Green X)
@@ -54,9 +67,9 @@ if ~isempty(medRawEye)
     
     for iMedian = 1:size(medRawEye,1)
         if iMedian == currentFixPosIndex
-            crossColor = p.trial.display.clut.Calib_DG;
+            crossColor = currMedianCol;
         else
-            crossColor = p.trial.display.clut.Calib_DR;
+            crossColor = otherMedianCol;
         end
         
         crossCenter = gain .* (medRawEye(iMedian,:) - offset);
@@ -80,11 +93,11 @@ if ~isempty(medRawEye)
     
     % Get the colors
     % Most are dark red so start with that
-    dotColors = repmat(p.trial.display.clut.Calib_R,nPoints,3);
+    dotColors = repmat(otherPointsCol,nPoints,3);
     % Make the ones corresponding to the current fixPos dark green
-    dotColors(ismember(allFixPos,currFixPos,'rows'),:) = p.trial.display.clut.Calib_G;
+    dotColors(ismember(allFixPos,currFixPos,'rows'),:) = currPointsCol;
     % Make the most recent calibration point yellow
-    dotColors(end,:) = p.trial.display.clut.Calib_Y;
+    dotColors(end,:) = recentPointCol;
     
     % Make the last dot bigger for visibility
     dotSizes = repmat(dotSize,1,nPoints);

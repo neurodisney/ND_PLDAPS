@@ -34,20 +34,7 @@ if(isempty(state))
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.  
     
-    % Colors used for calibration points
-    bgColor = p.trial.display.bgColor; % For making things invisible on the monkey screen;
-    ND_DefineCol(p, 'Calib_LG', 70, [0.69, 1.00, 0.69], bgColor); % Light Green
-    ND_DefineCol(p, 'Calib_G',  71, [0.00, 1.00, 0.00], bgColor); % Green
-    ND_DefineCol(p, 'Calib_DG', 72, [0.00, 0.69, 0.00], bgColor); % Dark Green
-    ND_DefineCol(p, 'Calib_LR', 73, [1.00, 0.69, 0.69], bgColor); % Light Red
-    ND_DefineCol(p, 'Calib_R',  74, [1.00, 0.00, 0.00], bgColor); % Red
-    ND_DefineCol(p, 'Calib_DR', 75, [0.69, 0.00, 0.00], bgColor); % Dark Red
-    ND_DefineCol(p, 'Calib_Y',  76, [1.00, 1.00, 0.00], bgColor); % Yellow
-    
-    % Always use light blue for fixation spot during calibration
-    ND_DefineCol(p, 'Fix_LB',  77, [0.69, 0.69, 1.00]);
-    
-    p.trial.behavior.fixation.FixCol = 'Fix_LB';
+    p.trial.behavior.fixation.FixCol = 'lBlue';
     
     % --------------------------------------------------------------------%
     %% Enable random positions
