@@ -95,7 +95,7 @@ if(isempty(state))
     c3.reward.Dur            = [0.10 0.10];
     c3.reward.Period         = [1.00 1.00];
     c3.reward.jackpotDur     = 0.3;
-    c3.nTrials = 100;
+    c3.nTrials = 25;
     
     % condition 4
     c4.Nr = 4;
@@ -125,17 +125,17 @@ if(isempty(state))
     c6.reward.Dur            = [0.15 0.15];
     c6.reward.Period         = [0.60 0.60];   
     c6.reward.jackpotDur     = 0.5;
-    c6.nTrials = 300;
+    c6.nTrials = 200;
     
     % condition 7
-    c6.Nr = 7;
-    c6.reward.MinWaitInitial = 1.48;
-    c6.reward.MaxWaitInitial = 1.52;
-    c6.reward.nRewards       = [1    25  ];
-    c6.reward.Dur            = [0.20 0.20];
-    c6.reward.Period         = [0.30 0.30];   
-    c6.reward.jackpotDur     = 1.0;
-    c6.nTrials = 1000;
+    c7.Nr = 7;
+    c7.reward.MinWaitInitial = 1.48;
+    c7.reward.MaxWaitInitial = 1.52;
+    c7.reward.nRewards       = [1    25  ];
+    c7.reward.Dur            = [0.20 0.20];
+    c7.reward.Period         = [0.30 0.30];   
+    c7.reward.jackpotDur     = 1.0;
+    c7.nTrials = 1000;
     
     
     % Fill a conditions list with n of each kind of condition sequentially
@@ -144,7 +144,7 @@ if(isempty(state))
     totalTrials = 0;
     
     % Iterate through each condition to fill conditions
-    conditionsIterator = {c4,c5,c6};
+    conditionsIterator = {c4,c5,c6,c7};
     
     for iCond = 1:size(conditionsIterator,2)
         cond = conditionsIterator(iCond);
