@@ -212,6 +212,17 @@ try
         end  %  if(~p.trial.pldaps.quit)
     end  %  while(p.trial.pldaps.iTrial < p.trial.pldaps.finish && p.trial.pldaps.quit ~= 2)
 
+    
+    % final update of trial information
+    p = ND_AfterTrial(p);
+    
+    %% save online plot
+    if(p.defaultParameters.plot.do_online)
+        ND_fig2pdf(p.trial.plot.fig, ...
+                  [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pdf']);
+        p.defaultParameters.plot.fig = []; % avoid saving the figure to data
+    end
+    
     % ----------------------------------------------------------------%
     %% make the session parameterStruct active
     p.defaultParameters.setLevels(levelsPreTrials);
@@ -244,16 +255,6 @@ try
 
     % ----------------------------------------------------------------%
     %% save the session data to file
-
-    % save online plot
-    if(p.defaultParameters.plot.do_online)
-        ND_fig2pdf(p.trial.plot.fig, ...
-                  [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pdf']);
-        p.defaultParameters.plot.fig = []; % avoid saving the figure to data
-    end
-
-    % final update of trial information
-    p = ND_AfterTrial(p);
     
     % save defaultParameters as they are at the end of the session
     tmpts = mergeToSingleStruct(p.defaultParameters);
