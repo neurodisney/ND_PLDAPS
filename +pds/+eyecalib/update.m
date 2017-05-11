@@ -83,6 +83,8 @@ oldGain = p.trial.eyeCalib.gain;
 if isnan(xGain)
     xGain = oldGain(1);
 end
+
+
 if isnan(yGain)
     yGain = oldGain(2);
 end

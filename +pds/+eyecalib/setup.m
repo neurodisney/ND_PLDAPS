@@ -18,6 +18,10 @@ if p.trial.behavior.fixation.enableCalib
     p.trial.eyeCalib.name = [p.trial.session.subject, '_', datestr(now,'yyyymmdd') '_EyeCalib_' , datestr(now,'HHMM')];
     p.trial.eyeCalib.file = [p.trial.session.eyeCalibDir, filesep, p.trial.eyeCalib.name, '.mat'];    
     
+    % Load in the default gain and offset
+    p.trial.eyeCalib.gain = p.trial.eyeCalib.defaultGain;
+    p.trial.eyeCalib.offset = p.trial.eyeCalib.defaultOffset;
+    
     % define keys used for eye calibration
     KbName('UnifyKeyNames');
     p.trial.key.resetCalib    = KbName('z');  % Clear the calibration matrices and start over
