@@ -18,9 +18,13 @@ classdef pldaps < handle
           %You can add calculated parameters to this struct, e.g. the
           %actual eyeposition used for calculating the frame, etc.
           
-    data@cell % WZ: currently removed, was a cell array containing each single trial struct
+    session               % WZ: store session relevant information here    
     
-    plotdata  % WZ: temporary ad hoc addition to get plots working again
+    data                  % WZ: keep essential data across trials
+    
+    plotdata              % WZ: temporary ad hoc addition to get plots working again
+    
+    PAL                   % WZ: preparation for an integration of the palamedes toolbox
     
     functionHandles%@cell %mostly unused atm
  end

@@ -44,8 +44,6 @@ end
 if(p.trial.behavior.fixation.use)
 
     switch p.trial.FixState.Current
-        
-        
         case p.trial.FixState.FixOut
             %% currently not fixating
             
@@ -53,10 +51,8 @@ if(p.trial.behavior.fixation.use)
             if(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin/2 )
                 pds.datapixx.strobe(p.trial.event.FIX_IN);
                 p.trial.FixState.Current = p.trial.FixState.startingFix;
-                p.trial.Timer.fixEntry = p.trial.CurTime;
+                p.trial.EV.FixEntry = p.trial.CurTime;
             end
-            
-            
         
         case p.trial.FixState.startingFix
             %% gaze has momentarily entered fixation window
@@ -67,11 +63,10 @@ if(p.trial.behavior.fixation.use)
                 p.trial.FixState.Current = p.trial.FixState.FixOut;
                 
             % Gaze is robustly within the fixation window
-            elseif p.trial.CurTime >= p.trial.Timer.fixEntry + p.trial.behavior.fixation.entryTime
+            elseif p.trial.CurTime >= p.trial.EV.FixEntry + p.trial.behavior.fixation.entryTime
                 pds.datapixx.strobe(p.trial.event.FIXATION);
                 p.trial.FixState.Current = p.trial.FixState.FixIn;
-                p.trial.Timer.fixStart = p.trial.Timer.fixEntry;
-                
+                p.trial.EV.FixStart = p.trial.EV.FixEntry;
             end
             
         case p.trial.FixState.FixIn
@@ -83,9 +78,8 @@ if(p.trial.behavior.fixation.use)
                 
                 % Set state to fixbreak to ascertain if this is just jitter (time out of fixation window is very short)
                 p.trial.FixState.Current = p.trial.FixState.breakingFix;
-                p.trial.Timer.fixLeave = p.trial.CurTime;
+                p.trial.EV.FixLeave = p.trial.CurTime;
             end
-            
         
         case p.trial.FixState.breakingFix
             %% gaze has momentarily left fixation window    
@@ -96,13 +90,12 @@ if(p.trial.behavior.fixation.use)
                 p.trial.FixState.Current = p.trial.FixState.FixIn;
             
             % Eye has not re-entered fix window in time
-            elseif p.trial.CurTime > p.trial.Timer.fixLeave + p.trial.behavior.fixation.BreakTime
+            elseif p.trial.CurTime > p.trial.EV.FixLeave + p.trial.behavior.fixation.BreakTime
                 pds.datapixx.strobe(p.trial.event.FIX_BREAK);
                 p.trial.FixState.Current = p.trial.FixState.FixOut;
-                p.trial.Timer.FixBreak = p.trial.Timer.fixLeave;
+                p.trial.EV.FixBreak = p.trial.EV.FixLeave;
             end
        
-
         otherwise
             %% Initially nan, just get the current state
             if(isnan(p.trial.FixState.Current))

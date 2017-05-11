@@ -9,7 +9,6 @@ function p = ND_AfterTrial(p)
 %
 % wolf zinke, May 2017
 
-
 Tnr = p.trial.pldaps.iTrial;
 p.data.NumTrial = Tnr;
 
@@ -31,7 +30,7 @@ p.data.FixBreak(  Tnr, 1) = p.trial.EV.FixBreak;
 
 % --------------------------------------------------------------------%
 %% execute user after trial function
-if isfield(p.trial.task, 'AfterTrial') 
+if(isfield(p.trial.task, 'AfterTrial') )
     if(exist(p.trial.task.AfterTrial,'file'))
         feval(p.trial.task.AfterTrial,  p);
     end
@@ -39,7 +38,7 @@ end
 
 % --------------------------------------------------------------------%
 %% save trial overview
-cdata = p.cdata;
+cdata = p.data;
 
 save(fullfile(p.trial.session.trialdir, ...
              [p.trial.session.filestem, '_TrialTrack.pds']), ...

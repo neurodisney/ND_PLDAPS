@@ -77,7 +77,7 @@ try
         
         %% get relevant data
         Trial_tm = (TaskStart - TaskStart(1)) / 60; % first trial defines zero, convert to minutes
-        ITI = [NaN, diff(Trial_tm)];
+        ITI = [NaN; diff(Trial_tm)];
 
         Tm      = Trial_tm(fp);
         RT      = FixRT(fp);
