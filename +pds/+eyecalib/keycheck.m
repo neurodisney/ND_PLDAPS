@@ -30,6 +30,27 @@ if(~isempty(p.trial.LastKeyPress))
             end
             
             % ----------------------------------------------------------------%
+        case p.trial.key.wipeCalibPos
+            %% Wipe the calibration points at the current fixPos
+            
+            % Load from the p struct
+            curFixPos = p.trial.behavior.fixation.fixPos;
+            fixPos = p.trial.eyeCalib.fixPos;
+            rawEye = p.trial.eyeCalib.rawEye;
+            
+            % Find the calibration points taken at the current fix position
+            wipeRows = ismember(fixPos,curFixPos,'rows');
+            
+            % Remove those rows
+            fixPos(wipeRows,:) = [];
+            rawEye(wipeRows,:) = [];
+            
+            % Save to the p struct
+            p.trial.eyeCalib.fixPos = fixPos;
+            p.trial.eyeCalib.rawEye = rawEye;
+            
+            pds.eyecalib.update(p);
+            % ----------------------------------------------------------------%
         case p.trial.key.resetCalib
             %% Clear the calibration matrix and reset to default values
             pds.eyecalib.reset(p);
