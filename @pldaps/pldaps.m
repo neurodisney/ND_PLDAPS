@@ -17,7 +17,10 @@ classdef pldaps < handle
     trial %will get all variables from defaultParameters + correct conditions cell merged. This will get saved automatically. 
           %You can add calculated parameters to this struct, e.g. the
           %actual eyeposition used for calculating the frame, etc.
-    data@cell
+          
+    data@cell % WZ: currently removed, was a cell array containing each single trial struct
+    
+    plotdata  % WZ: temporary ad hoc addition to get plots working again
     
     functionHandles%@cell %mostly unused atm
  end

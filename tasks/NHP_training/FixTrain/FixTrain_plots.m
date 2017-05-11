@@ -44,39 +44,40 @@ end
 %% initialize plot
 if(offln == 1)
     figure('Position', fig_sz, 'Units', 'normalized');
-elseif(isempty(p.defaultParameters.plot.fig ) || offln == 1)
-    p.defaultParameters.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
-    drawnow
-    return;
+elseif(isempty(p.trial.plot.fig) || offln == 1)
+    p.trial.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
 else
-    figure(p.defaultParameters.plot.fig);
+    figure(p.trial.plot.fig);
 end
 
-Ntrials  = length(p.data);
+Ntrials = p.trial.pldaps.iTrial;
 
-%Cond     = cellfun(@(x) x.Nr, p.data);
-Results  = cellfun(@(x) x.outcome.CurrOutcome, p.data);
+% keep track of plot relevant trial data
+p.plotdata.Outcome(  Ntrials, 1) = p.trial.outcome.CurrOutcome;
+p.plotdata.TaskStart(Ntrials, 1) = p.trial.EV.TaskStart;
+p.plotdata.FixStart( Ntrials, 1) = p.trial.EV.FixStart;
+p.plotdata.FixBreak( Ntrials, 1) = p.trial.EV.FixBreak;
+p.plotdata.CurrRew(  Ntrials, 1) = p.trial.task.CurRewDelay;
+p.plotdata.RewCnt(   Ntrials, 1) = p.trial.reward.iReward;
 
-fp = Results ~= p.data{1}.outcome.NoFix;
+% for easier handling assign to local variables
+Results   = p.plotdata.Outcome;
+TaskStart = p.plotdata.TaskStart;
+FixStart  = p.plotdata.FixStart;
+FixBreak  = p.plotdata.FixBreak;
+CurrRew   = p.plotdata.CurrRew;
+RewCnt    = p.plotdata.RewCnt;
+
+fp = Results ~= p.trial.outcome.NoFix;
+FixRT  = (FixStart - TaskStart) * 1000;
+FixDur = (FixBreak - FixStart);
 
 try
     if(sum(fp) > 4)
         
         %% get relevant data
-        
-        TaskStart = cellfun(@(x) x.EV.TaskStart, p.data);
         Trial_tm = (TaskStart - TaskStart(1)) / 60; % first trial defines zero, convert to minutes
-        
         ITI = [NaN, diff(Trial_tm)];
-        
-        FixStart  = cellfun(@(x) x.EV.FixStart, p.data);
-        FixRT     = (FixStart - TaskStart) * 1000;
-        
-        FixBreak  = cellfun(@(x) x.EV.FixBreak, p.data);
-        FixDur    = (FixBreak - FixStart);
-
-        CurrRew   = cellfun(@(x) x.task.CurRewDelay, p.data) / 1000;
-        RewCnt    = cellfun(@(x) x.reward.iReward,   p.data);        
 
         Tm      = Trial_tm(fp);
         RT      = FixRT(fp);

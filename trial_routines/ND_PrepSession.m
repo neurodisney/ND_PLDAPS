@@ -118,10 +118,10 @@ if(p.defaultParameters.behavior.joystick.use && ~p.defaultParameters.datapixx.us
 end
 
 % don't enable online plots if no function is specified
-if(~exist(p.defaultParameters.plot.routine,'file'))
+if(p.defaultParameters.plot.do_online && ~exist(p.defaultParameters.plot.routine,'file'))
     warning('Plotting routine for online analysis not found, disabled plotting!');
     p.defaultParameters.plot.do_online  =  0;
-elseif(~isfield(p.defaultParameters.plot, 'fig'))
+elseif(p.defaultParameters.plot.do_online && ~isfield(p.defaultParameters.plot, 'fig'))
     p.defaultParameters.plot.fig = [];
 end
 

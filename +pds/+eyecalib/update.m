@@ -78,13 +78,14 @@ yIndices = find(relativeFix(:,2));
 xGain = nanmean( relativeFix(xIndices,1) ./ relativeEye(xIndices,1) , 1);
 yGain = nanmean( relativeFix(yIndices,2) ./ relativeEye(yIndices,2) , 1);
 
-% Update the p struct (only if the new gain is not nan)
+% Reset the gain to the default value if no points exist
 oldGain = p.trial.eyeCalib.gain;
 if isnan(xGain)
-    xGain = oldGain(1);
+    xGain = p.trial.eyeCalib.defaultGain(1);
 end
+
 if isnan(yGain)
-    yGain = oldGain(2);
+    yGain = p.trial.eyeCalib.defaultGain(2);
 end
 
 newGain = [xGain, yGain];

@@ -151,12 +151,6 @@ if(~isempty(p.trial.mouse.initialCoordinates))
 end
 
 % --------------------------------------------------------------------%
-%% prepare online plots
-if(p.trial.plot.do_online)
-    p = feval(p.trial.plot.routine,  p);
-end
-
-% --------------------------------------------------------------------%
 %% Set text size for screen display
 Screen('TextSize', p.trial.display.overlayptr , 36);
 
