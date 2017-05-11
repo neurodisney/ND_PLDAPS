@@ -54,9 +54,10 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.reward.MinWaitInitial = 0.15; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.reward.MaxWaitInitial = 0.15;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.reward.InitialRew     = 0.2;  % duration for initial reward pulse
+    c1.reward.MinWaitInitial = 0.5;
+    c1.reward.MaxWaitInitial = 0.5;
+    c1.reward.Dur            = 0.05;
+    c1.reward.Period         = 1;
     
     conditions = {c1};
 
@@ -126,10 +127,8 @@ function TaskSetUp(p)
 
     p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
         
-    p.trial.reward.Curr = p.trial.reward.InitialRew; % determine reward amount based on number of previous correct trials
-        
     p.trial.task.Good                = 1;  % assume no error untill error occurs
-    p.trial.reward.cnt          = 0;  % counter for received rewardsw
+    p.trial.reward.count          = 0;  % counter for received rewardsw
     p.trial.behavior.fixation.GotFix = 0;
     
     % if random position is required pick one and move fix spot
@@ -177,16 +176,6 @@ function TaskDesign(p)
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; %Will become FullFixation upon holding long enough
                     p.trial.behavior.fixation.GotFix = 1;
                     p.trial.Timer.fixStart = p.trial.CurTime;
-                
-                % Time to fixate has expired
-                elseif p.trial.CurTime > p.trial.Timer.trialStart + p.trial.task.Timing.WaitFix
-                    
-                    % Long enough fixation did not occur, failed trial
-                    p.trial.task.Good = 0;
-                    
-                    % Go directly to TaskEnd, do not start task, do not collect reward
-                    p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                    
                 end
                 
                 
@@ -209,8 +198,8 @@ function TaskDesign(p)
                     p.trial.EV.FixStart = p.trial.Timer.fixStart;
                     
                     % Reward the monkey
-                    p.trial.reward.count = 1;
-                    pds.reward.give(p, p.trial.reward.allDurs(1));
+                    p.trial.reward.count = p.trial.reward.count + 1;
+                    pds.reward.give(p, p.trial.reward.Dur);
                     p.trial.Timer.lastReward = p.trial.CurTime;
                     
                     % Transition to the succesful fixation epoch
@@ -228,7 +217,7 @@ function TaskDesign(p)
         if p.trial.FixState.Current == p.trial.FixState.FixIn
                 
                 rewardCount = p.trial.reward.count;
-                rewardPeriod = p.trial.reward.allPeriods(rewardCount);
+                rewardPeriod = p.trial.reward.Period;
                 
                 % Wait for rewardPeriod to elapse since last reward, then give the next reward
                 if p.trial.CurTime > p.trial.Timer.lastReward + rewardPeriod
@@ -237,18 +226,7 @@ function TaskDesign(p)
                     p.trial.reward.count = rewardCount;
                     
                     % Get the reward duration
-                    if rewardCount <= length(p.trial.reward.allDurs)
-                        rewardDuration = p.trial.reward.allDurs(rewardCount);                  
-                    else
-                        % Last reward has been reached, give the JACKPOT!
-                        rewardDuration = p.trial.reward.jackpotDur;                    
-                        
-                        % Best outcome
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
-                        
-                        % End the task
-                        p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                    end
+                    rewardDuration = p.trial.reward.Dur;                  
                     
                     % Give the reward and update the lastReward time
                     pds.reward.give(p, rewardDuration);
@@ -256,10 +234,11 @@ function TaskDesign(p)
                     
                 end
         
-        % Fixation Break, end the trial        
+        % Fixation Break, go back to waitFix    
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
             % TODO: Possibly play breakfix sound
-            p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+            p.trial.behavior.fixation.GotFix = 0;
+            p.trial.CurrEpoch = p.trial.epoch.WaitFix;
                                  
         end
             
