@@ -161,97 +161,112 @@ function TaskDesign(p)
             if(p.trial.datapixx.TTL_trialOn)
                 pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
             end
-        
-            p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.WaitFix;
+ 
+            p.trial.Timer.trialStart = p.trial.CurTime;
             p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
-        %% Fixation target shown, wait until gaze gets in there
-        
-            if(p.trial.FixState.Current == p.trial.FixState.FixIn || p.trial.behavior.fixation.GotFix == 1)
-            % got fixation
-                if(p.trial.behavior.fixation.GotFix == 0) % starts to fixate
+            %% Fixation target shown, waiting for a sufficiently held gaze
+            
+            % Gaze is outside fixation window
+            if p.trial.behavior.fixation.GotFix == 0
+               
+                % Fixation has occured
+                if p.trial.FixState.Current == p.trial.FixState.FixIn
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; %Will become FullFixation upon holding long enough
                     p.trial.behavior.fixation.GotFix = 1;
-                    p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.entryTime; % start timer to check if it is robust fixation
+                    p.trial.Timer.fixStart = p.trial.CurTime;
+                
+                % Time to fixate has expired
+                elseif p.trial.CurTime > p.trial.Timer.trialStart + p.trial.task.Timing.WaitFix
                     
-                elseif(p.trial.FixState.Current == p.trial.FixState.FixOut)
-                    p.trial.behavior.fixation.GotFix = 0;
+                    % Long enough fixation did not occur, failed trial
+                    p.trial.task.Good = 0;
                     
-                elseif(p.trial.CurTime > p.trial.Timer.FixBreak) % long enough within FixWin
-                    pds.datapixx.strobe(p.trial.event.FIXATION);
-
-                    p.trial.EV.FixStart = p.trial.CurTime - p.trial.behavior.fixation.entryTime;
+                    % Go directly to TaskEnd, do not start task, do not collect reward
+                    p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                     
-                    p.trial.Timer.Wait  = p.trial.CurTime + p.trial.task.Timing.MaxFix;
-                    p.trial.CurrEpoch   = p.trial.epoch.Fixating;
-                    
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION; % at least fixation was achieved
-                    
-                    p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.CurRewDelay; % timer for initial reward
                 end
                 
-            elseif(p.trial.CurTime  > p.trial.Timer.Wait)
-            % trial offering ended    
-                p.trial.task.Good = 0;
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;  % Go directly to TaskEnd, do not start task, do not collect reward
-                p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
+                
+            % If gaze is inside fixation window
+            elseif p.trial.behavior.fixation.GotFix == 1
+                
+                % Fixation ceases
+                if p.trial.FixState.Current == p.trial.FixState.FixOut
+                    p.trial.EV.FixBreak = p.trial.CurTime;
+                    p.trial.behavior.fixation.GotFix = 0;
+                
+                % Fixation has been held for long enough && not currently in the middle of breaking fixation
+                elseif (p.trial.CurTime > p.trial.Timer.fixStart + p.trial.task.CurRewDelay) && p.trial.FixState.Current == p.trial.FixState.FixIn
+                    
+                    % Succesful
+                    p.trial.task.Good = 1;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
+                    
+                    % Record when the monkey started fixating
+                    p.trial.EV.FixStart = p.trial.Timer.fixStart;
+                    
+                    % Reward the monkey
+                    p.trial.reward.count = 1;
+                    pds.reward.give(p, p.trial.reward.allDurs(1));
+                    p.trial.Timer.lastReward = p.trial.CurTime;
+                    
+                    % Transition to the succesful fixation epoch
+                    p.trial.CurrEpoch = p.trial.epoch.Fixating;
+
+                end
+                
             end
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.Fixating
-        %% Animal maintains fixation 
-        
-            % check current fixation
-            if(p.trial.FixState.Current == p.trial.FixState.FixOut || p.trial.behavior.fixation.GotFix == 0) % fixation break          
+        %% Animal has reached fixation criteria and now starts receiving rewards for continued fixation
+            
+        % Still fixating    
+        if p.trial.FixState.Current == p.trial.FixState.FixIn
                 
-                if(p.trial.behavior.fixation.GotFix == 1)
-                % first time break detected    
-                    p.trial.behavior.fixation.GotFix = 0;
-                    p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.BreakTime;
+                rewardCount = p.trial.reward.count;
+                rewardPeriod = p.trial.reward.allPeriods(rewardCount);
+                
+                % Wait for rewardPeriod to elapse since last reward, then give the next reward
+                if p.trial.CurTime > p.trial.Timer.lastReward + rewardPeriod
                     
-                elseif(p.trial.FixState.Current == p.trial.FixState.FixIn)
-                % gaze returned in time to not be a fixation break
-                    p.trial.behavior.fixation.GotFix = 1;
-
-                elseif(p.trial.CurTime > p.trial.Timer.FixBreak)
-                % out too long, it's a break    
-                    pds.datapixx.strobe(p.trial.event.FIX_BREAK);
+                    rewardCount = rewardCount + 1;
+                    p.trial.reward.count = rewardCount;
                     
-                    p.trial.EV.FixBreak = p.trial.CurTime - p.trial.behavior.fixation.BreakTime;
-                    p.trial.CurrEpoch   = p.trial.epoch.TaskEnd; % Go directly to TaskEnd, do not continue task, do not collect reward
-                    
-                    if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.Correct)
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; % only consider break before first reward
+                    % Get the reward duration
+                    if rewardCount <= length(p.trial.reward.allDurs)
+                        rewardDuration = p.trial.reward.allDurs(rewardCount);                  
+                    else
+                        % Last reward has been reached, give the JACKPOT!
+                        rewardDuration = p.trial.reward.jackpotDur;                    
+                        
+                        % Best outcome
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
+                        
+                        % End the task
+                        p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                     end
                     
-                    p.trial.task.Good = 0;
+                    % Give the reward and update the lastReward time
+                    pds.reward.give(p, rewardDuration);
+                    p.trial.Timer.lastReward = p.trial.CurTime;
+                    
                 end
-            end
-            
-            % fixation time expired    
-            if(p.trial.CurTime  > p.trial.Timer.Wait)
-                pds.reward.give(p,  p.trial.reward.JackPot);  % long term fixation, deserves something big
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                        
-            % reward if it is about time
-            elseif(p.trial.task.Good == 1 && p.trial.behavior.fixation.GotFix == 1 && ...
-                p.trial.CurTime > p.trial.Timer.Reward)
-                
-                pds.reward.give(p, p.trial.reward.Curr);
-                p.trial.reward.cnt = p.trial.reward.cnt + 1;
-                
-                rs = find(~(p.trial.reward.Step >= p.trial.reward.cnt), 1, 'last');
-
-                p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.Dur + p.trial.reward.WaitNext(rs);
-                                
-                p.trial.reward.Curr = p.trial.reward.Dur;
-            end
+        
+        % Fixation Break, end the trial        
+        elseif p.trial.FixState.Current == p.trial.FixState.FixOut
+            % TODO: Possibly play breakfix sound
+            p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                                 
+        end
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
-            
+        
         % set timer for intertrial interval            
             tms = pds.datapixx.strobe(p.trial.event.TASK_OFF); 
             p.trial.EV.DPX_TaskOff = tms(1);
@@ -262,14 +277,13 @@ function TaskDesign(p)
             if(p.trial.datapixx.TTL_trialOn)
                 pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
             end
-            
-            if(p.trial.reward.cnt > 0)
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Correct; % received a reward, hence correct
-            end
 
             % determine ITI
-            if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.Correct)
-                p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
+            switch p.trial.outcome.CurrOutcome
+                
+                case {p.trial.outcome.NoFix, p.trial.outcome.FixBreak}
+                    % Timeout if no fixation
+                    p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
             end
             
             p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
