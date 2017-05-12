@@ -1,4 +1,4 @@
-function p = start_DelayedSaccade(subjname, rig, experimenter)
+function p = start_DelSacc(subjname, rig, experimenter)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,
@@ -20,13 +20,13 @@ SS = ND_RigDefaults;    % load default settings according to the current rig set
 %% Define task related functions
 
 % function to set up experiment (and maybe also including the trial function)
-exp_fun = 'DelayedSaccade';
+exp_fun = 'DelSacc';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'DelayedSaccade_taskdef';  % function that provides task specific parameter definitions
-SS.task.AfterTrial = 'DelayedSaccade_aftertrial';  % function that provides runs task specific actions after a trial
-SS.plot.routine    = 'DelayedSaccade_plots';    % function for online plotting of session progress
+SS.task.TaskDef    = 'DelSacc_taskdef';  % function that provides task specific parameter definitions
+SS.task.AfterTrial = 'DelSacc_aftertrial';  % function that provides runs task specific actions after a trial
+SS.plot.routine    = 'DelSacc_plots';    % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
