@@ -46,8 +46,10 @@ end
 
 % if fixation is used
 if(p.defaultParameters.behavior.fixation.use)
+    p.defaultParameters.EV.FixEntry   = NaN; % entering fixation window
     p.defaultParameters.EV.FixStart   = NaN; % start of fixation
     p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
+    p.defaultParameters.EV.FixLeave   = NaN; % time when eyes leave fixation window
     p.defaultParameters.EV.Saccade    = NaN; % response saccade detected
 end
 
