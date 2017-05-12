@@ -5,8 +5,13 @@ function p = start_FixTrain(subjname, rig, experimenter)
 % setting parameters for the session, creating a pldaps class and running the experiment.
 %
 % wolf zinke, Apr. 2017
+% Nate Faber, May 2017
 
 % ------------------------------------------------------------------------%
+%% Reset things
+ND_reset;
+
+%-------------------------------------------------------------------------%
 %% load default settings into a struct
 SS = ND_RigDefaults;    % load default settings according to the current rig setup
 

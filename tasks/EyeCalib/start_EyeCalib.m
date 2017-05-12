@@ -7,6 +7,10 @@ function p = start_EyeCalib(subjname, rig, experimenter)
 % wolf zinke, Apr. 2017
 
 % ------------------------------------------------------------------------%
+%% Reset things
+ND_reset;
+
+%-------------------------------------------------------------------------%
 %% load default settings into a struct
 SS = ND_RigDefaults;    % load default settings according to the current rig setup
 
