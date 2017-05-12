@@ -31,7 +31,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             case p.trial.key.reward
             %% reward
             % check for manual reward delivery via keyboard
-                pds.reward.give(p, p.trial.task.Reward.ManDur);  % per default, output will be channel three.
+                pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
             
             % ----------------------------------------------------------------%
             case p.trial.key.FixReq
@@ -54,7 +54,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin + ...
                                                        p.trial.behavior.fixation.FixWinStp;
                     %p.trial.behavior.fixation.FixWin = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
-                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
                                                       p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
                 end
                 
@@ -65,7 +65,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin - ...
                                                        p.trial.behavior.fixation.FixWinStp;
                     %p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
-                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
                                                       p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
                 end
 
@@ -76,7 +76,15 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             if(p.trial.datapixx.useJoystick)
                 p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
             end
-
+            
+            
+            case p.trial.key.viewEyeCalib
+                %% Toggle viewing eye calibration
+                if p.trial.behavior.fixation.useCalibration
+                    p.trial.pldaps.draw.eyeCalib = not(p.trial.pldaps.draw.eyeCalib);
+                end
+                
+                
             % ----------------------------------------------------------------%
 %             case p.trial.key.pause
 %             %% pause trial

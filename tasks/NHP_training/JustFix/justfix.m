@@ -38,16 +38,8 @@ if(isempty(state))
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.
-    ND_DefineCol(p, 'Fix_W',  26, [1.00, 1.00, 1.00]);
-    ND_DefineCol(p, 'Fix_R',  27, [1.00, 0.00, 0.00]);
-    ND_DefineCol(p, 'Fix_G',  28, [0.00, 1.00, 0.00]);
-    ND_DefineCol(p, 'Fix_B',  29, [0.00, 0.00, 1.00]);
-    ND_DefineCol(p, 'Fix_O',  30, [1.00, 0.40, 0.00]);
-    ND_DefineCol(p, 'Fix_Y',  31, [1.00, 1.00, 0.00]);
-    ND_DefineCol(p, 'Fix_C',  24, [0.00, 1.00, 1.00]);
-    ND_DefineCol(p, 'Fix_M',  25, [1.00, 0.00, 1.00]);
 
-    p.trial.task.Color_list = Shuffle({'Fix_W', 'Fix_R', 'Fix_G', 'Fix_B', 'Fix_O', 'Fix_Y', 'Fix_C', 'Fix_M'});  
+    p.trial.task.Color_list = Shuffle({'white', 'red', 'green', 'blue', 'orange', 'yellow', 'cyan', 'magenta'});  
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -61,33 +53,33 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.task.Reward.MinWaitInitial  = 0.05; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c1.task.Reward.InitialRew      = 0.1;  % duration for initial reward pulse
+    c1.reward.MinWaitInitial  = 0.05; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c1.reward.InitialRew      = 0.1;  % duration for initial reward pulse
     
     % condition 2
     c2.Nr = 2;
-    c2.task.Reward.MinWaitInitial  = 0.1;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.MaxWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c2.task.Reward.InitialRew      = 0.2;  % duration for initial reward pulse
+    c2.reward.MinWaitInitial  = 0.1;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c2.reward.MaxWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c2.reward.InitialRew      = 0.2;  % duration for initial reward pulse
 
     % condition 3
     c3.Nr = 3;
-    c3.task.Reward.MinWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.MaxWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c3.task.Reward.InitialRew      = 0.4;  % duration for initial reward pulse
+    c3.reward.MinWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c3.reward.MaxWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c3.reward.InitialRew      = 0.4;  % duration for initial reward pulse
 
     % condition 4
     c4.Nr = 4;
-    c4.task.Reward.MinWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.MaxWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c4.task.Reward.InitialRew      = 0.6;  % duration for initial reward pulse
+    c4.reward.MinWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c4.reward.MaxWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c4.reward.InitialRew      = 0.6;  % duration for initial reward pulse
 
     % condition 5
     c5.Nr = 5;
-    c5.task.Reward.MinWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    c5.task.Reward.InitialRew      = 0.8;  % duration for initial reward pulse
+    c5.reward.MinWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c5.reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    c5.reward.InitialRew      = 0.8;  % duration for initial reward pulse
     
     
     %conditions = {c2, c3, c4, c5};
@@ -154,17 +146,17 @@ function TaskSetUp(p)
     p.trial.task.Timing.ITI   = ND_GetITI(p.trial.task.Timing.MinITI,  ...
                                           p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
                                      
-    p.trial.task.CurRewDelay  = ND_GetITI(p.trial.task.Reward.MinWaitInitial,  ...
-                                          p.trial.task.Reward.MaxWaitInitial,  [], [], 1, 0.001);
+    p.trial.task.CurRewDelay  = ND_GetITI(p.trial.reward.MinWaitInitial,  ...
+                                          p.trial.reward.MaxWaitInitial,  [], [], 1, 0.001);
 
     p.trial.task.InitRewDelay = p.trial.task.CurRewDelay;  
     
     p.trial.CurrEpoch         = p.trial.epoch.TrialStart;
         
-    p.trial.task.Reward.Curr  = p.trial.task.Reward.InitialRew; % determine reward amount based on number of previous correct trials
+    p.trial.reward.Curr  = p.trial.reward.InitialRew; % determine reward amount based on number of previous correct trials
         
     p.trial.task.Good                = 1;  % assume no error untill error occurs
-    p.trial.task.Reward.cnt          = 0;  % counter for received rewardsw
+    p.trial.reward.cnt          = 0;  % counter for received rewardsw
     p.trial.behavior.fixation.GotFix = 0;
      
     p.trial.task.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
@@ -178,7 +170,7 @@ function TaskDesign(p)
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
             
-            tms = pds.tdt.strobe(p.trial.event.TASK_ON); 
+            tms = pds.datapixx.strobe(p.trial.event.TASK_ON); 
             p.trial.EV.DPX_TaskOn = tms(1);
             p.trial.EV.TDT_TaskOn = tms(2);
 
@@ -203,7 +195,7 @@ function TaskDesign(p)
             % got fixation
                 if(p.trial.behavior.fixation.GotFix == 0) % starts to fixate
                     p.trial.behavior.fixation.GotFix = 1;
-                    p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.EnsureFix; % start timer to check if it is robust fixation
+                    p.trial.Timer.FixBreak = p.trial.CurTime + p.trial.behavior.fixation.entryTime; % start timer to check if it is robust fixation
                     fprintf('Fix in \n');
                     
                 elseif(p.trial.FixState.Current == p.trial.FixState.FixOut)
@@ -212,9 +204,9 @@ function TaskDesign(p)
                     
                 elseif(p.trial.CurTime > p.trial.Timer.FixBreak) % long enough within FixWin
                     fprintf('Fixating \n');
-                    pds.tdt.strobe(p.trial.event.FIXATION);
+                    pds.datapixx.strobe(p.trial.event.FIXATION);
 
-                    p.trial.EV.FixStart = p.trial.CurTime - p.trial.behavior.fixation.EnsureFix;
+                    p.trial.EV.FixStart = p.trial.CurTime - p.trial.behavior.fixation.entryTime;
                     
                     p.trial.Timer.Wait  = p.trial.CurTime + p.trial.task.Timing.MaxFix;
                     p.trial.CurrEpoch   = p.trial.epoch.Fixating;
@@ -254,7 +246,7 @@ function TaskDesign(p)
 
                 elseif(p.trial.CurTime > p.trial.Timer.FixBreak)
                 % out too long, it's a break    
-                    pds.tdt.strobe(p.trial.event.FIX_BREAK);
+                    pds.datapixx.strobe(p.trial.event.FIX_BREAK);
                     
                     p.trial.EV.FixBreak = p.trial.CurTime - p.trial.behavior.fixation.BreakTime;
                     p.trial.CurrEpoch   = p.trial.epoch.TaskEnd; % Go directly to TaskEnd, do not continue task, do not collect reward
@@ -271,7 +263,7 @@ function TaskDesign(p)
                 end
             % fixation time expired    
             elseif(p.trial.CurTime  > p.trial.Timer.Wait)
-                pds.reward.give(p,  p.trial.task.Reward.JackPot);  % long term fixation, deserves something big
+                pds.reward.give(p,  p.trial.reward.JackPot);  % long term fixation, deserves something big
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                 
                 p.trial.pldaps.draw.ScreenEvent     = p.trial.event.FIXSPOT_OFF;       
@@ -282,16 +274,16 @@ function TaskDesign(p)
             if(p.trial.task.Good == 1 && p.trial.behavior.fixation.GotFix == 1 && ...
                p.trial.CurTime > p.trial.Timer.Reward)
                 
-                pds.reward.give(p, p.trial.task.Reward.Curr);
-                p.trial.task.Reward.cnt = p.trial.task.Reward.cnt + 1;
+                pds.reward.give(p, p.trial.reward.Curr);
+                p.trial.reward.cnt = p.trial.reward.cnt + 1;
                 
-                rs = find(~(p.trial.task.Reward.Step >= p.trial.task.Reward.cnt), 1, 'last');
+                rs = find(~(p.trial.reward.Step >= p.trial.reward.cnt), 1, 'last');
 
-                p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.Dur + p.trial.task.Reward.WaitNext(rs);
+                p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.Dur + p.trial.reward.WaitNext(rs);
                 
-                fprintf('reward cound: %d  --> next reward: %.4f \n', p.trial.task.Reward.cnt, p.trial.task.Reward.WaitNext(rs));
+                fprintf('reward cound: %d  --> next reward: %.4f \n', p.trial.reward.cnt, p.trial.reward.WaitNext(rs));
                 
-                p.trial.task.Reward.Curr = p.trial.task.Reward.Dur;
+                p.trial.reward.Curr = p.trial.reward.Dur;
             end
             
         % ----------------------------------------------------------------%
@@ -299,7 +291,7 @@ function TaskDesign(p)
         %% finish trial and error handling
             fprintf('TaskEnd \n');
         % set timer for intertrial interval            
-            tms = pds.tdt.strobe(p.trial.event.TASK_OFF); 
+            tms = pds.datapixx.strobe(p.trial.event.TASK_OFF); 
             p.trial.EV.DPX_TaskOff = tms(1);
             p.trial.EV.TDT_TaskOff = tms(2);
 
@@ -309,7 +301,7 @@ function TaskDesign(p)
                 pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
             end
             
-            if(p.trial.task.Reward.cnt > 0)
+            if(p.trial.reward.cnt > 0)
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Correct; % received a reward, hence correct
             end
 
@@ -348,47 +340,47 @@ function KeyAction(p)
     grdX = p.trial.behavior.fixation.FixGridStp(1);
     grdY = p.trial.behavior.fixation.FixGridStp(2);
     
-    FixPos = p.trial.behavior.fixation.FixPos;
+    fixPos = p.trial.behavior.fixation.fixPos;
 
     switch p.trial.LastKeyPress(1)
 
         % grid positions
         case KbName('1')
-            FixPos = [-grdX,  -grdY];
+            fixPos = [-grdX,  -grdY];
 
         case KbName('2')
-            FixPos = [    0,  -grdY];
+            fixPos = [    0,  -grdY];
 
         case KbName('3')
-            FixPos = [ grdX,  -grdY];
+            fixPos = [ grdX,  -grdY];
 
         case KbName('4')
-            FixPos = [-grdX,     0];
+            fixPos = [-grdX,     0];
 
         case KbName('5')
-            FixPos = [    0,     0];
+            fixPos = [    0,     0];
 
         case KbName('6')
-            FixPos = [ grdX,    0];
+            fixPos = [ grdX,    0];
 
         case KbName('7')
-            FixPos = [-grdX, grdY];
+            fixPos = [-grdX, grdY];
 
         case KbName('8')
-            FixPos = [    0, grdY];
+            fixPos = [    0, grdY];
 
         case KbName('9')
-            FixPos = [ grdX, grdY];
+            fixPos = [ grdX, grdY];
 
         % steps
         case KbName('RightArrow')
-            FixPos(1) = FixPos(1) + p.trial.behavior.fixation.FixWinStp;   
+            fixPos(1) = fixPos(1) + p.trial.behavior.fixation.FixWinStp;   
         case KbName('LeftArrow')
-            FixPos(1) = FixPos(1) - p.trial.behavior.fixation.FixWinStp;
+            fixPos(1) = fixPos(1) - p.trial.behavior.fixation.FixWinStp;
         case KbName('UpArrow')
-            FixPos(2) = FixPos(2) + p.trial.behavior.fixation.FixWinStp;
+            fixPos(2) = fixPos(2) + p.trial.behavior.fixation.FixWinStp;
         case KbName('DownArrow')
-            FixPos(2) = FixPos(2) - p.trial.behavior.fixation.FixWinStp;
+            fixPos(2) = fixPos(2) - p.trial.behavior.fixation.FixWinStp;
             
         % Center fixation (define zero)
         case KbName('z')
@@ -399,21 +391,21 @@ function KeyAction(p)
             cX = prctile(p.trial.eyeX_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
             cY = prctile(p.trial.eyeY_hist(1:p.trial.behavior.fixation.NumSmplCtr), 50);
 
-            p.trial.behavior.fixation.PrevOffset = p.trial.behavior.fixation.Offset;
+            p.trial.behavior.fixation.PrevOffset = p.trial.eyeCalib.offset;
 
-            p.trial.behavior.fixation.Offset    = p.trial.behavior.fixation.Offset + FixPos - [cX,cY]; 
+            p.trial.eyeCalib.offset    = p.trial.eyeCalib.offset + fixPos - [cX,cY]; 
 
             fprintf('\n >>> fixation offset changed to [%.4f; %.4f] -- current eye position: [%.4f; %.4f]\n\n', ...
-                     p.trial.behavior.fixation.Offset, cX,cY);
+                     p.trial.eyeCalib.offset, cX,cY);
             
         case KbName('BackSpace')
         % update calibration with current eye positions    
-            p.trial.behavior.fixation.Offset = p.trial.behavior.fixation.PrevOffset;
+            p.trial.eyeCalib.offset = p.trial.behavior.fixation.PrevOffset;
             
     end
     
-    if(any((p.trial.behavior.fixation.FixPos == FixPos) == 0))
-        p.trial.behavior.fixation.FixPos = FixPos;
+    if(any((p.trial.behavior.fixation.fixPos == fixPos) == 0))
+        p.trial.behavior.fixation.fixPos = fixPos;
         MoveFix(p);
         pds.fixation.move(p);
     end
@@ -421,13 +413,13 @@ function KeyAction(p)
 % ####################################################################### %
 function MoveFix(p)
 %% displace fixation window and fixation target
-p.trial.task.fixrect    = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+p.trial.task.fixrect    = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
                                      p.trial.behavior.fixation.FixWin);  
 % target item
-p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;   % Stimulus diameter in dva
+p.trial.task.TargetPos  = p.trial.behavior.fixation.fixPos;   % Stimulus diameter in dva
 
 % get dva values into psychtoolbox pixel values/coordinates
-p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;
+p.trial.task.TargetPos  = p.trial.behavior.fixation.fixPos;
 p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
 
 % ####################################################################### %
@@ -454,7 +446,7 @@ function Trial2Ascii(p, act)
 
             fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  FixRT  ', ...
                              'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI  ',   ...
-                             'FixWin  FixPos_X  FixPos_Y  FixOn  FixOff\n']);
+                             'FixWin  fixPos_X  fixPos_Y  FixOn  FixOff\n']);
             fclose(tblptr);
 
         case 'save'
@@ -470,7 +462,7 @@ function Trial2Ascii(p, act)
                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
                                 p.trial.EV.DPX_TaskOn, p.trial.session.subject, p.trial.session.experimentSetupFile, ...
                                 p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
-                                p.trial.task.InitRewDelay, p.trial.task.Reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
+                                p.trial.task.InitRewDelay, p.trial.reward.cnt, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.task.FixCol, p.trial.task.Timing.ITI, ...
                                 p.trial.behavior.fixation.FixWin, p.trial.task.TargetPos(1), p.trial.task.TargetPos(2), ...
                                 p.trial.EV.FixOn, p.trial.EV.FixOff);

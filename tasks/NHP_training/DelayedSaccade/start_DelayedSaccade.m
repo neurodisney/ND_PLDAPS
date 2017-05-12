@@ -1,12 +1,17 @@
-function p = start_FixTrainCalib(subjname, rig, experimenter)
+function p = start_DelayedSaccade(subjname, rig, experimenter)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,
 % setting parameters for the session, creating a pldaps class and running the experiment.
 %
 % wolf zinke, Apr. 2017
+% Nate Faber, May 2017
 
 % ------------------------------------------------------------------------%
+%% Reset things
+ND_reset;
+
+%-------------------------------------------------------------------------%
 %% load default settings into a struct
 SS = ND_RigDefaults;    % load default settings according to the current rig setup
 
@@ -15,12 +20,13 @@ SS = ND_RigDefaults;    % load default settings according to the current rig set
 %% Define task related functions
 
 % function to set up experiment (and maybe also including the trial function)
-exp_fun = 'FixTrainCalib';
+exp_fun = 'DelayedSaccade';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef  = 'FixTrainCalib_taskdef';  % function that provides task specific parameter definitions
-SS.plot.routine  = 'FixTrainCalib_plots';    % function for online plotting of session progress
+SS.task.TaskDef    = 'DelayedSaccade_taskdef';  % function that provides task specific parameter definitions
+SS.task.AfterTrial = 'DelayedSaccade_aftertrial';  % function that provides runs task specific actions after a trial
+SS.plot.routine    = 'DelayedSaccade_plots';    % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
@@ -46,6 +52,7 @@ SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
 SS.behavior.fixation.useCalibration = 1;
+SS.behavior.fixation.enableCalib = 0;
 
 SS.behavior.fixation.required = 1; % fixation required for this task
 
@@ -58,10 +65,9 @@ SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states
 
 SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
-SS.behavior.fixation.FixScale = [4.5, 4.5]; 
 
 SS.behavior.fixation.FixWin     = 8;
-SS.behavior.fixation.FixGridStp = [2, 2]; % x,y coordinates in a 9pt grid
+SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
 
 %% ################## Edit within the preceding block ################### %%
@@ -86,6 +92,24 @@ if(~exist('experimenter','var') || isempty(experimenter))
     experimenter = getenv('USER');
 end
 
+% ------------------------------------------------------------------------%
+%% Special debug mode variables
+if strcmp(subjname,'mouse')
+    
+    % Use the mouse as eyeposition
+    SS.mouse.use = 1;
+    SS.mouse.useAsEyepos = 1;
+    
+    % Don't collect any analog channels
+    SS.datapixx.adc.PupilChannel   = [];
+    SS.datapixx.adc.XEyeposChannel = [];
+    SS.datapixx.adc.YEyeposChannel = [];
+    SS.datapixx.adc.RewardChannel  = [];  
+    SS.datapixx.useAsEyepos        = 0;
+    SS.behavior.joystick.use       = 0;
+    SS.datapixx.useForReward       = 0;
+    
+end
 % ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);

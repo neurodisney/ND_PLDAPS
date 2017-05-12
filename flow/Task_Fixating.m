@@ -19,7 +19,7 @@ elseif(p.trial.FixState.Current == p.trial.FixState.FixOut) % fixation break
 
         elseif(p.trial.CurTime > p.trial.Timer.FixBreak)
         % out too long, it's a break
-            pds.tdt.strobe(p.trial.event.FIX_BREAK);
+            pds.datapixx.strobe(p.trial.event.FIX_BREAK);
             p.trial.EV.FixBreak = p.trial.CurTime - p.trial.behavior.fixation.BreakTime;
             p.trial.task.Good   = 0;
             p.trial.CurrEpoch   = p.trial.epoch.TaskEnd; % Go directly to TaskEnd, do not continue task, do not collect reward

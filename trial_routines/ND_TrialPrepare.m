@@ -30,7 +30,7 @@ pds.keyboard.clearBuffer(p);
 %% Start of trial timing
 % record start of trial in Datapixx, PC & DAQ; each device has a separate clock
 p.trial.timing.datapixxStartTime  = Datapixx('Gettime');
-p.trial.timing.datapixxTRIALSTART = pds.tdt.strobe(p.trial.event.TRIALSTART);  % start of trial
+p.trial.timing.datapixxTRIALSTART = pds.datapixx.strobe(p.trial.event.TRIALSTART);  % start of trial
 
 %-------------------------------------------------------------------------%
 %% Get last Screen Flip prior to trial

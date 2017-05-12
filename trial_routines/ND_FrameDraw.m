@@ -70,10 +70,6 @@ if(p.trial.pldaps.draw.eyepos.use)
                         p.trial.pldaps.draw.eyepos.sz, p.trial.display.clut.eyepos, [0 0], 0);
 end
 
-if(p.trial.behavior.fixation.use)
-    pds.fixation.draw(p); 
-end
-
 % ------------------------------------------------------------------------%
 %% draw joystick state
 % show a representation of the joystick elevation level
@@ -87,6 +83,11 @@ if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
     % draw current joystick level
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joypos , ...
                        p.trial.pldaps.draw.joystick.levelrect);
+end
+
+%% draw current eye calibration
+if p.trial.pldaps.draw.eyeCalib
+    pds.eyecalib.draw(p);
 end
 
 % % ------------------------------------------------------------------------%

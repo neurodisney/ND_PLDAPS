@@ -49,9 +49,9 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
-SS.display.viewdist                             = 114;    % screen distance to the observer                            !!!
-SS.display.heightcm                             = 35;     % height of the visible screen in cm                         !!!
-SS.display.widthcm                              = 64;     % width  of the visible screen in cm                         !!!
+SS.display.viewdist                             = 97;    % screen distance to the observer
+SS.display.heightcm                             = 40;     % height of the visible screen in cm
+SS.display.widthcm                              = 71;     % width  of the visible screen in cm
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -79,6 +79,7 @@ SS.display.movie.options  = ':CodecType=x264enc :EncodingQuality=1.0'; % encodin
 % Use the coordinate frame transformations
 SS.display.useCustomOrigin                      = 1;     % 0 is off (use PTB standard origin in corner), 1 uses central origin, [x,y] uses custom pixel location as origin
 SS.display.useDegreeUnits                       = 1;     % 0 uses pixels, 1 uses uniform scaling to degrees priortizing accuracy near the center of the screen
+SS.display.coordMatrix                          = eye(3);% Identity matrix, will be transformed  to allow for easy pix -> screen transformations
 
 % ------------------------------------------------------------------------%
 %% EyeLink settings: Eyelink specific parameters
@@ -118,7 +119,11 @@ SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be call
 SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
 
 % dirs: configure pldaps' built-in drawing options
-SS.pldaps.dirs.data                             = '/DATA/ExpData';   % data directory.
+if(exist('/DATA/ExpData', 'dir'))
+    SS.pldaps.dirs.data = '/DATA/ExpData';   % data directory.
+else
+    SS.pldaps.dirs.data = '~/Data/ExpData';   % data directory.
+end
 SS.pldaps.dirs.wavfiles                         = './beepsounds';  % directory for sound files
 
 % cursor: control drawing of the mouse cursor
@@ -152,8 +157,6 @@ SS.pldaps.pause.type                            = 1;     % Only type 1 is curren
 
 % save: control how pldaps saves data
 SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial parameters
-SS.pldaps.save.mergedData                       = 1;     % Save merged data. By default pldaps only saves changes to the trial struct in .data. When mergedData is enabled, the complete content of p.trial is saved to p.data. This can cause significantly larger files
-SS.pldaps.save.trialTempfiles                   = 1;     % save temp files with the data from each trial?
 
 % ####################################################################### %
 %% Below follow definitions used in the Disney Lab
@@ -185,29 +188,38 @@ SS.datapixx.adc.PupilChannel   = 2;
 SS.behavior.fixation.use       =  0;       % does this task require control of eye position
 
 SS.behavior.fixation.required  =  0;       % If not required, fixation states will be ignored
-SS.behavior.fixation.Sample    = 20;       % how many data points to use for determining fixation state.
-SS.behavior.fixation.BreakTime = 50;       % minimum time [ms] to identify a fixation break
+SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
+SS.behavior.fixation.entryTime = 0.025;    % minimum time [s] before fixation is registered when gaze enters fixation window
+SS.behavior.fixation.BreakTime = 0.05;     % minimum time [s] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
 
 % fixation target parameters
-SS.behavior.fixation.FixPos    = [0, 0];    % center position of fixation window [dva]
+SS.behavior.fixation.fixPos    = [0, 0];    % center position of fixation window [dva]
 SS.behavior.fixation.FixType   = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 SS.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
 SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % Calibration of eye position
-SS.behavior.fixation.useCalibration  = 0;    % load mat file for eye calibration
-SS.behavior.fixation.enableCalib     = 0;    % allow changing the current eye calibration parameters
+SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibration
+SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
+SS.pldaps.draw.eyeCalib              = 0;         % Show the eye calibration points
+SS.eyeCalib.name                     = 'Default';        % Name of the calibration used. For back referencing in the data later
+SS.eyeCalib.file                     = 'nofile';   % THe file that stores the calibration information
+SS.eyeCalib.defaultGain              = [-5, -5];  % default gain, used if no calibration points are entered
+SS.eyeCalib.defaultOffset            = [0, 0];    % default offset, used if no calibration points are entered
 SS.behavior.fixation.CalibMat        = [];
-SS.behavior.fixation.CalibMethod     = [];
+SS.eyeCalib.rawEye    = [];
+SS.eyeCalib.fixPos    = [];
+SS.eyeCalib.medRawEye = [];
+SS.eyeCalib.medFixPos = [];
+SS.behavior.fixation.CalibMethod     = 'gain'; % method used for calibration, currently only gain adjustment
+SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
+
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.GridPos         = 0;
+SS.behavior.fixation.GridPos         = 5;
 
 SS.behavior.fixation.FixWinStp       = 0.25;    % change of the size of the fixation window upon key press
-SS.behavior.fixation.FixScale        = [1, 1];  % general scaling factor to match get the eye position within the dva range
-SS.behavior.fixation.FixGain         = [1, 1];  % additional fine scale adjustment of the eye position signal to scale it to dva
-SS.behavior.fixation.Offset          = [0, 0];  % offset to get current position signal to FixPos
 SS.behavior.fixation.PrevOffset      = [0, 0];  % keep track of previous offset to change back from the one
 
 SS.behavior.fixation.NumSmplCtr      = 10;      % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
@@ -219,10 +231,11 @@ SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indi
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
 % Define fixation states
-SS.FixState.Current  = NaN;
-SS.FixState.FixIn    =   1;  % Gaze within fixation window
-SS.FixState.FixOut   =   0;  % Gaze out of fixation window
-SS.FixState.FixBreak =  -1;  % Gaze out of fixation window
+SS.FixState.Current     = NaN;
+SS.FixState.FixOut      =    0;  % Gaze out of fixation window
+SS.FixState.startingFix = 0.25;  % Gaze has momentarily entered fixation window
+SS.FixState.FixIn       =    1;  % Gaze robustly within fixation window
+SS.FixState.breakingFix = 0.75;  % Gaze has momentarily left fixation window
 
 % ------------------------------------------------------------------------%
 %% Joystick
@@ -273,6 +286,8 @@ SS.key.CtrJoy  = KbName('j');  % set current joystick position as zero
 
 SS.key.FixInc  = KbName('=+'); % increase size of fixation window
 SS.key.FixDec  = KbName('-_'); % decrease size of fixation window
+
+SS.key.viewEyeCalib = KbName('insert'); % View the calibration points
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables

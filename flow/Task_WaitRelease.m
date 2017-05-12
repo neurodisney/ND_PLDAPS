@@ -6,8 +6,8 @@ function p = Task_WaitRelease(p)
 
 if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
     % use it as optional release reward if not full task is used
-    if(p.trial.task.Reward.Pull && ~p.trial.task.FullTask)
-        pds.reward.give(p, p.trial.task.Reward.PullRew);
+    if(p.trial.reward.Pull && ~p.trial.task.FullTask)
+        pds.reward.give(p, p.trial.reward.PullRew);
     end
 
     Response_JoyRelease(p);

@@ -6,5 +6,5 @@ function p = Response_JoyRelease(p)
 
 p.trial.EV.JoyRelease = p.trial.CurTime;
 
-pds.tdt.strobe(p.trial.event.JOY_RELEASE);
+pds.datapixx.strobe(p.trial.event.JOY_RELEASE);
 

@@ -15,12 +15,15 @@ disp('');
 
 % --------------------------------------------------------------------%
 %% set output directories and file names
-p.defaultParameters.session.dir =  fullfile(p.defaultParameters.pldaps.dirs.data, ...
-                                   p.defaultParameters.session.subject, ...
-                                   p.defaultParameters.session.experimentSetupFile, datestr(now,'yyyy_mm_dd'));
-                                    
+p.defaultParameters.session.dir          =  fullfile(p.defaultParameters.pldaps.dirs.data, ...
+                                                     p.defaultParameters.session.subject, datestr(now,'yyyy_mm_dd'), ...
+                                                     p.defaultParameters.session.experimentSetupFile);
+% Eye calibration directory
+p.defaultParameters.session.eyeCalibDir  =  fullfile(p.defaultParameters.pldaps.dirs.data, ...
+                                                     p.defaultParameters.session.subject, datestr(now,'yyyy_mm_dd'), ...
+                                                     'EyeCalib');
 % ensure that the data directory exists
-p.defaultParameters.session.tmpdir = fullfile(p.defaultParameters.session.dir,'TEMP');
+p.defaultParameters.session.tmpdir   = fullfile(p.defaultParameters.session.dir,'TEMP');
 
 if(~exist(p.defaultParameters.session.tmpdir,'dir'))
     mkdir(p.defaultParameters.session.tmpdir);
@@ -30,7 +33,13 @@ p.defaultParameters.session.filestem = [p.defaultParameters.session.subject, '_'
                                         datestr(p.defaultParameters.session.initTime, 'yyyymmdd'), '_', ...
                                         p.defaultParameters.session.experimentSetupFile, '_',  ...
                                         datestr(p.defaultParameters.session.initTime, 'HHMM')];
-                                    
+
+p.defaultParameters.session.trialdir = fullfile(p.defaultParameters.session.dir, p.defaultParameters.session.filestem);
+
+if(~exist(p.defaultParameters.session.trialdir,'dir'))
+    mkdir(p.defaultParameters.session.trialdir);
+end
+
 p.defaultParameters.session.file     = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
 
 p.defaultParameters.session.asciitbl = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem,'.dat'];
@@ -97,7 +106,7 @@ if(p.defaultParameters.behavior.fixation.use)
     if(~p.defaultParameters.datapixx.useAsEyepos)
         p.defaultParameters.datapixx.useAsEyepos = 1;
     end
-    
+
     if( p.defaultParameters.behavior.fixation.NumSmplCtr > p.defaultParameters.pldaps.draw.eyepos.history)
         p.defaultParameters.behavior.fixation.NumSmplCtr = p.defaultParameters.pldaps.draw.eyepos.history;
     end
@@ -109,10 +118,10 @@ if(p.defaultParameters.behavior.joystick.use && ~p.defaultParameters.datapixx.us
 end
 
 % don't enable online plots if no function is specified
-if(~exist(p.defaultParameters.plot.routine,'file'))
+if(p.defaultParameters.plot.do_online && ~exist(p.defaultParameters.plot.routine,'file'))
     warning('Plotting routine for online analysis not found, disabled plotting!');
-    p.defaultParameters.plot.do_online  =  0;  
-elseif(~isfield(p.defaultParameters.plot, 'fig'))
+    p.defaultParameters.plot.do_online  =  0;
+elseif(p.defaultParameters.plot.do_online && ~isfield(p.defaultParameters.plot, 'fig'))
     p.defaultParameters.plot.fig = [];
 end
 
@@ -146,32 +155,32 @@ if(~isfield(p.defaultParameters.datapixx.adc, 'channelMapping'))
     p.defaultParameters.datapixx.adc.channelMapping = {};
 end
 
-% add channels to collect eye data 
+% add channels to collect eye data
 if(p.defaultParameters.datapixx.useAsEyepos == 1)
     if(isfield(p.defaultParameters.datapixx.adc, 'XEyeposChannel') && ~isempty(p.defaultParameters.datapixx.adc.XEyeposChannel))
         p.defaultParameters.datapixx.adc.channels(end+1) = p.defaultParameters.datapixx.adc.XEyeposChannel;
         p.defaultParameters.datapixx.adc.channelMapping{end+1} = 'AI.Eye.X';
     end
-    
+
     if(isfield(p.defaultParameters.datapixx.adc, 'YEyeposChannel') && ~isempty(p.defaultParameters.datapixx.adc.YEyeposChannel))
         p.defaultParameters.datapixx.adc.channels(end+1) = p.defaultParameters.datapixx.adc.YEyeposChannel;
         p.defaultParameters.datapixx.adc.channelMapping{end+1} = 'AI.Eye.Y';
     end
-    
+
     if(isfield(p.defaultParameters.datapixx.adc, 'PupilChannel') && ~isempty(p.defaultParameters.datapixx.adc.PupilChannel))
         p.defaultParameters.datapixx.adc.channels(end+1) = p.defaultParameters.datapixx.adc.PupilChannel;
         p.defaultParameters.datapixx.adc.channelMapping{end+1} = 'AI.Eye.PD';
     end
 end
 
-% add channels to collect joystick data 
+% add channels to collect joystick data
 if(p.defaultParameters.datapixx.useJoystick == 1)
-    
+
     if(isfield(p.defaultParameters.datapixx.adc, 'XJoyChannel') && ~isempty(p.defaultParameters.datapixx.adc.XJoyChannel))
         p.defaultParameters.datapixx.adc.channels(end+1) = p.defaultParameters.datapixx.adc.XJoyChannel;
         p.defaultParameters.datapixx.adc.channelMapping{end+1} = 'AI.Joy.X';
     end
-    
+
     if(isfield(p.defaultParameters.datapixx.adc, 'YJoyChannel') && ~isempty(p.defaultParameters.datapixx.adc.YJoyChannel))
         p.defaultParameters.datapixx.adc.channels(end+1) = p.defaultParameters.datapixx.adc.YJoyChannel;
         p.defaultParameters.datapixx.adc.channelMapping{end+1} = 'AI.Joy.Y';
@@ -180,7 +189,7 @@ end
 
 %-------------------------------------------------------------------------%
 %% create p.trial as copy of the default parameters
-p.trial = p.defaultParameters; 
+p.trial = p.defaultParameters;
 
 % --------------------------------------------------------------------%
 %% helper functions

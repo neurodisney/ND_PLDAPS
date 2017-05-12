@@ -111,10 +111,6 @@ if(p.trial.sound.use)
 end
 
 %-------------------------------------------------------------------------%
-%% REWARD
-p = pds.reward.setup(p);
-
-%-------------------------------------------------------------------------%
 %% Setup Photodiode stimuli
 if(p.trial.pldaps.draw.photodiode.use)    
     szstep = p.trial.pldaps.draw.photodiode.size / 2; % move PD away from edge
@@ -152,12 +148,6 @@ end
 if(~isempty(p.trial.mouse.initialCoordinates))
     SetMouse(p.trial.mouse.initialCoordinates(1), ...
              p.trial.mouse.initialCoordinates(2), p.trial.mouse.windowPtr)
-end
-
-% --------------------------------------------------------------------%
-%% prepare online plots
-if(p.trial.plot.do_online)
-    p = feval(p.trial.plot.routine,  p);
 end
 
 % --------------------------------------------------------------------%

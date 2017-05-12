@@ -4,7 +4,7 @@ function p = Response_Late(p)
 %
 % wolf zinke, March 2017
 
-pds.tdt.strobe(p.trial.event.RESP_LATE);     
+pds.datapixx.strobe(p.trial.event.RESP_LATE);     
 
 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 

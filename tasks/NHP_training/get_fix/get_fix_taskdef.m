@@ -18,14 +18,14 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % ------------------------------------------------------------------------%
 %% Reward
-p.trial.task.Reward.Pull    = 1;          % If 1 then give reward for pulling the joystick
-p.trial.task.Reward.PullRew = 0.1;        % reward amount for pulling joystick (if p.trial.task.Reward.Pull == 1)
+p.trial.reward.Pull    = 1;          % If 1 then give reward for pulling the joystick
+p.trial.reward.PullRew = 0.1;        % reward amount for pulling joystick (if p.trial.reward.Pull == 1)
 
-p.trial.task.Reward.IncrConsecutive = 1;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.task.Reward.Dur  = [0.6, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.task.Reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.task.Reward.Dur
+p.trial.reward.IncrConsecutive = 1;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
+p.trial.reward.Dur  = [0.6, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.reward.Dur
 
-p.trial.task.Reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
@@ -49,7 +49,7 @@ p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a tri
 %% Fixation parameters
 p.trial.behavior.fixation.FixScale = [5, 5];  % scaling factor to match screen/dva [TODO: get from calibration]
 
-p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
                                   p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
 
 % ------------------------------------------------------------------------%
@@ -62,7 +62,7 @@ p.trial.task.FrameRect  = ND_GetRect([0,0], p.trial.task.FrameSize);
 
 % target item
 p.trial.task.TargetSz  = 1;   % Stimulus diameter in dva
-p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
+p.trial.task.TargetPos = p.trial.behavior.fixation.fixPos;    % Stimulus diameter in dva25seconds
 
 % get dva values into psychtoolbox pixel values/coordinates
 p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);

@@ -29,15 +29,14 @@ if(p.defaultParameters.behavior.joystick.use)
     p.defaultParameters.outcome.NoPress       =   1;  % No joystick press occurred to initialize trial
 end
 
-% AD: 3000-3009 for fixation breaks
-%       3010-for errors
-
 % fixation related
 if(p.defaultParameters.behavior.fixation.use)
 
     p.defaultParameters.outcome.FIXATION      =   1000;
     p.defaultParameters.outcome.NoFix         =   3010;
     p.defaultParameters.outcome.FixBreak      =   3011;
+    p.defaultParameters.outcome.FullFixation  =   3012;
+    p.defaultParameters.outcome.Jackpot       =   3013;
 
     % refine timing of fixation break if desired    
     p.defaultParameters.outcome.FIX_BRK_BSL   =   3000; % use for fixation break from fixspot, where relevant

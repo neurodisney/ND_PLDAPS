@@ -124,7 +124,7 @@ function TaskSetUp(p)
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
         
-    p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
+    p.trial.reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
         
     
 % ####################################################################### %
@@ -173,8 +173,8 @@ function TaskDesign(p)
                     p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.WaitFix;
                     p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
 
-                    if(p.trial.task.Reward.Pull)
-                        pds.reward.give(p, p.trial.task.Reward.PullRew);
+                    if(p.trial.reward.Pull)
+                        pds.reward.give(p, p.trial.reward.PullRew);
                     end
                 end
             end
@@ -188,7 +188,7 @@ function TaskDesign(p)
                 Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
             elseif(p.trial.FixState.Current == p.trial.FixState.FixIn)
             % got fixation
-                pds.tdt.strobe(p.trial.event.FIXATION);
+                pds.datapixx.strobe(p.trial.event.FIXATION);
                 p.trial.Timer.Wait  = p.trial.CurTime + p.trial.task.Timing.HoldTime;
                 p.trial.EV.FixStart = p.trial.CurTime;
                 p.trial.CurrEpoch   = p.trial.epoch.Fixating;
@@ -222,7 +222,7 @@ function TaskDesign(p)
                     
                     elseif(p.trial.CurTime > p.trial.Timer.FixBreak)
                     % out too long, it's a break    
-                        pds.tdt.strobe(p.trial.event.FIX_BREAK);
+                        pds.datapixx.strobe(p.trial.event.FIX_BREAK);
                         p.trial.EV.FixBreak = p.trial.CurTime - p.trial.behavior.fixation.BreakTime;
                         p.trial.CurrEpoch   = p.trial.epoch.TaskEnd; % Go directly to TaskEnd, do not continue task, do not collect reward
                         p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
@@ -322,66 +322,66 @@ function KeyAction(p)
 
             % grid positions
             case KbName('1')
-            p.trial.behavior.fixation.FixPos = [-grdX, -grdY];
+            p.trial.behavior.fixation.fixPos = [-grdX, -grdY];
             MoveFix(p);
             
             case KbName('2')
-            p.trial.behavior.fixation.FixPos = [    0, -grdY];
+            p.trial.behavior.fixation.fixPos = [    0, -grdY];
             MoveFix(p);
             
             case KbName('3')
-            p.trial.behavior.fixation.FixPos = [ grdX, -grdY];
+            p.trial.behavior.fixation.fixPos = [ grdX, -grdY];
             MoveFix(p);
             
             case KbName('4')
-            p.trial.behavior.fixation.FixPos = [-grdX,     0];
+            p.trial.behavior.fixation.fixPos = [-grdX,     0];
             MoveFix(p);
             
             case KbName('5')
-            p.trial.behavior.fixation.FixPos = [    0,     0];
+            p.trial.behavior.fixation.fixPos = [    0,     0];
             MoveFix(p);
             
             case KbName('6')
-            p.trial.behavior.fixation.FixPos = [ grdX,    0];
+            p.trial.behavior.fixation.fixPos = [ grdX,    0];
             MoveFix(p);
             
             case KbName('7')
-            p.trial.behavior.fixation.FixPos = [-grdX,  grdY];
+            p.trial.behavior.fixation.fixPos = [-grdX,  grdY];
             MoveFix(p);
             
             case KbName('8')
-            p.trial.behavior.fixation.FixPos = [    0,  grdY];
+            p.trial.behavior.fixation.fixPos = [    0,  grdY];
             MoveFix(p);
             
             case KbName('9')
-            p.trial.behavior.fixation.FixPos = [ grdX,  grdY];
+            p.trial.behavior.fixation.fixPos = [ grdX,  grdY];
             MoveFix(p);
             
             % steps
             case KbName('RightArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) + ...
+            p.trial.behavior.fixation.fixPos(1) = p.trial.behavior.fixation.fixPos(1) + ...
                                                   p.trial.behavior.fixation.FixWinStp;   
             MoveFix(p);
             
             case KbName('LeftArrow')
-            p.trial.behavior.fixation.FixPos(1) = p.trial.behavior.fixation.FixPos(1) - ...
+            p.trial.behavior.fixation.fixPos(1) = p.trial.behavior.fixation.fixPos(1) - ...
                                                   p.trial.behavior.fixation.FixWinStp;
             MoveFix(p);
             
             case KbName('UpArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) + ...
+            p.trial.behavior.fixation.fixPos(2) = p.trial.behavior.fixation.fixPos(2) + ...
                                                   p.trial.behavior.fixation.FixWinStp;
             MoveFix(p);
             
             case KbName('DownArrow')
-            p.trial.behavior.fixation.FixPos(2) = p.trial.behavior.fixation.FixPos(2) - ...
+            p.trial.behavior.fixation.fixPos(2) = p.trial.behavior.fixation.fixPos(2) - ...
                                                   p.trial.behavior.fixation.FixWinStp;
             MoveFix(p);
             
             case KbName('g')
                 
                 fprintf('\n#####################\n  >>  Fix Pos: %d, %d \n Eye Sig: %d, 5d \n#####################\n', ...
-                        p.trial.behavior.fixation.FixPos, p.trial.behavior.fixation.FixScale);
+                        p.trial.behavior.fixation.fixPos, p.trial.behavior.fixation.FixScale);
         end
     end
 
@@ -389,13 +389,13 @@ function KeyAction(p)
 % ####################################################################### %
 function MoveFix(p)
 %% displace fixation window and fixation target
-p.trial.task.fixrect       = ND_GetRect(p.trial.behavior.fixation.FixPos, ...
+p.trial.task.fixrect       = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
                                         p.trial.behavior.fixation.FixWin);  
 % target item
-p.trial.task.TargetPos = p.trial.behavior.fixation.FixPos;    % Stimulus diameter in dva25seconds
+p.trial.task.TargetPos = p.trial.behavior.fixation.fixPos;    % Stimulus diameter in dva25seconds
 
 % get dva values into psychtoolbox pixel values/coordinates
-p.trial.task.TargetPos  = p.trial.behavior.fixation.FixPos;
+p.trial.task.TargetPos  = p.trial.behavior.fixation.fixPos;
 p.trial.task.TargetRect = ND_GetRect(p.trial.task.TargetPos, p.trial.task.TargetSz);
 
 
@@ -455,7 +455,7 @@ function Trial2Ascii(p, act)
                                 p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
                                 trltm, p.trial.EV.JoyPress, ...
                                 p.trial.EV.GoCue, p.trial.EV.JoyRelease, p.trial.EV.Reward, ...
-                                p.trial.task.Reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
+                                p.trial.reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.StartRT, RT, p.trial.task.Timing.HoldTime);
                fclose(tblptr);
             end

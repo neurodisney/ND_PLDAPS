@@ -1,8 +1,8 @@
 function p = save(p)
 % pds.eyecalib.save(p) save current calibration for eye position to mat file
 %
-% wolf zinke, april 2017
+% Nate Faber, May 2017
+ 
+eyeCalib = p.trial.eyeCalib;
 
-% ceye = p.trial.Calib.Eye;
-% 
-% save(p.trial.behavior.fixation.CalibMat, '-struct', 'ceye')
+save(eyeCalib.file,'eyeCalib');

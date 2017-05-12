@@ -5,13 +5,19 @@ function p = ND_CheckMouse(p)
 %
 %
 % wolf zinke, Feb 2017
+% Nate Faber, May 2017
 
 [cursorX, cursorY,buttons] = GetMouse();
 
 iSamples =    p.trial.mouse.samples+1;
 p.trial.mouse.samples = iSamples;
 p.trial.mouse.samplesTimes(iSamples) = GetSecs;
-p.trial.mouse.cursorSamples(:, iSamples) = [cursorX; cursorY];
+
+% Store the pixel mouse position
+p.trial.mouse.cursorPxSamples(:, iSamples) = [cursorX; cursorY];
+
+% Also get the mouse position in screen coordinates (if transformed with a coordinate frame)
+p.trial.mouse.cursorSamples(:, iSamples) = px2screen(p, cursorX, cursorY);
 
 %% Process Mouse buttons
 
@@ -23,15 +29,3 @@ p.trial.mouse.buttonPressSamples( :, iSamples) = buttons';
 % Store this in mouse.newButtons. 1 = newly pressed, 0 = no change, -1 = newly released
 lastButtons = p.trial.mouse.buttonPressSamples(:, max(iSamples - 1, 1));
 p.trial.mouse.newButtons = buttons' - lastButtons;
-
-
-%if(p.trial.mouse.useAsEyepos)
-%    if(p.trial.pldaps.eyeposMovAv == 1) % just take a single sample
-%        p.trial.eyeX = p.trial.mouse.cursorSamples(1,p.trial.mouse.samples);
-%        p.trial.eyeY = p.trial.mouse.cursorSamples(2,p.trial.mouse.samples);
-%    else % Do moving average:  calculate mean over as many samples as the number in eyeposMovAv specifies
-%        mInds = (p.trial.mouse.samples-p.trial.pldaps.eyeposMovAv+1):p.trial.mouse.samples;
-%        p.trial.eyeX = mean(p.trial.mouse.cursorSamples(1,mInds));
-%        p.trial.eyeY = mean(p.trial.mouse.cursorSamples(2,mInds));
-%    end
-%end  %/ if(p.trial.mouse.useAsEyepos)

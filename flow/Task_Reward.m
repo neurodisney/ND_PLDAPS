@@ -6,7 +6,7 @@ function p = Task_Reward(p)
 if(p.trial.CurTime > p.trial.Timer.Reward)
     p.trial.EV.Reward = p.trial.CurTime - p.trial.EV.TaskStart;
 
-    pds.reward.give(p, p.trial.task.Reward.Curr);
+    pds.reward.give(p, p.trial.reward.Curr);
 
     p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
 end

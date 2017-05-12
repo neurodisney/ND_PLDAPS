@@ -41,9 +41,9 @@ p.trial.timing.datapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
 % ------------------------------------------------------------------------%
 %% Reward
 %%% prepare reward system and pre-allocate variables for reward timings
-p.trial.reward.iReward     = 0; % counter for reward times
-% p.trial.reward.timeReward  = nan(2,p.trial.pldaps.maxTrialLength*2); %preallocate for a reward up to every 0.5 s
 
+    p.trial.reward.timeReward = nan(100,2);
+    p.trial.reward.iReward     = 0; % counter for reward times
 % ------------------------------------------------------------------------%
 %% eye position
 
@@ -111,7 +111,7 @@ p.trial.task.Good                = 0;    % flag to indicate if an error occurred
 p.trial.CurrEpoch                = NaN;  % keep track of task epochs
 p.trial.CurTime                  = NaN;  % keep track of current time
 p.trial.behavior.fixation.GotFix =   0;  % assume no fixation at task start
-p.trial.task.Reward.Curr         = p.trial.reward.defaultAmount;  % expected reward amount (set to default amount)
+p.trial.reward.Curr         = p.trial.reward.defaultAmount;  % expected reward amount (set to default amount)
 
 % ------------------------------------------------------------------------%
 %% Initialize default Timer

@@ -1,4 +1,4 @@
-function p = FixTrainCalib_plots(p, offln)
+function p = DelayedSaccade_plots(p, offln)
 %% online analysis for joystick training task
 %
 % TODO: - For offline analysis, allow specification of pds file, or open file selector if p is empty.
@@ -44,39 +44,40 @@ end
 %% initialize plot
 if(offln == 1)
     figure('Position', fig_sz, 'Units', 'normalized');
-elseif(isempty(p.defaultParameters.plot.fig ) || offln == 1)
-    p.defaultParameters.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
-    drawnow
-    return;
+elseif(isempty(p.trial.plot.fig) || offln == 1)
+    p.trial.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
 else
-    figure(p.defaultParameters.plot.fig);
+    figure(p.trial.plot.fig);
 end
 
-Ntrials  = length(p.data);
+Ntrials = p.trial.pldaps.iTrial;
 
-%Cond     = cellfun(@(x) x.Nr, p.data);
-Results  = cellfun(@(x) x.outcome.CurrOutcome, p.data);
+% keep track of plot relevant trial data
+p.plotdata.Outcome(  Ntrials, 1) = p.trial.outcome.CurrOutcome;
+p.plotdata.TaskStart(Ntrials, 1) = p.trial.EV.TaskStart;
+p.plotdata.FixStart( Ntrials, 1) = p.trial.EV.FixStart;
+p.plotdata.FixBreak( Ntrials, 1) = p.trial.EV.FixBreak;
+p.plotdata.CurrRew(  Ntrials, 1) = p.trial.task.CurRewDelay;
+p.plotdata.RewCnt(   Ntrials, 1) = p.trial.reward.iReward;
 
-fp = Results ~= p.data{1}.outcome.NoFix;
+% for easier handling assign to local variables
+Results   = p.plotdata.Outcome;
+TaskStart = p.plotdata.TaskStart;
+FixStart  = p.plotdata.FixStart;
+FixBreak  = p.plotdata.FixBreak;
+CurrRew   = p.plotdata.CurrRew;
+RewCnt    = p.plotdata.RewCnt;
 
-% try
+fp = Results ~= p.trial.outcome.NoFix;
+FixRT  = (FixStart - TaskStart) * 1000;
+FixDur = (FixBreak - FixStart);
+
+try
     if(sum(fp) > 4)
         
         %% get relevant data
-        
-        TaskStart = cellfun(@(x) x.EV.TaskStart, p.data);
         Trial_tm = (TaskStart - TaskStart(1)) / 60; % first trial defines zero, convert to minutes
-        
-        ITI = [NaN, diff(Trial_tm)];
-        
-        FixStart  = cellfun(@(x) x.EV.FixStart, p.data);
-        FixRT     = (FixStart - TaskStart) * 1000;
-        
-        FixBreak  = cellfun(@(x) x.EV.FixBreak, p.data);
-        FixDur    = (FixBreak - FixStart);
-
-        CurrRew   = cellfun(@(x) x.task.CurRewDelay, p.data) / 1000;
-        RewCnt    = cellfun(@(x) x.reward.iReward,   p.data);        
+        ITI = [NaN; diff(Trial_tm)];
 
         Tm      = Trial_tm(fp);
         RT      = FixRT(fp);
@@ -99,8 +100,8 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         xlabel('time from target onset [ms]')
         xlim([0, prctile(RT,90)]);
         axis tight
+        set(gca, 'TickDir', 'out');
         
-        hold on;
         yl = ylim;
         plot([medRT,medRT], yl,'-r','LineWidth', 2.5);
         hold off
@@ -118,8 +119,8 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         xlabel('time from fixation onset [s]')
         xlim([0,prctile(Dur,98)]);
         axis tight
-        
-        hold on;
+        set(gca, 'TickDir', 'out');
+
         yl = ylim;
         plot([medDur,medDur], yl,'-r','LineWidth', 2.5);
         hold off
@@ -137,6 +138,7 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         xlim([0,prctile(RT,90)]);
         ylim([0,max(Dur)]);
         axis tight
+        set(gca, 'TickDir', 'out');
         hold off
        
         % fixation duration depending on initial reward time
@@ -151,6 +153,7 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         xlim([0,prctile(RT,90)]);
         ylim([0,prctile(Dur,98)]);
         axis tight
+        set(gca, 'TickDir', 'out');
         hold off
         
         % fixation duration depending on initial reward time
@@ -165,6 +168,7 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         xlim([0, max(ITI)]);
         ylim([0, prctile(RT,90)]);
         axis tight
+        set(gca, 'TickDir', 'out');
         hold off
         
         % fixation durations over session time
@@ -193,6 +197,7 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         ylabel('RT [ms]');
         xlabel('trial time [min]');
         axis tight
+        set(gca, 'TickDir', 'out');
         hold off
         
         % fixation durations over session time
@@ -224,12 +229,13 @@ fp = Results ~= p.data{1}.outcome.NoFix;
         ylabel('fix duration [ms]');
         xlabel('trial time [min]');
         axis tight
+        set(gca, 'TickDir', 'out');
         hold off
         
         %% update plot
         drawnow
     end
-% catch me
-%     disp('Online plot failed!');
-%     disp(me.message);
+catch me
+     disp('Online plot failed!');
+     disp(me.message);
 end

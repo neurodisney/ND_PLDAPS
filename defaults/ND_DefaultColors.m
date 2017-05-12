@@ -25,7 +25,7 @@ disp('****************************************************************')
 disp('');
 
 % keep the currently defined background color
-bgcol = p.defaultParameters.display.bgColor;
+bgColor = p.defaultParameters.display.bgColor;
 
 %% remove PLDAPS default colors
 % this ensures that there is not interference with the PLDAPS definitions,
@@ -44,31 +44,50 @@ p.defaultParameters.display.monkeyCLUT = zeros(256,3);
 
 %% define default set of colors
 % some color names are used by pldaps and should not be changed
-ND_DefineCol(p, 'bg',          1, bgcol);  % background color
+ND_DefineCol(p, 'bg',          1, bgColor);  % background color
 ND_DefineCol(p, 'TrialStart',  2, [0.65, 0.65, 0.65]); % indicate that a trial started
-ND_DefineCol(p, 'joypos',      3, [1.00, 0.80, 0.20], bgcol);  % current joystick position
-ND_DefineCol(p, 'joybox',      4, [0.45, 0.20, 0.00], bgcol);  % color representing released state
-ND_DefineCol(p, 'joythr',      5, [0.65, 0.25, 0.00], bgcol);  % color representing pressed state
-ND_DefineCol(p, 'eyepos',      6, [0.00, 1.00, 1.00], bgcol);  % current eye position
-ND_DefineCol(p, 'eyeold',      7, [0.00, 0.65, 0.65], bgcol);  % eye positions from previous frames
-ND_DefineCol(p, 'window',      8, [0.80, 0.80, 0.80], bgcol);
-ND_DefineCol(p, 'grid',        9, [0.00, 0.00, 0.00], bgcol);
-ND_DefineCol(p, 'fixspot',    10, [0.80, 0.80, 0.80], bgcol);
-ND_DefineCol(p, 'fixwin',     11, [0.00, 1.00, 1.00], bgcol);
-ND_DefineCol(p, 'targetfix',  12, [1.00, 0.00, 0.00], bgcol);
-ND_DefineCol(p, 'cursor',     13, [0.90, 0.90, 0.90], bgcol);
+ND_DefineCol(p, 'joypos',      3, [1.00, 0.80, 0.20], bgColor);  % current joystick position
+ND_DefineCol(p, 'joybox',      4, [0.45, 0.20, 0.00], bgColor);  % color representing released state
+ND_DefineCol(p, 'joythr',      5, [0.65, 0.25, 0.00], bgColor);  % color representing pressed state
+ND_DefineCol(p, 'eyepos',      6, [0.00, 1.00, 1.00], bgColor);  % current eye position
+ND_DefineCol(p, 'eyeold',      7, [0.00, 0.65, 0.65], bgColor);  % eye positions from previous frames
+ND_DefineCol(p, 'window',      8, [0.80, 0.80, 0.80], bgColor);
+ND_DefineCol(p, 'grid',        9, [0.00, 0.00, 0.00], bgColor);
+ND_DefineCol(p, 'fixspot',    10, [0.80, 0.80, 0.80], bgColor);
+ND_DefineCol(p, 'fixwin',     11, [0.00, 1.00, 1.00], bgColor);
+ND_DefineCol(p, 'targetfix',  12, [1.00, 0.00, 0.00], bgColor);
+ND_DefineCol(p, 'cursor',     13, [0.90, 0.90, 0.90], bgColor);
 ND_DefineCol(p, 'black',      14, [0.00, 0.00, 0.00]);
-ND_DefineCol(p, 'blackbg',    15, [0.00, 0.00, 0.00], bgcol);
+ND_DefineCol(p, 'blackbg',    15, [0.00, 0.00, 0.00], bgColor);
 ND_DefineCol(p, 'white',      16, [1.00, 1.00, 1.00]);
-ND_DefineCol(p, 'whitebg',    17, [1.00, 1.00, 1.00], bgcol);
+ND_DefineCol(p, 'whitebg',    17, [1.00, 1.00, 1.00], bgColor);
 ND_DefineCol(p, 'red',        18, [1.00, 0.00, 0.00]);
-ND_DefineCol(p, 'redbg',      19, [1.00, 0.00, 0.00], bgcol);
+ND_DefineCol(p, 'redbg',      19, [1.00, 0.00, 0.00], bgColor);
 ND_DefineCol(p, 'blue',       20, [0.00, 0.00, 1.00]);
-ND_DefineCol(p, 'green',      21, [0.00, 1.00, 0.00]);
-ND_DefineCol(p, 'greenbg',    22, [0.00, 1.00, 0.00], bgcol);
-
-
-%ND_DefineCol(p, 'text',       32, [1.00, 1.00, 1.00], bgcol);
+ND_DefineCol(p, 'bluebg',     21, [0.00, 0.00, 1.00], bgColor);
+ND_DefineCol(p, 'green',      22, [0.00, 1.00, 0.00]);
+ND_DefineCol(p, 'greenbg',    23, [0.00, 1.00, 0.00], bgColor);
+ND_DefineCol(p, 'orange',     24, [1.00, 0.40, 0.00]);
+ND_DefineCol(p, 'orangebg',   25, [1.00, 0.40, 0.00], bgColor);
+ND_DefineCol(p, 'yellow',     26, [1.00, 1.00, 0.00]);
+ND_DefineCol(p, 'yellowbg',   27, [1.00, 1.00, 0.00], bgColor);
+ND_DefineCol(p, 'cyan',       28, [0.00, 1.00, 1.00]);
+ND_DefineCol(p, 'cyanbg',     29, [0.00, 1.00, 1.00], bgColor);
+ND_DefineCol(p, 'magenta',    30, [1.00, 0.00, 1.00]);
+ND_DefineCol(p, 'magentabg',  31, [1.00, 0.00, 1.00], bgColor);
+ND_DefineCol(p, 'lGreen',     32, [0.69, 1.00, 0.69]);
+ND_DefineCol(p, 'lGreenbg',   33, [0.69, 1.00, 0.69], bgColor);
+ND_DefineCol(p, 'dGreen',     34, [0.00, 0.69, 0.00]);
+ND_DefineCol(p, 'dGreenbg',   35, [0.00, 0.69, 0.00], bgColor);
+ND_DefineCol(p, 'lRed',       36, [1.00, 0.69, 0.69]);
+ND_DefineCol(p, 'lRedbg',     37, [1.00, 0.69, 0.69], bgColor);
+ND_DefineCol(p, 'dRed',       38, [0.69, 0.00, 0.00]);
+ND_DefineCol(p, 'dRedbg',     39, [0.69, 0.00, 0.00], bgColor);
+ND_DefineCol(p, 'lBlue',      40, [0.69, 0.69, 1.00]);
+ND_DefineCol(p, 'lBluebg',    41, [0.69, 0.69, 1.00], bgColor);
+ND_DefineCol(p, 'dBlue',      42, [0.00, 0.00, 0.69]);
+ND_DefineCol(p, 'dBluebg',    43, [0.00, 0.00, 0.69], bgColor);
+%ND_DefineCol(p, 'text',       32, [1.00, 1.00, 1.00], bgColor);
 
 
 

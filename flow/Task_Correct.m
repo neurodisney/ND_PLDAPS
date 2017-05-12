@@ -5,7 +5,7 @@ function p = Task_Correct(p)
 % wolf zinke, March 2017
 
 %ND_CtrlMsg(p, 'Correct Response');
-pds.tdt.strobe(p.trial.event.RESP_CORR);
+pds.datapixx.strobe(p.trial.event.RESP_CORR);
 
 p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
 

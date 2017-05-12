@@ -142,7 +142,7 @@ function TaskSetUp(p)
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
     
-    p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
+    p.trial.reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
 
 % ####################################################################### %
 function TaskDesign(p)
@@ -186,8 +186,8 @@ function TaskDesign(p)
                     p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;
                     p.trial.CurrEpoch = p.trial.epoch.WaitGo;
                         
-                    if(p.trial.task.Reward.Pull)
-                        pds.reward.give(p, p.trial.task.Reward.PullRew);
+                    if(p.trial.reward.Pull)
+                        pds.reward.give(p, p.trial.reward.PullRew);
                     end
                 end
             end
@@ -202,14 +202,14 @@ function TaskDesign(p)
             elseif(p.trial.CurTime > p.trial.Timer.Wait)
                 Task_GoCue(p);
 
-            elseif(p.trial.task.Reward.RewTrain)
+            elseif(p.trial.reward.RewTrain)
                 % shoot of a train of rewards
                 if(p.trial.CurTime > p.trial.Timer.Reward)
-                    cr_gap = ND_GetITI(p.trial.task.Reward.RewGapMin, ...
-                                       p.trial.task.Reward.RewGapMax,[],[],[], 0.01);
-                    p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.Reward.TrainRew  + cr_gap;
+                    cr_gap = ND_GetITI(p.trial.reward.RewGapMin, ...
+                                       p.trial.reward.RewGapMax,[],[],[], 0.01);
+                    p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.TrainRew  + cr_gap;
                                                                
-                    pds.reward.give(p, p.trial.task.Reward.TrainRew);
+                    pds.reward.give(p, p.trial.reward.TrainRew);
                 end
             end
 
@@ -340,7 +340,7 @@ function Trial2Ascii(p, act)
                                 p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
                                 trltm, p.trial.EV.JoyPress, ...
                                 p.trial.EV.GoCue, p.trial.EV.JoyRelease, p.trial.EV.Reward, ...
-                                p.trial.task.Reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
+                                p.trial.reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.StartRT, RT, p.trial.task.Timing.HoldTime);
                fclose(tblptr);
             end

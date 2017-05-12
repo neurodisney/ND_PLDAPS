@@ -187,7 +187,7 @@ function TaskSetUp(p)
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
     
-    p.trial.task.Reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
+    p.trial.reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
 
 % ------------------------------------------------------------------------%
 function TaskDesign(p)
@@ -233,8 +233,8 @@ function TaskDesign(p)
                         p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;
                         p.trial.CurrEpoch = p.trial.epoch.WaitGo;
 
-                        if(p.trial.task.Reward.Pull)
-                            pds.reward.give(p, p.trial.task.Reward.PullRew);
+                        if(p.trial.reward.Pull)
+                            pds.reward.give(p, p.trial.reward.PullRew);
                         end
                     else
                         % That was the task, reward animal and done                        
@@ -379,7 +379,7 @@ function Trial2Ascii(p, act)
                                 p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
                                 trltm, p.trial.EV.JoyPress, ...
                                 p.trial.EV.GoCue, p.trial.EV.JoyRelease, p.trial.EV.Reward, ...
-                                p.trial.task.Reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
+                                p.trial.reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.StartRT, RT, p.trial.task.Timing.HoldTime);
                fclose(tblptr);
             end

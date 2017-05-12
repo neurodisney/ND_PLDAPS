@@ -1,57 +1,53 @@
 function p = setup(p)
-% pds.eyecalib.setup(p) setup calibration for eye position
+% pds.eyecalib.setup(p) setup calibration for eye position. 
+% If calibration is enabled for this experiment (i.e., for the actual calibration experiment),
+% setup will create the files necessary to store the information, and setup any keys.
+%
+% For other experiments, setup will load the most recent eye calibration file for the day
+% If none exist, the user will be given a warning.
 %
 % wolf zinke, april 2017
+% Nate Faber, May 2017
 
-%% existing calibration data
-% refer to default struct with calibration information
-% if(isempty(p.trial.behavior.fixation.CalibMat))
-%     [pathStr,~,~] = fileparts(mfilename('fullpath'));
-%     p.trial.behavior.fixation.CalibMat = [pathStr,filesep,'FixCal.mat'];
-% end
-% 
-% % load data
-% p.trial.Calib.Eye = load(p.trial.behavior.fixation.CalibMat);
+if p.trial.behavior.fixation.enableCalib
+    %% Prepare to calibrate the eye position
 
-% update name for calibration file
-p.trial.behavior.fixation.CalibMat = [p.defaultParameters.session.dir,filesep,'FixCal.mat'];
-
-%% set up positions for the 9-point calibration grid
-% grid ID's follow numpad scheme:
-%
-%  -------------
-%  | 7 | 8 | 9 |
-%  -------------
-%  | 4 | 5 | 6 |
-%  -------------
-%  | 1 | 2 | 3 |
-%  -------------
-
-% TODO: Check! currently the ID's do not match screen coordinates!
-
-grdX = p.trial.behavior.fixation.FixGridStp(1);
-grdY = p.trial.behavior.fixation.FixGridStp(2);
-
-X = [-grdX;     0;  grdX; -grdX; 0; grdX; -grdX;    0; grdX];
-Y = [-grdY; -grdY; -grdY;     0; 0;    0;  grdY; grdY; grdY];
-p.trial.Calib.Grid_XY = [X, Y];
-
-p.trial.Calib.EyePos_X = nan(1, 9);
-p.trial.Calib.EyePos_Y = nan(1, 9);
-
-% define keys used for eye calibration
-KbName('UnifyKeyNames');
-p.trial.Calib.GridKey     = KbName(arrayfun(@num2str, 1:9, 'unif', 0));
-p.trial.Calib.GridKeyCell = num2cell(p.trial.Calib.GridKey);
-p.trial.key.CtrFix        = KbName('z');         % set current eye position as center (i.e. change offset)
-p.trial.key.FixGain       = KbName('g');         % adjust fixation gain
-p.trial.key.OffsetReset   = KbName('BackSpace'); % reset offset to previous one
-p.trial.key.enableCalib   = KbName('Insert'); % allow changing calibration parameters
-p.trial.key.acceptCalPos  = KbName('return');    % accept current fixation
-p.trial.key.updateCalib   = KbName('End');       % update calibration with current eye positions    
-
-
-% save calibration file
-pds.eyecalib.save(p);
+    % TODO: Allow for loading of previous calibrations as a starting point
+    
+    % Name of calibration setup (uses the current time to differentiate different calibrations taken on the same day
+    p.trial.eyeCalib.name = [p.trial.session.subject, '_', datestr(now,'yyyymmdd') '_EyeCalib_' , datestr(now,'HHMM')];
+    p.trial.eyeCalib.file = [p.trial.session.eyeCalibDir, filesep, p.trial.eyeCalib.name, '.mat'];    
+    
+    % Load in the default gain and offset
+    p.trial.eyeCalib.gain = p.trial.eyeCalib.defaultGain;
+    p.trial.eyeCalib.offset = p.trial.eyeCalib.defaultOffset;
+    
+    % define keys used for eye calibration
+    KbName('UnifyKeyNames');
+    p.trial.key.resetCalib    = KbName('z');  % Clear the calibration matrices and start over
+    p.trial.key.wipeCalibPos  = KbName('w');  % Clear the calibration points at the current fixPos 
+    p.trial.key.rmLastCalib   = KbName('BackSpace'); % reset offset to previous one
+    p.trial.key.enableCalib   = KbName('Insert');    % allow changing calibration parameters
+    p.trial.key.addCalibPoint  = 37; % KbName('Return') returns two numbers;    % accept current fixation
+    
+    % save calibration file
+    pds.eyecalib.save(p);
+    
+else
+    %% Load the most recent eye position of the day
+    eyeCalibDir = p.trial.session.eyeCalibDir;
+    dailyCalibs = dir([eyeCalibDir,filesep,'*.mat']);
+    
+    % Warn the user if no calibration files exist
+    if isempty(dailyCalibs)
+        warning('No calibrations performed today. eye position likely highly inaccurate');
+        return;
+    end
+    
+    % Load the most recent calibration file
+    calibFileName = [eyeCalibDir, filesep, dailyCalibs(end).name];
+    pds.eyecalib.load(p, calibFileName);
+    
+end
 
 
