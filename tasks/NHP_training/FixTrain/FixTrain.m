@@ -364,6 +364,9 @@ function TaskDesign(p)
                         
                         % End the task
                         p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                        
+                        % Play jackpot sound
+                        pds.audio.playDP(p,'jackpot','left')
                     end
                     
                     % Give the reward and update the lastReward time
@@ -374,7 +377,7 @@ function TaskDesign(p)
         
         % Fixation Break, end the trial        
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
-            % TODO: Possibly play breakfix sound
+            pds.audio.playDP(p,'breakfix','left');
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                                  
         end
