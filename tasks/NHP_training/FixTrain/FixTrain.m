@@ -71,7 +71,7 @@ if(isempty(state))
     c1.reward.nRewards       = [1    8  ];
     c1.reward.Dur            = [0.04  0.04];
     c1.reward.Period         = [1    1  ];
-    c1.reward.jackpotDur     = 0.5;
+    c1.reward.jackpotDur     = 0.15;
     
     c1.nTrials = 100;
     
@@ -83,7 +83,7 @@ if(isempty(state))
     c2.reward.nRewards       = [1    8  ];
     c2.reward.Dur            = [0.04  0.04];
     c2.reward.Period         = [1    1  ];
-    c2.reward.jackpotDur     = 0.5;
+    c2.reward.jackpotDur     = 0.15;
     c2.nTrials = 100;
     
     
@@ -94,7 +94,7 @@ if(isempty(state))
     c3.reward.nRewards       = [1    8   ];
     c3.reward.Dur            = [0.04 0.04];
     c3.reward.Period         = [1.00 1.00];
-    c3.reward.jackpotDur     = 0.3;
+    c3.reward.jackpotDur     = 0.15;
     c3.nTrials = 25;
     
     % condition 4
@@ -104,7 +104,7 @@ if(isempty(state))
     c4.reward.nRewards       = [1    8   ];
     c4.reward.Dur            = [0.04 0.04]; 
     c4.reward.Period         = [1.00 1.00];   
-    c4.reward.jackpotDur     = 0.5;
+    c4.reward.jackpotDur     = 0.25;
     c4.nTrials = 50;
     
     % condition 5
@@ -114,7 +114,7 @@ if(isempty(state))
     c5.reward.nRewards       = [1    14  ];
     c5.reward.Dur            = [0.04 0.04];
     c5.reward.Period         = [0.75 0.75];   
-    c5.reward.jackpotDur     = 0.5;
+    c5.reward.jackpotDur     = 0.25;
     c5.nTrials = 100;
     
     % condition 6
@@ -124,7 +124,7 @@ if(isempty(state))
     c6.reward.nRewards       = [1    18  ];
     c6.reward.Dur            = [0.06 0.06];
     c6.reward.Period         = [0.60 0.60];   
-    c6.reward.jackpotDur     = 0.5;
+    c6.reward.jackpotDur     = 0.25;
     c6.nTrials = 200;
     
     % condition 7
@@ -134,7 +134,7 @@ if(isempty(state))
     c7.reward.nRewards       = [1    25  ];
     c7.reward.Dur            = [0.08 0.08];
     c7.reward.Period         = [0.30 0.30];   
-    c7.reward.jackpotDur     = 1.0;
+    c7.reward.jackpotDur     = 0.5;
     c7.nTrials = 1000;
     
     
