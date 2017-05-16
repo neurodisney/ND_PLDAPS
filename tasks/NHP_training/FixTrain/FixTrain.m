@@ -69,7 +69,7 @@ if(isempty(state))
     c1.reward.MinWaitInitial = 0.13;
     c1.reward.MaxWaitInitial = 0.17;
     c1.reward.nRewards       = [1    8  ];
-    c1.reward.Dur            = [0.1  0.1];
+    c1.reward.Dur            = [0.04  0.04];
     c1.reward.Period         = [1    1  ];
     c1.reward.jackpotDur     = 0.5;
     
@@ -81,7 +81,7 @@ if(isempty(state))
     c2.reward.MinWaitInitial = 0.23;
     c2.reward.MaxWaitInitial = 0.27;
     c2.reward.nRewards       = [1    8  ];
-    c2.reward.Dur            = [0.1  0.1];
+    c2.reward.Dur            = [0.04  0.04];
     c2.reward.Period         = [1    1  ];
     c2.reward.jackpotDur     = 0.5;
     c2.nTrials = 100;
@@ -92,7 +92,7 @@ if(isempty(state))
     c3.reward.MinWaitInitial = 0.48;
     c3.reward.MaxWaitInitial = 0.52;
     c3.reward.nRewards       = [1    8   ];
-    c3.reward.Dur            = [0.10 0.10];
+    c3.reward.Dur            = [0.04 0.04];
     c3.reward.Period         = [1.00 1.00];
     c3.reward.jackpotDur     = 0.3;
     c3.nTrials = 25;
@@ -102,7 +102,7 @@ if(isempty(state))
     c4.reward.MinWaitInitial = 0.73;
     c4.reward.MaxWaitInitial = 0.77;
     c4.reward.nRewards       = [1    8   ];
-    c4.reward.Dur            = [0.10 0.10]; 
+    c4.reward.Dur            = [0.04 0.04]; 
     c4.reward.Period         = [1.00 1.00];   
     c4.reward.jackpotDur     = 0.5;
     c4.nTrials = 50;
@@ -112,7 +112,7 @@ if(isempty(state))
     c5.reward.MinWaitInitial = 0.98;
     c5.reward.MaxWaitInitial = 1.02;
     c5.reward.nRewards       = [1    14  ];
-    c5.reward.Dur            = [0.10 0.10];
+    c5.reward.Dur            = [0.04 0.04];
     c5.reward.Period         = [0.75 0.75];   
     c5.reward.jackpotDur     = 0.5;
     c5.nTrials = 100;
@@ -122,7 +122,7 @@ if(isempty(state))
     c6.reward.MinWaitInitial = 1.23;
     c6.reward.MaxWaitInitial = 1.27;
     c6.reward.nRewards       = [1    18  ];
-    c6.reward.Dur            = [0.15 0.15];
+    c6.reward.Dur            = [0.06 0.06];
     c6.reward.Period         = [0.60 0.60];   
     c6.reward.jackpotDur     = 0.5;
     c6.nTrials = 200;
@@ -132,7 +132,7 @@ if(isempty(state))
     c7.reward.MinWaitInitial = 1.48;
     c7.reward.MaxWaitInitial = 1.52;
     c7.reward.nRewards       = [1    25  ];
-    c7.reward.Dur            = [0.20 0.20];
+    c7.reward.Dur            = [0.08 0.08];
     c7.reward.Period         = [0.30 0.30];   
     c7.reward.jackpotDur     = 1.0;
     c7.nTrials = 1000;
