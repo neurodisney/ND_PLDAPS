@@ -1,4 +1,4 @@
-function p = DelayedSaccade(p, state)
+function p = DelSacc(p, state)
 % Main trial function for initial fixation training.
 %
 %

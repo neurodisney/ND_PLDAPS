@@ -21,11 +21,11 @@ function p = give(p, amount)
     % send event code for reward
     pds.datapixx.strobe(p.trial.event.REWARD);
 
-    %%sound
-    if(p.trial.sound.use && p.trial.sound.useForReward)
-        PsychPortAudio('Start', p.trial.sound.reward);
-        pds.datapixx.strobe(p.trial.event.AUDIO_REW);
-    end
+%     %%sound
+%     if(p.trial.sound.use && p.trial.sound.useForReward)
+%         PsychPortAudio('Start', p.trial.sound.reward);
+%         pds.datapixx.strobe(p.trial.event.AUDIO_REW);
+%     end
 
     %% store data
     p.trial.reward.iReward = p.trial.reward.iReward + 1;

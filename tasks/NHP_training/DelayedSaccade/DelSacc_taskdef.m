@@ -1,4 +1,4 @@
-function p = DelayedSaccade_taskdef(p)
+function p = DelSacc_taskdef(p)
 % define task parameters for the joystick training task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
@@ -24,14 +24,14 @@ p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by k
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.task.Timing.WaitFix = 1;    % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 3;    % Time to get a solid fixation before trial ends unsuccessfully
 p.trial.task.Timing.MaxFix = 20;    % Maximum amount of time of fixation
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.5;  % minimum time period [s] between subsequent trials
 p.trial.task.Timing.MaxITI  = 3;    % maximum time period [s] between subsequent trials
 
 % penalties
-p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
+p.trial.task.Timing.TimeOut =  2;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

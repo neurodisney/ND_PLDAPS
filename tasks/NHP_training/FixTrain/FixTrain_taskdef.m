@@ -24,7 +24,7 @@ p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by k
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.task.Timing.WaitFix = 1;    % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 3;    % Time to get a solid fixation before trial ends unsuccessfully
 p.trial.task.Timing.MaxFix = 20;    % Maximum amount of time of fixation
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.5;  % minimum time period [s] between subsequent trials

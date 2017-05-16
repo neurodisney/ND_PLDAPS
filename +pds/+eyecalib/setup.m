@@ -41,6 +41,8 @@ else
     % Warn the user if no calibration files exist
     if isempty(dailyCalibs)
         warning('No calibrations performed today. eye position likely highly inaccurate');
+        p.trial.eyeCalib.offset = p.trial.eyeCalib.defaultOffset;
+        p.trial.eyeCalib.gain = p.trial.eyeCalib.defaultGain;
         return;
     end
     
