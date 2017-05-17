@@ -47,6 +47,20 @@ p.trial.behavior.fixation.FixType = 'disc';     % shape of fixation target, opti
 p.trial.behavior.fixation.FixCol  = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixSz   = 0.1;        % size of the fixation spot
 
+%% Stim parameters
+% Eccentricity in degrees from origin
+p.trial.stim.eccentricity       = 4;     
+
+% Locations of the stimuli (will scale to the proper eccentricity in the task)
+% Right now use the 4 diagonal quadrants and 
+p.trial.stim.locations          = {[1  , 1], ...
+                                   [-1 , 1], ...
+                                   [-1 ,-1], ...
+                                   [1  ,-1], ...
+                                   [1  , 0]};
+% diameter of the stim
+p.trial.stim.size               = 0.75;
+
 % ------------------------------------------------------------------------%
 %% Trial duration
 % maxTrialLength is used to pre-allocate memory at several initialization

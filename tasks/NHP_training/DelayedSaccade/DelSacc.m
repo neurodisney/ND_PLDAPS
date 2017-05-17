@@ -57,8 +57,10 @@ if(isempty(state))
 
     
     % reward series for continous fixation
-    % c.reward.MinWaitInitial -  minimum latency to reward after fixation
-    % c.reward.MaxWaitInitial -  maximum latency to reward after fixation
+    % c.task.fixLatency       -  time to hold fixation before it counts
+    % c.reward.initialFixRwd  -  Reward for fixating long enough (before stim appears). Set to 0 for harder difficulty
+    % c.task.stimLatency      -  Time from initialFixRwd to the stim appearing (if no reward this is ignored).
+    % c.
     % c.reward.nRewards       -  array of how many of each kind of reward
     % c.reward.Dur            -  array of how long each kind of reward lasts
     % c.reward.Period         -  the period between one reward and the next NEEDS TO BE GREATER THAN Dur
@@ -66,76 +68,14 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.reward.MinWaitInitial = 0.13;
-    c1.reward.MaxWaitInitial = 0.17;
+    c1.task.fixLatency       = 0.75; % Time to hold fixation before it counts 
+    c1.
     c1.reward.nRewards       = [1    8  ];
     c1.reward.Dur            = [0.1  0.1];
     c1.reward.Period         = [1    1  ];
     c1.reward.jackpotDur     = 0.5;
     
     c1.nTrials = 100;
-    
-    
-    % condition 2
-    c2.Nr = 2;
-    c2.reward.MinWaitInitial = 0.23;
-    c2.reward.MaxWaitInitial = 0.27;
-    c2.reward.nRewards       = [1    8  ];
-    c2.reward.Dur            = [0.1  0.1];
-    c2.reward.Period         = [1    1  ];
-    c2.reward.jackpotDur     = 0.5;
-    c2.nTrials = 100;
-    
-    
-    % condition 3
-    c3.Nr = 3;
-    c3.reward.MinWaitInitial = 0.48;
-    c3.reward.MaxWaitInitial = 0.52;
-    c3.reward.nRewards       = [1    8   ];
-    c3.reward.Dur            = [0.10 0.10];
-    c3.reward.Period         = [1.00 1.00];
-    c3.reward.jackpotDur     = 0.3;
-    c3.nTrials = 25;
-    
-    % condition 4
-    c4.Nr = 4;
-    c4.reward.MinWaitInitial = 0.73;
-    c4.reward.MaxWaitInitial = 0.77;
-    c4.reward.nRewards       = [1    8   ];
-    c4.reward.Dur            = [0.10 0.10]; 
-    c4.reward.Period         = [1.00 1.00];   
-    c4.reward.jackpotDur     = 0.5;
-    c4.nTrials = 50;
-    
-    % condition 5
-    c5.Nr = 5;
-    c5.reward.MinWaitInitial = 0.98;
-    c5.reward.MaxWaitInitial = 1.02;
-    c5.reward.nRewards       = [1    14  ];
-    c5.reward.Dur            = [0.10 0.10];
-    c5.reward.Period         = [0.75 0.75];   
-    c5.reward.jackpotDur     = 0.5;
-    c5.nTrials = 100;
-    
-    % condition 6
-    c6.Nr = 6;
-    c6.reward.MinWaitInitial = 1.23;
-    c6.reward.MaxWaitInitial = 1.27;
-    c6.reward.nRewards       = [1    18  ];
-    c6.reward.Dur            = [0.15 0.15];
-    c6.reward.Period         = [0.60 0.60];   
-    c6.reward.jackpotDur     = 0.5;
-    c6.nTrials = 200;
-    
-    % condition 7
-    c7.Nr = 7;
-    c7.reward.MinWaitInitial = 1.48;
-    c7.reward.MaxWaitInitial = 1.52;
-    c7.reward.nRewards       = [1    25  ];
-    c7.reward.Dur            = [0.20 0.20];
-    c7.reward.Period         = [0.30 0.30];   
-    c7.reward.jackpotDur     = 1.0;
-    c7.nTrials = 1000;
     
     
     % Fill a conditions list with n of each kind of condition sequentially
