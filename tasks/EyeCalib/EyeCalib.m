@@ -54,10 +54,10 @@ if(isempty(state))
 
     % condition 1
     c1.Nr = 1;
-    c1.reward.MinWaitInitial = 0.5;
-    c1.reward.MaxWaitInitial = 0.5;
+    c1.reward.MinWaitInitial = 0.15;
+    c1.reward.MaxWaitInitial = 0.15;
     c1.reward.Dur            = 0.05;
-    c1.reward.Period         = 1;
+    c1.reward.Period         = 0.2;
     
     conditions = {c1};
 
