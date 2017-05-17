@@ -15,11 +15,17 @@ if(~isempty(p.trial.LastKeyPress))
                 
                 % Position of the fixation target
                 fixPos = p.trial.behavior.fixation.fixPos;
-                
-                % Position of eye. Gets the median X and Y values over a
-                % range of samples to get a better estimate
-                sampleRange = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.NSmpls + 1) : p.trial.datapixx.adc.dataSampleCount;
-                rawEye = [prctile(p.trial.AI.Eye.X(sampleRange), 50)  prctile(p.trial.AI.Eye.Y(sampleRange), 50)];
+                          
+                if ~p.trial.mouse.useAsEyepos
+                    % Raw eye analog signal. Gets the median X and Y values over a
+                    % range of samples to get a better estimate
+                    sampleRange = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.NSmpls + 1) : p.trial.datapixx.adc.dataSampleCount;
+                    rawEye = [prctile(p.trial.AI.Eye.X(sampleRange), 50)  prctile(p.trial.AI.Eye.Y(sampleRange), 50)];
+                else 
+                    % Use the mouse coordinates as the raw eye signal
+                    iSample = p.trial.mouse.samples;
+                    rawEye = p.trial.mouse.cursorSamples(:, iSample);
+                end
                 
                 % Add these samples to the list of calibration points,
                 % which will be processed in pds.eyecalib.update
