@@ -60,8 +60,9 @@ if(isempty(state))
     % c.task.fixLatency       -  time to hold fixation before it counts
     % c.reward.initialFixRwd  -  Reward for fixating long enough (before stim appears). Set to 0 for harder difficulty
     % c.task.stimLatency      -  Time from initialFixRwd to the stim appearing (if no reward this is ignored).
-    % c.
-    % c.reward.nRewards       -  array of how many of each kind of reward
+    % c.reward.nRewards       -  array of how many of each kind of reward while maintaining fixation on central spot
+    % c.task.centerOffLatency -  Time from stim appearing to when the central fix spot disappears
+    
     % c.reward.Dur            -  array of how long each kind of reward lasts
     % c.reward.Period         -  the period between one reward and the next NEEDS TO BE GREATER THAN Dur
     % c.reward.jackpotDur     -  the jackpot is given after all other rewards
@@ -183,17 +184,9 @@ function TaskSetUp(p)
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
         
-    p.trial.task.Good                = 1;  % assume no error untill error occurs
+    p.trial.task.Good                = 0;
     p.trial.behavior.fixation.GotFix = 0;
     
-    % if random position is required pick one and move fix spot
-    if(p.trial.task.RandomPos == 1)
-        p.trial.behavior.fixation.fixPos = p.trial.eyeCalib.Grid_XY(randi(size(p.trial.eyeCalib.Grid_XY,1)), :);
-        
-         Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
-         Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
-         p.trial.behavior.fixation.fixPos = [Xpos, Ypos];
-    end
     pds.fixation.move(p);
     
     p.trial.behavior.fixation.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
@@ -386,12 +379,6 @@ function KeyAction(p)
                  p.trial.task.FixCol     = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), ...
                                            length(p.trial.task.Color_list))+1};
                                        
-            case KbName('r')  % random position on each trial
-                 if(p.trial.task.RandomPos == 0)
-                    p.trial.task.RandomPos = 1;
-                 else
-                    p.trial.task.RandomPos = 0;
-                 end
         end
         
         pds.fixation.move(p);
