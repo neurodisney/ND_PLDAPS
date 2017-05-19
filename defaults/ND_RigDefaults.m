@@ -152,9 +152,7 @@ SS.pldaps.draw.photodiode.state                 = 0;     % is PD signal on?
 SS.pldaps.draw.photodiode.cnt                   = 0;     % counter for PD signals
 
 % pause: control pausing behavior of pldaps
-SS.pldaps.pause.preExperiment                   = 0;     % pause before experiment starts: 0=don't; 1 = debugger; 2 = pause loop
-SS.pldaps.pause.type                            = 1;     % Only type 1 is currently tested.
-
+SS.pldaps.pause                                 = 0;     % pause the experiment after the current trial
 % save: control how pldaps saves data
 SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial parameters
 
@@ -280,6 +278,7 @@ SS.pldaps.draw.ScreenEventName = 'NULL';  % keep track of times in pldaps data f
 KbName('UnifyKeyNames');
 SS.key.reward  = KbName('space');    % trigger reward
 SS.key.quit    = KbName('ESCAPE');   % end experiment
+SS.key.pause   = KbName('p');        % pause the experiment
 
 SS.key.FixReq  = KbName('f');  % disable/enable fixation control
 SS.key.CtrJoy  = KbName('j');  % set current joystick position as zero
