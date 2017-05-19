@@ -217,12 +217,12 @@ SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of th
 
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.GridPos         = 5;
+SS.behavior.fixation.GridPos         = 5;      % cntral fixation position (for pure offset correction)
 
-SS.behavior.fixation.FixWinStp       = 0.25;    % change of the size of the fixation window upon key press
-SS.behavior.fixation.PrevOffset      = [0, 0];  % keep track of previous offset to change back from the one
+SS.behavior.fixation.FixWinStp       = 0.25;   % change of the size of the fixation window upon key press
+SS.behavior.fixation.PrevOffset      = [0, 0]; % keep track of previous offset to change back from the one
 
-SS.behavior.fixation.NumSmplCtr      = 10;      % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
+SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use to determine current (median) eye position (has to be smaller than SS.pldaps.draw.eyepos.history)
 
 % fixation window
 SS.behavior.fixation.FixWin          =  4;  % diameter of fixation window in dva
