@@ -1,4 +1,4 @@
-function p = Task_WaitRelease(p)
+function p = Task_WaitITI(p)
 % default actions when the task starts
 %
 %
