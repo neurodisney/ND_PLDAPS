@@ -19,7 +19,7 @@ if(~isempty(p.trial.LastKeyPress))
                 if ~p.trial.mouse.useAsEyepos
                     % Raw eye analog signal. Gets the median X and Y values over a
                     % range of samples to get a better estimate
-                    sampleRange = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.NSmpls + 1) : p.trial.datapixx.adc.dataSampleCount;
+                    sampleRange = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.calibSamples + 1) : p.trial.datapixx.adc.dataSampleCount;
                     rawEye = [prctile(p.trial.AI.Eye.X(sampleRange), 50)  prctile(p.trial.AI.Eye.Y(sampleRange), 50)];
                 else 
                     % Use the mouse coordinates as the raw eye signal

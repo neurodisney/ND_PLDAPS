@@ -205,12 +205,11 @@ SS.eyeCalib.name                     = 'Default';        % Name of the calibrati
 SS.eyeCalib.file                     = 'nofile';   % THe file that stores the calibration information
 SS.eyeCalib.defaultGain              = [-5, -5];  % default gain, used if no calibration points are entered
 SS.eyeCalib.defaultOffset            = [0, 0];    % default offset, used if no calibration points are entered
-SS.behavior.fixation.CalibMat        = [];
 SS.eyeCalib.rawEye    = [];
 SS.eyeCalib.fixPos    = [];
 SS.eyeCalib.medRawEye = [];
 SS.eyeCalib.medFixPos = [];
-SS.behavior.fixation.CalibMethod     = 'gain'; % method used for calibration, currently only gain adjustment
+SS.behavior.fixation.calibSamples    = 200;    % analog eyesamples in the the datapixx to determine the position of an eye calibration point
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 
 
