@@ -82,9 +82,9 @@ if(isempty(state))
     c2.reward.MaxWaitInitial = 0.27;
     c2.reward.nRewards       = [1    8  ];
     c2.reward.Dur            = [0.04  0.04];
-    c2.reward.Period         = [1    1  ];
+    c2.reward.Period         = [0.5    0.5  ];
     c2.reward.jackpotDur     = 0.15;
-    c2.nTrials = 100;
+    c2.nTrials = 1000;
     
     
     % condition 3
@@ -105,7 +105,7 @@ if(isempty(state))
     c4.reward.Dur            = [0.04 0.04]; 
     c4.reward.Period         = [1.00 1.00];   
     c4.reward.jackpotDur     = 0.25;
-    c4.nTrials = 50;
+    c4.nTrials = 75;
     
     % condition 5
     c5.Nr = 5;
@@ -125,7 +125,7 @@ if(isempty(state))
     c6.reward.Dur            = [0.06 0.06];
     c6.reward.Period         = [0.60 0.60];   
     c6.reward.jackpotDur     = 0.25;
-    c6.nTrials = 200;
+    c6.nTrials = 1000;
     
     % condition 7
     c7.Nr = 7;
@@ -144,7 +144,7 @@ if(isempty(state))
     totalTrials = 0;
     
     % Iterate through each condition to fill conditions
-    conditionsIterator = {c4,c5,c6,c7};
+    conditionsIterator = {c2};
     
     for iCond = 1:size(conditionsIterator,2)
         cond = conditionsIterator(iCond);
