@@ -80,10 +80,6 @@ if(isempty(state))
     c2.Nr = 2;
     c2.reward.MinWaitInitial = 0.23;
     c2.reward.MaxWaitInitial = 0.27;
-    c2.reward.nRewards       = [1    8  ];
-    c2.reward.Dur            = [0.04  0.04];
-    c2.reward.Period         = [0.5    0.5  ];
-    c2.reward.jackpotDur     = 0.15;
     c2.nTrials = 1000;
     
     
