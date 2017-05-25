@@ -78,8 +78,6 @@ if(isempty(state))
     
     % condition 2
     c2.Nr = 2;
-    c2.reward.MinWaitInitial = 0.23;
-    c2.reward.MaxWaitInitial = 0.27;
     c2.nTrials = 1000;
     
     
