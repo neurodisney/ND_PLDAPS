@@ -10,6 +10,9 @@ function p = update(p)
 rawEye = p.trial.eyeCalib.rawEye;
 fixPos = p.trial.eyeCalib.fixPos;
 
+offsetTweak = p.trial.eyeCalib.offsetTweak;
+gainTweak   = p.trial.eyeCalib.gainTweak;
+
 %% Median of rawEye point cloud for each unique fixPos
 % For the calibration points collected at each individual fixPos on the
 % screen, calculate the median, and then use these medians in the future
@@ -60,7 +63,7 @@ centerEye = medRawEye(centerIndex,:);
 centerFix = [0,0];
 
 oldOffset = p.trial.eyeCalib.offset;
-newOffset = centerEye;
+newOffset = centerEye + offsetTweak;
 p.trial.eyeCalib.offset = newOffset;
 
 
@@ -79,7 +82,6 @@ xGain = nanmean( relativeFix(xIndices,1) ./ relativeEye(xIndices,1) , 1);
 yGain = nanmean( relativeFix(yIndices,2) ./ relativeEye(yIndices,2) , 1);
 
 % Reset the gain to the default value if no points exist
-oldGain = p.trial.eyeCalib.gain;
 if isnan(xGain)
     xGain = p.trial.eyeCalib.defaultGain(1);
 end
@@ -88,7 +90,8 @@ if isnan(yGain)
     yGain = p.trial.eyeCalib.defaultGain(2);
 end
 
-newGain = [xGain, yGain];
+oldGain = p.trial.eyeCalib.gain;
+newGain = [xGain, yGain] + gainTweak;
 p.trial.eyeCalib.gain = newGain;
 
 %% Display info
