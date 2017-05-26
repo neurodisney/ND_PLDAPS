@@ -20,7 +20,14 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur         = 0.2;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.Dur            = 0.08;
+p.trial.reward.jackpotDur     = 0.4;
+p.trial.reward.nRewards       = 30;
+p.trial.reward.Period         = 0.25;
+
+p.trial.reward.MinWaitInitial = 0.23;
+p.trial.reward.MaxWaitInitial = 0.27;
 
 % ------------------------------------------------------------------------%
 %% Task Timings

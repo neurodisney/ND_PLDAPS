@@ -16,10 +16,26 @@ if(p.trial.mouse.useAsEyepos)
     
     % Get the last mouse position
     iSample = p.trial.mouse.samples;
-    mousePos = p.trial.mouse.cursorSamples(:,iSample);   
+    mousePos = p.trial.mouse.cursorSamples(:,iSample); 
     
-    p.trial.eyeX = mousePos(1);
-    p.trial.eyeY = mousePos(2);
+    % If manual calibration has been collected, use it. Otherwise, just use the actual mouse position
+    if any(p.trial.eyeCalib.offset ~= p.trial.eyeCalib.defaultOffset)
+     
+        offset = p.trial.eyeCalib.offset;
+        
+        gain = p.trial.eyeCalib.gain;
+        % If gain hasn't been changed for a particular axis, just use a gain of 1
+        gain(gain == p.trial.eyeCalib.defaultGain) = 1;
+        
+        p.trial.eyeX = gain(1) * (mousePos(1) - offset(1));
+        p.trial.eyeY = gain(2) * (mousePos(2) - offset(2));
+        
+    else
+        % If no calibration has been specified, just use the actualy position of the mouse
+        p.trial.eyeX = mousePos(1);
+        p.trial.eyeY = mousePos(2);
+        
+    end
     
 else
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.

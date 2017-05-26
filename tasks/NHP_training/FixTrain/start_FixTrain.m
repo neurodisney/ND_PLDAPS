@@ -46,7 +46,7 @@ SS.pldaps.draw.grid.use       = 1;
 
 SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
-SS.datapixx.TTL_trialOn       = 0;
+SS.datapixx.TTL_trialOn       = 1;
 
 SS.behavior.fixation.useCalibration = 1;
 SS.behavior.fixation.enableCalib = 0;
@@ -101,10 +101,10 @@ if strcmp(subjname,'mouse')
     SS.datapixx.adc.PupilChannel   = [];
     SS.datapixx.adc.XEyeposChannel = [];
     SS.datapixx.adc.YEyeposChannel = [];
-    SS.datapixx.adc.RewardChannel  = [];  
+    %SS.datapixx.adc.RewardChannel  = [];  
     SS.datapixx.useAsEyepos        = 0;
     SS.behavior.joystick.use       = 0;
-    SS.datapixx.useForReward       = 0;
+    %SS.datapixx.useForReward       = 0;
     
 end
 % ------------------------------------------------------------------------%

@@ -111,8 +111,7 @@ function s=pldapsClassDefaultParameters(s)
  s.	pldaps.	draw.	photodiode.	use = 0;
 
 %s.	pldaps.	pause.
- s.	pldaps.	pause.	preExperiment = true;
- s.	pldaps.	pause.	type = 1;
+ s.	pldaps.	pause = 0;
 
 %s.	pldaps.	save.
  s.	pldaps.	save.	initialParametersMerged = 1;

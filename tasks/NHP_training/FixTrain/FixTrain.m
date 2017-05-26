@@ -78,13 +78,7 @@ if(isempty(state))
     
     % condition 2
     c2.Nr = 2;
-    c2.reward.MinWaitInitial = 0.23;
-    c2.reward.MaxWaitInitial = 0.27;
-    c2.reward.nRewards       = [1    8  ];
-    c2.reward.Dur            = [0.04  0.04];
-    c2.reward.Period         = [1    1  ];
-    c2.reward.jackpotDur     = 0.15;
-    c2.nTrials = 100;
+    c2.nTrials = 1000;
     
     
     % condition 3
@@ -105,7 +99,7 @@ if(isempty(state))
     c4.reward.Dur            = [0.04 0.04]; 
     c4.reward.Period         = [1.00 1.00];   
     c4.reward.jackpotDur     = 0.25;
-    c4.nTrials = 50;
+    c4.nTrials = 75;
     
     % condition 5
     c5.Nr = 5;
@@ -125,7 +119,7 @@ if(isempty(state))
     c6.reward.Dur            = [0.06 0.06];
     c6.reward.Period         = [0.60 0.60];   
     c6.reward.jackpotDur     = 0.25;
-    c6.nTrials = 200;
+    c6.nTrials = 1000;
     
     % condition 7
     c7.Nr = 7;
@@ -144,7 +138,7 @@ if(isempty(state))
     totalTrials = 0;
     
     % Iterate through each condition to fill conditions
-    conditionsIterator = {c4,c5,c6,c7};
+    conditionsIterator = {c2};
     
     for iCond = 1:size(conditionsIterator,2)
         cond = conditionsIterator(iCond);
@@ -192,7 +186,6 @@ else
         % prepare the stimuli that should be shown, do some required calculations
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
-                pds.fixation.keycheck(p);
             end
             TaskDesign(p);
             
@@ -366,7 +359,7 @@ function TaskDesign(p)
                         p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                         
                         % Play jackpot sound
-                        pds.audio.playDP(p,'jackpot','left')
+                        %pds.audio.playDP(p,'jackpot','left')
                     end
                     
                     % Give the reward and update the lastReward time
@@ -377,7 +370,7 @@ function TaskDesign(p)
         
         % Fixation Break, end the trial        
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
-            pds.audio.playDP(p,'breakfix','left');
+            %pds.audio.playDP(p,'breakfix','left');
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                                  
         end

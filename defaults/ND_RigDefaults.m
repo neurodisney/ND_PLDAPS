@@ -152,9 +152,7 @@ SS.pldaps.draw.photodiode.state                 = 0;     % is PD signal on?
 SS.pldaps.draw.photodiode.cnt                   = 0;     % counter for PD signals
 
 % pause: control pausing behavior of pldaps
-SS.pldaps.pause.preExperiment                   = 0;     % pause before experiment starts: 0=don't; 1 = debugger; 2 = pause loop
-SS.pldaps.pause.type                            = 1;     % Only type 1 is currently tested.
-
+SS.pldaps.pause                                 = 0;     % pause the experiment after the current trial
 % save: control how pldaps saves data
 SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial parameters
 
@@ -202,27 +200,30 @@ SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibration
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
-SS.pldaps.draw.eyeCalib              = 0;         % Show the eye calibration points
 SS.eyeCalib.name                     = 'Default';        % Name of the calibration used. For back referencing in the data later
 SS.eyeCalib.file                     = 'nofile';   % THe file that stores the calibration information
-SS.eyeCalib.defaultGain              = [8.858,-7.683];  % default gain, used if no calibration points are entered
+SS.eyeCalib.defaultGain              = [5.536,-4.802];  % default gain, used if no calibration points are entered
 SS.eyeCalib.defaultOffset            = [0, 0];    % default offset, used if no calibration points are entered
-SS.behavior.fixation.CalibMat        = [];
+SS.eyeCalib.offsetTweak              = [0, 0];    % Additive tweak to the offset parameter  
+SS.eyeCalib.gainTweak                = [0, 0];    % Additive tweak to the gain parameter
+SS.behavior.fixation.calibTweakMode  = 'off';     % Parameter currently being tweaked
+SS.behavior.fixation.offsetTweakSize = 0.1;       % How much to tweak offset by in dva
+SS.behavior.fixation.gainTweakSize   = 0.03;       % How much to tweak gain by
 SS.eyeCalib.rawEye    = [];
 SS.eyeCalib.fixPos    = [];
 SS.eyeCalib.medRawEye = [];
 SS.eyeCalib.medFixPos = [];
-SS.behavior.fixation.CalibMethod     = 'gain'; % method used for calibration, currently only gain adjustment
+SS.behavior.fixation.calibSamples    = 200;    % analog eyesamples in the the datapixx to determine the position of an eye calibration point
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.GridPos         = 5;
+SS.behavior.fixation.GridPos         = 5;      % cntral fixation position (for pure offset correction)
 
-SS.behavior.fixation.FixWinStp       = 0.25;    % change of the size of the fixation window upon key press
-SS.behavior.fixation.PrevOffset      = [0, 0];  % keep track of previous offset to change back from the one
+SS.behavior.fixation.FixWinStp       = 0.25;   % change of the size of the fixation window upon key press
+SS.behavior.fixation.PrevOffset      = [0, 0]; % keep track of previous offset to change back from the one
 
-SS.behavior.fixation.NumSmplCtr      = 10;      % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
+SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use to determine current (median) eye position (has to be smaller than SS.pldaps.draw.eyepos.history)
 
 % fixation window
 SS.behavior.fixation.FixWin          =  4;  % diameter of fixation window in dva
@@ -280,6 +281,7 @@ SS.pldaps.draw.ScreenEventName = 'NULL';  % keep track of times in pldaps data f
 KbName('UnifyKeyNames');
 SS.key.reward  = KbName('space');    % trigger reward
 SS.key.quit    = KbName('ESCAPE');   % end experiment
+SS.key.pause   = KbName('p');        % pause the experiment
 
 SS.key.FixReq  = KbName('f');  % disable/enable fixation control
 SS.key.CtrJoy  = KbName('j');  % set current joystick position as zero

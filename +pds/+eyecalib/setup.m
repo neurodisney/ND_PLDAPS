@@ -27,8 +27,13 @@ if p.trial.behavior.fixation.enableCalib
     p.trial.key.resetCalib    = KbName('z');  % Clear the calibration matrices and start over
     p.trial.key.wipeCalibPos  = KbName('w');  % Clear the calibration points at the current fixPos 
     p.trial.key.rmLastCalib   = KbName('BackSpace'); % reset offset to previous one
-    p.trial.key.enableCalib   = KbName('Insert');    % allow changing calibration parameters
     p.trial.key.addCalibPoint  = 37; % KbName('Return') returns two numbers;    % accept current fixation
+    % Tweak calibration
+    p.trial.key.offsetTweak   = KbName('Home'); % Alternate between xTweak, yTweak, and off
+    p.trial.key.gainTweak     = KbName('End'); % Alternate between xTweak, yTweak, and off
+    p.trial.key.tweakUp       = KbName('PageUp'); % Increase the currently tweaked parameter
+    p.trial.key.tweakDown     = KbName('PageDown'); % Decrease the currently tweaked parameter
+    
     
     % save calibration file
     pds.eyecalib.save(p);
@@ -45,6 +50,21 @@ else
         p.trial.eyeCalib.gain = p.trial.eyeCalib.defaultGain;
         return;
     end
+    
+    % define keys used for tweaking eye calibration
+    KbName('UnifyKeyNames');
+    % Don't allow points to be changed in this mode, only tweaking
+    p.trial.key.resetCalib    = [];
+    p.trial.key.wipeCalibPos  = [];
+    p.trial.key.rmLastCalib   = [];
+    p.trial.key.enableCalib   = [];
+    p.trial.key.addCalibPoint = [];
+    
+    % Tweak calibration
+    p.trial.key.offsetTweak   = KbName('Home');
+    p.trial.key.gainTweak     = KbName('End');
+    p.trial.key.tweakUp       = KbName('PageUp');
+    p.trial.key.tweakDown     = KbName('PageDown');
     
     % Load the most recent calibration file
     calibFileName = [eyeCalibDir, filesep, dailyCalibs(end).name];

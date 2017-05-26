@@ -56,10 +56,10 @@ try
 
     % --------------------------------------------------------------------%
     %% Last chance to check variables
-    if(p.trial.pldaps.pause.type==1 && p.trial.pldaps.pause.preExperiment==true) %0=don't,1 is debugger, 2=pause loop
-        p  %#ok<NOPRT>
+    if p.trial.pldaps.pause
         disp('Ready to begin trials. Type return to start first trial...')
-        keyboard %#ok<MCKBD>
+        pause
+        p.trial.pldaps.pause = 0;
     end
 
     % --------------------------------------------------------------------%
@@ -84,7 +84,7 @@ try
     %% main trial loop %%
     while(p.trial.pldaps.iTrial < p.trial.pldaps.finish && p.trial.pldaps.quit ~= 2)
 
-        if(~p.trial.pldaps.quit)
+        if(~p.trial.pldaps.quit && ~p.trial.pldaps.pause)
 
             % ----------------------------------------------------------------%
             %% load parameters for next trial
@@ -177,39 +177,12 @@ try
                 disp(result.message)
             end
             
-        else %dbquit == 1 is meant to be pause. should we halt datapixx?
+        elseif p.trial.pldaps.pause
+            pds.datapixx.strobe(p.trial.event.PAUSE);
+            p.trial.EV.Pause = p.trial.CurTime;
+            pauseLoop(p);
 
-            %create a new level to store all changes in,
-            %load only non trial paraeters
-            pause   = p.trial.pldaps.pause.type;
-            p.trial = p.defaultParameters;
-
-            p.defaultParameters.addLevels({struct}, {['PauseAfterTrial' num2str(trialNr) 'Parameters']});
-            p.defaultParameters.setLevels([levelsPreTrials length(p.defaultParameters.getAllLevels())]);
-
-            if pause==1 %0=don't,1 is debugger, 2=pause loop
-                ListenChar(0);
-                ShowCursor;
-                p.trial
-                disp('Ready to begin trials. Type return to start first trial...')
-                keyboard %#ok<MCKBD>
-                p.trial.pldaps.quit = 0;
-                ListenChar(2);
-                HideCursor;
-
-            elseif pause==2
-                pauseLoop(p);
-            end
-
-            %now I'm assuming that nobody created new levels,
-            %but I guess when you know how to do that
-            %you should also now how to not screw things up
-            allStructs=p.defaultParameters.getAllStructs();
-            if(~isequal(struct,allStructs{end}))
-                levelsPreTrials=[levelsPreTrials length(allStructs)]; %#ok<AGROW>
-            end
-
-        end  %  if(~p.trial.pldaps.quit)
+        end
     end  %  while(p.trial.pldaps.iTrial < p.trial.pldaps.finish && p.trial.pldaps.quit ~= 2)
 
     
@@ -299,12 +272,12 @@ end
 % ----------------------------------------------------------------%
 %we are pausing, will create a new defaultParaneters Level where changes
 %would go.
-function pauseLoop(dv)
-ShowCursor;
-ListenChar(1);
+function pauseLoop(p)
+ListenChar(2);
+KbQueueStart;
 while(true)
     %the keyboard chechking we only capture ctrl+alt key presses.
-    [dv.trial.keyboard.pressedQ,  dv.trial.keyboard.firstPressQ]=KbQueueCheck(); % fast
+    [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck(); % fast
 
     if(any(p.trial.keyboard.firstPressQ))
 
@@ -312,7 +285,7 @@ while(true)
 
         switch qp
 
-            case KbName(p.trial.key.reward)
+            case p.trial.key.reward
                 % check for manual reward delivery via keyboard
                 pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
 
@@ -322,15 +295,18 @@ while(true)
 %                 keyboard %#ok<MCKBD>
 %
 %                 %P: PAUSE (end the pause)
-%             case KbName(p.trial.key.pause)
-%                 dv.trial.pldaps.quit = 0;
-%                 ListenChar(2);
-%                 HideCursor;
-%                 break;
+            case p.trial.key.pause
+                p.trial.pldaps.pause = 0;
+                pds.datapixx.strobe(p.trial.event.UNPAUSE);
+                p.trial.EV.Unpause = GetSecs;
+                ListenChar(2);
+                HideCursor;
+                ND_CtrlMsg(p,'Unpausing...');
+                break;
 
                 %Q: QUIT
-            case KbName(p.trial.key.quit)
-                dv.trial.pldaps.quit = 2;
+            case p.trial.key.quit
+                p.trial.pldaps.quit = 2;
                 break;
 
                 %X: Execute text selected in Matlab editor

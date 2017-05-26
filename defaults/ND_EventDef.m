@@ -21,7 +21,7 @@ disp('');
 
 p.defaultParameters.EV.TrialStart  = NaN; % Trial start time
 p.defaultParameters.EV.TaskStart   = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
-p.defaultParameters.EV.TaskEnd     = NaN; % actual task end 
+p.defaultParameters.EV.TaskEnd     = NaN; % actual task end
 p.defaultParameters.EV.Initiated   = NaN; % animal intiated the task
 p.defaultParameters.EV.StimOn      = NaN; % Stimulus Onset 
 p.defaultParameters.EV.StimOff     = NaN; % Stimulus Offset 
@@ -37,6 +37,9 @@ p.defaultParameters.EV.DPX_TaskOn  = NaN; % Synch time with datapixx for task on
 p.defaultParameters.EV.DPX_TaskOff = NaN; % Synch time with datapixx for task off
 p.defaultParameters.EV.TDT_TaskOn  = NaN; % Synch time with TDT for task on
 p.defaultParameters.EV.TDT_TaskOff = NaN; % Synch time with TDT for task off
+
+p.defaultParameters.EV.Pause       = NaN;
+p.defaultParameters.EV.Unpause     = NaN;
 
 % if joystick is used for behavior
 if(p.defaultParameters.behavior.joystick.use)
@@ -64,6 +67,9 @@ p.defaultParameters.event.TASK_OFF      = 11;   % end of task (should happen bef
 p.defaultParameters.event.TC_CORR       = 1004; % trial complete, correct
 p.defaultParameters.event.TC_ERR        = 3010; % trial complete, incorrect
 p.defaultParameters.event.NO_TC         = 3011; % trial incomplete
+p.defaultParameters.event.PAUSE         = 3999; % Pause the experiment
+p.defaultParameters.event.UNPAUSE       = 3989; % Unpause the experiment
+
 
 % response related
 p.defaultParameters.event.RESP_CORR     = 1110; % correct response occurred
@@ -153,8 +159,8 @@ p.defaultParameters.event.DO_7       = 2327;
 p.defaultParameters.event.DO_8       = 2328;
 
 % marker to select start and end of trial header
-p.defaultParameters.event.TRIAL_HDR_ON  = 99001;
-p.defaultParameters.event.TRIAL_HDR_OFF = 99000;
+p.defaultParameters.event.TRIAL_HDR_ON  = 9901;
+p.defaultParameters.event.TRIAL_HDR_OFF = 9900;
 
 % TODO: encode trial states (and task epochs)?
 

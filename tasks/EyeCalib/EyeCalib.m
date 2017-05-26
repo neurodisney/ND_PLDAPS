@@ -57,7 +57,7 @@ if(isempty(state))
     c1.reward.MinWaitInitial = 0.15;
     c1.reward.MaxWaitInitial = 0.15;
     c1.reward.Dur            = 0.05;
-    c1.reward.Period         = 1;
+    c1.reward.Period         = 0.2;
     
     conditions = {c1};
 
@@ -92,8 +92,6 @@ else
         % prepare the stimuli that should be shown, do some required calculations
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
-                pds.eyecalib.keycheck(p);
-                pds.fixation.keycheck(p);
             end
             TaskDesign(p);
             
@@ -130,6 +128,7 @@ function TaskSetUp(p)
     p.trial.task.Good                = 1;  % assume no error untill error occurs
     p.trial.reward.count          = 0;  % counter for received rewardsw
     p.trial.behavior.fixation.GotFix = 0;
+    p.trial.behavior.fixation.required       = 0;  % Whether or not to display the fixation spot
     
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
@@ -162,11 +161,25 @@ function TaskDesign(p)
             end
  
             p.trial.Timer.trialStart = p.trial.CurTime;
-            p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
+            p.trial.CurrEpoch  = p.trial.epoch.WaitExperimenter;
+            
+        % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitExperimenter
+            %% No fixation spot is shown, wait for experimenter to press 'f' to turn on spot
+            if p.trial.behavior.fixation.required
+                p.trial.CurrEpoch = p.trial.epoch.WaitFix;
+            end
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
             %% Fixation target shown, waiting for a sufficiently held gaze
+            
+            % 'f' key is pressed, turn off fixation spot and return to earlier epoch.
+            if ~p.trial.behavior.fixation.required
+                p.trial.behavior.fixation.GotFix = 0;
+                p.trial.CurrEpoch = p.trial.epoch.WaitExperimenter;
+                return;
+            end
             
             % Gaze is outside fixation window
             if p.trial.behavior.fixation.GotFix == 0
@@ -212,7 +225,14 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.Fixating
         %% Animal has reached fixation criteria and now starts receiving rewards for continued fixation
-            
+        
+        % 'f' key is pressed, turn off fixation spot and return to earlier epoch.
+            if ~p.trial.behavior.fixation.required
+                p.trial.behavior.fixation.GotFix = 0;
+                p.trial.CurrEpoch = p.trial.epoch.WaitExperimenter;
+                return;
+            end
+        
         % Still fixating    
         if p.trial.FixState.Current == p.trial.FixState.FixIn
                 
@@ -288,11 +308,11 @@ function TaskDraw(p)
     if p.trial.behavior.fixation.enableCalib
         pds.eyecalib.draw(p)
     end
-
+    
+    
     switch p.trial.CurrEpoch
         % ----------------------------------------------------------------%
-        case {p.trial.epoch.TrialStart, p.trial.epoch.WaitFix, p.trial.epoch.Fixating}
-        %% delay before response is needed
+        case {p.trial.epoch.WaitFix, p.trial.epoch.Fixating}
             pds.fixation.draw(p);
 
     end

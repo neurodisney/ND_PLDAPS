@@ -81,15 +81,19 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             case p.trial.key.viewEyeCalib
                 %% Toggle viewing eye calibration
                 if p.trial.behavior.fixation.useCalibration
-                    p.trial.pldaps.draw.eyeCalib = not(p.trial.pldaps.draw.eyeCalib);
+                    p.trial.behavior.fixation.enableCalib = not(p.trial.behavior.fixation.enableCalib);
                 end
                 
                 
             % ----------------------------------------------------------------%
-%             case p.trial.key.pause
-%             %% pause trial
-%                 p.trial.pldaps.quit = 1;
-%                 ShowCursor;
+            case p.trial.key.pause
+            %% pause trial
+                p.trial.pldaps.pause = ~p.trial.pldaps.pause;
+                if p.trial.pldaps.pause
+                    ND_CtrlMsg(p,'Pausing after current trial...');
+                else
+                    ND_CtrlMsg(p,'Pause cancelled.');
+                end
 
             % ----------------------------------------------------------------%
             case p.trial.key.quit

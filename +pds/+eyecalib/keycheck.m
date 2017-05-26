@@ -15,11 +15,17 @@ if(~isempty(p.trial.LastKeyPress))
                 
                 % Position of the fixation target
                 fixPos = p.trial.behavior.fixation.fixPos;
-                
-                % Position of eye. Gets the median X and Y values over a
-                % range of samples to get a better estimate
-                sampleRange = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.NSmpls + 1) : p.trial.datapixx.adc.dataSampleCount;
-                rawEye = [prctile(p.trial.AI.Eye.X(sampleRange), 50)  prctile(p.trial.AI.Eye.Y(sampleRange), 50)];
+                          
+                if ~p.trial.mouse.useAsEyepos
+                    % Raw eye analog signal. Gets the median X and Y values over a
+                    % range of samples to get a better estimate
+                    sampleRange = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.calibSamples + 1) : p.trial.datapixx.adc.dataSampleCount;
+                    rawEye = [prctile(p.trial.AI.Eye.X(sampleRange), 50)  prctile(p.trial.AI.Eye.Y(sampleRange), 50)];
+                else 
+                    % Use the mouse coordinates as the raw eye signal
+                    iSample = p.trial.mouse.samples;
+                    rawEye = p.trial.mouse.cursorSamples(:, iSample);
+                end
                 
                 % Add these samples to the list of calibration points,
                 % which will be processed in pds.eyecalib.update
@@ -73,15 +79,132 @@ if(~isempty(p.trial.LastKeyPress))
             end
             
             % ----------------------------------------------------------------%
-        case p.trial.key.enableCalib
-            %% enable the option to calibrate/correct current eye position
-            if(p.trial.behavior.fixation.enableCalib == 1)
-                p.trial.behavior.fixation.enableCalib = 0;
-            else
-                p.trial.behavior.fixation.enableCalib = 1;
+        
+        %% Tweaking parameters
+        case p.trial.key.offsetTweak
+            % Toggle between xOffset, yOffset, and off
+            switch p.trial.behavior.fixation.calibTweakMode
+                case 'xOffset'
+                    p.trial.behavior.fixation.calibTweakMode = 'yOffset';
+                    disp('tweakMode = yOffset');
+                    
+                case 'yOffset'
+                    p.trial.behavior.fixation.calibTweakMode = 'off';
+                    disp('tweakMode = off');
+                    
+                otherwise
+                    p.trial.behavior.fixation.calibTweakMode = 'xOffset';
+                    disp('tweakMode = xOffset');
             end
             
             % ----------------------------------------------------------------%
+        case p.trial.key.gainTweak
+            % Toggle between xGain, yGain, and off
+            switch p.trial.behavior.fixation.calibTweakMode
+                case 'xGain'
+                    p.trial.behavior.fixation.calibTweakMode = 'yGain';
+                    disp('tweakMode = yGain');
+                    
+                case 'yGain'
+                    p.trial.behavior.fixation.calibTweakMode = 'off';
+                    disp('tweakMode = off');
+                    
+                otherwise
+                    p.trial.behavior.fixation.calibTweakMode = 'xGain';
+                    disp('tweakMode = xGain');
+            end
+            
+            % ----------------------------------------------------------------%
+        case p.trial.key.tweakUp
+            % Tweak parameters based on calibTweakMode
+            switch p.trial.behavior.fixation.calibTweakMode
+                case 'xOffset'
+                    % Tweaking by dva, so need to know gain first
+                    xGain = p.trial.eyeCalib.gain(1);
+                    
+                    tweakVar  = 'offsetTweak';
+                    tweakInd  = 1;
+                    tweakSize = p.trial.behavior.fixation.offsetTweakSize / xGain;
+                    
+                 case 'yOffset'
+                    % Tweaking by dva, so need to know gain first
+                    yGain = p.trial.eyeCalib.gain(2);
+                    
+                    tweakVar  = 'offsetTweak';
+                    tweakInd  = 2;
+                    tweakSize = p.trial.behavior.fixation.offsetTweakSize / yGain;
+                    
+                case 'xGain'                    
+                    tweakVar  = 'gainTweak';
+                    tweakInd  = 1;
+                    tweakSize = p.trial.behavior.fixation.gainTweakSize;
+                    
+                case  'yGain'                   
+                    tweakVar  = 'gainTweak';
+                    tweakInd  = 2;
+                    tweakSize = p.trial.behavior.fixation.gainTweakSize;
+                    
+                case 'off'
+                    % Don't do anything
+                    tweakVar = '';
+                    
+                otherwise
+                    warning('Bad tweak mode');
+            end
+            
+            % Now apply the tweak
+            if ~isempty(tweakVar)
+                tweakVal = p.trial.eyeCalib.(tweakVar);
+                tweakVal(tweakInd) = tweakVal(tweakInd) + tweakSize;
+                p.trial.eyeCalib.(tweakVar) = tweakVal;
+                pds.eyecalib.update(p);
+            end
+            
+            % ----------------------------------------------------------------%
+        case p.trial.key.tweakDown
+            % Tweak parameters based on calibTweakMode
+            switch p.trial.behavior.fixation.calibTweakMode
+                case 'xOffset'
+                    % Tweaking by dva, so need to know gain first
+                    xGain = p.trial.eyeCalib.gain(1);
+                    
+                    tweakVar  = 'offsetTweak';
+                    tweakInd  = 1;
+                    tweakSize = -p.trial.behavior.fixation.offsetTweakSize / xGain;
+                    
+                 case 'yOffset'
+                    % Tweaking by dva, so need to know gain first
+                    yGain = p.trial.eyeCalib.gain(2);
+                    
+                    tweakVar  = 'offsetTweak';
+                    tweakInd  = 2;
+                    tweakSize = -p.trial.behavior.fixation.offsetTweakSize / yGain;
+                    
+                case 'xGain'                    
+                    tweakVar  = 'gainTweak';
+                    tweakInd  = 1;
+                    tweakSize = -p.trial.behavior.fixation.gainTweakSize;
+                    
+                case  'yGain'                   
+                    tweakVar  = 'gainTweak';
+                    tweakInd  = 2;
+                    tweakSize = -p.trial.behavior.fixation.gainTweakSize;
+                    
+                case 'off'
+                    % Don't do anything
+                    tweakVar = '';
+                    
+                otherwise
+                    warning('Bad tweak mode');
+            end
+            
+            % Now apply the tweak
+            if ~isempty(tweakVar)
+                tweakVal = p.trial.eyeCalib.(tweakVar);
+                tweakVal(tweakInd) = tweakVal(tweakInd) + tweakSize;
+                p.trial.eyeCalib.(tweakVar) = tweakVal;
+                pds.eyecalib.update(p);
+            end
     end
     
     

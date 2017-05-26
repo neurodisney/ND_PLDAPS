@@ -86,7 +86,7 @@ if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
 end
 
 %% draw current eye calibration
-if p.trial.pldaps.draw.eyeCalib
+if p.trial.behavior.fixation.enableCalib
     pds.eyecalib.draw(p);
 end
 
