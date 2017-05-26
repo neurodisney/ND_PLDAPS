@@ -56,9 +56,10 @@ end
 % --------------------------------------------------------------------%
 %% keep calibration information for eye position
 if(p.trial.behavior.fixation.useCalibration)
-    p.defaultParameters.behavior.fixation.GridPos     = p.trial.behavior.fixation.GridPos;
-    p.defaultParameters.behavior.fixation.enableCalib = p.trial.behavior.fixation.enableCalib;
-    p.defaultParameters.eyeCalib                      = p.trial.eyeCalib;
+    p.defaultParameters.behavior.fixation.GridPos        = p.trial.behavior.fixation.GridPos;
+    p.defaultParameters.behavior.fixation.enableCalib    = p.trial.behavior.fixation.enableCalib;
+    p.defaultParameters.behavior.fixation.calibTweakMode = p.trial.behavior.fixation.calibTweakMode;
+    p.defaultParameters.eyeCalib                         = p.trial.eyeCalib;
 end
 
 % --------------------------------------------------------------------%
