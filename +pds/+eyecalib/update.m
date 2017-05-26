@@ -63,7 +63,7 @@ centerEye = medRawEye(centerIndex,:);
 centerFix = [0,0];
 
 oldOffset = p.trial.eyeCalib.offset;
-newOffset = centerEye + offsetTweak;
+newOffset = centerEye - offsetTweak;
 p.trial.eyeCalib.offset = newOffset;
 
 
