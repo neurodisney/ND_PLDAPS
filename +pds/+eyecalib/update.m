@@ -100,24 +100,27 @@ disp('Current Calibration:')
 % Offset
 if all(oldOffset == newOffset)
     % Nothing changed, just display the offset
-    fprintf('Offset = [%.4f, %.4f]\n',newOffset);
+    fprintf('Offset  = [%.4f, %.4f]\n',newOffset);
 else
     % Offset changed, display the change
-    fprintf('Offset = [%.4f, %.4f] <- [%.4f, %.4f]\n', newOffset, oldOffset);
+    fprintf('Offset  = [%.4f, %.4f] <- [%.4f, %.4f]\n', newOffset, oldOffset);
 end
 
 % Gain
 if all(oldGain == newGain)
     % Nothing changed, just display the gain
-    fprintf('Gain   = [%.4f, %.4f]\n\n',newGain);
+    fprintf('Gain    = [%.4f, %.4f]\n\n',newGain);
 else
     % Offset changed, display the change
-    fprintf('Gain   = [%.4f, %.4f] <- [%.4f, %.4f]\n\n', newGain, oldGain);
+    fprintf('Gain    = [%.4f, %.4f] <- [%.4f, %.4f]\n\n', newGain, oldGain);
 end
 
-% Calibration Table
-fprintf('Calibration Table\n');
-disp([rawEye fixPos]);
+% Tweaks
+fprintf('offsetTweak = [%.4f, %.4f]\n',offsetTweak);
+fprintf('gainTweak   = [%.4f, %.4f]\n\n',gainTweak);
+
+% Calibration points
+fprintf('nCalibPoints: %d\n\n', nFixPos)
 
 % save the new calibration to file
 pds.eyecalib.save(p);
