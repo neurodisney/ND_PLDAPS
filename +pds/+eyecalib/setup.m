@@ -27,7 +27,6 @@ if p.trial.behavior.fixation.enableCalib
     p.trial.key.resetCalib    = KbName('z');  % Clear the calibration matrices and start over
     p.trial.key.wipeCalibPos  = KbName('w');  % Clear the calibration points at the current fixPos 
     p.trial.key.rmLastCalib   = KbName('BackSpace'); % reset offset to previous one
-    p.trial.key.enableCalib   = KbName('Insert');    % allow changing calibration parameters
     p.trial.key.addCalibPoint  = 37; % KbName('Return') returns two numbers;    % accept current fixation
     % Tweak calibration
     p.trial.key.offsetTweak   = KbName('Home'); % Alternate between xTweak, yTweak, and off

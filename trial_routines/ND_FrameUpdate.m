@@ -12,7 +12,11 @@ function ND_FrameUpdate(p)
 %% check keyboard presses
 ND_CheckKey(p);   % check for key hits
 
-% Allow for eye calibration
+% Eye calibration key presses
+if p.trial.behavior.fixation.enableCalib
+    pds.eyecalib.keycheck(p);
+end
+
 
 % ------------------------------------------------------------------------%
 %% get analog data
