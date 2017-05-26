@@ -86,12 +86,15 @@ if(~isempty(p.trial.LastKeyPress))
             switch p.trial.behavior.fixation.calibTweakMode
                 case 'xOffset'
                     p.trial.behavior.fixation.calibTweakMode = 'yOffset';
+                    disp('tweakMode = yOffset');
                     
                 case 'yOffset'
                     p.trial.behavior.fixation.calibTweakMode = 'off';
+                    disp('tweakMode = off');
                     
                 otherwise
                     p.trial.behavior.fixation.calibTweakMode = 'xOffset';
+                    disp('tweakMode = xOffset');
             end
             
             % ----------------------------------------------------------------%
@@ -100,12 +103,15 @@ if(~isempty(p.trial.LastKeyPress))
             switch p.trial.behavior.fixation.calibTweakMode
                 case 'xGain'
                     p.trial.behavior.fixation.calibTweakMode = 'yGain';
+                    disp('tweakMode = yGain');
                     
                 case 'yGain'
                     p.trial.behavior.fixation.calibTweakMode = 'off';
+                    disp('tweakMode = off');
                     
                 otherwise
                     p.trial.behavior.fixation.calibTweakMode = 'xGain';
+                    disp('tweakMode = xGain');
             end
             
             % ----------------------------------------------------------------%
