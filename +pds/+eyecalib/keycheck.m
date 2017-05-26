@@ -88,6 +88,18 @@ if(~isempty(p.trial.LastKeyPress))
             end
             
             % ----------------------------------------------------------------%
+        
+        % Tweaking parameters
+        case p.trial.key.offsetTweak
+            
+            % ----------------------------------------------------------------%
+        case p.trial.key.gainTweak
+            
+            % ----------------------------------------------------------------%
+        case p.trial.key.tweakUp
+            
+            % ----------------------------------------------------------------%
+        case p.trial.key.tweakDown
     end
     
     
