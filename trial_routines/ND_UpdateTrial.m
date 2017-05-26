@@ -57,13 +57,8 @@ end
 %% keep calibration information for eye position
 if(p.trial.behavior.fixation.useCalibration)
     p.defaultParameters.behavior.fixation.GridPos     = p.trial.behavior.fixation.GridPos;
-    p.defaultParameters.eyeCalib.rawEye                  = p.trial.eyeCalib.rawEye;
-    p.defaultParameters.eyeCalib.fixPos                  = p.trial.eyeCalib.fixPos;
-    p.defaultParameters.eyeCalib.medRawEye               = p.trial.eyeCalib.medRawEye;
-    p.defaultParameters.eyeCalib.medFixPos              = p.trial.eyeCalib.medFixPos;
     p.defaultParameters.behavior.fixation.enableCalib = p.trial.behavior.fixation.enableCalib;
-    p.defaultParameters.eyeCalib.name                   = p.trial.eyeCalib.name;
-    p.defaultParameters.eyeCalib.file                   = p.trial.eyeCalib.file;
+    p.defaultParameters.eyeCalib                      = p.trial.eyeCalib;
 end
 
 % --------------------------------------------------------------------%
