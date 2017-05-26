@@ -186,7 +186,6 @@ else
         % prepare the stimuli that should be shown, do some required calculations
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
-                pds.fixation.keycheck(p);
             end
             TaskDesign(p);
             
