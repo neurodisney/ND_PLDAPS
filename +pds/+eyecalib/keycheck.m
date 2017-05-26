@@ -80,17 +80,138 @@ if(~isempty(p.trial.LastKeyPress))
             
             % ----------------------------------------------------------------%
         
-        % Tweaking parameters
+        %% Tweaking parameters
         case p.trial.key.offsetTweak
+            % Toggle between xOffset, yOffset, and off
+            switch p.trial.behavior.fixation.calibTweakMode
+                case 'xOffset'
+                    p.trial.behavior.fixation.calibTweakMode = 'yOffset';
+                    
+                case 'yOffset'
+                    p.trial.behavior.fixation.calibTweakMode = 'off';
+                    
+                otherwise
+                    p.trial.behavior.fixation.calibTweakMode = 'xOffset';
+            end
             
             % ----------------------------------------------------------------%
         case p.trial.key.gainTweak
+            % Toggle between xGain, yGain, and off
+            switch p.trial.behavior.fixation.calibTweakMode
+                case 'xGain'
+                    p.trial.behavior.fixation.calibTweakMode = 'yGain';
+                    
+                case 'yGain'
+                    p.trial.behavior.fixation.calibTweakMode = 'off';
+                    
+                otherwise
+                    p.trial.behavior.fixation.calibTweakMode = 'xGain';
+            end
             
             % ----------------------------------------------------------------%
         case p.trial.key.tweakUp
-            
+            % Tweak parameters based on calibTweakMode
+            switch p.trial.behavior.fixation.calibTweakMode
+                case 'xOffset'
+                    % Tweaking by dva, so need to know gain first
+                    xGain = p.trial.eyeCalib.Gain(1);
+                    
+                    tweakSize = p.trial.behavior.fixation.offsetTweakSize;
+                    
+                    % Change the tweak variable 
+                    p.trial.eyeCalib.offsetTweak(1) = p.trial.eyeCalib.offsetTweak + tweakSize / xGain;
+                                        
+                    % Update the calibration
+                    pds.eyecalib.update
+                    
+                 case 'yOffset'
+                    % Tweaking by dva, so need to know gain first
+                    yGain = p.trial.eyeCalib.Gain(2);
+                    
+                    tweakSize = p.trial.behavior.fixation.offsetTweakSize;
+                    
+                    % Change the tweak variable 
+                    p.trial.eyeCalib.offsetTweak(2) = p.trial.eyeCalib.offsetTweak + tweakSize / yGain;   
+                                        
+                    % Update the calibration
+                    pds.eyecalib.update
+                    
+                case 'xGain'                    
+                    tweakSize = p.trial.behavior.fixation.gainTweakSize;
+                    
+                    % Change the tweak variable 
+                    p.trial.eyeCalib.offsetTweak(1) = p.trial.eyeCalib.offsetTweak + tweakSize;
+                                        
+                    % Update the calibration
+                    pds.eyecalib.update
+                    
+                case  'yGain'                   
+                    tweakSize = p.trial.behavior.fixation.gainTweakSize;
+                    
+                    % Change the tweak variable 
+                    p.trial.eyeCalib.offsetTweak(2) = p.trial.eyeCalib.offsetTweak + tweakSize;
+                                        
+                    % Update the calibration
+                    pds.eyecalib.update
+                    
+                case 'off'
+                    % Don't do anything
+                    
+                otherwise
+                    warning('Bad tweak mode');
+            end
             % ----------------------------------------------------------------%
         case p.trial.key.tweakDown
+            % Tweak parameters based on calibTweakMode
+            switch p.trial.behavior.fixation.calibTweakMode
+                case 'xOffset'
+                    % Tweaking by dva, so need to know gain first
+                    xGain = p.trial.eyeCalib.Gain(1);
+                    
+                    tweakSize = p.trial.behavior.fixation.offsetTweakSize;
+                    
+                    % Change the tweak variable 
+                    p.trial.eyeCalib.offsetTweak(1) = p.trial.eyeCalib.offsetTweak - tweakSize / xGain;
+                    
+                    % Update the calibration
+                    pds.eyecalib.update
+                    
+                 case 'yOffset'
+                    % Tweaking by dva, so need to know gain first
+                    yGain = p.trial.eyeCalib.Gain(2);
+                    
+                    tweakSize = p.trial.behavior.fixation.offsetTweakSize;
+                    
+                    % Change the tweak variable 
+                    p.trial.eyeCalib.offsetTweak(2) = p.trial.eyeCalib.offsetTweak - tweakSize / yGain;   
+                                        
+                    % Update the calibration
+                    pds.eyecalib.update
+                    
+                case 'xGain'                    
+                    tweakSize = p.trial.behavior.fixation.gainTweakSize;
+                    
+                    % Change the tweak variable 
+                    p.trial.eyeCalib.offsetTweak(1) = p.trial.eyeCalib.offsetTweak - tweakSize;
+                                        
+                    % Update the calibration
+                    pds.eyecalib.update
+                    
+                case  'yGain'                   
+                    tweakSize = p.trial.behavior.fixation.gainTweakSize;
+                    
+                    % Change the tweak variable 
+                    p.trial.eyeCalib.offsetTweak(2) = p.trial.eyeCalib.offsetTweak - tweakSize;
+                                        
+                    % Update the calibration
+                    pds.eyecalib.update
+                    
+                case 'off'
+                    % Don't do anything
+                    
+                otherwise
+                    warning('Bad tweak mode');
+            end
     end
     
     
