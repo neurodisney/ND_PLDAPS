@@ -200,7 +200,6 @@ SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibration
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
-SS.pldaps.draw.eyeCalib              = 0;         % Show the eye calibration points
 SS.eyeCalib.name                     = 'Default';        % Name of the calibration used. For back referencing in the data later
 SS.eyeCalib.file                     = 'nofile';   % THe file that stores the calibration information
 SS.eyeCalib.defaultGain              = [5.536,-4.802];  % default gain, used if no calibration points are entered

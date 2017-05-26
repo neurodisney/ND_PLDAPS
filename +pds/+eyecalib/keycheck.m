@@ -79,15 +79,6 @@ if(~isempty(p.trial.LastKeyPress))
             end
             
             % ----------------------------------------------------------------%
-        case p.trial.key.enableCalib
-            %% enable the option to calibrate/correct current eye position
-            if(p.trial.behavior.fixation.enableCalib == 1)
-                p.trial.behavior.fixation.enableCalib = 0;
-            else
-                p.trial.behavior.fixation.enableCalib = 1;
-            end
-            
-            % ----------------------------------------------------------------%
         
         % Tweaking parameters
         case p.trial.key.offsetTweak

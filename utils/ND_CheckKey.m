@@ -81,7 +81,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             case p.trial.key.viewEyeCalib
                 %% Toggle viewing eye calibration
                 if p.trial.behavior.fixation.useCalibration
-                    p.trial.pldaps.draw.eyeCalib = not(p.trial.pldaps.draw.eyeCalib);
+                    p.trial.behavior.fixation.enableCalib = not(p.trial.behavior.fixation.enableCalib);
                 end
                 
                 

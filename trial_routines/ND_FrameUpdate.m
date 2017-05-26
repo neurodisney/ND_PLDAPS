@@ -12,6 +12,8 @@ function ND_FrameUpdate(p)
 %% check keyboard presses
 ND_CheckKey(p);   % check for key hits
 
+% Allow for eye calibration
+
 % ------------------------------------------------------------------------%
 %% get analog data
 if(~isempty(p.trial.datapixx.adc.channels))
