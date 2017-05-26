@@ -101,10 +101,10 @@ if strcmp(subjname,'mouse')
     SS.datapixx.adc.PupilChannel   = [];
     SS.datapixx.adc.XEyeposChannel = [];
     SS.datapixx.adc.YEyeposChannel = [];
-    SS.datapixx.adc.RewardChannel  = [];  
+    %SS.datapixx.adc.RewardChannel  = [];  
     SS.datapixx.useAsEyepos        = 0;
     SS.behavior.joystick.use       = 0;
-    SS.datapixx.useForReward       = 0;
+    %SS.datapixx.useForReward       = 0;
     
 end
 % ------------------------------------------------------------------------%
