@@ -57,6 +57,7 @@ p.plotdata.Outcome(  Ntrials, 1) = p.trial.outcome.CurrOutcome;
 p.plotdata.TaskStart(Ntrials, 1) = p.trial.EV.TaskStart;
 p.plotdata.FixStart( Ntrials, 1) = p.trial.EV.FixStart;
 p.plotdata.FixBreak( Ntrials, 1) = p.trial.EV.FixBreak;
+p.plotdata.TaskEnd(  Ntrials, 1) = p.trial.EV.TaskEnd;
 p.plotdata.CurrRew(  Ntrials, 1) = p.trial.task.CurRewDelay;
 p.plotdata.RewCnt(   Ntrials, 1) = p.trial.reward.iReward;
 
@@ -65,12 +66,18 @@ Results   = p.plotdata.Outcome;
 TaskStart = p.plotdata.TaskStart;
 FixStart  = p.plotdata.FixStart;
 FixBreak  = p.plotdata.FixBreak;
+TaskEnd   = p.plotdata.TaskEnd;
 CurrRew   = p.plotdata.CurrRew;
 RewCnt    = p.plotdata.RewCnt;
 
 fp = Results ~= p.trial.outcome.NoFix;
 FixRT  = (FixStart - TaskStart) * 1000;
-FixDur = (FixBreak - FixStart);
+
+if Results == p.trial.outcome.Jackpot
+    FixDur = (TaskEnd - FixStart);
+else
+    FixDur = (FixBreak - FixStart);
+end
 
 try
     if(sum(fp) > 4)
