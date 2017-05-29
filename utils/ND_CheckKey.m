@@ -34,20 +34,6 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
             
             % ----------------------------------------------------------------%
-            case p.trial.key.FixReq
-            %% Fixation request
-            % disable/enable requirement of fixation for the task
-                if(p.trial.behavior.fixation.use)
-                    if(p.trial.behavior.fixation.required)
-                        p.trial.behavior.fixation.required = 0;
-                        ND_CtrlMsg(p, 'Fixation requirement disabled!');
-                    else
-                        p.trial.behavior.fixation.required = 1;
-                        ND_CtrlMsg(p, 'Fixation requirement enabled!');
-                    end
-                end
-
-            % ----------------------------------------------------------------%
             case p.trial.key.FixInc
             %% Fixation Window increase
                 if(p.trial.behavior.fixation.use)

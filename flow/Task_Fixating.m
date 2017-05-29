@@ -8,7 +8,7 @@ if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest) % early release
     Response_JoyRelease(p);
     Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
 elseif(p.trial.FixState.Current == p.trial.FixState.FixOut) % fixation break
-    if(p.trial.behavior.fixation.required)
+    if(p.trial.behavior.fixation.on)
         if(p.trial.behavior.fixation.GotFix == 1)
         % first time break detected
             p.trial.behavior.fixation.GotFix = 0;

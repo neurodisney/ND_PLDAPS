@@ -237,7 +237,9 @@ function TaskSetUp(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
         
     p.trial.task.Good                = 1;  % assume no error untill error occurs
+    
     p.trial.behavior.fixation.GotFix = 0;
+    p.trial.behavior.fixation.on = 0;
     
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
@@ -259,7 +261,8 @@ function TaskDesign(p)
 
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
-            
+            p.trial.behavior.fixation.on = 1;
+        
             tms = pds.datapixx.strobe(p.trial.event.TASK_ON); 
             p.trial.EV.DPX_TaskOn = tms(1);
             p.trial.EV.TDT_TaskOn = tms(2);
@@ -295,6 +298,7 @@ function TaskDesign(p)
                     
                     % Go directly to TaskEnd, do not start task, do not collect reward
                     p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                    p.trial.behavior.fixation.on = 0;
                     
                 end
                 
@@ -304,7 +308,6 @@ function TaskDesign(p)
                 
                 % Fixation ceases
                 if p.trial.FixState.Current == p.trial.FixState.FixOut
-                    p.trial.EV.FixBreak = p.trial.CurTime;
                     p.trial.behavior.fixation.GotFix = 0;
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
@@ -357,6 +360,7 @@ function TaskDesign(p)
                         
                         % End the task
                         p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                        p.trial.behavior.fixation.on = 0;
                         
                         % Play jackpot sound
                         %pds.audio.playDP(p,'jackpot','left')
@@ -372,6 +376,7 @@ function TaskDesign(p)
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
             %pds.audio.playDP(p,'breakfix','left');
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+            p.trial.behavior.fixation.on = 0;
                                  
         end
             
@@ -421,13 +426,9 @@ function TaskDraw(p)
     if p.trial.behavior.fixation.enableCalib
         pds.eyecalib.draw(p)
     end
-
-    switch p.trial.CurrEpoch
-        % ----------------------------------------------------------------%
-        case {p.trial.epoch.TrialStart, p.trial.epoch.WaitFix, p.trial.epoch.Fixating}
-        %% delay before response is needed
-            pds.fixation.draw(p);
-
+    
+    if p.trial.behavior.fixation.on
+        pds.fixation.draw(p);
     end
     
 % ####################################################################### %

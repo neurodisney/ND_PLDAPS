@@ -26,11 +26,11 @@ end
 
 %% fixation window
 if(p.trial.behavior.fixation.use)
-    if(p.trial.FixState.Current == p.trial.FixState.FixOut && p.trial.behavior.fixation.required)
+    if(p.trial.FixState.Current == p.trial.FixState.FixOut && p.trial.behavior.fixation.on)
         Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyeold, p.trial.behavior.fixation.FixWinRect, ...
                             p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
                         
-    elseif(p.trial.FixState.Current == p.trial.FixState.FixIn && p.trial.behavior.fixation.required)
+    elseif(p.trial.FixState.Current == p.trial.FixState.FixIn && p.trial.behavior.fixation.on)
         Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyepos, p.trial.behavior.fixation.FixWinRect, ...
                             p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
     else

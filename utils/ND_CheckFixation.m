@@ -57,7 +57,7 @@ if(p.trial.pldaps.draw.eyepos.use)
 end
 
 %% if relevant for task determine fixation state
-if(p.trial.behavior.fixation.use)
+if p.trial.behavior.fixation.use && p.trial.behavior.fixation.on
 
     switch p.trial.FixState.Current
         case p.trial.FixState.FixOut
