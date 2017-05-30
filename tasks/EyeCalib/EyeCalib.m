@@ -330,6 +330,9 @@ function KeyAction(p)
                  else
                     p.trial.task.RandomPos = 0;
                  end
+                 
+            case KbName('f') % Turn fixation position on and off
+                p.trial.behavior.fixation.on = ~p.trial.behavior.fixation.on;
         end
         
         pds.fixation.move(p);
