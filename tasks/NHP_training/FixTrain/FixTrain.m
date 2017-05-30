@@ -227,10 +227,7 @@ function TaskSetUp(p)
     p.trial.reward.count = 0;
     % Create arrays for direct reference during reward
     p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
-    p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);   
-    % Calculate the jackpot time
-    p.trial.reward.jackpotTime = sum(p.trial.reward.allPeriods);
-    
+    p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);       
     
     
     % Outcome if no fixation occurs at all during the trial
@@ -323,6 +320,7 @@ function TaskDesign(p)
                     % Reward the monkey
                     p.trial.reward.count = 1;
                     pds.reward.give(p, p.trial.reward.allDurs(1));
+                    p.trial.EV.FirstReward   = p.trial.CurTime;
                     p.trial.Timer.lastReward = p.trial.CurTime;
                     
                     % Transition to the succesful fixation epoch
@@ -338,39 +336,47 @@ function TaskDesign(p)
             
         % Still fixating    
         if p.trial.FixState.Current == p.trial.FixState.FixIn
+            
+            % If the supplied reward schema doesn't cover until jackpot
+            % time, just repeat the last reward
+            rewardCount = min(p.trial.reward.count , length(p.trial.reward.allDurs));
                 
-                rewardCount = p.trial.reward.count;
-                rewardPeriod = p.trial.reward.allPeriods(rewardCount);
+            rewardPeriod = p.trial.reward.allPeriods(rewardCount);
                 
+                
+            % While jackpot time has not yet been reached
+            if p.trial.CurTime < p.trial.EV.FirstReward + p.trial.reward.jackpotTime;
+
                 % Wait for rewardPeriod to elapse since last reward, then give the next reward
                 if p.trial.CurTime > p.trial.Timer.lastReward + rewardPeriod
-                    
-                    rewardCount = rewardCount + 1;
-                    p.trial.reward.count = rewardCount;
-                    
-                    % Get the reward duration
-                    if rewardCount <= length(p.trial.reward.allDurs)
-                        rewardDuration = p.trial.reward.allDurs(rewardCount);                  
-                    else
-                        % Last reward has been reached, give the JACKPOT!
-                        rewardDuration = p.trial.reward.jackpotDur;                    
-                        
-                        % Best outcome
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
-                        
-                        % End the task
-                        p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                        p.trial.behavior.fixation.on = 0;
-                        
-                        % Play jackpot sound
-                        %pds.audio.playDP(p,'jackpot','left')
-                    end
-                    
+
+                    rewardCount = min(rewardCount + 1 , length(p.trial.reward.allDurs));
+                    p.trial.reward.count = p.trial.reward.count + 1;
+
+                    rewardDuration = p.trial.reward.allDurs(rewardCount);                  
+
                     % Give the reward and update the lastReward time
                     pds.reward.give(p, rewardDuration);
                     p.trial.Timer.lastReward = p.trial.CurTime;
-                    
+
                 end
+
+            else
+                % Give JACKPOT!
+                rewardDuration = p.trial.reward.jackpotDur;
+                pds.reward.give(p, rewardDuration);
+                p.trial.Timer.lastReward = p.trial.CurTime;
+
+                % Best outcome
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
+
+                % End the task
+                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                p.trial.behavior.fixation.on = 0;
+
+                % Play jackpot sound
+                %pds.audio.playDP(p,'jackpot','left')
+            end
         
         % Fixation Break, end the trial        
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
