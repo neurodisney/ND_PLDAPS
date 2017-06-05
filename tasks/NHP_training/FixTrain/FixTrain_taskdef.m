@@ -22,12 +22,13 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.2;         % reward duration [s] for reward given by keyboard presses
 p.trial.reward.Dur            = 0.08;
+p.trial.reward.jackpotTime    = 10;
 p.trial.reward.jackpotDur     = 0.4;
 p.trial.reward.nRewards       = 30;
 p.trial.reward.Period         = 0.25;
 
-p.trial.reward.MinWaitInitial = 0.23;
-p.trial.reward.MaxWaitInitial = 0.27;
+p.trial.reward.MinWaitInitial = 0.25;
+p.trial.reward.MaxWaitInitial = 0.35;
 
 % ------------------------------------------------------------------------%
 %% Task Timings
@@ -38,7 +39,7 @@ p.trial.task.Timing.MinITI  = 1.5;  % minimum time period [s] between subsequent
 p.trial.task.Timing.MaxITI  = 3;    % maximum time period [s] between subsequent trials
 
 % penalties
-p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
+p.trial.task.Timing.TimeOut =  2.5;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
@@ -52,7 +53,7 @@ p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixa
 %% fixation spot parameters
 p.trial.behavior.fixation.FixType = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.behavior.fixation.FixCol  = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
-p.trial.behavior.fixation.FixSz   = 0.1;        % size of the fixation spot
+p.trial.behavior.fixation.FixSz   = 0.15;        % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Trial duration

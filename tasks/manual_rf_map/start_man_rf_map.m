@@ -63,7 +63,7 @@ SS.datapixx.TTL_trialOn       = 0;
 
 SS.behavior.fixation.useCalibration = 0;
 
-SS.behavior.fixation.required = 0; % fixation required for this task
+SS.behavior.fixation.on = 0; % fixation.on for this task
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 

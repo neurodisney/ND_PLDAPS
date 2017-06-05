@@ -196,7 +196,7 @@ function TaskDesign(p)
                 
             elseif(p.trial.CurTime  > p.trial.Timer.Wait)
             % trial offering ended    
-                if(p.trial.behavior.fixation.required)
+                if(p.trial.behavior.fixation.on)
                     Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
                 else
                     % ignore lack of fixation and continue
@@ -211,7 +211,7 @@ function TaskDesign(p)
                 Response_JoyRelease(p);
                 Response_Early(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
             elseif(p.trial.FixState.Current == p.trial.FixState.FixOut) % fixation break               
-                if(p.trial.behavior.fixation.required)
+                if(p.trial.behavior.fixation.on)
                     if(p.trial.behavior.fixation.GotFix == 1)
                     % first time break detected    
                         p.trial.behavior.fixation.GotFix = 0;

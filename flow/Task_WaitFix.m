@@ -18,7 +18,7 @@ elseif(p.trial.FixState.Current == p.trial.FixState.FixIn)
 
 elseif(p.trial.CurTime  > p.trial.Timer.Wait)
 % trial offering ended
-    if(p.trial.behavior.fixation.required)
+    if(p.trial.behavior.fixation.on)
         Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
     end
 end
