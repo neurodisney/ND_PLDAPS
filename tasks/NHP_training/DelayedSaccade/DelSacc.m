@@ -187,7 +187,13 @@ p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);
 % Calculate the jackpot time
 p.trial.reward.jackpotTime = sum(p.trial.reward.allPeriods);
 
-% Turn the stim off
+
+% The stim parameters
+% Calculate the location of the stim
+direction = p.trial.stim.locations{randi(length(p.trial.stim.locations))};
+magnitude = p.trial.stim.eccentricity;
+p.trial.stim.location = magnitude * direction / norm(direction);
+% stim starts off
 p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
 
 % Outcome if no fixation occurs at all during the trial
@@ -335,7 +341,10 @@ switch p.trial.CurrEpoch
                     
                 else
                     % Saccade has been inhibited long enough. Make the central fix spot disappear
-                    p.trial.behavior.fixation.fixPos = p.trial.stim.
+                    p.trial.behavior.fixation.fixPos = p.trial.stim.location;
+                    p.trial.behavior.fixation.FixType = 'off';
+                    
+                    
                 end
             
             end
