@@ -187,6 +187,9 @@ p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);
 % Calculate the jackpot time
 p.trial.reward.jackpotTime = sum(p.trial.reward.allPeriods);
 
+% Fixation spot
+p.trial.behavior.fixation.fixPos = [0,0];
+p.trial.behavior.fixation.FixType = 'disc';
 
 % The stim parameters
 % Calculate the location of the stim
@@ -214,6 +217,7 @@ switch p.trial.CurrEpoch
     
     case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot
+        p.trial.behavior.fixation.on = 1;
         
         tms = pds.datapixx.strobe(p.trial.event.TASK_ON);
         p.trial.EV.DPX_TaskOn = tms(1);
@@ -251,6 +255,7 @@ switch p.trial.CurrEpoch
                 % Go directly to TaskEnd, do not start task, do not collect reward
                 p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
                 p.trial.EV.epochEnd = p.trial.CurTime;
+                p.trial.behavior.fixation.on = 0;
                 
             end
             
@@ -267,8 +272,6 @@ switch p.trial.CurrEpoch
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
             elseif (p.trial.CurTime > p.trial.Timer.fixStart + p.trial.task.CurRewDelay) && p.trial.FixState.Current == p.trial.FixState.FixIn
                 
-                % Succesful
-                p.trial.task.Good = 1;
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
                 
                 % Record when the monkey started fixating
@@ -283,6 +286,7 @@ switch p.trial.CurrEpoch
                     % Start showing the stim next frame
                     p.trial.stim.on = 1;
                     p.trial.EV.StimOn = p.trial.CurTime;
+                    pds.datapixx.strobe(p.trial.event.STIM_ON);
                 end
                 
                 % Transition to the succesful fixation epoch
@@ -304,6 +308,7 @@ switch p.trial.CurrEpoch
             if ~p.trial.stim.on
                 if p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.stimLatency
                     p.trial.stim.on = 1;
+                    pds.datapixx.strobe(p.trial.event.STIM_ON);
                     p.trial.EV.StimOn = p.trial.CurTime;
                     p.trial.Timer.nextReward = p.trial.CurTime + p.trial.reward.stimRwdLatency;
                 end
@@ -343,7 +348,18 @@ switch p.trial.CurrEpoch
                     % Saccade has been inhibited long enough. Make the central fix spot disappear
                     p.trial.behavior.fixation.fixPos = p.trial.stim.location;
                     p.trial.behavior.fixation.FixType = 'off';
+                    p.trial.EV.FixOff = p.trial.CurTime;
+                    pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
                     
+                    % Make the stim high contrast
+                    p.trial.stim.on = 2;
+                    
+                    % Change to the saccade epoch
+                    p.trial.CurrEpoch = p.trial.epoch.Saccade;
+                    p.trial.EV.epochEnd = p.trial.CurTime;
+                    
+                    % Record the current position of the eye to reference in the saccade epoch
+                    p.trial.behavior.fixation.refPos = [p.trial.eyeX p.trial.eyeY];
                     
                 end
             
@@ -351,9 +367,47 @@ switch p.trial.CurrEpoch
             
             % Fixation Break, end the trial
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
-            % TODO: Possibly play breakfix sound
-            p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+            pds.audio.playDP(p,'breakfix','left');
+            
+            % Turn of fixspot and stim
+            p.trial.behavior.fixation.on = 0;
+            p.trial.stim.on = 0;
+            
+            p.trial.CurrEpoch = p.trial.epoch.Saccade;
             p.trial.EV.epochEnd = p.trial.CurTime;
+            
+        end
+        
+        % ----------------------------------------------------------------%
+    case p.trial.epoch.Saccade
+        %% Central fixation spot has disappeared. Animal must quickly saccade to stim to get the main reward
+        
+        if ~p.trial.task.Good
+            % Not yet succeeded in task
+        
+            if p.trial.FixState.Current == p.trial.FixState.FixIn
+                % Animal has saccaded to stim, give jackpot and mark trial good
+                pds.reward.give(p, p.trial.reward.jackpotDur);
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
+                p.trial.task.Good = 1;
+                p.trial.Timer.taskEnd = p.trial.CurTime + p.trial.reward.jackpotDur + 0.1;
+                
+                
+            else
+                % Animal has not yet saccaded to target
+                
+                % 
+                
+            end    
+        
+        else
+            % Correctly saccaded, continue to show stim until jackpot reward ends
+            if p.trial.CurTime > p.trial.Timer.taskEnd
+                p.trial.stim.on = 0;
+                p.trial.CurrEpoch = p.trail.epoch.TaskEnd;
+                p.trail.EV.epochEnd = p.trial.CurTime;
+                pds.datapixx.strobe(p.trial.event.STIM_OFF);
+            end
             
         end
         
