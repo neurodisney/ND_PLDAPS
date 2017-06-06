@@ -375,12 +375,12 @@ function TaskDesign(p)
                 p.trial.behavior.fixation.on = 0;
 
                 % Play jackpot sound
-                %pds.audio.playDP(p,'jackpot','left')
+                pds.audio.playDP(p,'jackpot','left')
             end
         
         % Fixation Break, end the trial        
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
-            %pds.audio.playDP(p,'breakfix','left');
+            pds.audio.playDP(p,'breakfix','left');
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             p.trial.behavior.fixation.on = 0;
                                  
