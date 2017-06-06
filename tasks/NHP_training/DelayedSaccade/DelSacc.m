@@ -60,19 +60,29 @@ if(isempty(state))
     % c.task.fixLatency       -  time to hold fixation before it counts
     % c.reward.initialFixRwd  -  Reward for fixating long enough (before stim appears). Set to 0 for harder difficulty
     % c.task.stimLatency      -  Time from initialFixRwd to the stim appearing (if no reward this is ignored).
-    % c.task.centerOffLatency -  Time from stim appearing to when the central fix spot disappears
+    % c.reward.stimRwdLatency -  Time from onset of stim to first reward
     
+    % c.reward.nRewards       -  array that defines the reward schema with Dur and Period
     % c.reward.Dur            -  array of how long each kind of reward lasts
     % c.reward.Period         -  the period between one reward and the next NEEDS TO BE GREATER THAN Dur
+    
+    % c.task.centerOffLatency -  Time from stim appearing to when the central fix spot disappears
     % c.reward.jackpotDur     -  the jackpot is given after all other rewards
+    % c.task.saccadeTimeout   -  time to make the saccade before stim disappears
+    
     
     % condition 1
     c1.Nr = 1;
     c1.task.fixLatency       = 0.75; % Time to hold fixation before it counts
-    c1.
+    c1.reward.initialFixRwd  = 0.06;
+    c1.task.stimLatency      = 0.35;
+    c1.reward.stimRwdLatency = 0.25;
+    
     c1.reward.nRewards       = [1    100];
     c1.reward.Dur            = [0.1  0.1];
     c1.reward.Period         = [1    1  ];
+    
+    c1.task.centerOffLatency = 5;
     c1.reward.jackpotDur     = 0.5;
     
     c1.nTrials = 100;
@@ -177,7 +187,13 @@ p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);
 % Calculate the jackpot time
 p.trial.reward.jackpotTime = sum(p.trial.reward.allPeriods);
 
-% Turn the stim off
+
+% The stim parameters
+% Calculate the location of the stim
+direction = p.trial.stim.locations{randi(length(p.trial.stim.locations))};
+magnitude = p.trial.stim.eccentricity;
+p.trial.stim.location = magnitude * direction / norm(direction);
+% stim starts off
 p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
 
 % Outcome if no fixation occurs at all during the trial
@@ -209,8 +225,7 @@ switch p.trial.CurrEpoch
         if(p.trial.datapixx.TTL_trialOn)
             pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
         end
-        
-        p.trial.Timer.trialStart = p.trial.CurTime;
+
         p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
         p.trial.EV.epochEnd = p.trial.CurTime;
         
@@ -228,7 +243,7 @@ switch p.trial.CurrEpoch
                 p.trial.Timer.fixStart = p.trial.CurTime;
                 
                 % Time to fixate has expired
-            elseif p.trial.CurTime > p.trial.Timer.trialStart + p.trial.task.Timing.WaitFix
+            elseif p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix
                 
                 % Long enough fixation did not occur, failed trial
                 p.trial.task.Good = 0;
@@ -261,8 +276,7 @@ switch p.trial.CurrEpoch
                 
                 % Reward the monkey if there is initial reward for this trial
                 if p.trial.reward.initialFixRwd > 0
-                    p.trial.reward.count = 1;
-                    pds.reward.give(p, p.trial.reward.allDurs(1));
+                    pds.reward.give(p, p.trial.reward.initialFixRwd);
                     p.trial.Timer.lastReward = p.trial.CurTime;
                     
                 else
@@ -291,45 +305,48 @@ switch p.trial.CurrEpoch
                 if p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.stimLatency
                     p.trial.stim.on = 1;
                     p.trial.EV.StimOn = p.trial.CurTime;
-                    p.trial.Timer.nextReward = p.trial.CurTime + p.trial.reward.Period;
+                    p.trial.Timer.nextReward = p.trial.CurTime + p.trial.reward.stimRwdLatency;
                 end
                 
-                % If stim is on
-            else
-            end
-            
-            % Give rewards if fixation is maintained (inhibit saccade to stim)
-            if p.trial.CurTime < p.trial.EV.StimOn + p.trial.task.centerOffLatency
-                rewardCount = p.trial.reward.count;
-                rewardPeriod = p.trial.reward.allPeriods(rewardCount);
                 
-                % Wait for rewardPeriod to elapse since last reward, then give the next reward
-                if p.trial.CurTime > p.trial.Timer.lastReward + rewardPeriod
+            else
+                
+                % Give rewards if fixation is maintained (inhibit saccade to stim)
+                if p.trial.CurTime < p.trial.EV.StimOn + p.trial.task.centerOffLatency
                     
-                    rewardCount = rewardCount + 1;
-                    p.trial.reward.count = rewardCount;
+                    % If the supplied reward schema doesn't cover the fixspot turns off, just reuse the last one
+                    rewardCount = min(p.trial.reward.count , length(p.trial.reward.allDurs));
                     
-                    % Get the reward duration
-                    if rewardCount <= length(p.trial.reward.allDurs)
-                        rewardDuration = p.trial.reward.allDurs(rewardCount);
-                    else
-                        % Last reward has been reached, give the JACKPOT!
-                        rewardDuration = p.trial.reward.jackpotDur;
-                        
-                        % Best outcome
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
-                        
-                        % End the task
-                        p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                        p.trial.EV.epochEnd = p.trial.CurTime;
+                    if rewardCount == 0
+                        p.trial.Timer.nextReward = p.trial.EV.epochEnd + p.trial.reward.stimRwdLatency;
                     end
                     
-                    % Give the reward and update the lastReward time
-                    pds.reward.give(p, rewardDuration);
-                    p.trial.Timer.lastReward = p.trial.CurTime;
+                    % Wait for rewardPeriod to elapse since last reward, then give the next reward
+                    if p.trial.CurTime > p.trial.Timer.nextReward
+
+                        rewardCount = min(rewardCount + 1 , length(p.trial.reward.allDurs));
+                        p.trial.reward.count = p.trial.reward.count + 1;
+                        
+                        % Get the reward duration
+                        rewardDuration = p.trial.reward.allDurs(rewardCount);
+                        
+
+                        % Give the reward and update the lastReward time
+                        pds.reward.give(p, rewardDuration);
+                        p.trial.Timer.lastReward = p.trial.CurTime;
+                        
+                        % Set a timer for the next reward
+                        p.trial.Timer.nextReward = p.trial.CurTime + p.trial.reward.allPeriods(rewardCount);
+                    end
+                    
+                else
+                    % Saccade has been inhibited long enough. Make the central fix spot disappear
+                    p.trial.behavior.fixation.fixPos = p.trial.stim.location;
+                    p.trial.behavior.fixation.FixType = 'off';
+                    
                     
                 end
-                
+            
             end
             
             % Fixation Break, end the trial
