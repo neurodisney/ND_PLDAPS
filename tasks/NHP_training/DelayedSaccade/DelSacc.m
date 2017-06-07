@@ -199,6 +199,9 @@ p.trial.stim.location = magnitude * direction / norm(direction);
 % stim starts off
 p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
 
+% Reference distance to check if a wrong saccade is made
+p.trial.behavior.fixation.refDist = NaN;
+
 % Outcome if no fixation occurs at all during the trial
 p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
 
@@ -358,8 +361,8 @@ switch p.trial.CurrEpoch
                     p.trial.CurrEpoch = p.trial.epoch.Saccade;
                     p.trial.EV.epochEnd = p.trial.CurTime;
                     
-                    % Record the current position of the eye to reference in the saccade epoch
-                    p.trial.behavior.fixation.refPos = [p.trial.eyeX p.trial.eyeY];
+                    % Record the current distance of the eye away from the stim as a reference
+                    p.trial.behavior.fixation.refDist = sqrt(sum((p.trial.stim.location - [p.trial.eyeX p.trial.eyeY]) .^ 2));
                     
                 end
             
@@ -373,7 +376,7 @@ switch p.trial.CurrEpoch
             p.trial.behavior.fixation.on = 0;
             p.trial.stim.on = 0;
             
-            p.trial.CurrEpoch = p.trial.epoch.Saccade;
+            p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             p.trial.EV.epochEnd = p.trial.CurTime;
             
         end
@@ -395,8 +398,33 @@ switch p.trial.CurrEpoch
                 
             else
                 % Animal has not yet saccaded to target
+                % Need to check if no saccade has been made or if a wrong saccade has been made
                 
-                % 
+                % If no saccade has been made before the time runs out, end the trial
+                if p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout
+                    % Turn the stim off
+                    p.trial.stim.on = 0;
+                    
+                    % Play an incorrect sound
+                    pds.audio.playDP(p,'incorrect','left');
+                    
+                    p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                    p.trial.EV.epochEnd = p.trial.CurTime;                   
+                end
+                
+                % If the distance from the stim increases, a wrong saccade has been made
+                if p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
+                    % Turn the stim off
+                    p.trial.stim.on = 0;
+                    
+                    % Play an incorrect sound
+                    pds.audio.playDP(p,'incorrect','left');
+                    
+                    p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
+                    p.trial.EV.epochEnd = p.trial.CurTime; 
+                      
+                end
+
                 
             end    
         

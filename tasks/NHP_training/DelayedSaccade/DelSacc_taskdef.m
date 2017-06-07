@@ -47,6 +47,7 @@ p.trial.behavior.fixation.FixType = 'disc';     % shape of fixation target, opti
 p.trial.behavior.fixation.FixCol  = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixSz   = 0.1;        % size of the fixation spot
 
+% ------------------------------------------------------------------------%
 %% Stim parameters
 % Eccentricity in degrees from origin
 p.trial.stim.eccentricity       = 4;     
@@ -60,6 +61,13 @@ p.trial.stim.locations          = {[1  , 1], ...
                                    [1  , 0]};
 % diameter of the stim
 p.trial.stim.size               = 0.75;
+
+
+
+% ------------------------------------------------------------------------%
+%% Task parameters
+% Max distance increase away from stim before considered a wrong saccade
+p.trial.behavior.fixation.distInc = 1.5;
 
 % ------------------------------------------------------------------------%
 %% Trial duration

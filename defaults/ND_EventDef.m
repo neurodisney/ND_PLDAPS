@@ -38,7 +38,7 @@ p.defaultParameters.EV.DPX_TaskOn  = NaN; % Synch time with datapixx for task on
 p.defaultParameters.EV.DPX_TaskOff = NaN; % Synch time with datapixx for task off
 p.defaultParameters.EV.TDT_TaskOn  = NaN; % Synch time with TDT for task on
 p.defaultParameters.EV.TDT_TaskOff = NaN; % Synch time with TDT for task off
-
+p.defaultParameters.EV.epochEnd    = NaN; % Ending time of the last epoch
 p.defaultParameters.EV.Pause       = NaN;
 p.defaultParameters.EV.Unpause     = NaN;
 
