@@ -74,16 +74,16 @@ methods
         width = 2*radius;
         height = 2*radius;
         % The texture that gets drawn
-        obj.texture = CreateProceduralSineGrating(window, width, height, obj.bgcOff, radius, obj.pcmult);
+        obj.texture = CreateProceduralSineGrating(window, width, height, obj.bgOffset, radius, obj.pcmult);
 
     end
     
     function draw(obj,p)
-        elapsedTime = p.trial.CurTime - obj.genTime;
-        window = p.trial.display.ptr
+        window = p.trial.display.ptr;
         
         % Use the current time to calculate the phase for accurate temporal frequency
-        phase = 360 * elapsedTime * tFreq;
+        elapsedTime = p.trial.CurTime - obj.genTime;
+        phase = 360 * elapsedTime * obj.tFreq;
         
         % Calculate the rect using the position
         destRect = [obj.pos - obj.radius, obj.pos + obj.radius];
@@ -94,10 +94,12 @@ methods
         
         % Draw the texture
         Screen('DrawTexture', window, obj.texture, [], destRect, obj.angle, filterMode, ...
-            obj.alpha, [], [], [phase, obj.sFreq, obj.contrast, 0]);
+            obj.alpha, [], [], [], [phase, obj.sFreq, obj.contrast, 0]);
         
     end
     
+end
+
 end
         
 

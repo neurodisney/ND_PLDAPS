@@ -7,10 +7,6 @@ function p = start_DelSacc(subjname, rig, experimenter)
 % wolf zinke, Apr. 2017
 % Nate Faber, May 2017
 
-% ------------------------------------------------------------------------%
-%% Reset things
-ND_reset;
-
 %-------------------------------------------------------------------------%
 %% load default settings into a struct
 SS = ND_RigDefaults;    % load default settings according to the current rig setup
@@ -38,7 +34,7 @@ SS.editable = {'task.RandomPos', 'task.Color_list'};
 SS.sound.use                  = 0; % no sound for now
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
-SS.plot.do_online             = 1; % run online data analysis between two subsequent trials
+SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
 SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.

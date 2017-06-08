@@ -8,8 +8,8 @@ function p = DelSacc_aftertrial(p)
 
 % ------------------------------------------------------------------------%
 %% Add information tot the Trial Track struct
-p.defaultParameters.TrialTrack.RewDelay = p.trial.task.CurRewDelay;
-p.defaultParameters.TrialTrack.RewCnt   = p.trial.reward.iReward;    
+%p.defaultParameters.TrialTrack.RewDelay = p.trial.task.CurRewDelay;
+%p.defaultParameters.TrialTrack.RewCnt   = p.trial.reward.iReward;    
 
 % ------------------------------------------------------------------------%
 %% utilize previous trials for selection of next condition
