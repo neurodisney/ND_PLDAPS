@@ -60,9 +60,10 @@ p.trial.stim.locations          = {[1  , 1], ...
                                    [1  ,-1], ...
                                    [1  , 0]};
 % diameter of the stim
-p.trial.stim.size               = 0.75;
+p.trial.stim.radius               = 0.5;
 
-
+% Possbile angles for the stim
+p.trial.stim.orientations = [0, 45, 90, 135, 180, 225, 270, 315];
 
 % ------------------------------------------------------------------------%
 %% Task parameters

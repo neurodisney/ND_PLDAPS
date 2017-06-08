@@ -70,6 +70,9 @@ if(isempty(state))
     % c.reward.jackpotDur     -  the jackpot is given after all other rewards
     % c.task.saccadeTimeout   -  time to make the saccade before stim disappears
     
+    % c.stim.lowContrast      -  contrast value when stim.on = 1
+    % c.stim.highContrast     -  contrast value when stim.on = 2
+    
     
     % condition 1
     c1.Nr = 1;
@@ -84,6 +87,9 @@ if(isempty(state))
     
     c1.task.centerOffLatency = 5;
     c1.reward.jackpotDur     = 0.5;
+    
+    c1.stim.lowContrast      = 0.3;
+    c1.stim.highContrast     = 1;
     
     c1.nTrials = 100;
     
@@ -177,28 +183,6 @@ p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial,  ...
 
 p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
 
-% Reward
-nRewards = p.trial.reward.nRewards;
-% Reset the reward counter (separate from iReward to allow for manual rewards)
-p.trial.reward.count = 0;
-% Create arrays for direct reference during reward
-p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
-p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);
-% Calculate the jackpot time
-p.trial.reward.jackpotTime = sum(p.trial.reward.allPeriods);
-
-% Fixation spot
-p.trial.behavior.fixation.fixPos = [0,0];
-p.trial.behavior.fixation.FixType = 'disc';
-
-% The stim parameters
-% Calculate the location of the stim
-direction = p.trial.stim.locations{randi(length(p.trial.stim.locations))};
-magnitude = p.trial.stim.eccentricity;
-p.trial.stim.pos = magnitude * direction / norm(direction);
-% stim starts off
-p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
-
 % Reference distance to check if a wrong saccade is made
 p.trial.behavior.fixation.refDist = NaN;
 
@@ -212,6 +196,35 @@ pds.fixation.move(p);
 
 p.trial.behavior.fixation.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
 
+
+%% Reward
+nRewards = p.trial.reward.nRewards;
+% Reset the reward counter (separate from iReward to allow for manual rewards)
+p.trial.reward.count = 0;
+% Create arrays for direct reference during reward
+p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
+p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);
+% Calculate the jackpot time
+p.trial.reward.jackpotTime = sum(p.trial.reward.allPeriods);
+
+% Fixation spot
+p.trial.behavior.fixation.fixPos = [0,0];
+p.trial.behavior.fixation.FixType = 'disc';
+
+%% Stimulus parameters
+% Generate the stimulus
+p.trial.stim.grating1 = pds.stim.Grating(p,p.trial.stim.radius);
+
+% Calculate the location of the stim
+direction = p.trial.stim.locations{randi(length(p.trial.stim.locations))};
+magnitude = p.trial.stim.eccentricity;
+p.trial.stim.grating1.pos = magnitude * direction / norm(direction);
+
+% Stimulus orientation
+p.trial.stim.grating1.angle = datasample(p.trial.stim.orientations,1);
+
+% stim starts off
+p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
 % ####################################################################### %
 function TaskDesign(p)
 %% main task outline
@@ -489,6 +502,14 @@ end
 
 if p.trial.behavior.fixation.on
     pds.fixation.draw(p);
+end
+
+if p.trial.stim.on == 1
+    p.trial.stim.grating1.contrast = p.trial.stim.lowContrast;
+    draw(p.trial.stim.grating1,p);
+elseif p.trial.stim.on == 2
+    p.trial.stim.grating1.contrast = p.trial.stim.highContrast;
+    draw(p.trial.stim.grating1,p);
 end
 
 
