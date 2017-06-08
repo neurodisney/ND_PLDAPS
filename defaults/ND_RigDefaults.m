@@ -239,6 +239,22 @@ SS.FixState.FixIn       =    1;  % Gaze robustly within fixation window
 SS.FixState.breakingFix = 0.75;  % Gaze has momentarily left fixation window
 
 % ------------------------------------------------------------------------%
+%% Stimuli
+% Sine Wave Grating stimlui
+SS.stim.grating.sFreq    = 3; % Spatial frequency, cycles/deg
+SS.stim.grating.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
+SS.stim.grating.angle    = 0; % Rotation
+SS.stim.grating.contrast = 1;
+% contrastMethod:
+% 'raw' - ignore background color and do accurate contrast, 0% contrast will always be 50% grey.
+% 'bgshift' - 0% contrast will be the background color, and accurate at low contrasts, but high contrasts do not extend all the way or are clipped
+% 'bgscale' - 0% contrast will be background color, and 100% contrast will be correct, other contrasts scale from the extremes to the bgcolor.
+% All three of these methods will be correct at 50% grey background color
+SS.stim.grating.contrastMethod = 'raw';
+SS.stim.grating.pos      = [0, 0];
+SS.stim.grating.alpha    = 1; % Fully opaque
+
+% ------------------------------------------------------------------------%
 %% Joystick
 SS.datapixx.useJoystick      = 0;
 

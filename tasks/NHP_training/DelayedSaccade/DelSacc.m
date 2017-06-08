@@ -195,7 +195,7 @@ p.trial.behavior.fixation.FixType = 'disc';
 % Calculate the location of the stim
 direction = p.trial.stim.locations{randi(length(p.trial.stim.locations))};
 magnitude = p.trial.stim.eccentricity;
-p.trial.stim.location = magnitude * direction / norm(direction);
+p.trial.stim.pos = magnitude * direction / norm(direction);
 % stim starts off
 p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
 
@@ -349,7 +349,7 @@ switch p.trial.CurrEpoch
                     
                 else
                     % Saccade has been inhibited long enough. Make the central fix spot disappear
-                    p.trial.behavior.fixation.fixPos = p.trial.stim.location;
+                    p.trial.behavior.fixation.fixPos = p.trial.stim.pos;
                     p.trial.behavior.fixation.FixType = 'off';
                     p.trial.EV.FixOff = p.trial.CurTime;
                     pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
@@ -362,7 +362,7 @@ switch p.trial.CurrEpoch
                     p.trial.EV.epochEnd = p.trial.CurTime;
                     
                     % Record the current distance of the eye away from the stim as a reference
-                    p.trial.behavior.fixation.refDist = sqrt(sum((p.trial.stim.location - [p.trial.eyeX p.trial.eyeY]) .^ 2));
+                    p.trial.behavior.fixation.refDist = sqrt(sum((p.trial.stim.pos - [p.trial.eyeX p.trial.eyeY]) .^ 2));
                     
                 end
             
@@ -487,13 +487,11 @@ if p.trial.behavior.fixation.enableCalib
     pds.eyecalib.draw(p)
 end
 
-switch p.trial.CurrEpoch
-    % ----------------------------------------------------------------%
-    case {p.trial.epoch.TrialStart, p.trial.epoch.WaitFix, p.trial.epoch.Fixating}
-        %% delay before response is needed
-        pds.fixation.draw(p);
-        
+if p.trial.behavior.fixation.on
+    pds.fixation.draw(p);
 end
+
+
 
 % ####################################################################### %
 function KeyAction(p)
