@@ -253,6 +253,7 @@ SS.stim.grating.contrast = 1;
 SS.stim.grating.contrastMethod = 'raw';
 SS.stim.grating.pos      = [0, 0];
 SS.stim.grating.alpha    = 1; % Fully opaque
+% SS.stim.grating.srcRadius  = 500; % Big source to allow for more resolution
 
 % ------------------------------------------------------------------------%
 %% Joystick

@@ -72,6 +72,7 @@ if(isempty(state))
     
     % c.stim.lowContrast      -  contrast value when stim.on = 1
     % c.stim.highContrast     -  contrast value when stim.on = 2
+    % c.stim.tFreq            -  drift speed, 0 is stationary
     
     
     % condition 1
@@ -91,6 +92,7 @@ if(isempty(state))
     
     c1.stim.lowContrast      = 0.3;
     c1.stim.highContrast     = 1;
+    c1.stim.tFreq            = 1;
     
     c1.nTrials = 100;
     
@@ -221,9 +223,13 @@ magnitude = p.trial.stim.eccentricity;
 p.trial.stim.pos = magnitude * direction / norm(direction);
 p.trial.stim.grating1.pos = p.trial.stim.pos;
 
-% Stimulus orientation
+% Stimulus angle
 p.trial.stim.angle = datasample(p.trial.stim.orientations,1);
 p.trial.stim.grating1.angle = p.trial.stim.angle;
+
+% Other stim properties
+p.trial.stim.grating1.tFreq = p.trial.stim.tFreq;
+p.trial.stim.grating1.sFreq = p.trial.stim.sFreq;
 
 % stim starts off
 p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
