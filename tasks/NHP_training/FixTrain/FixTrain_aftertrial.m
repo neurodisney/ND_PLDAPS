@@ -7,7 +7,7 @@ function p = FixTrain_aftertrial(p)
 % wolf zinke, May. 2017
 
 % ------------------------------------------------------------------------%
-%% Add information to the Trial Track struct
+%% Add information to the data struct
 p.defaultParameters.data.RewDelay = p.trial.task.CurRewDelay;
 p.defaultParameters.data.RewCnt   = p.trial.reward.iReward;
 
