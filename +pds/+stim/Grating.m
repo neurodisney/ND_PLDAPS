@@ -66,7 +66,7 @@ methods
                 
             case 'bgscale'
                 obj.bgOffset = [p.trial.display.bgColor, 0];
-                obj.pcmult = 0.5 + abs(obj.bgOffset(1));
+                obj.pcmult = 0.5 + abs(obj.bgOffset(1) - 0.5);
                 
             otherwise
                 error('Bad Contrast Method');
