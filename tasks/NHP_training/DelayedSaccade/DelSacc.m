@@ -254,8 +254,7 @@ switch p.trial.CurrEpoch
             pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
         end
 
-        p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
-        p.trial.EV.epochEnd = p.trial.CurTime;
+        switchEpoch(p,'WaitFix');
         
         % ----------------------------------------------------------------%
     case p.trial.epoch.WaitFix
@@ -277,9 +276,8 @@ switch p.trial.CurrEpoch
                 p.trial.task.Good = 0;
                 
                 % Go directly to TaskEnd, do not start task, do not collect reward
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                p.trial.EV.epochEnd = p.trial.CurTime;
                 p.trial.behavior.fixation.on = 0;
+                switchEpoch(p,'TaskEnd');
                 
             end
             
@@ -314,8 +312,7 @@ switch p.trial.CurrEpoch
                 end
                 
                 % Transition to the succesful fixation epoch
-                p.trial.CurrEpoch = p.trial.epoch.Fixating;
-                p.trial.EV.epochEnd = p.trial.CurTime;
+                switchEpoch(p,'Fixating')
                 
             end
             
@@ -380,8 +377,7 @@ switch p.trial.CurrEpoch
                     p.trial.stim.on = 2;
                     
                     % Change to the saccade epoch
-                    p.trial.CurrEpoch = p.trial.epoch.Saccade;
-                    p.trial.EV.epochEnd = p.trial.CurTime;
+                    switchEpoch(p,'Saccade');
                     
                     % Record the current distance of the eye away from the stim as a reference
                     p.trial.behavior.fixation.refDist = sqrt(sum((p.trial.stim.pos - [p.trial.eyeX p.trial.eyeY]) .^ 2));
@@ -398,8 +394,7 @@ switch p.trial.CurrEpoch
             p.trial.behavior.fixation.on = 0;
             p.trial.stim.on = 0;
             
-            p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-            p.trial.EV.epochEnd = p.trial.CurTime;
+            switchEpoch(p,'TaskEnd')
             
         end
         
@@ -431,8 +426,7 @@ switch p.trial.CurrEpoch
                     % Play an incorrect sound
                     pds.audio.playDP(p,'incorrect','left');
                     
-                    p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                    p.trial.EV.epochEnd = p.trial.CurTime;                   
+                    switchEpoch(p,'TaskEnd');                
                 end
                 
                 % If the distance from the stim increases, a wrong saccade has been made
@@ -444,8 +438,8 @@ switch p.trial.CurrEpoch
                     % Play an incorrect sound
                     pds.audio.playDP(p,'incorrect','left');
                     
-                    p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                    p.trial.EV.epochEnd = p.trial.CurTime; 
+                    % End the trial
+                    switchEpoch(p,'TaskEnd');
                       
                 end
 
@@ -456,9 +450,9 @@ switch p.trial.CurrEpoch
             % Correctly saccaded, continue to show stim until jackpot reward ends
             if p.trial.CurTime > p.trial.Timer.taskEnd
                 p.trial.stim.on = 0;
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                p.trial.EV.epochEnd = p.trial.CurTime;
                 pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                switchEpoch(p,'TaskEnd');
+                
             end
             
         end
@@ -489,8 +483,7 @@ switch p.trial.CurrEpoch
         p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
         
         p.trial.Timer.ITI  = p.trial.Timer.Wait;
-        p.trial.CurrEpoch  = p.trial.epoch.ITI;
-        p.trial.EV.epochEnd = p.trial.CurTime;
+        switchEpoch(p,'ITI');
         
         % ----------------------------------------------------------------%
     case p.trial.epoch.ITI
@@ -545,6 +538,10 @@ end
 % ####################################################################### %
 %% additional inline functions that
 % ####################################################################### %
+function switchEpoch(p,epochName)
+p.trial.CurrEpoch = p.trial.epoch.(epochName);
+p.trial.EV.epochEnd = p.trial.CurTime;
+
 
 % ####################################################################### %
 function Trial2Ascii(p, act)
