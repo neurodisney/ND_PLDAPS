@@ -90,9 +90,9 @@ if(isempty(state))
     c1.reward.jackpotDur     = 0.5;
     c1.task.saccadeTimeout        = 2;
     
-    c1.stim.lowContrast      = 0.3;
+    c1.stim.lowContrast      = 0.6;
     c1.stim.highContrast     = 1;
-    c1.stim.tFreq            = 1;
+    c1.stim.tFreq            = 0;
     
     c1.nTrials = 100;
     
