@@ -390,6 +390,9 @@ switch p.trial.CurrEpoch
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
             pds.audio.playDP(p,'breakfix','left');
             
+            % If the stim is on when breakfix occurs, saccade is precocious
+            p.trial.outcome.CurrOutcome = p.trial.outcome.earlySaccade;
+            
             % Turn of fixspot and stim
             p.trial.behavior.fixation.on = 0;
             p.trial.stim.on = 0;
@@ -408,7 +411,7 @@ switch p.trial.CurrEpoch
             if p.trial.FixState.Current == p.trial.FixState.FixIn
                 % Animal has saccaded to stim, give jackpot and mark trial good
                 pds.reward.give(p, p.trial.reward.jackpotDur);
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
                 p.trial.task.Good = 1;
                 p.trial.Timer.taskEnd = p.trial.CurTime + p.trial.reward.jackpotDur + 0.1;
                 
@@ -419,6 +422,8 @@ switch p.trial.CurrEpoch
                 
                 % If no saccade has been made before the time runs out, end the trial
                 if p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.noSaccade;
+                    
                     % Turn the stim off and fixation off
                     p.trial.stim.on = 0;
                     p.trial.behavior.fixation.on = 0;
@@ -431,6 +436,8 @@ switch p.trial.CurrEpoch
                 
                 % If the distance from the stim increases, a wrong saccade has been made
                 if p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.wrongSaccade;
+                    
                     % Turn the stim off and fixation off
                     p.trial.stim.on = 0;
                     p.trial.behavior.fixation.on = 0;
@@ -475,8 +482,8 @@ switch p.trial.CurrEpoch
         % determine ITI
         switch p.trial.outcome.CurrOutcome
             
-            case {p.trial.outcome.NoFix, p.trial.outcome.FixBreak}
-                % Timeout if no fixation
+            case ~p.trial.task.Good
+                % Timeout if task not performed correctly
                 p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
         end
         
