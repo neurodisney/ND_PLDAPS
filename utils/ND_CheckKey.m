@@ -73,25 +73,37 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 
             % ----------------------------------------------------------------%
             case p.trial.key.pause
-            %% pause trial
-                p.trial.pldaps.pause = ~p.trial.pldaps.pause;
-                if p.trial.pldaps.pause
-                    ND_CtrlMsg(p,'Pausing after current trial...');
-                else
-                    ND_CtrlMsg(p,'Pause cancelled.');
-                end
-
+            %% pause experiment
+%                 p.trial.pldaps.pause = ~p.trial.pldaps.pause;
+%                 if p.trial.pldaps.pause
+                p.trial.pldaps.pause = 1;
+                ND_CtrlMsg(p,'Pausing after current trial...');
+%                 else
+%                     ND_CtrlMsg(p,'Pause cancelled.');
+%                 end
+% 
+            % ----------------------------------------------------------------%
+            case p.trial.key.break
+            %% break experiment
+%                 p.trial.pldaps.pause = ~p.trial.pldaps.pause;
+%                 if p.trial.pldaps.pause
+                p.trial.pldaps.pause = 2;
+                ND_CtrlMsg(p,'Starting break...');
+%                 else
+%                     ND_CtrlMsg(p,'Break cancelled.');
+%                 end
+                
             % ----------------------------------------------------------------%
             case p.trial.key.quit
             %% quit experiment
                 p.trial.pldaps.quit = 2;
                 ShowCursor;
 
-            % ----------------------------------------------------------------%
-            case p.trial.key.quit
-            %%  go into debug mode
-                disp('stepped into debugger. Type return to start first trial...')
-                keyboard %#ok<MCKBD>
+%             % ----------------------------------------------------------------%
+%             case p.trial.key.quit
+%             %%  go into debug mode
+%                 disp('stepped into debugger. Type return to start first trial...')
+%                 keyboard %#ok<MCKBD>
 
         end  %/ switch Kact
     end

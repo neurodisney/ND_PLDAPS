@@ -178,8 +178,19 @@ try
             end
             
         elseif p.trial.pldaps.pause
-            pds.datapixx.strobe(p.trial.event.PAUSE);
-            p.trial.EV.Pause = p.trial.CurTime;
+        %% interupt experiment    
+            if(p.trial.pldaps.pause == 1)
+                pds.datapixx.strobe(p.trial.event.PAUSE);
+%                 p.trial.EV.Pause = p.trial.CurTime;
+            elseif(p.trial.pldaps.pause == 2)
+                % set screen to break color
+                Screen('FillRect', p.trial.display.ptr, p.trial.display.breakColor);
+                Screen('FillRect', p.trial.display.overlayptr, p.trial.display.breakColor);
+                Screen('Flip', p.trial.display.ptr, 0);
+                pds.datapixx.strobe(p.trial.event.BREAK);
+%                 p.trial.EV.Break = p.trial.CurTime;
+            end
+            
             pauseLoop(p);
 
         end
@@ -267,66 +278,53 @@ catch me
     keyboard
 end
 
-end
-
 % ----------------------------------------------------------------%
-%we are pausing, will create a new defaultParaneters Level where changes
-%would go.
+%%  Pausing of experiment
 function pauseLoop(p)
-ListenChar(2);
-KbQueueStart;
-while(true)
-    %the keyboard chechking we only capture ctrl+alt key presses.
-    [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck(); % fast
+    KbQueueStart;
+    
+    while(true)
+        %the keyboard chechking we only capture ctrl+alt key presses.
+        [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck(); % fast
 
-    if(any(p.trial.keyboard.firstPressQ))
+        if(any(p.trial.keyboard.firstPressQ))
 
-        qp = find(p.trial.keyboard.firstPressQ); % identify which key was pressed
+            qp = find(p.trial.keyboard.firstPressQ); % identify which key was pressed
 
-        switch qp
+            switch qp
 
-            case p.trial.key.reward
+                % ----------------------------------------------------------------%
+                case p.trial.key.reward
+                % reward
                 % check for manual reward delivery via keyboard
-                pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
+                    pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
 
-                %D: Debugger
-%             case KbName(p.trial.key.debug)
-%                 disp('stepped into debugger. Type return to start first trial...')
-%                 keyboard %#ok<MCKBD>
-%
-%                 %P: PAUSE (end the pause)
-            case p.trial.key.pause
-                p.trial.pldaps.pause = 0;
-                pds.datapixx.strobe(p.trial.event.UNPAUSE);
-                p.trial.EV.Unpause = GetSecs;
-                ListenChar(2);
-                HideCursor;
-                ND_CtrlMsg(p,'Unpausing...');
-                break;
+                % ----------------------------------------------------------------%
+                case p.trial.key.pause
+                % un-pause trial
+                    p.trial.pldaps.pause = 0;
+                    ND_CtrlMsg(p,'Pause cancelled.');
+                    pds.datapixx.strobe(p.trial.event.UNPAUSE);
+    %                 p.trial.EV.Unpause = GetSecs;
+                    break;
 
-                %Q: QUIT
-            case p.trial.key.quit
-                p.trial.pldaps.quit = 2;
-                break;
+                % ----------------------------------------------------------------%
+                case p.trial.key.break
+                % un-break trial
+                    p.trial.pldaps.pause = 0;
+                    ND_CtrlMsg(p,'Break cancelled.');
+                    pds.datapixx.strobe(p.trial.event.UNBREAK);
+    %                 p.trial.EV.Unpause = GetSecs;
+                    break;
 
-                %X: Execute text selected in Matlab editor
-%             case KbName(p.trial.key.exe)
-%                 activeEditor=matlab.desktop.editor.getActive;
-%                 if isempty(activeEditor)
-%                     display('No Matlab editor open -> Nothing to execute');
-%                 else
-%                     if isempty(activeEditor.SelectedText)
-%                         display('Nothing selected in the active editor Widnow -> Nothing to execute');
-%                     else
-%                         try
-%                             eval(activeEditor.SelectedText)
-%                         catch ME
-%                             display(ME);
-%                         end
-%                     end
-%                 end
-        end  %  switch qp
-    end  % if(any(p.trial.keyboard.firstPressQ))
-    pause(0.1);
-end  %  while(true)
-end % function pauseLoop(dv)
+                % ----------------------------------------------------------------%
+                case p.trial.key.quit
+                % quit experiment
+                    p.trial.pldaps.quit = 2;
+                    ShowCursor;
+                    break;
+
+            end  %  switch qp
+        end  % if(any(p.trial.keyboard.firstPressQ))
+        pause(0.1);
+    end  %  while(true)
