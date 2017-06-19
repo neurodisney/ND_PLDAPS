@@ -75,9 +75,9 @@ if(isempty(state))
     
     % condition 1
     c1.Nr = 1;
-    c1.task.fixLatency       = 0.75; % Time to hold fixation before it counts
+    c1.task.fixLatency       = 0.35; % Time to hold fixation before it counts
     c1.reward.initialFixRwd  = 0.06;
-    c1.task.stimLatency      = 0.35;
+    c1.task.stimLatency      = 0.35; % Time from full fixation to stim appearing
     c1.reward.stimRwdLatency = 0.25;
     
     c1.reward.nRewards       = [1    100];
@@ -302,12 +302,6 @@ switch p.trial.CurrEpoch
                 if p.trial.reward.initialFixRwd > 0
                     pds.reward.give(p, p.trial.reward.initialFixRwd);
                     p.trial.Timer.lastReward = p.trial.CurTime;
-                    
-                else
-                    % Start showing the stim next frame
-                    p.trial.stim.on = 1;
-                    p.trial.EV.StimOn = p.trial.CurTime;
-                    pds.datapixx.strobe(p.trial.event.STIM_ON);
                 end
                 
                 % Transition to the succesful fixation epoch
@@ -324,7 +318,7 @@ switch p.trial.CurrEpoch
         % Still fixating
         if p.trial.FixState.Current == p.trial.FixState.FixIn
             
-            % If stim is off (because an initial reward was given), wait stim latency before showing reward
+            % Wait stim latency before showing reward
             if ~p.trial.stim.on
                 if p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.stimLatency
                     p.trial.stim.on = 1;
