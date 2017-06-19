@@ -1,0 +1,11 @@
+#!/usr/bin/expect -f
+
+set ppival [lindex $argv 0]
+
+spawn /usr/local/VPixx_Software_Tools/vputil/bin/linux/vputil
+expect -- "-1:(ANY DEVICE) > "
+send "ppi\r"
+expect "> "
+send "$ppival\r"
+expect -- "-1:(ANY DEVICE) > "
+send "quit\r"

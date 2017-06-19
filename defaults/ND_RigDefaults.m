@@ -24,6 +24,8 @@ SS.datapixx.use                                 = 1;      % enable control of VP
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
 
+SS.datapixx.propixxIntensity                    = 2;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
+
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
 % WZ: Also for more clarification check the PsychDataPixx function in Psychtoolbox-3/Psychtoolbox/PsychHardware/DatapixxToolbox/DatapixxBasic
