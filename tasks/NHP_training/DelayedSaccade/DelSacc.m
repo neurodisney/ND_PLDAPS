@@ -43,10 +43,8 @@ if(isempty(state))
     p.trial.task.Color_list = Shuffle({'magenta'});
     
     % --------------------------------------------------------------------%
-    %% Enable random positions
-    p.trial.task.RandomPos = 0;
-    
-    p.trial.task.RandomPosRange = [5, 5];  % range of x and y dva for random position
+    %% Set initial Fix Window size
+    p.trial.behavior.fixation.FixWin = 2.5;
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -77,16 +75,17 @@ if(isempty(state))
     
     % condition 1
     c1.Nr = 1;
-    c1.task.fixLatency       = 0.75; % Time to hold fixation before it counts
+    c1.task.fixLatency       = 0.35; % Time to hold fixation before it counts
     c1.reward.initialFixRwd  = 0.06;
-    c1.task.stimLatency      = 0.35;
+    c1.task.stimLatency      = 0.35; % Time from full fixation to stim appearing
     c1.reward.stimRwdLatency = 0.25;
     
     c1.reward.nRewards       = [1    100];
     c1.reward.Dur            = [0.1  0.1];
     c1.reward.Period         = [1    1  ];
     
-    c1.task.centerOffLatency = 5;
+    c1.task.centerOffLatency = 0.5;
+    c1.task.minTargetFixTime = 0.3;
     c1.reward.jackpotDur     = 0.5;
     c1.task.saccadeTimeout        = 2;
     
@@ -192,6 +191,7 @@ p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
 
 p.trial.task.Good                = 0;
 p.trial.behavior.fixation.GotFix = 0;
+p.trial.stim.GotFix              = 0;
 
 pds.fixation.move(p);
 
@@ -303,12 +303,6 @@ switch p.trial.CurrEpoch
                 if p.trial.reward.initialFixRwd > 0
                     pds.reward.give(p, p.trial.reward.initialFixRwd);
                     p.trial.Timer.lastReward = p.trial.CurTime;
-                    
-                else
-                    % Start showing the stim next frame
-                    p.trial.stim.on = 1;
-                    p.trial.EV.StimOn = p.trial.CurTime;
-                    pds.datapixx.strobe(p.trial.event.STIM_ON);
                 end
                 
                 % Transition to the succesful fixation epoch
@@ -325,7 +319,7 @@ switch p.trial.CurrEpoch
         % Still fixating
         if p.trial.FixState.Current == p.trial.FixState.FixIn
             
-            % If stim is off (because an initial reward was given), wait stim latency before showing reward
+            % Wait stim latency before showing reward
             if ~p.trial.stim.on
                 if p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.stimLatency
                     p.trial.stim.on = 1;
@@ -396,6 +390,7 @@ switch p.trial.CurrEpoch
             % Turn of fixspot and stim
             p.trial.behavior.fixation.on = 0;
             p.trial.stim.on = 0;
+            pds.datapixx.strobe(p.trial.event.STIM_OFF);
             
             switchEpoch(p,'TaskEnd')
             
@@ -405,64 +400,80 @@ switch p.trial.CurrEpoch
     case p.trial.epoch.Saccade
         %% Central fixation spot has disappeared. Animal must quickly saccade to stim to get the main reward
         
-        if ~p.trial.task.Good
-            % Not yet succeeded in task
-        
-            if p.trial.FixState.Current == p.trial.FixState.FixIn
-                % Animal has saccaded to stim, give jackpot and mark trial good
-                pds.reward.give(p, p.trial.reward.jackpotDur);
-                p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
-                p.trial.task.Good = 1;
-                p.trial.Timer.taskEnd = p.trial.CurTime + p.trial.reward.jackpotDur + 0.1;
-                
-                
-            else
-                % Animal has not yet saccaded to target
-                % Need to check if no saccade has been made or if a wrong saccade has been made
-                
-                % If no saccade has been made before the time runs out, end the trial
-                if p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.noSaccade;
-                    
-                    % Turn the stim off and fixation off
-                    p.trial.stim.on = 0;
-                    p.trial.behavior.fixation.on = 0;
-                    
-                    % Play an incorrect sound
-                    pds.audio.playDP(p,'incorrect','left');
-                    
-                    switchEpoch(p,'TaskEnd');                
-                end
-                
-                % If the distance from the stim increases, a wrong saccade has been made
-                if p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.wrongSaccade;
-                    
-                    % Turn the stim off and fixation off
-                    p.trial.stim.on = 0;
-                    p.trial.behavior.fixation.on = 0;
-                    
-                    % Play an incorrect sound
-                    pds.audio.playDP(p,'incorrect','left');
-                    
-                    % End the trial
-                    switchEpoch(p,'TaskEnd');
-                      
-                end
+        if ~p.trial.stim.GotFix
+            % Animal has not yet saccaded to target
+            % Need to check if no saccade has been made or if a wrong saccade has been made
 
-                
-            end    
-        
-        else
-            % Correctly saccaded, continue to show stim until jackpot reward ends
-            if p.trial.CurTime > p.trial.Timer.taskEnd
+            if p.trial.FixState.Current == p.trial.FixState.FixIn
+                % Animal has saccaded to stim
+                p.trial.stim.GotFix = 1;
+
+
+            elseif p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
+                % If the distance from the stim increases, a wrong saccade has been made
+
+                p.trial.outcome.CurrOutcome = p.trial.outcome.wrongSaccade;
+
+                % Turn the stim off and fixation off
                 p.trial.stim.on = 0;
                 pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                p.trial.behavior.fixation.on = 0;
+
+                % Play an incorrect sound
+                pds.audio.playDP(p,'incorrect','left');
+
+                % End the trial
                 switchEpoch(p,'TaskEnd');
-                
+
+
+
+            elseif p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout
+                % If no saccade has been made before the time runs out, end the trial
+
+                p.trial.outcome.CurrOutcome = p.trial.outcome.noSaccade;
+
+                % Turn the stim off and fixation off
+                p.trial.stim.on = 0;
+                pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                p.trial.behavior.fixation.on = 0;
+
+                % Play an incorrect sound
+                pds.audio.playDP(p,'incorrect','left');
+
+                switchEpoch(p,'TaskEnd')              
+
             end
-            
+
+        else
+            % Animal is currently fixating on target
+
+            % Wait for animal to hold fixation for the required length of time
+            % then give jackpot and mark trial good
+            if p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.minTargetFixTime
+                pds.reward.give(p, p.trial.reward.jackpotDur);
+                pds.audio.playDP(p,'reward','left');
+                p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
+                p.trial.task.Good = 1;
+                switchEpoch(p,'TaskEnd');
+
+
+            elseif p.trial.FixState.Current == p.trial.FixState.FixOut
+                % If animal's gaze leaves window, end the task and do not give reward
+                p.trial.outcome.CurrOutcome = p.trial.outcome.glance;
+
+                % Turn the stim off
+                p.trial.stim.on = 0;
+                pds.datapixx.strobe(p.trial.event.STIM_OFF);
+
+                % Play an incorrect sound
+                pds.audio.playDP(p,'incorrect','left');
+
+                switchEpoch(p,'TaskEnd')
+
+            end
+
         end
+
         
         % ----------------------------------------------------------------%
     case p.trial.epoch.TaskEnd
