@@ -53,7 +53,7 @@ p.defaultParameters.outcome.noSaccade         = 4002;     % Saccade was supposed
 p.defaultParameters.outcome.earlySaccade      = 4003;
 p.defaultParameters.outcome.lateSaccade       = 4004;     % Saccade still occured, but after it was supposed to.
 p.defaultParameters.outcome.wrongSaccade      = 4005;  % saccade to wrong target or in wrong direction
-
+p.defaultParameters.outcome.glance            = 4006;  % saccade made to target, but not held for long enough
 
 
 %% get a string representation of the outcome

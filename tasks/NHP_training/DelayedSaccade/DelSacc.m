@@ -191,6 +191,7 @@ p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
 
 p.trial.task.Good                = 0;
 p.trial.behavior.fixation.GotFix = 0;
+p.trial.stim.GotFix              = 0;
 
 pds.fixation.move(p);
 
@@ -389,6 +390,7 @@ switch p.trial.CurrEpoch
             % Turn of fixspot and stim
             p.trial.behavior.fixation.on = 0;
             p.trial.stim.on = 0;
+            pds.datapixx.strobe(p.trial.event.STIM_OFF);
             
             switchEpoch(p,'TaskEnd')
             
@@ -401,8 +403,52 @@ switch p.trial.CurrEpoch
         if ~p.trial.task.Good
             % Not yet succeeded in task
         
-            if p.trial.FixState.Current == p.trial.FixState.FixIn
-                % Animal has saccaded to stim
+            if ~p.trial.stim.GotFix
+                % Animal has not yet saccaded to target
+                % Need to check if no saccade has been made or if a wrong saccade has been made
+      
+                if p.trial.FixState.Current == p.trial.FixState.FixIn
+                    % Animal has saccaded to stim
+                    p.trial.stim.GotFix = 1;
+                
+                
+                elseif p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
+                    % If the distance from the stim increases, a wrong saccade has been made
+                    
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.wrongSaccade;
+                    
+                    % Turn the stim off and fixation off
+                    p.trial.stim.on = 0;
+                    pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                    p.trial.behavior.fixation.on = 0;
+                    
+                    % Play an incorrect sound
+                    pds.audio.playDP(p,'incorrect','left');
+                    
+                    % End the trial
+                    switchEpoch(p,'TaskEnd');
+                
+                    
+                    
+                elseif p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout
+                    % If no saccade has been made before the time runs out, end the trial
+                    
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.noSaccade;
+                    
+                    % Turn the stim off and fixation off
+                    p.trial.stim.on = 0;
+                    pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                    p.trial.behavior.fixation.on = 0;
+                    
+                    % Play an incorrect sound
+                    pds.audio.playDP(p,'incorrect','left');
+                    
+                    switchEpoch(p,'TaskEnd')              
+                
+                end
+                
+            else
+                % Animal is currently fixating on target
                 
                 % Wait for animal to hold fixation for the required length of time
                 % then give jackpot and mark trial good
@@ -411,47 +457,27 @@ switch p.trial.CurrEpoch
                     p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
                     p.trial.task.Good = 1;
                     p.trial.Timer.taskEnd = p.trial.CurTime + p.trial.reward.jackpotDur + 0.1;
-                end
                 
-            else
-                % Animal has not yet saccaded to target
-                % Need to check if no saccade has been made or if a wrong saccade has been made
-                
-                % If no saccade has been made before the time runs out, end the trial
-                if p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.noSaccade;
+                   
+                elseif p.trial.FixState.Current == p.trial.FixState.FixOut
+                    % If animal's gaze leaves window, end the task and do not give reward
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.glance;
                     
-                    % Turn the stim off and fixation off
+                    % Turn the stim off
                     p.trial.stim.on = 0;
-                    p.trial.behavior.fixation.on = 0;
+                    pds.datapixx.strobe(p.trial.event.STIM_OFF);
                     
                     % Play an incorrect sound
                     pds.audio.playDP(p,'incorrect','left');
                     
-                    switchEpoch(p,'TaskEnd');                
+                    switchEpoch(p,'TaskEnd')
+                    
                 end
                 
-                % If the distance from the stim increases, a wrong saccade has been made
-                if p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.wrongSaccade;
-                    
-                    % Turn the stim off and fixation off
-                    p.trial.stim.on = 0;
-                    p.trial.behavior.fixation.on = 0;
-                    
-                    % Play an incorrect sound
-                    pds.audio.playDP(p,'incorrect','left');
-                    
-                    % End the trial
-                    switchEpoch(p,'TaskEnd');
-                      
-                end
-
-                
-            end    
+            end
         
         else
-            % Correctly saccaded, continue to show stim until jackpot reward ends
+            % Correctly saccaded, wait until jackpot reward ends to end the task
             if p.trial.CurTime > p.trial.Timer.taskEnd
                 p.trial.stim.on = 0;
                 pds.datapixx.strobe(p.trial.event.STIM_OFF);
