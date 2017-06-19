@@ -457,8 +457,8 @@ switch p.trial.CurrEpoch
             end    
         
         else
-            % Correctly saccaded, continue to show stim until animal looks away
-            if p.trial.FixState.Current == p.trial.FixState.FixOut
+            % Correctly saccaded, continue to show stim until jackpot reward ends
+            if p.trial.CurTime > p.trial.Timer.taskEnd
                 p.trial.stim.on = 0;
                 pds.datapixx.strobe(p.trial.event.STIM_OFF);
                 switchEpoch(p,'TaskEnd');
