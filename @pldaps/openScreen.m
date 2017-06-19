@@ -37,7 +37,7 @@ Screen('Preference','VisualDebugLevel',3);
 PsychImaging('PrepareConfiguration');
 
 %% Change the brightness of the propixx light
-if ~isempty(p.defaultParmeters.datapixx.propixxIntensity)
+if ~isempty(p.defaultParameters.datapixx.propixxIntensity)
     disp('****************************************************************')
     disp('****************************************************************')
     disp('Changing Propixx Projector Intensity')
