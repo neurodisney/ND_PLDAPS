@@ -26,7 +26,7 @@ SS.plot.routine    = 'DelSacc_plots';    % function for online plotting of sessi
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos', 'task.Color_list'};
+SS.editable = {'task.Color_list'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed

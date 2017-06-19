@@ -43,10 +43,8 @@ if(isempty(state))
     p.trial.task.Color_list = Shuffle({'magenta'});
     
     % --------------------------------------------------------------------%
-    %% Enable random positions
-    p.trial.task.RandomPos = 0;
-    
-    p.trial.task.RandomPosRange = [5, 5];  % range of x and y dva for random position
+    %% Set initial Fix Window size
+    p.trial.behavior.fixation.FixWin = 2.5;
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
