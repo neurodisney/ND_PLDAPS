@@ -60,7 +60,7 @@ p.trial.stim.locations          = {[1  , 0], ...
                                    [-1 ,-1], ...
                                    [1  ,-1]};
 % diameter of the stim
-p.trial.stim.radius               = 2;
+p.trial.stim.radius               = 1;
 
 % Possbile angles for the stim
 p.trial.stim.orientations = [0]; %[0, 45, 90, 135, 180, 225, 270, 315];
