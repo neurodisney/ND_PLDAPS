@@ -84,7 +84,8 @@ if(isempty(state))
     c1.reward.Dur            = [0.1  0.1];
     c1.reward.Period         = [1    1  ];
     
-    c1.task.centerOffLatency = 5;
+    c1.task.centerOffLatency = 0.5;
+    c1.task.minTargetFixTime = 0.3;
     c1.reward.jackpotDur     = 0.5;
     c1.task.saccadeTimeout        = 2;
     
@@ -407,12 +408,16 @@ switch p.trial.CurrEpoch
             % Not yet succeeded in task
         
             if p.trial.FixState.Current == p.trial.FixState.FixIn
-                % Animal has saccaded to stim, give jackpot and mark trial good
-                pds.reward.give(p, p.trial.reward.jackpotDur);
-                p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
-                p.trial.task.Good = 1;
-                p.trial.Timer.taskEnd = p.trial.CurTime + p.trial.reward.jackpotDur + 0.1;
+                % Animal has saccaded to stim
                 
+                % Wait for animal to hold fixation for the required length of time
+                % then give jackpot and mark trial good
+                if p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.minTargetFixTime
+                    pds.reward.give(p, p.trial.reward.jackpotDur);
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
+                    p.trial.task.Good = 1;
+                    p.trial.Timer.taskEnd = p.trial.CurTime + p.trial.reward.jackpotDur + 0.1;
+                end
                 
             else
                 % Animal has not yet saccaded to target
@@ -452,8 +457,8 @@ switch p.trial.CurrEpoch
             end    
         
         else
-            % Correctly saccaded, continue to show stim until jackpot reward ends
-            if p.trial.CurTime > p.trial.Timer.taskEnd
+            % Correctly saccaded, continue to show stim until animal looks away
+            if p.trial.FixState.Current == p.trial.FixState.FixOut
                 p.trial.stim.on = 0;
                 pds.datapixx.strobe(p.trial.event.STIM_OFF);
                 switchEpoch(p,'TaskEnd');

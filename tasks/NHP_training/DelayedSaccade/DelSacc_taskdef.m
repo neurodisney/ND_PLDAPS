@@ -65,7 +65,7 @@ p.trial.stim.radius               = 2;
 % Possbile angles for the stim
 p.trial.stim.orientations = [0]; %[0, 45, 90, 135, 180, 225, 270, 315];
 
-p.trial.stim.sFreq = 0.3;
+p.trial.stim.sFreq = 1;
 
 % ------------------------------------------------------------------------%
 %% Task parameters
