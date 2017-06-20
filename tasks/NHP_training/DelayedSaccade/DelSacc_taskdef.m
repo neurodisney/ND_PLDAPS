@@ -17,6 +17,24 @@ function p = DelSacc_taskdef(p)
 p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % ------------------------------------------------------------------------%
+%% Main stuff to change
+p.trial.task.fixLatency       = 0.35; % Time to hold fixation before it counts
+p.trial.reward.initialFixRwd  = 0.1; % Small reward for achieving full fixation
+p.trial.task.stimLatency      = 0.35; % Time from full fixation to stim appearing
+
+p.trial.task.centerOffLatency = 0.5; % Time from stim appearing to fixspot disappearing
+p.trial.task.saccadeTimeout   = 2;   % Time allowed to make the saccade to the stim before error
+p.trial.task.minTargetFixTime = 0.3; % Must fixate on stim for at least this time before it counts
+
+p.trial.reward.Dur            = 0.4; % Reward for completing the task successfully
+
+p.trial.stim.lowContrast      = 0.4; % contrast value when stim.on = 1
+p.trial.stim.highContrast     = 1;   % contrast value when stim.on = 2
+p.trial.stim.tFreq            = 0;   % drift speed, 0 is stationary
+
+p.trial.behavior.fixation.centralFixWin = 2.5;
+p.trial.stim.FixWin           = 4;
+
 %% Reward
 
 % manual reward from experimenter

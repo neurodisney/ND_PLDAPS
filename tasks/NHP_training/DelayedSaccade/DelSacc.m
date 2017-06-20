@@ -50,24 +50,7 @@ if(isempty(state))
     % of a defined number of trials per condition, needs to be clarified.
         
     % condition 1
-    c1.Nr = 1;
-    c1.task.fixLatency       = 0.35; % Time to hold fixation before it counts
-    c1.reward.initialFixRwd  = 0.06; % Small reward for achieving full fixation
-    c1.task.stimLatency      = 0.35; % Time from full fixation to stim appearing
-    
-    c1.task.centerOffLatency = 0.5; % Time from stim appearing to fixspot disappearing
-    c1.task.saccadeTimeout   = 2;   % Time allowed to make the saccade to the stim before error
-    c1.task.minTargetFixTime = 0.3; % Must fixate on stim for at least this time before it counts
-    
-    c1.reward.Dur            = 0.5; % Reward for completing the task successfully
-    
-    c1.stim.lowContrast      = 0.4; % contrast value when stim.on = 1
-    c1.stim.highContrast     = 1;   % contrast value when stim.on = 2
-    c1.stim.tFreq            = 0;   % drift speed, 0 is stationary
-    
-    c1.behavior.fixation.centralFixWin = 2.5;
-    c1.stim.FixWin           = 4;
-    
+    c1.Nr = 1;    
     c1.nTrials = 1000;
     
     
