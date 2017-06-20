@@ -450,9 +450,15 @@ switch p.trial.CurrEpoch
             % Wait for animal to hold fixation for the required length of time
             % then give jackpot and mark trial good
             if p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.minTargetFixTime
+                p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
+                
                 pds.reward.give(p, p.trial.reward.jackpotDur);
                 pds.audio.playDP(p,'reward','left');
-                p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
+                
+                % Turn of stim
+                p.trial.stim.on = 0;
+                pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                
                 p.trial.task.Good = 1;
                 switchEpoch(p,'TaskEnd');
 
