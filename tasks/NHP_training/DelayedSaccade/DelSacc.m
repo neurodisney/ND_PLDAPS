@@ -52,46 +52,22 @@ if(isempty(state))
     % cell array, or defined here within the main trial function. The
     % control of trials, especially the use of blocks, i.e. the repetition
     % of a defined number of trials per condition, needs to be clarified.
-    
-    
-    % reward series for continous fixation
-    % c.task.fixLatency       -  time to hold fixation before it counts
-    % c.reward.initialFixRwd  -  Reward for fixating long enough (before stim appears). Set to 0 for harder difficulty
-    % c.task.stimLatency      -  Time from initialFixRwd to the stim appearing (if no reward this is ignored).
-    % c.reward.stimRwdLatency -  Time from onset of stim to first reward
-    
-    % c.reward.nRewards       -  array that defines the reward schema with Dur and Period
-    % c.reward.Dur            -  array of how long each kind of reward lasts
-    % c.reward.Period         -  the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-    
-    % c.task.centerOffLatency -  Time from stim appearing to when the central fix spot disappears
-    % c.reward.jackpotDur     -  the jackpot is given after all other rewards
-    % c.task.saccadeTimeout   -  time to make the saccade before stim disappears
-    
-    % c.stim.lowContrast      -  contrast value when stim.on = 1
-    % c.stim.highContrast     -  contrast value when stim.on = 2
-    % c.stim.tFreq            -  drift speed, 0 is stationary
-    
-    
+        
     % condition 1
     c1.Nr = 1;
     c1.task.fixLatency       = 0.35; % Time to hold fixation before it counts
-    c1.reward.initialFixRwd  = 0.06;
+    c1.reward.initialFixRwd  = 0.06; % Small reward for achieving full fixation
     c1.task.stimLatency      = 0.35; % Time from full fixation to stim appearing
-    c1.reward.stimRwdLatency = 0.25;
     
-    c1.reward.nRewards       = [1    100];
-    c1.reward.Dur            = [0.1  0.1];
-    c1.reward.Period         = [1    1  ];
+    c1.task.centerOffLatency = 0.5; % Time from stim appearing to fixspot disappearing
+    c1.task.saccadeTimeout   = 2;   % Time allowed to make the saccade to the stim before error
+    c1.task.minTargetFixTime = 0.3; % Must fixate on stim for at least this time before it counts
     
-    c1.task.centerOffLatency = 0.5;
-    c1.task.minTargetFixTime = 0.3;
-    c1.reward.jackpotDur     = 0.5;
-    c1.task.saccadeTimeout        = 2;
+    c1.reward.Dur            = 0.5; % Reward for completing the task successfully
     
-    c1.stim.lowContrast      = 0.6;
-    c1.stim.highContrast     = 1;
-    c1.stim.tFreq            = 0;
+    c1.stim.lowContrast      = 0.4; % contrast value when stim.on = 1
+    c1.stim.highContrast     = 1;   % contrast value when stim.on = 2
+    c1.stim.tFreq            = 0;   % drift speed, 0 is stationary
     
     c1.nTrials = 100;
     
@@ -325,41 +301,15 @@ switch p.trial.CurrEpoch
                     p.trial.stim.on = 1;
                     pds.datapixx.strobe(p.trial.event.STIM_ON);
                     p.trial.EV.StimOn = p.trial.CurTime;
-                    p.trial.Timer.nextReward = p.trial.CurTime + p.trial.reward.stimRwdLatency;
                 end
                 
                 
             else
                 
-                % Give rewards if fixation is maintained (inhibit saccade to stim)
-                if p.trial.CurTime < p.trial.EV.StimOn + p.trial.task.centerOffLatency
+                % Must maintain fixation (inhibit saccade) until central
+                % fixation spot disappears
+                if p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.centerOffLatency
                     
-                    % If the supplied reward schema doesn't cover the fixspot turns off, just reuse the last one
-                    rewardCount = min(p.trial.reward.count , length(p.trial.reward.allDurs));
-                    
-                    if rewardCount == 0
-                        p.trial.Timer.nextReward = p.trial.EV.epochEnd + p.trial.reward.stimRwdLatency;
-                    end
-                    
-                    % Wait for rewardPeriod to elapse since last reward, then give the next reward
-                    if p.trial.CurTime > p.trial.Timer.nextReward
-
-                        rewardCount = min(rewardCount + 1 , length(p.trial.reward.allDurs));
-                        p.trial.reward.count = p.trial.reward.count + 1;
-                        
-                        % Get the reward duration
-                        rewardDuration = p.trial.reward.allDurs(rewardCount);
-                        
-
-                        % Give the reward and update the lastReward time
-                        pds.reward.give(p, rewardDuration);
-                        p.trial.Timer.lastReward = p.trial.CurTime;
-                        
-                        % Set a timer for the next reward
-                        p.trial.Timer.nextReward = p.trial.CurTime + p.trial.reward.allPeriods(rewardCount);
-                    end
-                    
-                else
                     % Saccade has been inhibited long enough. Make the central fix spot disappear
                     p.trial.behavior.fixation.fixPos = p.trial.stim.pos;
                     p.trial.behavior.fixation.FixType = 'off';
@@ -452,7 +402,7 @@ switch p.trial.CurrEpoch
             if p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.minTargetFixTime
                 p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
                 
-                pds.reward.give(p, p.trial.reward.jackpotDur);
+                pds.reward.give(p, p.trial.reward.Dur);
                 pds.audio.playDP(p,'reward','left');
                 
                 % Turn of stim
