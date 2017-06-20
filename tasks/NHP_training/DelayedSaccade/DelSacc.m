@@ -65,7 +65,7 @@ if(isempty(state))
     c1.stim.highContrast     = 1;   % contrast value when stim.on = 2
     c1.stim.tFreq            = 0;   % drift speed, 0 is stationary
     
-    c1.nTrials = 100;
+    c1.nTrials = 1000;
     
     
     % Fill a conditions list with n of each kind of condition sequentially
@@ -171,9 +171,6 @@ p.trial.behavior.fixation.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.
 
 
 %% Reward
-nRewards = p.trial.reward.nRewards;
-% Reset the reward counter (separate from iReward to allow for manual rewards)
-p.trial.reward.count = 0;
 
 % Fixation spot
 p.trial.behavior.fixation.fixPos = [0,0];
@@ -259,7 +256,7 @@ switch p.trial.CurrEpoch
                 p.trial.behavior.fixation.GotFix = 0;
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
-            elseif (p.trial.CurTime > p.trial.Timer.fixStart + p.trial.task.fixLatency) && p.trial.FixState.Current == p.trial.FixState.FixIn
+            elseif (p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.fixLatency) && p.trial.FixState.Current == p.trial.FixState.FixIn
                 
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
                 
@@ -348,7 +345,7 @@ switch p.trial.CurrEpoch
             if p.trial.FixState.Current == p.trial.FixState.FixIn
                 % Animal has saccaded to stim
                 p.trial.stim.GotFix = 1;
-                p.trial.EV.FixTargetStart = p.trial.Ev.FixStart;
+                p.trial.EV.FixTargetStart = p.trial.EV.FixStart;
 
 
             elseif p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
@@ -519,7 +516,7 @@ if bool
     p.trial.EV.FixOn = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
 else
-    p.trial.behavior.fixation.off = 0;
+    p.trial.behavior.fixation.on = 0;
     p.trial.EV.FixOff = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
 end
@@ -547,7 +544,7 @@ else
     % Stim is changing
     p.trial.stim.on = val;
     p.trial.EV.StimChange = p.trial.CurTime;
-    pds.datapixx.strob(p.trial.event.STIM_CHNG);
+    pds.datapixx.strobe(p.trial.event.STIM_CHNG);
 end
     
     
@@ -573,7 +570,7 @@ switch act
         
         p.trial.session.asciifmtstr = ['%s  %s  %.5f  %s  %s  %d  %d  %s  %d  ',...
             '%.2f  %.2f  %.1f  %.2f  %.1f  %.1f  %.1f  ',...
-            '%.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f',...
+            '%.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  ',...
             '%.5f  %.2f  %.5f  %.2f',...
             '%.3f  %.2f  \n'];
         
@@ -589,8 +586,16 @@ switch act
         iTrial = p.trial.pldaps.iTrial;
         Cond =  p.trial.Nr;
         Outcome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-        Good = p.trial.Good;
-
+        Good = p.trial.task.Good;
+        
+        StimPosX = p.trial.stim.pos(1);
+        StimPosY = p.trial.stim.pos(2);
+        tFreq = p.trial.stim.tFreq;
+        sFreq = p.trial.stim.sFreq;
+        lContr = p.trial.stim.lowContrast;
+        hContr = p.trial.stim.highContrast;
+        radius = p.trial.stim.radius;
+        
         Tstart = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
         CenterOn = p.trial.EV.FixOn;
         CenterOff = p.trial.EV.FixOff;

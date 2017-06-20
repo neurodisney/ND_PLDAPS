@@ -77,11 +77,11 @@ methods
         % For some reason, all generated gratings are off by 0.5,0.5
         % degrees. Maybe it has something to do with the coordinate
         % transformations... Therefore, do this hack of fix.
-        width = 2*radius + 1;
-        height = 2*radius + 1;
+        width = 2*radius;
+        height = 2*radius;
         % The texture that gets drawn
         [obj.texture, obj.gratingRect] = CreateProceduralSineGrating(window, width, height, ...
-            obj.bgOffset, radius, obj.pcmult);
+            obj.bgOffset, inf, obj.pcmult);
 
     end
     
@@ -93,7 +93,7 @@ methods
         phase = 360 * elapsedTime * obj.tFreq;
         
         % Calculate the rect using the position
-        destRect = [obj.pos - obj.radius, obj.pos + obj.radius - 0.5];
+        destRect = [obj.pos - obj.radius, obj.pos + obj.radius];
         
         % Filter mode (not sure what the best value is yet)
         % For more information see the PTB documentation for Screen('DrawTexture')
