@@ -248,6 +248,7 @@ SS.stim.grating.sFreq    = 3; % Spatial frequency, cycles/deg
 SS.stim.grating.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
 SS.stim.grating.angle    = 0; % Rotation
 SS.stim.grating.contrast = 1;
+SS.stim.grating.res = 1000; % Half the size of the texture matrix
 % contrastMethod:
 % 'raw' - ignore background color and do accurate contrast, 0% contrast will always be 50% grey.
 % 'bgshift' - 0% contrast will be the background color, and accurate at low contrasts, but high contrasts do not extend all the way or are clipped

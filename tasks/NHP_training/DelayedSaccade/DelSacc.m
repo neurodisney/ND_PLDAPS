@@ -65,6 +65,9 @@ if(isempty(state))
     c1.stim.highContrast     = 1;   % contrast value when stim.on = 2
     c1.stim.tFreq            = 0;   % drift speed, 0 is stationary
     
+    c1.behavior.fixation.centralFixWin = 2.5;
+    c1.stim.FixWin           = 4;
+    
     c1.nTrials = 1000;
     
     
@@ -178,6 +181,10 @@ p.trial.behavior.fixation.FixType = 'disc';
 pds.fixation.move(p)
 
 %% Stimulus parameters
+
+% Must set spatial frequency before generating the stimulus
+p.trial.stim.grating.sFreq = p.trial.stim.sFreq;
+
 % Generate the stimulus
 p.trial.stim.grating1 = pds.stim.Grating(p,p.trial.stim.radius);
 
@@ -193,7 +200,7 @@ p.trial.stim.grating1.angle = p.trial.stim.angle;
 
 % Other stim properties
 p.trial.stim.grating1.tFreq = p.trial.stim.tFreq;
-p.trial.stim.grating1.sFreq = p.trial.stim.sFreq;
+
 
 % stim starts off
 p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
@@ -217,6 +224,8 @@ switch p.trial.CurrEpoch
         end
         
         fixspot(p,1);
+        p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.centralFixWin;
+        pds.fixation.move(p)
         
         switchEpoch(p,'WaitFix');
         
@@ -297,6 +306,7 @@ switch p.trial.CurrEpoch
                     % Saccade has been inhibited long enough. Make the central fix spot disappear
                     p.trial.behavior.fixation.fixPos = p.trial.stim.pos;
                     p.trial.behavior.fixation.FixType = 'off';
+                    p.trial.behavior.fixation.FixWin = p.trial.stim.FixWin;
                     pds.fixation.move(p);
                     p.trial.EV.FixOff = p.trial.CurTime;
                     pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);

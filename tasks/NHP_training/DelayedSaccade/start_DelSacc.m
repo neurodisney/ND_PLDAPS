@@ -31,7 +31,7 @@ SS.editable = {'task.Color_list'};
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
-SS.sound.use                  = 0;
+SS.sound.use                  = 1;
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
 SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
@@ -103,7 +103,7 @@ if strcmp(subjname,'mouse')
     %SS.datapixx.adc.RewardChannel  = [];  
     SS.datapixx.useAsEyepos        = 0;
     SS.behavior.joystick.use       = 0;
-    SS.datapixx.useForReward       = 0;
+    %SS.datapixx.useForReward       = 0;
     
 end
 % ------------------------------------------------------------------------%
