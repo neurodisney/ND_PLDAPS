@@ -24,7 +24,8 @@ p.defaultParameters.EV.TaskStart   = NaN; % actual task start after animal got r
 p.defaultParameters.EV.TaskEnd     = NaN; % actual task end
 p.defaultParameters.EV.Initiated   = NaN; % animal intiated the task
 p.defaultParameters.EV.StimOn      = NaN; % Stimulus Onset 
-p.defaultParameters.EV.StimOff     = NaN; % Stimulus Offset 
+p.defaultParameters.EV.StimOff     = NaN; % Stimulus Offset
+p.defaultParameters.EV.StimChange  = NaN; % Stimulus Change
 p.defaultParameters.EV.FixOn       = NaN; % Onset of fixation spot
 p.defaultParameters.EV.FixOff      = NaN; % Offset of fixation spot
 p.defaultParameters.EV.PDOn        = NaN; % Photo diode onset
@@ -58,6 +59,14 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
     p.defaultParameters.EV.FixLeave   = NaN; % time when eyes leave fixation window
     p.defaultParameters.EV.Saccade    = NaN; % response saccade detected
+    
+    % Fixspot
+    p.defaultParameters.EV.FixSpotStart = NaN; % Start of fixation on central fix spot
+    p.defaultParameters.EV.FixSpotStop  = NaN; % Stop of fixation on central fix spot
+    
+    % Target
+    p.defaultParameters.EV.FixTargetStart = NaN; % Start of fixation on target
+    p.defaultParameters.EV.FixTargetStop  = NaN; % Stop of fixation on target
 end
 
 % ------------------------------------------------------------------------%

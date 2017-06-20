@@ -43,10 +43,6 @@ if(isempty(state))
     p.trial.task.Color_list = Shuffle({'magenta'});
     
     % --------------------------------------------------------------------%
-    %% Set initial Fix Window size
-    p.trial.behavior.fixation.FixWin = 2.5;
-    
-    % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
     % define conditions (conditions could be passed to the pldaps call as
     % cell array, or defined here within the main trial function. The
@@ -178,11 +174,6 @@ p.trial.behavior.fixation.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.
 nRewards = p.trial.reward.nRewards;
 % Reset the reward counter (separate from iReward to allow for manual rewards)
 p.trial.reward.count = 0;
-% Create arrays for direct reference during reward
-p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
-p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);
-% Calculate the jackpot time
-p.trial.reward.jackpotTime = sum(p.trial.reward.allPeriods);
 
 % Fixation spot
 p.trial.behavior.fixation.fixPos = [0,0];
@@ -216,9 +207,7 @@ function TaskDesign(p)
 switch p.trial.CurrEpoch
     
     case p.trial.epoch.TrialStart
-        %% trial starts with onset of fixation spot
-        p.trial.behavior.fixation.on = 1;
-        
+        %% trial starts with onset of fixation spot       
         tms = pds.datapixx.strobe(p.trial.event.TASK_ON);
         p.trial.EV.DPX_TaskOn = tms(1);
         p.trial.EV.TDT_TaskOn = tms(2);
@@ -229,7 +218,9 @@ switch p.trial.CurrEpoch
         if(p.trial.datapixx.TTL_trialOn)
             pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
         end
-
+        
+        fixspot(p,1);
+        
         switchEpoch(p,'WaitFix');
         
         % ----------------------------------------------------------------%
@@ -241,9 +232,9 @@ switch p.trial.CurrEpoch
             
             % Fixation has occured
             if p.trial.FixState.Current == p.trial.FixState.FixIn
+                p.trial.EV.FixSpotStart = p.trial.EV.FixStart;
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; %Will become FullFixation upon holding long enough
                 p.trial.behavior.fixation.GotFix = 1;
-                p.trial.Timer.fixStart = p.trial.CurTime;
                 
                 % Time to fixate has expired
             elseif p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix
@@ -252,7 +243,7 @@ switch p.trial.CurrEpoch
                 p.trial.task.Good = 0;
                 
                 % Go directly to TaskEnd, do not start task, do not collect reward
-                p.trial.behavior.fixation.on = 0;
+                fixspot(p,0);
                 switchEpoch(p,'TaskEnd');
                 
             end
@@ -264,7 +255,7 @@ switch p.trial.CurrEpoch
             % Fixation ceases
             if p.trial.FixState.Current == p.trial.FixState.FixOut
                 
-                p.trial.EV.FixBreak = p.trial.CurTime;
+                p.trial.EV.FixSpotStop = p.trial.EV.FixBreak;
                 p.trial.behavior.fixation.GotFix = 0;
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
@@ -272,13 +263,10 @@ switch p.trial.CurrEpoch
                 
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
                 
-                % Record when the monkey started fixating
-                p.trial.EV.FixStart = p.trial.Timer.fixStart;
-                
                 % Reward the monkey if there is initial reward for this trial
                 if p.trial.reward.initialFixRwd > 0
                     pds.reward.give(p, p.trial.reward.initialFixRwd);
-                    p.trial.Timer.lastReward = p.trial.CurTime;
+                    p.trial.EV.FirstReward = p.trial.CurTime;
                 end
                 
                 % Transition to the succesful fixation epoch
@@ -298,9 +286,8 @@ switch p.trial.CurrEpoch
             % Wait stim latency before showing reward
             if ~p.trial.stim.on
                 if p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.stimLatency
-                    p.trial.stim.on = 1;
-                    pds.datapixx.strobe(p.trial.event.STIM_ON);
-                    p.trial.EV.StimOn = p.trial.CurTime;
+                    % Turn on stim
+                    stim(p,1)
                 end
                 
                 
@@ -316,9 +303,11 @@ switch p.trial.CurrEpoch
                     pds.fixation.move(p);
                     p.trial.EV.FixOff = p.trial.CurTime;
                     pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
+                    p.trial.EV.FixSpotStop = p.trial.CurTime;
+                    
                     
                     % Make the stim high contrast
-                    p.trial.stim.on = 2;
+                    stim(p,2)
                     
                     % Change to the saccade epoch
                     switchEpoch(p,'Saccade');
@@ -337,10 +326,12 @@ switch p.trial.CurrEpoch
             % If the stim is on when breakfix occurs, saccade is precocious
             p.trial.outcome.CurrOutcome = p.trial.outcome.earlySaccade;
             
-            % Turn of fixspot and stim
-            p.trial.behavior.fixation.on = 0;
-            p.trial.stim.on = 0;
-            pds.datapixx.strobe(p.trial.event.STIM_OFF);
+            % Record time
+            p.trial.EV.FixSpotStop = p.trial.EV.FixBreak;
+            
+            % Turn off fixspot and stim
+            fixspot(p,0);
+            stim(p,0);
             
             switchEpoch(p,'TaskEnd')
             
@@ -357,6 +348,7 @@ switch p.trial.CurrEpoch
             if p.trial.FixState.Current == p.trial.FixState.FixIn
                 % Animal has saccaded to stim
                 p.trial.stim.GotFix = 1;
+                p.trial.EV.FixTargetStart = p.trial.Ev.FixStart;
 
 
             elseif p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
@@ -365,9 +357,8 @@ switch p.trial.CurrEpoch
                 p.trial.outcome.CurrOutcome = p.trial.outcome.wrongSaccade;
 
                 % Turn the stim off and fixation off
-                p.trial.stim.on = 0;
-                pds.datapixx.strobe(p.trial.event.STIM_OFF);
-                p.trial.behavior.fixation.on = 0;
+                stim(p,0)
+                fixspot(p,0)
 
                 % Play an incorrect sound
                 pds.audio.playDP(p,'incorrect','left');
@@ -383,9 +374,8 @@ switch p.trial.CurrEpoch
                 p.trial.outcome.CurrOutcome = p.trial.outcome.noSaccade;
 
                 % Turn the stim off and fixation off
-                p.trial.stim.on = 0;
-                pds.datapixx.strobe(p.trial.event.STIM_OFF);
-                p.trial.behavior.fixation.on = 0;
+                stim(p,0);
+                fixspot(p,0);
 
                 % Play an incorrect sound
                 pds.audio.playDP(p,'incorrect','left');
@@ -398,16 +388,21 @@ switch p.trial.CurrEpoch
             % Animal is currently fixating on target
 
             % Wait for animal to hold fixation for the required length of time
-            % then give jackpot and mark trial good
+            % then give reward and mark trial good
             if p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.minTargetFixTime
                 p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
                 
                 pds.reward.give(p, p.trial.reward.Dur);
                 pds.audio.playDP(p,'reward','left');
                 
-                % Turn of stim
-                p.trial.stim.on = 0;
-                pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                % Record main reward time
+                p.trial.EV.Reward = p.trial.CurTime;
+                
+                % Turn off stim
+                stim(p,0)
+                
+                % Record time fixation on stim ending
+                p.trial.EV.FixTargetStop = p.trial.CurTime;
                 
                 p.trial.task.Good = 1;
                 switchEpoch(p,'TaskEnd');
@@ -418,9 +413,11 @@ switch p.trial.CurrEpoch
                 p.trial.outcome.CurrOutcome = p.trial.outcome.glance;
 
                 % Turn the stim off
-                p.trial.stim.on = 0;
-                pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                stim(p,0);
 
+                % Record time fixation on stim ending
+                p.trial.EV.FixTargetStop = p.trial.EV.FixBreak;
+                
                 % Play an incorrect sound
                 pds.audio.playDP(p,'incorrect','left');
 
@@ -516,6 +513,44 @@ function switchEpoch(p,epochName)
 p.trial.CurrEpoch = p.trial.epoch.(epochName);
 p.trial.EV.epochEnd = p.trial.CurTime;
 
+function fixspot(p,bool)
+if bool
+    p.trial.behavior.fixation.on = 1;
+    p.trial.EV.FixOn = p.trial.CurTime;
+    pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
+else
+    p.trial.behavior.fixation.off = 0;
+    p.trial.EV.FixOff = p.trial.CurTime;
+    pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
+end
+
+function stim(p,val)
+% Turn on/off or change the stim
+oldVal = p.trial.stim.on;
+
+% Don't do anything if stim doesn't change
+if val == oldVal; return; end
+
+if val == 0
+    % Turn the stim off
+    p.trial.stim.on = 0;
+    p.trial.EV.StimOff = p.trial.CurTime;
+    pds.datapixx.strobe(p.trial.event.STIM_OFF);
+    
+elseif oldVal == 0
+    % Stim is turning on
+    p.trial.stim.on = val;
+    p.trial.EV.StimOn = p.trial.CurTime;
+    pds.datapixx.strobe(p.trial.event.STIM_ON);
+    
+else
+    % Stim is changing
+    p.trial.stim.on = val;
+    p.trial.EV.StimChange = p.trial.CurTime;
+    pds.datapixx.strob(p.trial.event.STIM_CHNG);
+end
+    
+    
 
 % ####################################################################### %
 function Trial2Ascii(p, act)
@@ -530,27 +565,59 @@ switch act
     case 'init'
         tblptr = fopen(p.trial.session.asciitbl , 'w');
         
-        fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  FixRT  ',...
-            'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI FixWin  fixPos_X  fixPos_Y \n']);
+        fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  iTrial  Cond  Outcome  Good  ',...
+            'StimPosX  StimPosY  tFreq  sFreq  lContr  hContr  radius  ',... 
+            'Tstart  CenterOn  CenterOff  StimOn  StimOff  CenterFix  CenterBreak  StimFix  StimBreak  ',...
+            'InitRwd  InitRwdDur  MainRwd  MainRwdDur',...
+            'ITI  FixWin\n']);
+        
+        p.trial.session.asciifmtstr = ['%s  %s  %.5f  %s  %s  %d  %d  %s  %d  ',...
+            '%.2f  %.2f  %.1f  %.2f  %.1f  %.1f  %.1f  ',...
+            '%.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f',...
+            '%.5f  %.2f  %.5f  %.2f',...
+            '%.3f  %.2f  \n'];
+        
         fclose(tblptr);
         
     case 'save'
-        if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoFix)  % we might loose the last trial when pressing esc.
-            
-            trltm = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
-            
-            cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-            
-            tblptr = fopen(p.trial.session.asciitbl, 'a');
-            
-            fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f  %.5f  %.5f  %d  %d  %s  %.5f  %s  %.5f  %.2f  %.2f  %.2f \n' , ...
-                datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
-                p.trial.EV.DPX_TaskOn, p.trial.session.subject, p.trial.session.experimentSetupFile, ...
-                p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
-                p.trial.task.fixLatency, p.trial.reward.count, p.trial.outcome.CurrOutcome, cOutCome, ...
-                p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.behavior.fixation.FixCol, p.trial.task.Timing.ITI, ...
-                p.trial.behavior.fixation.FixWin, p.trial.behavior.fixation.fixPos(1), p.trial.behavior.fixation.fixPos(2));
-            fclose(tblptr);
-        end
+        % Load proper variables
+        Date = datestr(p.trial.session.initTime,'yyyy_mm_dd');
+        Time = p.trial.EV.TaskStartTime;
+        Secs = p.trial.EV.DPX_TaskOn;
+        Subject = p.trial.EV.DPX_TaskOn;
+        Experiment = p.trial.session.experimentSetupFile;
+        iTrial = p.trial.pldaps.iTrial;
+        Cond =  p.trial.Nr;
+        Outcome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+        Good = p.trial.Good;
+
+        Tstart = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
+        CenterOn = p.trial.EV.FixOn;
+        CenterOff = p.trial.EV.FixOff;
+        StimOn = p.trial.EV.StimOn;
+        StimOff = p.trial.EV.StimOff;
+        CenterFix = p.trial.EV.FixSpotStart;
+        CenterBreak = p.trial.EV.FixSpotStop;
+        StimFix = p.trial.EV.FixTargetStart;
+        StimBreak = p.trial.EV.FixTargetStop;
+        
+        InitRwd = p.trial.EV.FirstReward;
+        InitRwdDur = p.trial.reward.initialFixRwd * ~isnan(InitRwd); % 0 if not given
+        MainRwd = p.trial.EV.Reward;
+        MainRwdDur = p.trial.reward.Dur * ~isnan(MainRwd); % 0 if not given
+        
+        ITI = p.trial.task.Timing.ITI;
+        FixWin = p.trial.behavior.fixation.FixWin;
+        
+        % Write to dksik
+        tblptr = fopen(p.trial.session.asciitbl, 'a');
+        fmtstr = p.trial.session.asciifmtstr;
+        fprintf(tblptr, fmtstr, ...
+            Date, Time, Secs, Subject, Experiment, iTrial, Cond, Outcome, Good, ...
+            StimPosX, StimPosY, tFreq, sFreq, lContr, hContr, radius, ... 
+            Tstart, CenterOn, CenterOff, StimOn, StimOff, CenterFix, CenterBreak, StimFix, StimBreak, ...
+            InitRwd, InitRwdDur, MainRwd, MainRwdDur, ...
+            ITI, FixWin);
+        fclose(tblptr);
 end
 

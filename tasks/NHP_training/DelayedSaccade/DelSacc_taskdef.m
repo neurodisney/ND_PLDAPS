@@ -63,7 +63,7 @@ p.trial.stim.locations          = {[1  , 0], ...
 p.trial.stim.radius               = 1;  % WZ: what RF/area are we aiming for? 1-2 dva sshould be good.
 
 % Possbile angles for the stim
-p.trial.stim.orientations = [0]; %[0, 45, 90, 135, 180, 225, 270, 315];
+p.trial.stim.orientations = [0, 45, 90, 135, 180, 225, 270, 315];
 
 p.trial.stim.sFreq = 1;   % WZ: range 1-10 cycles/degree
 
