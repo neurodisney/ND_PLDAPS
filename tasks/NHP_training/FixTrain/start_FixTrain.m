@@ -49,7 +49,7 @@ SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 1;
 
 SS.behavior.fixation.useCalibration = 1;
-SS.behavior.fixation.enableCalib = 0;
+SS.behavior.fixation.enableCalib = 1;
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
