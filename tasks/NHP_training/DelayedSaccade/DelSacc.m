@@ -166,7 +166,7 @@ pds.fixation.move(p)
 %% Stimulus parameters
 
 % Must set spatial frequency before generating the stimulus
-p.trial.stim.grating.sFreq = p.trial.stim.sFreq;
+p.trial.stim.grating.sFreq = datasample(p.trial.stim.sFreq);
 
 % Generate the stimulus
 p.trial.stim.grating1 = pds.stim.Grating(p,p.trial.stim.radius);

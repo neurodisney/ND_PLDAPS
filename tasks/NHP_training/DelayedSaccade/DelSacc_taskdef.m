@@ -83,7 +83,7 @@ p.trial.stim.radius               = 1;  % WZ: what RF/area are we aiming for? 1-
 % Possbile angles for the stim
 p.trial.stim.orientations = [0, 45, 90, 135, 180, 225, 270, 315];
 
-p.trial.stim.sFreq = 1;   % WZ: range 1-10 cycles/degree
+p.trial.stim.sFreq = [1, 2, 4, 8];   % WZ: range 1-10 cycles/degree
 
 
 % ------------------------------------------------------------------------%
