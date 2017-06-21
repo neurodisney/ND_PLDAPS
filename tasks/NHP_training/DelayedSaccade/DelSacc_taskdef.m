@@ -18,9 +18,11 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % ------------------------------------------------------------------------%
 %% Main stuff to change
-p.trial.task.fixLatency       = 0.35; % Time to hold fixation before it counts
+p.trial.task.FixCol = 'black';
+
+p.trial.task.fixLatency       = 0.25; % Time to hold fixation before it counts
 p.trial.reward.initialFixRwd  = 0.1; % Small reward for achieving full fixation
-p.trial.task.stimLatency      = 0.35; % Time from full fixation to stim appearing
+p.trial.task.stimLatency      = 0.25; % Time from full fixation to stim appearing
 
 p.trial.task.centerOffLatency = 0.5; % Time from stim appearing to fixspot disappearing
 p.trial.task.saccadeTimeout   = 2;   % Time allowed to make the saccade to the stim before error
@@ -32,8 +34,8 @@ p.trial.stim.lowContrast      = 0.4; % contrast value when stim.on = 1
 p.trial.stim.highContrast     = 1;   % contrast value when stim.on = 2
 p.trial.stim.tFreq            = 0;   % drift speed, 0 is stationary
 
-p.trial.behavior.fixation.centralFixWin = 2.5;
-p.trial.stim.FixWin           = 4;
+p.trial.behavior.fixation.centralFixWin = 5;
+p.trial.stim.FixWin           = 5;
 
 %% Reward
 
@@ -63,7 +65,7 @@ p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixa
 %% fixation spot parameters
 p.trial.behavior.fixation.FixType = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.behavior.fixation.FixCol  = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
-p.trial.behavior.fixation.FixSz   = 0.1;        % size of the fixation spot
+p.trial.behavior.fixation.FixSz   = 0.2;        % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Stim parameters

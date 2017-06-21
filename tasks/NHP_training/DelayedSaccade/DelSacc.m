@@ -40,7 +40,7 @@ if(isempty(state))
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.
     
-    p.trial.task.Color_list = Shuffle({'magenta'});
+    p.trial.task.Color_list = Shuffle({'black'});
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -166,7 +166,7 @@ pds.fixation.move(p)
 %% Stimulus parameters
 
 % Must set spatial frequency before generating the stimulus
-p.trial.stim.grating.sFreq = datasample(p.trial.stim.sFreq);
+p.trial.stim.grating.sFreq = datasample(p.trial.stim.sFreq,1);
 
 % Generate the stimulus
 p.trial.stim.grating1 = pds.stim.Grating(p,p.trial.stim.radius);
