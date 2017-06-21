@@ -49,7 +49,7 @@ p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixa
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.behavior.fixation.FixType = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.behavior.fixation.FixSz   = 0.2;        % size of the fixation spot
+p.trial.behavior.fixation.FixSz   = 0.25;        % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Trial duration
