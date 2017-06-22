@@ -31,8 +31,41 @@ if(isempty(state))
     
     % --------------------------------------------------------------------%
     %% define ascii output file
+    p = ND_AddAsciiEntry(p, 'Date',       'p.trial.DateStr',                     '%s');
+    p = ND_AddAsciiEntry(p, 'Time',       'p.trial.EV.TaskStartTime',            '%s');
+    p = ND_AddAsciiEntry(p, 'Secs',       'p.trial.EV.DPX_TaskOn',               '%5f');
+    p = ND_AddAsciiEntry(p, 'Subject',    'p.trial.session.subject',             '%s');
+    p = ND_AddAsciiEntry(p, 'Experiment', 'p.trial.session.experimentSetupFile', '%s');
+    p = ND_AddAsciiEntry(p, 'Tcnt',       'p.trial.pldaps.iTrial',               '%d');
+    p = ND_AddAsciiEntry(p, 'Cond',       'p.trial.Nr',                          '%d');
+    p = ND_AddAsciiEntry(p, 'Result',     'p.trial.outcome.CurrOutcome',         '%d');
+    p = ND_AddAsciiEntry(p, 'Outcome',    'p.trial.outcome.CurrOutcomeStr',      '%s');
+    p = ND_AddAsciiEntry(p, 'Good',       'p.trial.task.Good',                   '%d');
+    p = ND_AddAsciiEntry(p, 'StimPosX',   'p.trial.stim.pos(1)',                 '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimPosY',   'p.trial.stim.pos(2)',                 '%.5f');
+    p = ND_AddAsciiEntry(p, 'tFreq',      'p.trial.stim.tFreq',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'sFreq',      'p.trial.stim.sFreq',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'lContr',     'p.trial.stim.lowContrast',            '%.5');
+    p = ND_AddAsciiEntry(p, 'hContr',     'p.trial.stim.highContrast',           '%.5');
+    p = ND_AddAsciiEntry(p, 'StimSize',   '2*p.trial.stim.radius',               '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixSpotOn', ' p.trial.EV.FixOn',                    '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixSpotOff', 'p.trial.EV.FixOff',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimOn',     'p.trial.EV.StimOn',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimOff',    'p.trial.EV.StimOff',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixStart',   'p.trial.EV.FixSpotStart',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixBreak',   'p.trial.EV.FixSpotStop',              '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimFix',    'p.trial.EV.FixTargetStart',           '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimBreak',  'p.trial.EV.FixTargetStop',            '%.5f');
+    p = ND_AddAsciiEntry(p, 'TaskEnd',    'p.trial.EV.TaskEnd',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'ITI',        'p.trial.task.Timing.ITI',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixWin',     'p.trial.behavior.fixation.FixWin',    '%.5f');
+    p = ND_AddAsciiEntry(p, 'InitRwd',    'p.trial.EV.FirstReward',              '%.5f');
+    p = ND_AddAsciiEntry(p, 'Reward',     'p.trial.EV.Reward',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'InitRwdDur', 'p.trial.reward.initialFixRwd * ~isnan(InitRwd)', '%.5f');
+    p = ND_AddAsciiEntry(p, 'RewardDur',  'p.trial.reward.Dur * ~isnan(MainRwd)',           '%.5f');
+
     % call this after ND_InitSession to be sure that output directory exists!
-    Trial2Ascii(p, 'init');
+    ND_Trial2Ascii(p, 'init');
     
     % --------------------------------------------------------------------%
     %% Color definitions of stuff shown during the trial
@@ -123,7 +156,8 @@ else
         case p.trial.pldaps.trialStates.trialCleanUpandSave
             %% trial end
             Task_Finish(p);
-            Trial2Ascii(p, 'save');
+            p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+            ND_Trial2Ascii(p, 'save');
             
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
@@ -541,85 +575,3 @@ else
 end
     
     
-
-% ####################################################################### %
-function Trial2Ascii(p, act)
-%% Save trial progress in an ASCII table
-% 'init' creates the file with a header defining all columns
-% 'save' adds a line with the information for the current trial
-%
-% make sure that number of header names is the same as the number of entries
-% to write, also that the position matches.
-
-switch act
-    case 'init'
-        
-        p.trial.session.asciifmt = 
-        
-        tblptr = fopen(p.trial.session.asciitbl , 'w');
-        
-        fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  iTrial  Cond  Outcome  Good  ',...
-            'StimPosX  StimPosY  tFreq  sFreq  lContr  hContr  radius  ',... 
-            'Tstart  CenterOn  CenterOff  StimOn  StimOff  CenterFix  CenterBreak  StimFix  StimBreak  TaskEnd  ',...
-            'InitRwd  InitRwdDur  MainRwd  MainRwdDur',...
-            'ITI  FixWin\n']);
-        
-        p.trial.session.asciifmtstr = ['%s  %s  %.5f  %s  %s  %d  %d  %s  %d  ',...
-            '%.2f  %.2f  %.1f  %.2f  %.1f  %.1f  %.1f  ',...
-            '%.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  ',...
-            '%.5f  %.2f  %.5f  %.2f  ',...
-            '%.3f  %.2f  \n'];
-        
-        fclose(tblptr);
-        
-    case 'save'
-        % Load proper variables
-        Date = datestr(p.trial.session.initTime,'yyyy_mm_dd');
-        Time = p.trial.EV.TaskStartTime;
-        Secs = p.trial.EV.DPX_TaskOn;
-        Subject = p.trial.EV.DPX_TaskOn;
-        Experiment = p.trial.session.experimentSetupFile;
-        iTrial = p.trial.pldaps.iTrial;
-        Cond =  p.trial.Nr;
-        Outcome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-        Good = p.trial.task.Good;
-        
-        StimPosX = p.trial.stim.pos(1);
-        StimPosY = p.trial.stim.pos(2);
-        tFreq = p.trial.stim.tFreq;
-        sFreq = p.trial.stim.sFreq;
-        lContr = p.trial.stim.lowContrast;
-        hContr = p.trial.stim.highContrast;
-        radius = p.trial.stim.radius;
-        
-        Tstart = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
-        CenterOn = p.trial.EV.FixOn;
-        CenterOff = p.trial.EV.FixOff;
-        StimOn = p.trial.EV.StimOn;
-        StimOff = p.trial.EV.StimOff;
-        CenterFix = p.trial.EV.FixSpotStart;
-        CenterBreak = p.trial.EV.FixSpotStop;
-        StimFix = p.trial.EV.FixTargetStart;
-        StimBreak = p.trial.EV.FixTargetStop;
-        TaskEnd = p.trial.EV.TaskEnd;
-        
-        InitRwd = p.trial.EV.FirstReward;
-        InitRwdDur = p.trial.reward.initialFixRwd * ~isnan(InitRwd); % 0 if not given
-        MainRwd = p.trial.EV.Reward;
-        MainRwdDur = p.trial.reward.Dur * ~isnan(MainRwd); % 0 if not given
-        
-        ITI = p.trial.task.Timing.ITI;
-        FixWin = p.trial.behavior.fixation.FixWin;
-        
-        % Write to dksik
-        tblptr = fopen(p.trial.session.asciitbl, 'a');
-        fmtstr = p.trial.session.asciifmtstr;
-        fprintf(tblptr, fmtstr, ...
-            Date, Time, Secs, Subject, Experiment, iTrial, Cond, Outcome, Good, ...
-            StimPosX, StimPosY, tFreq, sFreq, lContr, hContr, radius, ... 
-            Tstart, CenterOn, CenterOff, StimOn, StimOff, CenterFix, CenterBreak, StimFix, StimBreak, TaskEnd, ...
-            InitRwd, InitRwdDur, MainRwd, MainRwdDur, ...
-            ITI, FixWin);
-        fclose(tblptr);
-end
-

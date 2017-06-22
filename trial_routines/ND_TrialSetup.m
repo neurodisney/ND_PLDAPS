@@ -5,8 +5,6 @@ function p = ND_TrialSetup(p)
 %
 % wolf zinke, Dec. 2016
 
-p.trial.DateStr = datestr(p.trial.session.initTime,'yyyy_mm_dd');
-
 % p.trial.timing.flipTimes = zeros(4,p.trial.pldaps.maxFrames);
 p.trial.timing.flipTimes = zeros(5,p.trial.pldaps.maxFrames);
 
