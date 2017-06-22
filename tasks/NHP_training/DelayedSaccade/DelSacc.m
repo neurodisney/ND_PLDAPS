@@ -51,7 +51,7 @@ if(isempty(state))
         
     % condition 1
     c1.Nr = 1;    
-    c1.nTrials = 1000;
+    c1.nTrials = 20000;
     
     
     % Fill a conditions list with n of each kind of condition sequentially
@@ -562,10 +562,10 @@ switch act
             'ITI  FixWin\n']);
         
         p.trial.session.asciifmtstr = ['%s  %s  %.5f  %s  %s  %d  %d  %s  %d  ',...
-            '%.2f  %.2f  %.1f  %.2f  %.1f  %.1f  %.1f  ',...
-            '%.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  ',...
-            '%.5f  %.2f  %.5f  %.2f  ',...
-            '%.3f  %.2f  \n'];
+                                       '%.2f  %.2f  %.1f  %.2f  %.1f  %.1f  %.1f  ',...
+                                       '%.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  ',...
+                                       '%.5f  %.2f  %.5f  %.2f  ',...
+                                       '%.3f  %.2f  \n'];
         
         fclose(tblptr);
         
@@ -574,7 +574,7 @@ switch act
         Date = datestr(p.trial.session.initTime,'yyyy_mm_dd');
         Time = p.trial.EV.TaskStartTime;
         Secs = p.trial.EV.DPX_TaskOn;
-        Subject = p.trial.EV.DPX_TaskOn;
+        Subject = p.trial.session.subject;
         Experiment = p.trial.session.experimentSetupFile;
         iTrial = p.trial.pldaps.iTrial;
         Cond =  p.trial.Nr;
