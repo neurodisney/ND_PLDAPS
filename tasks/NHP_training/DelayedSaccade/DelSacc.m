@@ -553,6 +553,9 @@ function Trial2Ascii(p, act)
 
 switch act
     case 'init'
+        
+        p.trial.session.asciifmt = 
+        
         tblptr = fopen(p.trial.session.asciitbl , 'w');
         
         fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  iTrial  Cond  Outcome  Good  ',...
