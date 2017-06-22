@@ -21,18 +21,18 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.2;         % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur            = 0.08;
-p.trial.reward.jackpotTime    = 10;
-p.trial.reward.jackpotDur     = 0.4;
-p.trial.reward.nRewards       = 30;
-p.trial.reward.Period         = 0.25;
+p.trial.reward.Dur            = [0.15 0.15 0.15];
+p.trial.reward.jackpotTime    = 3;
+p.trial.reward.jackpotDur     = 0.5;
+p.trial.reward.nRewards       = [1 3 4];
+p.trial.reward.Period         = [0.25 0.20 0.15];
 
-p.trial.reward.MinWaitInitial = 0.30;
-p.trial.reward.MaxWaitInitial = 0.35;
+p.trial.reward.MinWaitInitial = 0.25;
+p.trial.reward.MaxWaitInitial = 0.25;
 
 % ------------------------------------------------------------------------%
 %% Task Timings
-p.trial.task.Timing.WaitFix = 3;    % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 6;    % Time to get a solid fixation before trial ends unsuccessfully
 p.trial.task.Timing.MaxFix = 20;    % Maximum amount of time of fixation
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.5;  % minimum time period [s] between subsequent trials
