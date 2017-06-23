@@ -19,7 +19,7 @@ if (~exist('nrep','var') || isempty(nrep))
 end
 
 if (~exist('gap','var') || isempty(gap))
-    gap = 2; 
+    gap = 1.0; 
 end
 
 
