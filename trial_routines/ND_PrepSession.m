@@ -13,7 +13,7 @@ disp('>>>>  Preparing Sessions <<<<')
 disp('****************************************************************')
 disp('');
 
-p.defaultParameters.DateStr = datestr(p.trial.session.initTime,'yyyy_mm_dd');
+p.defaultParameters.DateStr = datestr(p.defaultParameters.session.initTime,'yyyy_mm_dd');
 
 % --------------------------------------------------------------------%
 %% set output directories and file names

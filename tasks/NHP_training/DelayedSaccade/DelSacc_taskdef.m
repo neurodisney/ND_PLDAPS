@@ -40,7 +40,7 @@ p.trial.stim.FixWin           = 5;
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur = 0.1;         % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 %% Task Timings
