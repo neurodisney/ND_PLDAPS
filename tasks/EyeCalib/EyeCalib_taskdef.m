@@ -21,8 +21,8 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % manual reward from experimenter
 p.trial.reward.ManDur = 0.1;         % reward duration [s] for reward given by keyboard presses
-p.trial.reward.MinWaitInitial = 0.15;
-p.trial.reward.MaxWaitInitial = 0.15;
+p.trial.reward.MinWaitInitial = 0.2;
+p.trial.reward.MaxWaitInitial = 0.2;
 p.trial.reward.Dur            = 0.1;
 p.trial.reward.Period         = 0.5;
 
@@ -49,7 +49,7 @@ p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixa
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.behavior.fixation.FixType = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.behavior.fixation.FixSz   = 0.2;        % size of the fixation spot
+p.trial.behavior.fixation.FixSz   = 0.25;        % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Trial duration

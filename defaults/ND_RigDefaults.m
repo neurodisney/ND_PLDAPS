@@ -24,6 +24,8 @@ SS.datapixx.use                                 = 1;      % enable control of VP
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
 
+SS.datapixx.propixxIntensity                    = 2;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
+
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
 % WZ: Also for more clarification check the PsychDataPixx function in Psychtoolbox-3/Psychtoolbox/PsychHardware/DatapixxToolbox/DatapixxBasic
@@ -48,6 +50,7 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 % ------------------------------------------------------------------------%
 %% Display settings: specify options for the screen.
 SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
+SS.display.breakColor                           = [0, 0, 0];  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 97;    % screen distance to the observer
 SS.display.heightcm                             = 40;     % height of the visible screen in cm
@@ -202,8 +205,8 @@ SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibr
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
 SS.eyeCalib.name                     = 'Default';        % Name of the calibration used. For back referencing in the data later
 SS.eyeCalib.file                     = 'nofile';   % THe file that stores the calibration information
-SS.eyeCalib.defaultGain              = [5.536,-4.802];  % default gain, used if no calibration points are entered
-SS.eyeCalib.defaultOffset            = [0, 0];    % default offset, used if no calibration points are entered
+SS.eyeCalib.defaultGain              = [4.494,-4.407];  % default gain, used if no calibration points are entered
+SS.eyeCalib.defaultOffset            = [-0.479,3.464];    % default offset, used if no calibration points are entered
 SS.eyeCalib.offsetTweak              = [0, 0];    % Additive tweak to the offset parameter  
 SS.eyeCalib.gainTweak                = [0, 0];    % Additive tweak to the gain parameter
 SS.behavior.fixation.calibTweakMode  = 'off';     % Parameter currently being tweaked
@@ -237,6 +240,24 @@ SS.FixState.FixOut      =    0;  % Gaze out of fixation window
 SS.FixState.startingFix = 0.25;  % Gaze has momentarily entered fixation window
 SS.FixState.FixIn       =    1;  % Gaze robustly within fixation window
 SS.FixState.breakingFix = 0.75;  % Gaze has momentarily left fixation window
+
+% ------------------------------------------------------------------------%
+%% Stimuli
+% Sine Wave Grating stimlui
+SS.stim.grating.sFreq    = 3; % Spatial frequency, cycles/deg
+SS.stim.grating.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
+SS.stim.grating.angle    = 0; % Rotation
+SS.stim.grating.contrast = 1;
+SS.stim.grating.res = 1000; % Half the size of the texture matrix
+% contrastMethod:
+% 'raw' - ignore background color and do accurate contrast, 0% contrast will always be 50% grey.
+% 'bgshift' - 0% contrast will be the background color, and accurate at low contrasts, but high contrasts do not extend all the way or are clipped
+% 'bgscale' - 0% contrast will be background color, and 100% contrast will be correct, other contrasts scale from the extremes to the bgcolor.
+% All three of these methods will be correct at 50% grey background color
+SS.stim.grating.contrastMethod = 'raw';
+SS.stim.grating.pos      = [0, 0];
+SS.stim.grating.alpha    = 1; % Fully opaque
+% SS.stim.grating.srcRadius  = 500; % Big source to allow for more resolution
 
 % ------------------------------------------------------------------------%
 %% Joystick
@@ -282,8 +303,8 @@ KbName('UnifyKeyNames');
 SS.key.reward  = KbName('space');    % trigger reward
 SS.key.quit    = KbName('ESCAPE');   % end experiment
 SS.key.pause   = KbName('p');        % pause the experiment
-
-SS.key.CtrJoy  = KbName('j');  % set current joystick position as zero
+SS.key.break   = KbName('b');        % give a break
+SS.key.CtrJoy  = KbName('j');        % set current joystick position as zero
 
 SS.key.FixInc  = KbName('=+'); % increase size of fixation window
 SS.key.FixDec  = KbName('-_'); % decrease size of fixation window

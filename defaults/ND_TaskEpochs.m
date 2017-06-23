@@ -49,6 +49,7 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.epoch.WaitFix     =   31;  % Target not acquired yet, wait for fixation
     p.defaultParameters.epoch.Fixating    =   32;  % Ongoing fixation
     p.defaultParameters.epoch.LostFix     =   33;  % fixation break detected, wait to verify clear break
+    p.defaultParameters.epoch.Saccade     =   34;  % saccade needed
 end
 
 % Wait for intervention from experimenter

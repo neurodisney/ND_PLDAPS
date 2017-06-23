@@ -63,6 +63,9 @@ if(p.trial.behavior.fixation.useCalibration)
 end
 
 % --------------------------------------------------------------------%
+%% format string for ascii table
+p.defaultParameters.session.asciifmtstr  =  p.trial.session.asciifmtstr;
+% --------------------------------------------------------------------%
 %% figure handle for online plots
 if(p.trial.plot.do_online)
     p.defaultParameters.plot.fig = p.trial.plot.fig;

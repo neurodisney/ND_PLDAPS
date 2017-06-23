@@ -120,6 +120,7 @@ if p.trial.behavior.fixation.use && p.trial.behavior.fixation.on
 
                 elseif(p.trial.eyeAmp <= p.trial.behavior.fixation.FixWin/2)
                     p.trial.FixState.Current = p.trial.FixState.FixIn;
+                    p.trial.EV.FixStart = p.trial.CurTime;
 
                 else
                     p.trial.FixState.Current = NaN;

@@ -23,6 +23,7 @@ p.defaultParameters.outcome.Miss              =   3007;  % no response at a reas
 p.defaultParameters.outcome.NoStart           =   3004;  % trial not started
 p.defaultParameters.outcome.PrematStart       =   3008;  % trial start not too early as response to cue
 p.defaultParameters.outcome.TaskStart         =   3009;  % trial not started
+p.defaultParameters.outcome.Break             =   9901;  % A break was triggered by the experimenter
 
 % joystick related
 if(p.defaultParameters.behavior.joystick.use)
@@ -43,7 +44,17 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.outcome.FIX_BRK_CUE   =   3001; 
     p.defaultParameters.outcome.FIX_BRK_STIM  =   3002;
     p.defaultParameters.outcome.FIX_BRK_SPEED =   3003;
+    
 end
+
+% Saccade outcomes
+p.defaultParameters.outcome.goodSaccade       = 4001;
+p.defaultParameters.outcome.noSaccade         = 4002;     % Saccade was supposed to happen but none did
+p.defaultParameters.outcome.earlySaccade      = 4003;
+p.defaultParameters.outcome.lateSaccade       = 4004;     % Saccade still occured, but after it was supposed to.
+p.defaultParameters.outcome.wrongSaccade      = 4005;  % saccade to wrong target or in wrong direction
+p.defaultParameters.outcome.glance            = 4006;  % saccade made to target, but not held for long enough
+
 
 %% get a string representation of the outcome
 p.defaultParameters.outcome.codenames = fieldnames(p.defaultParameters.outcome);

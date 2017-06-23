@@ -17,6 +17,26 @@ function p = DelSacc_taskdef(p)
 p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % ------------------------------------------------------------------------%
+%% Main stuff to change
+p.trial.task.FixCol = 'black';
+
+p.trial.task.fixLatency       = 0.25; % Time to hold fixation before it counts
+p.trial.reward.initialFixRwd  = 0.1; % Small reward for achieving full fixation
+p.trial.task.stimLatency      = 0.25; % Time from full fixation to stim appearing
+
+p.trial.task.centerOffLatency = 0.5; % Time from stim appearing to fixspot disappearing
+p.trial.task.saccadeTimeout   = 2;   % Time allowed to make the saccade to the stim before error
+p.trial.task.minTargetFixTime = 0.3; % Must fixate on stim for at least this time before it counts
+
+p.trial.reward.Dur            = 0.4; % Reward for completing the task successfully
+
+p.trial.stim.lowContrast      = 0.4; % contrast value when stim.on = 1
+p.trial.stim.highContrast     = 1;   % contrast value when stim.on = 2
+p.trial.stim.tFreq            = 0;   % drift speed, 0 is stationary
+
+p.trial.behavior.fixation.centralFixWin = 5;
+p.trial.stim.FixWin           = 5;
+
 %% Reward
 
 % manual reward from experimenter
@@ -31,7 +51,7 @@ p.trial.task.Timing.MinITI  = 1.5;  % minimum time period [s] between subsequent
 p.trial.task.Timing.MaxITI  = 3;    % maximum time period [s] between subsequent trials
 
 % penalties
-p.trial.task.Timing.TimeOut =  2;   % Time [s] out for incorrect responses
+p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
@@ -45,21 +65,33 @@ p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixa
 %% fixation spot parameters
 p.trial.behavior.fixation.FixType = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.behavior.fixation.FixCol  = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
-p.trial.behavior.fixation.FixSz   = 0.1;        % size of the fixation spot
+p.trial.behavior.fixation.FixSz   = 0.2;        % size of the fixation spot
 
+% ------------------------------------------------------------------------%
 %% Stim parameters
 % Eccentricity in degrees from origin
 p.trial.stim.eccentricity       = 4;     
 
 % Locations of the stimuli (will scale to the proper eccentricity in the task)
-% Right now use the 4 diagonal quadrants and 
-p.trial.stim.locations          = {[1  , 1], ...
+% Right now use the 4 diagonal quadrants and the right cardinal.
+p.trial.stim.locations          = {[1  , 0], ...
+                                   [1  , 1], ...
                                    [-1 , 1], ...
                                    [-1 ,-1], ...
-                                   [1  ,-1], ...
-                                   [1  , 0]};
+                                   [1  ,-1]};
 % diameter of the stim
-p.trial.stim.size               = 0.75;
+p.trial.stim.radius               = 1;  % WZ: what RF/area are we aiming for? 1-2 dva sshould be good.
+
+% Possbile angles for the stim
+p.trial.stim.orientations = [0, 45, 90, 135, 180, 225, 270, 315];
+
+p.trial.stim.sFreq = [1, 2, 4, 8];   % WZ: range 1-10 cycles/degree
+
+
+% ------------------------------------------------------------------------%
+%% Task parameters
+% Max distance increase away from stim before considered a wrong saccade
+p.trial.behavior.fixation.distInc = 1.5;
 
 % ------------------------------------------------------------------------%
 %% Trial duration

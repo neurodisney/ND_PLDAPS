@@ -11,8 +11,9 @@ function p = DelSacc_plots(p, offln)
 resp_bin = 25;
 smPT = 50;
 
-hit_col   = [0, 0.65, 0];
-early_col = [0.65, 0, 0];
+fix_col   = [0, 0.65, 0];
+jkpt_col  = [0, 0, 0.65];
+break_col = [0.65, 0, 0];
 %late_col  = [0, 0, 0.65];
 
 fig_sz = [25, 25, 1800, 980];
@@ -57,6 +58,7 @@ p.plotdata.Outcome(  Ntrials, 1) = p.trial.outcome.CurrOutcome;
 p.plotdata.TaskStart(Ntrials, 1) = p.trial.EV.TaskStart;
 p.plotdata.FixStart( Ntrials, 1) = p.trial.EV.FixStart;
 p.plotdata.FixBreak( Ntrials, 1) = p.trial.EV.FixBreak;
+p.plotdata.TaskEnd(  Ntrials, 1) = p.trial.EV.TaskEnd;
 p.plotdata.CurrRew(  Ntrials, 1) = p.trial.task.CurRewDelay;
 p.plotdata.RewCnt(   Ntrials, 1) = p.trial.reward.iReward;
 
@@ -65,12 +67,20 @@ Results   = p.plotdata.Outcome;
 TaskStart = p.plotdata.TaskStart;
 FixStart  = p.plotdata.FixStart;
 FixBreak  = p.plotdata.FixBreak;
+TaskEnd   = p.plotdata.TaskEnd;
 CurrRew   = p.plotdata.CurrRew;
 RewCnt    = p.plotdata.RewCnt;
 
 fp = Results ~= p.trial.outcome.NoFix;
 FixRT  = (FixStart - TaskStart) * 1000;
-FixDur = (FixBreak - FixStart);
+
+% Fixation either ends with a FixBreak or Jackpot (where gaze is held
+% sufficiently long)
+FixEnd = FixBreak;
+jackpots = Results == p.trial.outcome.Jackpot;
+FixEnd(jackpots) = TaskEnd(jackpots);
+
+FixDur = FixEnd - FixStart;
 
 try
     if(sum(fp) > 4)
@@ -86,6 +96,12 @@ try
         medDur  = nanmedian(Dur);
         FrstRew = CurrRew(fp);
         ITI     = ITI(fp);
+        
+        % Determine the indices where the various outcomes occured
+        OC      = Results(fp);
+        iBreak  = OC == p.trial.outcome.FixBreak;
+        iFix    = OC == p.trial.outcome.FullFixation;
+        iJkpt   = OC == p.trial.outcome.Jackpot;
         
         %% get plots
         % time to start fixatio
@@ -143,9 +159,10 @@ try
        
         % fixation duration depending on initial reward time
         subplot(3,5,3);
-        plot(FrstRew(RewCnt(fp)>0),  Dur(RewCnt(fp)>0),  '.', 'color', hit_col);
+        plot(FrstRew(iFix),  Dur(iFix),  '.', 'color', fix_col);
         hold on;
-        plot(FrstRew(RewCnt(fp)==0), Dur(RewCnt(fp)==0), '.', 'color', early_col);
+        plot(FrstRew(iBreak), Dur(iBreak), '.', 'color', break_col);
+        plot(FrstRew(iJkpt), Dur(iJkpt), '.', 'color', jkpt_col);
         
         title('fix duration depending on first reward')
         xlabel('time of first reward [ms]');
@@ -158,9 +175,10 @@ try
         
         % fixation duration depending on initial reward time
         subplot(3,5,4);
-        plot(ITI(RewCnt(fp) >0), Dur(RewCnt(fp) >0), '.', 'color', hit_col);
+        plot(ITI(iFix), Dur(iFix), '.', 'color', fix_col);
         hold on;
-        plot(ITI(RewCnt(fp)==0), Dur(RewCnt(fp)==0), '.', 'color', early_col);
+        plot(ITI(iBreak), Dur(iBreak), '.', 'color', break_col);
+        plot(ITI(iJkpt), Dur(iJkpt), '.', 'color', jkpt_col);
         
         title('RT depending on ITI')
         ylabel('RT [ms]');
@@ -174,11 +192,13 @@ try
         % fixation durations over session time
         subplot(3,1,2);
         
-        plot(Tm(RewCnt(fp)>0),  RT(RewCnt(fp)>0),  'o', 'MarkerSize', 6, ...
-            'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
+        plot(Tm(iFix),  RT(iFix),  'o', 'MarkerSize', 6, ...
+            'MarkerEdgeColor', fix_col,'MarkerFaceColor',fix_col)
         hold on;
-        plot(Tm(RewCnt(fp)==0), RT(RewCnt(fp)==0), 'o', 'MarkerSize', 6, ...
-            'MarkerEdgeColor', early_col,'MarkerFaceColor',early_col)
+        plot(Tm(iBreak), RT(iBreak), 'o', 'MarkerSize', 6, ...
+            'MarkerEdgeColor', break_col,'MarkerFaceColor',break_col)
+        plot(Tm(iJkpt), RT(iJkpt), 'o', 'MarkerSize', 6, ...
+            'MarkerEdgeColor', break_col,'MarkerFaceColor',jkpt_col)
         
         if(Ntrials > 4)
             X = [ones(length(Tm),1) Tm(:)];
@@ -203,11 +223,13 @@ try
         % fixation durations over session time
         subplot(3,1,3);
         
-        plot(Tm(RewCnt(fp)>0),  Dur(RewCnt(fp)>0),  'o', 'MarkerSize', 6, ...
-            'MarkerEdgeColor', hit_col,'MarkerFaceColor',hit_col)
+        plot(Tm(iFix),  Dur(iFix),  'o', 'MarkerSize', 6, ...
+            'MarkerEdgeColor', fix_col,'MarkerFaceColor',fix_col)
         hold on;
-        plot(Tm(RewCnt(fp)==0), Dur(RewCnt(fp)==0), 'o', 'MarkerSize', 6, ...
-            'MarkerEdgeColor', early_col,'MarkerFaceColor',early_col)
+        plot(Tm(iBreak), Dur(iBreak), 'o', 'MarkerSize', 6, ...
+            'MarkerEdgeColor', break_col,'MarkerFaceColor',break_col)
+        plot(Tm(iJkpt), Dur(iJkpt), 'o', 'MarkerSize', 6, ...
+            'MarkerEdgeColor', break_col,'MarkerFaceColor',jkpt_col)
         
         if(Ntrials > 4)
             vpos = isfinite(Dur);

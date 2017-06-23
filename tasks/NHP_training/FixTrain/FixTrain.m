@@ -40,7 +40,7 @@ if(isempty(state))
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.
 
-    p.trial.task.Color_list = Shuffle({'white', 'red', 'green', 'blue', 'orange', 'yellow', 'cyan', 'magenta'});  
+    p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});  
     
     % --------------------------------------------------------------------%
     %% Enable random positions
@@ -375,12 +375,12 @@ function TaskDesign(p)
                 p.trial.behavior.fixation.on = 0;
 
                 % Play jackpot sound
-                %pds.audio.playDP(p,'jackpot','left')
+                pds.audio.playDP(p,'jackpot','left')
             end
         
         % Fixation Break, end the trial        
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
-            %pds.audio.playDP(p,'breakfix','left');
+            pds.audio.playDP(p,'breakfix','left');
             p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
             p.trial.behavior.fixation.on = 0;
                                  

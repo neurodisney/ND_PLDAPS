@@ -30,12 +30,22 @@ function p = openScreen(p)
 %                           moved default parameters to the
 %                           pldapsClassDefaultParameters
 
-
 InitializeMatlabOpenGL(0,0); %second 0: debug level =0 for speed
 % prevent splash screen
 Screen('Preference','VisualDebugLevel',3);
 % Initiate Psych Imaging screen configs
 PsychImaging('PrepareConfiguration');
+
+%% Change the brightness of the propixx light
+if ~isempty(p.defaultParameters.datapixx.propixxIntensity)
+    disp('****************************************************************')
+    disp('****************************************************************')
+    disp('Changing Propixx Projector Intensity')
+    disp('****************************************************************')
+
+    command = ['./propixx-brightness.expect ', mat2str(p.trial.datapixx.propixxIntensity)];
+    [~,~] = system(command);
+end
 
 %% Setup Psych Imaging
 % Add appropriate tasks to psych imaging pipeline

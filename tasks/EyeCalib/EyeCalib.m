@@ -34,7 +34,7 @@ if(isempty(state))
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.  
     
-    p.trial.behavior.fixation.FixCol = 'lBlue';
+    p.trial.behavior.fixation.FixCol = 'white';
     
     % --------------------------------------------------------------------%
     %% Enable random positions
@@ -131,8 +131,8 @@ function TaskSetUp(p)
     if(p.trial.task.RandomPos == 1)
         p.trial.behavior.fixation.fixPos = p.trial.eyeCalib.Grid_XY(randi(size(p.trial.eyeCalib.Grid_XY,1)), :);
         
-         Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
-         Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
+         Xpos = round((rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1));
+         Ypos = round((rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2));
          p.trial.behavior.fixation.fixPos = [Xpos, Ypos];
     end
     pds.fixation.move(p);

@@ -24,7 +24,8 @@ p.defaultParameters.EV.TaskStart   = NaN; % actual task start after animal got r
 p.defaultParameters.EV.TaskEnd     = NaN; % actual task end
 p.defaultParameters.EV.Initiated   = NaN; % animal intiated the task
 p.defaultParameters.EV.StimOn      = NaN; % Stimulus Onset 
-p.defaultParameters.EV.StimOff     = NaN; % Stimulus Offset 
+p.defaultParameters.EV.StimOff     = NaN; % Stimulus Offset
+p.defaultParameters.EV.StimChange  = NaN; % Stimulus Change
 p.defaultParameters.EV.FixOn       = NaN; % Onset of fixation spot
 p.defaultParameters.EV.FixOff      = NaN; % Offset of fixation spot
 p.defaultParameters.EV.PDOn        = NaN; % Photo diode onset
@@ -38,9 +39,12 @@ p.defaultParameters.EV.DPX_TaskOn  = NaN; % Synch time with datapixx for task on
 p.defaultParameters.EV.DPX_TaskOff = NaN; % Synch time with datapixx for task off
 p.defaultParameters.EV.TDT_TaskOn  = NaN; % Synch time with TDT for task on
 p.defaultParameters.EV.TDT_TaskOff = NaN; % Synch time with TDT for task off
+p.defaultParameters.EV.epochEnd    = NaN; % Ending time of the last epoch
 
-p.defaultParameters.EV.Pause       = NaN;
-p.defaultParameters.EV.Unpause     = NaN;
+% p.defaultParameters.EV.Pause       = NaN;  % WZ: These events should be within trials. Pauses and breaks are between trials. Might cause conflicts...
+% p.defaultParameters.EV.Unpause     = NaN;
+% p.defaultParameters.EV.Break       = NaN;
+% p.defaultParameters.EV.Unbreak     = NaN;
 
 % if joystick is used for behavior
 if(p.defaultParameters.behavior.joystick.use)
@@ -55,6 +59,14 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
     p.defaultParameters.EV.FixLeave   = NaN; % time when eyes leave fixation window
     p.defaultParameters.EV.Saccade    = NaN; % response saccade detected
+    
+    % Fixspot
+    p.defaultParameters.EV.FixSpotStart = NaN; % Start of fixation on central fix spot
+    p.defaultParameters.EV.FixSpotStop  = NaN; % Stop of fixation on central fix spot
+    
+    % Target
+    p.defaultParameters.EV.FixTargetStart = NaN; % Start of fixation on target
+    p.defaultParameters.EV.FixTargetStop  = NaN; % Stop of fixation on target
 end
 
 % ------------------------------------------------------------------------%
@@ -70,7 +82,8 @@ p.defaultParameters.event.TC_ERR        = 3010; % trial complete, incorrect
 p.defaultParameters.event.NO_TC         = 3011; % trial incomplete
 p.defaultParameters.event.PAUSE         = 3999; % Pause the experiment
 p.defaultParameters.event.UNPAUSE       = 3989; % Unpause the experiment
-
+p.defaultParameters.event.BREAK         = 3899; % Pause the experiment
+p.defaultParameters.event.UNBREAK       = 3889; % Unpause the experiment
 
 % response related
 p.defaultParameters.event.RESP_CORR     = 1110; % correct response occurred

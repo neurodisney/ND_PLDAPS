@@ -27,7 +27,7 @@ p.trial.reward.jackpotDur     = 0.4;
 p.trial.reward.nRewards       = 30;
 p.trial.reward.Period         = 0.25;
 
-p.trial.reward.MinWaitInitial = 0.25;
+p.trial.reward.MinWaitInitial = 0.30;
 p.trial.reward.MaxWaitInitial = 0.35;
 
 % ------------------------------------------------------------------------%
@@ -39,7 +39,7 @@ p.trial.task.Timing.MinITI  = 1.5;  % minimum time period [s] between subsequent
 p.trial.task.Timing.MaxITI  = 3;    % maximum time period [s] between subsequent trials
 
 % penalties
-p.trial.task.Timing.TimeOut =  2.5;   % Time [s] out for incorrect responses
+p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
