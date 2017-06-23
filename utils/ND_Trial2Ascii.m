@@ -36,10 +36,10 @@ switch act
         Ndt = size(p.trial.session.asciifmt, 1);
         
         if(Ndt > 1)
-            LNstr = Var2Str(p.trial.session.asciifmt{1,2}, p.trial.session.asciifmt{1,3});
+            LNstr = sprintf(p.trial.session.asciifmt{1,3}, eval(p.trial.session.asciifmt{1,2}));
 
             for(i=2:Ndt)
-                LNstr = sprintf('%s  %s', LNstr, Var2Str(p.trial.session.asciifmt{i,2}, p.trial.session.asciifmt{i,3}));
+                LNstr = sprintf(['%s  ', p.trial.session.asciifmt{i,3}] , LNstr, eval(p.trial.session.asciifmt{i,2}));
             end
             
             tblptr = fopen(p.trial.session.asciitbl , 'a');

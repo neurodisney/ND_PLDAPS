@@ -64,8 +64,8 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'FixWin',     'p.trial.behavior.fixation.FixWin',    '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwd',    'p.trial.EV.FirstReward',              '%.5f');
     p = ND_AddAsciiEntry(p, 'Reward',     'p.trial.EV.Reward',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'InitRwdDur', 'p.trial.reward.initialFixRwd * ~isnan(InitRwd)', '%.5f');
-    p = ND_AddAsciiEntry(p, 'RewardDur',  'p.trial.reward.Dur * ~isnan(MainRwd)',           '%.5f');
+    p = ND_AddAsciiEntry(p, 'InitRwdDur', 'p.trial.reward.initialFixRwd * ~isnan(p.trial.EV.FirstReward)', '%.5f');
+    p = ND_AddAsciiEntry(p, 'RewardDur',  'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
 
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
