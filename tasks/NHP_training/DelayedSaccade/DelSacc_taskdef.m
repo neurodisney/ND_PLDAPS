@@ -92,6 +92,9 @@ p.trial.stim.sFreq = [1, 2, 4, 8];   % WZ: range 1-10 cycles/degree
 %% Task parameters
 % Max distance increase away from stim before considered a wrong saccade
 p.trial.behavior.fixation.distInc = 1.5;
+% Max angle away from stim before premature saccade is counted instead as a
+% fix break.
+p.trial.behavior.saccade.earlyAngle = 30;
 
 % ------------------------------------------------------------------------%
 %% Trial duration

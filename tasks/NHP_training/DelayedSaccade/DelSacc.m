@@ -350,7 +350,18 @@ switch p.trial.CurrEpoch
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
             pds.audio.playDP(p,'breakfix','left');
             
-            % If the stim is on when breakfix occurs, saccade is precocious
+            % Check where the eye position is, if the break occured in the general direction of the stim,
+            % Mark the trial as 'Early'. Otherwise mark it as Breakfix
+            breakAngle = ATand2(p.trial.eyeY,p.trial.eyeX);
+            stimAngle = ATand2(p.trial.stim.grating1.pos(2), p.trial.stim.grating1.pos(1));
+            dtheta = abs(breakAngle - stimAngle);
+            % See if dtheta is below a certain value (or that close to 360)
+            if dtheta < p.trial.behavior.saccade.earlyAngle || dtheta > (360 - p.trial.behavior.saccade.earlyAngle)
+                p.trial.outcome.CurrOutcome = p.trial.outcome.earlySaccade;
+            else
+                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+            end
+            
             p.trial.outcome.CurrOutcome = p.trial.outcome.earlySaccade;
             
             % Record time
