@@ -24,8 +24,8 @@ p.trial.task.fixLatency       = 0.25; % Time to hold fixation before it counts
 p.trial.reward.initialFixRwd  = 0.1; % Small reward for achieving full fixation
 p.trial.task.stimLatency      = 0.25; % Time from full fixation to stim appearing
 
-p.trial.task.centerOffLatency = 0.5; % Time from stim appearing to fixspot disappearing
-p.trial.task.saccadeTimeout   = 2;   % Time allowed to make the saccade to the stim before error
+p.trial.task.centerOffLatency = ND_GetITI(0.4,1.0); % Time from stim appearing to fixspot disappearing
+p.trial.task.saccadeTimeout   = 1;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minTargetFixTime = 0.3; % Must fixate on stim for at least this time before it counts
 
 p.trial.reward.Dur            = 0.4; % Reward for completing the task successfully
@@ -34,7 +34,7 @@ p.trial.stim.lowContrast      = 0.4; % contrast value when stim.on = 1
 p.trial.stim.highContrast     = 1;   % contrast value when stim.on = 2
 p.trial.stim.tFreq            = 0;   % drift speed, 0 is stationary
 
-p.trial.behavior.fixation.centralFixWin = 5;
+p.trial.behavior.fixation.centralFixWin = 3.5;
 p.trial.stim.FixWin           = 5;
 
 %% Reward
@@ -75,6 +75,7 @@ p.trial.stim.eccentricity       = 4;
 % Locations of the stimuli (will scale to the proper eccentricity in the task)
 % Right now use the 4 diagonal quadrants and the right cardinal.
 p.trial.stim.locations          = {[1  , 0], ...
+                                   [-1 , 0], ...
                                    [1  , 1], ...
                                    [-1 , 1], ...
                                    [-1 ,-1], ...
@@ -83,11 +84,11 @@ p.trial.stim.locations          = {[1  , 0], ...
 p.trial.stim.radius               = 1;  % WZ: what RF/area are we aiming for? 1-2 dva sshould be good.
 
 % Possbile angles for the stim
-p.trial.stim.orientations = [0, 45, 90, 135, 180, 225, 270, 315];
+p.trial.stim.orientations = [45]; % [0, 45, 90, 135, 180, 225, 270, 315];
 
-p.trial.stim.sFreq = [1, 2, 4, 8];   % WZ: range 1-10 cycles/degree
+p.trial.stim.sFreq = [4]; %[1, 2, 4, 8];   % WZ: range 1-10 cycles/degree
 
-
+p.trial.stim.grating.res = 300;
 % ------------------------------------------------------------------------%
 %% Task parameters
 % Max distance increase away from stim before considered a wrong saccade

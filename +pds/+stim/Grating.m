@@ -3,15 +3,14 @@ classdef Grating
 % A class for creating and drawing procedurally generated sine wave gratings
 % within the
 
-% Variables that can be changed about the sine wave grating after it has been created:
-
+%%% Variables that can be changed about the sine wave grating after it has been created:
 % Temporal Frequency
 % Orientation
-% Contrast
 % Position
 % Alpha
 %
-% Variables that can't be changed (for now)
+%%% Variables that can't be changed (for now)
+% Contrast
 % Spatial Frequency
 % radius
 % Contrast Method
@@ -21,7 +20,6 @@ classdef Grating
 properties
     tFreq
     angle
-    contrast
     pos
     alpha
 end
@@ -33,44 +31,88 @@ properties (SetAccess = private)
     bgOffset
     gratingRect
     res
+    contrast
 end
 
 properties (SetAccess = private, Hidden = true)
     genTime %When the grating was created (to calculate drifting phase)
     texture % The actual texture used for drawing
     pcmult
+    srcRect
 end
 
 methods
     % The constructor method
-    function obj = Grating(p, radius)
-        % Load variables
-        % Changeable
-        obj.tFreq = p.trial.stim.grating.tFreq;
-        obj.angle = p.trial.stim.grating.angle;
-        obj.contrast = p.trial.stim.grating.contrast;
-        obj.pos = p.trial.stim.grating.pos;
-        obj.alpha = p.trial.stim.grating.alpha;
+    function obj = Grating(p, radius, contrast, pos, angle, sFreq, tFreq, res, alpha)
         
-        % Unchangeable after loading
-        obj.sFreq = p.trial.stim.grating.sFreq;
-        obj.contrastMethod = p.trial.stim.grating.contrastMethod;        
+        %% Load variables
+        if nargin < 9 || isempty(alpha)
+            alpha = p.trial.stim.grating.alpha;
+        end
+        obj.alpha = alpha;
+        
+        if nargin < 8 || isempty(res)
+            res = p.trial.stim.grating.res;
+        end
+        obj.res = res;
+        
+        if nargin < 7 || isempty(tFreq)
+            tFreq = p.trial.stim.grating.tFreq;
+        end
+        obj.tFreq = tFreq;
+        
+        if nargin < 6 || isempty(sFreq)
+            sFreq = p.trial.stim.grating.sFreq;
+        end
+        obj.sFreq = sFreq;
+        
+        if nargin < 5 || isempty(angle)
+            angle = p.trial.stim.grating.angle;
+        end
+        obj.angle = angle;
+        
+        if nargin < 4 || isempty(pos)
+            pos = p.trial.stim.grating.pos;
+        end
+        obj.pos = pos;
+        
+        if nargin < 3 || isempty(contrast)
+            contrast = p.trial.stim.grating.contrast;
+        end
+        obj.contrast = contrast;
+        
+        if nargin < 2 || isempty(radius)
+            radius = p.trial.stim.grating.radius;
+        end
         obj.radius = radius;
+        
+       
+        % Unchangeable after loading
+        obj.contrastMethod = p.trial.stim.grating.contrastMethod;
         obj.genTime = p.trial.CurTime;
-        obj.res = p.trial.stim.grating.res;
+        obj.srcRect = [0, 0, 2*obj.res + 1, 2*obj.res + 1];
         
         switch obj.contrastMethod
             case 'raw'
+                % Always centered at 0.5, will not match bg at low contrasts
                 obj.bgOffset = 0.5;
-                obj.pcmult = 0.5;
+                obj.pcmult = obj.contrast / 2;
                 
             case 'bgshift'
+                % Will match bg at low contrasts, but not be correct at high contrasts.
                 obj.bgOffset = p.trial.display.bgColor(1);
-                obj.pcmult = 0.5;
+                obj.pcmult = obj.contrast / 2;
                 
-            case 'bgscale'
-                obj.bgOffset = p.trial.display.bgColor(1);
-                obj.pcmult = 0.5 + abs(obj.bgOffset(1) - 0.5);
+            case 'balanced'
+                % Probably the best bet. This will be background at 0 contrast, and white - black = contrast
+                bg = p.trial.display.bgColor(1);
+                bgdiff = 0.5 - bg; % goes from 0 to (+/-)0.5
+                if obj.contrast/2 > (0.5 - abs(bgdiff))
+                    obj.bgOffset = round(bg) + sign(bgdiff) * contrast / 2;
+                else
+                    obj.bgOffset = bg;
+                end
+                obj.pcmult = obj.contrast/2;
                 
             otherwise
                 error('Bad Contrast Method');
@@ -85,10 +127,10 @@ methods
         sFreqTex = obj.sFreq * obj.radius / obj.res;
         
         % Make sure that at least one complete cycle is created in the texture
-        %q = ceil(1/sFreqTex);
+        q = ceil(1/sFreqTex);
         
         % Create the texture matrix
-        x = meshgrid(-obj.res:obj.res, -obj.res:obj.res);
+        x = meshgrid(-obj.res:obj.res + q, -obj.res:obj.res);
         grating = obj.bgOffset + obj.pcmult * cos(sFreqTex*2*pi*x); 
         
         % Create a circular aperture using the separate alpha-channel:
@@ -118,8 +160,8 @@ methods
         filterMode = [];
         
         % Draw the texture
-        Screen('DrawTexture', window, obj.texture, [], destRect, obj.angle, filterMode, ...
-            obj.contrast, [], [], [], [0, phaseOffset, 0, 0]);
+        Screen('DrawTexture', window, obj.texture, obj.srcRect, destRect, obj.angle, filterMode, ...
+            obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
         
     end
     
