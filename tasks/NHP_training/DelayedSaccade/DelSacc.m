@@ -60,6 +60,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'StimBreak',  'p.trial.EV.FixTargetStop',            '%.5f');
     p = ND_AddAsciiEntry(p, 'TaskEnd',    'p.trial.EV.TaskEnd',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'ITI',        'p.trial.task.Timing.ITI',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'GoLatency',  'p.trial.task.centerOffLatency',       '%.5f');
     
     p = ND_AddAsciiEntry(p, 'FixWin',     'p.trial.behavior.fixation.FixWin',    '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwd',    'p.trial.EV.FirstReward',              '%.5f');
