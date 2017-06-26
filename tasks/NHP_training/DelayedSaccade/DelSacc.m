@@ -182,7 +182,7 @@ p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
 p.trial.behavior.fixation.refDist = NaN;
 
 % Outcome if no fixation occurs at all during the trial
-p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
+p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 
 p.trial.task.Good                = 0;
 p.trial.behavior.fixation.GotFix = 0;
@@ -259,7 +259,7 @@ switch p.trial.CurrEpoch
             % Fixation has occured
             if p.trial.FixState.Current == p.trial.FixState.FixIn
                 p.trial.EV.FixSpotStart = p.trial.EV.FixStart;
-                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; %Will become FullFixation upon holding long enough
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Abort; %Will become FullFixation upon holding long enough
                 p.trial.behavior.fixation.GotFix = 1;
                 
                 % Time to fixate has expired
@@ -286,8 +286,6 @@ switch p.trial.CurrEpoch
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
             elseif (p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.fixLatency) && p.trial.FixState.Current == p.trial.FixState.FixIn
-                
-                p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
                 
                 % Reward the monkey if there is initial reward for this trial
                 if p.trial.reward.initialFixRwd > 0
@@ -350,19 +348,24 @@ switch p.trial.CurrEpoch
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
             pds.audio.playDP(p,'breakfix','left');
             
-            % Check where the eye position is, if the break occured in the general direction of the stim,
-            % Mark the trial as 'Early'. Otherwise mark it as Breakfix
-            breakAngle = ATand2(p.trial.eyeY,p.trial.eyeX);
-            stimAngle = ATand2(p.trial.stim.grating1.pos(2), p.trial.stim.grating1.pos(1));
-            dtheta = abs(breakAngle - stimAngle);
-            % See if dtheta is below a certain value (or that close to 360)
-            if dtheta < p.trial.behavior.saccade.earlyAngle || dtheta > (360 - p.trial.behavior.saccade.earlyAngle)
-                p.trial.outcome.CurrOutcome = p.trial.outcome.earlySaccade;
+            % If the stim is on, determine whether it is an early saccade or a breakfix
+            if p.trial.stim.on
+            
+                % Check where the eye position is, if the break occured in the general direction of the stim,
+                % Mark the trial as 'Early'. Otherwise mark it as Breakfix
+                breakAngle = ATand2(p.trial.eyeY,p.trial.eyeX);
+                stimAngle = ATand2(p.trial.stim.grating1.pos(2), p.trial.stim.grating1.pos(1));
+                dtheta = abs(breakAngle - stimAngle);
+                % See if dtheta is below a certain value (or that close to 360)
+                if dtheta < p.trial.behavior.saccade.earlyAngle || dtheta > (360 - p.trial.behavior.saccade.earlyAngle)
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                else
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+                end
+            
             else
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
             end
-            
-            p.trial.outcome.CurrOutcome = p.trial.outcome.earlySaccade;
             
             % Record time
             p.trial.EV.FixSpotStop = p.trial.EV.FixBreak;
@@ -392,7 +395,7 @@ switch p.trial.CurrEpoch
             elseif p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
                 % If the distance from the stim increases, a wrong saccade has been made
 
-                p.trial.outcome.CurrOutcome = p.trial.outcome.wrongSaccade;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.False;
 
                 % Turn the stim off and fixation off
                 stim(p,0)
@@ -409,7 +412,7 @@ switch p.trial.CurrEpoch
             elseif p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout
                 % If no saccade has been made before the time runs out, end the trial
 
-                p.trial.outcome.CurrOutcome = p.trial.outcome.noSaccade;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
 
                 % Turn the stim off and fixation off
                 stim(p,0);
@@ -428,7 +431,7 @@ switch p.trial.CurrEpoch
             % Wait for animal to hold fixation for the required length of time
             % then give reward and mark trial good
             if p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.minTargetFixTime
-                p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
                 
                 pds.reward.give(p, p.trial.reward.Dur);
                 pds.audio.playDP(p,'reward','left');
@@ -448,7 +451,7 @@ switch p.trial.CurrEpoch
 
             elseif p.trial.FixState.Current == p.trial.FixState.FixOut
                 % If animal's gaze leaves window, end the task and do not give reward
-                p.trial.outcome.CurrOutcome = p.trial.outcome.glance;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
 
                 % Turn the stim off
                 stim(p,0);
@@ -481,12 +484,10 @@ switch p.trial.CurrEpoch
             pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
         end
         
-        % determine ITI
-        switch p.trial.outcome.CurrOutcome
-            
-            case ~p.trial.task.Good
-                % Timeout if task not performed correctly
-                p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
+        % determine ITI            
+        if ~p.trial.task.Good
+            % Timeout if task not performed correctly
+            p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
         end
         
         p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
