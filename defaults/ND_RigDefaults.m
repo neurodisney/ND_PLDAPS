@@ -205,8 +205,8 @@ SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibr
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
 SS.eyeCalib.name                     = 'Default';        % Name of the calibration used. For back referencing in the data later
 SS.eyeCalib.file                     = 'nofile';   % THe file that stores the calibration information
-SS.eyeCalib.defaultGain              = [4.494,-4.407];  % default gain, used if no calibration points are entered
-SS.eyeCalib.defaultOffset            = [-0.479,3.464];    % default offset, used if no calibration points are entered
+SS.eyeCalib.defaultGain              = [4.4281 -4.3813];  % default gain, used if no calibration points are entered
+SS.eyeCalib.defaultOffset            = [-2.3334 -1.5129];    % default offset, used if no calibration points are entered
 SS.eyeCalib.offsetTweak              = [0, 0];    % Additive tweak to the offset parameter  
 SS.eyeCalib.gainTweak                = [0, 0];    % Additive tweak to the gain parameter
 SS.behavior.fixation.calibTweakMode  = 'off';     % Parameter currently being tweaked
@@ -249,12 +249,8 @@ SS.stim.grating.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
 SS.stim.grating.angle    = 0; % Rotation
 SS.stim.grating.contrast = 1;
 SS.stim.grating.res = 1000; % Half the size of the texture matrix
-% contrastMethod:
-% 'raw' - ignore background color and do accurate contrast, 0% contrast will always be 50% grey.
-% 'bgshift' - 0% contrast will be the background color, and accurate at low contrasts, but high contrasts do not extend all the way or are clipped
-% 'bgscale' - 0% contrast will be background color, and 100% contrast will be correct, other contrasts scale from the extremes to the bgcolor.
-% All three of these methods will be correct at 50% grey background color
-SS.stim.grating.contrastMethod = 'raw';
+SS.stim.grating.radius   = 1;
+SS.stim.grating.contrastMethod = 'balanced';
 SS.stim.grating.pos      = [0, 0];
 SS.stim.grating.alpha    = 1; % Fully opaque
 % SS.stim.grating.srcRadius  = 500; % Big source to allow for more resolution
