@@ -39,6 +39,7 @@ properties (SetAccess = private, Hidden = true)
     genTime %When the grating was created (to calculate drifting phase)
     texture % The actual texture used for drawing
     pcmult
+    srcRect
 end
 
 methods
@@ -58,6 +59,7 @@ methods
         obj.radius = radius;
         obj.genTime = p.trial.CurTime;
         obj.res = p.trial.stim.grating.res;
+        obj.srcRect = [0, 0, 2*obj.res + 1, 2*obj.res + 1];
         
         switch obj.contrastMethod
             case 'raw'
@@ -85,10 +87,10 @@ methods
         sFreqTex = obj.sFreq * obj.radius / obj.res;
         
         % Make sure that at least one complete cycle is created in the texture
-        %q = ceil(1/sFreqTex);
+        q = ceil(1/sFreqTex);
         
         % Create the texture matrix
-        x = meshgrid(-obj.res:obj.res, -obj.res:obj.res);
+        x = meshgrid(-obj.res:obj.res + q, -obj.res:obj.res);
         grating = obj.bgOffset + obj.pcmult * cos(sFreqTex*2*pi*x); 
         
         % Create a circular aperture using the separate alpha-channel:
@@ -118,7 +120,7 @@ methods
         filterMode = [];
         
         % Draw the texture
-        Screen('DrawTexture', window, obj.texture, [], destRect, obj.angle, filterMode, ...
+        Screen('DrawTexture', window, obj.texture, obj.srcRect, destRect, obj.angle, filterMode, ...
             obj.contrast, [], [], [], [0, phaseOffset, 0, 0]);
         
     end
