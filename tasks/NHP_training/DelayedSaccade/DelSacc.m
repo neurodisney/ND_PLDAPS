@@ -31,8 +31,44 @@ if(isempty(state))
     
     % --------------------------------------------------------------------%
     %% define ascii output file
+    p = ND_AddAsciiEntry(p, 'Date',       'p.trial.DateStr',                     '%s');
+    p = ND_AddAsciiEntry(p, 'Time',       'p.trial.EV.TaskStartTime',            '%s');
+    p = ND_AddAsciiEntry(p, 'Subject',    'p.trial.session.subject',             '%s');
+    p = ND_AddAsciiEntry(p, 'Experiment', 'p.trial.session.experimentSetupFile', '%s');
+    p = ND_AddAsciiEntry(p, 'Tcnt',       'p.trial.pldaps.iTrial',               '%d');
+    p = ND_AddAsciiEntry(p, 'Cond',       'p.trial.Nr',                          '%d');
+    p = ND_AddAsciiEntry(p, 'Result',     'p.trial.outcome.CurrOutcome',         '%d');
+    p = ND_AddAsciiEntry(p, 'Outcome',    'p.trial.outcome.CurrOutcomeStr',      '%s');
+    p = ND_AddAsciiEntry(p, 'Good',       'p.trial.task.Good',                   '%d');
+    
+    p = ND_AddAsciiEntry(p, 'StimPosX',   'p.trial.stim.pos(1)',                 '%.3f');
+    p = ND_AddAsciiEntry(p, 'StimPosY',   'p.trial.stim.pos(2)',                 '%.3f');
+    p = ND_AddAsciiEntry(p, 'tFreq',      'p.trial.stim.tFreq',                  '%.2f');
+    p = ND_AddAsciiEntry(p, 'sFreq',      'p.trial.stim.sFreq',                  '%.2f');
+    p = ND_AddAsciiEntry(p, 'lContr',     'p.trial.stim.lowContrast',            '%.1f');
+    p = ND_AddAsciiEntry(p, 'hContr',     'p.trial.stim.highContrast',           '%.1f');
+    p = ND_AddAsciiEntry(p, 'StimSize',   '2*p.trial.stim.radius',               '%.1f');
+    
+    p = ND_AddAsciiEntry(p, 'Secs',       'p.trial.EV.DPX_TaskOn',               '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixSpotOn', ' p.trial.EV.FixOn',                    '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixSpotOff', 'p.trial.EV.FixOff',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimOn',     'p.trial.EV.StimOn',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimOff',    'p.trial.EV.StimOff',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixStart',   'p.trial.EV.FixSpotStart',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixBreak',   'p.trial.EV.FixSpotStop',              '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimFix',    'p.trial.EV.FixTargetStart',           '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimBreak',  'p.trial.EV.FixTargetStop',            '%.5f');
+    p = ND_AddAsciiEntry(p, 'TaskEnd',    'p.trial.EV.TaskEnd',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'ITI',        'p.trial.task.Timing.ITI',             '%.5f');
+    
+    p = ND_AddAsciiEntry(p, 'FixWin',     'p.trial.behavior.fixation.FixWin',    '%.5f');
+    p = ND_AddAsciiEntry(p, 'InitRwd',    'p.trial.EV.FirstReward',              '%.5f');
+    p = ND_AddAsciiEntry(p, 'Reward',     'p.trial.EV.Reward',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'InitRwdDur', 'p.trial.reward.initialFixRwd * ~isnan(p.trial.EV.FirstReward)', '%.5f');
+    p = ND_AddAsciiEntry(p, 'RewardDur',  'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
+
     % call this after ND_InitSession to be sure that output directory exists!
-    Trial2Ascii(p, 'init');
+    ND_Trial2Ascii(p, 'init');
     
     % --------------------------------------------------------------------%
     %% Color definitions of stuff shown during the trial
@@ -51,7 +87,7 @@ if(isempty(state))
         
     % condition 1
     c1.Nr = 1;    
-    c1.nTrials = 1000;
+    c1.nTrials = 20000;
     
     
     % Fill a conditions list with n of each kind of condition sequentially
@@ -123,7 +159,8 @@ else
         case p.trial.pldaps.trialStates.trialCleanUpandSave
             %% trial end
             Task_Finish(p);
-            Trial2Ascii(p, 'save');
+            p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+            ND_Trial2Ascii(p, 'save');
             
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
@@ -145,7 +182,7 @@ p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
 p.trial.behavior.fixation.refDist = NaN;
 
 % Outcome if no fixation occurs at all during the trial
-p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
+p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 
 p.trial.task.Good                = 0;
 p.trial.behavior.fixation.GotFix = 0;
@@ -222,7 +259,7 @@ switch p.trial.CurrEpoch
             % Fixation has occured
             if p.trial.FixState.Current == p.trial.FixState.FixIn
                 p.trial.EV.FixSpotStart = p.trial.EV.FixStart;
-                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; %Will become FullFixation upon holding long enough
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Abort; %Will become FullFixation upon holding long enough
                 p.trial.behavior.fixation.GotFix = 1;
                 
                 % Time to fixate has expired
@@ -249,8 +286,6 @@ switch p.trial.CurrEpoch
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
             elseif (p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.fixLatency) && p.trial.FixState.Current == p.trial.FixState.FixIn
-                
-                p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
                 
                 % Reward the monkey if there is initial reward for this trial
                 if p.trial.reward.initialFixRwd > 0
@@ -313,8 +348,24 @@ switch p.trial.CurrEpoch
         elseif p.trial.FixState.Current == p.trial.FixState.FixOut
             pds.audio.playDP(p,'breakfix','left');
             
-            % If the stim is on when breakfix occurs, saccade is precocious
-            p.trial.outcome.CurrOutcome = p.trial.outcome.earlySaccade;
+            % If the stim is on, determine whether it is an early saccade or a breakfix
+            if p.trial.stim.on
+            
+                % Check where the eye position is, if the break occured in the general direction of the stim,
+                % Mark the trial as 'Early'. Otherwise mark it as Breakfix
+                breakAngle = ATand2(p.trial.eyeY,p.trial.eyeX);
+                stimAngle = ATand2(p.trial.stim.grating1.pos(2), p.trial.stim.grating1.pos(1));
+                dtheta = abs(breakAngle - stimAngle);
+                % See if dtheta is below a certain value (or that close to 360)
+                if dtheta < p.trial.behavior.saccade.earlyAngle || dtheta > (360 - p.trial.behavior.saccade.earlyAngle)
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                else
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+                end
+            
+            else
+                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+            end
             
             % Record time
             p.trial.EV.FixSpotStop = p.trial.EV.FixBreak;
@@ -344,7 +395,7 @@ switch p.trial.CurrEpoch
             elseif p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
                 % If the distance from the stim increases, a wrong saccade has been made
 
-                p.trial.outcome.CurrOutcome = p.trial.outcome.wrongSaccade;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.False;
 
                 % Turn the stim off and fixation off
                 stim(p,0)
@@ -361,7 +412,7 @@ switch p.trial.CurrEpoch
             elseif p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout
                 % If no saccade has been made before the time runs out, end the trial
 
-                p.trial.outcome.CurrOutcome = p.trial.outcome.noSaccade;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
 
                 % Turn the stim off and fixation off
                 stim(p,0);
@@ -380,7 +431,7 @@ switch p.trial.CurrEpoch
             % Wait for animal to hold fixation for the required length of time
             % then give reward and mark trial good
             if p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.minTargetFixTime
-                p.trial.outcome.CurrOutcome = p.trial.outcome.goodSaccade;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
                 
                 pds.reward.give(p, p.trial.reward.Dur);
                 pds.audio.playDP(p,'reward','left');
@@ -400,7 +451,7 @@ switch p.trial.CurrEpoch
 
             elseif p.trial.FixState.Current == p.trial.FixState.FixOut
                 % If animal's gaze leaves window, end the task and do not give reward
-                p.trial.outcome.CurrOutcome = p.trial.outcome.glance;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
 
                 % Turn the stim off
                 stim(p,0);
@@ -433,12 +484,10 @@ switch p.trial.CurrEpoch
             pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
         end
         
-        % determine ITI
-        switch p.trial.outcome.CurrOutcome
-            
-            case ~p.trial.task.Good
-                % Timeout if task not performed correctly
-                p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
+        % determine ITI            
+        if ~p.trial.task.Good
+            % Timeout if task not performed correctly
+            p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
         end
         
         p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
@@ -539,84 +588,3 @@ else
     p.trial.EV.StimChange = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.STIM_CHNG);
 end
-    
-    
-
-% ####################################################################### %
-function Trial2Ascii(p, act)
-%% Save trial progress in an ASCII table
-% 'init' creates the file with a header defining all columns
-% 'save' adds a line with the information for the current trial
-%
-% make sure that number of header names is the same as the number of entries
-% to write, also that the position matches.
-
-switch act
-    case 'init'
-        tblptr = fopen(p.trial.session.asciitbl , 'w');
-        
-        fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  iTrial  Cond  Outcome  Good  ',...
-            'StimPosX  StimPosY  tFreq  sFreq  lContr  hContr  radius  ',... 
-            'Tstart  CenterOn  CenterOff  StimOn  StimOff  CenterFix  CenterBreak  StimFix  StimBreak  TaskEnd  ',...
-            'InitRwd  InitRwdDur  MainRwd  MainRwdDur  ',...
-            'ITI  FixWin\n']);
-        
-        p.trial.session.asciifmtstr = ['%s  %s  %.5f  %s  %s  %d  %d  %s  %d  ',...
-            '%.2f  %.2f  %.1f  %.2f  %.1f  %.1f  %.1f  ',...
-            '%.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  %.5f  ',...
-            '%.5f  %.2f  %.5f  %.2f  ',...
-            '%.3f  %.2f  \n'];
-        
-        fclose(tblptr);
-        
-    case 'save'
-        % Load proper variables
-        Date = datestr(p.trial.session.initTime,'yyyy_mm_dd');
-        Time = p.trial.EV.TaskStartTime;
-        Secs = p.trial.EV.DPX_TaskOn;
-        Subject = p.trial.EV.DPX_TaskOn;
-        Experiment = p.trial.session.experimentSetupFile;
-        iTrial = p.trial.pldaps.iTrial;
-        Cond =  p.trial.Nr;
-        Outcome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-        Good = p.trial.task.Good;
-        
-        StimPosX = p.trial.stim.pos(1);
-        StimPosY = p.trial.stim.pos(2);
-        tFreq = p.trial.stim.tFreq;
-        sFreq = p.trial.stim.grating.sFreq;
-        lContr = p.trial.stim.lowContrast;
-        hContr = p.trial.stim.highContrast;
-        radius = p.trial.stim.radius;
-        
-        Tstart = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
-        CenterOn = p.trial.EV.FixOn;
-        CenterOff = p.trial.EV.FixOff;
-        StimOn = p.trial.EV.StimOn;
-        StimOff = p.trial.EV.StimOff;
-        CenterFix = p.trial.EV.FixSpotStart;
-        CenterBreak = p.trial.EV.FixSpotStop;
-        StimFix = p.trial.EV.FixTargetStart;
-        StimBreak = p.trial.EV.FixTargetStop;
-        TaskEnd = p.trial.EV.TaskEnd;
-        
-        InitRwd = p.trial.EV.FirstReward;
-        InitRwdDur = p.trial.reward.initialFixRwd * ~isnan(InitRwd); % 0 if not given
-        MainRwd = p.trial.EV.Reward;
-        MainRwdDur = p.trial.reward.Dur * ~isnan(MainRwd); % 0 if not given
-        
-        ITI = p.trial.task.Timing.ITI;
-        FixWin = p.trial.behavior.fixation.FixWin;
-        
-        % Write to dksik
-        tblptr = fopen(p.trial.session.asciitbl, 'a');
-        fmtstr = p.trial.session.asciifmtstr;
-        fprintf(tblptr, fmtstr, ...
-            Date, Time, Secs, Subject, Experiment, iTrial, Cond, Outcome, Good, ...
-            StimPosX, StimPosY, tFreq, sFreq, lContr, hContr, radius, ... 
-            Tstart, CenterOn, CenterOff, StimOn, StimOff, CenterFix, CenterBreak, StimFix, StimBreak, TaskEnd, ...
-            InitRwd, InitRwdDur, MainRwd, MainRwdDur, ...
-            ITI, FixWin);
-        fclose(tblptr);
-end
-
