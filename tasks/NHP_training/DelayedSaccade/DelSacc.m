@@ -198,28 +198,27 @@ p.trial.behavior.fixation.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.
 % Fixation spot
 p.trial.behavior.fixation.fixPos = [0,0];
 p.trial.behavior.fixation.FixType = 'disc';
-pds.fixation.move(p)
+pds.fixation.move(p);
 
 %% Stimulus parameters
-
-% Must set spatial frequency before generating the stimulus
-p.trial.stim.grating.sFreq = datasample(p.trial.stim.sFreq,1);
-
-% Generate the stimulus
-p.trial.stim.grating1 = pds.stim.Grating(p,p.trial.stim.radius);
 
 % Calculate the location of the stim
 direction = p.trial.stim.locations{randi(length(p.trial.stim.locations))};
 magnitude = p.trial.stim.eccentricity;
 p.trial.stim.pos = magnitude * direction / norm(direction);
-p.trial.stim.grating1.pos = p.trial.stim.pos;
+p.trial.stim.grating.pos = p.trial.stim.pos;
 
-% Stimulus angle
+p.trial.stim.grating.sFreq = datasample(p.trial.stim.sFreq,1);
+p.trial.stim.grating.tFreq = p.trial.stim.tFreq;
+
 p.trial.stim.angle = datasample(p.trial.stim.orientations,1);
-p.trial.stim.grating1.angle = p.trial.stim.angle;
+p.trial.stim.grating.angle = p.trial.stim.angle;
 
-% Other stim properties
-p.trial.stim.grating1.tFreq = p.trial.stim.tFreq;
+
+% Generate the low contrast stimulus
+p.trial.stim.gratingL = pds.stim.Grating(p,p.trial.stim.radius,p.trial.stim.lowContrast);
+% and the high contrast stimulus
+p.trial.stim.gratingH = pds.stim.Grating(p,p.trial.stim.radius,p.trial.stim.highContrast);
 
 
 % stim starts off
@@ -245,7 +244,7 @@ switch p.trial.CurrEpoch
         
         fixspot(p,1);
         p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.centralFixWin;
-        pds.fixation.move(p)
+        pds.fixation.move(p);
         
         switchEpoch(p,'WaitFix');
         
@@ -354,7 +353,7 @@ switch p.trial.CurrEpoch
                 % Check where the eye position is, if the break occured in the general direction of the stim,
                 % Mark the trial as 'Early'. Otherwise mark it as Breakfix
                 breakAngle = ATand2(p.trial.eyeY,p.trial.eyeX);
-                stimAngle = ATand2(p.trial.stim.grating1.pos(2), p.trial.stim.grating1.pos(1));
+                stimAngle = ATand2(p.trial.stim.gratingL.pos(2), p.trial.stim.gratingL.pos(1));
                 dtheta = abs(breakAngle - stimAngle);
                 % See if dtheta is below a certain value (or that close to 360)
                 if dtheta < p.trial.behavior.saccade.earlyAngle || dtheta > (360 - p.trial.behavior.saccade.earlyAngle)
@@ -462,7 +461,7 @@ switch p.trial.CurrEpoch
                 % Play an incorrect sound
                 pds.audio.playDP(p,'incorrect','left');
 
-                switchEpoch(p,'TaskEnd')
+                switchEpoch(p,'TaskEnd');
 
             end
 
@@ -511,7 +510,7 @@ function TaskDraw(p)
 %% TODO: draw predicted eye pos for calibration grid, draw indicator for random posiiton vs. fix, indicate current position
 
 if p.trial.behavior.fixation.enableCalib
-    pds.eyecalib.draw(p)
+    pds.eyecalib.draw(p);
 end
 
 if p.trial.behavior.fixation.on
@@ -519,11 +518,9 @@ if p.trial.behavior.fixation.on
 end
 
 if p.trial.stim.on == 1
-    p.trial.stim.grating1.contrast = p.trial.stim.lowContrast;
-    draw(p.trial.stim.grating1,p);
+    draw(p.trial.stim.gratingL,p);
 elseif p.trial.stim.on == 2
-    p.trial.stim.grating1.contrast = p.trial.stim.highContrast;
-    draw(p.trial.stim.grating1,p);
+    draw(p.trial.stim.gratingH,p);
 end
 
 
