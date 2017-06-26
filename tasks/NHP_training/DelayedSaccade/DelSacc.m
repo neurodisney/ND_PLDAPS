@@ -365,7 +365,7 @@ switch p.trial.CurrEpoch
                 end
             
             else
-                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Abort;
             end
             
             % Record time
