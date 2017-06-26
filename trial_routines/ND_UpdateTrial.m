@@ -21,7 +21,7 @@ if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && ...
         p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)
     p.defaultParameters.NCompleted = p.trial.NCompleted + 1; % number of started trials (excluding not started trials)
 else
-    p.defualtParameters.NCompleted = p.trial.NCompleted;
+    p.defaultParameters.NCompleted = p.trial.NCompleted;
 end
 
 p.defaultParameters.blocks = p.trial.blocks;
