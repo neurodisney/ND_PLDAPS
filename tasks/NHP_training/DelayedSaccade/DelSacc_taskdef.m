@@ -22,20 +22,20 @@ p.trial.task.FixCol = 'black';
 
 p.trial.task.fixLatency       = 0.25; % Time to hold fixation before it counts
 p.trial.reward.initialFixRwd  = 0.1; % Small reward for achieving full fixation
-p.trial.task.stimLatency      = ND_GetITI(0.2,0.5); % Time from full fixation to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.2,0.35); % Time from full fixation to stim appearing
 
-p.trial.task.centerOffLatency = ND_GetITI(0.4,1.0); % Time from stim appearing to fixspot disappearing
+p.trial.task.centerOffLatency = ND_GetITI(0.3,0.8); % Time from stim appearing to fixspot disappearing
 p.trial.task.saccadeTimeout   = 1;   % Time allowed to make the saccade to the stim before error
-p.trial.task.minTargetFixTime = 0.3; % Must fixate on stim for at least this time before it counts
+p.trial.task.minTargetFixTime = 0.5; % Must fixate on stim for at least this time before it counts
 
 p.trial.reward.Dur            = 1.0; % Reward for completing the task successfully
 
-p.trial.stim.lowContrast      = 0.4; % contrast value when stim.on = 1
+p.trial.stim.lowContrast      = 0.25; % contrast value when stim.on = 1
 p.trial.stim.highContrast     = 1;   % contrast value when stim.on = 2
 p.trial.stim.tFreq            = 0;   % drift speed, 0 is stationary
 
-p.trial.behavior.fixation.centralFixWin = 3.5;
-p.trial.stim.FixWin           = 5;
+p.trial.behavior.fixation.centralFixWin = 3;
+p.trial.stim.FixWin           = 3.5;
 
 %% Reward
 
@@ -84,9 +84,9 @@ p.trial.stim.locations          = {[1  , 0], ...
 p.trial.stim.radius               = 1;  % WZ: what RF/area are we aiming for? 1-2 dva sshould be good.
 
 % Possbile angles for the stim
-p.trial.stim.orientations = [45]; % [0, 45, 90, 135, 180, 225, 270, 315];
+p.trial.stim.orientations = [90]; % [0, 45, 90, 135, 180, 225, 270, 315];
 
-p.trial.stim.sFreq = [4]; %[1, 2, 4, 8];   % WZ: range 1-10 cycles/degree
+p.trial.stim.sFreq = [2]; %[1, 2, 4, 8];   % WZ: range 1-10 cycles/degree
 
 p.trial.stim.grating.res = 300;
 % ------------------------------------------------------------------------%
