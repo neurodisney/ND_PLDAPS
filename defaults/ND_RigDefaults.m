@@ -168,7 +168,7 @@ SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial p
 %% Debugging
 SS.pldaps.GetTrialStateTimes = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 SS.pldaps.GetScreenFlipTimes = 0;  % get each screen refresh time, i.e. wait for synch for each screen update
-
+SS.pldaps.ptbVerbosity       = 3;  % See here https://github.com/Psychtoolbox-3/Psychtoolbox-3/wiki/FAQ:-Control-Verbosity-and-Debugging
 % ------------------------------------------------------------------------%
 %% Reward settings
 SS.datapixx.useForReward      = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
