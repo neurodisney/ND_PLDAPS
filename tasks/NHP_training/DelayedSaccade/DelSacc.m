@@ -31,46 +31,47 @@ if(isempty(state))
     
     % --------------------------------------------------------------------%
     %% define ascii output file
-    p = ND_AddAsciiEntry(p, 'Date',       'p.trial.DateStr',                     '%s');
-    p = ND_AddAsciiEntry(p, 'Time',       'p.trial.EV.TaskStartTime',            '%s');
-    p = ND_AddAsciiEntry(p, 'Subject',    'p.trial.session.subject',             '%s');
-    p = ND_AddAsciiEntry(p, 'Experiment', 'p.trial.session.experimentSetupFile', '%s');
-    p = ND_AddAsciiEntry(p, 'Tcnt',       'p.trial.pldaps.iTrial',               '%d');
-    p = ND_AddAsciiEntry(p, 'Cond',       'p.trial.Nr',                          '%d');
-    p = ND_AddAsciiEntry(p, 'Result',     'p.trial.outcome.CurrOutcome',         '%d');
-    p = ND_AddAsciiEntry(p, 'Outcome',    'p.trial.outcome.CurrOutcomeStr',      '%s');
-    p = ND_AddAsciiEntry(p, 'Good',       'p.trial.task.Good',                   '%d');
+    p = ND_AddAsciiEntry(p, 'Date',        'p.trial.DateStr',                     '%s');
+    p = ND_AddAsciiEntry(p, 'Time',        'p.trial.EV.TaskStartTime',            '%s');
+    p = ND_AddAsciiEntry(p, 'Subject',     'p.trial.session.subject',             '%s');
+    p = ND_AddAsciiEntry(p, 'Experiment',  'p.trial.session.experimentSetupFile', '%s');
+    p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
+    p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
+    p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
+    p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
+    p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
     
-    p = ND_AddAsciiEntry(p, 'StimPosX',   'p.trial.stim.pos(1)',                 '%.3f');
-    p = ND_AddAsciiEntry(p, 'StimPosY',   'p.trial.stim.pos(2)',                 '%.3f');
-    p = ND_AddAsciiEntry(p, 'tFreq',      'p.trial.stim.tFreq',                  '%.2f');
-    p = ND_AddAsciiEntry(p, 'sFreq',      'p.trial.stim.sFreq',                  '%.2f');
-    p = ND_AddAsciiEntry(p, 'lContr',     'p.trial.stim.lowContrast',            '%.1f');
-    p = ND_AddAsciiEntry(p, 'hContr',     'p.trial.stim.highContrast',           '%.1f');
-    p = ND_AddAsciiEntry(p, 'StimSize',   '2*p.trial.stim.radius',               '%.1f');
+    p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.pos(1)',                 '%.3f');
+    p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.pos(2)',                 '%.3f');
+    p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.tFreq',                  '%.2f');
+    p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.sFreq',                  '%.2f');
+    p = ND_AddAsciiEntry(p, 'lContr',      'p.trial.stim.lowContrast',            '%.1f');
+    p = ND_AddAsciiEntry(p, 'hContr',      'p.trial.stim.highContrast',           '%.1f');
+    p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.radius',               '%.1f');
     
-    p = ND_AddAsciiEntry(p, 'Secs',       'p.trial.EV.DPX_TaskOn',               '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixSpotOn', ' p.trial.EV.FixOn',                    '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixSpotOff', 'p.trial.EV.FixOff',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimOn',     'p.trial.EV.StimOn',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimOff',    'p.trial.EV.StimOff',                  '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixStart',   'p.trial.EV.FixSpotStart',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixBreak',   'p.trial.EV.FixSpotStop',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimFix',    'p.trial.EV.FixTargetStart',           '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimBreak',  'p.trial.EV.FixTargetStop',            '%.5f');
-    p = ND_AddAsciiEntry(p, 'TaskEnd',    'p.trial.EV.TaskEnd',                  '%.5f');
-    p = ND_AddAsciiEntry(p, 'ITI',        'p.trial.task.Timing.ITI',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'GoLatency',  'p.trial.task.centerOffLatency',       '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimLatency','p.trial.task.stimLatency + p.trial.task.fixLatency',       '%.5f');
-    p = ND_AddAsciiEntry(p, 'SRT_StimOn', 'p.trial.task.SRT_StimOn',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'SRT_Go',     'p.trial.task.SRT_Go',                 '%.5f');
+    p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimOn',      'p.trial.EV.StimOn',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimOff',     'p.trial.EV.StimOff',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixStart',    'p.trial.EV.FixSpotStart',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixBreak',    'p.trial.EV.FixSpotStop',              '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimFix',     'p.trial.EV.FixTargetStart',           '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimBreak',   'p.trial.EV.FixTargetStop',            '%.5f');
+    p = ND_AddAsciiEntry(p, 'TaskEnd',     'p.trial.EV.TaskEnd',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'GoLatency',   'p.trial.task.centerOffLatency',       '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimLatency', 'p.trial.task.stimLatency + p.trial.task.fixLatency',       '%.5f');
+    p = ND_AddAsciiEntry(p, 'SRT_FixStart','p.trial.task.SRT_FixStart',           '%.5f');
+    p = ND_AddAsciiEntry(p, 'SRT_StimOn',  'p.trial.task.SRT_StimOn',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'SRT_Go',      'p.trial.task.SRT_Go',                 '%.5f');
 
-    p = ND_AddAsciiEntry(p, 'FixWin',     'p.trial.behavior.fixation.FixWin',    '%.5f');
-    p = ND_AddAsciiEntry(p, 'InitRwd',    'p.trial.EV.FirstReward',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'Reward',     'p.trial.EV.Reward',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'InitRwdDur', 'p.trial.reward.initialFixRwd * ~isnan(p.trial.EV.FirstReward)', '%.5f');
-    p = ND_AddAsciiEntry(p, 'RewardDur',  'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
-    p = ND_AddAsciiEntry(p, 'TotalRwd',   'sum(p.trial.reward.timeReward(:,2))', '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
+    p = ND_AddAsciiEntry(p, 'InitRwd',     'p.trial.EV.FirstReward',              '%.5f');
+    p = ND_AddAsciiEntry(p, 'Reward',      'p.trial.EV.Reward',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'InitRwdDur',  'p.trial.reward.initialFixRwd * ~isnan(p.trial.EV.FirstReward)', '%.5f');
+    p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
+    p = ND_AddAsciiEntry(p, 'TotalRwd',    'sum(p.trial.reward.timeReward(:,2))', '%.5f');
     
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
@@ -618,26 +619,31 @@ function Calculate_SRT(p)
 
 switch p.trial.outcome.CurrOutcomeStr
     
-    case {'NoStart', 'Abort'}
-        p.trial.task.SRT_StimOn  = NaN;
-        p.trial.task.SRT_Go      = NaN;
+    case {'NoStart', 'Abort', 'Break'}
+        p.trial.task.SRT_StimOn   = NaN;
+        p.trial.task.SRT_Go       = NaN;
+        p.trial.task.SRT_FixStart = NaN;
        
     case {'FixBreak', 'Early'}
-        p.trial.task.SRT_StimOn  = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
-        p.trial.task.SRT_Go      = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.centerOffLatency);
+        p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
+        p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.centerOffLatency);
+        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
         
     case {'False','Miss'}
-        p.trial.task.SRT_StimOn  = p.trial.EV.TaskEnd - p.trial.EV.StimOn;
-        p.trial.task.SRT_Go      = p.trial.EV.TaskEnd - p.trial.EV.FixOff;
+        p.trial.task.SRT_StimOn   = p.trial.EV.TaskEnd - p.trial.EV.StimOn;
+        p.trial.task.SRT_Go       = p.trial.EV.TaskEnd - p.trial.EV.FixOff;
+        p.trial.task.SRT_FixStart = p.trial.EV.TaskEnd - p.trial.EV.FixSpotStart;
 
     case {'Correct','TargetBreak'}
-        p.trial.task.SRT_StimOn  = p.trial.EV.FixTargetStart - p.trial.EV.StimOn;
-        p.trial.task.SRT_Go      = p.trial.EV.FixTargetStart - p.trial.EV.FixOff;
+        p.trial.task.SRT_StimOn   = p.trial.EV.FixTargetStart - p.trial.EV.StimOn;
+        p.trial.task.SRT_Go       = p.trial.EV.FixTargetStart - p.trial.EV.FixOff;
+        p.trial.task.SRT_FixStart = p.trial.EV.FixTargetStart - p.trial.EV.FixSpotStart;
         
     otherwise
         warning('Calculate_SRT: unrecognized outcome')
-        p.trial.task.SRT_StimOn  = NaN;
-        p.trial.task.SRT_Go      = NaN;
+        p.trial.task.SRT_StimOn   = NaN;
+        p.trial.task.SRT_Go       = NaN;
+        p.trial.task.SRT_FixStart = NaN;
         
 end
       
