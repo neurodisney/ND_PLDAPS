@@ -33,6 +33,8 @@ function p = openScreen(p)
 InitializeMatlabOpenGL(0,0); %second 0: debug level =0 for speed
 % prevent splash screen
 Screen('Preference','VisualDebugLevel',3);
+% Decrease verbosity of PTB as well
+Screen('Preference', 'Verbosity', p.defaultParameters.pldaps.ptbVerbosity);
 % Initiate Psych Imaging screen configs
 PsychImaging('PrepareConfiguration');
 
@@ -365,5 +367,13 @@ Screen('BlendFunction', p.defaultParameters.display.ptr, p.defaultParameters.dis
 if p.defaultParameters.display.forceLinearGamma %does't really belong here, but need it before the first flip....
     LoadIdentityClut(p.defaultParameters.display.ptr);
 end
+
+%% Create a GLSL Shader for use in making textures
+disp('****************************************************************')
+disp('****************************************************************')
+disp('Creating GLSL shader for making masked textures (SeparateAlphaChannel)')
+% Create a special texture drawing shader for masked texture drawing:
+p.defaultParameters.display.glsl = MakeTextureDrawShader(p.defaultParameters.display.ptr, 'SeparateAlphaChannel');
+disp('****************************************************************')
 
 p.defaultParameters.display.t0 = Screen('Flip', p.defaultParameters.display.ptr);

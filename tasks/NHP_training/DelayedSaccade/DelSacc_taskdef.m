@@ -22,13 +22,13 @@ p.trial.task.FixCol = 'black';
 
 p.trial.task.fixLatency       = 0.25; % Time to hold fixation before it counts
 p.trial.reward.initialFixRwd  = 0.1; % Small reward for achieving full fixation
-p.trial.task.stimLatency      = 0.25; % Time from full fixation to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.2,0.5); % Time from full fixation to stim appearing
 
 p.trial.task.centerOffLatency = ND_GetITI(0.4,1.0); % Time from stim appearing to fixspot disappearing
 p.trial.task.saccadeTimeout   = 1;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minTargetFixTime = 0.3; % Must fixate on stim for at least this time before it counts
 
-p.trial.reward.Dur            = 0.4; % Reward for completing the task successfully
+p.trial.reward.Dur            = 1.0; % Reward for completing the task successfully
 
 p.trial.stim.lowContrast      = 0.4; % contrast value when stim.on = 1
 p.trial.stim.highContrast     = 1;   % contrast value when stim.on = 2

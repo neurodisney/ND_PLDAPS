@@ -24,6 +24,16 @@ else
     p.defaultParameters.NCompleted = p.trial.NCompleted;
 end
 
+% Store the current outcome in the Map of all outcomes
+allOutcomes = p.defaultParameters.outcome.allOutcomes;
+outcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+if isKey(allOutcomes,outcomeStr)
+    allOutcomes(outcomeStr) = allOutcomes(outcomeStr) + 1;
+else
+    allOutcomes(outcomeStr) = 1;
+end
+p.defaultParameters.outcome.allOutcomes = allOutcomes;
+
 p.defaultParameters.blocks = p.trial.blocks;
 
 % Define a set of variables that should be editable, i.e. pass on information by default

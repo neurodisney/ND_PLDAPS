@@ -121,7 +121,7 @@ methods
         window = p.trial.display.ptr;
         
         % Create a special texture drawing shader for masked texture drawing:
-        glsl = MakeTextureDrawShader(window, 'SeparateAlphaChannel');
+        glsl = p.trial.display.glsl;
         
         % Scale the spatial frequency to match the resolution of the grating
         sFreqTex = obj.sFreq * obj.radius / obj.res;

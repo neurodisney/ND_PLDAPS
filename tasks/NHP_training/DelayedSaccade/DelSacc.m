@@ -61,7 +61,9 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'TaskEnd',    'p.trial.EV.TaskEnd',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'ITI',        'p.trial.task.Timing.ITI',             '%.5f');
     p = ND_AddAsciiEntry(p, 'GoLatency',  'p.trial.task.centerOffLatency',       '%.5f');
-    
+    p = ND_AddAsciiEntry(p, 'SRT_StimOn', 'p.trial.task.SRT_StimOn',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'SRT_Go',     'p.trial.task.SRT_Go',                 '%.5f');
+
     p = ND_AddAsciiEntry(p, 'FixWin',     'p.trial.behavior.fixation.FixWin',    '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwd',    'p.trial.EV.FirstReward',              '%.5f');
     p = ND_AddAsciiEntry(p, 'Reward',     'p.trial.EV.Reward',                   '%.5f');
@@ -160,9 +162,7 @@ else
             % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
             %% trial end
-            Task_Finish(p);
-            p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-            ND_Trial2Ascii(p, 'save');
+            
             
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
@@ -225,6 +225,7 @@ p.trial.stim.gratingH = pds.stim.Grating(p,p.trial.stim.radius,p.trial.stim.high
 
 % stim starts off
 p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
+
 % ####################################################################### %
 function TaskDesign(p)
 %% main task outline
@@ -525,7 +526,24 @@ elseif p.trial.stim.on == 2
     draw(p.trial.stim.gratingH,p);
 end
 
+% ####################################################################### %
+function TaskCleanAndSave(p)
+%% Clean up textures, variables, and save useful info to ascii table
+Task_Finish(p);
 
+% Destroy the two grating textures generated to save memory
+Screen('Close', p.trial.stim.gratingL)
+Screen('Close', p.trial.stim.gratingH)
+
+% Get the text name of the outcome
+p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+
+% Calculate the Saccadic Response Time for easy plotting
+Calculate_SRT(p);
+
+% Save useful info to an ascii table for plotting
+ND_Trial2Ascii(p, 'save');
+% ####################################################################### %
 
 % ####################################################################### %
 function KeyAction(p)
@@ -545,11 +563,13 @@ if(~isempty(p.trial.LastKeyPress))
 end
 
 % ####################################################################### %
-%% additional inline functions that
+%% additional inline functions
 % ####################################################################### %
 function switchEpoch(p,epochName)
 p.trial.CurrEpoch = p.trial.epoch.(epochName);
 p.trial.EV.epochEnd = p.trial.CurTime;
+
+
 
 function fixspot(p,bool)
 if bool
@@ -561,6 +581,8 @@ else
     p.trial.EV.FixOff = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
 end
+
+
 
 function stim(p,val)
 % Turn on/off or change the stim
@@ -587,3 +609,32 @@ else
     p.trial.EV.StimChange = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.STIM_CHNG);
 end
+
+
+function Calculate_SRT(p)
+
+switch p.trial.outcome.CurrOutcomeStr
+    
+    case {'NoStart', 'Abort'}
+        p.trial.task.SRT_StimOn  = NaN;
+        p.trial.task.SRT_Go      = NaN;
+       
+    case {'FixBreak', 'Early'}
+        p.trial.task.SRT_StimOn  = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
+        p.trial.task.SRT_Go      = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.centerOffLatency);
+        
+    case {'False','Miss'}
+        p.trial.task.SRT_StimOn  = p.trial.EV.TaskEnd - p.trial.EV.StimOn;
+        p.trial.task.SRT_Go      = p.trial.EV.TaskEnd - p.trial.EV.FixOff;
+
+    case {'Correct','TargetBreak'}
+        p.trial.task.SRT_StimOn  = p.trial.EV.FixTargetStart - p.trial.EV.StimOn;
+        p.trial.task.SRT_Go      = p.trial.EV.FixTargetStart - p.trial.EV.FixOff;
+        
+    otherwise
+        warn('Calculate_SRT: unrecognized outcome')
+        p.trial.task.SRT_StimOn  = NaN;
+        p.trial.task.SRT_Go      = NaN;
+        
+end
+      
