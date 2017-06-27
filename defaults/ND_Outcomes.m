@@ -68,3 +68,6 @@ end
 
 % pre-define field for the current outcome
 p.defaultParameters.outcome.CurrOutcome = NaN;  % just initialize, no start no outcome
+
+% Create a map to store previous outcomes in to get summary information
+p.defaultParameters.outcome.allOutcomes = containers.Map;
