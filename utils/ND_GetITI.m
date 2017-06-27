@@ -37,7 +37,7 @@ end
 %% check arguments
 
 if minval > maxval
-    warn('Min value is greater than Max value. Switching arguments')
+    warning('Min value is greater than Max value. Switching arguments')
     [minval, maxval] = deal(maxval,minval);
 end
 

@@ -61,6 +61,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'TaskEnd',    'p.trial.EV.TaskEnd',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'ITI',        'p.trial.task.Timing.ITI',             '%.5f');
     p = ND_AddAsciiEntry(p, 'GoLatency',  'p.trial.task.centerOffLatency',       '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimLatency','p.trial.task.stimLatency + p.trial.task.fixLatency',       '%.5f');
     p = ND_AddAsciiEntry(p, 'SRT_StimOn', 'p.trial.task.SRT_StimOn',             '%.5f');
     p = ND_AddAsciiEntry(p, 'SRT_Go',     'p.trial.task.SRT_Go',                 '%.5f');
 
@@ -155,12 +156,13 @@ else
         case p.trial.pldaps.trialStates.frameDraw
             %% Display stuff on the screen
             % Just call graphic routines, avoid any computations
-            TaskDraw(p)
+            TaskDraw(p);
             
             % ------------------------------------------------------------------------%
             % DONE AFTER THE MAIN TRIAL LOOP:
             % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
+            TaskCleanAndSave(p);
             %% trial end
             
             
@@ -532,8 +534,8 @@ function TaskCleanAndSave(p)
 Task_Finish(p);
 
 % Destroy the two grating textures generated to save memory
-Screen('Close', p.trial.stim.gratingL)
-Screen('Close', p.trial.stim.gratingH)
+Screen('Close', p.trial.stim.gratingL.texture);
+Screen('Close', p.trial.stim.gratingH.texture);
 
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
@@ -632,7 +634,7 @@ switch p.trial.outcome.CurrOutcomeStr
         p.trial.task.SRT_Go      = p.trial.EV.FixTargetStart - p.trial.EV.FixOff;
         
     otherwise
-        warn('Calculate_SRT: unrecognized outcome')
+        warning('Calculate_SRT: unrecognized outcome')
         p.trial.task.SRT_StimOn  = NaN;
         p.trial.task.SRT_Go      = NaN;
         
