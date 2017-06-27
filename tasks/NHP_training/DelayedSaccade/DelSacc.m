@@ -263,7 +263,6 @@ switch p.trial.CurrEpoch
             % Fixation has occured
             if p.trial.FixState.Current == p.trial.FixState.FixIn
                 p.trial.EV.FixSpotStart = p.trial.EV.FixStart;
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Abort; %Will become FullFixation upon holding long enough
                 p.trial.behavior.fixation.GotFix = 1;
                 
                 % Time to fixate has expired
@@ -286,7 +285,9 @@ switch p.trial.CurrEpoch
             if p.trial.FixState.Current == p.trial.FixState.FixOut
                 
                 p.trial.EV.FixSpotStop = p.trial.EV.FixBreak;
-                p.trial.behavior.fixation.GotFix = 0;
+                % Turn off the spot and end the trial
+                fixspot(p,0);
+                switchEpoch(p,'TaskEnd');
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
             elseif (p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.fixLatency) && p.trial.FixState.Current == p.trial.FixState.FixIn
