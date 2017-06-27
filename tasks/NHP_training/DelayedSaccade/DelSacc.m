@@ -162,10 +162,7 @@ else
             % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
             %% trial end
-            Task_Finish(p);
-            p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-            Calculate_SRT(p);
-            ND_Trial2Ascii(p, 'save');
+            
             
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
@@ -228,6 +225,7 @@ p.trial.stim.gratingH = pds.stim.Grating(p,p.trial.stim.radius,p.trial.stim.high
 
 % stim starts off
 p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
+
 % ####################################################################### %
 function TaskDesign(p)
 %% main task outline
@@ -528,7 +526,24 @@ elseif p.trial.stim.on == 2
     draw(p.trial.stim.gratingH,p);
 end
 
+% ####################################################################### %
+function TaskCleanAndSave(p)
+%% Clean up textures, variables, and save useful info to ascii table
+Task_Finish(p);
 
+% Destroy the two grating textures generated to save memory
+Screen('Close', p.trial.stim.gratingL)
+Screen('Close', p.trial.stim.gratingH)
+
+% Get the text name of the outcome
+p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+
+% Calculate the Saccadic Response Time for easy plotting
+Calculate_SRT(p);
+
+% Save useful info to an ascii table for plotting
+ND_Trial2Ascii(p, 'save');
+% ####################################################################### %
 
 % ####################################################################### %
 function KeyAction(p)
