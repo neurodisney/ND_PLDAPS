@@ -5,12 +5,21 @@ require(useful)
 require(catspec) 
 
 # Load in arguments from the command line
-args = commandArgs()
-datadir = args[1]
-fname = args[-1]
+# datadir [space separated file names]
+args = commandArgs(trailingOnly = TRUE)
+if (length(args) == 1) {
+  datadir = args[1]
+  fname = NA
+} else if(length(args) > 1) {
+  datadir = args[1]
+  fname = args[-1]
+} else {
+  datadir = NA
+  fname = NA
+}
 
 # Function for plotting data from the delayed saccade task
-DelSacc_Behav = function(datadir=NULL, fname=NULL) {
+DelSacc_Behav = function(datadir=NA, fname=NA) {
 
 ## specify analysis/graph parameters
 avrgwin  =   90  # moving average window for performance plot in seconds
@@ -27,15 +36,15 @@ False_Col     = 'lightsalmon4'
 
 ###########################################################################################
 ## Read in data
-if(is.null(datadir)) {
+if(is.na(datadir)) {
   print("No datadir specified, exiting")
   return()
 }
-
+print(args)
 setwd(datadir)
 
 # If no fname is specified, use all the .dat files in the datadir
-if(is.null(fname)) {
+if(is.na(fname)) {
   fname = Sys.glob('*.dat')
 }
 
