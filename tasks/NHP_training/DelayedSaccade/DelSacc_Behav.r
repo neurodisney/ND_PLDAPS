@@ -7,7 +7,7 @@ require(catspec)
 # Load in arguments from the command line
 args = commandArgs()
 datadir = args[1]
-fname = args[2]
+fname = args[-1]
 
 # Function for plotting data from the delayed saccade task
 DelSacc_Behav = function(datadir=NULL, fname=NULL) {
@@ -27,7 +27,17 @@ False_Col     = 'lightsalmon4'
 
 ###########################################################################################
 ## Read in data
+if(is.null(datadir)) {
+  print("No datadir specified, exiting")
+  return()
+}
+
 setwd(datadir)
+
+# If no fname is specified, use all the .dat files in the datadir
+if(is.null(fname)) {
+  fname = Sys.glob('*.dat')
+}
 
 dt=read.table(fname[1], header=TRUE)
 
