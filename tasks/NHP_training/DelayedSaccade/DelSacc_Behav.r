@@ -1,25 +1,38 @@
-DelSacc_Behav = function(fname=NULL, datadir=NULL) {
+#!/usr/bin/Rscript
 
 ## load required packages
 require(useful)
 require(catspec) 
+
+# Function for plotting data from the delayed saccade task
+DelSacc_Behav = function(datadir=NA, fname=NA) {
 
 ## specify analysis/graph parameters
 avrgwin  =   90  # moving average window for performance plot in seconds
 avrgstep =   10  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
 RTbw     = 0.025 # kernel width for density estimate of response times
 
-Corr_Col      = 'green'
-Early_Col     = 'blue' 
-StimBreak_Col = 'red'
-FixBreak_Col  = 'orange'
-HoldBreak_Col = 'magenta'
-Miss_Col      = 'yellow' 
-False_Col     = 'brown' 
+Corr_Col      = 'limegreen'
+Early_Col     = 'cornflowerblue' 
+StimBreak_Col = 'tomato'
+FixBreak_Col  = 'darkgoldenrod1'
+HoldBreak_Col = 'violet'
+Miss_Col      = 'khaki1' 
+False_Col     = 'lightsalmon4' 
 
 ###########################################################################################
 ## Read in data
+if(is.na(datadir)) {
+  print("No datadir specified, exiting")
+  return()
+}
 setwd(datadir)
+
+# If no fname is specified, use all the .dat files in the datadir
+if(is.na(fname)) {
+  fname = Sys.glob('*.dat')
+}
+
 dt=read.table(fname[1], header=TRUE)
 
 if(length(fname)>1) {
@@ -94,7 +107,15 @@ StimSRT[pFixBreak] = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimL
 Trng = range(Ttime)
 
 # open figure of defined size
-x11(width=19.5, height=10.5, pointsize=10, title='DelSacc_Behav')
+# Only display figure directly if called from the r environment (not the command line)
+# If we didn't do this, when called from the command line, it would just open briefly and then close when the script ends
+if(interactive()) {
+  x11(width=19.5, height=10.5, pointsize=10, title='DelSacc_Behav')
+} else {
+  # Otherwise only save the figure as a pdf.
+  pdf('DelSacc.pdf', 19.5, 10.5, pointsize=10, title='DelSacc_Behav')
+}
+
 
 # create plot layout
 pllyt = matrix(c(1,1,1,1,1,1, 2,2,2,2,2,2, 3,3,3,3,3,3, 4,5,6,7,8,9), 4, 6, byrow=TRUE)
@@ -103,21 +124,25 @@ par(mar=c(5,5,1,1))
 
 ###########################################################################################
 # plot 1: saccade time
-plot(Trng, range(TDur, na.rm = TRUE), type='n', xaxs='i', yaxs='i', main = 'Trial Duration',
-     xlab='', ylab='Trial Duration [s]', xaxt="n")
+plot(Trng, range(TDur, na.rm = TRUE), type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
+     xlab='', ylab='Time after Target Onset [s]', xaxt="n")
 
-points(Ttime[pCorr],     TDur[pCorr],     pch=19, col=Corr_Col)
-points(Ttime[pFixBreak], TDur[pFixBreak], pch=19, col=FixBreak_Col)
+points(Ttime[pCorr],      TDur[pCorr],      pch=19, col=Corr_Col)
+points(Ttime[pFixBreak],  TDur[pFixBreak],  pch=19, col=FixBreak_Col)
 points(Ttime[pStimBreak], TDur[pStimBreak], pch=19, col=StimBreak_Col)
-points(Ttime[pHoldErr],  TDur[pHoldErr],  pch=19, col=HoldBreak_Col)
-points(Ttime[pEarly],    TDur[pEarly],    pch=19, col=Early_Col)
-points(Ttime[pMiss],     TDur[pMiss],     pch=19, col=Miss_Col)
-points(Ttime[pFalse],    TDur[pFalse],    pch=19, col=False_Col)
+points(Ttime[pHoldErr],   TDur[pHoldErr],   pch=19, col=HoldBreak_Col)
+points(Ttime[pEarly],     TDur[pEarly],     pch=19, col=Early_Col)
+points(Ttime[pMiss],      TDur[pMiss],      pch=19, col=Miss_Col)
+points(Ttime[pFalse],     TDur[pFalse],     pch=19, col=False_Col)
+
+legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "HoldBreak", "Miss", "False"), 
+       pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, HoldBreak_Col, Miss_Col, False_Col), 
+       inset=c(0,-0.2), title=NULL, xpd=NA, ncol=7, cex=2, bty='n', horiz=TRUE)
 
 ###########################################################################################
 # plot 2: reaction times
-plot(Trng, range(SRT, na.rm = TRUE), type='n', xaxs='i', yaxs='i', main = 'SRT',
-     xlab='', ylab='SRTs [s]', xaxt="n")
+plot(Trng, range(SRT, na.rm = TRUE), type='n', xaxs='i', yaxs='i', main='Response after Go Cue',
+     xlab='Trial Time [s]', ylab='SRTs [s]')
 
 points(Ttime[pCorr],      SRT[pCorr],      pch=19, col=Corr_Col)
 points(Ttime[pFixBreak],  SRT[pFixBreak],  pch=19, col=FixBreak_Col)
@@ -126,6 +151,8 @@ points(Ttime[pHoldErr],   SRT[pHoldErr],   pch=19, col=HoldBreak_Col)
 points(Ttime[pEarly],     SRT[pEarly],     pch=19, col=Early_Col)
 points(Ttime[pMiss],      SRT[pMiss],      pch=19, col=Miss_Col)
 points(Ttime[pFalse],     SRT[pFalse],     pch=19, col=False_Col)
+
+abline(h=0,lty=2)
 
 ###########################################################################################
 # plot 3: time resolved performance
@@ -157,19 +184,27 @@ for(i in 1:length(Tavrg)) {
   }
 }
 
+# Rcorr[Rcorr==0]           = NA
+# Rfixbreak[Rfixbreak==0]   = NA
+# Rstimbreak[Rstimbreak==0] = NA
+# Rearly[Rearly==0]         = NA
+# Rmiss[Rmiss==0]           = NA
+# Rfalse[Rfalse==0]         = NA
+# Rholderr[Rholderr==0]     = NA
+
 plot(Trng, c(0, 100), type='n', xaxs='i', yaxs='i', main = 'Performance',
      xlab='Trial Time [s]', ylab='performance [s]')
 
 abline(h=50, lty=2)
 abline(h=c(25,75), lty=3)
 
-lines(Tavrg, Rcorr,      col=Corr_Col,       lwd=2)
-lines(Tavrg, Rfixbreak,  col=FixBreak_Col,   lwd=2)
-lines(Tavrg, Rstimbreak, col=StimBreak_Col,  lwd=2)
-lines(Tavrg, Rearly,     col=Early_Col,      lwd=2)
-lines(Tavrg, Rmiss,      col=Miss_Col,      lwd=2)
-lines(Tavrg, Rfalse,     col=False_Col,      lwd=2)
-lines(Tavrg, Rholderr,   col=HoldBreak_Col,  lwd=2)
+lines(Tavrg, Rcorr,      col=Corr_Col,       lwd=2.5)
+lines(Tavrg, Rfixbreak,  col=FixBreak_Col,   lwd=1)
+lines(Tavrg, Rstimbreak, col=StimBreak_Col,  lwd=1)
+lines(Tavrg, Rearly,     col=Early_Col,      lwd=1)
+lines(Tavrg, Rmiss,      col=Miss_Col,       lwd=1)
+lines(Tavrg, Rfalse,     col=False_Col,      lwd=1)
+lines(Tavrg, Rholderr,   col=HoldBreak_Col,  lwd=1)
  
 abline(h=0, lty=1)
 
@@ -178,7 +213,7 @@ abline(h=0, lty=1)
 GoSig = dt$GoLatency
 
 plot(GoSig, StimSRT, type='n', xaxs='i', yaxs='i', main = 'RT over GoCue',
-     ylab='Time after Stim Onset[s]', xlab='Contrast change [s]')
+     ylab='Time after Target Onset[s]', xlab='Contrast change [s]')
 
 points(GoSig[pCorr],      StimSRT[pCorr],      pch=19, col=Corr_Col)
 points(GoSig[pFixBreak],  StimSRT[pFixBreak],  pch=19, col=FixBreak_Col)
@@ -230,7 +265,7 @@ if(sum(pStimBreak) > 1) {
   all_vals_X = c(all_vals_X, TDurstimbreak$x)
   all_vals_Y = c(all_vals_Y, TDurstimbreak$y)
 }
-plot(range(all_vals_X), range(all_vals_Y), type='n', xaxs='i', yaxs='i', main = 'Trial Durations',
+plot(range(all_vals_X), range(all_vals_Y), type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
      ylab='count', xlab='Trial Duration [s]')
 
 if(sum(pCorr) > 1) {
@@ -258,8 +293,8 @@ if(sum(pStimBreak) > 1) {
 all_vals_X = c()
 all_vals_Y = c()
 
-RTall  = density(SRT, bw=RTbw, na.rm=TRUE)
-RTall$y = RTall$y  * length(SRT)  * RTbw
+# RTall  = density(SRT, bw=RTbw, na.rm=TRUE)
+# RTall$y = RTall$y  * length(SRT)  * RTbw
 
 if(sum(pCorr) > 1) {
   RThit   = density(SRT[pCorr], bw=RTbw, na.rm=TRUE)
@@ -296,10 +331,10 @@ if(sum(pStimBreak) > 1) {
   all_vals_Y = c(all_vals_Y, RTstimbreak$y)
 }
 
-plot(range(all_vals_X), range(all_vals_Y), type='n', xaxs='i', yaxs='i', main = 'SRT',
+plot(range(all_vals_X), range(all_vals_Y), type='n', xaxs='i', yaxs='i', main='Response after Go Cue',
      ylab='count', xlab='SRTs [s]')
 
-lines(RTall, lwd=2, col='grey')
+#lines(RTall, lwd=2, col='grey')
 
 if(sum(pCorr) > 1) {
   lines(RThit, lwd=2, col=Corr_Col)
@@ -323,14 +358,15 @@ if(sum(pStimBreak) > 1) {
 
 ###########################################################################################
 # plot 7: performance barplot
-All_perf =  c(sum(pStim), sum(pEarly), sum(pStimBreak), sum(pFixBreak), sum(pFalse), sum(pMiss))
+All_perf =  c(sum(pStim), sum(pEarly), sum(pFixBreak), sum(pStimBreak), sum(pFalse), sum(pMiss))
 
-All_typ = c('Correct', 'Early', 'StimBreak', 'FixBreak', 'False', 'Miss')
-All_col = c(Corr_Col, Early_Col, StimBreak_Col, FixBreak_Col, False_Col, Miss_Col)
+All_typ = c('Correct', 'Early', 'FixBreak', 'StimBreak', 'False', 'Miss')
+All_col = c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, False_Col, Miss_Col)
 
-x = barplot(All_perf, beside=TRUE, col=All_col, xaxt="n", main='Session Performance', ylab='count')
+x = barplot(100*All_perf/Ntrials, beside=TRUE, col=All_col, xaxt="n", main='Session Performance', ylab='Proportion [%]', border=NA)
 
 text(cex=0.9, x=x-.25, y=-1.5, All_typ, xpd=TRUE, srt=45, pos=1, offset=1)
+text(cex=1.5, x=x, y=0, All_perf, xpd=TRUE, srt=0, pos=3, offset=0.1)
 
 ###########################################################################################
 # plot 8: Delay dependent performance
@@ -344,9 +380,9 @@ FixBreak_Cnt  = hist(GoSig[pFixBreak],        DelBrks, plot=FALSE)$counts
 StimBreak_Cnt = hist(GoSig[pStimBreak],       DelBrks, plot=FALSE)$counts
 Early_Cnt     = hist(GoSig[pEarly],           DelBrks, plot=FALSE)$counts
 
-PerfTbl = 100 * rbind(Hit_Cnt / All_Cnt, FixBreak_Cnt / All_Cnt, StimBreak_Cnt / All_Cnt, Early_Cnt / All_Cnt)
+PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt)
 
-x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, FixBreak_Col, StimBreak_Col, Early_Col),
+x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col), border=NA,
             main='Delay Performance', xlab='Delay [s]', ylab='Proportion [%]', xaxt="n")
 xl = colMeans(x)
 stp = unique(diff(colMeans(x)))
@@ -354,9 +390,13 @@ lblpos = seq(from=1, to=NumCond*stp, by=stp)-0.5
 
 text(cex=1, x=lblpos, y=-1.5, DelBrks, xpd=TRUE, srt=0, pos=1, offset=0.5)
 
+text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
+
 ###########################################################################################
 # plot 9: Position dependent performance
-TPos = as.factor(cart2pol(dt$StimPosX, dt$StimPosY,degree=TRUE)$theta)
+TPos = cart2pol(dt$StimPosX, dt$StimPosY,degree=TRUE)$theta
+TPos[TPos==315] = -45
+TPos = as.factor(TPos)
 
 All_Cnt       = as.numeric(table(TPos))
 Hit_Cnt       = as.numeric(table(TPos[pCorr | pHoldErr]))
@@ -369,15 +409,45 @@ if(length(FixBreak_Cnt)  == 0 ) {FixBreak_Cnt  = All_Cnt * 0}
 if(length(StimBreak_Cnt) == 0 ) {StimBreak_Cnt = All_Cnt * 0}
 if(length(Early_Cnt)     == 0 ) {Early_Cnt     = All_Cnt * 0}
 
-PerfTbl = rbind(Hit_Cnt, FixBreak_Cnt, StimBreak_Cnt, Early_Cnt) / All_Cnt
+PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt) 
 
-x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, FixBreak_Col, StimBreak_Col, Early_Col),
+x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col), border=NA,
             main='Location Performance', xlab='Target Location [degree]', ylab='Proportion [%]', xaxt="n")
+xl = colMeans(x)
 
 text(cex=1, x=colMeans(x), y=0, levels(TPos), xpd=TRUE, srt=0, pos=1, offset=0.5)
+text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
 
+
+if(interactive()) {
+  # Save the figure to pdf
+  dev.copy(pdf, 'DelSacc.pdf', 19.5, 10.5, pointsize=10, title='DelSacc_Behav')
+}
+
+dev.off()
 ###########################################################################################
 # Get rough overview
 print(ctab(table(dt$Outcome),addmargins=TRUE))
 
 }
+
+# If this program was called from the command line, load in the datadir and fname arguments
+# and run the function once
+if(!interactive()) {
+  args = commandArgs(trailingOnly = TRUE)
+  if (length(args) == 1) {
+    datadir = args[1]
+    fname = NA
+  } else if(length(args) > 1) {
+    datadir = args[1]
+    fname = args[-1]
+  } else {
+    datadir = NA
+    fname = NA
+  }
+  
+  # Run the function
+  DelSacc_Behav(datadir, fname)
+}
+
+
