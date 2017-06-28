@@ -40,7 +40,6 @@ if(is.na(datadir)) {
   print("No datadir specified, exiting")
   return()
 }
-print(args)
 setwd(datadir)
 
 # If no fname is specified, use all the .dat files in the datadir
@@ -123,7 +122,12 @@ StimSRT[pFixBreak] = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimL
 Trng = range(Ttime)
 
 # open figure of defined size
-x11(width=19.5, height=10.5, pointsize=10, title='DelSacc_Behav')
+# Only display figure directly if called from the r environment (not the command line)
+# If called from the command line, it will just open briefly and then close when the script ends
+if(interactive()) {x11(width=19.5, height=10.5, pointsize=10, title='DelSacc_Behav')}
+
+# Save the figure as a pdf. This happens regardsless of the environment.
+pdf('~/DelSacc.pdf', 19.5, 10.5, pointsize=10, title='DelSacc_Behav')
 
 # create plot layout
 pllyt = matrix(c(1,1,1,1,1,1, 2,2,2,2,2,2, 3,3,3,3,3,3, 4,5,6,7,8,9), 4, 6, byrow=TRUE)
@@ -426,9 +430,12 @@ xl = colMeans(x)
 text(cex=1, x=colMeans(x), y=0, levels(TPos), xpd=TRUE, srt=0, pos=1, offset=0.5)
 text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
 
+dev.off()
 ###########################################################################################
 # Get rough overview
 print(ctab(table(dt$Outcome),addmargins=TRUE))
+
+
 
 }
 
