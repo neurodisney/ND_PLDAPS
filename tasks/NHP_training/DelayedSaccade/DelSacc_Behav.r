@@ -4,20 +4,6 @@
 require(useful)
 require(catspec) 
 
-# Load in arguments from the command line
-# datadir [space separated file names]
-args = commandArgs(trailingOnly = TRUE)
-if (length(args) == 1) {
-  datadir = args[1]
-  fname = NA
-} else if(length(args) > 1) {
-  datadir = args[1]
-  fname = args[-1]
-} else {
-  datadir = NA
-  fname = NA
-}
-
 # Function for plotting data from the delayed saccade task
 DelSacc_Behav = function(datadir=NA, fname=NA) {
 
@@ -444,7 +430,25 @@ dev.off()
 # Get rough overview
 print(ctab(table(dt$Outcome),addmargins=TRUE))
 
-
 }
 
-DelSacc_Behav(datadir, fname)
+# If this program was called from the command line, load in the datadir and fname arguments
+# and run the function once
+if(!interactive()) {
+  args = commandArgs(trailingOnly = TRUE)
+  if (length(args) == 1) {
+    datadir = args[1]
+    fname = NA
+  } else if(length(args) > 1) {
+    datadir = args[1]
+    fname = args[-1]
+  } else {
+    datadir = NA
+    fname = NA
+  }
+  
+  # Run the function
+  DelSacc_Behav(datadir, fname)
+}
+
+
