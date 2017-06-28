@@ -1,8 +1,16 @@
-DelSacc_Behav = function(fname=NULL, datadir=NULL) {
+#!/usr/bin/Rscript
 
 ## load required packages
 require(useful)
 require(catspec) 
+
+# Load in arguments from the command line
+args = commandArgs()
+datadir = args[1]
+fname = args[2]
+
+# Function for plotting data from the delayed saccade task
+DelSacc_Behav = function(datadir=NULL, fname=NULL) {
 
 ## specify analysis/graph parameters
 avrgwin  =   90  # moving average window for performance plot in seconds
@@ -20,6 +28,7 @@ False_Col     = 'lightsalmon4'
 ###########################################################################################
 ## Read in data
 setwd(datadir)
+
 dt=read.table(fname[1], header=TRUE)
 
 if(length(fname)>1) {
@@ -403,3 +412,5 @@ text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
 print(ctab(table(dt$Outcome),addmargins=TRUE))
 
 }
+
+DelSacc_Behav(datadir, fname)
