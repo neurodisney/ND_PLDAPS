@@ -3,6 +3,7 @@
 ## load required packages
 require(useful)
 require(catspec) 
+require(beanplot)
 
 # Function for plotting data from the delayed saccade task
 DelSacc_Behav = function(datadir=NA, fname=NA) {
@@ -118,8 +119,8 @@ if(interactive()) {
 
 
 # create plot layout
-pllyt = matrix(c(1,1,1,1,1,1, 2,2,2,2,2,2, 3,3,3,3,3,3, 4,5,6,7,8,9), 4, 6, byrow=TRUE)
-layout(pllyt,  heights=c(2,2,1.5,2.5))
+pllyt = matrix(c(1,1,1,1,1,1,1, 2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,5,6,10,10,11,11,  7,8,9,10,10,11,11 ), 5, 7, byrow=TRUE)
+layout(pllyt,  heights=c(2,2,1.5,2.5,2.5))
 par(mar=c(5,5,1,1)) 
 
 ###########################################################################################
@@ -137,7 +138,7 @@ points(Ttime[pFalse],     TDur[pFalse],     pch=19, col=False_Col)
 
 legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "HoldBreak", "Miss", "False"), 
        pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, HoldBreak_Col, Miss_Col, False_Col), 
-       inset=c(0,-0.2), title=NULL, xpd=NA, ncol=7, cex=2, bty='n', horiz=TRUE)
+       inset=c(0,-0.4), title=NULL, xpd=NA, ncol=7, cex=2, bty='n', horiz=TRUE, pt.cex=4)
 
 ###########################################################################################
 # plot 2: reaction times
@@ -373,6 +374,7 @@ text(cex=1.5, x=x, y=0, All_perf, xpd=TRUE, srt=0, pos=3, offset=0.1)
 NumCond = 6  # -1 because it defines start and end of interval
 
 DelBrks = seq(floor(min(GoSig*10))/10, ceiling(max(GoSig*10))/10, length=NumCond)
+DelCat  = as.factor(cut(GoSig, breaks=DelBrks, labels= as.character(1:(NumCond-1))))
 
 All_Cnt       = hist(GoSig,                   DelBrks, plot=FALSE)$counts
 Hit_Cnt       = hist(GoSig[pCorr | pHoldErr], DelBrks, plot=FALSE)$counts
@@ -384,13 +386,13 @@ PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, 
 
 x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col), border=NA,
             main='Delay Performance', xlab='Delay [s]', ylab='Proportion [%]', xaxt="n")
+
 xl = colMeans(x)
 stp = unique(diff(colMeans(x)))
 lblpos = seq(from=1, to=NumCond*stp, by=stp)-0.5
 
-text(cex=1, x=lblpos, y=-1.5, DelBrks, xpd=TRUE, srt=0, pos=1, offset=0.5)
-
-text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
+text(cex=1,   x=lblpos, y=-1.5, DelBrks, xpd=TRUE, srt=0, pos=1, offset=0.5)
+text(cex=1.5, x=xl,     y=0,    All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
 
 ###########################################################################################
 # plot 9: Position dependent performance
@@ -418,17 +420,58 @@ xl = colMeans(x)
 text(cex=1, x=colMeans(x), y=0, levels(TPos), xpd=TRUE, srt=0, pos=1, offset=0.5)
 text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
 
+###########################################################################################
+# plot 10: Delay dependent SRT
 
+RespP      = pCorr | pEarly | pHoldErr 
+SRTresp    = SRT[RespP]
+DelCatresp = DelCat[RespP]
+
+Result = as.character(dt$Outcome[RespP])
+Result[Result != 'Early'] = 'Correct'
+
+plrng = c(min(SRTresp[Result== 'Early']), max(SRTresp[Result== 'Correct']))
+
+beanplot(SRTresp ~ Result*DelCatresp, ll = 0.1,
+         main = "Delay dependent SRT", side = "both", xlab="Delay [s]", ylab='Response Time [s]',
+         col = list(Corr_Col, c(Early_Col, "black")), overallline='median', beanlinese='median', what=c(0,1,1,1))
+abline(h=median(SRTresp[Result== 'Correct']), col=Corr_Col, lty=3)
+abline(h=median(SRTresp[Result== 'Early']), col=Early_Col, lty=3)
+abline(h=0, col="black", lty=2)
+
+
+###########################################################################################
+# plot 11: Location dependent SRT
+RespP      = pCorr | pEarly | pHoldErr 
+SRTresp    = SRT[RespP]
+PosCatresp = TPos[RespP]
+
+Result = as.character(dt$Outcome[RespP])
+Result[Result != 'Early'] = 'Correct'
+
+plrng = c(min(SRTresp[Result== 'Early']), max(SRTresp[Result== 'Correct']))
+
+beanplot(SRTresp ~ Result*PosCatresp, ll = 0.1,
+         main = "Location dependent SRT", side = "both", xlab="Delay [s]", ylab='Response Time [s]',
+         col = list(Corr_Col, c(Early_Col, "black")), overallline='median', beanlinese='median', what=c(0,1,1,1))
+abline(h=median(SRTresp[Result== 'Correct']), col=Corr_Col, lty=3)
+abline(h=median(SRTresp[Result== 'Early']), col=Early_Col, lty=3)
+abline(h=0, col="black", lty=2)
+
+
+
+###########################################################################################
+# save plot as pdf
 if(interactive()) {
   # Save the figure to pdf
   dev.copy(pdf, 'DelSacc.pdf', 19.5, 10.5, pointsize=10, title='DelSacc_Behav')
 }
 
 dev.off()
+
 ###########################################################################################
 # Get rough overview
 print(ctab(table(dt$Outcome),addmargins=TRUE))
-
 }
 
 # If this program was called from the command line, load in the datadir and fname arguments
