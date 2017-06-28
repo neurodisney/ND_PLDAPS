@@ -620,30 +620,35 @@ function Calculate_SRT(p)
 switch p.trial.outcome.CurrOutcomeStr
     
     case {'NoStart', 'Abort', 'Break'}
+        p.trial.task.SRT_FixStart = NaN;
         p.trial.task.SRT_StimOn   = NaN;
         p.trial.task.SRT_Go       = NaN;
-        p.trial.task.SRT_FixStart = NaN;
        
+    case {'Abort'}
+        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
+        p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.fixLatency + p.trial.task.stimLatency);
+        p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.fixLatency + p.trial.task.stimLatency + p.trial.task.centerOffLatency);
+    
     case {'FixBreak', 'Early'}
+        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
         p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
         p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.centerOffLatency);
-        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
         
     case {'False','Miss'}
+        p.trial.task.SRT_FixStart = p.trial.EV.TaskEnd - p.trial.EV.FixSpotStart;
         p.trial.task.SRT_StimOn   = p.trial.EV.TaskEnd - p.trial.EV.StimOn;
         p.trial.task.SRT_Go       = p.trial.EV.TaskEnd - p.trial.EV.FixOff;
-        p.trial.task.SRT_FixStart = p.trial.EV.TaskEnd - p.trial.EV.FixSpotStart;
 
     case {'Correct','TargetBreak'}
+        p.trial.task.SRT_FixStart = p.trial.EV.FixTargetStart - p.trial.EV.FixSpotStart;
         p.trial.task.SRT_StimOn   = p.trial.EV.FixTargetStart - p.trial.EV.StimOn;
         p.trial.task.SRT_Go       = p.trial.EV.FixTargetStart - p.trial.EV.FixOff;
-        p.trial.task.SRT_FixStart = p.trial.EV.FixTargetStart - p.trial.EV.FixSpotStart;
         
     otherwise
         warning('Calculate_SRT: unrecognized outcome')
+        p.trial.task.SRT_FixStart = NaN;
         p.trial.task.SRT_StimOn   = NaN;
         p.trial.task.SRT_Go       = NaN;
-        p.trial.task.SRT_FixStart = NaN;
         
 end
       
