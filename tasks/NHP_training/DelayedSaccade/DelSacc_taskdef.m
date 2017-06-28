@@ -25,7 +25,7 @@ p.trial.reward.initialFixRwd  = 0.1; % Small reward for achieving full fixation
 p.trial.task.stimLatency      = ND_GetITI(0.2,0.35); % Time from full fixation to stim appearing
 
 p.trial.task.centerOffLatency = ND_GetITI(0.3,0.8); % Time from stim appearing to fixspot disappearing
-p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to the stim before error
+p.trial.task.saccadeTimeout   = 0.5;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minTargetFixTime = 0.5; % Must fixate on stim for at least this time before it counts
 
 p.trial.reward.Dur            = 1.0; % Reward for completing the task successfully
