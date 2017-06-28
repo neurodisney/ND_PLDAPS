@@ -87,7 +87,6 @@ SRT[pFixBreak]     = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimL
 StimSRT = dt$SRT_StimOn
 StimSRT[pFixBreak] = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak])
 
-
 # SRT[pStim]  = SaccTime[pStim]
 # SRT[pFalse] = dt$TaskEnd[pStim] - dt$FixSpotOff[pStim]
 
