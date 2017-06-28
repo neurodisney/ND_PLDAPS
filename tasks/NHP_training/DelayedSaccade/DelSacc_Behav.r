@@ -359,10 +359,10 @@ if(sum(pStimBreak) > 1) {
 
 ###########################################################################################
 # plot 7: performance barplot
-All_perf =  c(sum(pStim), sum(pEarly), sum(pFixBreak), sum(pStimBreak), sum(pFalse), sum(pMiss))
+All_perf =  c(sum(pCorr), sum(pEarly), sum(pFixBreak), sum(pStimBreak), sum(pHoldErr), sum(pFalse), sum(pMiss))
 
-All_typ = c('Correct', 'Early', 'FixBreak', 'StimBreak', 'False', 'Miss')
-All_col = c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, False_Col, Miss_Col)
+All_typ = c('Correct', 'Early', 'FixBreak', 'StimBreak', 'HoldBreak', 'False', 'Miss')
+All_col = c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, HoldBreak_Col, False_Col, Miss_Col)
 
 x = barplot(100*All_perf/Ntrials, beside=TRUE, col=All_col, xaxt="n", main='Session Performance', ylab='Proportion [%]', border=NA)
 
@@ -376,15 +376,16 @@ NumCond = 6  # -1 because it defines start and end of interval
 DelBrks = seq(floor(min(GoSig*10))/10, ceiling(max(GoSig*10))/10, length=NumCond)
 DelCat  = as.factor(cut(GoSig, breaks=DelBrks, labels= as.character(1:(NumCond-1))))
 
-All_Cnt       = hist(GoSig,                   DelBrks, plot=FALSE)$counts
-Hit_Cnt       = hist(GoSig[pCorr | pHoldErr], DelBrks, plot=FALSE)$counts
-FixBreak_Cnt  = hist(GoSig[pFixBreak],        DelBrks, plot=FALSE)$counts
-StimBreak_Cnt = hist(GoSig[pStimBreak],       DelBrks, plot=FALSE)$counts
-Early_Cnt     = hist(GoSig[pEarly],           DelBrks, plot=FALSE)$counts
+All_Cnt       = hist(GoSig,             DelBrks, plot=FALSE)$counts
+Hit_Cnt       = hist(GoSig[pCorr],      DelBrks, plot=FALSE)$counts
+HoldErr_Cnt   = hist(GoSig[pHoldErr],   DelBrks, plot=FALSE)$counts
+FixBreak_Cnt  = hist(GoSig[pFixBreak],  DelBrks, plot=FALSE)$counts
+StimBreak_Cnt = hist(GoSig[pStimBreak], DelBrks, plot=FALSE)$counts
+Early_Cnt     = hist(GoSig[pEarly],     DelBrks, plot=FALSE)$counts
 
-PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt)
+PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt)
 
-x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col), border=NA,
+x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, HoldBreak_Col), border=NA,
             main='Delay Performance', xlab='Delay [s]', ylab='Proportion [%]', xaxt="n")
 
 xl = colMeans(x)
@@ -401,19 +402,21 @@ TPos[TPos==315] = -45
 TPos = as.factor(TPos)
 
 All_Cnt       = as.numeric(table(TPos))
-Hit_Cnt       = as.numeric(table(TPos[pCorr | pHoldErr]))
+Hit_Cnt       = as.numeric(table(TPos[pCorr]))
+HoldErr_Cnt   = as.numeric(table(TPos[pHoldErr]))
 FixBreak_Cnt  = as.numeric(table(TPos[pFixBreak]))
 StimBreak_Cnt = as.numeric(table(TPos[pStimBreak]))
 Early_Cnt     = as.numeric(table(TPos[pEarly]))
 
 if(length(Hit_Cnt)       == 0 ) {Hit_Cnt       = All_Cnt * 0}
+if(length(HoldErr_Cnt)   == 0 ) {HoldErr_Cnt   = All_Cnt * 0}
 if(length(FixBreak_Cnt)  == 0 ) {FixBreak_Cnt  = All_Cnt * 0}
 if(length(StimBreak_Cnt) == 0 ) {StimBreak_Cnt = All_Cnt * 0}
 if(length(Early_Cnt)     == 0 ) {Early_Cnt     = All_Cnt * 0}
 
-PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt) 
+PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt) 
 
-x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col), border=NA,
+x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, HoldBreak_Col), border=NA,
             main='Location Performance', xlab='Target Location [degree]', ylab='Proportion [%]', xaxt="n")
 xl = colMeans(x)
 
