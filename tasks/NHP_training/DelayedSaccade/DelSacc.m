@@ -271,6 +271,7 @@ switch p.trial.CurrEpoch
                 
                 % Long enough fixation did not occur, failed trial
                 p.trial.task.Good = 0;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Abort;
                 
                 % Go directly to TaskEnd, do not start task, do not collect reward
                 fixspot(p,0);
