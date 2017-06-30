@@ -28,36 +28,35 @@ p.trial.task.centerOffLatency = ND_GetITI(0.3, 0.75); % Time from stim appearing
 p.trial.task.saccadeTimeout   = 0.5;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minTargetFixTime = 0.5;   % Must fixate on target for at least this time before it counts
 
-p.trial.behavior.fixation.centralFixWin = 3;  % fixation window around central spot (radius)
+p.trial.behavior.fixation.centralFixWin = 4;  % fixation window around central spot (radius)
 p.trial.stim.FixWin                     = 4;  % fixation window around target (radius)          
 
 % ------------------------------------------------------------------------%
 %% Stimulus parameters
 
 % Eccentricity in degrees from origin
-p.trial.stim.eccentricity       = 4;     
+p.trial.stim.eccentricity = 4;     
 
 % Locations of the stimuli (will scale to the proper eccentricity in the task)
 % Right now use the 4 diagonal quadrants and the right cardinal.
-p.trial.stim.locations          = {[1  , 0], ...
-                                   [-1 , 0], ...
-                                   [1  , 1], ...
-                                   [-1 , 1], ...
-                                   [-1 ,-1], ...
-                                   [1  ,-1]};
+p.trial.stim.locations    = {[1  , 0], ...
+                             [-1 , 0], ...
+                             [1  , 1], ...
+                             [-1 , 1], ...
+                             [-1 ,-1], ...
+                             [1  ,-1]};
                                    
-p.trial.stim.radius           = 1;    % radius of grating
+p.trial.stim.radius       = 1;    % radius of grating
 
-p.trial.stim.lowContrast      = 0.25;  % grating contrast value when stim.on = 1
-p.trial.stim.highContrast     = 0.65;  % grating contrast value when stim.on = 2
+p.trial.stim.lowContrast  = 0.25;  % grating contrast value when stim.on = 1
+p.trial.stim.highContrast = 0.65;  % grating contrast value when stim.on = 2
 
+p.trial.stim.orientations = [30];   % [0, 45, 90, 135, 180, 225, 270, 315]; %  angles for the stim
 
-p.trial.stim.orientations = [-60];   % [0, 45, 90, 135, 180, 225, 270, 315]; %  angles for the stim
+p.trial.stim.tFreq        = 0;   % temporal frequency of grating; drift speed, 0 is stationary
+p.trial.stim.sFreq        = [3.25]; %[1, 2, 4, 8];  % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
 
-p.trial.stim.tFreq            = 0;   % temporal frequency of grating; drift speed, 0 is stationary
-p.trial.stim.sFreq = [2]; %[1, 2, 4, 8];  % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
-
-p.trial.stim.grating.res = 300;
+p.trial.stim.grating.res  = 300;
 
 % ------------------------------------------------------------------------%
 %% Reward
@@ -65,7 +64,7 @@ p.trial.stim.grating.res = 300;
 % manual reward from experimenter
 p.trial.reward.initialFixRwd  = 0.1; % Small reward for achieving full fixation - set to zero to disable
 p.trial.reward.ManDur = 0.1;         % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur    = 1.2;         % Reward for completing the task successfully
+p.trial.reward.Dur    = 1.0;         % Reward for completing the task successfully
 
 % ------------------------------------------------------------------------%
 %% Task Timings
