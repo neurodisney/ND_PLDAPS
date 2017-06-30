@@ -271,7 +271,7 @@ switch p.trial.CurrEpoch
                 
                 % Long enough fixation did not occur, failed trial
                 p.trial.task.Good = 0;
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Abort;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
                 
                 % Go directly to TaskEnd, do not start task, do not collect reward
                 fixspot(p,0);
@@ -287,6 +287,7 @@ switch p.trial.CurrEpoch
             if p.trial.FixState.Current == p.trial.FixState.FixOut
                 
                 p.trial.EV.FixSpotStop = p.trial.EV.FixBreak;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
                 % Turn off the spot and end the trial
                 fixspot(p,0);
                 switchEpoch(p,'TaskEnd');
@@ -367,11 +368,11 @@ switch p.trial.CurrEpoch
                 if dtheta < p.trial.behavior.saccade.earlyAngle || dtheta > (360 - p.trial.behavior.saccade.earlyAngle)
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
                 else
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
                 end
             
             else
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Abort;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
             end
             
             % Record time
@@ -396,7 +397,7 @@ switch p.trial.CurrEpoch
             if p.trial.FixState.Current == p.trial.FixState.FixIn
                 % Animal has saccaded to stim
                 p.trial.stim.GotFix = 1;
-                p.trial.EV.FixTargetStart = p.trial.EV.FixStart;
+                p.trial.EV.FixTargetStart = p.trial.CurTime - p.trial.behavior.fixation.entryTime;
 
 
             elseif p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
@@ -620,17 +621,17 @@ function Calculate_SRT(p)
 
 switch p.trial.outcome.CurrOutcomeStr
     
-    case {'NoStart', 'Abort', 'Break'}
+    case {'NoStart', 'Break'}
         p.trial.task.SRT_FixStart = NaN;
         p.trial.task.SRT_StimOn   = NaN;
         p.trial.task.SRT_Go       = NaN;
        
-    case {'Abort'}
+    case {'FixBreak'}
         p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
         p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.fixLatency + p.trial.task.stimLatency);
         p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.fixLatency + p.trial.task.stimLatency + p.trial.task.centerOffLatency);
     
-    case {'FixBreak', 'Early'}
+    case {'StimBreak', 'Early'}
         p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
         p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
         p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.centerOffLatency);

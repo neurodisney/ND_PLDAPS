@@ -39,12 +39,7 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.outcome.FullFixation  =   3012;
     p.defaultParameters.outcome.Jackpot       =   3013;
     p.defaultParameters.outcome.TargetBreak   =   3014;
-
-    % refine timing of fixation break if desired    
-    p.defaultParameters.outcome.FIX_BRK_BSL   =   3000; % use for fixation break from fixspot, where relevant
-    p.defaultParameters.outcome.FIX_BRK_CUE   =   3001; 
-    p.defaultParameters.outcome.FIX_BRK_STIM  =   3002;
-    p.defaultParameters.outcome.FIX_BRK_SPEED =   3003;
+    p.defaultParameters.outcome.StimBreak     =   3015;
     
 end
 
