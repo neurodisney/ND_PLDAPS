@@ -45,22 +45,26 @@ if(length(fname)>1) {
 
 ###########################################################################################
 # standardize outcomes
-dt$Outcome = as.character(dt$Outcome)
-dt$Outcome[dt$Outcome == 'goodSaccade']  = 'Correct'
-dt$Outcome[dt$Outcome == 'earlySaccade'] = 'Early'
-dt$Outcome[dt$Outcome == 'Abort']        = 'FixBreak_BSL'
-dt$Outcome[dt$Outcome == 'FixBreak']     = 'FixBreak_Stim'
-dt$Outcome[dt$Outcome == 'wrongSaccade'] = 'FixBreak_Stim'
-dt$Outcome[dt$Outcome == 'glance']       = 'TargetBreak'
-dt$Outcome[dt$Outcome == 'TargetBreak']  = 'FixBreak_Trgt'
-dt$Outcome[dt$Outcome == 'noSaccade']    = 'Miss'
-dt$Outcome[dt$Outcome == 'Abort' & is.numeric(dt$FixStart)] = 'FixBreak_BSL'
-dt$Outcome[dt$Outcome == 'Abort' & !is.numeric(dt$FixStart)]= 'NoStart'
-dt$Outcome[is.nan(dt$FixStart)]= 'NoStart'
+
+
+
+# corrections used before June 30th 2017:
+# dt$Outcome = as.character(dt$Outcome)
+# dt$Outcome[dt$Outcome == 'goodSaccade']  = 'Correct'
+# dt$Outcome[dt$Outcome == 'earlySaccade'] = 'Early'
+# dt$Outcome[dt$Outcome == 'Abort']        = 'FixBreak_BSL'
+# dt$Outcome[dt$Outcome == 'FixBreak']     = 'FixBreak_Stim'
+# dt$Outcome[dt$Outcome == 'wrongSaccade'] = 'FixBreak_Stim'
+# dt$Outcome[dt$Outcome == 'glance']       = 'TargetBreak'
+# dt$Outcome[dt$Outcome == 'TargetBreak']  = 'FixBreak_Trgt'
+# dt$Outcome[dt$Outcome == 'noSaccade']    = 'Miss'
+# dt$Outcome[dt$Outcome == 'Abort' & is.numeric(dt$FixStart)] = 'FixBreak_BSL'
+# dt$Outcome[dt$Outcome == 'Abort' & !is.numeric(dt$FixStart)]= 'NoStart'
+# dt$Outcome[is.nan(dt$FixStart)]= 'NoStart'
 
 # get rid of un-started trials
 # (ToDo: keep times when experimenter initiated breaks starts)
-dt=droplevels(subset(dt, dt$Outcome != 'NoFix' & dt$Outcome != 'Break'  & dt$Outcome != 'NoStart'))
+dt = droplevels(subset(dt, dt$Outcome != 'NoFix' & dt$Outcome != 'Break'  & dt$Outcome != 'NoStart'))
 
 Ntrials = length(dt$Outcome)
 
@@ -72,9 +76,9 @@ dt$Outcome = as.factor(dt$Outcome)
 pCorr      = dt$Outcome == 'Correct'
 pEarly     = dt$Outcome == 'Early'
 pFalse     = dt$Outcome == 'False'
-pHoldErr   = dt$Outcome == 'FixBreak_Trgt'
-pStimBreak = dt$Outcome == 'FixBreak_Stim'
-pFixBreak  = dt$Outcome == 'FixBreak_BSL'
+pHoldErr   = dt$Outcome == 'TargetBreak'
+pStimBreak = dt$Outcome == 'StimBreak'
+pFixBreak  = dt$Outcome == 'FixBreak'
 pMiss      = dt$Outcome == 'Miss'
 pStim      = pCorr | dt$Outcome == pHoldErr
 
@@ -82,11 +86,10 @@ pStim      = pCorr | dt$Outcome == pHoldErr
 # get relevant variables
 Ttime    = (dt$FixSpotOn - dt$FixSpotOn[1]) / 60  # in minutes, define trial start times as fixation spot onset
 FixStart = dt$FixStart   - dt$FixSpotOn
+
 # TDur     = dt$TaskEnd    - dt$FixStart
-
-TDur = dt$StimOn - dt$FixStart + dt$SRT_StimOn
-TDur[pFixBreak]  = dt$FixBreak[pFixBreak] - dt$FixStart[pFixBreak]
-
+# TDur             = dt$StimOn - dt$FixStart + dt$SRT_StimOn
+# TDur[pFixBreak]  = dt$FixBreak[pFixBreak]  - dt$FixStart[pFixBreak]
 
 GoCue    = dt$FixSpotOff - dt$FixStart
 SaccTime = dt$StimFix    - dt$FixSpotOff
@@ -98,12 +101,13 @@ IntGo[pStim] = dt$FixSpotOff[pStim]
 ###########################################################################################
 # derive RT times
 # SRT = dt$FixSpotOff - IntGo
-SRT = dt$SRT_Go
-
+SRT                = dt$SRT_Go
 SRT[pFixBreak]     = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak] + dt$GoLatency[pFixBreak])
+#SRT[SRT<0 & dt$Outcome == 'Correct'] = SRT[SRT<0 & dt$Outcome == 'Correct'] + dt$GoLatency[SRT<0 & dt$Outcome == 'Correct']
 
-StimSRT = dt$SRT_StimOn
+StimSRT            = dt$SRT_StimOn
 StimSRT[pFixBreak] = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak])
+#StimSRT[SRT<0 & dt$Outcome == 'Correct'] = StimSRT[SRT<0 & dt$Outcome == 'Correct'] + dt$GoLatency[SRT<0 & dt$Outcome == 'Correct'] + dt$StimOn[SRT<0 & dt$Outcome == 'Correct'] - dt$FixStart[SRT<0 & dt$Outcome == 'Correct']
 
 # SRT[pStim]  = SaccTime[pStim]
 # SRT[pFalse] = dt$TaskEnd[pStim] - dt$FixSpotOff[pStim]
@@ -129,16 +133,16 @@ par(mar=c(5,5,1,1))
 
 ###########################################################################################
 # plot 1: saccade time
-plot(Trng, range(TDur, na.rm = TRUE), type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
+plot(Trng, range(StimSRT, na.rm = TRUE), type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
      xlab='', ylab='Time after Target Onset [s]', xaxt="n")
 
-points(Ttime[pCorr],      TDur[pCorr],      pch=19, col=Corr_Col)
-points(Ttime[pFixBreak],  TDur[pFixBreak],  pch=19, col=FixBreak_Col)
-points(Ttime[pStimBreak], TDur[pStimBreak], pch=19, col=StimBreak_Col)
-points(Ttime[pHoldErr],   TDur[pHoldErr],   pch=19, col=TargetBreak_Col)
-points(Ttime[pEarly],     TDur[pEarly],     pch=19, col=Early_Col)
-points(Ttime[pMiss],      TDur[pMiss],      pch=19, col=Miss_Col)
-points(Ttime[pFalse],     TDur[pFalse],     pch=19, col=False_Col)
+points(Ttime[pCorr],      StimSRT[pCorr],      pch=19, col=Corr_Col)
+points(Ttime[pFixBreak],  StimSRT[pFixBreak],  pch=19, col=FixBreak_Col)
+points(Ttime[pStimBreak], StimSRT[pStimBreak], pch=19, col=StimBreak_Col)
+points(Ttime[pHoldErr],   StimSRT[pHoldErr],   pch=19, col=TargetBreak_Col)
+points(Ttime[pEarly],     StimSRT[pEarly],     pch=19, col=Early_Col)
+points(Ttime[pMiss],      StimSRT[pMiss],      pch=19, col=Miss_Col)
+points(Ttime[pFalse],     StimSRT[pFalse],     pch=19, col=False_Col)
 
 legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBreak", "Miss", "False"), 
        pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, Miss_Col, False_Col), 
@@ -224,40 +228,40 @@ lines(GoSig, GoSig, lty=3, col='black')
 abline(h=0, lty=2)
 
 ###########################################################################################
-# plot 5: Trial duration
+# plot 5: response after target onset
 all_vals_X = c()
 all_vals_Y = c()
 
 if(sum(pCorr) > 1) {
-  TDurhit   = density(TDur[pCorr], bw=RTbw, na.rm=TRUE)
+  TDurhit   = density(StimSRT[pCorr], bw=RTbw, na.rm=TRUE)
   TDurhit$y = TDurhit$y  * sum(pCorr)  * RTbw
   all_vals_X = c(all_vals_X, TDurhit$x)
   all_vals_Y = c(all_vals_Y, TDurhit$y)
 }
 
 if(sum(pHoldErr) > 1) {
-  TDurhold   = density(TDur[pHoldErr], bw=RTbw, na.rm=TRUE)
+  TDurhold   = density(StimSRT[pHoldErr], bw=RTbw, na.rm=TRUE)
   TDurhold$y = TDurhold$y  * sum(pHoldErr)  * RTbw
   all_vals_X = c(all_vals_X, TDurhold$x)
   all_vals_Y = c(all_vals_Y, TDurhold$y)
 }
 
 if(sum(pEarly) > 1) {
-  TDurearly   = density(TDur[pEarly], bw=RTbw, na.rm=TRUE)
+  TDurearly   = density(StimSRT[pEarly], bw=RTbw, na.rm=TRUE)
   TDurearly$y = TDurearly$y  * sum(pEarly)  * RTbw
   all_vals_X = c(all_vals_X, TDurearly$x)
   all_vals_Y = c(all_vals_Y, TDurearly$y)
 }
 
 if(sum(pFixBreak) > 1) {
-  TDurfixbreak   = density(TDur[pFixBreak], bw=RTbw, na.rm=TRUE)
+  TDurfixbreak   = density(StimSRT[pFixBreak], bw=RTbw, na.rm=TRUE)
   TDurfixbreak$y = TDurfixbreak$y  * sum(pFixBreak)  * RTbw
   all_vals_X = c(all_vals_X, TDurfixbreak$x)
   all_vals_Y = c(all_vals_Y, TDurfixbreak$y)
 }
 
 if(sum(pStimBreak) > 1) {
-  TDurstimbreak   = density(TDur[pStimBreak], bw=RTbw, na.rm=TRUE)
+  TDurstimbreak   = density(StimSRT[pStimBreak], bw=RTbw, na.rm=TRUE)
   TDurstimbreak$y = TDurstimbreak$y  * sum(pStimBreak)  * RTbw
   all_vals_X = c(all_vals_X, TDurstimbreak$x)
   all_vals_Y = c(all_vals_Y, TDurstimbreak$y)
@@ -291,8 +295,8 @@ if(sum(pStimBreak) > 1) {
   lines(TDurstimbreak, lwd=2, col=StimBreak_Col)
 }
 
-abline(v=median(TDur[pCorr], na.rm=TRUE), col=Corr_Col, lty=2, lwd=2)
-abline(v=median(TDur[pEarly], na.rm=TRUE), col=Early_Col, lty=2, lwd=2)
+abline(v=median(StimSRT[pCorr], na.rm=TRUE), col=Corr_Col, lty=2, lwd=2)
+abline(v=median(StimSRT[pEarly], na.rm=TRUE), col=Early_Col, lty=2, lwd=2)
 
 ###########################################################################################
 # plot 6: response times
@@ -436,7 +440,7 @@ DelCatresp = DelCat[RespP]
 Result = as.character(dt$Outcome[RespP])
 Result[Result != 'Early'] = 'Correct'
 
-plrng = c(min(SRTresp[Result== 'Early']), max(SRTresp[Result== 'Correct']))
+plrng = range(SRTresp)
 
 beanplot(SRTresp ~ Result*DelCatresp, ll = 0.1,
          main = "Delay dependent SRT", side = "both", xlab="Delay [s]", ylab='Response Time [s]', bw=RTbw,
@@ -448,14 +452,10 @@ abline(h=0, col="black", lty=2, lwd=1.5)
 
 ###########################################################################################
 # plot 11: Location dependent SRT
-RespP      = pCorr | pEarly | pHoldErr 
-SRTresp    = SRT[RespP]
 PosCatresp = TPos[RespP]
 
-Result = as.character(dt$Outcome[RespP])
-Result[Result != 'Early'] = 'Correct'
-
-plrng = c(min(SRTresp[Result== 'Early']), max(SRTresp[Result== 'Correct']))
+# plrng = c(min(SRTresp[Result== 'Early']), max(SRTresp[Result== 'Correct']))
+plrng = range(SRTresp)
 
 beanplot(SRTresp ~ Result*PosCatresp, ll = 0.1,
          main = "Location dependent SRT", side = "both", xlab="Delay [s]", ylab='Response Time [s]', bw=RTbw,
