@@ -193,37 +193,27 @@ p.trial.task.Good                = 0;
 p.trial.behavior.fixation.GotFix = 0;
 p.trial.stim.GotFix              = 0;
 
-pds.fixation.move(p);
 
 p.trial.behavior.fixation.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
 
 
-%% Reward
+%% Generate all the visual stimuli
 
 % Fixation spot
-p.trial.behavior.fixation.fixPos = [0,0];
-p.trial.behavior.fixation.FixType = 'disc';
-pds.fixation.move(p);
+p.trial.stim.fix = pds.stim.FixSpot(p);
 
-%% Stimulus parameters
-
-% Calculate the location of the stim
-direction = p.trial.stim.locations{randi(length(p.trial.stim.locations))};
+% Gratings
+% Calculate the location
+direction = p.trial.stim.grating.direction;
 magnitude = p.trial.stim.eccentricity;
-p.trial.stim.pos = magnitude * direction / norm(direction);
-p.trial.stim.grating.pos = p.trial.stim.pos;
-
-p.trial.stim.grating.sFreq = datasample(p.trial.stim.sFreq,1);
-p.trial.stim.grating.tFreq = p.trial.stim.tFreq;
-
-p.trial.stim.angle = datasample(p.trial.stim.orientations,1);
-p.trial.stim.grating.angle = p.trial.stim.angle;
-
+p.trial.stim.grating.pos = magnitude * direction / norm(direction);
 
 % Generate the low contrast stimulus
-p.trial.stim.gratingL = pds.stim.Grating(p,p.trial.stim.radius,p.trial.stim.lowContrast);
+p.trial.stim.grating.contrast = p.trial.stim.grating.lowContrast;
+p.trial.stim.gratingL = pds.stim.Grating(p);
 % and the high contrast stimulus
-p.trial.stim.gratingH = pds.stim.Grating(p,p.trial.stim.radius,p.trial.stim.highContrast);
+p.trial.stim.grating.contrast = p.trial.stim.grating.highContrast;
+p.trial.stim.gratingH = pds.stim.Grating(p);
 
 
 % stim starts off
@@ -579,11 +569,11 @@ p.trial.EV.epochEnd = p.trial.CurTime;
 
 function fixspot(p,bool)
 if bool
-    p.trial.behavior.fixation.on = 1;
+    p.trial.stim.fix.on = 1;
     p.trial.EV.FixOn = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
 else
-    p.trial.behavior.fixation.on = 0;
+    p.trial.stim.fix.on = 0;
     p.trial.EV.FixOff = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
 end
@@ -597,21 +587,34 @@ oldVal = p.trial.stim.on;
 % Don't do anything if stim doesn't change
 if val == oldVal; return; end
 
+p.trial.stim.on = val;
+
+% Turn on/off the appropriate generated stimuli
+switch val
+    case 0
+        p.trial.stim.gratingL.on = 0;
+        p.trial.stim.gratingH.on = 0;
+    case 1
+        p.trial.stim.gratingL.on = 1;
+        p.trial.stim.gratingH.on = 0;
+    case 2
+        p.trial.stim.gratingL.on = 0;
+        p.trial.stim.gratingH.on = 1;
+    otherwise
+        error('bad stim value')
+end
+
+% Record the change timing
 if val == 0
-    % Turn the stim off
-    p.trial.stim.on = 0;
+    % Stim is turning off
     p.trial.EV.StimOff = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.STIM_OFF);
-    
+    pds.datapixx.strobe(p.trial.event.STIM_OFF);    
 elseif oldVal == 0
     % Stim is turning on
-    p.trial.stim.on = val;
     p.trial.EV.StimOn = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.STIM_ON);
-    
+    pds.datapixx.strobe(p.trial.event.STIM_ON);   
 else
     % Stim is changing
-    p.trial.stim.on = val;
     p.trial.EV.StimChange = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.STIM_CHNG);
 end

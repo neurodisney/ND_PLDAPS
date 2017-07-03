@@ -49,7 +49,7 @@ methods
                         obj.pos(1), obj.pos(2), obj.size);
                 case 'rect'
                     Screen('FillRect',  p.trial.display.overlayptr, p.trial.display.clut.(obj.color), ...
-                        [obj.pos - [obj.size obj.size]; obj.pos + [obj.size obj.size]]);
+                        ND_GetRect(obj.pos, obj.size));
                     
                 otherwise
                     error('Unknown type of fixation spot: %s', p.trial.behavior.fixation.FixType);
