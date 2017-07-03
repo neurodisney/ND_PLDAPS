@@ -1,4 +1,6 @@
 classdef FixSpot < BaseStim
+% Fix spot stimulus
+% Nate Faber, July 2017
 
 properties
     size

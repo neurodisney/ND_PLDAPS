@@ -17,6 +17,8 @@ classdef Grating < BaseStim
 % Background color offset
 % Resolution
 
+% Nate Faber, July 2017
+
 properties
     tFreq
     angle

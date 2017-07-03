@@ -1,7 +1,8 @@
 classdef BaseStim < Handle
     
 % A superclass that defines a bunch of useful methods and properties for use across visual stimuli
-
+%
+% Nate Faber, July 2017
 
 properties
     pos
