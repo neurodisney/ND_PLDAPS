@@ -15,6 +15,7 @@ properties (SetAccess = private)
     eyeDist                 % How far away the eyes are from the center of the stim
     fixState = 'inactive'    
     EV = struct             % Struct of timing arrays to store when things happen to the stim
+    fixWinRect              % The bounding box of the fixation window, used for drawing the window
 end
 
 methods
@@ -38,21 +39,33 @@ methods
         if p.trial.behavior.fixation.use
             %Determine how far away the eyes are
             obj.eyeDist = sqrt( (obj.pos(1) - p.trial.eyeX)^2 + (obj.pos(2) - p.trial.eyeY)^2 );
-
-            % If object has been turned on, activate the fixation window
-            if obj.on && ~obj.fixActive
-                obj.fixActive = 1;
-            end
-
+            
+            % Check fixation state
             getFixState(p)
             
-            % Deactivate the stim if it is off and eye is no longer looking at where it once was
-            if obj.autoDeactivate && ~obj.on && obj.fixActive && strcmp(obj.fixState, 'FixOut')
-                obj.fixActive = 0;
-            end
         end
     end
-
+    
+    function obj = set.fixWin(obj,value)
+        % Automatically adjust the fixWinRect if the fixWin changes size
+        obj.fixWin = value;
+        obj.fixWinRect = ND_GetRect(obj.pos, obj.fixWin);
+    end
+    
+    function obj = set.pos(obj,value)
+        % Automatically adjust the fixWinRect if the objects position changes
+        obj.pos = value;
+        obj.fixWinRect = ND_GetRect(obj.pos, obj.fixWin);
+    end
+    
+    function obj = set.on(obj,value)
+        obj.on = value
+        
+        if value
+            % Automatically turn on fixation checking when object becomes visible
+            obj.fixActive = 1;
+        end
+    
 end
 
 methods (Access = private)
@@ -79,6 +92,11 @@ methods (Access = private)
                         obj.fixState = 'startingFix';
                         obj.EV.FixEntry = p.trial.CurTime;
                         p.trial.EV.FixEntry = p.trial.CurTime;
+                    else
+                        % If the stim is off, deactivate the stim
+                        if obj.autoDeactivate && ~obj.on
+                            obj.fixActive = 0;
+                        end
                     end
                     
                 case 'startingFix'
