@@ -57,7 +57,9 @@ methods
     function draw(obj,p)
         % Just draw a dot at the position for the base stimulus.
         % This function can and should be replaced by subclasses
-        Screen('DrawDots', p.trial.display.overlayptr,obj.pos,1,p.trial.display.clut.black)
+        if obj.on
+            Screen('DrawDots', p.trial.display.overlayptr,obj.pos,1,p.trial.display.clut.black)
+        end
     end
     
     function drawFixWin(obj,p)
