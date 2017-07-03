@@ -7,14 +7,12 @@ function p = ND_UpdateTrial(p)
 
 %% The old trial struct is still in memory
 if p.trial.task.Good
-    p.defaultParameters.LastHits = p.trial.LastHits + 1; % how many correct trials since last error
-    p.defaultParameters.NHits    = p.trial.NHits    + 1; % how many correct trials in total
+    p.defaultParameters.LastHits   = p.trial.LastHits   + 1; % how many correct trials since last error
+    p.defaultParameters.NHits      = p.trial.NHits      + 1; % how many correct trials in total
     p.defaultParameters.NCompleted = p.trial.NCompleted + 1; % number of started trials (excluding not started trials)
 else
-    p.defaultParameters.NHits    = p.trial.NHits;
-    p.defaultParameters.LastHits = 0;     % how many correct trials since last error
-
-    
+    p.defaultParameters.NHits      = p.trial.NHits;
+    p.defaultParameters.LastHits   = 0;     % how many correct trials since last error
 end
 
 if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && ...
@@ -27,11 +25,13 @@ end
 % Store the current outcome in the Map of all outcomes
 allOutcomes = p.defaultParameters.outcome.allOutcomes;
 outcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+
 if isKey(allOutcomes,outcomeStr)
     allOutcomes(outcomeStr) = allOutcomes(outcomeStr) + 1;
 else
     allOutcomes(outcomeStr) = 1;
 end
+
 p.defaultParameters.outcome.allOutcomes = allOutcomes;
 
 p.defaultParameters.blocks = p.trial.blocks;

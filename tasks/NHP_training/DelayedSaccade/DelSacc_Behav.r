@@ -9,8 +9,8 @@ require(beanplot)
 DelSacc_Behav = function(datadir=NA, fname=NA) {
 
 ## specify analysis/graph parameters
-avrgwin  =   90  # moving average window for performance plot in seconds
-avrgstep =   10  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
+avrgwin  =   240  # moving average window for performance plot in seconds
+avrgstep =   1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
 RTbw     =  0.02 # kernel width for density estimate of response times
 
 Corr_Col        = 'limegreen'

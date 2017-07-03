@@ -69,6 +69,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwd',     'p.trial.EV.FirstReward',              '%.5f');
     p = ND_AddAsciiEntry(p, 'Reward',      'p.trial.EV.Reward',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'RewPulses',   'p.trial.reward.nPulse',               '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwdDur',  'p.trial.reward.initialFixRwd * ~isnan(p.trial.EV.FirstReward)', '%.5f');
     p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
     p = ND_AddAsciiEntry(p, 'TotalRwd',    'sum(p.trial.reward.timeReward(:,2))', '%.5f');
@@ -441,7 +442,17 @@ switch p.trial.CurrEpoch
             if p.trial.CurTime > p.trial.EV.FixStart + p.trial.task.minTargetFixTime
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
                 
-                pds.reward.give(p, p.trial.reward.Dur);
+                if(p.trial.reward.IncrConsecutive == 1)
+                    AddPulse = find(p.trial.reward.PulseStep <= p.trial.LastHits+1, 1, 'last');
+                    if(~isempty(AddPulse))
+                        p.trial.reward.nPulse = p.trial.reward.nPulse + AddPulse;
+                    end
+                    
+                    fprintf('     REWARD!!!  [%d pulse(s) for %d subsequent correct trials]\n\n', ...
+                             p.trial.reward.nPulse, p.trial.LastHits+1);
+                end
+
+                pds.reward.give(p, p.trial.reward.Dur, p.trial.reward.nPulse);
                 pds.audio.playDP(p,'reward','left');
                 
                 % Record main reward time

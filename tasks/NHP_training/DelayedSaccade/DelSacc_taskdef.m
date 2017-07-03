@@ -20,15 +20,15 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 %% Main stuff to change
 p.trial.task.FixCol = 'black';
 
-p.trial.task.fixLatency       = 0.25; % Time to hold fixation before it counts
-p.trial.task.stimLatency      = ND_GetITI(0.25, 0.35); % Time from full fixation to stim appearing (efficiently, p.trial.task.fixLatency will be added to this value) 
+p.trial.task.fixLatency       = 0.15; % Time to hold fixation before it counts
+p.trial.task.stimLatency      = ND_GetITI(0.35, 0.85); % Time from full fixation to stim appearing (efficiently, p.trial.task.fixLatency will be added to this value) 
 
-p.trial.task.centerOffLatency = ND_GetITI(0.3, 0.75); % Time from stim appearing to fixspot disappearing
+p.trial.task.centerOffLatency = ND_GetITI(0.5, 1.0); % Time from stim appearing to fixspot disappearing
 
-p.trial.task.saccadeTimeout   = 0.5;   % Time allowed to make the saccade to the stim before error
-p.trial.task.minTargetFixTime = 0.5;   % Must fixate on target for at least this time before it counts
+p.trial.task.saccadeTimeout   =  0.5;   % Time allowed to make the saccade to the stim before error
+p.trial.task.minTargetFixTime = 0.75;   % Must fixate on target for at least this time before it counts
 
-p.trial.behavior.fixation.centralFixWin = 4;  % fixation window around central spot (radius)
+p.trial.behavior.fixation.centralFixWin = 3;  % fixation window around central spot (radius)
 p.trial.stim.FixWin                     = 4;  % fixation window around target (radius)          
 
 % ------------------------------------------------------------------------%
@@ -48,13 +48,13 @@ p.trial.stim.locations    = {[1  , 0], ...
                                    
 p.trial.stim.radius       = 1;    % radius of grating
 
-p.trial.stim.lowContrast  = 0.25;  % grating contrast value when stim.on = 1
+p.trial.stim.lowContrast  = 0.4;  % grating contrast value when stim.on = 1
 p.trial.stim.highContrast = 0.65;  % grating contrast value when stim.on = 2
 
-p.trial.stim.orientations = [30];   % [0, 45, 90, 135, 180, 225, 270, 315]; %  angles for the stim
+p.trial.stim.orientations = [-75];   % [0, 45, 90, 135, 180, 225, 270, 315]; %  angles for the stim
 
 p.trial.stim.tFreq        = 0;   % temporal frequency of grating; drift speed, 0 is stationary
-p.trial.stim.sFreq        = [3.25]; %[1, 2, 4, 8];  % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
+p.trial.stim.sFreq        = [1.75]; %[1, 2, 4, 8];  % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
 
 p.trial.stim.grating.res  = 300;
 
@@ -62,9 +62,12 @@ p.trial.stim.grating.res  = 300;
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.initialFixRwd  = 0.1; % Small reward for achieving full fixation - set to zero to disable
-p.trial.reward.ManDur = 0.1;         % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur    = 1.0;         % Reward for completing the task successfully
+p.trial.reward.initialFixRwd   =   0;  % Small reward for achieving full fixation - set to zero to disable
+p.trial.reward.ManDur          = 0.1;  % reward duration [s] for reward given by keyboard presses
+p.trial.reward.Dur             = 0.5;  % Reward for completing the task successfully
+p.trial.reward.IncrConsecutive = 1;    % use rewarding scheme that gives more rewards with subsequent correct trials
+p.trial.reward.nPulse          = 1;    % number of reward pulses 
+p.trial.reward.PulseStep       = [2, 3, 4]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
 %% Task Timings
