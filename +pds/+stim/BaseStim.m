@@ -21,8 +21,15 @@ end
 methods
     % The constructor method
     function obj = BaseStim(p, pos, fixWin)
-        obj.pos = pos;
+        if nargin < 3 || isempty(fixWin)
+            fixWin = p.trial.stim.fixWin;
+        end
         obj.fixWin = fixWin;
+        
+        if nargin < 2 || isempty(pos)
+            pos = p.trial.stim.pos;
+        end
+        obj.pos = pos;
         
         % Initialize EV struct to contain NaNs
         obj.EV.FixEntry = NaN;

@@ -228,11 +228,6 @@ SS.behavior.fixation.PrevOffset      = [0, 0]; % keep track of previous offset t
 
 SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use to determine current (median) eye position (has to be smaller than SS.pldaps.draw.eyepos.history)
 
-% fixation window
-SS.behavior.fixation.FixWin          =  4;  % diameter of fixation window in dva
-SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
-SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
-SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
 % Define fixation states
 SS.FixState.Current     = NaN;
@@ -245,6 +240,15 @@ SS.FixState.breakingFix = 0.75;  % Gaze has momentarily left fixation window
 %% Stimuli
 SS.stim.allStims = {}; % Cell array to store references of all the stims created
 
+% Default position for stimuli to be generated
+SS.stim.pos = [0,0];
+
+% fixation window
+SS.stim.fixWin                       =  4;  % diameter of fixation window in dva
+SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
+SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
+SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
+
 % Sine Wave Grating stimlui
 SS.stim.grating.sFreq    = 3; % Spatial frequency, cycles/deg
 SS.stim.grating.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
@@ -256,6 +260,8 @@ SS.stim.grating.contrastMethod = 'balanced';
 SS.stim.grating.pos      = [0, 0];
 SS.stim.grating.alpha    = 1; % Fully opaque
 % SS.stim.grating.srcRadius  = 500; % Big source to allow for more resolution
+
+
 
 % ------------------------------------------------------------------------%
 %% Joystick
