@@ -4,7 +4,7 @@ classdef BaseStim < Handle
 
 
 properties
-    pos = [0, 0];
+    pos
     on = 0;                 % Visibility
     fixWin
     fixActive = 0;          % Whether or not this stim is is checked for eye fixation
