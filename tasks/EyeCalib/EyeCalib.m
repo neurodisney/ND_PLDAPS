@@ -135,7 +135,6 @@ function TaskSetUp(p)
          Ypos = round((rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2));
          p.trial.behavior.fixation.fixPos = [Xpos, Ypos];
     end
-    pds.fixation.move(p);
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -263,29 +262,8 @@ function TaskDesign(p)
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
         
-        % set timer for intertrial interval            
-            tms = pds.datapixx.strobe(p.trial.event.TASK_OFF); 
-            p.trial.EV.DPX_TaskOff = tms(1);
-            p.trial.EV.TDT_TaskOff = tms(2);
-
-            p.trial.EV.TaskEnd = p.trial.CurTime;
-
-            if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
-            end
-
-            % determine ITI
-            switch p.trial.outcome.CurrOutcome
-                
-                case {p.trial.outcome.NoFix, p.trial.outcome.FixBreak}
-                    % Timeout if no fixation
-                    p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
-            end
-            
-            p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
-            
-            p.trial.Timer.ITI  = p.trial.Timer.Wait;
-            p.trial.CurrEpoch  = p.trial.epoch.ITI;
+            % Run standard TaskEnd routine
+            Task_OFF(p)
         
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI
@@ -300,18 +278,8 @@ function TaskDraw(p)
 % go through the task epochs as defined in TaskDesign and draw the stimulus
 % content that needs to be shown during this epoch.
 
-%% TODO: draw predicted eye pos for calibration grid, draw indicator for random posiiton vs. fix, indicate current position
-
     if p.trial.behavior.fixation.enableCalib
         pds.eyecalib.draw(p)
-    end
-    
-    
-    switch p.trial.CurrEpoch
-        % ----------------------------------------------------------------%
-        case {p.trial.epoch.WaitFix, p.trial.epoch.Fixating}
-            pds.fixation.draw(p);
-
     end
     
 % ####################################################################### %

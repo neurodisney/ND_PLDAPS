@@ -458,16 +458,8 @@ switch p.trial.CurrEpoch
     case p.trial.epoch.TaskEnd
         %% finish trial and error handling
         
-        % set timer for intertrial interval
-        tms = pds.datapixx.strobe(p.trial.event.TASK_OFF);
-        p.trial.EV.DPX_TaskOff = tms(1);
-        p.trial.EV.TDT_TaskOff = tms(2);
-        
-        p.trial.EV.TaskEnd = p.trial.CurTime;
-        
-        if(p.trial.datapixx.TTL_trialOn)
-            pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
-        end
+        % Run standard TaskEnd routine
+        Task_OFF(p)
         
         % Grab the fixation stopping and starting values from the stim properties
         p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
@@ -479,18 +471,7 @@ switch p.trial.CurrEpoch
             p.trial.EV.FixTargetStart = p.trial.stim.gratingH.EV.FixStart;
             p.trial.EV.FixTargetStop  = p.trial.stim.gratingH.EV.FixBreak;
         end
-        
-        
-        
-        % determine ITI
-        if ~p.trial.task.Good
-            % Timeout if task not performed correctly
-            p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
-        end
-        
-        p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
-        
-        p.trial.Timer.ITI  = p.trial.Timer.Wait;
+      
         switchEpoch(p,'ITI');
         
         % ----------------------------------------------------------------%
@@ -502,15 +483,8 @@ end  % switch p.trial.CurrEpoch
 
 % ####################################################################### %
 function TaskDraw(p)
-%% show epoch dependent stimuli
-% go through the task epochs as defined in TaskDesign and draw the stimulus
-% content that needs to be shown during this epoch.
+%% Custom draw function for this experiment
 
-%% TODO: draw predicted eye pos for calibration grid, draw indicator for random posiiton vs. fix, indicate current position
-
-if p.trial.behavior.fixation.enableCalib
-    pds.eyecalib.draw(p);
-end
 
 % ####################################################################### %
 function TaskCleanAndSave(p)
