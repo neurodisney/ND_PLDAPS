@@ -12,12 +12,14 @@ properties
     autoDeactivate = 1;     % If fixActive automatically turns off after the stim is turned off and the eye leaves
 end
 
-properties (SetAccess = private)
+properties (SetAccess = protected)
     eyeDist                 % How far away the eyes are from the center of the stim
     fixState = 'inactive'    
     EV = struct             % Struct of timing arrays to store when things happen to the stim
     fixWinRect              % The bounding box of the fixation window, used for drawing the window
+    fixating = 0            % Boolean for fixation
 end
+
 
 methods
     % The constructor method
@@ -43,17 +45,22 @@ methods
         p.trial.stim.allStims{end+1} = obj;
     end
     
-    function checkFix(obj,p)
-        % Only do this if fixation is relavent
+    function checkFix(obj,p)        
         if p.trial.behavior.fixation.use
+            point = [p.trial.eyeX, p.trial.eyeY];
+            
             %Determine how far away the eyes are
-            obj.eyeDist = sqrt( (obj.pos(1) - p.trial.eyeX)^2 + (obj.pos(2) - p.trial.eyeY)^2 );
+            obj.eyeDist = inFixWin(obj, point);
             
             % Check fixation state
-            getFixState(obj,p)
-            
+            getFixState(obj,p)   
         end
     end
+    
+    function dist = inFixWin(obj, point)
+        dist = sqrt( sum( (obj.pos - point)^2 ) );
+    end
+        
     
     function draw(obj,p)
         % Just draw a dot at the position for the base stimulus.
@@ -119,10 +126,12 @@ methods (Access = private)
                     % Fixation was just activated, determine the starting state
                     if obj.eyeDist <= obj.fixWin/2
                         obj.fixState = 'FixIn';
+                        obj.fixating = 1;
                         obj.EV.FixStart = p.trial.CurTime;
                         p.trial.EV.FixStart = p.trial.CurTime;
                     else
                         obj.fixState = 'FixOut';
+                        obj.fixating = 0;
                     end
      
                 case 'FixOut'
@@ -153,6 +162,7 @@ methods (Access = private)
                     elseif p.trial.CurTime >= obj.EV.FixEntry + p.trial.behavior.fixation.entryTime
                         pds.datapixx.strobe(p.trial.event.FIXATION);
                         obj.fixState = 'FixIn';
+                        obj.fixating = 1;
                         obj.EV.FixStart = obj.EV.FixEntry;
                         p.trial.EV.FixStart = obj.EV.FixEntry;
                     end
@@ -182,6 +192,7 @@ methods (Access = private)
                     elseif p.trial.CurTime > obj.EV.FixLeave + p.trial.behavior.fixation.BreakTime
                         pds.datapixx.strobe(p.trial.event.FIX_BREAK);
                         obj.fixState = 'FixOut';
+                        obj.fixating = 0;
                         obj.EV.FixBreak = obj.EV.FixLeave;
                         p.trial.EV.FixBreak = obj.EV.FixLeave;
                     end

@@ -250,7 +250,7 @@ switch p.trial.CurrEpoch
         if p.trial.behavior.fixation.GotFix == 0
             
             % Fixation has occured
-            if p.trial.FixState.Current == p.trial.FixState.FixIn
+            if p.trial.stim.fix.fixating
                 p.trial.behavior.fixation.GotFix = 1;
                 
                 % Time to fixate has expired
@@ -271,15 +271,15 @@ switch p.trial.CurrEpoch
         elseif p.trial.behavior.fixation.GotFix == 1
             
             % Fixation ceases
-            if p.trial.FixState.Current == p.trial.FixState.FixOut
+            if ~p.trial.stim.fix.fixating
                 
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
                 % Turn off the spot and end the trial
                 fixspot(p,0);
                 switchEpoch(p,'TaskEnd');
                 
-                % Fixation has been held for long enough && not currently in the middle of breaking fixation
-            elseif (p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.fixLatency) && p.trial.FixState.Current == p.trial.FixState.FixIn
+                % Fixation has been held for long enough
+            elseif (p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.fixLatency)
                 
                 % Reward the monkey if there is initial reward for this trial
                 if p.trial.reward.initialFixRwd > 0
@@ -296,10 +296,10 @@ switch p.trial.CurrEpoch
         
         % ----------------------------------------------------------------%
     case p.trial.epoch.Fixating
-        %% Animal has reached fixation criteria and now starts receiving rewards for continued fixation
+        %% Initial reward has been given (if it is not 0), now stim target will appear
         
         % Still fixating
-        if p.trial.FixState.Current == p.trial.FixState.FixIn
+        if p.trial.stim.fix.fixating
             
             % Wait stim latency before showing reward
             if ~p.trial.stim.on
@@ -332,7 +332,7 @@ switch p.trial.CurrEpoch
             end
             
             % Fixation Break, end the trial
-        elseif p.trial.FixState.Current == p.trial.FixState.FixOut
+        elseif ~p.trial.stim.fix.fixating
             pds.audio.playDP(p,'breakfix','left');
             
             % If the stim is on, determine whether it is an early saccade or a breakfix
