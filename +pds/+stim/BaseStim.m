@@ -1,13 +1,13 @@
-classdef BaseStim < Handle
+classdef BaseStim < handle
     
 % A superclass that defines a bunch of useful methods and properties for use across visual stimuli
 %
 % Nate Faber, July 2017
 
 properties
-    pos
+    pos = [0,0]
     on = 0;                 % Visibility
-    fixWin
+    fixWin = 0
     fixActive = 0;          % Whether or not this stim is is checked for eye fixation
     autoDeactivate = 1;     % If fixActive automatically turns off after the stim is turned off and the eye leaves
 end
@@ -25,11 +25,12 @@ methods
         if nargin < 3 || isempty(fixWin)
             fixWin = p.trial.stim.fixWin;
         end
-        obj.fixWin = fixWin;
         
         if nargin < 2 || isempty(pos)
             pos = p.trial.stim.pos;
         end
+        
+        obj.fixWin = fixWin;
         obj.pos = pos;
         
         % Initialize EV struct to contain NaNs
@@ -81,6 +82,8 @@ methods
         end
     end
         
+    %---------------------------------------------%
+    % Methods to run on changes of properties
     
     function obj = set.fixWin(obj,value)
         % Automatically adjust the fixWinRect if the fixWin changes size
@@ -115,7 +118,9 @@ methods (Access = private)
                 case 'inactive'
                     % Fixation was just activated, determine the starting state
                     if obj.eyeDist <= obj.fixWin/2
-                        obj.fixState = 'FixIn';                       
+                        obj.fixState = 'FixIn';
+                        obj.EV.FixStart = p.trial.CurTime;
+                        p.trial.EV.FixStart = p.trial.CurTime;
                     else
                         obj.fixState = 'FixOut';
                     end

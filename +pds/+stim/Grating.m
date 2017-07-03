@@ -1,4 +1,4 @@
-classdef Grating < BaseStim
+classdef Grating < pds.stim.BaseStim
 
 % A class for creating and drawing procedurally generated sine wave gratings
 % within the
@@ -22,7 +22,6 @@ classdef Grating < BaseStim
 properties
     tFreq
     angle
-    pos
     alpha
 end
 
@@ -85,7 +84,7 @@ methods
         end
         
         % Load the superclass
-        obj@BaseStim(p, pos, fixWin);
+        obj@pds.stim.BaseStim(p, pos, fixWin);
        
         obj.alpha = alpha;
         obj.res = res;

@@ -1,4 +1,4 @@
-classdef FixSpot < BaseStim
+classdef FixSpot < pds.stim.BaseStim
 % Fix spot stimulus
 % Nate Faber, July 2017
 
@@ -32,7 +32,7 @@ methods
         end
         
         % Load the BaseStim superclass
-        obj@BaseStim(p, pos, fixWin)
+        obj@pds.stim.BaseStim(p, pos, fixWin)
         
         obj.color = color;
         obj.type = type;
