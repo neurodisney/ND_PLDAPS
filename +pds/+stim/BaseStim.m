@@ -1,4 +1,4 @@
-classdef BaseStim
+classdef BaseStim < Handle
     
 % A superclass that defines a bunch of useful methods and properties for use across visual stimuli
 
@@ -19,7 +19,7 @@ end
 
 methods
     % The constructor method
-    function obj = BaseStim(pos, fixWin)
+    function obj = BaseStim(p, pos, fixWin)
         obj.pos = pos;
         obj.fixWin = fixWin;
         
@@ -28,6 +28,9 @@ methods
         obj.EV.FixStart = NaN;
         obj.EV.FixBreak = NaN;
         obj.EV.FixLeave = NaN;
+        
+        % Save the stimulus into p
+        p.trial.stim.allStims{end+1} = obj;
     end
     
     function checkFix(p)

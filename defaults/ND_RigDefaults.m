@@ -243,6 +243,8 @@ SS.FixState.breakingFix = 0.75;  % Gaze has momentarily left fixation window
 
 % ------------------------------------------------------------------------%
 %% Stimuli
+SS.stim.allStims = {}; % Cell array to store references of all the stims created
+
 % Sine Wave Grating stimlui
 SS.stim.grating.sFreq    = 3; % Spatial frequency, cycles/deg
 SS.stim.grating.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
