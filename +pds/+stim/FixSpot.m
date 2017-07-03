@@ -42,16 +42,18 @@ methods
     end
     
     function draw(p)
-        switch  obj.type
-            case 'disc'
-                Screen('gluDisk', p.trial.display.overlayptr, p.trial.display.clut.(obj.color), ...
-                    obj.pos(1), obj.pos(2), obj.size);
-            case 'rect'
-                Screen('FillRect',  p.trial.display.overlayptr, p.trial.display.clut.(obj.color), ...
-                    [obj.pos - [obj.size obj.size]; obj.pos + [obj.size obj.size]]);
-                
-            otherwise
-                error('Unknown type of fixation spot: %s', p.trial.behavior.fixation.FixType);
+        if obj.on
+            switch  obj.type
+                case 'disc'
+                    Screen('gluDisk', p.trial.display.overlayptr, p.trial.display.clut.(obj.color), ...
+                        obj.pos(1), obj.pos(2), obj.size);
+                case 'rect'
+                    Screen('FillRect',  p.trial.display.overlayptr, p.trial.display.clut.(obj.color), ...
+                        [obj.pos - [obj.size obj.size]; obj.pos + [obj.size obj.size]]);
+                    
+                otherwise
+                    error('Unknown type of fixation spot: %s', p.trial.behavior.fixation.FixType);
+            end
         end
     end
     

@@ -154,24 +154,25 @@ methods
     end
     
     function draw(obj,p)
-        window = p.trial.display.ptr;
-        
-        % Use the current time to calculate the phase for accurate temporal frequency
-        elapsedTime = p.trial.CurTime - obj.genTime;
-        sFreqTex = obj.sFreq * obj.radius / obj.res;
-        phaseOffset =  mod(elapsedTime * obj.tFreq,1) / sFreqTex;
-        
-        % Calculate the rect using the position
-        destRect = [obj.pos - obj.radius, obj.pos + obj.radius];
-        
-        % Filter mode (not sure what the best value is yet)
-        % For more information see the PTB documentation for Screen('DrawTexture')
-        filterMode = [];
-        
-        % Draw the texture
-        Screen('DrawTexture', window, obj.texture, obj.srcRect, destRect, obj.angle, filterMode, ...
-            obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
-        
+        if obj.on
+            window = p.trial.display.ptr;
+            
+            % Use the current time to calculate the phase for accurate temporal frequency
+            elapsedTime = p.trial.CurTime - obj.genTime;
+            sFreqTex = obj.sFreq * obj.radius / obj.res;
+            phaseOffset =  mod(elapsedTime * obj.tFreq,1) / sFreqTex;
+            
+            % Calculate the rect using the position
+            destRect = [obj.pos - obj.radius, obj.pos + obj.radius];
+            
+            % Filter mode (not sure what the best value is yet)
+            % For more information see the PTB documentation for Screen('DrawTexture')
+            filterMode = [];
+            
+            % Draw the texture
+            Screen('DrawTexture', window, obj.texture, obj.srcRect, destRect, obj.angle, filterMode, ...
+                obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
+        end
     end
     
 end
