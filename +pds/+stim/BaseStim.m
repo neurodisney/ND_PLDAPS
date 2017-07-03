@@ -75,6 +75,7 @@ methods (Access = private)
                         pds.datapixx.strobe(p.trial.event.FIX_IN);
                         obj.fixState = 'startingFix';
                         obj.EV.FixEntry = p.trial.CurTime;
+                        p.trial.EV.FixEntry = p.trial.CurTime;
                     end
                     
                 case 'startingFix'
@@ -90,6 +91,7 @@ methods (Access = private)
                         pds.datapixx.strobe(p.trial.event.FIXATION);
                         obj.fixState = 'FixIn';
                         obj.EV.FixStart = obj.EV.FixEntry;
+                        p.trial.EV.FixStart = obj.EV.FixEntry;
                     end
                     
                 case 'FixIn'
@@ -102,6 +104,7 @@ methods (Access = private)
                         % Set state to fixbreak to ascertain if this is just jitter (time out of fixation window is very short)
                         obj.fixState = 'breakingFix';
                         obj.EV.FixLeave = p.trial.CurTime;
+                        p.trial.EV.FixLeave = p.trial.CurTime;
                     end
                     
                 case 'breakingFix'
@@ -117,6 +120,7 @@ methods (Access = private)
                         pds.datapixx.strobe(p.trial.event.FIX_BREAK);
                         obj.fixState = 'FixOut';
                         obj.EV.FixBreak = obj.EV.FixLeave;
+                        p.trial.EV.FixBreak = obj.EV.FixLeave;
                     end
 
                 otherwise
