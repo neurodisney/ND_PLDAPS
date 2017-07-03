@@ -46,6 +46,26 @@ methods
         end
     end
     
+    function drawFixWin(p)
+        %% Draw the fixation window around the stimulus
+        if obj.fixActive
+            switch obj.fixState
+                case 'FixOut'
+                    Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyeold, obj.fixWinRect, ...
+                        p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
+                
+                case 'FixIn'
+                    Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.eyepos, obj.fixWinRect, ...
+                        p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
+                
+                otherwise
+                    Screen('FrameOval', p.trial.display.overlayptr, p.trial.display.clut.window, obj.fixWinRect, ...
+                        p.trial.pldaps.draw.eyepos.fixwinwdth, p.trial.pldaps.draw.eyepos.fixwinwdth);
+            end
+        end
+    end
+        
+    
     function obj = set.fixWin(obj,value)
         % Automatically adjust the fixWinRect if the fixWin changes size
         obj.fixWin = value;
@@ -59,12 +79,13 @@ methods
     end
     
     function obj = set.on(obj,value)
-        obj.on = value
+        obj.on = value;
         
         if value
             % Automatically turn on fixation checking when object becomes visible
             obj.fixActive = 1;
         end
+    end
     
 end
 

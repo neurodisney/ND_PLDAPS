@@ -57,5 +57,5 @@ end
 %% Update the fixation state of all the stimuli on the screen
 for i = 1:length(p.trial.stim.allStims)
     stim = p.trial.stim.allStims{i};
-    stim.checkFix;
+    checkFix(stim,p);
 end
