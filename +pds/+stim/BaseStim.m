@@ -52,7 +52,13 @@ methods
             getFixState(obj,p)
             
         end
-    end        
+    end
+    
+    function draw(obj,p)
+        % Just draw a dot at the position for the base stimulus.
+        % This function can and should be replaced by subclasses
+        Screen('DrawDots', p.trial.display.overlayptr,obj.pos,1,p.trial.display.clut.black)
+    end
     
     function drawFixWin(obj,p)
         %% Draw the fixation window around the stimulus
