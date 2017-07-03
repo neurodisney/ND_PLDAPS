@@ -41,7 +41,7 @@ methods
         
     end
     
-    function draw(p)
+    function draw(obj,p)
         if obj.on
             switch  obj.type
                 case 'disc'

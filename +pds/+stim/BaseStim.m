@@ -42,19 +42,19 @@ methods
         p.trial.stim.allStims{end+1} = obj;
     end
     
-    function checkFix(p)
+    function checkFix(obj,p)
         % Only do this if fixation is relavent
         if p.trial.behavior.fixation.use
             %Determine how far away the eyes are
             obj.eyeDist = sqrt( (obj.pos(1) - p.trial.eyeX)^2 + (obj.pos(2) - p.trial.eyeY)^2 );
             
             % Check fixation state
-            getFixState(p)
+            getFixState(obj,p)
             
         end
-    end
+    end        
     
-    function drawFixWin(p)
+    function drawFixWin(obj,p)
         %% Draw the fixation window around the stimulus
         if obj.fixActive
             switch obj.fixState
@@ -99,7 +99,7 @@ end
 
 methods (Access = private)
     
-    function getFixState(p)
+    function getFixState(obj,p)
         %% Determine the objects fixation state
         if obj.fixActive
             
