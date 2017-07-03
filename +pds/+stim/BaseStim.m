@@ -50,17 +50,20 @@ methods
             point = [p.trial.eyeX, p.trial.eyeY];
             
             %Determine how far away the eyes are
-            obj.eyeDist = inFixWin(obj, point);
+            obj.eyeDist = dist(obj, point);
             
             % Check fixation state
             getFixState(obj,p)   
         end
     end
     
-    function dist = inFixWin(obj, point)
-        dist = sqrt( sum( (obj.pos - point)^2 ) );
+    function bool = inFixWin(obj, point)
+        bool = dist(obj, point) <= obj.fixWin/2;
     end
-        
+    
+    function dist = dist(obj, point)
+        dist = sqrt( sum( (obj.pos - point).^2 ) );
+    end
     
     function draw(obj,p)
         % Just draw a dot at the position for the base stimulus.

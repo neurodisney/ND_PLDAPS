@@ -89,11 +89,7 @@ p.trial.behavior.fixation.entryTime = 0.150;  % minimum time to stay within fixa
 
 % ------------------------------------------------------------------------%
 %% Task parameters
-% Max distance increase away from stim before considered a wrong saccade
-p.trial.behavior.fixation.distInc = 1.5;
-% Max angle away from stim before premature saccade is counted instead as a
-% fix break.
-p.trial.behavior.saccade.earlyAngle = 30;
+p.trial.task.breakFixCheck = 0.150; % Time after a stimbreak where if task is marked early or stim break is calculated
 
 % ------------------------------------------------------------------------%
 %% Trial duration

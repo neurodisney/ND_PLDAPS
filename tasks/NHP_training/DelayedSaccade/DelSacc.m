@@ -335,31 +335,19 @@ switch p.trial.CurrEpoch
         elseif ~p.trial.stim.fix.fixating
             pds.audio.playDP(p,'breakfix','left');
             
-            % If the stim is on, determine whether it is an early saccade or a breakfix
             if p.trial.stim.on
-            
-                % Check where the eye position is, if the break occured in the general direction of the stim,
-                % Mark the trial as 'Early'. Otherwise mark it as Breakfix
-                breakAngle = ATand2(p.trial.eyeY,p.trial.eyeX);
-                stimAngle = ATand2(p.trial.stim.gratingL.pos(2), p.trial.stim.gratingL.pos(1));
-                dtheta = abs(breakAngle - stimAngle);
-                % See if dtheta is below a certain value (or that close to 360)
-                if dtheta < p.trial.behavior.saccade.earlyAngle || dtheta > (360 - p.trial.behavior.saccade.earlyAngle)
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
-                else
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
-                end
-            
+                % If the stim is on, need to determine whether it is an early saccade
+                % or a stimBreak. Calculated in the BreakFixCheck epoch
+                switchEpoch(p,'BreakFixCheck'); 
             else
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+                switchEpoch(p,'TaskEnd')
             end
             
             % Turn off fixspot and stim
             fixspot(p,0);
             stim(p,0);
-            
-            switchEpoch(p,'TaskEnd')
-            
+          
         end
         
         % ----------------------------------------------------------------%
@@ -370,26 +358,27 @@ switch p.trial.CurrEpoch
             % Animal has not yet saccaded to target
             % Need to check if no saccade has been made or if a wrong saccade has been made
 
-            if p.trial.FixState.Current == p.trial.FixState.FixIn
+            if p.trial.stim.gratingH.fixating
                 % Animal has saccaded to stim
                 p.trial.stim.GotFix = 1;
 
-            elseif p.trial.eyeAmp > p.trial.behavior.fixation.refDist + p.trial.behavior.fixation.distInc
-                % If the distance from the stim increases, a wrong saccade has been made
+            elseif ~p.trial.stim.fix.fixating
+                % Eye has left the central fixation spot. Wait a breifly for eye to arrive
+                    if p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck
+                        % Eye has saccaded somewhere besides the target
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.False;
 
-                p.trial.outcome.CurrOutcome = p.trial.outcome.False;
-
-                % Turn the stim off and fixation off
-                stim(p,0)
-                fixspot(p,0)
-
-                % Play an incorrect sound
-                pds.audio.playDP(p,'incorrect','left');
-
-                % End the trial
-                switchEpoch(p,'TaskEnd');
-
-
+                        % Turn the stim off and fixation off
+                        stim(p,0)
+                        fixspot(p,0)
+                        
+                        % Play an incorrect sound
+                        pds.audio.playDP(p,'incorrect','left');
+                        
+                        % End the trial
+                        switchEpoch(p,'TaskEnd');
+                    
+                    end
 
             elseif p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout
                 % If no saccade has been made before the time runs out, end the trial
@@ -428,7 +417,7 @@ switch p.trial.CurrEpoch
                 switchEpoch(p,'TaskEnd');
 
 
-            elseif p.trial.FixState.Current == p.trial.FixState.FixOut
+            elseif ~p.trial.stim.gratingH.fixating
                 % If animal's gaze leaves window, end the task and do not give reward
                 p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
 
@@ -444,6 +433,26 @@ switch p.trial.CurrEpoch
 
         end
 
+        
+        % ----------------------------------------------------------------%
+    case p.trial.epoch.BreakFixCheck
+        %% Determine whether stim early saccade or a stimBreak
+        % Wait for enough time to elapse after the stimBreak
+        delay = p.trial.task.breakFixCheck;
+        if p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + delay
+            % Get the median eye position in the delay
+            frames = ceil(p.trial.display.frate * delay);
+            medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'],50);
+            
+            % Determine if the medPos is in the fixation window for the stim
+            if inFixWin(p.trial.stim.gratingL, medPos);
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+            else
+                p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
+            end
+            
+            switchEpoch(p,'TaskEnd')
+        end
         
         % ----------------------------------------------------------------%
     case p.trial.epoch.TaskEnd

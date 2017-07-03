@@ -104,7 +104,7 @@ if strcmp(subjname,'mouse')
     SS.datapixx.useAsEyepos        = 0;
     SS.behavior.joystick.use       = 0;
     %SS.datapixx.useForReward       = 0;
-    %SS.sound.use                   = 0;
+    SS.sound.use                   = 0;
     
 end
 % ------------------------------------------------------------------------%
