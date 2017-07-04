@@ -19,7 +19,7 @@ function p = give(p, amount, nPulse)
         nPulse = 1;
         pulse_gap = 4*sampleRate;
     elseif(nPulse>1)
-        pulse_gap = 50;  % hardcoded gap between subsequent pulses (ToDo: make it default setting variable)
+        pulse_gap = 0.1;  % hardcoded gap between subsequent pulses (ToDo: make it default setting variable)
     else
         nPulse = 1;
         pulse_gap = 4*sampleRate;
@@ -28,7 +28,7 @@ function p = give(p, amount, nPulse)
     if(p.trial.datapixx.useForReward)
         %% datapixx analog output is used
         bufferData = repmat(p.trial.datapixx.adc.TTLamp * ...
-                     [ones(1,round(amount*sampleRate)), zeros(1,round(pulse_gap*sampleRate))], 1, 2) ;
+                     [ones(1,round(amount*sampleRate)), zeros(1,round(pulse_gap*sampleRate))], 1, nPulse);
         pds.datapixx.analogOut(bufferData, p.trial.datapixx.adc.RewardChannel);
     end
 

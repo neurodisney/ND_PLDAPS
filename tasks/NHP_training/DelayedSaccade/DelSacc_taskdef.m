@@ -62,11 +62,11 @@ p.trial.stim.grating.res  = 300;
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.initialFixRwd   =   0;  % Small reward for achieving full fixation - set to zero to disable
-p.trial.reward.ManDur          = 0.1;  % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur             = 0.5;  % Reward for completing the task successfully
-p.trial.reward.IncrConsecutive = 1;    % use rewarding scheme that gives more rewards with subsequent correct trials
-p.trial.reward.nPulse          = 1;    % number of reward pulses 
+p.trial.reward.initialFixRwd   =    0;  % Small reward for achieving full fixation - set to zero to disable
+p.trial.reward.ManDur          =  0.1;  % reward duration [s] for reward given by keyboard presses
+p.trial.reward.Dur             = 0.25;  % Reward for completing the task successfully
+p.trial.reward.IncrConsecutive =    1;  % use rewarding scheme that gives more rewards with subsequent correct trials
+p.trial.reward.nPulse          =    1;  % number of reward pulses 
 p.trial.reward.PulseStep       = [2, 3, 4]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
