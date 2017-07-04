@@ -96,8 +96,10 @@ methods
     % Methods to run on changes of properties
     
     function obj = set.fixWin(obj,value)
+        % Ensure fixWin stays nonnegative
+        obj.fixWin = max(value,0);        
+        
         % Automatically adjust the fixWinRect if the fixWin changes size
-        obj.fixWin = value;
         obj.fixWinRect = ND_GetRect(obj.pos, obj.fixWin);
     end
     
