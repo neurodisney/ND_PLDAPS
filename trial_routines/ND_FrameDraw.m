@@ -29,6 +29,13 @@ if(p.trial.pldaps.draw.grid.use)
 end
 
 % ------------------------------------------------------------------------%
+%% Draw all the stimuli to the screen with their fixation windows
+for i=1:length(p.trial.stim.allStims)
+    stim = p.trial.stim.allStims{i};
+    draw(stim,p);
+    drawFixWin(stim,p);
+end
+
 %% draw a history of fast inter frame intervals
 %  if(p.trial.pldaps.draw.framerate.use && p.trial.iFrame > 2)
 %      % update data
@@ -59,6 +66,11 @@ end
 %  end
 
 % ------------------------------------------------------------------------%
+%% draw current eye calibration
+if p.trial.behavior.fixation.enableCalib
+    pds.eyecalib.draw(p);
+end
+% ------------------------------------------------------------------------%
 %% draw eye position
 % show history of recent eye position
 if(p.trial.pldaps.draw.eyepos.use)
@@ -85,10 +97,7 @@ if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
                        p.trial.pldaps.draw.joystick.levelrect);
 end
 
-%% draw current eye calibration
-if p.trial.behavior.fixation.enableCalib
-    pds.eyecalib.draw(p);
-end
+
 
 % % ------------------------------------------------------------------------%
 % %% draw mouse state

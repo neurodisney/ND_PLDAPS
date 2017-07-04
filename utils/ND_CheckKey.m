@@ -37,22 +37,22 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             case p.trial.key.FixInc
             %% Fixation Window increase
                 if(p.trial.behavior.fixation.use)
-                    p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin + ...
-                                                       p.trial.behavior.fixation.FixWinStp;
-                    %p.trial.behavior.fixation.FixWin = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
-                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
-                                                      p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
+                    % Increase the fixation window for all stims
+                    for i = 1:length(p.trial.stim.allStims)
+                        stim = p.trial.stim.allStims{i};
+                        stim.fixWin = stim.fixWin + p.trial.behavior.fixation.FixWinStp;
+                    end
                 end
                 
             % ----------------------------------------------------------------%
             case p.trial.key.FixDec
             %% Fixation Window increase
                 if(p.trial.behavior.fixation.use)
-                    p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin - ...
-                                                       p.trial.behavior.fixation.FixWinStp;
-                    %p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
-                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
-                                                      p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
+                    % Increase the fixation window for all stims
+                    for i = 1:length(p.trial.stim.allStims)
+                        stim = p.trial.stim.allStims{i};
+                        stim.fixWin = stim.fixWin - p.trial.behavior.fixation.FixWinStp;
+                    end
                 end
 
             % ----------------------------------------------------------------%

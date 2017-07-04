@@ -14,7 +14,7 @@ if(~isempty(p.trial.LastKeyPress))
                 iCalib = size(p.trial.eyeCalib.rawEye, 1) + 1;
                 
                 % Position of the fixation target
-                fixPos = p.trial.behavior.fixation.fixPos;
+                fixPos = p.trial.behavior.fixation.fix.pos;
                           
                 if ~p.trial.mouse.useAsEyepos
                     % Raw eye analog signal. Gets the median X and Y values over a
@@ -40,7 +40,7 @@ if(~isempty(p.trial.LastKeyPress))
             %% Wipe the calibration points at the current fixPos
             
             % Load from the p struct
-            curFixPos = p.trial.behavior.fixation.fixPos;
+            curFixPos = p.trial.behavior.fixation.fix.pos;
             fixPos = p.trial.eyeCalib.fixPos;
             rawEye = p.trial.eyeCalib.rawEye;
             

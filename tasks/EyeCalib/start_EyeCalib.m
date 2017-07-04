@@ -23,7 +23,7 @@ SS.task.TaskDef  = 'EyeCalib_taskdef';  % function that provides task specific p
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos'};
+SS.editable = {'task.RandomPos','stim.fixspot.fixWin'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed

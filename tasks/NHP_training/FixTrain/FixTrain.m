@@ -390,29 +390,8 @@ function TaskDesign(p)
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
         
-        % set timer for intertrial interval            
-            tms = pds.datapixx.strobe(p.trial.event.TASK_OFF); 
-            p.trial.EV.DPX_TaskOff = tms(1);
-            p.trial.EV.TDT_TaskOff = tms(2);
-
-            p.trial.EV.TaskEnd = p.trial.CurTime;
-
-            if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
-            end
-
-            % determine ITI
-            switch p.trial.outcome.CurrOutcome
-                
-                case {p.trial.outcome.NoFix, p.trial.outcome.FixBreak}
-                    % Timeout if no fixation
-                    p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
-            end
-            
-            p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
-            
-            p.trial.Timer.ITI  = p.trial.Timer.Wait;
-            p.trial.CurrEpoch  = p.trial.epoch.ITI;
+        % Run standard TaskEnd routine
+        Task_OFF(p)
         
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI

@@ -39,9 +39,14 @@ p.trial.task.Timing.MaxITI  = 3;    % maximum time period [s] between subsequent
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
+%% fixation spot parameters
+p.trial.stim.fixspot.pos     = [0,0];
+p.trial.stim.fixspot.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.fixspot.color   = 'white';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.fixspot.size    = 0.25;        % size of the fixation spot
+
+% ------------------------------------------------------------------------%
 %% Fixation parameters
-p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
-                                  p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
 
 p.trial.behavior.fixation.BreakTime = 0.025;  % minimum time [ms] to identify a fixation break
 p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixation window to detect initial fixation start
