@@ -254,8 +254,9 @@ function TaskDesign(p)
                     
                 end
         
-        % Fixation Break, go back to waitFix    
+        % Fixation Break, go to TaskEnd and turn off fixation point    
         elseif ~p.trial.stim.fix.fixating
+            p.trial.stim.fix.on = 0;
             p.trial.behavior.fixation.GotFix = 0;
             switchEpoch(p,'TaskEnd');
                                  
