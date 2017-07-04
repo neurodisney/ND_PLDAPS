@@ -1,4 +1,4 @@
-classdef Grating
+classdef Grating < pds.stim.BaseStim
 
 % A class for creating and drawing procedurally generated sine wave gratings
 % within the
@@ -17,10 +17,11 @@ classdef Grating
 % Background color offset
 % Resolution
 
+% Nate Faber, July 2017
+
 properties
     tFreq
     angle
-    pos
     alpha
 end
 
@@ -43,50 +44,57 @@ end
 
 methods
     % The constructor method
-    function obj = Grating(p, radius, contrast, pos, angle, sFreq, tFreq, res, alpha)
+    function obj = Grating(p, radius, contrast, pos, angle, sFreq, tFreq, res, alpha, fixWin)
         
         %% Load variables
+        if nargin < 10 || isempty(fixWin)
+            fixWin = p.trial.stim.grating.fixWin;
+        end
+        
         if nargin < 9 || isempty(alpha)
             alpha = p.trial.stim.grating.alpha;
         end
-        obj.alpha = alpha;
         
         if nargin < 8 || isempty(res)
             res = p.trial.stim.grating.res;
         end
-        obj.res = res;
         
         if nargin < 7 || isempty(tFreq)
             tFreq = p.trial.stim.grating.tFreq;
         end
-        obj.tFreq = tFreq;
-        
+                
         if nargin < 6 || isempty(sFreq)
             sFreq = p.trial.stim.grating.sFreq;
         end
-        obj.sFreq = sFreq;
         
         if nargin < 5 || isempty(angle)
             angle = p.trial.stim.grating.angle;
         end
-        obj.angle = angle;
         
         if nargin < 4 || isempty(pos)
             pos = p.trial.stim.grating.pos;
         end
-        obj.pos = pos;
         
         if nargin < 3 || isempty(contrast)
             contrast = p.trial.stim.grating.contrast;
         end
-        obj.contrast = contrast;
         
         if nargin < 2 || isempty(radius)
             radius = p.trial.stim.grating.radius;
         end
-        obj.radius = radius;
         
+        % Load the superclass
+        obj@pds.stim.BaseStim(p, pos, fixWin);
        
+        obj.alpha = alpha;
+        obj.res = res;
+        obj.tFreq = tFreq;
+        obj.sFreq = sFreq;
+        obj.angle = angle;
+        obj.contrast = contrast;
+        obj.radius = radius;
+
+        
         % Unchangeable after loading
         obj.contrastMethod = p.trial.stim.grating.contrastMethod;
         obj.genTime = p.trial.CurTime;
@@ -145,24 +153,25 @@ methods
     end
     
     function draw(obj,p)
-        window = p.trial.display.ptr;
-        
-        % Use the current time to calculate the phase for accurate temporal frequency
-        elapsedTime = p.trial.CurTime - obj.genTime;
-        sFreqTex = obj.sFreq * obj.radius / obj.res;
-        phaseOffset =  mod(elapsedTime * obj.tFreq,1) / sFreqTex;
-        
-        % Calculate the rect using the position
-        destRect = [obj.pos - obj.radius, obj.pos + obj.radius];
-        
-        % Filter mode (not sure what the best value is yet)
-        % For more information see the PTB documentation for Screen('DrawTexture')
-        filterMode = [];
-        
-        % Draw the texture
-        Screen('DrawTexture', window, obj.texture, obj.srcRect, destRect, obj.angle, filterMode, ...
-            obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
-        
+        if obj.on
+            window = p.trial.display.ptr;
+            
+            % Use the current time to calculate the phase for accurate temporal frequency
+            elapsedTime = p.trial.CurTime - obj.genTime;
+            sFreqTex = obj.sFreq * obj.radius / obj.res;
+            phaseOffset =  mod(elapsedTime * obj.tFreq,1) / sFreqTex;
+            
+            % Calculate the rect using the position
+            destRect = [obj.pos - obj.radius, obj.pos + obj.radius];
+            
+            % Filter mode (not sure what the best value is yet)
+            % For more information see the PTB documentation for Screen('DrawTexture')
+            filterMode = [];
+            
+            % Draw the texture
+            Screen('DrawTexture', window, obj.texture, obj.srcRect, destRect, obj.angle, filterMode, ...
+                obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
+        end
     end
     
 end

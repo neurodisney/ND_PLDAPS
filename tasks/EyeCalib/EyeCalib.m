@@ -42,6 +42,10 @@ if(isempty(state))
     
     p.trial.task.RandomPosRange = [5, 5];  % range of x and y dva for random position
     
+    %% Setup fixation window
+    % Start fixation window off, and just do manual reward. Can be increased later if desired
+    p.trial.stim.fixspot.fixWin  = 0;
+    
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
     % define conditions (conditions could be passed to the pldaps call as
@@ -125,17 +129,16 @@ function TaskSetUp(p)
     p.trial.task.Good                = 1;  % assume no error untill error occurs
     p.trial.reward.count          = 0;  % counter for received rewardsw
     p.trial.behavior.fixation.GotFix = 0;
-    p.trial.behavior.fixation.on       = 0;  % Whether or not to display the fixation spot
+    
+    % Generate the fixspot
+    p.trial.stim.fix = pds.stim.FixSpot(p);
     
     % if random position is required pick one and move fix spot
-    if(p.trial.task.RandomPos == 1)
-        p.trial.behavior.fixation.fixPos = p.trial.eyeCalib.Grid_XY(randi(size(p.trial.eyeCalib.Grid_XY,1)), :);
-        
+    if(p.trial.task.RandomPos == 1) 
          Xpos = round((rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1));
          Ypos = round((rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2));
-         p.trial.behavior.fixation.fixPos = [Xpos, Ypos];
+         p.trial.stim.fix.pos = [Xpos, Ypos];
     end
-    pds.fixation.move(p);
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -158,13 +161,13 @@ function TaskDesign(p)
             end
  
             p.trial.Timer.trialStart = p.trial.CurTime;
-            p.trial.CurrEpoch  = p.trial.epoch.WaitExperimenter;
+            switchEpoch(p,'WaitExperimenter');
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitExperimenter
             %% No fixation spot is shown, wait for experimenter to press 'f' to turn on spot
             if p.trial.behavior.fixation.on
-                p.trial.CurrEpoch = p.trial.epoch.WaitFix;
+               switchEpoch(p,'WaitFix');
             end
             
         % ----------------------------------------------------------------%
@@ -174,7 +177,7 @@ function TaskDesign(p)
             % 'f' key is pressed, turn off fixation spot and return to earlier epoch.
             if ~p.trial.behavior.fixation.on
                 p.trial.behavior.fixation.GotFix = 0;
-                p.trial.CurrEpoch = p.trial.epoch.WaitExperimenter;
+                switchEpoch(p,'WaitExperimenter')
                 return;
             end
             
@@ -193,12 +196,12 @@ function TaskDesign(p)
             elseif p.trial.behavior.fixation.GotFix == 1
                 
                 % Fixation ceases
-                if p.trial.FixState.Current == p.trial.FixState.FixOut
+                if ~p.trial.stim.fix.fixating
                     p.trial.EV.FixBreak = p.trial.CurTime;
                     p.trial.behavior.fixation.GotFix = 0;
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
-                elseif (p.trial.CurTime > p.trial.Timer.fixStart + p.trial.task.CurRewDelay) && p.trial.FixState.Current == p.trial.FixState.FixIn
+                elseif (p.trial.CurTime > p.trial.Timer.fixStart + p.trial.task.CurRewDelay)                    
                     
                     % Succesful
                     p.trial.task.Good = 1;
@@ -213,7 +216,7 @@ function TaskDesign(p)
                     p.trial.Timer.lastReward = p.trial.CurTime;
                     
                     % Transition to the succesful fixation epoch
-                    p.trial.CurrEpoch = p.trial.epoch.Fixating;
+                    switchEpoch(p,'Fixating');
 
                 end
                 
@@ -224,14 +227,14 @@ function TaskDesign(p)
         %% Animal has reached fixation criteria and now starts receiving rewards for continued fixation
         
         % 'f' key is pressed, turn off fixation spot and return to earlier epoch.
-            if ~p.trial.behavior.fixation.on
+            if ~p.trial.stim.fix.on
                 p.trial.behavior.fixation.GotFix = 0;
-                p.trial.CurrEpoch = p.trial.epoch.WaitExperimenter;
+                switchEpoch(p,'WaitExperimenter');
                 return;
             end
         
         % Still fixating    
-        if p.trial.FixState.Current == p.trial.FixState.FixIn
+        if p.trial.stim.fix.fixating
                 
                 rewardCount = p.trial.reward.count;
                 rewardPeriod = p.trial.reward.Period;
@@ -251,11 +254,11 @@ function TaskDesign(p)
                     
                 end
         
-        % Fixation Break, go back to waitFix    
-        elseif p.trial.FixState.Current == p.trial.FixState.FixOut
-            % TODO: Possibly play breakfix sound
+        % Fixation Break, go to TaskEnd and turn off fixation point    
+        elseif ~p.trial.stim.fix.fixating
+            p.trial.stim.fix.on = 0;
             p.trial.behavior.fixation.GotFix = 0;
-            p.trial.CurrEpoch = p.trial.epoch.WaitFix;
+            switchEpoch(p,'TaskEnd');
                                  
         end
             
@@ -263,29 +266,8 @@ function TaskDesign(p)
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
         
-        % set timer for intertrial interval            
-            tms = pds.datapixx.strobe(p.trial.event.TASK_OFF); 
-            p.trial.EV.DPX_TaskOff = tms(1);
-            p.trial.EV.TDT_TaskOff = tms(2);
-
-            p.trial.EV.TaskEnd = p.trial.CurTime;
-
-            if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
-            end
-
-            % determine ITI
-            switch p.trial.outcome.CurrOutcome
-                
-                case {p.trial.outcome.NoFix, p.trial.outcome.FixBreak}
-                    % Timeout if no fixation
-                    p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
-            end
-            
-            p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
-            
-            p.trial.Timer.ITI  = p.trial.Timer.Wait;
-            p.trial.CurrEpoch  = p.trial.epoch.ITI;
+            % Run standard TaskEnd routine
+            Task_OFF(p)
         
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI
@@ -300,37 +282,51 @@ function TaskDraw(p)
 % go through the task epochs as defined in TaskDesign and draw the stimulus
 % content that needs to be shown during this epoch.
 
-%% TODO: draw predicted eye pos for calibration grid, draw indicator for random posiiton vs. fix, indicate current position
-
-    if p.trial.behavior.fixation.enableCalib
-        pds.eyecalib.draw(p)
-    end
-    
-    
-    switch p.trial.CurrEpoch
-        % ----------------------------------------------------------------%
-        case {p.trial.epoch.WaitFix, p.trial.epoch.Fixating}
-            pds.fixation.draw(p);
-
-    end
     
 % ####################################################################### %
 function KeyAction(p)
 %% task specific action upon key press
-    if(~isempty(p.trial.LastKeyPress))
-
-        switch p.trial.LastKeyPress(1)
-                                       
-            case KbName('r')  % random position on each trial
-                 if(p.trial.task.RandomPos == 0)
-                    p.trial.task.RandomPos = 1;
-                 else
-                    p.trial.task.RandomPos = 0;
-                 end
-                 
-            case KbName('f') % Turn fixation position on and off
-                p.trial.behavior.fixation.on = ~p.trial.behavior.fixation.on;
-        end
+if(~isempty(p.trial.LastKeyPress))
+    
+    switch p.trial.LastKeyPress(1)
         
-        pds.fixation.move(p);
+        case KbName('r')  % random position on each trial
+            if(p.trial.task.RandomPos == 0)
+                p.trial.task.RandomPos = 1;
+            else
+                p.trial.task.RandomPos = 0;
+            end
+            
+        case KbName('f') % Turn fixation position on and off
+            p.trial.stim.fix.on = ~p.trial.stim.fix.on;
+            
+        case p.trial.key.GridKeyCell
+            % move target to grid positions
+            gpos = find(p.trial.key.GridKey == p.trial.LastKeyPress(1));
+            p.trial.behavior.fixation.GridPos = gpos;
+            
+            p.trial.stim.fix.pos = p.trial.eyeCalib.Grid_XY(gpos, :);
+            
+            % move target by steps
+        case KbName('RightArrow')
+            p.trial.stim.fix.pos(1) = p.trial.stim.fix.pos(1) +  p.trial.behavior.fixation.FixWinStp;
+            
+        case KbName('LeftArrow')
+            p.trial.stim.fix.pos(1) = p.trial.stim.fix.pos(1) - p.trial.behavior.fixation.FixWinStp;
+            
+        case KbName('UpArrow')
+            p.trial.stim.fix.pos(2) = p.trial.stim.fix.pos(2) + p.trial.behavior.fixation.FixWinStp;
+            
+        case KbName('DownArrow')
+            p.trial.stim.fix.pos(2) = p.trial.stim.fix.pos(2) - p.trial.behavior.fixation.FixWinStp;
+            
     end
+    
+end
+
+% ####################################################################### %
+% Additional inline rewards
+% ####################################################################### %
+function switchEpoch(p,epochName)
+p.trial.CurrEpoch = p.trial.epoch.(epochName);
+p.trial.EV.epochEnd = p.trial.CurTime;

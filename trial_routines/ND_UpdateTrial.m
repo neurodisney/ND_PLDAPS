@@ -48,19 +48,7 @@ end
 %% keep offset correction for eye position
 if(p.trial.datapixx.useAsEyepos)
     p.defaultParameters.eyeCalib.offset     = p.trial.eyeCalib.offset;
-    p.defaultParameters.behavior.fixation.PrevOffset = p.trial.behavior.fixation.PrevOffset;
     p.defaultParameters.eyeCalib.gain       = p.trial.eyeCalib.gain;
-end
-
-% --------------------------------------------------------------------%
-%% keep fixation requirements
-if(p.trial.behavior.fixation.use)
-    p.defaultParameters.behavior.fixation.on   = p.trial.behavior.fixation.on;
-    p.defaultParameters.behavior.fixation.fixPos     = p.trial.behavior.fixation.fixPos;
-    p.defaultParameters.behavior.fixation.FixWin     = p.trial.behavior.fixation.FixWin;
-    p.defaultParameters.behavior.fixation.FixSz      = p.trial.behavior.fixation.FixSz;
-    %p.defaultParameters.behavior.fixation.FixRect    = p.trial.behavior.fixation.FixRect;
-    p.defaultParameters.behavior.fixation.FixWinRect = p.trial.behavior.fixation.FixWinRect;
 end
 
 % --------------------------------------------------------------------%
