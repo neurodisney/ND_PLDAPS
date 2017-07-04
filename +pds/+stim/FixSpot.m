@@ -39,6 +39,9 @@ methods
         obj.size = size;
         obj.pos = pos;
         
+        % Save a reference to this object in a dependable place in the p struct
+        p.trial.behavior.fixation.fix = obj;
+        
     end
     
     function draw(obj,p)
