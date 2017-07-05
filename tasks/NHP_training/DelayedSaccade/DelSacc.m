@@ -595,7 +595,7 @@ function Calculate_SRT(p)
 
 switch p.trial.outcome.CurrOutcomeStr
     
-    case {'NoStart', 'Break'}
+    case {'NoStart', 'Break', 'Miss'}
         p.trial.task.SRT_FixStart = NaN;
         p.trial.task.SRT_StimOn   = NaN;
         p.trial.task.SRT_Go       = NaN;
@@ -610,15 +610,10 @@ switch p.trial.outcome.CurrOutcomeStr
         p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
         p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.centerOffLatency);
         
-    case {'False','Miss'}
-        p.trial.task.SRT_FixStart = p.trial.EV.TaskEnd - p.trial.EV.FixSpotStart;
-        p.trial.task.SRT_StimOn   = p.trial.EV.TaskEnd - p.trial.EV.StimOn;
-        p.trial.task.SRT_Go       = p.trial.EV.TaskEnd - p.trial.EV.FixOff;
-
-    case {'Correct','TargetBreak'}
-        p.trial.task.SRT_FixStart = p.trial.EV.FixTargetStart - p.trial.EV.FixSpotStart;
-        p.trial.task.SRT_StimOn   = p.trial.EV.FixTargetStart - p.trial.EV.StimOn;
-        p.trial.task.SRT_Go       = p.trial.EV.FixTargetStart - p.trial.EV.FixOff;
+    case {'False','Correct','TargetBreak'}
+        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
+        p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
+        p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - p.trial.EV.FixOff;
         
     otherwise
         warning('Calculate_SRT: unrecognized outcome')
