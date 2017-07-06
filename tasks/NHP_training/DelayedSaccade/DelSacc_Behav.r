@@ -65,7 +65,7 @@ if(length(fname)>1) {
 SessTimeRng = range(dt$FixSpotOn)
 SessTrialStart = SessTimeRng[1]
 SessTrialEnd   = diff(SessTimeRng)
-Break_trial = Break_trial = which(dt$Outcome == 'Break')
+Break_trial = which(dt$Outcome == 'Break')
 
 if(length(Break_trial) == 0){
   Break_start = NA
@@ -76,6 +76,21 @@ if(length(Break_trial) == 0){
     Break_end = (dt$FixSpotOn[Break_trial+1] - SessTrialStart) / 60
   }else{
     Break_end = (dt$FixSpotOn[Break_trial[-length(Break_trial)]+1] - SessTrialStart) / 60
+  }
+  
+  # if last trial started a break, set break end to 
+  #if(length(Break_start) > length(Break_end)) { Break_end = c(Break_end, SessTrialEnd / 60) }
+  lastTrial = tail(dt,n=1)
+  if(lastTrial$Outcome == 'Break') {
+    # If the last trial ended with a break, extend the plot to the current time, if it occurred less than an hour ago
+    currentTime = as.numeric(Sys.time())
+    if(currentTime - lastTrial$TaskEnd < 3600) {
+        # Extend the plot to now
+        SessTrialEnd = currentTime - SessTrialStart
+        
+        # Add the final break
+        Break_end[length(Break_end)] = SessTrialEnd / 60
+    }
   }
 }
 
@@ -154,7 +169,7 @@ Ylim = range(StimSRT, na.rm = TRUE)
 plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
      xlab='', ylab='Time after Target Onset [s]', xaxt="n")
 
-for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) }
+if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
 points(Ttime[pCorr],      StimSRT[pCorr],      pch=19, col=Corr_Col)
 points(Ttime[pFixBreak],  StimSRT[pFixBreak],  pch=19, col=FixBreak_Col)
@@ -174,7 +189,7 @@ Ylim = range(SRT, na.rm = TRUE)
 plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Go Cue',
      xlab='Trial Time [s]', ylab='SRTs [s]')
 
-for(i in 1:length(Break_end)){ rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) }
+if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
 points(Ttime[pCorr],      SRT[pCorr],      pch=19, col=Corr_Col)
 points(Ttime[pFixBreak],  SRT[pFixBreak],  pch=19, col=FixBreak_Col)
@@ -219,7 +234,7 @@ for(i in 1:length(Tavrg)) {
 plot(Trng, c(0, 100), type='n', xaxs='i', yaxs='i', main = 'Performance',
      xlab='Trial Time [s]', ylab='performance [s]')
 
-for(i in 1:length(Break_end)){ rect(Break_start[i], 0, Break_end[i], 100, angle = 0,col='gray', border=FALSE) }
+if(length(Break_end) > 1){  for(i in 1:length(Break_end)){  rect(Break_start[i], 0, Break_end[i], 100, angle = 0, col='gray', border=FALSE) } }
 
 abline(h=50, lty=2)
 abline(h=c(25,75), lty=3)
