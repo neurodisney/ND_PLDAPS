@@ -17,12 +17,12 @@ function p = give(p, amount, nPulse)
     
     if(nargin < 3)
         nPulse = 1;
-        pulse_gap = 4*sampleRate;
+        pulse_gap = 0.002;
     elseif(nPulse>1)
         pulse_gap = 0.1;  % hardcoded gap between subsequent pulses (ToDo: make it default setting variable)
     else
         nPulse = 1;
-        pulse_gap = 4*sampleRate;
+        pulse_gap = 0.002;
     end
         
     if(p.trial.datapixx.useForReward)
