@@ -83,7 +83,6 @@ if(isempty(state))
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.
     
-    p.trial.task.Color_list = Shuffle({'black'});
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -184,19 +183,13 @@ p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
 
 p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
 
-% Reference distance to check if a wrong saccade is made
-p.trial.behavior.fixation.refDist = NaN;
 
 % Outcome if no fixation occurs at all during the trial
 p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 
-p.trial.task.Good                = 0;
-p.trial.behavior.fixation.GotFix = 0;
-p.trial.stim.GotFix              = 0;
-
-
-p.trial.behavior.fixation.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
-
+p.trial.task.Good    = 0;
+p.trial.task.fixFix  = 0;
+p.trial.task.stimFix  = 0;
 
 %% Generate all the visual stimuli
 
@@ -218,7 +211,7 @@ p.trial.stim.gratingH = pds.stim.Grating(p);
 
 
 % stim starts off
-p.trial.stim.on = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
+p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
 
 % ####################################################################### %
 function TaskDesign(p)
@@ -248,11 +241,11 @@ switch p.trial.CurrEpoch
         %% Fixation target shown, waiting for a sufficiently held gaze
         
         % Gaze is outside fixation window
-        if p.trial.behavior.fixation.GotFix == 0
+        if p.trial.task.fixFix == 0
             
             % Fixation has occured
             if p.trial.stim.fix.fixating
-                p.trial.behavior.fixation.GotFix = 1;
+                p.trial.task.fixFix = 1;
                 
                 % Time to fixate has expired
             elseif p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix
@@ -269,7 +262,7 @@ switch p.trial.CurrEpoch
             
             
             % If gaze is inside fixation window
-        elseif p.trial.behavior.fixation.GotFix == 1
+        elseif p.trial.task.fixFix == 1
             
             % Fixation ceases
             if ~p.trial.stim.fix.fixating
@@ -303,7 +296,7 @@ switch p.trial.CurrEpoch
         if p.trial.stim.fix.fixating
             
             % Wait stim latency before showing reward
-            if ~p.trial.stim.on
+            if ~p.trial.task.stimState
                 if p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.stimLatency
                     % Turn on stim
                     stim(p,1)
@@ -324,10 +317,7 @@ switch p.trial.CurrEpoch
                     
                     % Change to the saccade epoch
                     switchEpoch(p,'Saccade');
-                    
-                    % Record the current distance of the eye away from the stim as a reference
-                    p.trial.behavior.fixation.refDist = sqrt(sum((p.trial.stim.pos - [p.trial.eyeX p.trial.eyeY]) .^ 2));
-                    
+                                        
                 end
             
             end
@@ -336,7 +326,7 @@ switch p.trial.CurrEpoch
         elseif ~p.trial.stim.fix.fixating
             pds.audio.playDP(p,'breakfix','left');
             
-            if p.trial.stim.on
+            if p.trial.task.stimState
                 % If the stim is on, need to determine whether it is an early saccade
                 % or a stimBreak. Calculated in the BreakFixCheck epoch
                 switchEpoch(p,'BreakFixCheck'); 
@@ -355,7 +345,7 @@ switch p.trial.CurrEpoch
     case p.trial.epoch.Saccade
         %% Central fixation spot has disappeared. Animal must quickly saccade to stim to get the main reward
         
-        if ~p.trial.stim.GotFix
+        if ~p.trial.task.stimFix
             % Animal has not yet saccaded to target
             % Need to check if no saccade has been made or if a wrong saccade has been made
 
@@ -379,7 +369,7 @@ switch p.trial.CurrEpoch
                 
                 elseif p.trial.stim.gratingH.fixating
                     % Real reaction to GO cue and has acheived fixation
-                    p.trial.stim.GotFix = 1;
+                    p.trial.task.stimFix = 1;
                 end
                 
 
@@ -573,12 +563,12 @@ end
 
 function stim(p,val)
 % Turn on/off or change the stim
-oldVal = p.trial.stim.on;
+oldVal = p.trial.task.stimState;
 
 % Don't do anything if stim doesn't change
 if val == oldVal; return; end
 
-p.trial.stim.on = val;
+p.trial.task.stimState = val;
 
 % Turn on/off the appropriate generated stimuli
 switch val
