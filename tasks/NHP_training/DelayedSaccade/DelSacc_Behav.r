@@ -9,9 +9,9 @@ require(beanplot)
 DelSacc_Behav = function(datadir=NA, fname=NA) {
 
 ## specify analysis/graph parameters
-avrgwin  =   240  # moving average window for performance plot in seconds
-avrgstep =   1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
-RTbw     =  0.02 # kernel width for density estimate of response times
+avrgwin  =   320  # moving average window for performance plot in seconds
+avrgstep =    1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
+RTbw     =  0.02  # kernel width for density estimate of response times
 
 Corr_Col        = 'limegreen'
 Early_Col       = 'cornflowerblue' 
@@ -62,6 +62,23 @@ if(length(fname)>1) {
 # dt$Outcome[dt$Outcome == 'Abort' & !is.numeric(dt$FixStart)]= 'NoStart'
 # dt$Outcome[is.nan(dt$FixStart)]= 'NoStart'
 
+SessTimeRng = range(dt$FixSpotOn)
+SessTrialStart = SessTimeRng[1]
+SessTrialEnd   = diff(SessTimeRng)
+Break_trial = Break_trial = which(dt$Outcome == 'Break')
+
+if(length(Break_trial) == 0){
+  Break_start = NA
+}else{
+  Break_start = (dt$TaskEnd[Break_trial]     - SessTrialStart) / 60
+  
+  if(max(Break_trial) <= length(dt$FixSpotOn)){
+    Break_end = (dt$FixSpotOn[Break_trial+1] - SessTrialStart) / 60
+  }else{
+    Break_end = (dt$FixSpotOn[Break_trial[-length(Break_trial)]+1] - SessTrialStart) / 60
+  }
+}
+
 # get rid of un-started trials
 # (ToDo: keep times when experimenter initiated breaks starts)
 dt = droplevels(subset(dt, dt$Outcome != 'NoFix' & dt$Outcome != 'Break'  & dt$Outcome != 'NoStart'))
@@ -84,7 +101,7 @@ pStim      = pCorr | dt$Outcome == pHoldErr
 
 ###########################################################################################
 # get relevant variables
-Ttime    = (dt$FixSpotOn - dt$FixSpotOn[1]) / 60  # in minutes, define trial start times as fixation spot onset
+Ttime    = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
 FixStart = dt$FixStart   - dt$FixSpotOn
 
 # TDur     = dt$TaskEnd    - dt$FixStart
@@ -113,7 +130,6 @@ StimSRT[pFixBreak] = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimL
 # SRT[pFalse] = dt$TaskEnd[pStim] - dt$FixSpotOff[pStim]
 
 # create plots
-Trng = range(Ttime)
 
 # open figure of defined size
 # Only display figure directly if called from the r environment (not the command line)
@@ -125,16 +141,20 @@ if(interactive()) {
   pdf('DelSacc.pdf', 19.5, 10.5, pointsize=10, title='DelSacc_Behav')
 }
 
-
 # create plot layout
 pllyt = matrix(c(1,1,1,1,1,1,1, 2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,5,6,10,10,11,11,  7,8,9,10,10,11,11 ), 5, 7, byrow=TRUE)
 layout(pllyt,  heights=c(2,2,1.5,2.5,2.5))
 par(mar=c(5,5,1,1)) 
 
+Trng = c(0, SessTrialEnd / 60)
+
 ###########################################################################################
 # plot 1: saccade time
-plot(Trng, range(StimSRT, na.rm = TRUE), type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
+Ylim = range(StimSRT, na.rm = TRUE)
+plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
      xlab='', ylab='Time after Target Onset [s]', xaxt="n")
+
+for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) }
 
 points(Ttime[pCorr],      StimSRT[pCorr],      pch=19, col=Corr_Col)
 points(Ttime[pFixBreak],  StimSRT[pFixBreak],  pch=19, col=FixBreak_Col)
@@ -150,8 +170,11 @@ legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBre
 
 ###########################################################################################
 # plot 2: reaction times
-plot(Trng, range(SRT, na.rm = TRUE), type='n', xaxs='i', yaxs='i', main='Response after Go Cue',
+Ylim = range(SRT, na.rm = TRUE)
+plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Go Cue',
      xlab='Trial Time [s]', ylab='SRTs [s]')
+
+for(i in 1:length(Break_end)){ rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) }
 
 points(Ttime[pCorr],      SRT[pCorr],      pch=19, col=Corr_Col)
 points(Ttime[pFixBreak],  SRT[pFixBreak],  pch=19, col=FixBreak_Col)
@@ -182,7 +205,7 @@ for(i in 1:length(Tavrg)) {
   
   Nall = sum(cpos)
   
-  if(Nall > 0){
+  if(Nall > 4){
     Rcorr[cnt]      = 100 * sum(cpos & pCorr)      /Nall
     Rfixbreak[cnt]  = 100 * sum(cpos & pFixBreak)  /Nall
     Rstimbreak[cnt] = 100 * sum(cpos & pStimBreak) /Nall
@@ -196,8 +219,60 @@ for(i in 1:length(Tavrg)) {
 plot(Trng, c(0, 100), type='n', xaxs='i', yaxs='i', main = 'Performance',
      xlab='Trial Time [s]', ylab='performance [s]')
 
+for(i in 1:length(Break_end)){ rect(Break_start[i], 0, Break_end[i], 100, angle = 0,col='gray', border=FALSE) }
+
 abline(h=50, lty=2)
 abline(h=c(25,75), lty=3)
+abline(h=0, lty=1)
+
+# krnlwht = 0.5
+# krnltyp = 'rectangular'
+# 
+# Time_all   = density(Ttime, bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
+# Time_all$y = Time_all$y * sum(is.finite(Ttime)) * krnlwht
+# Time_all$y[Time_all$y<0.05] = NA
+# 
+# if(sum(pCorr) > 1) {
+#   Time_Corr   = density(Ttime[pCorr], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
+#   Time_Corr$y = 100 * (Time_Corr$y * sum(pCorr) * krnlwht) / Time_all$y
+#   lines(Time_Corr, col=Corr_Col, lwd=2.5)
+# }
+# 
+# if(sum(pEarly) > 1) {
+#   Time_Early   = density(Ttime[pEarly], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
+#   Time_Early$y = 100 * (Time_Early$y * sum(pEarly) * krnlwht) / Time_all$y
+#   lines(Time_Early, col=Early_Col, lwd=1)
+# }
+# 
+# if(sum(pFixBreak) > 1) {
+#   Time_FixBreak   = density(Ttime[pFixBreak], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
+#   Time_FixBreak$y = 100 * (Time_FixBreak$y * sum(pFixBreak) * krnlwht) / Time_all$y
+#   lines(Time_FixBreak,  col=FixBreak_Col,   lwd=1)
+# }
+# 
+# if(sum(pStimBreak) > 1) {
+#   Time_StimBreak   = density(Ttime[pStimBreak], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
+#   Time_StimBreak$y = 100 * (Time_StimBreak$y * sum(pStimBreak) * krnlwht) / Time_all$y
+#   lines(Time_StimBreak, col=StimBreak_Col,  lwd=1)
+# }
+# 
+# if(sum(pMiss) > 1) {
+#   Time_Miss   = density(Ttime[pMiss], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
+#   Time_Miss$y = 100 * (Time_Miss$y * sum(pMiss) * krnlwht) / Time_all$y
+#   lines(Time_Miss, col=Miss_Col, lwd=1)
+# }
+# 
+# if(sum(pFalse) > 1) {
+#   Time_False   = density(Ttime[pFalse], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
+#   Time_False$y = 100 * (Time_False$y * sum(pFalse) * krnlwht) / Time_all$y
+#   lines(Time_False, col=False_Col, lwd=1)
+# }
+# 
+# if(sum(pHoldErr) > 1) {
+#   Time_HoldErr   = density(Ttime[pHoldErr], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
+#   Time_HoldErr$y = 100 * (Time_HoldErr$y * sum(pHoldErr) * krnlwht) / Time_all$y
+#   lines(Time_HoldErr, col=TargetBreak_Col, lwd=1)
+# }
 
 lines(Tavrg, Rcorr,      col=Corr_Col,       lwd=2.5)
 lines(Tavrg, Rfixbreak,  col=FixBreak_Col,   lwd=1)
@@ -206,8 +281,6 @@ lines(Tavrg, Rearly,     col=Early_Col,      lwd=1)
 lines(Tavrg, Rmiss,      col=Miss_Col,       lwd=1)
 lines(Tavrg, Rfalse,     col=False_Col,      lwd=1)
 lines(Tavrg, Rholderr,   col=TargetBreak_Col,  lwd=1)
- 
-abline(h=0, lty=1)
 
 ###########################################################################################
 # plot 4: RT over Go
@@ -298,6 +371,8 @@ if(sum(pStimBreak) > 1) {
 abline(v=median(StimSRT[pCorr], na.rm=TRUE), col=Corr_Col, lty=2, lwd=2)
 abline(v=median(StimSRT[pEarly], na.rm=TRUE), col=Early_Col, lty=2, lwd=2)
 
+box()
+
 ###########################################################################################
 # plot 6: response times
 all_vals_X = c()
@@ -377,6 +452,8 @@ x = barplot(100*All_perf/Ntrials, beside=TRUE, col=All_col, xaxt="n", main='Sess
 text(cex=0.9, x=x-.25, y=-1.5, All_typ, xpd=TRUE, srt=45, pos=1, offset=1)
 text(cex=1.5, x=x, y=0, All_perf, xpd=TRUE, srt=0, pos=3, offset=0.1)
 
+box()
+
 ###########################################################################################
 # plot 8: Delay dependent performance
 NumCond = 6  # -1 because it defines start and end of interval
@@ -402,6 +479,8 @@ lblpos = seq(from=1, to=NumCond*stp, by=stp)-0.5
 
 text(cex=1,   x=lblpos, y=-1.5, DelBrks, xpd=TRUE, srt=0, pos=1, offset=0.5)
 text(cex=1.5, x=xl,     y=0,    All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
+
+box()
 
 ###########################################################################################
 # plot 9: Position dependent performance
@@ -430,6 +509,8 @@ xl = colMeans(x)
 
 text(cex=1, x=colMeans(x), y=0, levels(TPos), xpd=TRUE, srt=0, pos=1, offset=0.5)
 text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
+
+box()
 
 ###########################################################################################
 # plot 10: Delay dependent SRT
