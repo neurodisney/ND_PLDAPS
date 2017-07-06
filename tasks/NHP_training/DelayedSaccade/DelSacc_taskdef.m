@@ -22,10 +22,10 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 % manual reward from experimenter
 p.trial.reward.initialFixRwd  = 0; % Small reward for achieving full fixation - set to zero to disable
 p.trial.reward.ManDur = 0.1;         % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur    = 0.75;         % Reward for completing the task successfully
+p.trial.reward.Dur    = 0.25;         % Reward for completing the task successfully
 p.trial.reward.IncrConsecutive =    1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          =    1;  % number of reward pulses 
-p.trial.reward.PulseStep       = [2, 3, 4]; % increase number of pulses with this trial number
+p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -36,10 +36,11 @@ p.trial.task.fixLatency       = 0.15; % Time to hold fixation before initial rew
 p.trial.task.stimLatency      = ND_GetITI(0.35, 0.85); % Time from initial reward to stim appearing 
 % Time from fixation to stim appearing is fixLatency + stimLatency
 
-p.trial.task.centerOffLatency = ND_GetITI(0.5, 0.75); % Time from stim appearing to fixspot disappearing
+p.trial.task.centerOffLatency = ND_GetITI(0.3, 0.5); % Time from stim appearing to fixspot disappearing
 
 p.trial.task.saccadeTimeout   = 0.5;   % Time allowed to make the saccade to the stim before error
-p.trial.task.minTargetFixTime = 0.75;   % Must fixate on target for at least this time before it counts
+p.trial.task.minSaccReactTime = 0.1;   % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
+p.trial.task.minTargetFixTime = 1.0;   % Must fixate on target for at least this time before it counts
 
 
 % inter-trial interval
@@ -74,7 +75,7 @@ p.trial.stim.grating.radius       = 1;    % radius of grating
 p.trial.stim.grating.tFreq        = 0;    % temporal frequency of grating; drift speed, 0 is stationary
 p.trial.stim.grating.sFreq        = 1.75; % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
 
-p.trial.stim.grating.lowContrast  = 0.4;  % grating contrast value when stim.on = 1
+p.trial.stim.grating.lowContrast  = 0.65;  % grating contrast value when stim.on = 1
 p.trial.stim.grating.highContrast = 0.65;  % grating contrast value when stim.on = 2
 
 orientations               = [-75];   %  angles for the stim

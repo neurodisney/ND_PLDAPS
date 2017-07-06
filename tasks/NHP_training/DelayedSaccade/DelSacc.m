@@ -359,9 +359,29 @@ switch p.trial.CurrEpoch
             % Animal has not yet saccaded to target
             % Need to check if no saccade has been made or if a wrong saccade has been made
 
-            if p.trial.stim.gratingH.fixating
+            if p.trial.stim.gratingH.looking
                 % Animal has saccaded to stim
-                p.trial.stim.GotFix = 1;
+                
+                % Make sure that saccade was actually a reaction to the go cue,
+                % rather than a lucky precocious saccade
+                if p.trial.stim.gratingH.EV.FixEntry < p.trial.EV.FixOff + p.trial.task.minSaccReactTime
+                    % Play breakfix sound
+                    pds.audio.playDP(p,'breakfix','left');
+                    
+                    % Turn the stim off and fixation off
+                    stim(p,0)
+                    fixspot(p,0)
+                    
+                    % Mark trial early and end task
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                    switchEpoch(p,'TaskEnd')
+                
+                
+                elseif p.trial.stim.gratingH.fixating
+                    % Real reaction to GO cue and has acheived fixation
+                    p.trial.stim.GotFix = 1;
+                end
+                
 
             elseif ~p.trial.stim.fix.fixating
                 % Eye has left the central fixation spot. Wait a breifly for eye to arrive
@@ -399,7 +419,7 @@ switch p.trial.CurrEpoch
 
         else
             % Animal is currently fixating on target
-
+            
             % Wait for animal to hold fixation for the required length of time
             % then give reward and mark trial good
             if p.trial.CurTime > p.trial.stim.gratingH.EV.FixStart + p.trial.task.minTargetFixTime

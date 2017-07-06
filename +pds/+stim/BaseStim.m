@@ -18,6 +18,7 @@ properties (SetAccess = protected)
     EV = struct             % Struct of timing arrays to store when things happen to the stim
     fixWinRect              % The bounding box of the fixation window, used for drawing the window
     fixating = 0            % Boolean for fixation
+    looking = 0             % Less stringent than fixation. Eye is in the fix window
 end
 
 
@@ -53,7 +54,23 @@ methods
             obj.eyeDist = dist(obj, point);
             
             % Check fixation state
-            getFixState(obj,p)   
+            getFixState(obj,p) 
+            
+            % Update the fixation variables
+            switch obj.fixState
+                case 'startingFix'
+                    obj.fixating = 0;
+                    obj.looking = 1;
+                case 'FixIn'
+                    obj.fixating = 1;
+                    obj.looking = 1;
+                case 'breakingFix'
+                    obj.fixating = 1;
+                    obj.looking = 0;
+                case 'FixOut'
+                    obj.fixating = 0;
+                    obj.looking = 0;
+            end
         end
     end
     
@@ -131,12 +148,10 @@ methods (Access = private)
                     % Fixation was just activated, determine the starting state
                     if obj.eyeDist <= obj.fixWin/2
                         obj.fixState = 'FixIn';
-                        obj.fixating = 1;
                         obj.EV.FixStart = p.trial.CurTime;
                         p.trial.EV.FixStart = p.trial.CurTime;
                     else
                         obj.fixState = 'FixOut';
-                        obj.fixating = 0;
                     end
      
                 case 'FixOut'
@@ -167,7 +182,6 @@ methods (Access = private)
                     elseif p.trial.CurTime >= obj.EV.FixEntry + p.trial.behavior.fixation.entryTime
                         pds.datapixx.strobe(p.trial.event.FIXATION);
                         obj.fixState = 'FixIn';
-                        obj.fixating = 1;
                         obj.EV.FixStart = obj.EV.FixEntry;
                         p.trial.EV.FixStart = obj.EV.FixEntry;
                     end
@@ -197,7 +211,6 @@ methods (Access = private)
                     elseif p.trial.CurTime > obj.EV.FixLeave + p.trial.behavior.fixation.BreakTime
                         pds.datapixx.strobe(p.trial.event.FIX_BREAK);
                         obj.fixState = 'FixOut';
-                        obj.fixating = 0;
                         obj.EV.FixBreak = obj.EV.FixLeave;
                         p.trial.EV.FixBreak = obj.EV.FixLeave;
                     end
