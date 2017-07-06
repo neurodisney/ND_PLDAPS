@@ -22,7 +22,7 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 % manual reward from experimenter
 p.trial.reward.initialFixRwd  = 0; % Small reward for achieving full fixation - set to zero to disable
 p.trial.reward.ManDur = 0.1;         % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur    = 0.25;         % Reward for completing the task successfully
+p.trial.reward.Dur    = 0.75;         % Reward for completing the task successfully
 p.trial.reward.IncrConsecutive =    1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          =    1;  % number of reward pulses 
 p.trial.reward.PulseStep       = [2, 3, 4]; % increase number of pulses with this trial number
@@ -92,7 +92,7 @@ p.trial.behavior.fixation.entryTime = 0.150;  % minimum time to stay within fixa
 
 % ------------------------------------------------------------------------%
 %% Task parameters
-p.trial.task.breakFixCheck = 0.150; % Time after a stimbreak where if task is marked early or stim break is calculated
+p.trial.task.breakFixCheck = 0.2; % Time after a stimbreak where if task is marked early or stim break is calculated
 
 % ------------------------------------------------------------------------%
 %% Trial duration
