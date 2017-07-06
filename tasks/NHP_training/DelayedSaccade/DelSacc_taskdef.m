@@ -36,7 +36,7 @@ p.trial.task.fixLatency       = 0.15; % Time to hold fixation before initial rew
 p.trial.task.stimLatency      = ND_GetITI(0.35, 0.85); % Time from initial reward to stim appearing 
 % Time from fixation to stim appearing is fixLatency + stimLatency
 
-p.trial.task.centerOffLatency = ND_GetITI(0.3, 0.5); % Time from stim appearing to fixspot disappearing
+p.trial.task.centerOffLatency = ND_GetITI(0.3, 0.75); % Time from stim appearing to fixspot disappearing
 
 p.trial.task.saccadeTimeout   = 0.5;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.1;   % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
@@ -75,10 +75,10 @@ p.trial.stim.grating.radius       = 1;    % radius of grating
 p.trial.stim.grating.tFreq        = 0;    % temporal frequency of grating; drift speed, 0 is stationary
 p.trial.stim.grating.sFreq        = 1.75; % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
 
-p.trial.stim.grating.lowContrast  = 0.65;  % grating contrast value when stim.on = 1
-p.trial.stim.grating.highContrast = 0.65;  % grating contrast value when stim.on = 2
+p.trial.stim.grating.lowContrast  = 0.40;  % grating contrast value when stim.on = 1
+p.trial.stim.grating.highContrast = 0.40;  % grating contrast value when stim.on = 2
 
-orientations               = [-75];   %  angles for the stim
+orientations               = [-75,30,0,130,90,45,-110];  %  angles for the stim
 p.trial.stim.grating.angle = datasample(orientations,1);
 
 p.trial.stim.grating.res          = 300;
