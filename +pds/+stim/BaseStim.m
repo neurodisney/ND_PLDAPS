@@ -9,7 +9,7 @@ properties
     on = 0;                 % Visibility
     fixWin = 0
     fixActive = 0;          % Whether or not this stim is is checked for eye fixation
-    autoDeactivate = 1;     % If fixActive automatically turns off after the stim is turned off and the eye leaves
+    autoFixWin = 1;         % If fixActive automatically turns on/off with stim and eye movement
 end
 
 properties (SetAccess = protected)
@@ -129,7 +129,7 @@ methods
     function obj = set.on(obj,value)
         obj.on = value;
         
-        if value
+        if value && obj.autoFixWin
             % Automatically turn on fixation checking when object becomes visible
             obj.fixActive = 1;
         end
@@ -165,7 +165,7 @@ methods (Access = private)
                         p.trial.EV.FixEntry = p.trial.CurTime;
                     else
                         % If the stim is off, deactivate the stim
-                        if obj.autoDeactivate && ~obj.on
+                        if obj.autoFixWin && ~obj.on
                             obj.fixActive = 0;
                         end
                     end

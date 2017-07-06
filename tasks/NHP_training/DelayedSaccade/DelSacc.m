@@ -209,6 +209,9 @@ p.trial.stim.gratingL = pds.stim.Grating(p);
 p.trial.stim.grating.contrast = p.trial.stim.grating.highContrast;
 p.trial.stim.gratingH = pds.stim.Grating(p);
 
+% Assume manual control of the activation of the grating fix windows
+p.trial.stim.gratingL.autoFixWin = 0;
+p.trial.stim.gratingH.autoFixWin = 0;
 
 % stim starts off
 p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
@@ -466,7 +469,7 @@ switch p.trial.CurrEpoch
             medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'],50);
             
             % Determine if the medPos is in the fixation window for the stim
-            if inFixWin(p.trial.stim.gratingL, medPos);
+            if inFixWin(p.trial.stim.gratingH, medPos);
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
             else
                 p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
@@ -485,13 +488,8 @@ switch p.trial.CurrEpoch
         % Grab the fixation stopping and starting values from the stim properties
         p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
         p.trial.EV.FixSpotStop  = p.trial.stim.fix.EV.FixBreak;
-        if isnan(p.trial.EV.StimChange)
-            p.trial.EV.FixTargetStart = p.trial.stim.gratingL.EV.FixStart;
-            p.trial.EV.FixTargetStop  = p.trial.stim.gratingL.EV.FixBreak;
-        else
-            p.trial.EV.FixTargetStart = p.trial.stim.gratingH.EV.FixStart;
-            p.trial.EV.FixTargetStop  = p.trial.stim.gratingH.EV.FixBreak;
-        end
+        p.trial.EV.FixTargetStart = p.trial.stim.gratingH.EV.FixStart;
+        p.trial.EV.FixTargetStop  = p.trial.stim.gratingH.EV.FixBreak;
       
         switchEpoch(p,'ITI');
         
@@ -549,11 +547,11 @@ p.trial.EV.epochEnd = p.trial.CurTime;
 
 
 function fixspot(p,bool)
-if bool
+if bool && ~p.trial.stim.fix.on
     p.trial.stim.fix.on = 1;
     p.trial.EV.FixOn = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
-else
+elseif ~bool && p.trial.stim.fix.on
     p.trial.stim.fix.on = 0;
     p.trial.EV.FixOff = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
@@ -571,6 +569,7 @@ if val == oldVal; return; end
 p.trial.task.stimState = val;
 
 % Turn on/off the appropriate generated stimuli
+% Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
 switch val
     case 0
         p.trial.stim.gratingL.on = 0;
@@ -578,9 +577,11 @@ switch val
     case 1
         p.trial.stim.gratingL.on = 1;
         p.trial.stim.gratingH.on = 0;
+        p.trial.stim.gratingH.fixActive = 1;
     case 2
         p.trial.stim.gratingL.on = 0;
         p.trial.stim.gratingH.on = 1;
+        p.trial.stim.gratingH.fixActive = 1;        
     otherwise
         error('bad stim value')
 end
