@@ -357,7 +357,7 @@ switch p.trial.CurrEpoch
                 
                 % Make sure that saccade was actually a reaction to the go cue,
                 % rather than a lucky precocious saccade
-                if p.trial.stim.gratingH.EV.FixEntry < p.trial.EV.FixOff + p.trial.task.minSaccReactTime
+                if p.trial.stim.fix.EV.FixBreak < p.trial.EV.FixOff + p.trial.task.minSaccReactTime
                     % Play breakfix sound
                     pds.audio.playDP(p,'breakfix','left');
                     
