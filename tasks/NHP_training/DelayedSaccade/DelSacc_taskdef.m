@@ -73,7 +73,7 @@ p.trial.stim.grating.direction    = datasample(directions,1,1);
 p.trial.stim.grating.radius       = 1;    % radius of grating
 
 p.trial.stim.grating.tFreq        = 0;    % temporal frequency of grating; drift speed, 0 is stationary
-p.trial.stim.grating.sFreq        = 1.75; % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
+p.trial.stim.grating.sFreq        = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
 
 p.trial.stim.grating.lowContrast  = 0.40;  % grating contrast value when stim.on = 1
 p.trial.stim.grating.highContrast = 0.40;  % grating contrast value when stim.on = 2
