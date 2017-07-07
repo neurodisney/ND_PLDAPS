@@ -35,24 +35,32 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             
             % ----------------------------------------------------------------%
             case p.trial.key.FixInc
-            %% Fixation Window increase
-                if(p.trial.behavior.fixation.use)
-                    % Increase the fixation window for all stims
+            %% Fixspot window increase
+                if p.trial.behavior.fixation.use
+                    % Increase the fixation window for all existing fixspots
                     for i = 1:length(p.trial.stim.allStims)
                         stim = p.trial.stim.allStims{i};
-                        stim.fixWin = stim.fixWin + p.trial.behavior.fixation.FixWinStp;
+                        if strcmp(class(stim),'pds.stim.FixSpot')
+                            stim.fixWin = stim.fixWin + p.trial.behavior.fixation.FixWinStp;
+                        end
                     end
+                    % Increase the fixation window for fixspots created later
+                    p.trial.stim.fixspot.fixWin = p.trial.stim.fixspot.fixWin + p.trial.behavior.fixation.FixWinStp;
                 end
                 
             % ----------------------------------------------------------------%
             case p.trial.key.FixDec
-            %% Fixation Window increase
-                if(p.trial.behavior.fixation.use)
-                    % Increase the fixation window for all stims
+            %% Fixspot window decrease
+                if p.trial.behavior.fixation.use
+                    % Decrease the fixation window for all existing fixspots
                     for i = 1:length(p.trial.stim.allStims)
                         stim = p.trial.stim.allStims{i};
-                        stim.fixWin = stim.fixWin - p.trial.behavior.fixation.FixWinStp;
+                        if strcmp(class(stim),'pds.stim.FixSpot')
+                            stim.fixWin = stim.fixWin - p.trial.behavior.fixation.FixWinStp;
+                        end
                     end
+                    % Decrease the fixation window for fixspots created later
+                    p.trial.stim.fixspot.fixWin = p.trial.stim.fixspot.fixWin - p.trial.behavior.fixation.FixWinStp;
                 end
 
             % ----------------------------------------------------------------%

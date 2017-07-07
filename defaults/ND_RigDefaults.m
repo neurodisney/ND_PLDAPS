@@ -245,6 +245,7 @@ SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window
 
 % Fixation spot stimuli
 SS.stim.fixspot.pos     = [0,0];
+SS.stim.fixspot.fixWin  =  4;         % diameter of fixation window in dva
 SS.stim.fixspot.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 SS.stim.fixspot.color   = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
 SS.stim.fixspot.size    = 0.2;        % size of the fixation spot
@@ -255,10 +256,11 @@ SS.stim.grating.sFreq    = 3; % Spatial frequency, cycles/deg
 SS.stim.grating.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
 SS.stim.grating.angle    = 0; % Rotation
 SS.stim.grating.contrast = 1;
-SS.stim.grating.res = 1000; % Half the size of the texture matrix
+SS.stim.grating.res      = 1000; % Half the size of the texture matrix
 SS.stim.grating.radius   = 1;
 SS.stim.grating.contrastMethod = 'balanced';
 SS.stim.grating.pos      = [0, 0];
+SS.stim.grating.fixWin   =  4;  
 SS.stim.grating.alpha    = 1; % Fully opaque
 % SS.stim.grating.srcRadius  = 500; % Big source to allow for more resolution
 

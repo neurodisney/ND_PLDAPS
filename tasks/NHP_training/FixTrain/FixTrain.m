@@ -221,6 +221,7 @@ function TaskSetUp(p)
 
     p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
     
+      
     % Reward
     nRewards = p.trial.reward.nRewards;
     % Reset the reward counter (separate from iReward to allow for manual rewards)
@@ -231,24 +232,24 @@ function TaskSetUp(p)
     
     
     % Outcome if no fixation occurs at all during the trial
-    p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
-        
-    p.trial.task.Good                = 1;  % assume no error untill error occurs
+    p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
+    p.trial.task.Good   = 0;
     
-    p.trial.behavior.fixation.GotFix = 0;
-    p.trial.behavior.fixation.on = 0;
+    % State for acheiving fixation
+    p.trial.task.fixFix = 0;
     
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
-        p.trial.behavior.fixation.fixPos = p.trial.eyeCalib.Grid_XY(randi(size(p.trial.eyeCalib.Grid_XY,1)), :);
-        
          Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
          Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
-         p.trial.behavior.fixation.fixPos = [Xpos, Ypos];
+         p.trial.stim.fixspot.pos = [Xpos, Ypos];
     end
-    pds.fixation.move(p);
     
-    p.trial.behavior.fixation.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
+    p.trial.stim.fixspot.color = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
+    
+    %% Make the visual stimuli
+    % Fixation spot
+    p.trial.stim.fix = pds.stim.FixSpot(p);
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -258,7 +259,7 @@ function TaskDesign(p)
 
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
-            p.trial.behavior.fixation.on = 1;
+            fixspot(p,1);
         
             tms = pds.datapixx.strobe(p.trial.event.TASK_ON); 
             p.trial.EV.DPX_TaskOn = tms(1);
@@ -270,52 +271,52 @@ function TaskDesign(p)
             if(p.trial.datapixx.TTL_trialOn)
                 pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
             end
- 
-            p.trial.Timer.trialStart = p.trial.CurTime;
-            p.trial.CurrEpoch  = p.trial.epoch.WaitFix;
+           
+            switchEpoch(p,'WaitFix')
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
             %% Fixation target shown, waiting for a sufficiently held gaze
             
             % Gaze is outside fixation window
-            if p.trial.behavior.fixation.GotFix == 0
+            if p.trial.task.fixFix == 0
                
                 % Fixation has occured
-                if p.trial.FixState.Current == p.trial.FixState.FixIn
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; %Will become FullFixation upon holding long enough
-                    p.trial.behavior.fixation.GotFix = 1;
-                    p.trial.Timer.fixStart = p.trial.CurTime;
+                if p.trial.stim.fix.fixating
+                    p.trial.task.fixFix = 1;
                 
                 % Time to fixate has expired
-                elseif p.trial.CurTime > p.trial.Timer.trialStart + p.trial.task.Timing.WaitFix
+                elseif p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix
+                    % Turn off fixation spot
+                    fixspot(p,0);
                     
-                    % Long enough fixation did not occur, failed trial
-                    p.trial.task.Good = 0;
-                    
-                    % Go directly to TaskEnd, do not start task, do not collect reward
-                    p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                    p.trial.behavior.fixation.on = 0;
-                    
+                    % Mark trial NoFix, go directly to TaskEnd, do not start task, do not collect reward
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
+                    switchEpoch(p,'TaskEnd')                   
                 end
                 
                 
             % If gaze is inside fixation window
-            elseif p.trial.behavior.fixation.GotFix == 1
+            elseif p.trial.task.fixFix == 1
                 
                 % Fixation ceases
-                if p.trial.FixState.Current == p.trial.FixState.FixOut
-                    p.trial.behavior.fixation.GotFix = 0;
+                if ~p.trial.stim.fix.fixating
+                    % Play breakfix sound
+                    pds.audio.playDP(p,'breakfix','left');
+                    
+                    % Turn the fixation spot off
+                    fixspot(p,0)
+                    
+                    % Mark trial as breakfix and end the task
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+                    switchEpoch(p,'TaskEnd');
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
-                elseif (p.trial.CurTime > p.trial.Timer.fixStart + p.trial.task.CurRewDelay) && p.trial.FixState.Current == p.trial.FixState.FixIn
+                elseif p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.CurRewDelay
                     
                     % Succesful
                     p.trial.task.Good = 1;
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
-                    
-                    % Record when the monkey started fixating
-                    p.trial.EV.FixStart = p.trial.Timer.fixStart;
                     
                     % Reward the monkey
                     p.trial.reward.count = 1;
@@ -324,7 +325,7 @@ function TaskDesign(p)
                     p.trial.Timer.lastReward = p.trial.CurTime;
                     
                     % Transition to the succesful fixation epoch
-                    p.trial.CurrEpoch = p.trial.epoch.Fixating;
+                    switchEpoch(p,'Fixating');
 
                 end
                 
@@ -335,7 +336,7 @@ function TaskDesign(p)
         %% Animal has reached fixation criteria and now starts receiving rewards for continued fixation
             
         % Still fixating    
-        if p.trial.FixState.Current == p.trial.FixState.FixIn
+        if p.trial.stim.fix.fixating
             
             % If the supplied reward schema doesn't cover until jackpot
             % time, just repeat the last reward
@@ -370,19 +371,21 @@ function TaskDesign(p)
                 % Best outcome
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
 
+                % Turn off fixation spot
+                fixspot(p,0);
+                
                 % End the task
-                p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-                p.trial.behavior.fixation.on = 0;
+                switchEpoch(p,'TaskEnd');
 
                 % Play jackpot sound
-                pds.audio.playDP(p,'jackpot','left')
+                pds.audio.playDP(p,'jackpot','left');
             end
         
         % Fixation Break, end the trial        
-        elseif p.trial.FixState.Current == p.trial.FixState.FixOut
+        elseif ~p.trial.stim.fix.fixating
             pds.audio.playDP(p,'breakfix','left');
-            p.trial.CurrEpoch = p.trial.epoch.TaskEnd;
-            p.trial.behavior.fixation.on = 0;
+            switchEpoch(p,'TaskEnd');
+            fixspot(p,0);
                                  
         end
             
@@ -391,7 +394,8 @@ function TaskDesign(p)
         %% finish trial and error handling
         
         % Run standard TaskEnd routine
-        Task_OFF(p)
+        Task_OFF(p);
+        switchEpoch(p,'ITI');
         
         % ----------------------------------------------------------------%
         case p.trial.epoch.ITI
@@ -406,15 +410,6 @@ function TaskDraw(p)
 % go through the task epochs as defined in TaskDesign and draw the stimulus
 % content that needs to be shown during this epoch.
 
-%% TODO: draw predicted eye pos for calibration grid, draw indicator for random posiiton vs. fix, indicate current position
-
-    if p.trial.behavior.fixation.enableCalib
-        pds.eyecalib.draw(p)
-    end
-    
-    if p.trial.behavior.fixation.on
-        pds.fixation.draw(p);
-    end
     
 % ####################################################################### %
 function KeyAction(p)
@@ -435,13 +430,26 @@ function KeyAction(p)
                     p.trial.task.RandomPos = 0;
                  end
         end
-        
-        pds.fixation.move(p);
     end
 
 % ####################################################################### %
-%% additional inline functions that
+%% additional inline functions
 % ####################################################################### %
+function switchEpoch(p,epochName)
+p.trial.CurrEpoch = p.trial.epoch.(epochName);
+p.trial.EV.epochEnd = p.trial.CurTime;
+
+function fixspot(p,bool)
+if bool && ~p.trial.stim.fix.on
+    p.trial.stim.fix.on = 1;
+    p.trial.EV.FixOn = p.trial.CurTime;
+    pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
+elseif ~bool && p.trial.stim.fix.on
+    p.trial.stim.fix.on = 0;
+    p.trial.EV.FixOff = p.trial.CurTime;
+    pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
+end
+
 
 % ####################################################################### %
 function Trial2Ascii(p, act)
@@ -475,7 +483,7 @@ function Trial2Ascii(p, act)
                                 p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
                                 p.trial.task.CurRewDelay, p.trial.reward.count, p.trial.outcome.CurrOutcome, cOutCome, ...
                                 p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.behavior.fixation.FixCol, p.trial.task.Timing.ITI, ...
-                                p.trial.behavior.fixation.FixWin, p.trial.behavior.fixation.fixPos(1), p.trial.behavior.fixation.fixPos(2));
+                                p.trial.stim.fix.fixWin, p.trial.stim.fix.pos(1), p.trial.stim.fix.pos(2));
                fclose(tblptr);
             end
     end
