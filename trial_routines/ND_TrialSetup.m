@@ -5,7 +5,6 @@ function p = ND_TrialSetup(p)
 %
 % wolf zinke, Dec. 2016
 
-
 % p.trial.timing.flipTimes = zeros(4,p.trial.pldaps.maxFrames);
 p.trial.timing.flipTimes = zeros(5,p.trial.pldaps.maxFrames);
 
@@ -83,9 +82,15 @@ end
 
 % ------------------------------------------------------------------------%
 %% Update summary information for preceding trials
-p.trial.SmryStr = sprintf('Condition: %d  Block: %d -- %d/%d correct trials (%.2f)', ...
+outcomeStr = 'Outcomes --  ';
+allKeys = keys(p.trial.outcome.allOutcomes);
+for iKey = 1:length(allKeys)
+    key = allKeys{iKey};
+    outcomeStr = [outcomeStr key ':' mat2str(p.trial.outcome.allOutcomes(key)) '  '];
+end
+p.trial.SmryStr = sprintf('Condition: %d  Block: %d -- %d/%d correct trials (%.2f)\n%s', ...
                    p.trial.Nr, p.trial.blocks(p.trial.pldaps.iTrial), p.trial.NHits, ...
-                   p.trial.pldaps.iTrial, p.trial.cPerf);
+                   p.trial.pldaps.iTrial, p.trial.cPerf, outcomeStr);
 
 ND_CtrlMsg(p, p.trial.SmryStr);
 

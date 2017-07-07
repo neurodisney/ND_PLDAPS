@@ -24,6 +24,8 @@ SS.datapixx.use                                 = 1;      % enable control of VP
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
 
+SS.datapixx.propixxIntensity                    = 2;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
+
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
 % WZ: Also for more clarification check the PsychDataPixx function in Psychtoolbox-3/Psychtoolbox/PsychHardware/DatapixxToolbox/DatapixxBasic
@@ -48,6 +50,7 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 % ------------------------------------------------------------------------%
 %% Display settings: specify options for the screen.
 SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
+SS.display.breakColor                           = [0, 0, 0];  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 97;    % screen distance to the observer
 SS.display.heightcm                             = 40;     % height of the visible screen in cm
@@ -152,9 +155,7 @@ SS.pldaps.draw.photodiode.state                 = 0;     % is PD signal on?
 SS.pldaps.draw.photodiode.cnt                   = 0;     % counter for PD signals
 
 % pause: control pausing behavior of pldaps
-SS.pldaps.pause.preExperiment                   = 0;     % pause before experiment starts: 0=don't; 1 = debugger; 2 = pause loop
-SS.pldaps.pause.type                            = 1;     % Only type 1 is currently tested.
-
+SS.pldaps.pause                                 = 0;     % pause the experiment after the current trial
 % save: control how pldaps saves data
 SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial parameters
 
@@ -167,7 +168,7 @@ SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial p
 %% Debugging
 SS.pldaps.GetTrialStateTimes = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 SS.pldaps.GetScreenFlipTimes = 0;  % get each screen refresh time, i.e. wait for synch for each screen update
-
+SS.pldaps.ptbVerbosity       = 3;  % See here https://github.com/Psychtoolbox-3/Psychtoolbox-3/wiki/FAQ:-Control-Verbosity-and-Debugging
 % ------------------------------------------------------------------------%
 %% Reward settings
 SS.datapixx.useForReward      = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
@@ -187,48 +188,40 @@ SS.datapixx.adc.PupilChannel   = 2;
 % Saccade parameters
 SS.behavior.fixation.use       =  0;       % does this task require control of eye position
 
-SS.behavior.fixation.required  =  0;       % If not required, fixation states will be ignored
+SS.behavior.fixation.on  =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
 SS.behavior.fixation.entryTime = 0.025;    % minimum time [s] before fixation is registered when gaze enters fixation window
 SS.behavior.fixation.BreakTime = 0.05;     % minimum time [s] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
 
-% fixation target parameters
-SS.behavior.fixation.fixPos    = [0, 0];    % center position of fixation window [dva]
-SS.behavior.fixation.FixType   = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-SS.behavior.fixation.FixCol    = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
-SS.behavior.fixation.FixSz     = 0.25;      % size of the fixation spot
 
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibration
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
-SS.pldaps.draw.eyeCalib              = 0;         % Show the eye calibration points
 SS.eyeCalib.name                     = 'Default';        % Name of the calibration used. For back referencing in the data later
 SS.eyeCalib.file                     = 'nofile';   % THe file that stores the calibration information
-SS.eyeCalib.defaultGain              = [-5, -5];  % default gain, used if no calibration points are entered
-SS.eyeCalib.defaultOffset            = [0, 0];    % default offset, used if no calibration points are entered
-SS.behavior.fixation.CalibMat        = [];
+SS.eyeCalib.defaultGain              = [4.4281 -4.3813];  % default gain, used if no calibration points are entered
+SS.eyeCalib.defaultOffset            = [-2.3334 -1.5129];    % default offset, used if no calibration points are entered
+SS.eyeCalib.offsetTweak              = [0, 0];    % Additive tweak to the offset parameter  
+SS.eyeCalib.gainTweak                = [0, 0];    % Additive tweak to the gain parameter
+SS.behavior.fixation.calibTweakMode  = 'off';     % Parameter currently being tweaked
+SS.behavior.fixation.offsetTweakSize = 0.1;       % How much to tweak offset by in dva
+SS.behavior.fixation.gainTweakSize   = 0.03;       % How much to tweak gain by
 SS.eyeCalib.rawEye    = [];
 SS.eyeCalib.fixPos    = [];
 SS.eyeCalib.medRawEye = [];
 SS.eyeCalib.medFixPos = [];
-SS.behavior.fixation.CalibMethod     = 'gain'; % method used for calibration, currently only gain adjustment
+SS.behavior.fixation.calibSamples    = 200;    % analog eyesamples in the the datapixx to determine the position of an eye calibration point
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.GridPos         = 5;
+SS.behavior.fixation.GridPos         = 5;      % cntral fixation position (for pure offset correction)
 
-SS.behavior.fixation.FixWinStp       = 0.25;    % change of the size of the fixation window upon key press
-SS.behavior.fixation.PrevOffset      = [0, 0];  % keep track of previous offset to change back from the one
+SS.behavior.fixation.FixWinStp       = 0.25;   % change of the size of the fixation window upon key press
 
-SS.behavior.fixation.NumSmplCtr      = 10;      % number of recent samples to use to determine current (median) eye position ( has to be small than SS.pldaps.draw.eyepos.history)
+SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use to determine current (median) eye position (has to be smaller than SS.pldaps.draw.eyepos.history)
 
-% fixation window
-SS.behavior.fixation.FixWin          =  4;  % diameter of fixation window in dva
-SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
-SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
-SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
 % Define fixation states
 SS.FixState.Current     = NaN;
@@ -236,6 +229,42 @@ SS.FixState.FixOut      =    0;  % Gaze out of fixation window
 SS.FixState.startingFix = 0.25;  % Gaze has momentarily entered fixation window
 SS.FixState.FixIn       =    1;  % Gaze robustly within fixation window
 SS.FixState.breakingFix = 0.75;  % Gaze has momentarily left fixation window
+
+% ------------------------------------------------------------------------%
+%% Stimuli
+SS.stim.allStims = {}; % Cell array to store references of all the stims created
+
+% Default position for stimuli to be generated
+SS.stim.pos = [0,0];
+
+% fixation window
+SS.stim.fixWin                       =  4;  % diameter of fixation window in dva
+SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
+SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
+SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
+
+% Fixation spot stimuli
+SS.stim.fixspot.pos     = [0,0];
+SS.stim.fixspot.fixWin  =  4;         % diameter of fixation window in dva
+SS.stim.fixspot.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+SS.stim.fixspot.color   = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
+SS.stim.fixspot.size    = 0.2;        % size of the fixation spot
+SS.behavior.fixation.fix.pos = [0,0]; % Somethings may rely on this, will be overwritten upon creation of first FixSpot
+
+% Sine Wave Grating stimlui
+SS.stim.grating.sFreq    = 3; % Spatial frequency, cycles/deg
+SS.stim.grating.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
+SS.stim.grating.angle    = 0; % Rotation
+SS.stim.grating.contrast = 1;
+SS.stim.grating.res      = 1000; % Half the size of the texture matrix
+SS.stim.grating.radius   = 1;
+SS.stim.grating.contrastMethod = 'balanced';
+SS.stim.grating.pos      = [0, 0];
+SS.stim.grating.fixWin   =  4;  
+SS.stim.grating.alpha    = 1; % Fully opaque
+% SS.stim.grating.srcRadius  = 500; % Big source to allow for more resolution
+
+
 
 % ------------------------------------------------------------------------%
 %% Joystick
@@ -280,9 +309,9 @@ SS.pldaps.draw.ScreenEventName = 'NULL';  % keep track of times in pldaps data f
 KbName('UnifyKeyNames');
 SS.key.reward  = KbName('space');    % trigger reward
 SS.key.quit    = KbName('ESCAPE');   % end experiment
-
-SS.key.FixReq  = KbName('f');  % disable/enable fixation control
-SS.key.CtrJoy  = KbName('j');  % set current joystick position as zero
+SS.key.pause   = KbName('p');        % pause the experiment
+SS.key.break   = KbName('b');        % give a break
+SS.key.CtrJoy  = KbName('j');        % set current joystick position as zero
 
 SS.key.FixInc  = KbName('=+'); % increase size of fixation window
 SS.key.FixDec  = KbName('-_'); % decrease size of fixation window

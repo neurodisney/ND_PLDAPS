@@ -16,11 +16,9 @@ if(p.trial.datapixx.TTL_trialOn)
 end
 
 % determine ITI
-if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct)
-    p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI;
-else
-    p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
+if ~p.trial.task.Good
+    % Timeout if task not performed correctly
+    p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
 end
 
-p.trial.Timer.ITI  = p.trial.Timer.Wait;
-p.trial.CurrEpoch  = p.trial.epoch.ITI;
+p.trial.Timer.ITI = p.trial.CurTime + p.trial.task.Timing.ITI;

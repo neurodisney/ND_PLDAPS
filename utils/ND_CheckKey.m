@@ -34,39 +34,33 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
             
             % ----------------------------------------------------------------%
-            case p.trial.key.FixReq
-            %% Fixation request
-            % disable/enable requirement of fixation for the task
-                if(p.trial.behavior.fixation.use)
-                    if(p.trial.behavior.fixation.required)
-                        p.trial.behavior.fixation.required = 0;
-                        ND_CtrlMsg(p, 'Fixation requirement disabled!');
-                    else
-                        p.trial.behavior.fixation.required = 1;
-                        ND_CtrlMsg(p, 'Fixation requirement enabled!');
-                    end
-                end
-
-            % ----------------------------------------------------------------%
             case p.trial.key.FixInc
-            %% Fixation Window increase
-                if(p.trial.behavior.fixation.use)
-                    p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin + ...
-                                                       p.trial.behavior.fixation.FixWinStp;
-                    %p.trial.behavior.fixation.FixWin = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
-                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
-                                                      p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
+            %% Fixspot window increase
+                if p.trial.behavior.fixation.use
+                    % Increase the fixation window for all existing fixspots
+                    for i = 1:length(p.trial.stim.allStims)
+                        stim = p.trial.stim.allStims{i};
+                        if strcmp(class(stim),'pds.stim.FixSpot')
+                            stim.fixWin = stim.fixWin + p.trial.behavior.fixation.FixWinStp;
+                        end
+                    end
+                    % Increase the fixation window for fixspots created later
+                    p.trial.stim.fixspot.fixWin = p.trial.stim.fixspot.fixWin + p.trial.behavior.fixation.FixWinStp;
                 end
                 
             % ----------------------------------------------------------------%
             case p.trial.key.FixDec
-            %% Fixation Window increase
-                if(p.trial.behavior.fixation.use)
-                    p.trial.behavior.fixation.FixWin = p.trial.behavior.fixation.FixWin - ...
-                                                       p.trial.behavior.fixation.FixWinStp;
-                    %p.trial.behavior.fixation.FixWin_pxl = ND_dva2pxl(p.trial.behavior.fixation.FixWin, p); % Stimulus diameter in dva
-                    p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
-                                                      p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
+            %% Fixspot window decrease
+                if p.trial.behavior.fixation.use
+                    % Decrease the fixation window for all existing fixspots
+                    for i = 1:length(p.trial.stim.allStims)
+                        stim = p.trial.stim.allStims{i};
+                        if strcmp(class(stim),'pds.stim.FixSpot')
+                            stim.fixWin = stim.fixWin - p.trial.behavior.fixation.FixWinStp;
+                        end
+                    end
+                    % Decrease the fixation window for fixspots created later
+                    p.trial.stim.fixspot.fixWin = p.trial.stim.fixspot.fixWin - p.trial.behavior.fixation.FixWinStp;
                 end
 
             % ----------------------------------------------------------------%
@@ -81,27 +75,55 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             case p.trial.key.viewEyeCalib
                 %% Toggle viewing eye calibration
                 if p.trial.behavior.fixation.useCalibration
-                    p.trial.pldaps.draw.eyeCalib = not(p.trial.pldaps.draw.eyeCalib);
+                    p.trial.behavior.fixation.enableCalib = not(p.trial.behavior.fixation.enableCalib);
                 end
                 
                 
             % ----------------------------------------------------------------%
-%             case p.trial.key.pause
-%             %% pause trial
-%                 p.trial.pldaps.quit = 1;
-%                 ShowCursor;
+            case p.trial.key.pause
+            %% pause experiment
+%                 p.trial.pldaps.pause = ~p.trial.pldaps.pause;
+                if ~p.trial.pldaps.pause
+                    p.trial.pldaps.pause = 1;
+                    ND_CtrlMsg(p,'Pausing after current trial...');
+                else
+                    p.trial.pldaps.pause = 0;
+                    ND_CtrlMsg(p,'Pause cancelled.');
+                end
+% 
+            % ----------------------------------------------------------------%
+            case p.trial.key.break
+            %% break experiment
+                p.trial.pldaps.pause = 2;
+                ND_CtrlMsg(p,'Starting break...');
+                
+                % Finish up the trial
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Break;
+                tms = pds.datapixx.strobe(p.trial.event.TASK_OFF);
+                p.trial.EV.DPX_TaskOff = tms(1);
+                p.trial.EV.TDT_TaskOff = tms(2);
+                
+                p.trial.EV.TaskEnd = p.trial.CurTime;
+                
+                if(p.trial.datapixx.TTL_trialOn)
+                    pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
+                end
+                
+                % End the trial
+                p.trial.flagNextTrial = 1;
 
+                
             % ----------------------------------------------------------------%
             case p.trial.key.quit
             %% quit experiment
                 p.trial.pldaps.quit = 2;
                 ShowCursor;
 
-            % ----------------------------------------------------------------%
-            case p.trial.key.quit
-            %%  go into debug mode
-                disp('stepped into debugger. Type return to start first trial...')
-                keyboard %#ok<MCKBD>
+%             % ----------------------------------------------------------------%
+%             case p.trial.key.quit
+%             %%  go into debug mode
+%                 disp('stepped into debugger. Type return to start first trial...')
+%                 keyboard %#ok<MCKBD>
 
         end  %/ switch Kact
     end

@@ -13,14 +13,16 @@ disp('>>>>  Preparing Sessions <<<<')
 disp('****************************************************************')
 disp('');
 
+p.defaultParameters.DateStr = datestr(p.defaultParameters.session.initTime,'yyyy_mm_dd');
+
 % --------------------------------------------------------------------%
 %% set output directories and file names
 p.defaultParameters.session.dir          =  fullfile(p.defaultParameters.pldaps.dirs.data, ...
-                                                     p.defaultParameters.session.subject, datestr(now,'yyyy_mm_dd'), ...
+                                                     p.defaultParameters.session.subject, p.defaultParameters.DateStr, ...
                                                      p.defaultParameters.session.experimentSetupFile);
 % Eye calibration directory
 p.defaultParameters.session.eyeCalibDir  =  fullfile(p.defaultParameters.pldaps.dirs.data, ...
-                                                     p.defaultParameters.session.subject, datestr(now,'yyyy_mm_dd'), ...
+                                                     p.defaultParameters.session.subject, p.defaultParameters.DateStr, ...
                                                      'EyeCalib');
 % ensure that the data directory exists
 p.defaultParameters.session.tmpdir   = fullfile(p.defaultParameters.session.dir,'TEMP');
@@ -43,7 +45,7 @@ end
 p.defaultParameters.session.file     = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
 
 p.defaultParameters.session.asciitbl = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem,'.dat'];
-
+p.defaultParameters.session.asciifmtstr = '';
 %--------------------------------------------------------------------%
 %% Define Trial function
 % The runTrial function requires trialFunction to be defined, but buried in

@@ -36,6 +36,11 @@ end
 
 %% check arguments
 
+if minval > maxval
+    warning('Min value is greater than Max value. Switching arguments')
+    [minval, maxval] = deal(maxval,minval);
+end
+
 if (mu > maxval)
     error('Maximum ITI tme can not exceed mean ITI time!');
 end

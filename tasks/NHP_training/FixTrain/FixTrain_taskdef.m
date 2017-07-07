@@ -20,12 +20,21 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur         = 0.2;         % reward duration [s] for reward given by keyboard presses
+
+p.trial.reward.Dur            = [0.15 0.15 0.12];
+p.trial.reward.jackpotTime    = 3;
+p.trial.reward.jackpotDur     = 0.5;
+p.trial.reward.nRewards       = [1 3 4];
+p.trial.reward.Period         = [0.25 0.20 0.15];
+
+p.trial.reward.MinWaitInitial = 0.25;
+p.trial.reward.MaxWaitInitial = 0.50;
 
 % ------------------------------------------------------------------------%
-%% Task Timings
-p.trial.task.Timing.WaitFix = 1;    % Time to get a solid fixation before trial ends unsuccessfully
-p.trial.task.Timing.MaxFix = 20;    % Maximum amount of time of fixation
+%% Timing
+p.trial.task.Timing.WaitFix = 6;    % Time to get a solid fixation before trial ends unsuccessfully
+
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.5;  % minimum time period [s] between subsequent trials
 p.trial.task.Timing.MaxITI  = 3;    % maximum time period [s] between subsequent trials
@@ -34,23 +43,19 @@ p.trial.task.Timing.MaxITI  = 3;    % maximum time period [s] between subsequent
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
-%% Fixation parameters
-p.trial.task.fixrect = ND_GetRect(p.trial.behavior.fixation.fixPos, ...
-                                  p.trial.behavior.fixation.FixWin);  % make sure that this will be defined in a variable way in the future
-
-p.trial.behavior.fixation.BreakTime = 0.025;  % minimum time [ms] to identify a fixation break
-p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixation window to detect initial fixation start
+%% fixation spot parameters
+p.trial.stim.fixspot.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.fixspot.size    = 0.15;        % size of the fixation spot
 
 % ------------------------------------------------------------------------%
-%% fixation spot parameters
-p.trial.behavior.fixation.FixType = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.behavior.fixation.FixCol  = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
-p.trial.behavior.fixation.FixSz   = 0.1;        % size of the fixation spot
+%% Fixation parameters
+p.trial.behavior.fixation.BreakTime = 0.025;  % minimum time [ms] to identify a fixation break
+p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixation window to detect initial fixation start
 
 % ------------------------------------------------------------------------%
 %% Trial duration
 % maxTrialLength is used to pre-allocate memory at several initialization
 % steps. It specifies a duration in seconds.
 
-p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix + p.trial.task.Timing.MaxFix); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix + p.trial.reward.MaxWaitInitial + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 

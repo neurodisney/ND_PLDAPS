@@ -27,8 +27,6 @@ KbName('UnifyKeyNames');
 p.trial.key.GridKey       = KbName(arrayfun(@num2str, 1:9, 'unif', 0));
 p.trial.key.GridKeyCell   = num2cell(p.trial.key.GridKey);
 
-pds.fixation.move(p);
-
 
 
 

@@ -23,7 +23,7 @@ SS.task.TaskDef  = 'EyeCalib_taskdef';  % function that provides task specific p
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos'};
+SS.editable = {'task.RandomPos','stim.fixspot.fixWin','stim.fixspot.pos'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
@@ -47,7 +47,7 @@ SS.datapixx.TTL_trialOn       = 0;
 SS.behavior.fixation.enableCalib = 1;
 SS.behavior.fixation.useCalibration = 1;
 
-SS.behavior.fixation.required = 1; % fixation required for this task
+SS.behavior.fixation.on = 1; % fixation.on for this task
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
@@ -56,7 +56,7 @@ SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states
 % If there are modification from the default settings needed, copy the
 % needed lines from ND_RigDefaults and alter the values here.
 
-SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
+SS.display.bgColor    =  [0.5, 0.5, 0.5];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
 SS.behavior.fixation.FixWin     = 5;

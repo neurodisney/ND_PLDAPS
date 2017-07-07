@@ -47,7 +47,7 @@ SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
-SS.behavior.fixation.required = 1; % fixation required for this task
+SS.behavior.fixation.on = 1; % fixation.on for this task
 SS.behavior.fixation.FixType  = 'off';
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called

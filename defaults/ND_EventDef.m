@@ -21,15 +21,17 @@ disp('');
 
 p.defaultParameters.EV.TrialStart  = NaN; % Trial start time
 p.defaultParameters.EV.TaskStart   = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
-p.defaultParameters.EV.TaskEnd     = NaN; % actual task end 
+p.defaultParameters.EV.TaskEnd     = NaN; % actual task end
 p.defaultParameters.EV.Initiated   = NaN; % animal intiated the task
 p.defaultParameters.EV.StimOn      = NaN; % Stimulus Onset 
-p.defaultParameters.EV.StimOff     = NaN; % Stimulus Offset 
+p.defaultParameters.EV.StimOff     = NaN; % Stimulus Offset
+p.defaultParameters.EV.StimChange  = NaN; % Stimulus Change
 p.defaultParameters.EV.FixOn       = NaN; % Onset of fixation spot
 p.defaultParameters.EV.FixOff      = NaN; % Offset of fixation spot
 p.defaultParameters.EV.PDOn        = NaN; % Photo diode onset
 p.defaultParameters.EV.PDOff       = NaN; % Photo diode offset
 p.defaultParameters.EV.GoCue       = NaN; % Onset of Go-signal
+p.defaultParameters.EV.FirstReward = NaN; % First reward given in a trial
 p.defaultParameters.EV.Reward      = NaN; % time of reward delivery
 p.defaultParameters.EV.StartRT     = NaN; % response time to start trial after active cue
 p.defaultParameters.EV.RespRT      = NaN; % reaction time
@@ -37,6 +39,12 @@ p.defaultParameters.EV.DPX_TaskOn  = NaN; % Synch time with datapixx for task on
 p.defaultParameters.EV.DPX_TaskOff = NaN; % Synch time with datapixx for task off
 p.defaultParameters.EV.TDT_TaskOn  = NaN; % Synch time with TDT for task on
 p.defaultParameters.EV.TDT_TaskOff = NaN; % Synch time with TDT for task off
+p.defaultParameters.EV.epochEnd    = NaN; % Ending time of the last epoch
+
+% p.defaultParameters.EV.Pause       = NaN;  % WZ: These events should be within trials. Pauses and breaks are between trials. Might cause conflicts...
+% p.defaultParameters.EV.Unpause     = NaN;
+% p.defaultParameters.EV.Break       = NaN;
+% p.defaultParameters.EV.Unbreak     = NaN;
 
 % if joystick is used for behavior
 if(p.defaultParameters.behavior.joystick.use)
@@ -51,6 +59,14 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
     p.defaultParameters.EV.FixLeave   = NaN; % time when eyes leave fixation window
     p.defaultParameters.EV.Saccade    = NaN; % response saccade detected
+    
+    % Fixspot
+    p.defaultParameters.EV.FixSpotStart = NaN; % Start of fixation on central fix spot
+    p.defaultParameters.EV.FixSpotStop  = NaN; % Stop of fixation on central fix spot
+    
+    % Target
+    p.defaultParameters.EV.FixTargetStart = NaN; % Start of fixation on target
+    p.defaultParameters.EV.FixTargetStop  = NaN; % Stop of fixation on target
 end
 
 % ------------------------------------------------------------------------%
@@ -64,6 +80,10 @@ p.defaultParameters.event.TASK_OFF      = 11;   % end of task (should happen bef
 p.defaultParameters.event.TC_CORR       = 1004; % trial complete, correct
 p.defaultParameters.event.TC_ERR        = 3010; % trial complete, incorrect
 p.defaultParameters.event.NO_TC         = 3011; % trial incomplete
+p.defaultParameters.event.PAUSE         = 3999; % Pause the experiment
+p.defaultParameters.event.UNPAUSE       = 3989; % Unpause the experiment
+p.defaultParameters.event.BREAK         = 3899; % Pause the experiment
+p.defaultParameters.event.UNBREAK       = 3889; % Unpause the experiment
 
 % response related
 p.defaultParameters.event.RESP_CORR     = 1110; % correct response occurred
@@ -153,8 +173,8 @@ p.defaultParameters.event.DO_7       = 2327;
 p.defaultParameters.event.DO_8       = 2328;
 
 % marker to select start and end of trial header
-p.defaultParameters.event.TRIAL_HDR_ON  = 99001;
-p.defaultParameters.event.TRIAL_HDR_OFF = 99000;
+p.defaultParameters.event.TRIAL_HDR_ON  = 9901;
+p.defaultParameters.event.TRIAL_HDR_OFF = 9900;
 
 % TODO: encode trial states (and task epochs)?
 

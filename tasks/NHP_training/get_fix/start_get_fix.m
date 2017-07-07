@@ -44,7 +44,7 @@ SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
 SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 1;
 
-SS.behavior.fixation.required = 1; % fixation required for this task
+SS.behavior.fixation.on = 1; % fixation.on for this task
 
 SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states are called
 

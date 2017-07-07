@@ -26,15 +26,16 @@ SS.plot.routine    = 'FixTrain_plots';    % function for online plotting of sess
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos', 'task.Color_list'};
+SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.fixspot.fixWin', 'stim.fixspot.pos'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
-SS.sound.use                  = 0; % no sound for now
+SS.sound.use                  = 1;
+SS.sound.useDatapixx          = 1;
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
-SS.plot.do_online             = 1; % run online data analysis between two subsequent trials
+SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
 SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
@@ -45,12 +46,10 @@ SS.pldaps.draw.grid.use       = 1;
 
 SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
-SS.datapixx.TTL_trialOn       = 0;
+SS.datapixx.TTL_trialOn       = 1;
 
 SS.behavior.fixation.useCalibration = 1;
 SS.behavior.fixation.enableCalib = 0;
-
-SS.behavior.fixation.required = 1; % fixation required for this task
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
@@ -100,10 +99,10 @@ if strcmp(subjname,'mouse')
     SS.datapixx.adc.PupilChannel   = [];
     SS.datapixx.adc.XEyeposChannel = [];
     SS.datapixx.adc.YEyeposChannel = [];
-    SS.datapixx.adc.RewardChannel  = [];  
+    %SS.datapixx.adc.RewardChannel  = [];  
     SS.datapixx.useAsEyepos        = 0;
     SS.behavior.joystick.use       = 0;
-    SS.datapixx.useForReward       = 0;
+    %SS.datapixx.useForReward       = 0;
     
 end
 % ------------------------------------------------------------------------%

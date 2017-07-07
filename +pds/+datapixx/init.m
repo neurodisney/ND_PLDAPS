@@ -33,8 +33,8 @@ function p =  init(p)
 % 12/03/2013 jly reboot for version 3
 % 2014       adapt to version 4.1
 % 2016       jly add software overlay
+% 2017       Nate adds option to decrease propixx screen brightness
 global dpx GL;
-
 
 if ~Datapixx('IsReady')
     Datapixx('Open');

@@ -4,7 +4,7 @@ function p = Task_CheckFix(p)
 %
 % wolf zinke, March 2017
 
-if(p.trial.behavior.fixation.required)
+if(p.trial.behavior.fixation.on)
 
     if(p.trial.FixState.Current == p.trial.FixState.FixOut) % fixation break
         if(p.trial.behavior.fixation.GotFix == 1)

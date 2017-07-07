@@ -49,7 +49,7 @@ end
 
 
 %% Draw current fixation position (Light Green Box)
-currFixPos = p.trial.behavior.fixation.fixPos;
+currFixPos = p.trial.behavior.fixation.fix.pos;
 fixPosRect = ND_GetRect(currFixPos,boxSize);
 
 % Draw the box
