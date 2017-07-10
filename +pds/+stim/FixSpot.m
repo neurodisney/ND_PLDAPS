@@ -12,23 +12,23 @@ methods
     
     function obj = FixSpot(p,pos,size,type,color,fixWin)
         if nargin < 6 || isempty(fixWin)
-            fixWin = p.trial.stim.fixspot.fixWin;
+            fixWin = p.trial.stim.FIXSPOT.fixWin;
         end
         
         if nargin < 5 || isempty(color)
-            color = p.trial.stim.fixspot.color;
+            color = p.trial.stim.FIXSPOT.color;
         end
         
         if nargin < 4 || isempty(type)
-            type = p.trial.stim.fixspot.type;
+            type = p.trial.stim.FIXSPOT.type;
         end
         
         if nargin < 3 || isempty(size)
-            size = p.trial.stim.fixspot.size;
+            size = p.trial.stim.FIXSPOT.size;
         end
         
         if nargin < 2 || isempty(pos)
-            pos = p.trial.stim.fixspot.pos;
+            pos = p.trial.stim.FIXSPOT.pos;
         end
         
         % Load the BaseStim superclass
