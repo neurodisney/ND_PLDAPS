@@ -51,19 +51,19 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
-p.trial.stim.fixspot.pos    = [0,0];
-p.trial.stim.fixspot.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.fixspot.color  = 'magenta';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.fixspot.size   = 0.15;        % size of the fixation spot
-p.trial.stim.fixspot.fixWin = 4;
+p.trial.stim.FIXSPOT.pos    = [0,0];
+p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.FIXSPOT.color  = 'magenta';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size   = 0.15;        % size of the fixation spot
+p.trial.stim.FIXSPOT.fixWin = 4;
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
 
-p.trial.stim.grating.fixWin       = 4;
+p.trial.stim.GRATING.fixWin       = 4;
 
 % Eccentricity in degrees from origin
-p.trial.stim.grating.eccentricity = 4;
+p.trial.stim.GRATING.eccentricity = 4;
 
 % Locations of the stimuli (will scale to the proper eccentricity in the task)
 % Right now use the 4 diagonal quadrants and the right and left cardinals.
@@ -71,29 +71,28 @@ p.trial.stim.grating.eccentricity = 4;
 %                                   -1  1 ; -1 -1 ;  1 -1];
 %  p.trial.stim.grating.direction = datasample(directions,1,1);
 
-p.trial.stim.grating.direction  = [1 1];
+p.trial.stim.GRATING.direction  = [1 1];
 
-p.trial.stim.grating.radius    = 1;    % radius of grating
+p.trial.stim.GRATING.radius    = 1;    % radius of grating
 
 %  orientations               = [-75,30,0,135,90,45,-110];  %  angles for the stim
 %  p.trial.stim.grating.angle = datasample(orientations,1);
-p.trial.stim.grating.angle = 0;
+p.trial.stim.GRATING.angle = 0;
 
 % spatial frequency
 % p.trial.stim.grating.sFreq        = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
-p.trial.stim.grating.sFreq        = 2; % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
+p.trial.stim.GRATING.sFreq        = 2; % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
 
 % temporal frequency
-p.trial.stim.grating.tFreq        = 0;    % temporal frequency of grating; drift speed, 0 is stationary
+p.trial.stim.GRATING.tFreq        = 0;    % temporal frequency of grating; drift speed, 0 is stationary
 
 % contrast
 %currcont = datasample([0.01, 0.02, 0.05, 0.1, 0.2], 1);
 currcont = 0.05;
 
-p.trial.stim.grating.lowContrast  = currcont;  % grating contrast value when stim.on = 1
-p.trial.stim.grating.highContrast = currcont;  % grating contrast value when stim.on = 2
+p.trial.stim.GRATING.contrast = currcont;  % grating contrast value when stim.on = 2
 
-p.trial.stim.grating.res          = 300;
+p.trial.stim.GRATING.res          = 300;
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
