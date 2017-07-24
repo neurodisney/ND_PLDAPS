@@ -28,13 +28,7 @@ if(p.trial.pldaps.draw.grid.use)
                        p.trial.display.clut.grid, [0,0]);
 end
 
-% ------------------------------------------------------------------------%
-%% Draw all the stimuli to the screen with their fixation windows
-for i=1:length(p.trial.stim.allStims)
-    stim = p.trial.stim.allStims{i};
-    draw(stim,p);
-    drawFixWin(stim,p);
-end
+
 
 %% draw a history of fast inter frame intervals
 %  if(p.trial.pldaps.draw.framerate.use && p.trial.iFrame > 2)
@@ -80,6 +74,14 @@ if(p.trial.pldaps.draw.eyepos.use)
 
     Screen('Drawdots',  p.trial.display.overlayptr, p.trial.eyeXY_draw, ...
                         p.trial.pldaps.draw.eyepos.sz, p.trial.display.clut.eyepos, [0 0], 0);
+end
+
+% ------------------------------------------------------------------------%
+%% Draw all the stimuli to the screen with their fixation windows
+for i=1:length(p.trial.stim.allStims)
+    stim = p.trial.stim.allStims{i};
+    draw(stim,p);
+    drawFixWin(stim,p);
 end
 
 % ------------------------------------------------------------------------%
