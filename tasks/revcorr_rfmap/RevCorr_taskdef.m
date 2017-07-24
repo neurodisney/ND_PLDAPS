@@ -29,18 +29,16 @@ p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with 
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
+p.trial.task.Timing.WaitFix = 2;    % Time to wait for fixation before NoStart
 
 % Main trial timings
-p.trial.task.fixLatency       = 0.1; % Time to hold fixation before initial reward is given
-p.trial.task.stimLatency      = ND_GetITI(0.3, 0.9); % Time from initial reward to stim appearing
-% Time from fixation to stim appearing is fixLatency + stimLatency
+p.trial.task.fixLatency       = 0.1; % Time to hold fixation before mapping begins
 
-p.trial.task.centerOffLatency = ND_GetITI(0.25, 0.8); % Time from stim appearing to fixspot disappearing
 
-p.trial.task.saccadeTimeout   = 0.5;   % Time allowed to make the saccade to the stim before error
-p.trial.task.minSaccReactTime = 0.1;   % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
-p.trial.task.minTargetFixTime = 1.0;   % Must fixate on target for at least this time before it counts
+p.trial.task.stimOnTime       = 0.1;   % How long each stimulus is presented
+p.trial.task.stimOffTime      = 0;     % Gaps between succesive stimuli
+
+p.trial.task.jackpotTime      = 3;     % How long stimuli are presented before trial ends and jackpot is given
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
@@ -53,7 +51,7 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 %% fixation spot parameters
 p.trial.stim.fixspot.pos    = [0,0];
 p.trial.stim.fixspot.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.fixspot.color  = 'magenta';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.fixspot.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.fixspot.size   = 0.15;        % size of the fixation spot
 p.trial.stim.fixspot.fixWin = 4;
 
