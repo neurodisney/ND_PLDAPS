@@ -202,16 +202,9 @@ direction = p.trial.stim.GRATING.direction;
 magnitude = p.trial.stim.GRATING.eccentricity;
 p.trial.stim.GRATING.pos = magnitude * direction / norm(direction);
 
-% Generate the low contrast stimulus
-p.trial.stim.GRATING.contrast = p.trial.stim.GRATING.lowContrast;
-p.trial.stim.gratingL = pds.stim.Grating(p);
-% and the high contrast stimulus
-p.trial.stim.GRATING.contrast = p.trial.stim.GRATING.highContrast;
-p.trial.stim.gratingH = pds.stim.Grating(p);
+% Generate the grating
+p.trial.stim.grating = pds.stim.Grating(p);
 
-% Assume manual control of the activation of the grating fix windows
-p.trial.stim.gratingL.autoFixWin = 0;
-p.trial.stim.gratingH.autoFixWin = 0;
 
 % stim starts off
 p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
@@ -352,7 +345,7 @@ switch p.trial.CurrEpoch
             % Animal has not yet saccaded to target
             % Need to check if no saccade has been made or if a wrong saccade has been made
 
-            if p.trial.stim.gratingH.looking
+            if p.trial.stim.grating.looking
                 % Animal has saccaded to stim
                 
                 % Make sure that saccade was actually a reaction to the go cue,
@@ -370,7 +363,7 @@ switch p.trial.CurrEpoch
                     switchEpoch(p,'TaskEnd')
                 
                 
-                elseif p.trial.stim.gratingH.fixating
+                elseif p.trial.stim.grating.fixating
                     % Real reaction to GO cue and has acheived fixation
                     p.trial.task.stimFix = 1;
                 end
@@ -415,7 +408,7 @@ switch p.trial.CurrEpoch
             
             % Wait for animal to hold fixation for the required length of time
             % then give reward and mark trial good
-            if p.trial.CurTime > p.trial.stim.gratingH.EV.FixStart + p.trial.task.minTargetFixTime
+            if p.trial.CurTime > p.trial.stim.grating.EV.FixStart + p.trial.task.minTargetFixTime
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
                 
                 if(p.trial.reward.IncrConsecutive == 1)
@@ -441,7 +434,7 @@ switch p.trial.CurrEpoch
                 switchEpoch(p,'TaskEnd');
 
 
-            elseif ~p.trial.stim.gratingH.fixating
+            elseif ~p.trial.stim.grating.fixating
                 % If animal's gaze leaves window, end the task and do not give reward
                 p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
 
@@ -469,7 +462,7 @@ switch p.trial.CurrEpoch
             medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'],50);
             
             % Determine if the medPos is in the fixation window for the stim
-            if inFixWin(p.trial.stim.gratingH, medPos);
+            if inFixWin(p.trial.stim.grating, medPos);
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
             else
                 p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
@@ -488,8 +481,8 @@ switch p.trial.CurrEpoch
         % Grab the fixation stopping and starting values from the stim properties
         p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
         p.trial.EV.FixSpotStop  = p.trial.stim.fix.EV.FixBreak;
-        p.trial.EV.FixTargetStart = p.trial.stim.gratingH.EV.FixStart;
-        p.trial.EV.FixTargetStop  = p.trial.stim.gratingH.EV.FixBreak;
+        p.trial.EV.FixTargetStart = p.trial.stim.grating.EV.FixStart;
+        p.trial.EV.FixTargetStop  = p.trial.stim.grating.EV.FixBreak;
       
         switchEpoch(p,'ITI');
         
@@ -511,8 +504,7 @@ function TaskCleanAndSave(p)
 Task_Finish(p);
 
 % Destroy the two grating textures generated to save memory
-Screen('Close', p.trial.stim.gratingL.texture);
-Screen('Close', p.trial.stim.gratingH.texture);
+Screen('Close', p.trial.stim.grating.texture);
 
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
@@ -572,16 +564,10 @@ p.trial.task.stimState = val;
 % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
 switch val
     case 0
-        p.trial.stim.gratingL.on = 0;
-        p.trial.stim.gratingH.on = 0;
+        p.trial.stim.grating.on = 0;
     case 1
-        p.trial.stim.gratingL.on = 1;
-        p.trial.stim.gratingH.on = 0;
-        p.trial.stim.gratingH.fixActive = 1;
-    case 2
-        p.trial.stim.gratingL.on = 0;
-        p.trial.stim.gratingH.on = 1;
-        p.trial.stim.gratingH.fixActive = 1;        
+        p.trial.stim.grating.on = 1;
+        p.trial.stim.grating.fixActive = 1;       
     otherwise
         error('bad stim value')
 end
