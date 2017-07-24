@@ -45,7 +45,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                         end
                     end
                     % Increase the fixation window for fixspots created later
-                    p.trial.stim.fixspot.fixWin = p.trial.stim.fixspot.fixWin + p.trial.behavior.fixation.FixWinStp;
+                    p.trial.stim.FIXSPOT.fixWin = p.trial.stim.FIXSPOT.fixWin + p.trial.behavior.fixation.FixWinStp;
                 end
                 
             % ----------------------------------------------------------------%
@@ -60,7 +60,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                         end
                     end
                     % Decrease the fixation window for fixspots created later
-                    p.trial.stim.fixspot.fixWin = p.trial.stim.fixspot.fixWin - p.trial.behavior.fixation.FixWinStp;
+                    p.trial.stim.FIXSPOT.fixWin = p.trial.stim.FIXSPOT.fixWin - p.trial.behavior.fixation.FixWinStp;
                 end
 
             % ----------------------------------------------------------------%

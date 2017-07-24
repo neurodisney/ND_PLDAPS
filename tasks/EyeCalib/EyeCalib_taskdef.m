@@ -40,9 +40,9 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
-p.trial.stim.fixspot.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.fixspot.color   = 'white';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.fixspot.size    = 0.25;        % size of the fixation spot
+p.trial.stim.FIXSPOT.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.FIXSPOT.color   = 'white';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size    = 0.25;        % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

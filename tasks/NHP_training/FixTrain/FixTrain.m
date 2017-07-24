@@ -242,10 +242,10 @@ function TaskSetUp(p)
     if(p.trial.task.RandomPos == 1)
          Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
          Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
-         p.trial.stim.fixspot.pos = [Xpos, Ypos];
+         p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
     end
     
-    p.trial.stim.fixspot.color = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
+    p.trial.stim.FIXSPOT.color = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
     
     %% Make the visual stimuli
     % Fixation spot
