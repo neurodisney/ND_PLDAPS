@@ -9,8 +9,8 @@ require(beanplot)
 DelSacc_Behav = function(datadir=NA, fname=NA) {
 
 ## specify analysis/graph parameters
-avrgwin  =   320  # moving average window for performance plot in seconds
-avrgstep =    1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
+avrgwin  =   180  # moving average window for performance plot in seconds
+avrgstep =     1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
 RTbw     =  0.02  # kernel width for density estimate of response times
 
 Corr_Col        = 'limegreen'
@@ -69,6 +69,7 @@ Break_trial = which(dt$Outcome == 'Break')
 
 if(length(Break_trial) == 0){
   Break_start = NA
+  Break_end = NA
 }else{
   Break_start = (dt$TaskEnd[Break_trial]     - SessTrialStart) / 60
   
@@ -220,7 +221,7 @@ for(i in 1:length(Tavrg)) {
   
   Nall = sum(cpos)
   
-  if(Nall > 4){
+  if(Nall > 3){
     Rcorr[cnt]      = 100 * sum(cpos & pCorr)      /Nall
     Rfixbreak[cnt]  = 100 * sum(cpos & pFixBreak)  /Nall
     Rstimbreak[cnt] = 100 * sum(cpos & pStimBreak) /Nall
