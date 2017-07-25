@@ -45,8 +45,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.GRATING.pos(2)',         '%.3f');
     p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
-    p = ND_AddAsciiEntry(p, 'lContr',      'p.trial.stim.GRATING.lowContrast',    '%.1f');
-    p = ND_AddAsciiEntry(p, 'hContr',      'p.trial.stim.GRATING.highContrast',   '%.1f');
+    p = ND_AddAsciiEntry(p, 'Contrast',    'p.trial.stim.GRATING.contrast',       '%.1f');
     p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.GRATING.radius',       '%.1f');
     
     p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
@@ -264,6 +263,10 @@ switch p.trial.CurrEpoch
             if ~p.trial.stim.fix.fixating
                 
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+                
+                % Play breakfix sound
+                pds.audio.playDP(p,'breakfix','left');
+                
                 % Turn off the spot and end the trial
                 fixspot(p,0);
                 switchEpoch(p,'TaskEnd');
@@ -291,29 +294,56 @@ switch p.trial.CurrEpoch
         % Still fixating
         if p.trial.stim.fix.fixating
             
-            % Wait stim latency before showing reward
-            if ~p.trial.task.stimState
+            % Wait stim latency before showing stim
+            if isnan(p.trial.EV.StimOn)
                 if p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.stimLatency
                     % Turn on stim
                     stim(p,1)
                 end
                 
                 
+            elseif p.trial.stim.grating.on
+                % Wait an the stimOnDur and then turn off the stim
+                if p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.stimOnDur
+                    % Turn off stim
+                    stim(p,0)
+                end
+                
             else
                 
                 % Must maintain fixation (inhibit saccade) until central
                 % fixation spot disappears
-                if p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.centerOffLatency
+                if p.trial.CurTime > p.trial.EV.StimOff + p.trial.task.centerOffLatency
                     
                     % Saccade has been inhibited long enough. Make the central fix spot disappear
                     fixspot(p,0);
-   
-                    % Make the stim high contrast
-                    stim(p,2)
                     
-                    % Change to the saccade epoch
-                    switchEpoch(p,'Saccade');
-                                        
+                    % Mark trial good
+                    p.trial.task.Good = 1;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
+                    
+                    % Give reward (increase clicks if consecutively correct)
+                    if(p.trial.reward.IncrConsecutive == 1)
+                        AddPulse = find(p.trial.reward.PulseStep <= p.trial.LastHits+1, 1, 'last');
+                        if(~isempty(AddPulse))
+                            p.trial.reward.nPulse = p.trial.reward.nPulse + AddPulse;
+                        end
+                        
+                        fprintf('     REWARD!!!  [%d pulse(s) for %d subsequent correct trials]\n\n', ...
+                            p.trial.reward.nPulse, p.trial.LastHits+1);
+                    end
+                    
+                    pds.reward.give(p, p.trial.reward.Dur, p.trial.reward.nPulse);
+                    pds.audio.playDP(p,'reward','left');
+                    
+                    % Record main reward time
+                    p.trial.EV.Reward = p.trial.CurTime;
+                    
+                    % Turn off stim
+                    stim(p,0)
+                    
+                    
+                    switchEpoch(p,'TaskEnd');                         
                 end
             
             end
@@ -336,120 +366,6 @@ switch p.trial.CurrEpoch
             stim(p,0);
           
         end
-        
-        % ----------------------------------------------------------------%
-    case p.trial.epoch.Saccade
-        %% Central fixation spot has disappeared. Animal must quickly saccade to stim to get the main reward
-        
-        if ~p.trial.task.stimFix
-            % Animal has not yet saccaded to target
-            % Need to check if no saccade has been made or if a wrong saccade has been made
-
-            if p.trial.stim.grating.looking
-                % Animal has saccaded to stim
-                
-                % Make sure that saccade was actually a reaction to the go cue,
-                % rather than a lucky precocious saccade
-                if p.trial.stim.fix.EV.FixBreak < p.trial.EV.FixOff + p.trial.task.minSaccReactTime
-                    % Play breakfix sound
-                    pds.audio.playDP(p,'breakfix','left');
-                    
-                    % Turn the stim off and fixation off
-                    stim(p,0)
-                    fixspot(p,0)
-                    
-                    % Mark trial early and end task
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
-                    switchEpoch(p,'TaskEnd')
-                
-                
-                elseif p.trial.stim.grating.fixating
-                    % Real reaction to GO cue and has acheived fixation
-                    p.trial.task.stimFix = 1;
-                end
-                
-
-            elseif ~p.trial.stim.fix.fixating
-                % Eye has left the central fixation spot. Wait a breifly for eye to arrive
-                    if p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck
-                        % Eye has saccaded somewhere besides the target
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.False;
-
-                        % Turn the stim off and fixation off
-                        stim(p,0)
-                        fixspot(p,0)
-                        
-                        % Play an incorrect sound
-                        pds.audio.playDP(p,'incorrect','left');
-                        
-                        % End the trial
-                        switchEpoch(p,'TaskEnd');
-                    
-                    end
-
-            elseif p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout
-                % If no saccade has been made before the time runs out, end the trial
-
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
-
-                % Turn the stim off and fixation off
-                stim(p,0);
-                fixspot(p,0);
-
-                % Play an incorrect sound
-                pds.audio.playDP(p,'incorrect','left');
-
-                switchEpoch(p,'TaskEnd')              
-
-            end
-
-        else
-            % Animal is currently fixating on target
-            
-            % Wait for animal to hold fixation for the required length of time
-            % then give reward and mark trial good
-            if p.trial.CurTime > p.trial.stim.grating.EV.FixStart + p.trial.task.minTargetFixTime
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
-                
-                if(p.trial.reward.IncrConsecutive == 1)
-                    AddPulse = find(p.trial.reward.PulseStep <= p.trial.LastHits+1, 1, 'last');
-                    if(~isempty(AddPulse))
-                        p.trial.reward.nPulse = p.trial.reward.nPulse + AddPulse;
-                    end
-                    
-                    fprintf('     REWARD!!!  [%d pulse(s) for %d subsequent correct trials]\n\n', ...
-                             p.trial.reward.nPulse, p.trial.LastHits+1);
-                end
-
-                pds.reward.give(p, p.trial.reward.Dur, p.trial.reward.nPulse);
-                pds.audio.playDP(p,'reward','left');
-                
-                % Record main reward time
-                p.trial.EV.Reward = p.trial.CurTime;
-                
-                % Turn off stim
-                stim(p,0)
-                
-                p.trial.task.Good = 1;
-                switchEpoch(p,'TaskEnd');
-
-
-            elseif ~p.trial.stim.grating.fixating
-                % If animal's gaze leaves window, end the task and do not give reward
-                p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
-
-                % Turn the stim off
-                stim(p,0);
-                
-                % Play an incorrect sound
-                pds.audio.playDP(p,'incorrect','left');
-
-                switchEpoch(p,'TaskEnd');
-
-            end
-
-        end
-
         
         % ----------------------------------------------------------------%
     case p.trial.epoch.BreakFixCheck

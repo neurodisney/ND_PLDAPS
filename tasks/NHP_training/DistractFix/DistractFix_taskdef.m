@@ -36,11 +36,9 @@ p.trial.task.fixLatency       = 0.1; % Time to hold fixation before initial rewa
 p.trial.task.stimLatency      = ND_GetITI(0.3, 0.9); % Time from initial reward to stim appearing
 % Time from fixation to stim appearing is fixLatency + stimLatency
 
-p.trial.task.centerOffLatency = ND_GetITI(0.25, 0.8); % Time from stim appearing to fixspot disappearing
+p.trial.task.stimOnDur = 0.4; % How long the stim stays on before going off
 
-p.trial.task.saccadeTimeout   = 0.5;   % Time allowed to make the saccade to the stim before error
-p.trial.task.minSaccReactTime = 0.1;   % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
-p.trial.task.minTargetFixTime = 1.0;   % Must fixate on target for at least this time before it counts
+p.trial.task.centerOffLatency = ND_GetITI(0.25, 0.9); % Time from stim disappearing to fixspot disappearing
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
@@ -63,32 +61,30 @@ p.trial.stim.FIXSPOT.fixWin = 4;
 p.trial.stim.GRATING.fixWin       = 4;
 
 % Eccentricity in degrees from origin
-p.trial.stim.GRATING.eccentricity = 4;
+p.trial.stim.GRATING.eccentricity = datasample([3,4,5,6],1);
 
 % Locations of the stimuli (will scale to the proper eccentricity in the task)
 % Right now use the 4 diagonal quadrants and the right and left cardinals.
-%  directions                     = [1  0 ; -1  0 ;  1  1 ; ...
-%                                   -1  1 ; -1 -1 ;  1 -1];
-%  p.trial.stim.grating.direction = datasample(directions,1,1);
+directions                     = [1  0 ; -1  0 ;  1  1 ; ...
+                                 -1  1 ; -1 -1 ;  1 -1];
+p.trial.stim.GRATING.direction = datasample(directions,1,1);
 
-p.trial.stim.GRATING.direction  = [1 1];
+%p.trial.stim.GRATING.direction  = [1 1];
 
 p.trial.stim.GRATING.radius    = 1;    % radius of grating
 
-%  orientations               = [-75,30,0,135,90,45,-110];  %  angles for the stim
-%  p.trial.stim.grating.angle = datasample(orientations,1);
-p.trial.stim.GRATING.angle = 0;
+orientations               = [-75,30,0,135,90,45,-110];  %  angles for the stim
+p.trial.stim.GRATING.angle = datasample(orientations,1);
 
 % spatial frequency
-% p.trial.stim.grating.sFreq        = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
-p.trial.stim.GRATING.sFreq        = 2; % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
+p.trial.stim.GRATING.sFreq        = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
 
 % temporal frequency
 p.trial.stim.GRATING.tFreq        = 0;    % temporal frequency of grating; drift speed, 0 is stationary
 
 % contrast
 %currcont = datasample([0.01, 0.02, 0.05, 0.1, 0.2], 1);
-currcont = 0.05;
+currcont = 0.8;
 
 p.trial.stim.GRATING.contrast = currcont;  % grating contrast value when stim.on = 2
 
