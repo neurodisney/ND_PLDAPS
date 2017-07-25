@@ -63,6 +63,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'StimDur',     'p.trial.task.stimOnDur',              '%.5f');
     p = ND_AddAsciiEntry(p, 'FixOffLatency','p.trial.task.centerOffLatency',      '%.5f');
     p = ND_AddAsciiEntry(p, 'TotalFixRqrd','p.trial.task.stimLatency + p.trial.task.fixLatency + p.trial.task.stimOnDur + p.trial.task.centerOffLatency',       '%.5f');
+    p = ND_AddAsciiEntry(p, 'TotalFixTime','p.trial.task.totalFixTime',           '%.5f');
 
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwd',     'p.trial.EV.FirstReward',              '%.5f');
@@ -431,6 +432,19 @@ Screen('Close', p.trial.stim.grating.texture);
 
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+
+% Figure out total fix time
+switch p.trial.outcome.CurrOutcomeStr
+    case 'Correct'
+        p.trial.task.totalFixTime = p.trial.EV.TaskEnd - p.trial.stim.fix.EV.FixStart;
+        
+    case 'NoStart'
+        p.trial.task.totalFixTime = NaN;
+        
+    otherwise
+        p.trial.task.totalFixTime = p.trial.stim.fix.EV.FixBreak;
+end
+
 
 % Save useful info to an ascii table for plotting
 ND_Trial2Ascii(p, 'save');

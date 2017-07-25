@@ -17,9 +17,7 @@ Corr_Col        = 'limegreen'
 Early_Col       = 'cornflowerblue' 
 StimBreak_Col   = 'tomato'
 FixBreak_Col    = 'darkgoldenrod1'
-TargetBreak_Col = 'violet'
-Miss_Col        = 'khaki1' 
-False_Col       = 'lightsalmon4' 
+PostStimBreak_Col = 'violet'
 
 ###########################################################################################
 ## Read in data
@@ -175,13 +173,13 @@ if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], 
 points(Ttime[pCorr],      StimSRT[pCorr],      pch=19, col=Corr_Col)
 points(Ttime[pFixBreak],  StimSRT[pFixBreak],  pch=19, col=FixBreak_Col)
 points(Ttime[pStimBreak], StimSRT[pStimBreak], pch=19, col=StimBreak_Col)
-points(Ttime[pHoldErr],   StimSRT[pHoldErr],   pch=19, col=TargetBreak_Col)
+points(Ttime[pHoldErr],   StimSRT[pHoldErr],   pch=19, col=PostStimBreak_Col)
 points(Ttime[pEarly],     StimSRT[pEarly],     pch=19, col=Early_Col)
 points(Ttime[pMiss],      StimSRT[pMiss],      pch=19, col=Miss_Col)
 points(Ttime[pFalse],     StimSRT[pFalse],     pch=19, col=False_Col)
 
 legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBreak", "Miss", "False"), 
-       pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, Miss_Col, False_Col), 
+       pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, PostStimBreak_Col, Miss_Col, False_Col), 
        inset=c(0,-0.4), title=NULL, xpd=NA, cex=2, bty='n', horiz=TRUE, pt.cex=4)
 
 ###########################################################################################
@@ -195,7 +193,7 @@ if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], 
 points(Ttime[pCorr],      SRT[pCorr],      pch=19, col=Corr_Col)
 points(Ttime[pFixBreak],  SRT[pFixBreak],  pch=19, col=FixBreak_Col)
 points(Ttime[pStimBreak], SRT[pStimBreak], pch=19, col=StimBreak_Col)
-points(Ttime[pHoldErr],   SRT[pHoldErr],   pch=19, col=TargetBreak_Col)
+points(Ttime[pHoldErr],   SRT[pHoldErr],   pch=19, col=PostStimBreak_Col)
 points(Ttime[pEarly],     SRT[pEarly],     pch=19, col=Early_Col)
 points(Ttime[pMiss],      SRT[pMiss],      pch=19, col=Miss_Col)
 points(Ttime[pFalse],     SRT[pFalse],     pch=19, col=False_Col)
@@ -287,7 +285,7 @@ abline(h=0, lty=1)
 # if(sum(pHoldErr) > 1) {
 #   Time_HoldErr   = density(Ttime[pHoldErr], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
 #   Time_HoldErr$y = 100 * (Time_HoldErr$y * sum(pHoldErr) * krnlwht) / Time_all$y
-#   lines(Time_HoldErr, col=TargetBreak_Col, lwd=1)
+#   lines(Time_HoldErr, col=PostStimBreak_Col, lwd=1)
 # }
 
 lines(Tavrg, Rcorr,      col=Corr_Col,       lwd=2.5)
@@ -296,7 +294,7 @@ lines(Tavrg, Rstimbreak, col=StimBreak_Col,  lwd=1)
 lines(Tavrg, Rearly,     col=Early_Col,      lwd=1)
 lines(Tavrg, Rmiss,      col=Miss_Col,       lwd=1)
 lines(Tavrg, Rfalse,     col=False_Col,      lwd=1)
-lines(Tavrg, Rholderr,   col=TargetBreak_Col,  lwd=1)
+lines(Tavrg, Rholderr,   col=PostStimBreak_Col,  lwd=1)
 
 ###########################################################################################
 # plot 4: RT over Go
@@ -308,7 +306,7 @@ plot(GoSig, StimSRT, type='n', xaxs='i', yaxs='i', main = 'RT over GoCue',
 points(GoSig[pCorr],      StimSRT[pCorr],      pch=19, col=Corr_Col)
 points(GoSig[pFixBreak],  StimSRT[pFixBreak],  pch=19, col=FixBreak_Col)
 points(GoSig[pStimBreak], StimSRT[pStimBreak], pch=19, col=StimBreak_Col)
-points(GoSig[pHoldErr],   StimSRT[pHoldErr],   pch=19, col=TargetBreak_Col)
+points(GoSig[pHoldErr],   StimSRT[pHoldErr],   pch=19, col=PostStimBreak_Col)
 points(GoSig[pEarly],     StimSRT[pEarly],     pch=19, col=Early_Col)
 points(GoSig[pMiss],      StimSRT[pMiss],      pch=19, col=Miss_Col)
 points(GoSig[pFalse],     StimSRT[pFalse],     pch=19, col=False_Col)
@@ -369,7 +367,7 @@ if(sum(pCorr) > 1) {
 }
 
 if(sum(pHoldErr) > 1) {
-  lines(TDurhold, lwd=2, col=TargetBreak_Col)
+  lines(TDurhold, lwd=2, col=PostStimBreak_Col)
 }
 
 if(sum(pEarly) > 1) {
@@ -437,7 +435,7 @@ if(sum(pCorr) > 1) {
 }
 
 if(sum(pHoldErr) > 1) {
-  lines(RThold, lwd=2, col=TargetBreak_Col)
+  lines(RThold, lwd=2, col=PostStimBreak_Col)
 }
 
 if(sum(pEarly) > 1) {
@@ -461,7 +459,7 @@ abline(v=median(SRT[pEarly], na.rm=TRUE), col=Early_Col, lty=3, lwd=2)
 All_perf =  c(sum(pCorr), sum(pEarly), sum(pFixBreak), sum(pStimBreak), sum(pHoldErr), sum(pFalse), sum(pMiss))
 
 All_typ = c('Correct', 'Early', 'FixBreak', 'StimBreak', 'TargetBreak', 'False', 'Miss')
-All_col = c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, False_Col, Miss_Col)
+All_col = c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, PostStimBreak_Col, False_Col, Miss_Col)
 
 x = barplot(100*All_perf/Ntrials, beside=TRUE, col=All_col, xaxt="n", main='Session Performance', ylab='Proportion [%]', border=NA)
 
@@ -486,7 +484,7 @@ Early_Cnt     = hist(GoSig[pEarly],     DelBrks, plot=FALSE)$counts
 
 PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt)
 
-x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col), border=NA,
+x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, PostStimBreak_Col), border=NA,
             main='Delay Performance', xlab='Delay [s]', ylab='Proportion [%]', xaxt="n")
 
 xl = colMeans(x)
@@ -519,7 +517,7 @@ if(length(Early_Cnt)     == 0 ) {Early_Cnt     = All_Cnt * 0}
 
 PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt) 
 
-x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col), border=NA,
+x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, PostStimBreak_Col), border=NA,
             main='Location Performance', xlab='Target Location [degree]', ylab='Proportion [%]', xaxt="n")
 xl = colMeans(x)
 
