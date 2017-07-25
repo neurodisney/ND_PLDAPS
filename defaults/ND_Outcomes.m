@@ -40,6 +40,7 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.outcome.Jackpot       =   3013;
     p.defaultParameters.outcome.TargetBreak   =   3014;
     p.defaultParameters.outcome.StimBreak     =   3015;
+    p.defaultParameters.outcome.PostStimBreak =   3016;
     
 end
 

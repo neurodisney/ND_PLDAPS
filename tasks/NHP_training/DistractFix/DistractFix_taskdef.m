@@ -24,7 +24,7 @@ p.trial.reward.initialFixRwd  = 0.00; % Small reward for achieving full fixation
 p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
 p.trial.reward.Dur    = 0.2;         % Reward for completing the task successfully
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
-p.trial.reward.nPulse          = 2;  % number of reward pulses
+p.trial.reward.nPulse          = 1;  % number of reward pulses
 p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
@@ -36,7 +36,7 @@ p.trial.task.fixLatency       = 0.1; % Time to hold fixation before initial rewa
 p.trial.task.stimLatency      = ND_GetITI(0.3, 0.9); % Time from initial reward to stim appearing
 % Time from fixation to stim appearing is fixLatency + stimLatency
 
-p.trial.task.stimOnDur = 0.4; % How long the stim stays on before going off
+p.trial.task.stimOnDur = ND_GetITI(0.25,0.5); % How long the stim stays on before going off
 
 p.trial.task.centerOffLatency = ND_GetITI(0.25, 0.9); % Time from stim disappearing to fixspot disappearing
 
@@ -53,15 +53,15 @@ p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color  = 'orange';  % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.FIXSPOT.size   = 0.15;        % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin = 4;
+p.trial.stim.FIXSPOT.fixWin = 3;
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
 
-p.trial.stim.GRATING.fixWin       = 4;
+p.trial.stim.GRATING.fixWin       = 3;
 
 % Eccentricity in degrees from origin
-p.trial.stim.GRATING.eccentricity = datasample([3,4,5,6],1);
+p.trial.stim.GRATING.eccentricity = datasample([4,5,6],1);
 
 % Locations of the stimuli (will scale to the proper eccentricity in the task)
 % Right now use the 4 diagonal quadrants and the right and left cardinals.
@@ -71,7 +71,7 @@ p.trial.stim.GRATING.direction = datasample(directions,1,1);
 
 %p.trial.stim.GRATING.direction  = [1 1];
 
-p.trial.stim.GRATING.radius    = 1;    % radius of grating
+p.trial.stim.GRATING.radius    = 0.75;    % radius of grating
 
 orientations               = [-75,30,0,135,90,45,-110];  %  angles for the stim
 p.trial.stim.GRATING.angle = datasample(orientations,1);
@@ -83,10 +83,9 @@ p.trial.stim.GRATING.sFreq        = datasample([1,2,3,4,5],1); % spatial frequen
 p.trial.stim.GRATING.tFreq        = 0;    % temporal frequency of grating; drift speed, 0 is stationary
 
 % contrast
-%currcont = datasample([0.01, 0.02, 0.05, 0.1, 0.2], 1);
-currcont = 0.8;
+currcont = datasample([0.05, 0.1, 0.15, 0.2, 0.25, 0.3 , 0.4], 1);
 
-p.trial.stim.GRATING.contrast = currcont;  % grating contrast value when stim.on = 2
+p.trial.stim.GRATING.contrast = currcont;
 
 p.trial.stim.GRATING.res          = 300;
 

@@ -59,11 +59,10 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'StimBreak',   'p.trial.EV.FixTargetStop',            '%.5f');
     p = ND_AddAsciiEntry(p, 'TaskEnd',     'p.trial.EV.TaskEnd',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'GoLatency',   'p.trial.task.centerOffLatency',       '%.5f');
     p = ND_AddAsciiEntry(p, 'StimLatency', 'p.trial.task.stimLatency + p.trial.task.fixLatency',       '%.5f');
-    p = ND_AddAsciiEntry(p, 'SRT_FixStart','p.trial.task.SRT_FixStart',           '%.5f');
-    p = ND_AddAsciiEntry(p, 'SRT_StimOn',  'p.trial.task.SRT_StimOn',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'SRT_Go',      'p.trial.task.SRT_Go',                 '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimDur',     'p.trial.task.stimOnDur',              '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixOffLatency','p.trial.task.centerOffLatency',      '%.5f');
+    p = ND_AddAsciiEntry(p, 'TotalFixRqrd','p.trial.task.stimLatency + p.trial.task.fixLatency + p.trial.task.stimOnDur + p.trial.task.centerOffLatency',       '%.5f');
 
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwd',     'p.trial.EV.FirstReward',              '%.5f');
@@ -189,6 +188,7 @@ p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 p.trial.task.Good    = 0;
 p.trial.task.fixFix  = 0;
 p.trial.task.stimFix  = 0;
+p.trial.task.stimDisappear = 0; % Whether or not the stim has disappeared naturallt (not from fixbreak)
 
 %% Generate all the visual stimuli
 
@@ -204,6 +204,8 @@ p.trial.stim.GRATING.pos = magnitude * direction / norm(direction);
 % Generate the grating
 p.trial.stim.grating = pds.stim.Grating(p);
 
+% Manaully control the fixation window
+p.trial.stim.grating.autoFixWin = 0;
 
 % stim starts off
 p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
@@ -307,6 +309,7 @@ switch p.trial.CurrEpoch
                 if p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.stimOnDur
                     % Turn off stim
                     stim(p,0)
+                    p.trial.task.stimDisappear = 1;
                 end
                 
             else
@@ -352,9 +355,9 @@ switch p.trial.CurrEpoch
         elseif ~p.trial.stim.fix.fixating
             pds.audio.playDP(p,'breakfix','left');
             
-            if p.trial.task.stimState
-                % If the stim is on, need to determine whether it is an early saccade
-                % or a stimBreak. Calculated in the BreakFixCheck epoch
+            if ~isnan(p.trial.EV.StimOn)
+                % If the stim is on or has been on, determine the outcome based off of where he looks
+                % Calculated in the BreakFixCheck epoch
                 switchEpoch(p,'BreakFixCheck'); 
             else
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
@@ -379,9 +382,13 @@ switch p.trial.CurrEpoch
             
             % Determine if the medPos is in the fixation window for the stim
             if inFixWin(p.trial.stim.grating, medPos);
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                if p.trial.task.stimDisappear
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.PostStimBreak;
+                else
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                end
             else
-                p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
             end
             
             switchEpoch(p,'TaskEnd')
@@ -424,9 +431,6 @@ Screen('Close', p.trial.stim.grating.texture);
 
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-
-% Calculate the Saccadic Response Time for easy plotting
-Calculate_SRT(p);
 
 % Save useful info to an ascii table for plotting
 ND_Trial2Ascii(p, 'save');
@@ -502,37 +506,3 @@ else
     p.trial.EV.StimChange = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.STIM_CHNG);
 end
-
-
-function Calculate_SRT(p)
-
-switch p.trial.outcome.CurrOutcomeStr
-    
-    case {'NoStart', 'Break', 'Miss'}
-        p.trial.task.SRT_FixStart = NaN;
-        p.trial.task.SRT_StimOn   = NaN;
-        p.trial.task.SRT_Go       = NaN;
-       
-    case {'FixBreak'}
-        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
-        p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.fixLatency + p.trial.task.stimLatency);
-        p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.fixLatency + p.trial.task.stimLatency + p.trial.task.centerOffLatency);
-    
-    case {'StimBreak', 'Early'}
-        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
-        p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
-        p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.centerOffLatency);
-        
-    case {'False','Correct','TargetBreak'}
-        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
-        p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
-        p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - p.trial.EV.FixOff;
-        
-    otherwise
-        warning('Calculate_SRT: unrecognized outcome')
-        p.trial.task.SRT_FixStart = NaN;
-        p.trial.task.SRT_StimOn   = NaN;
-        p.trial.task.SRT_Go       = NaN;
-        
-end
-      
