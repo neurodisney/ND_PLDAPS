@@ -44,8 +44,7 @@ end
 
 p.defaultParameters.session.file     = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
 
-p.defaultParameters.session.asciitbl = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem,'.dat'];
-p.defaultParameters.session.asciifmtstr = '';
+p.defaultParameters.asciitbl.session.file = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem,'.dat'];
 %--------------------------------------------------------------------%
 %% Define Trial function
 % The runTrial function requires trialFunction to be defined, but buried in

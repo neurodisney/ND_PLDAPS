@@ -1,4 +1,4 @@
-function ND_Trial2Ascii(p, act)
+function ND_Trial2Ascii(p, act, tbl)
 % generate a formated ASCII table that summarizes trial data.
 %
 % This function needs an entry p.trial.session.asciifmt that must be created 
@@ -10,48 +10,65 @@ function ND_Trial2Ascii(p, act)
 %       - check that format and variable content match, and ensure that it
 %         is one entry per variable.
 
+if nargin < 3
+    tbl = 'session';
+end
+
+if ~isfield(p.trial.asciitbl, tbl)
+    p.trial.asciitbl.(tbl) = struct;
+end
+table = p.trial.asciitbl.(tbl);
+
 switch act
     case 'init'
         
-        if(~isfield(p.trial.session, 'asciifmt'))
-            error('No p.trial.session.asciifmt defined yet');
+        if(~isfield(table, 'fmt'))
+            error('No ascii format defined yet');
         end
         
-        Ndt = size(p.trial.session.asciifmt, 1);
+        Ndt = size(table.fmt, 1);
         
-        if(Ndt > 1)
-            HDstr = p.trial.session.asciifmt{1,1};
+        % Generate the table file name
+        tbldir = p.defaultParameters.session.dir;
+        
+        if ~isfield(table, 'file')
+            if strcmp(tbl,'session')
+                % Default file for the session table
+                table.file = fullfile(tbldir, [p.trial.session.filestem,'.dat']);
+            else
+                table.file = fullfile(tbldir, [p.trial.session.filestem, '_', tbl, '.dat']);
+            end
+            p.trial.asciitbl.(tbl).file = table.file;
+        end
+        
+        if(Ndt > 0)
+            HDstr = table.fmt{1,1};
 
             for(i=2:Ndt)
-                HDstr = sprintf('%s  %s', HDstr, p.trial.session.asciifmt{i,1});
+                HDstr = sprintf('%s  %s', HDstr, table.fmt{i,1});
             end
             
-            tblptr = fopen(p.trial.session.asciitbl , 'w');
+            tblptr = fopen(table.file , 'w');
             fprintf(tblptr, '%s \n', HDstr);
             fclose(tblptr);
         end
         
     case 'save'
         
-        Ndt = size(p.trial.session.asciifmt, 1);
+        Ndt = size(table.fmt, 1);
         
-        if(Ndt > 1)
-            LNstr = sprintf(p.trial.session.asciifmt{1,3}, eval(p.trial.session.asciifmt{1,2}));
+        if(Ndt > 0)
+            LNstr = sprintf(table.fmt{1,3}, eval(table.fmt{1,2}));
 
             for(i=2:Ndt)
-                LNstr = sprintf(['%s  ', p.trial.session.asciifmt{i,3}] , LNstr, eval(p.trial.session.asciifmt{i,2}));
+                LNstr = sprintf(['%s  ', table.fmt{i,3}] , LNstr, eval(table.fmt{i,2}));
             end
             
-            tblptr = fopen(p.trial.session.asciitbl , 'a');
+            tblptr = fopen(table.file , 'a');
             fprintf(tblptr, '%s \n', LNstr);
             fclose(tblptr);
         end
         
 end
-
-
-function cStr = Var2Str(varnm, frmt)
-    eval(['cdt = ', varnm]);
-    cStr = sprintf(frmt, cdt);
 
     

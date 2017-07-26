@@ -62,7 +62,7 @@ end
 
 % --------------------------------------------------------------------%
 %% format string for ascii table
-p.defaultParameters.session.asciifmtstr  =  p.trial.session.asciifmtstr;
+p.defaultParameters.asciitbl  =  p.trial.asciitbl;
 % --------------------------------------------------------------------%
 %% figure handle for online plots
 if(p.trial.plot.do_online)
