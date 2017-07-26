@@ -215,6 +215,19 @@ for angle = p.trial.stim.angle
     end
 end
 
+nStims = length(p.trial.stim.gratings;
+
+% Generate all the possible positions for the stimulus to be
+allXPos = p.trial.stim.xRange(1) : p.trial.stim.grdStp : p.trial.stim.xRange(2);
+allYPos = p.trial.stim.yRange(1) : p.trial.stim.grdStp : p.trial.stim.yRange(2);
+p.trial.stim.locations = combvec(allXPos,allYPos)';
+nLocs = size(p.trial.stim.locations,1);
+
+%% Generate a shuffled list of all possible stimuli and location indices for reference during the experiment
+indexReference = Shuffle(combvec(1:nStims,1:nLocs)');
+p.trial.stim.iStim = indexReference(:,1);
+p.trial.stim.iPos = indexReference(:,2);
+
 % stim starts off
 p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
 
