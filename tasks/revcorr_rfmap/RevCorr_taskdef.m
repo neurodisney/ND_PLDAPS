@@ -57,41 +57,32 @@ p.trial.stim.FIXSPOT.fixWin = 4;
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
+p.trial.stim.GRATING.res          = 300;
+p.trial.stim.GRATING.fixWin       = 0;
 
-p.trial.stim.GRATING.fixWin       = 4;
+% Will use a grid based layout to display the stimuli
+p.trial.stim.xRange = [-10, -2];
+p.trial.stim.yRange = [-10, -2];
+p.trial.stim.grdStp = 1;
 
-% Eccentricity in degrees from origin
-p.trial.stim.GRATING.eccentricity = 4;
 
-% Locations of the stimuli (will scale to the proper eccentricity in the task)
-% Right now use the 4 diagonal quadrants and the right and left cardinals.
-%  directions                     = [1  0 ; -1  0 ;  1  1 ; ...
-%                                   -1  1 ; -1 -1 ;  1 -1];
-%  p.trial.stim.GRATING.direction = datasample(directions,1,1);
+% For the following parameters, an array can be specified and all possible combinations
+% will be tested.
 
-p.trial.stim.GRATING.direction  = [1 1];
+p.trial.stim.angle    = [0, 90];
 
-p.trial.stim.GRATING.radius    = 1;    % radius of grating
-
-%  orientations               = [-75,30,0,135,90,45,-110];  %  angles for the stim
-%  p.trial.stim.GRATING.angle = datasample(orientations,1);
-p.trial.stim.GRATING.angle = 0;
+p.trial.stim.radius   = 0.75;    % radius of grating
 
 % spatial frequency
-% p.trial.stim.GRATING.sFreq        = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
-p.trial.stim.GRATING.sFreq        = 2; % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
+p.trial.stim.sFreq    = 1.5; % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
 
 % temporal frequency
-p.trial.stim.GRATING.tFreq        = 0;    % temporal frequency of grating; drift speed, 0 is stationary
+p.trial.stim.tFreq    = 0;    % temporal frequency of grating; drift speed, 0 is stationary
 
 % contrast
-%currcont = datasample([0.01, 0.02, 0.05, 0.1, 0.2], 1);
-currcont = 0.05;
+p.trial.stim.contrast = 1;
 
-p.trial.stim.GRATING.lowContrast  = currcont;  % grating contrast value when stim.on = 1
-p.trial.stim.GRATING.highContrast = currcont;  % grating contrast value when stim.on = 2
 
-p.trial.stim.GRATING.res          = 300;
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

@@ -1,10 +1,9 @@
 function p = RevCorr(p, state)
-% Main trial function for initial fixation training.
+% Calculating receptive fields using reverse correlation of stimuli with spike data
+% 
 %
 %
-%
-% wolf zinke, Apr. 2017
-% Nate Faber, May 2017
+% Nate Faber, July/August 2017
 
 % ####################################################################### %
 %% define the task name that will be used to create a sub-structure in the trial struct
@@ -60,11 +59,6 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'StimBreak',   'p.trial.EV.FixTargetStop',            '%.5f');
     p = ND_AddAsciiEntry(p, 'TaskEnd',     'p.trial.EV.TaskEnd',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'GoLatency',   'p.trial.task.centerOffLatency',       '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimLatency', 'p.trial.task.stimLatency + p.trial.task.fixLatency',       '%.5f');
-    p = ND_AddAsciiEntry(p, 'SRT_FixStart','p.trial.task.SRT_FixStart',           '%.5f');
-    p = ND_AddAsciiEntry(p, 'SRT_StimOn',  'p.trial.task.SRT_StimOn',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'SRT_Go',      'p.trial.task.SRT_Go',                 '%.5f');
 
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwd',     'p.trial.EV.FirstReward',              '%.5f');
@@ -189,7 +183,6 @@ p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 
 p.trial.task.Good    = 0;
 p.trial.task.fixFix  = 0;
-p.trial.task.stimFix  = 0;
 
 %% Generate all the visual stimuli
 
@@ -197,21 +190,30 @@ p.trial.task.stimFix  = 0;
 p.trial.stim.fix = pds.stim.FixSpot(p);
 
 % Gratings
-% Calculate the location
-direction = p.trial.stim.GRATING.direction;
-magnitude = p.trial.stim.GRATING.eccentricity;
-p.trial.stim.GRATING.pos = magnitude * direction / norm(direction);
-
-% Generate the low contrast stimulus
-p.trial.stim.GRATING.contrast = p.trial.stim.GRATING.lowContrast;
-p.trial.stim.gratingL = pds.stim.Grating(p);
-% and the high contrast stimulus
-p.trial.stim.GRATING.contrast = p.trial.stim.GRATING.highContrast;
-p.trial.stim.gratingH = pds.stim.Grating(p);
-
-% Assume manual control of the activation of the grating fix windows
-p.trial.stim.gratingL.autoFixWin = 0;
-p.trial.stim.gratingH.autoFixWin = 0;
+% Generate all the possible gratings 
+p.trial.stim.gratings = {};
+for angle = p.trial.stim.angle
+    p.trial.stim.GRATING = angle;
+    
+    for radius = p.trial.stim.radius
+        p.trial.stim.GRATING = radius;
+        
+        for sFreq = p.trial.stim.sFreq
+            p.trial.GRATING.sFreq = sFreq;
+            
+            for tFreq = p.trial.stim.tFreq
+                p.trial.GRATING.tFreq = tFreq;
+                
+                for contr = p.trial.stim.contrast
+                    p.trial.GRATING.contrast = contr;
+                    
+                    p.trial.stim.gratings{end+1} = pds.stim.Grating(p);
+                    
+                end
+            end
+        end
+    end
+end
 
 % stim starts off
 p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
