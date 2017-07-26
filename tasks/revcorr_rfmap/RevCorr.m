@@ -115,6 +115,8 @@ if(isempty(state))
     
     p.defaultParameters.pldaps.finish = totalTrials;
     
+    p.trial.stim.currNum = 0;
+    
 else
     % ####################################################################### %
     %% Subsequent calls during actual trials
@@ -215,21 +217,17 @@ for angle = p.trial.stim.angle
     end
 end
 
-nStims = length(p.trial.stim.gratings;
-
 % Generate all the possible positions for the stimulus to be
 allXPos = p.trial.stim.xRange(1) : p.trial.stim.grdStp : p.trial.stim.xRange(2);
 allYPos = p.trial.stim.yRange(1) : p.trial.stim.grdStp : p.trial.stim.yRange(2);
 p.trial.stim.locations = combvec(allXPos,allYPos)';
-nLocs = size(p.trial.stim.locations,1);
 
 %% Generate a shuffled list of all possible stimuli and location indices for reference during the experiment
-indexReference = Shuffle(combvec(1:nStims,1:nLocs)');
-p.trial.stim.iStim = indexReference(:,1);
-p.trial.stim.iPos = indexReference(:,2);
+% Only do this the first trial, because stim sequence should continue between trials
+if p.trial.stim.currNum == 0;
+new_neuron(p)
+end
 
-% stim starts off
-p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
 
 % ####################################################################### %
 function TaskDesign(p)
@@ -292,12 +290,6 @@ switch p.trial.CurrEpoch
                 
                 % Fixation has been held for long enough
             elseif (p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.fixLatency)
-                
-                % Reward the monkey if there is initial reward for this trial
-                if p.trial.reward.initialFixRwd > 0
-                    pds.reward.give(p, p.trial.reward.initialFixRwd);
-                    p.trial.EV.FirstReward = p.trial.CurTime;
-                end
                 
                 % Transition to the succesful fixation epoch
                 switchEpoch(p,'Fixating')
@@ -587,65 +579,43 @@ p.trial.task.stimState = val;
 % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
 switch val
     case 0
-        p.trial.stim.gratingL.on = 0;
-        p.trial.stim.gratingH.on = 0;
+        % Turn off all stimuli (as a precaution)
+        for grating = p.trial.stim.gratings
+            grating.on = 0;
+        end
+        p.trial.EV.StimOff = p.trial.CurTime;
+        pds.datapixx.strobe(p.trial.event.STIM_OFF);
+        
     case 1
-        p.trial.stim.gratingL.on = 1;
-        p.trial.stim.gratingH.on = 0;
-        p.trial.stim.gratingH.fixActive = 1;
-    case 2
-        p.trial.stim.gratingL.on = 0;
-        p.trial.stim.gratingH.on = 1;
-        p.trial.stim.gratingH.fixActive = 1;        
+        % Select the proper stim
+        stimNum = p.trial.stim.currNum;
+        stim = p.trial.stim.gratings{p.trial.stim.iStim(stimNum)};
+        
+        % Move the stim to the proper position
+        curPos = p.trial.stim.iPos(stimNum,:);
+        stim.pos = curPos;
+        
+        % Make the stim visible
+        stim.on = 1;
+        
+        % Record the timings
+        p.trial.EV.StimOn = p.trial.CurTime;
+        pds.datapixx.strobe(p.trial.event.STIM_ON); 
+              
     otherwise
         error('bad stim value')
 end
 
-% Record the change timing
-if val == 0
-    % Stim is turning off
-    p.trial.EV.StimOff = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.STIM_OFF);    
-elseif oldVal == 0
-    % Stim is turning on
-    p.trial.EV.StimOn = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.STIM_ON);   
-else
-    % Stim is changing
-    p.trial.EV.StimChange = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.STIM_CHNG);
-end
 
+function new_neuron(p)
+% Get the number of stimuli and positions
+nStims = length(p.trial.stim.gratings;
+nLocs = size(p.trial.stim.locations,1);
 
-function Calculate_SRT(p)
+% Rerandomize the list of stimuli
+indexReference = Shuffle(combvec(1:nStims,1:nLocs)');
+p.trial.stim.iStim = indexReference(:,1);
+p.trial.stim.iPos = indexReference(:,2);
 
-switch p.trial.outcome.CurrOutcomeStr
-    
-    case {'NoStart', 'Break', 'Miss'}
-        p.trial.task.SRT_FixStart = NaN;
-        p.trial.task.SRT_StimOn   = NaN;
-        p.trial.task.SRT_Go       = NaN;
-       
-    case {'FixBreak'}
-        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
-        p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.fixLatency + p.trial.task.stimLatency);
-        p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.fixLatency + p.trial.task.stimLatency + p.trial.task.centerOffLatency);
-    
-    case {'StimBreak', 'Early'}
-        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
-        p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
-        p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.centerOffLatency);
-        
-    case {'False','Correct','TargetBreak'}
-        p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
-        p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
-        p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - p.trial.EV.FixOff;
-        
-    otherwise
-        warning('Calculate_SRT: unrecognized outcome')
-        p.trial.task.SRT_FixStart = NaN;
-        p.trial.task.SRT_StimOn   = NaN;
-        p.trial.task.SRT_Go       = NaN;
-        
-end
+p.trial.stim.currNum = 1;
       
