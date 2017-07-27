@@ -20,9 +20,11 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.initialFixRwd  = 0.00; % Small reward for achieving full fixation - set to zero to disable
 p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur    = 0.2;         % Reward for completing the task successfully
+
+p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
+
+p.trial.reward.jackpotDur = 0.3;     % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 2;  % number of reward pulses
 p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with this trial number
@@ -32,7 +34,7 @@ p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with 
 p.trial.task.Timing.WaitFix = 2;    % Time to wait for fixation before NoStart
 
 % Main trial timings
-p.trial.task.fixLatency       = 0.1; % Time to hold fixation before mapping begins
+p.trial.task.fixLatency       = 0.15; % Time to hold fixation before mapping begins
 
 
 p.trial.task.stimOnTime       = 0.1;   % How long each stimulus is presented
