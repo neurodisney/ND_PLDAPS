@@ -55,6 +55,7 @@ p.trial.RF.spatialRes  = 50;  % Number sections to subdivide the possible visual
 p.trial.RF.maxHistory  = 0.5; % How long before each spike to calculate the reverse correlation
 p.trial.RF.temporalRes = 25;  % Number of sections to divide the history into for analysis
 
+p.trial.RF.maxSpikesPerTrial = 200;   % Max spikes per trial, for preallocation purposes.
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos    = [0,0];

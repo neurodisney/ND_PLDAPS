@@ -237,6 +237,9 @@ maxFrames = p.trial.pldaps.maxFrames;
 spatialRes = p.trial.RF.spatialRes;
 p.trial.RF.visualField = nan(spatialRes,spatialRes,maxFrames);
 
+p.trial.RF.spikes = nan(p.trial.RF.maxSpikesPerTrial,1);
+p.trial.RF.nSpikes = 0;
+
 
 % ####################################################################### %
 function TaskDesign(p)
@@ -497,6 +500,9 @@ for grating = p.trial.stim.gratings
     Screen('Close', grating{1}.texture);
 end
 
+% Remove NaNs at the end of the RF data
+p.trial.RF.visualField(:,:,p.trial.iFrame:end) = [];
+
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
 
@@ -516,6 +522,10 @@ if(~isempty(p.trial.LastKeyPress))
             
         case KbName('f')
             switch_to_fine(p)
+            
+        case KbName('s')
+            p.trial.RF.nSpikes = p.trial.RF.nSpikes + 1;
+            p.trial.RF.spikes(p.trial.RF.nSpikes) = p.trial.CurTime;
             
     end
     
