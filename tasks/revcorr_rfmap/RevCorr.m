@@ -454,7 +454,7 @@ if p.trial.stim.changeThisFrame || iFrame == 1
     circRes = size(onecirc,1);
 
     % For each stimulus, if the stimulus is on, interpolate a circle of 1's onto where it would be in the visual field
-    for iGrating = length(p.trial.stim.gratings)
+    for iGrating = 1:length(p.trial.stim.gratings)
         stim = p.trial.stim.gratings{iGrating};
         if stim.on
             radius = stim.radius;
