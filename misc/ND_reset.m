@@ -5,7 +5,9 @@
 % end
 
 ListenChar(0);
-Datapixx('Close');
+if Datapixx('IsReady')
+    Datapixx('Close');
+end
 clear all; 
 close all;
 sca;
