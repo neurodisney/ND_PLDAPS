@@ -38,7 +38,7 @@ p.trial.task.fixLatency       = 0.15; % Time to hold fixation before mapping beg
 
 
 p.trial.task.stimOnTime       = 0.1;   % How long each stimulus is presented
-p.trial.task.stimOffTime      = 0;     % Gaps between succesive stimuli
+p.trial.task.stimOffTime      = 0.1;     % Gaps between succesive stimuli
 
 p.trial.task.jackpotTime      = 3;     % How long stimuli are presented before trial ends and jackpot is given
 
@@ -55,7 +55,7 @@ p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.FIXSPOT.size   = 0.15;        % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin = 4;
+p.trial.stim.FIXSPOT.fixWin = 2.5;
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
@@ -63,28 +63,35 @@ p.trial.stim.GRATING.res          = 300;
 p.trial.stim.GRATING.fixWin       = 0;
 
 % Will use a grid based layout to display the stimuli
-p.trial.stim.xRange = [-10, -2];
-p.trial.stim.yRange = [-10, -2];
-p.trial.stim.grdStp = 1;
+p.trial.stim.coarse.xRange = [-10, -2];
+p.trial.stim.coarse.yRange = [-10, -2];
+p.trial.stim.coarse.grdStp = 1;
+
+p.trial.stim.fine.xRange = [-7, -4];
+p.trial.stim.fine.yRange = [-7, -4];
+p.trial.stim.fine.grdStp = 0.5;
 
 
 % For the following parameters, an array can be specified and all possible combinations
 % will be tested.
 
-p.trial.stim.angle    = [0, 90];
+p.trial.stim.coarse.angle    = [0, 90];
+p.trial.stim.fine.angle      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5];   
 
-p.trial.stim.radius   = 0.75;    % radius of grating
+p.trial.stim.coarse.radius   = 0.75;
+p.trial.stim.fine.radius     = 0.75;
 
-% spatial frequency
-p.trial.stim.sFreq    = 1.5; % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
+% spatial frequency (cycles per degree)
+p.trial.stim.coarse.sFreq    = 1.5;
+p.trial.stim.fine.sFreq      = 1.5;
 
-% temporal frequency
-p.trial.stim.tFreq    = 0;    % temporal frequency of grating; drift speed, 0 is stationary
+% temporal frequency (cycles per second, 0 is stationary)
+p.trial.stim.coarse.tFreq    = 0;
+p.trial.stim.fine.tFreq      = 0;
 
 % contrast
-p.trial.stim.contrast = 1;
-
-
+p.trial.stim.coarse.contrast = 1;
+p.trial.stim.fine.contrast   = 1;
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

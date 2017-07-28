@@ -114,6 +114,7 @@ if(isempty(state))
     p.defaultParameters.pldaps.finish = totalTrials;
     
     p.trial.stim.count = 0;
+    p.trial.stim.stage = 'coarse';
     
 else
     % ####################################################################### %
@@ -158,7 +159,6 @@ else
             % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
             TaskCleanAndSave(p);
-            fprintf(1,'%d / %d',p.trial.stim.count, length(p.trial.stim.iStim))
             %% trial end
             
             
@@ -194,19 +194,20 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 % Gratings
 % Generate all the possible gratings 
 p.trial.stim.gratings = {};
-for angle = p.trial.stim.angle
+stimdef = p.trial.stim.(p.trial.stim.stage);
+for angle = stimdef.angle
     p.trial.stim.GRATING.angle = angle;
     
-    for radius = p.trial.stim.radius
+    for radius = stimdef.radius
         p.trial.stim.GRATING.radius = radius;
         
-        for sFreq = p.trial.stim.sFreq
+        for sFreq = stimdef.sFreq
             p.trial.GRATING.sFreq = sFreq;
             
-            for tFreq = p.trial.stim.tFreq
+            for tFreq = stimdef.tFreq
                 p.trial.GRATING.tFreq = tFreq;
                 
-                for contr = p.trial.stim.contrast
+                for contr = stimdef.contrast
                     p.trial.GRATING.contrast = contr;
                     
                     p.trial.stim.gratings{end+1} = pds.stim.Grating(p);
@@ -218,14 +219,14 @@ for angle = p.trial.stim.angle
 end
 
 % Generate all the possible positions for the stimulus to be
-allXPos = p.trial.stim.xRange(1) : p.trial.stim.grdStp : p.trial.stim.xRange(2);
-allYPos = p.trial.stim.yRange(1) : p.trial.stim.grdStp : p.trial.stim.yRange(2);
+allXPos = stimdef.xRange(1) : stimdef.grdStp : stimdef.xRange(2);
+allYPos = stimdef.yRange(1) : stimdef.grdStp : stimdef.yRange(2);
 p.trial.stim.locations = combvec(allXPos,allYPos)';
 
 %% Generate a shuffled list of all possible stimuli and location indices for reference during the experiment
 % Only do this the first trial, because stim sequence should continue between trials
 if p.trial.stim.count == 0;
-new_neuron(p)
+reshuffle_stims(p);
 end
 
 
@@ -307,9 +308,20 @@ switch p.trial.CurrEpoch
         
         % Still fixating
         if p.trial.stim.fix.fixating
-
+            
             if p.trial.CurTime < p.trial.stim.fix.EV.FixStart + p.trial.task.jackpotTime
                 % Jackpot time has not yet been reached
+                
+                % If stim count goes above the total number of generated stimuli/positions, switcht to fine mode
+                if p.trial.stim.count > length(p.trial.stim.iStim)
+                    switch_to_fine(p)
+                end
+                
+                % When stage is switched to fine, count is reset at 0, display no stims and wait for jackpot
+                if p.trial.stim.count == 0
+                    stim(p,0);
+                    return;
+                end
                 
                 if p.trial.task.stimState
                     % Keep stim on for stimOn Time
@@ -373,10 +385,8 @@ switch p.trial.CurrEpoch
             % Fixation Break, end the trial
             pds.audio.playDP(p,'breakfix','left');
             
-            if p.trial.task.stimState
-                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-                switchEpoch(p,'TaskEnd')
-            end
+            p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+            switchEpoch(p,'TaskEnd')
             
             % Turn off fixspot and stim
             fixspot(p,0);
@@ -433,7 +443,11 @@ if(~isempty(p.trial.LastKeyPress))
     
     switch p.trial.LastKeyPress(1)
         
-        %case KbName('x')  % Space for custom key press routines
+        case KbName('n')  % Space for custom key press routines
+            new_neuron(p)
+            
+        case KbName('f')
+            switch_to_fine(p)
             
     end
     
@@ -502,7 +516,7 @@ switch val
 end
 
 
-function new_neuron(p)
+function reshuffle_stims(p)
 % Get the number of stimuli and positions
 nStims = length(p.trial.stim.gratings);
 nLocs = size(p.trial.stim.locations,1);
@@ -513,4 +527,13 @@ p.trial.stim.iStim = indexReference(:,1);
 p.trial.stim.iPos = indexReference(:,2);
 
 p.trial.stim.count = 1;
+
+function new_neuron(p)
+% Reset to coarse mapping
+p.trial.stim.stage = 'coarse';
+p.trial.stim.count = 0;
+
+function switch_to_fine(p)
+p.trial.stim.stage = 'fine';
+p.trial.stim.count = 0;
       
