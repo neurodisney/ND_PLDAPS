@@ -241,6 +241,10 @@ p.trial.RF.visualField = nan(spatialRes,spatialRes,maxFrames);
 % ####################################################################### %
 function TaskDesign(p)
 %% main task outline
+
+% This gets set to 1, if a stim is turned on or off this frame
+p.trial.stim.changeThisFrame = 0;
+
 % The different task stages (i.e. 'epochs') are defined here.
 switch p.trial.CurrEpoch
     
@@ -426,49 +430,57 @@ end  % switch p.trial.CurrEpoch
 function Calculate_RF_Visual(p)
 %% Generate the RF visual stimulus grid for this frame. Used for calculating reverse correlation
 
-stimdef = p.trial.stim.(p.trial.stim.stage);
+iFrame = p.trial.iFrame;
 
-% Find the x's and y's of the area of interest
-xmin = stimdef.xRange(1) - stimdef.radius;
-xmax = stimdef.xRange(2) + stimdef.radius;
-ymin = stimdef.yRange(1) - stimdef.radius;
-ymax = stimdef.yRange(2) + stimdef.radius;
-sRes = p.trial.RF.spatialRes;
+% Only recalculate this is a change has occured, otherwise just copy from the last frame
+if p.trial.stim.changeThisFrame || iFrame == 1
+    stimdef = p.trial.stim.(p.trial.stim.stage);
 
-[Xv,Yv] = meshgrid(linspace(xmin,xmax,sRes),linspace(ymin,ymax,sRes));
+    % Find the x's and y's of the area of interest
+    xmin = stimdef.xRange(1) - stimdef.radius;
+    xmax = stimdef.xRange(2) + stimdef.radius;
+    ymin = stimdef.yRange(1) - stimdef.radius;
+    ymax = stimdef.yRange(2) + stimdef.radius;
+    sRes = p.trial.RF.spatialRes;
 
-% Generate a matrix of zeros representing the relevant visual plane
-Vv = zeros(sRes);
+    [Xv,Yv] = meshgrid(linspace(xmin,xmax,sRes),linspace(ymin,ymax,sRes));
 
-% Generate a circle of 1's, which will be interpolated to the right size and location later
-[Xc, Yc] = meshgrid(-10:10);
-onecirc = double((Xc.^2 + Yc.^2) <= 100);
-circRes = size(onecirc,1);
+    % Generate a matrix of zeros representing the relevant visual plane
+    Vv = zeros(sRes);
 
-% For each stimulus, if the stimulus is on, interpolate a circle of 1's onto where it would be in the visual field
-for iGrating = length(p.trial.stim.gratings)
-    stim = p.trial.stim.gratings{iGrating};
-    if stim.on
-        radius = stim.radius;
-        pos = stim.pos;
-        
-        % The correct x and y range for the stimulus
-        xvals = linspace(pos(1) - radius, pos(1) + radius, circRes);
-        yvals = linspace(pos(2) - radius, pos(2) + radius, circRes);
-        [Xs, Ys] = meshgrid(xvals,yvals);
-        
-        % Interpolate the stimulus onto the visual space
-        visFieldRep = interp2(Xs, Ys, onecirc, Xv, Yv, 'nearest');
-        % Replace the NaNs in this with 0's
-        visFieldRep(isnan(visFieldRep))=0;
-        
-        % Now add it to the Vv (which represents all the visual stimuli
-        Vv = Vv | visFieldRep;
+    % Generate a circle of 1's, which will be interpolated to the right size and location later
+    [Xc, Yc] = meshgrid(-10:10);
+    onecirc = double((Xc.^2 + Yc.^2) <= 100);
+    circRes = size(onecirc,1);
+
+    % For each stimulus, if the stimulus is on, interpolate a circle of 1's onto where it would be in the visual field
+    for iGrating = length(p.trial.stim.gratings)
+        stim = p.trial.stim.gratings{iGrating};
+        if stim.on
+            radius = stim.radius;
+            pos = stim.pos;
+
+            % The correct x and y range for the stimulus
+            xvals = linspace(pos(1) - radius, pos(1) + radius, circRes);
+            yvals = linspace(pos(2) - radius, pos(2) + radius, circRes);
+            [Xs, Ys] = meshgrid(xvals,yvals);
+
+            % Interpolate the stimulus onto the visual space
+            visFieldRep = interp2(Xs, Ys, onecirc, Xv, Yv, 'nearest');
+            % Replace the NaNs in this with 0's
+            visFieldRep(isnan(visFieldRep))=0;
+
+            % Now add it to the Vv (which represents all the visual stimuli
+            Vv = Vv | visFieldRep;
+        end
     end
-end
 
-% Add the visual field representation to the history
-p.trial.RF.visualField(:,:,p.trial.iFrame) = Vv;
+    % Add the visual field representation to the history
+    p.trial.RF.visualField(:,:,iFrame) = Vv;
+    
+else
+    p.trial.RF.visualField(:,:,iFrame) = p.trial.RF.visualField(:,:,iFrame - 1);
+end
 
 % ####################################################################### %
 function TaskDraw(p)
@@ -537,6 +549,9 @@ oldVal = p.trial.task.stimState;
 
 % Don't do anything if stim doesn't change
 if val == oldVal; return; end
+
+% Indicate that a stim has been turned on or off this frame
+p.trial.stim.changeThisFrame = 1;
 
 p.trial.task.stimState = val;
 
