@@ -22,9 +22,9 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 % manual reward from experimenter
 p.trial.reward.initialFixRwd  = 0.00; % Small reward for achieving full fixation - set to zero to disable
 p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur    = 0.2;         % Reward for completing the task successfully
+p.trial.reward.Dur    = 1.0;         % Reward for completing the task successfully
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
-p.trial.reward.nPulse          = 2;  % number of reward pulses
+p.trial.reward.nPulse          = 1;  % number of reward pulses
 p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
@@ -88,7 +88,7 @@ p.trial.stim.GRATING.tFreq        = 0;    % temporal frequency of grating; drift
 
 % contrast
 %currcont = datasample([0.01, 0.02, 0.05, 0.1, 0.2], 1);
-currcont = 0.05;
+currcont = 0.10;
 
 p.trial.stim.GRATING.lowContrast  = currcont;  % grating contrast value when stim.on = 1
 p.trial.stim.GRATING.highContrast = currcont;  % grating contrast value when stim.on = 2
