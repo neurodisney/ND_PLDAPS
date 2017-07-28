@@ -50,6 +50,12 @@ p.trial.task.Timing.MaxITI  = 2.5;  % maximum time period [s] between subsequent
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
+%% RF mapping parameters
+p.trial.RF.spatialRes  = 50;  % Number sections to subdivide the possible visual space into
+p.trial.RF.maxHistory  = 0.5; % How long before each spike to calculate the reverse correlation
+p.trial.RF.temporalRes = 25;  % Number of sections to divide the history into for analysis
+
+% ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'

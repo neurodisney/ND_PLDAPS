@@ -147,7 +147,7 @@ else
                 KeyAction(p);
             end
             TaskDesign(p);
-            
+            Calculate_RF_Visual(p);
             % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
             %% Display stuff on the screen
@@ -228,6 +228,14 @@ p.trial.stim.locations = combvec(allXPos,allYPos)';
 if p.trial.stim.count == 0;
 reshuffle_stims(p);
 end
+
+%% Preallocate memory for RF-calculations
+maxFrames = p.trial.pldaps.maxFrames;
+
+% Create a 3D matrix representing the locations of stimuli within the visual field across time
+% x,y are 1 when a stimulus is present in that location, 0 otherwise. Each z position represents one frame
+spatialRes = p.trial.RF.spatialRes;
+p.trial.RF.visualField = nan(spatialRes,spatialRes,maxFrames);
 
 
 % ####################################################################### %
@@ -413,6 +421,54 @@ switch p.trial.CurrEpoch
         Task_WaitITI(p);
         
 end  % switch p.trial.CurrEpoch
+
+% ####################################################################### %
+function Calculate_RF_Visual(p)
+%% Generate the RF visual stimulus grid for this frame. Used for calculating reverse correlation
+
+stimdef = p.trial.stim.(p.trial.stim.stage);
+
+% Find the x's and y's of the area of interest
+xmin = stimdef.xRange(1) - stimdef.radius;
+xmax = stimdef.xRange(2) + stimdef.radius;
+ymin = stimdef.yRange(1) - stimdef.radius;
+ymax = stimdef.yRange(2) + stimdef.radius;
+sRes = p.trial.RF.spatialRes;
+
+[Xv,Yv] = meshgrid(linspace(xmin,xmax,sRes),linspace(ymin,ymax,sRes));
+
+% Generate a matrix of zeros representing the relevant visual plane
+Vv = zeros(sRes);
+
+% Generate a circle of 1's, which will be interpolated to the right size and location later
+[Xc, Yc] = meshgrid(-10:10);
+onecirc = double((Xc.^2 + Yc.^2) <= 100);
+circRes = size(onecirc,1);
+
+% For each stimulus, if the stimulus is on, interpolate a circle of 1's onto where it would be in the visual field
+for iGrating = length(p.trial.stim.gratings)
+    stim = p.trial.stim.gratings{iGrating};
+    if stim.on
+        radius = stim.radius;
+        pos = stim.pos;
+        
+        % The correct x and y range for the stimulus
+        xvals = linspace(pos(1) - radius, pos(1) + radius, circRes);
+        yvals = linspace(pos(2) - radius, pos(2) + radius, circRes);
+        [Xs, Ys] = meshgrid(xvals,yvals);
+        
+        % Interpolate the stimulus onto the visual space
+        visFieldRep = interp2(Xs, Ys, onecirc, Xv, Yv, 'nearest');
+        % Replace the NaNs in this with 0's
+        visFieldRep(isnan(visFieldRep))=0;
+        
+        % Now add it to the Vv (which represents all the visual stimuli
+        Vv = Vv | visFieldRep;
+    end
+end
+
+% Add the visual field representation to the history
+p.trial.RF.visualField(:,:,p.trial.iFrame) = Vv;
 
 % ####################################################################### %
 function TaskDraw(p)
