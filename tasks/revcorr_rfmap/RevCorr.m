@@ -147,7 +147,7 @@ else
                 KeyAction(p);
             end
             TaskDesign(p);
-            Calculate_RF_Visual(p);
+            Make_RF_VisualField(p);
             % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
             %% Display stuff on the screen
@@ -159,6 +159,7 @@ else
             % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
             TaskCleanAndSave(p);
+            Calculate_RF(p);
             %% trial end
             
             
@@ -430,7 +431,7 @@ switch p.trial.CurrEpoch
 end  % switch p.trial.CurrEpoch
 
 % ####################################################################### %
-function Calculate_RF_Visual(p)
+function Make_RF_VisualField(p)
 %% Generate the RF visual stimulus grid for this frame. Used for calculating reverse correlation
 
 iFrame = p.trial.iFrame;
@@ -469,9 +470,7 @@ if p.trial.stim.changeThisFrame || iFrame == 1
             [Xs, Ys] = meshgrid(xvals,yvals);
 
             % Interpolate the stimulus onto the visual space
-            visFieldRep = interp2(Xs, Ys, onecirc, Xv, Yv, 'nearest');
-            % Replace the NaNs in this with 0's
-            visFieldRep(isnan(visFieldRep))=0;
+            visFieldRep = interp2(Xs, Ys, onecirc, Xv, Yv, 'nearest', 0);
 
             % Now add it to the Vv (which represents all the visual stimuli
             Vv = Vv | visFieldRep;
@@ -508,6 +507,47 @@ p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes
 
 % Save useful info to an ascii table for plotting
 ND_Trial2Ascii(p, 'save');
+
+% ####################################################################### %
+function Calculate_RF(p)
+nSpikes = p.trial.RF.nSpikes;
+if nSpikes > 0
+    % Preallocate a 4D matrix to hold the visual field information for each spike
+    % x,y,time,spike
+    sRes = p.trial.RF.spatialRes;
+    tRes = p.trial.RF.temporalRes;
+    spikeHyperCube = nan(sRes, sRes, tRes, nSpikes);
+    
+    % Get the visual field information for this trial
+    t = p.trial.AllCurTimes;
+    % For 1D interpolation, interpolated dimension (time) must be first
+    Vf = permute(p.trial.RF.visualField, [3, 1, 2]);
+    
+    % For each spike, interpolate the visual field occuring before it into consistent slices
+    for iSpike = 1:nSpikes
+        spikeTime = p.trial.RF.spikes(iSpike);
+        
+        % Generate the times to use for interpolation
+        startTime = spikeTime - p.trial.RF.maxHistory;
+        tRes = p.trial.RF.temporalRes;
+        times = linspace(startTime, spikeTime, tRes);
+        
+        % Interpolate the visual field during the time before each spike
+        spikeCube = interp1(t,Vf,times,'previous',0);
+        
+        % Rearrange the dimensions again
+        spikeCube = permute(spikeCube,[2,3,1]);
+        
+        % Add the spikeCube to the spikeHyperCube
+        spikeHyperCube(:,:,:,iSpike) = spikeCube;
+    end
+    
+    
+        
+        
+        
+end
+
 % ####################################################################### %
 
 % ####################################################################### %
