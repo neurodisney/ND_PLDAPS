@@ -77,6 +77,7 @@ else
     %% get the current time
     % Define it here at a clear time point and use it later on whenever the 
     % current time is needed instead of calling GetSecs every time.
-    p.trial.CurTime = GetSecs;  
+    p.trial.CurTime = GetSecs;
+    p.trial.AllCurTimes(p.trial.iFrame) = p.trial.CurTime;
 
 end  %/  if(nargin == 1) [...] else [...]

@@ -83,5 +83,5 @@ end
 %%  clean up data
 % TODO: remove entries in the trial struct that need not to be written but
 % might occupy a lot of disk space.
-
+p.trial.AllCurTimes(p.trial.iFrame+1:end) = [];
 
