@@ -116,6 +116,9 @@ if(isempty(state))
     p.trial.stim.count = 0;
     p.trial.stim.stage = 'coarse';
     
+    p.trial.RF.coarse.revCorrCube = NaN;
+    p.trial.RF.fine.revCorrCube = NaN;
+    
 else
     % ####################################################################### %
     %% Subsequent calls during actual trials
@@ -446,6 +449,10 @@ if p.trial.stim.changeThisFrame || iFrame == 1
     ymin = stimdef.yRange(1) - stimdef.radius;
     ymax = stimdef.yRange(2) + stimdef.radius;
     sRes = p.trial.RF.spatialRes;
+    
+    % Save these values for plotting later
+    p.trial.RF.(p.trial.stim.stage).xRange = [xmin xmax];
+    p.trial.RF.(p.trial.stim.stage).yRange = [ymin ymax];
 
     [Xv,Yv] = meshgrid(linspace(xmin,xmax,sRes),linspace(ymin,ymax,sRes));
 
@@ -468,6 +475,7 @@ if p.trial.stim.changeThisFrame || iFrame == 1
             xvals = linspace(pos(1) - radius, pos(1) + radius, circRes);
             yvals = linspace(pos(2) - radius, pos(2) + radius, circRes);
             [Xs, Ys] = meshgrid(xvals,yvals);
+            
 
             % Interpolate the stimulus onto the visual space
             visFieldRep = interp2(Xs, Ys, onecirc, Xv, Yv, 'nearest', 0);
@@ -519,7 +527,7 @@ if nSpikes > 0
     spikeHyperCube = nan(sRes, sRes, tRes, nSpikes);
     
     % Get the visual field information for this trial
-    t = p.trial.AllCurTimes;
+    t = p.trial.AllCurTimes(1:end-1);
     % For 1D interpolation, interpolated dimension (time) must be first
     Vf = permute(p.trial.RF.visualField, [3, 1, 2]);
     
@@ -542,7 +550,41 @@ if nSpikes > 0
         spikeHyperCube(:,:,:,iSpike) = spikeCube;
     end
     
+    % Append this trials spikeHyperCube to the one spanning all trials
+    rfdef = p.trial.RF.(p.trial.stim.stage);
     
+    if ~isfield(rfdef,'spikeHyperCube')
+        rfdef.spikeHyperCube = spikeHyperCube;
+    else
+        rfdef.spikeHyperCube = cat(4, rfdef.spikeHyperCube, spikeHyperCube);
+    end
+    
+    % Average across all spikes
+    rfdef.revCorrCube = mean(rfdef.spikeHyperCube, 4);
+    
+    % Generate a positional heatmap by taking the maximum value across the time dimension
+    rfdef.heatmap = max(rfdef.revCorrCube, [], 3);
+    
+    % Plot the heatmap
+    subplot(1,2,1)
+    xRange = p.trial.RF.(p.trial.stim.stage).xRange;
+    yRange = p.trial.RF.(p.trial.stim.stage).yRange;
+    imagesc(xRange, yRange, rfdef.heatmap);
+    colormap('pink')
+    hold on;
+    
+    % Plot the temporal density of the maximum point on the heatmap
+    [maxRow, maxCol] = ind2sub(size(rfdef.heatmap),find(rfdef.heatmap == max(max(rfdef.heatmap)),1));
+    rfdef.maxTemporalProfile = squeeze(rfdef.revCorrCube(maxRow, maxCol, :));
+    
+    subplot(1,2,2)
+    plot(rfdef.maxTemporalProfile)
+    
+    drawnow
+    
+    
+    % Save rfdef back into p
+    p.trial.RF.(p.trial.stim.stage) = rfdef;
         
         
         

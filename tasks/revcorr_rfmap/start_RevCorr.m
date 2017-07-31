@@ -26,7 +26,7 @@ SS.plot.routine    = 'RevCorr_plots';    % function for online plotting of sessi
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'stim.count','stim.iStim','stim.iPos','stim.stage'};
+SS.editable = {'stim.count','stim.iStim','stim.iPos','stim.stage','RF.coarse','RF.fine'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
