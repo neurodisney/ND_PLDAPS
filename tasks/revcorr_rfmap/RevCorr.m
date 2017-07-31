@@ -331,9 +331,9 @@ switch p.trial.CurrEpoch
             if p.trial.CurTime < p.trial.stim.fix.EV.FixStart + p.trial.task.jackpotTime
                 % Jackpot time has not yet been reached
                 
-                % If stim count goes above the total number of generated stimuli/positions, switcht to fine mode
+                % If stim count goes above the total number of generated stimuli/positions, reshuffle the stims and start again
                 if p.trial.stim.count > length(p.trial.stim.iStim)
-                    switch_to_fine(p)
+                    reshuffle_stims(p);
                 end
                 
                 % When stage is switched to fine, count is reset at 0, display no stims and wait for jackpot
