@@ -551,6 +551,7 @@ if nSpikes > 0
     end
     
     % Append this trials spikeHyperCube to the one spanning all trials
+    stimdef = p.trial.stim.(p.trial.stim.stage);
     rfdef = p.trial.RF.(p.trial.stim.stage);
     
     if ~isfield(rfdef,'spikeHyperCube')
@@ -569,16 +570,30 @@ if nSpikes > 0
     subplot(1,2,1)
     xRange = p.trial.RF.(p.trial.stim.stage).xRange;
     yRange = p.trial.RF.(p.trial.stim.stage).yRange;
+    % Flip x and y so that x is along the columns and y is along the rows
     imagesc(xRange, yRange, rfdef.heatmap);
+    % Flip the y axis since imagesc does y reversed for some reason
+    set(gca,'YDir','normal')
     colormap('pink')
+    
+    
+    % Find the location with the highest density of spike responses
+    [maxRow, maxCol] = ind2sub(size(rfdef.heatmap),find(rfdef.heatmap == max(max(rfdef.heatmap)),1));
+    xSpace = linspace(rfdef.xRange(1), rfdef.xRange(2), p.trial.RF.spatialRes);
+    ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
+    maxPos = [xSpace(maxCol), ySpace(maxRow)];
+    
+    % Draw a rectangle showing where the fine placement will be
     hold on;
+    rect = [maxPos - p.trial.stim.fine.extent, 2*p.trial.stim.fine.extent, 2*p.trial.stim.fine.extent];
+    rectangle('Position', rect, 'LineWidth', 2, 'EdgeColor', 'r', 'LineStyle', ':');
+    
+    rfdef.maxTemporalProfile = squeeze(rfdef.revCorrCube(maxRow, maxCol, :));    
     
     % Plot the temporal density of the maximum point on the heatmap
-    [maxRow, maxCol] = ind2sub(size(rfdef.heatmap),find(rfdef.heatmap == max(max(rfdef.heatmap)),1));
-    rfdef.maxTemporalProfile = squeeze(rfdef.revCorrCube(maxRow, maxCol, :));
-    
     subplot(1,2,2)
-    plot(rfdef.maxTemporalProfile)
+    t = linspace(-p.trial.RF.maxHistory*1000, 0, p.trial.RF.temporalRes);
+    plot(t, rfdef.maxTemporalProfile)
     
     drawnow
     

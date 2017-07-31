@@ -72,11 +72,10 @@ p.trial.stim.GRATING.fixWin       = 0;
 % Will use a grid based layout to display the stimuli
 p.trial.stim.coarse.xRange = [-10, -2];
 p.trial.stim.coarse.yRange = [-10, -2];
-p.trial.stim.coarse.grdStp = 1;
+p.trial.stim.coarse.grdStp = 0.25;
 
-p.trial.stim.fine.xRange = [-7, -4];
-p.trial.stim.fine.yRange = [-7, -4];
-p.trial.stim.fine.grdStp = 0.5;
+p.trial.stim.fine.extent = 2; % From the max value in the coarse mapping, extend out +- this far
+p.trial.stim.fine.grdStp = 0.1;
 
 
 % For the following parameters, an array can be specified and all possible combinations
