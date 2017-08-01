@@ -583,6 +583,10 @@ if nSpikes > 0
     ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
     maxPos = [xSpace(maxCol), ySpace(maxRow)];
     
+    % Define the xRange and yRange for the fine stage
+    p.trial.stim.fine.xRange = maxPos(1) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+    p.trial.stim.fine.yRange = maxPos(2) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+    
     % Draw a rectangle showing where the fine placement will be
     hold on;
     rect = [maxPos - p.trial.stim.fine.extent, 2*p.trial.stim.fine.extent, 2*p.trial.stim.fine.extent];
