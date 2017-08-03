@@ -533,9 +533,9 @@ if nSpikes > 0
         spikeTime = p.trial.RF.spikes(iSpike);
         
         % Generate the times to use for interpolation
-        startTime = spikeTime - p.trial.RF.maxHistory;
+        timeRange = spikeTime + p.trial.RF.(p.trial.stim.stage).temporalRange;
         tRes = p.trial.RF.temporalRes;
-        times = linspace(startTime, spikeTime, tRes);
+        times = linspace(timeRange(1), timeRange(2), tRes);
         
         % Interpolate the visual field during the time before each spike
         spikeCube = interp1(t,Vf,times,'previous',0);
@@ -580,7 +580,25 @@ if nSpikes > 0
         p.trial.stim.fine.xRange = maxPos(1) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
         p.trial.stim.fine.yRange = maxPos(2) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
         
-        % TODO: define time range where to measure during the fine stage
+        % Find the maximum value in the temporal profile
+        [maxVal, maxIndex] = max(rfdef.maxTemporalProfile);
+        times = linspace(rfdef.temporalRange(1), rfdef.temporalRange(2), p.trial.RF.temporalRes);
+        timeOfMax = times(maxIndex);
+        
+        %% Find the times when the temporal profile goes below the threshold proportion of the max value
+        thresh = p.trial.RF.temporalProfileRefineProportion * maxVal;
+        
+        % Get the part of temporal profile before the max value point
+        lowerProf = rfdef.maxTemporalProfile(1:maxIndex);
+        % Find the closest point to the max value where the profile goes beneath threshold
+        minFineRange = max(rfdef.temporalRange(1), times(find(lowerProf < thresh, 1, 'last')));
+        
+        % Get the part of the temporal profile after the max value point
+        upperProf = rfdef.maxTemporalProfile(maxIndex:end);
+        maxFineRange = min(rfdef.temporalRange(2), times(maxIndex -1 + find(upperProf < thresh, 1, 'first')));
+        
+        % Assign this new temporal range
+        p.trial.RF.fine.temporalRange = [minFineRange, maxFineRange];
         
     else
         % Fine stage

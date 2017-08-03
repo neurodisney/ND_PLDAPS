@@ -125,10 +125,16 @@ try
     %% Plot of the coarse temporal profile
     % Shows when stimuli appeared relative to spikes
     subplot(plotRows, plotCols, 3*plotCols + [1:2])
-    t = linspace(-p.trial.RF.maxHistory*1000, 0, p.trial.RF.temporalRes);
+    t = linspace(rfdef.temporalRange(1)*1000, rfdef.temporalRange(2)*1000, p.trial.RF.temporalRes);
     plot(t, rfdef.maxTemporalProfile)
     xlabel('Stim temporal profile relative to spikes [ms]')
     ylabel('Proportion');
+    
+    % Display vertical lines where the fine mapping cutoffs will be
+    hold on;
+    h = vline(p.trial.RF.fine.temporalRange*1000,'k--');
+    set(h,'LineWidth',2);
+    hold off;
     
     %--------------------------------------------------%
     % Only plot fine plots if fine stage is active
