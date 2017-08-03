@@ -103,7 +103,7 @@ try
     
     % Flip the y axis since imagesc does y reversed for some reason
     set(gca,'YDir','normal')
-    colormap(coarse_colmap)
+    colormap(gca,coarse_colmap)
 
     % Find the location with the highest density of spike responses
     [maxRow, maxCol] = ind2sub(size(rfdef.heatmap),find(rfdef.heatmap == max(max(rfdef.heatmap)),1));
@@ -135,7 +135,7 @@ try
     if strcmp(p.trial.stim.stage, 'fine')
         %% Plot of fine heatmap
         % Shows where stimuli appeared before spiking activity in the fine mapping process
-        subplot(plotRows, plotCols, [plotCols*2+[3,4],plotCols*3+[3,4]])
+        subplot(plotRows, plotCols, [plotCols+[3,4],plotCols*2+[3,4]])
 
         rfdef = p.trial.RF.fine;
 
@@ -147,7 +147,7 @@ try
 
         % Flip the y axis since imagesc does y reversed for some reason
         set(gca,'YDir','normal')
-        colormap(fine_colmap)
+        colormap(gca,fine_colmap)
 
         % Find the location with the highest density of spike responses
         [maxRow, maxCol] = ind2sub(size(rfdef.heatmap),find(rfdef.heatmap == max(max(rfdef.heatmap)),1));
@@ -157,7 +157,7 @@ try
 
         % Draw a dot showing where the maxPos
         hold on;
-        plot(maxPos(1),maxPos(2), 'x', 'MarkerSize', 6, 'MarkerEdgeColor', 'r', 'MarkerFaceColor','r')
+        plot(maxPos(1),maxPos(2), 'x', 'MarkerSize', 50, 'MarkerEdgeColor', 'r', 'MarkerFaceColor','r')
         hold off;
     end
     
