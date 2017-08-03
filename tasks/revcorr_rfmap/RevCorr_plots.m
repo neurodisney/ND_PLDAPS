@@ -111,6 +111,11 @@ try
     ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
     maxPos = [xSpace(maxCol), ySpace(maxRow)];
     
+    % Draw an x showing where the maxPos is
+    hold on;
+    plot(maxPos(1),maxPos(2), 'x', 'MarkerSize', 50, 'MarkerEdgeColor', 'r', 'MarkerFaceColor','r')
+    hold off;
+    
     % Draw a rectangle showing where the fine placement will be
     hold on;
     extent = p.trial.stim.fine.extent;
@@ -126,7 +131,7 @@ try
     % Shows when stimuli appeared relative to spikes
     subplot(plotRows, plotCols, 3*plotCols + [1:2])
     t = linspace(rfdef.temporalRange(1)*1000, rfdef.temporalRange(2)*1000, p.trial.RF.temporalRes);
-    plot(t, rfdef.maxTemporalProfile)
+    plot(t, rfdef.maxTemporalProfile, 'r')
     xlabel('Stim temporal profile relative to spikes [ms]')
     ylabel('Proportion');
     
@@ -161,9 +166,17 @@ try
         ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
         maxPos = [xSpace(maxCol), ySpace(maxRow)];
 
-        % Draw a dot showing where the maxPos
+        % Draw an x showing where the maxPos
         hold on;
         plot(maxPos(1),maxPos(2), 'x', 'MarkerSize', 50, 'MarkerEdgeColor', 'r', 'MarkerFaceColor','r')
+        hold off;
+        
+        %% Plot of the fine temporal profile
+        % This will be plotted on top of the coarse profile
+        subplot(plotRows, plotCols, 3*plotCols + [1:2])
+        hold on;
+        t = linspace(rfdef.temporalRange(1)*1000, rfdef.temporalRange(2)*1000, p.trial.RF.temporalRes);
+        plot(t, rfdef.maxTemporalProfile,'b');
         hold off;
     end
     
