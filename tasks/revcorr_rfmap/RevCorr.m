@@ -113,11 +113,8 @@ if(isempty(state))
     
     p.defaultParameters.pldaps.finish = totalTrials;
     
-    p.trial.stim.count = 0;
-    p.trial.stim.stage = 'coarse';
-    
-    p.trial.RF.coarse.revCorrCube = NaN;
-    p.trial.RF.fine.revCorrCube = NaN;
+    new_neuron(p);
+   
     
 else
     % ####################################################################### %
@@ -565,42 +562,32 @@ if nSpikes > 0
     
     % Generate a positional heatmap by taking the maximum value across the time dimension
     rfdef.heatmap = max(rfdef.revCorrCube, [], 3);
-    
-    % Plot the heatmap
-    subplot(1,2,1)
-    xRange = p.trial.RF.(p.trial.stim.stage).xRange;
-    yRange = p.trial.RF.(p.trial.stim.stage).yRange;
-    % Flip x and y so that x is along the columns and y is along the rows
-    imagesc(xRange, yRange, rfdef.heatmap);
-    % Flip the y axis since imagesc does y reversed for some reason
-    set(gca,'YDir','normal')
-    colormap('pink')
-    
-    
+      
     % Find the location with the highest density of spike responses
     [maxRow, maxCol] = ind2sub(size(rfdef.heatmap),find(rfdef.heatmap == max(max(rfdef.heatmap)),1));
     xSpace = linspace(rfdef.xRange(1), rfdef.xRange(2), p.trial.RF.spatialRes);
     ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
     maxPos = [xSpace(maxCol), ySpace(maxRow)];
     
-    % Define the xRange and yRange for the fine stage
-    p.trial.stim.fine.xRange = maxPos(1) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
-    p.trial.stim.fine.yRange = maxPos(2) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
     
-    % Draw a rectangle showing where the fine placement will be
-    hold on;
-    rect = [maxPos - p.trial.stim.fine.extent, 2*p.trial.stim.fine.extent, 2*p.trial.stim.fine.extent];
-    rectangle('Position', rect, 'LineWidth', 2, 'EdgeColor', 'r', 'LineStyle', ':');
+    % Calculate the temporal profile (when stims appeared) for this max location
+    rfdef.maxTemporalProfile = squeeze(rfdef.revCorrCube(maxRow, maxCol, :));
     
-    rfdef.maxTemporalProfile = squeeze(rfdef.revCorrCube(maxRow, maxCol, :));    
+    % Change processing depending on the stage
+    if strcmp(p.trial.stim.stage, 'coarse')
     
-    % Plot the temporal density of the maximum point on the heatmap
-    subplot(1,2,2)
-    t = linspace(-p.trial.RF.maxHistory*1000, 0, p.trial.RF.temporalRes);
-    plot(t, rfdef.maxTemporalProfile)
-    
-    drawnow
-    
+        % Define the xRange and yRange for the fine stage
+        p.trial.stim.fine.xRange = maxPos(1) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+        p.trial.stim.fine.yRange = maxPos(2) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+        
+        % TODO: define time range where to measure during the fine stage
+        
+    else
+        % Fine stage
+        % TODO: store final receptive field position
+        % TODO: calculate RF orientation
+    end
+
     
     % Save rfdef back into p
     p.trial.RF.(p.trial.stim.stage) = rfdef;
@@ -714,6 +701,12 @@ function new_neuron(p)
 % Reset to coarse mapping
 p.trial.stim.stage = 'coarse';
 p.trial.stim.count = 0;
+
+% Remove all data
+p.trial.RF.coarse.revCorrCube = NaN;
+p.trial.RF.fine.revCorrCube = NaN;
+p.trial.stim.fine.xRange = NaN;
+p.trial.stim.fine.yRange = NaN;
 
 function switch_to_fine(p)
 p.trial.stim.stage = 'fine';
