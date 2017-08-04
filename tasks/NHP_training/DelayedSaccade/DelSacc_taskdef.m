@@ -88,7 +88,7 @@ p.trial.stim.GRATING.tFreq        = 0;    % temporal frequency of grating; drift
 
 % contrast
 %currcont = datasample([0.01, 0.02, 0.05, 0.1, 0.2], 1);
-currcont = 0.10;
+currcont = 0.3;
 
 p.trial.stim.GRATING.lowContrast  = currcont;  % grating contrast value when stim.on = 1
 p.trial.stim.GRATING.highContrast = currcont;  % grating contrast value when stim.on = 2
