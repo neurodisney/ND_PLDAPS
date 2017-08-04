@@ -530,6 +530,9 @@ ND_Trial2Ascii(p, 'save');
 % ####################################################################### %
 function Calculate_RF(p)
 nSpikes = p.trial.RF.nSpikes;
+stimdef = p.trial.stim.(p.trial.stim.stage);
+rfdef = p.trial.RF.(p.trial.stim.stage);
+
 if nSpikes > 0
     % Preallocate a 4D matrix to hold the visual field information for each spike
     % x,y,time,spike
@@ -548,7 +551,6 @@ if nSpikes > 0
         
         % Generate the times to use for interpolation
         timeRange = spikeTime + p.trial.RF.(p.trial.stim.stage).temporalRange;
-        tRes = p.trial.RF.temporalRes;
         times = linspace(timeRange(1), timeRange(2), tRes);
         
         % Interpolate the visual field during the time before each spike
@@ -562,9 +564,6 @@ if nSpikes > 0
     end
     
     % Append this trials spikeHyperCube to the one spanning all trials
-    stimdef = p.trial.stim.(p.trial.stim.stage);
-    rfdef = p.trial.RF.(p.trial.stim.stage);
-    
     if ~isfield(rfdef,'spikeHyperCube')
         rfdef.spikeHyperCube = spikeHyperCube;
     else
@@ -614,10 +613,71 @@ if nSpikes > 0
         % Assign this new temporal range
         p.trial.RF.fine.temporalRange = [minFineRange, maxFineRange];
         
-    else
-        % Fine stage
+    elseif strcmp(p.trial.stim.stage, 'fine')
         % TODO: store final receptive field position
-        % TODO: calculate RF orientation
+        
+        
+        %% Calculate the presence of individual stims before each spike
+        % Preallocate a 3D matrix to hold the stim/spike information
+        % (stim, time, nSpike)
+        nStims = length(p.trial.stim.gratings);
+        spikeStimsCube = nan(nStims, tRes, nSpikes);
+        
+        % Get the stim information for the trials (transpose so that time dimension is first)
+        stimsOn = p.trial.RF.stimsOn';
+        
+        % For each spike, interpolate the stims that are on before the spike into consistent slices
+        for iSpike = 1:nSpikes
+            spikeTime = p.trial.RF.spikes(iSpike);
+            
+            % Generate the times to use for interpolation
+            timeRange = spikeTime + p.trial.RF.(p.trial.stim.stage).temporalRange;
+            times = linspace(timeRange(1), timeRange(2), tRes);
+            
+            % Interpolate the visual field during the time before each spike
+            spikeStims = interp1(t, stimsOn, times, 'previous', 0)';
+            
+            % Add the spikeStims to the spikeStimCube
+            spikeStimsCube(:,:,iSpike) = spikeStims;
+        end
+        
+        % Append this trial's spikeStimsCube to the one spanning all trials
+        if ~isfield(rfdef,'spikeStimsCube')
+            rfdef.spikeStimsCube = spikeStimsCube;
+        else
+            rfdef.spikeStimsCube = cat(3, rfdef.spikeStimsCube, spikeStimsCube);
+        end
+        
+        
+        %% Calculate orientation tuning
+        nOrients = length(stimdef.angle);
+        
+        % Create matrix showing the mapping from stims to orientations
+        % stims x orientations
+        stims2angle = false(nStims, nOrients);
+        for iStim = 1:nStims
+            stim = p.trial.stim.gratings{iStim};
+            angle = stim.angle;
+            stims2angle(iStim, stimdef.angle == angle) = true;
+        end
+        
+        % First preallocate. Each number here will represent the proportion of spikes that occured following each of the orientations
+        rfdef.orientationTuning = nan(1,nOrients);
+        
+        % Now for each orientation, grab the appropriate stims from the spikeStimsCube,
+        % and average the spike response to orientation across all spikes
+        for iOrient = 1:nOrients
+            iStims = stims2angle(:, iOrient);
+            
+            % Combine rows of stims with this orientaiton
+            % Should leave a 2D matrix (time, nSpikes)
+            orientSpike = squeeze(any(rfdef.spikeStimsCube(iStims,:,:),1));
+            
+            % Average across all spikes, and take the max value in time as the orientation tuning
+            rfdef.orientationTuning(iOrient) = max(mean(orientSpike,2));
+            
+        end
+        
     end
 
     

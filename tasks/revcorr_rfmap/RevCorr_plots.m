@@ -149,6 +149,7 @@ try
         subplot(plotRows, plotCols, [plotCols+[3,4],plotCols*2+[3,4]])
 
         rfdef = p.trial.RF.fine;
+        stimdef = p.trial.stim.fine;
 
         xRange = rfdef.xRange;
         yRange = rfdef.yRange;
@@ -181,6 +182,25 @@ try
         t = linspace(rfdef.temporalRange(1)*1000, rfdef.temporalRange(2)*1000, p.trial.RF.temporalRes);
         plot(t, rfdef.maxTemporalProfile,'b');
         hold off;
+        
+        
+        %% Plot of the orientation tuning
+        subplot(plotRows, plotCols, 3*plotCols + [3:4])
+        angles = stimdef.angle;
+        tuning = rfdef.orientationTuning;
+        plot(angles,tuning,'k','LineWidth', 2)
+        
+        xlabel('Stim Orientation Tuning')
+        
+        % Set bottom of y axis to 0
+        currYMax = max(ylim(gca));
+        ylim([0 currYMax]);
+        
+        % Use visual x axis lables
+        set(gca, 'XTick', [0 45 90 135])
+        set(gca, 'XTickLabel',{'|','/','—','\'})
+        
+        
     end
     
     
