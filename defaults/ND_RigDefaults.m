@@ -1,4 +1,4 @@
-function SS = ND_RigDefaults(SS)
+function SS = ND_RigDefaults(rig)
 % set default parameters for a rig in the Disney lab.
 %
 % This file summarizes gives an overview of parameters that could be set for
@@ -16,6 +16,13 @@ function SS = ND_RigDefaults(SS)
 %
 %
 % wolf zinke, Oct. 2016
+% Nate Faber, 2017
+
+% If no rig is specified, use rig1
+if nargin < 1 || isempty(rig)
+    rig = 'rig1';
+end
+
 
 % ------------------------------------------------------------------------%
 %% DataPixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
@@ -87,6 +94,28 @@ SS.display.coordMatrix                          = eye(3);% Identity matrix, will
 % ------------------------------------------------------------------------%
 %% EyeLink settings: Eyelink specific parameters
 SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
+
+% ------------------------------------------------------------------------%
+%% Tucker-Davis Technologies: TDT specific parameters for receiving electrophysiological data
+SS.tdt.use                                      = 0;     % Collect UDP packets from the RZ5
+
+% Use the IP address specific to the rig
+switch rig
+    case 'rig1'
+        SS.tdt.ip                               = '129.59.230.10';
+        
+%    case 'rig2'
+%        SS.tdt.ip                               = 'NO_IP_YET';
+    
+    otherwise
+        SS.tdt.ip                               = '129.59.230.10';
+end
+
+SS.tdt.dataGizmo                                = 'SortBinner'; % Which gizmo is outputting the UDP data. Right now only SortBinner is implemented
+
+SS.tdt.channels                                 = 16; % Number of ephys channels to analyze in incoming data
+SS.tdt.sortCodes                                = 4;  % Number of units classified per channel. [1, 2, or 4]
+SS.tdt.bitsPerSort                              = 4;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
 % ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
