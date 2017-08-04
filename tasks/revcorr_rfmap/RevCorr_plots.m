@@ -158,7 +158,10 @@ try
 
         % Flip the y axis since imagesc does y reversed for some reason
         set(gca,'YDir','normal')
+        
+        % Change colorscheme and make square
         colormap(gca,fine_colmap)
+        axis square
 
         % Find the location with the highest density of spike responses
         [maxRow, maxCol] = ind2sub(size(rfdef.heatmap),find(rfdef.heatmap == max(max(rfdef.heatmap)),1));
