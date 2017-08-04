@@ -238,6 +238,9 @@ maxFrames = p.trial.pldaps.maxFrames;
 spatialRes = p.trial.RF.spatialRes;
 p.trial.RF.visualField = nan(spatialRes,spatialRes,maxFrames);
 
+% Create a 2D matrix representing the identity of the stimuli that were on
+p.trial.RF.stimsOn = nan(length(p.trial.stim.gratings),maxFrames);
+
 p.trial.RF.spikes = nan(p.trial.RF.maxSpikesPerTrial,1);
 p.trial.RF.nSpikes = 0;
 
@@ -461,10 +464,16 @@ if p.trial.stim.changeThisFrame || iFrame == 1
     onecirc = double((Xc.^2 + Yc.^2) <= 100);
     circRes = size(onecirc,1);
 
+    % Make a vector to indicate whether or not each of the stimuli was on during this frame
+    stimsOn = zeros(length(p.trial.stim.gratings),1);
+    
     % For each stimulus, if the stimulus is on, interpolate a circle of 1's onto where it would be in the visual field
     for iGrating = 1:length(p.trial.stim.gratings)
         stim = p.trial.stim.gratings{iGrating};
         if stim.on
+            % Record that the stimulus was on
+            stimsOn(iGrating) = 1;
+            
             radius = stim.radius;
             pos = stim.pos;
 
@@ -485,8 +494,12 @@ if p.trial.stim.changeThisFrame || iFrame == 1
     % Add the visual field representation to the history
     p.trial.RF.visualField(:,:,iFrame) = Vv;
     
+    % Add the stim on information to the history
+    p.trial.RF.stimsOn(:,iFrame) = stimsOn;
+    
 else
     p.trial.RF.visualField(:,:,iFrame) = p.trial.RF.visualField(:,:,iFrame - 1);
+    p.trial.RF.stimsOn(:,iFrame) = p.trial.RF.stimsOn(:,iFrame);
 end
 
 % ####################################################################### %
@@ -506,6 +519,7 @@ end
 
 % Remove NaNs at the end of the RF data
 p.trial.RF.visualField(:,:,p.trial.iFrame:end) = [];
+p.trial.RF.stimsOn(:,p.trial.iFrame:end) = [];
 
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
@@ -583,7 +597,7 @@ if nSpikes > 0
         % Find the maximum value in the temporal profile
         [maxVal, maxIndex] = max(rfdef.maxTemporalProfile);
         times = linspace(rfdef.temporalRange(1), rfdef.temporalRange(2), p.trial.RF.temporalRes);
-        timeOfMax = times(maxIndex);
+        rfdef.timeOfMax = times(maxIndex);
         
         %% Find the times when the temporal profile goes below the threshold proportion of the max value
         thresh = p.trial.RF.temporalProfileRefineProportion * maxVal;
