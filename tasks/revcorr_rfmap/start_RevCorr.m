@@ -66,6 +66,8 @@ SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
+SS.tdt.use                    = 1; % Get incoming UDP spike data from TDT
+
 SS.behavior.fixation.useCalibration = 1;
 SS.behavior.fixation.enableCalib = 0;
 
@@ -105,6 +107,9 @@ if strcmp(subjname,'mouse')
     SS.behavior.joystick.use       = 0;
     %SS.datapixx.useForReward       = 0;
     %SS.sound.use                   = 0;
+    
+    % Do manual spiking using the s key
+    SS.tdt.use                    = 0;
     
 end
 % ------------------------------------------------------------------------%

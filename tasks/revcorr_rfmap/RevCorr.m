@@ -704,8 +704,11 @@ if(~isempty(p.trial.LastKeyPress))
             switch_to_fine(p)
             
         case KbName('s')
-            p.trial.RF.nSpikes = p.trial.RF.nSpikes + 1;
-            p.trial.RF.spikes(p.trial.RF.nSpikes) = p.trial.CurTime;
+            % Allow manual spiking to be triggered if TDT is not used
+            if ~p.trial.tdt.use
+                p.trial.RF.nSpikes = p.trial.RF.nSpikes + 1;
+                p.trial.RF.spikes(p.trial.RF.nSpikes) = p.trial.CurTime;
+            end
             
     end
     
