@@ -6,6 +6,7 @@ function ND_FrameUpdate(p)
 %
 %
 % wolf zinke, Jan. 2017
+% Nate Faber, Aug 2017
 
 
 % ------------------------------------------------------------------------%
@@ -23,6 +24,11 @@ if(~isempty(p.trial.datapixx.adc.channels))
     pds.datapixx.adc.getData(p); % get analogData from Datapixx, including eye position and joystick
 end
 
+% ------------------------------------------------------------------------%
+%% Get spike data
+if p.trial.tdt.use
+    pds.tdt.getSpikes(p);
+end
 % ------------------------------------------------------------------------%
 %% check joystick state
 % needs to be called after pds.datapixx.adc.getData

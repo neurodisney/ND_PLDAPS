@@ -238,6 +238,12 @@ try
     end
 
     % ----------------------------------------------------------------%
+    %% Shut down TDT UDP connection
+    if p.defaultParameters.tdt.use
+        pds.tdt.close(p);
+    end
+    
+    % ----------------------------------------------------------------%
     %% save the session data to file
     
     % save defaultParameters as they are at the end of the session
