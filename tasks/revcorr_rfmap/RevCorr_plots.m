@@ -26,7 +26,8 @@ try
     plotRows = 4;
     plotCols = 4;
     
-    
+    % Clear the figure window
+    clf;
    
     %% Plot of fixation time
     % Takes up the top row of the plot. Shows fixation time over the duration of the entire experiment
@@ -88,6 +89,12 @@ try
     hold off
 
     %--------------------------------------------------%
+    % If a new neuron has been flagged, don't draw any of the other figures
+    if p.trial.RF.flag_new
+        drawnow;
+        return;
+    end
+    %--------------------------------------------------%
     
     %% Plot of coarse heatmap
     % Shows where stimuli appeared before spiking activity in the coarse mapping process
@@ -130,6 +137,7 @@ try
     %% Plot of the coarse temporal profile
     % Shows when stimuli appeared relative to spikes
     subplot(plotRows, plotCols, 3*plotCols + [1:2])
+    hold off;
     t = linspace(rfdef.temporalRange(1)*1000, rfdef.temporalRange(2)*1000, p.trial.RF.temporalRes);
     plot(t, rfdef.maxTemporalProfile, 'r')
     xlabel('Stim temporal profile relative to spikes [ms]')

@@ -189,6 +189,15 @@ p.trial.task.Good    = 0;
 p.trial.task.fixFix  = 0;
 p.trial.task.stimState = 0;
 
+%% Switch modes or reset RF data based on flags
+if p.trial.RF.flag_fine
+    switch_to_fine(p);
+end
+
+if p.trial.RF.flag_new
+    new_neuron(p);
+end
+
 %% Generate all the visual stimuli
 
 % Fixation spot
@@ -225,6 +234,7 @@ end
 allXPos = stimdef.xRange(1) : stimdef.grdStp : stimdef.xRange(2);
 allYPos = stimdef.yRange(1) : stimdef.grdStp : stimdef.yRange(2);
 p.trial.stim.locations = combvec(allXPos,allYPos)';
+
 
 %% Generate a shuffled list of all possible stimuli and location indices for reference during the experiment
 % Only do this the first trial, because stim sequence should continue between trials
@@ -712,10 +722,12 @@ if(~isempty(p.trial.LastKeyPress))
     switch p.trial.LastKeyPress(1)
         
         case KbName('n')  % Space for custom key press routines
-            new_neuron(p)
+            % Start new neuron on next trial
+            p.trial.RF.flag_new = 1;
             
         case KbName('f')
-            switch_to_fine(p)
+            % Switch to fine mode on next trial
+            p.trial.RF.flag_fine = 1;
             
         case KbName('s')
             % Allow manual spiking to be triggered if TDT is not used
@@ -835,12 +847,19 @@ p.trial.stim.stage = 'coarse';
 p.trial.stim.count = 0;
 
 % Remove all data
-p.trial.RF.coarse.revCorrCube = NaN;
-p.trial.RF.fine.revCorrCube = NaN;
+p.trial.RF.coarse.spikeHyperCube = [];
+p.trial.RF.fine.spikeHyperCube = [];
 p.trial.stim.fine.xRange = NaN;
 p.trial.stim.fine.yRange = NaN;
+
+% Reset flags
+p.trial.RF.flag_new = 0;
+p.trial.RF.flag_fine = 0;
 
 function switch_to_fine(p)
 p.trial.stim.stage = 'fine';
 p.trial.stim.count = 0;
+
+% Reset flag
+p.trial.RF.flag_fine = 0;
       
