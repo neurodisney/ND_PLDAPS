@@ -61,6 +61,12 @@ if(p.trial.behavior.fixation.useCalibration)
 end
 
 % --------------------------------------------------------------------%
+%% Keep TDT UDP connection
+if p.trial.tdt.use
+    p.defaultParameters.tdt.UDP = p.trial.tdt.UDP;
+end
+
+% --------------------------------------------------------------------%
 %% format string for ascii table
 p.defaultParameters.asciitbl  =  p.trial.asciitbl;
 % --------------------------------------------------------------------%
