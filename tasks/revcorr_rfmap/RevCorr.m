@@ -256,6 +256,9 @@ p.trial.RF.stimsOn = nan(length(p.trial.stim.gratings),maxFrames);
 p.trial.RF.spikes = nan(p.trial.RF.maxSpikesPerTrial,1);
 p.trial.RF.nSpikes = 0;
 
+%% Read and forget all the spikes that occured during the ITI
+pds.tdt.readSpikes(p);
+
 
 % ####################################################################### %
 function TaskDesign(p)
@@ -430,7 +433,7 @@ switch p.trial.CurrEpoch
         %% finish trial and error handling
         
         % Run standard TaskEnd routine
-        Task_OFF(p)
+        Task_OFF(p);
         
         % Grab the fixation stopping and starting values from the stim properties
         p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
@@ -582,7 +585,7 @@ if nSpikes > 0
     end
     
     % Append this trials spikeHyperCube to the one spanning all trials
-    if ~isfield(rfdef,'spikeHyperCube')
+    if ~isfield(rfdef,'spikeHyperCube') || isempty(rfdef.spikeHyperCube)
         rfdef.spikeHyperCube = spikeHyperCube;
     else
         rfdef.spikeHyperCube = cat(4, rfdef.spikeHyperCube, spikeHyperCube);
@@ -622,12 +625,22 @@ if nSpikes > 0
         % Get the part of temporal profile before the max value point
         lowerProf = rfdef.maxTemporalProfile(1:maxIndex);
         % Find the closest point to the max value where the profile goes beneath threshold
-        minFineRange = max(rfdef.temporalRange(1), times(find(lowerProf < thresh, 1, 'last')));
+        lowerThreshTime = times(find(lowerProf < thresh, 1, 'last'));
+        if isempty(lowerThreshTime) || lowerThreshTime < rfdef.temporalRange(1)
+            minFineRange = rfdef.temporalRange(1);
+        else
+            minFineRange = lowerThreshTime;
+        end
         
         % Get the part of the temporal profile after the max value point
         upperProf = rfdef.maxTemporalProfile(maxIndex:end);
-        maxFineRange = min(rfdef.temporalRange(2), times(maxIndex -1 + find(upperProf < thresh, 1, 'first')));
-        
+        upperThreshTime = times(maxIndex -1 + find(upperProf < thresh, 1, 'first'));
+        if isempty(upperThreshTime) || upperThreshTime > rfdef.temporalRange(2)
+            maxFineRange = rfdef.temporalRange(2);
+        else
+            maxFineRange = upperThreshTime;
+        end
+   
         % Assign this new temporal range
         p.trial.RF.fine.temporalRange = [minFineRange, maxFineRange];
         

@@ -5,6 +5,6 @@ function p = close(p)
 if p.trial.tdt.use
     % Only close the object if it exists
     if isfield(p.trial.tdt, 'UDP')
-        p.trial.tdt.UDP.close;
+        delete(p.trial.tdt.UDP);
     end
 end
