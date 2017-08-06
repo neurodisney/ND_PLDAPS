@@ -27,7 +27,7 @@ end
 % ------------------------------------------------------------------------%
 %% Get spike data
 if p.trial.tdt.use
-    pds.tdt.getSpikes(p);
+    pds.tdt.readSpikes(p);
 end
 % ------------------------------------------------------------------------%
 %% check joystick state

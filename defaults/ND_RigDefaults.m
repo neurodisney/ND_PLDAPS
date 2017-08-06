@@ -20,7 +20,7 @@ function SS = ND_RigDefaults(rig)
 
 % If no rig is specified, use rig1
 if nargin < 1 || isempty(rig)
-    rig = 'rig1';
+    rig = 1;
 end
 
 
@@ -101,17 +101,15 @@ SS.tdt.use                                      = 0;     % Collect UDP packets f
 
 % Use the IP address specific to the rig
 switch rig
-    case 'rig1'
+    case 1
         SS.tdt.ip                               = '129.59.230.10';
         
-%    case 'rig2'
+%    case 2
 %        SS.tdt.ip                               = 'NO_IP_YET';
     
     otherwise
         SS.tdt.ip                               = '129.59.230.10';
 end
-
-SS.tdt.dataGizmo                                = 'SortBinner'; % Which gizmo is outputting the UDP data. Right now only SortBinner is implemented
 
 SS.tdt.channels                                 = 16; % Number of ephys channels to analyze in incoming data
 SS.tdt.sortCodes                                = 4;  % Number of units classified per channel. [1, 2, or 4]
