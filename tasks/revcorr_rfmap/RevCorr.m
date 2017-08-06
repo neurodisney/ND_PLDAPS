@@ -146,6 +146,8 @@ else
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
             end
+            
+            ProcessSpikes(p);
             TaskDesign(p);
             Make_RF_VisualField(p);
             % ----------------------------------------------------------------%
@@ -549,6 +551,12 @@ if nSpikes > 0
     for iSpike = 1:nSpikes
         spikeTime = p.trial.RF.spikes(iSpike);
         
+        % Don't interpolate if this spike has the same time as the last one
+        if iSpike > 1 && spikeTime == p.trial.RF.spikes(iSpike - 1)
+            spikeHyperCube(:,:,:,iSpike) = spikeHyperCube(:,:,:,iSpike-1);
+            continue;
+        end
+        
         % Generate the times to use for interpolation
         timeRange = spikeTime + p.trial.RF.(p.trial.stim.stage).temporalRange;
         times = linspace(timeRange(1), timeRange(2), tRes);
@@ -629,6 +637,12 @@ if nSpikes > 0
         % For each spike, interpolate the stims that are on before the spike into consistent slices
         for iSpike = 1:nSpikes
             spikeTime = p.trial.RF.spikes(iSpike);
+            
+            % Don't interpolate if this spike has the same time as the last one
+            if iSpike > 1 && spikeTime == p.trial.RF.spikes(iSpike - 1)
+                spikeHyperCube(:,:,:,iSpike) = spikeHyperCube(:,:,:,iSpike-1);
+                continue;
+            end
             
             % Generate the times to use for interpolation
             timeRange = spikeTime + p.trial.RF.(p.trial.stim.stage).temporalRange;
@@ -715,6 +729,29 @@ if(~isempty(p.trial.LastKeyPress))
 end
 
 % ####################################################################### %
+
+function ProcessSpikes(p)
+% Get all the incoming spikes from TDT and then process the spike counts
+if p.trial.tdt.use
+    % Load in the spikes
+    spikes = p.trial.tdt.spikes;
+    
+    % Sum across all specified channels and sort codes
+    channels = p.trial.RF.channels;
+    sortCodes = p.trial.RF.sortCodes;
+    newSpikes = sum(sum(spikes(channels, sortCodes)));
+    
+    % Add to the list of spikes at the current time
+    if newSpikes > 0
+        nSpikeRange = p.trial.RF.nSpikes+1 : p.trial.RF.nSpikes+newSpikes;
+        p.trial.RF.spikes(nSpikeRange) = p.trial.CurTime;
+        p.trial.RF.nSpikes = p.trial.RF.nSpikes + newSpikes;
+    end
+end
+
+
+% ####################################################################### %
+
 %% additional inline functions
 % ####################################################################### %
 function switchEpoch(p,epochName)

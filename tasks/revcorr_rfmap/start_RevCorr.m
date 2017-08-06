@@ -18,7 +18,7 @@ end
 % name of subject. This will be used to create a subdirectory with this name.
 if(~exist('rig','var') || isempty(rig))
     [~, rigname] = system('hostname');
-    rig = str2num(rigname(4));
+    rig = str2num(rigname);
 end
 
 % name of subject. This will be used to create a subdirectory with this name.
@@ -109,7 +109,7 @@ if strcmp(subjname,'mouse')
     %SS.sound.use                   = 0;
     
     % Do manual spiking using the s key
-    SS.tdt.use                    = 0;
+    SS.tdt.use                    = 1;
     
 end
 % ------------------------------------------------------------------------%

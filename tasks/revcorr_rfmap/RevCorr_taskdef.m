@@ -51,13 +51,17 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% RF mapping parameters
-p.trial.RF.spatialRes  = 50;  % Number sections to subdivide the possible visual space into
+p.trial.RF.spatialRes  = 25;  % Number sections to subdivide the possible visual space into
 p.trial.RF.coarse.temporalRange  = [-0.5, 0]; % Range from each spike to calculate the reverse correlation
 p.trial.RF.temporalRes = 25;  % Number of sections to divide the history into for analysis
 
 p.trial.RF.temporalProfileRefineProportion = 0.2;  % During the coarse mapping, a temproal profile of stims is created, this proporiton of the max is used to cut off the accepted times for the fine mapping
 
 p.trial.RF.maxSpikesPerTrial = 100;   % Max spikes per trial, for preallocation purposes.
+
+p.trial.RF.channels = 1;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.sortCodes = 1:4;  % Which sort codes to use
+
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos    = [0,0];
