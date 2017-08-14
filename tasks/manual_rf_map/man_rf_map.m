@@ -42,8 +42,6 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
     
-    p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.GRATING.pos(1)',         '%.3f');
-    p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.GRATING.pos(2)',         '%.3f');
     p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'contrast',    'p.trial.stim.GRATING.contrast',       '%.1f');
@@ -52,12 +50,8 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimOn',      'p.trial.EV.StimOn',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimOff',     'p.trial.EV.StimOff',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'FixStart',    'p.trial.EV.FixSpotStart',             '%.5f');
     p = ND_AddAsciiEntry(p, 'FixBreak',    'p.trial.EV.FixSpotStop',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimFix',     'p.trial.EV.FixTargetStart',           '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimBreak',   'p.trial.EV.FixTargetStop',            '%.5f');
     p = ND_AddAsciiEntry(p, 'TaskEnd',     'p.trial.EV.TaskEnd',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
 
@@ -148,10 +142,8 @@ else
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
             end
-            
-            ProcessSpikes(p);
+            MouseAction(p);
             TaskDesign(p);
-            Make_RF_VisualField(p);
             % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
             %% Display stuff on the screen
@@ -452,75 +444,6 @@ switch p.trial.CurrEpoch
 end  % switch p.trial.CurrEpoch
 
 % ####################################################################### %
-function Make_RF_VisualField(p)
-%% Generate the RF visual stimulus grid for this frame. Used for calculating reverse correlation
-
-iFrame = p.trial.iFrame;
-
-% Only recalculate this is a change has occured, otherwise just copy from the last frame
-if p.trial.stim.changeThisFrame || iFrame == 1
-    stimdef = p.trial.stim.(p.trial.stim.stage);
-
-    % Find the x's and y's of the area of interest
-    xmin = stimdef.xRange(1) - stimdef.radius;
-    xmax = stimdef.xRange(2) + stimdef.radius;
-    ymin = stimdef.yRange(1) - stimdef.radius;
-    ymax = stimdef.yRange(2) + stimdef.radius;
-    sRes = p.trial.RF.spatialRes;
-    
-    % Save these values for plotting later
-    p.trial.RF.(p.trial.stim.stage).xRange = [xmin xmax];
-    p.trial.RF.(p.trial.stim.stage).yRange = [ymin ymax];
-
-    [Xv,Yv] = meshgrid(linspace(xmin,xmax,sRes),linspace(ymin,ymax,sRes));
-
-    % Generate a matrix of zeros representing the relevant visual plane
-    Vv = zeros(sRes);
-
-    % Generate a circle of 1's, which will be interpolated to the right size and location later
-    [Xc, Yc] = meshgrid(-10:10);
-    onecirc = double((Xc.^2 + Yc.^2) <= 100);
-    circRes = size(onecirc,1);
-
-    % Make a vector to indicate whether or not each of the stimuli was on during this frame
-    stimsOn = zeros(length(p.trial.stim.gratings),1);
-    
-    % For each stimulus, if the stimulus is on, interpolate a circle of 1's onto where it would be in the visual field
-    for iGrating = 1:length(p.trial.stim.gratings)
-        stim = p.trial.stim.gratings{iGrating};
-        if stim.on
-            % Record that the stimulus was on
-            stimsOn(iGrating) = 1;
-            
-            radius = stim.radius;
-            pos = stim.pos;
-
-            % The correct x and y range for the stimulus
-            xvals = linspace(pos(1) - radius, pos(1) + radius, circRes);
-            yvals = linspace(pos(2) - radius, pos(2) + radius, circRes);
-            [Xs, Ys] = meshgrid(xvals,yvals);
-            
-
-            % Interpolate the stimulus onto the visual space
-            visFieldRep = interp2(Xs, Ys, onecirc, Xv, Yv, 'nearest', 0);
-
-            % Now add it to the Vv (which represents all the visual stimuli
-            Vv = Vv | visFieldRep;
-        end
-    end
-
-    % Add the visual field representation to the history
-    p.trial.RF.visualField(:,:,iFrame) = Vv;
-    
-    % Add the stim on information to the history
-    p.trial.RF.stimsOn(:,iFrame) = stimsOn;
-    
-else
-    p.trial.RF.visualField(:,:,iFrame) = p.trial.RF.visualField(:,:,iFrame - 1);
-    p.trial.RF.stimsOn(:,iFrame) = p.trial.RF.stimsOn(:,iFrame);
-end
-
-% ####################################################################### %
 function TaskDraw(p)
 %% Custom draw function for this experiment
 
@@ -546,191 +469,6 @@ p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes
 ND_Trial2Ascii(p, 'save');
 
 % ####################################################################### %
-function Calculate_RF(p)
-nSpikes = p.trial.RF.nSpikes;
-stimdef = p.trial.stim.(p.trial.stim.stage);
-rfdef = p.trial.RF.(p.trial.stim.stage);
-
-if nSpikes > 0
-    % Preallocate a 4D matrix to hold the visual field information for each spike
-    % x,y,time,spike
-    sRes = p.trial.RF.spatialRes;
-    tRes = p.trial.RF.temporalRes;
-    spikeHyperCube = nan(sRes, sRes, tRes, nSpikes);
-    
-    % Get the visual field information for this trial
-    t = p.trial.AllCurTimes(1:end-1);
-    % For 1D interpolation, interpolated dimension (time) must be first
-    Vf = permute(p.trial.RF.visualField, [3, 1, 2]);
-    
-    % For each spike, interpolate the visual field occuring before it into consistent slices
-    for iSpike = 1:nSpikes
-        spikeTime = p.trial.RF.spikes(iSpike);
-        
-        % Don't interpolate if this spike has the same time as the last one
-        if iSpike > 1 && spikeTime == p.trial.RF.spikes(iSpike - 1)
-            spikeHyperCube(:,:,:,iSpike) = spikeHyperCube(:,:,:,iSpike-1);
-            continue;
-        end
-        
-        % Generate the times to use for interpolation
-        timeRange = spikeTime + p.trial.RF.(p.trial.stim.stage).temporalRange;
-        times = linspace(timeRange(1), timeRange(2), tRes);
-        
-        % Interpolate the visual field during the time before each spike
-        spikeCube = interp1(t,Vf,times,'previous',0);
-        
-        % Rearrange the dimensions again
-        spikeCube = permute(spikeCube,[2,3,1]);
-        
-        % Add the spikeCube to the spikeHyperCube
-        spikeHyperCube(:,:,:,iSpike) = spikeCube;
-    end
-    
-    % Append this trials spikeHyperCube to the one spanning all trials
-    if ~isfield(rfdef,'spikeHyperCube') || isempty(rfdef.spikeHyperCube)
-        rfdef.spikeHyperCube = spikeHyperCube;
-    else
-        rfdef.spikeHyperCube = cat(4, rfdef.spikeHyperCube, spikeHyperCube);
-    end
-    
-    % Average across all spikes
-    rfdef.revCorrCube = mean(rfdef.spikeHyperCube, 4);
-    
-    % Generate a positional heatmap by taking the maximum value across the time dimension
-    rfdef.heatmap = max(rfdef.revCorrCube, [], 3);
-      
-    % Find the location with the highest density of spike responses
-    [maxRow, maxCol] = ind2sub(size(rfdef.heatmap),find(rfdef.heatmap == max(max(rfdef.heatmap)),1));
-    xSpace = linspace(rfdef.xRange(1), rfdef.xRange(2), p.trial.RF.spatialRes);
-    ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
-    maxPos = [xSpace(maxCol), ySpace(maxRow)];
-    
-    
-    % Calculate the temporal profile (when stims appeared) for this max location
-    rfdef.maxTemporalProfile = squeeze(rfdef.revCorrCube(maxRow, maxCol, :));
-    
-    % Change processing depending on the stage
-    if strcmp(p.trial.stim.stage, 'coarse')
-    
-        % Define the xRange and yRange for the fine stage
-        p.trial.stim.fine.xRange = maxPos(1) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
-        p.trial.stim.fine.yRange = maxPos(2) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
-        
-        % Find the maximum value in the temporal profile
-        [maxVal, maxIndex] = max(rfdef.maxTemporalProfile);
-        times = linspace(rfdef.temporalRange(1), rfdef.temporalRange(2), p.trial.RF.temporalRes);
-        rfdef.timeOfMax = times(maxIndex);
-        
-        %% Find the times when the temporal profile goes below the threshold proportion of the max value
-        thresh = p.trial.RF.temporalProfileRefineProportion * maxVal;
-        
-        % Get the part of temporal profile before the max value point
-        lowerProf = rfdef.maxTemporalProfile(1:maxIndex);
-        % Find the closest point to the max value where the profile goes beneath threshold
-        lowerThreshTime = times(find(lowerProf < thresh, 1, 'last'));
-        if isempty(lowerThreshTime) || lowerThreshTime < rfdef.temporalRange(1)
-            minFineRange = rfdef.temporalRange(1);
-        else
-            minFineRange = lowerThreshTime;
-        end
-        
-        % Get the part of the temporal profile after the max value point
-        upperProf = rfdef.maxTemporalProfile(maxIndex:end);
-        upperThreshTime = times(maxIndex -1 + find(upperProf < thresh, 1, 'first'));
-        if isempty(upperThreshTime) || upperThreshTime > rfdef.temporalRange(2)
-            maxFineRange = rfdef.temporalRange(2);
-        else
-            maxFineRange = upperThreshTime;
-        end
-   
-        % Assign this new temporal range
-        p.trial.RF.fine.temporalRange = [minFineRange, maxFineRange];
-        
-    elseif strcmp(p.trial.stim.stage, 'fine')
-        % TODO: store final receptive field position
-        
-        
-        %% Calculate the presence of individual stims before each spike
-        % Preallocate a 3D matrix to hold the stim/spike information
-        % (stim, time, nSpike)
-        nStims = length(p.trial.stim.gratings);
-        spikeStimsCube = nan(nStims, tRes, nSpikes);
-        
-        % Get the stim information for the trials (transpose so that time dimension is first)
-        stimsOn = p.trial.RF.stimsOn';
-        
-        % For each spike, interpolate the stims that are on before the spike into consistent slices
-        for iSpike = 1:nSpikes
-            spikeTime = p.trial.RF.spikes(iSpike);
-            
-            % Don't interpolate if this spike has the same time as the last one
-            if iSpike > 1 && spikeTime == p.trial.RF.spikes(iSpike - 1)
-                spikeHyperCube(:,:,:,iSpike) = spikeHyperCube(:,:,:,iSpike-1);
-                continue;
-            end
-            
-            % Generate the times to use for interpolation
-            timeRange = spikeTime + p.trial.RF.(p.trial.stim.stage).temporalRange;
-            times = linspace(timeRange(1), timeRange(2), tRes);
-            
-            % Interpolate the visual field during the time before each spike
-            spikeStims = interp1(t, stimsOn, times, 'previous', 0)';
-            
-            % Add the spikeStims to the spikeStimCube
-            spikeStimsCube(:,:,iSpike) = spikeStims;
-        end
-        
-        % Append this trial's spikeStimsCube to the one spanning all trials
-        if ~isfield(rfdef,'spikeStimsCube')
-            rfdef.spikeStimsCube = spikeStimsCube;
-        else
-            rfdef.spikeStimsCube = cat(3, rfdef.spikeStimsCube, spikeStimsCube);
-        end
-        
-        
-        %% Calculate orientation tuning
-        nOrients = length(stimdef.angle);
-        
-        % Create matrix showing the mapping from stims to orientations
-        % stims x orientations
-        stims2angle = false(nStims, nOrients);
-        for iStim = 1:nStims
-            stim = p.trial.stim.gratings{iStim};
-            angle = stim.angle;
-            stims2angle(iStim, stimdef.angle == angle) = true;
-        end
-        
-        % First preallocate. Each number here will represent the proportion of spikes that occured following each of the orientations
-        rfdef.orientationTuning = nan(1,nOrients);
-        
-        % Now for each orientation, grab the appropriate stims from the spikeStimsCube,
-        % and average the spike response to orientation across all spikes
-        for iOrient = 1:nOrients
-            iStims = stims2angle(:, iOrient);
-            
-            % Combine rows of stims with this orientaiton
-            % Should leave a 2D matrix (time, nSpikes)
-            orientSpike = squeeze(any(rfdef.spikeStimsCube(iStims,:,:),1));
-            
-            % Average across all spikes, and take the max value in time as the orientation tuning
-            rfdef.orientationTuning(iOrient) = max(mean(orientSpike,2));
-            
-        end
-        
-    end
-
-    
-    % Save rfdef back into p
-    p.trial.RF.(p.trial.stim.stage) = rfdef;
-        
-        
-        
-end
-
-% ####################################################################### %
-
-% ####################################################################### %
 function KeyAction(p)
 %% task specific action upon key press
 if(~isempty(p.trial.LastKeyPress))
@@ -741,42 +479,35 @@ if(~isempty(p.trial.LastKeyPress))
             % Start new neuron on next trial
             p.trial.RF.flag_new = 1;
             
-        case KbName('f')
-            % Switch to fine mode on next trial
-            p.trial.RF.flag_fine = 1;
+        case KbName('''"') % Apostrophe Key, turn on and off the stimulus
+            stim(p,1);
             
-        case KbName('s')
+        case 37 % Enter Key, mark the current stimulus position and properties
             % Allow manual spiking to be triggered if TDT is not used
-            if ~p.trial.tdt.use
-                p.trial.RF.nSpikes = p.trial.RF.nSpikes + 1;
-                p.trial.RF.spikes(p.trial.RF.nSpikes) = p.trial.CurTime;
-            end
+            
+        case KbName('LeftArrow')
+            % Rotate orientation counter clockwise
+            
+            
+            
             
     end
     
 end
 
-% ####################################################################### %
+function MouseAction(p)
+%% Proccess mouse events
+if p.trial.mouse.use
+    % Load in variables from p
+    iSample = p.trial.mouse.samples;
 
-function ProcessSpikes(p)
-% Get all the incoming spikes from TDT and then process the spike counts
-if p.trial.tdt.use
-    % Load in the spikes
-    spikes = p.trial.tdt.spikes;
+    mousePos = p.trial.mouse.cursorSamples(:,iSample)';
+    xPos = mousePos(1);
+    yPos = mousePos(2);
     
-    % Sum across all specified channels and sort codes
-    channels = p.trial.RF.channels;
-    sortCodes = p.trial.RF.sortCodes;
-    newSpikes = sum(sum(spikes(channels, sortCodes)));
-    
-    % Add to the list of spikes at the current time
-    if newSpikes > 0
-        nSpikeRange = p.trial.RF.nSpikes+1 : p.trial.RF.nSpikes+newSpikes;
-        p.trial.RF.spikes(nSpikeRange) = p.trial.CurTime;
-        p.trial.RF.nSpikes = p.trial.RF.nSpikes + newSpikes;
-    end
+    % Set the stim pos to match up with the mouse
+    p.trial.stim.pos = [xPos, yPos];
 end
-
 
 % ####################################################################### %
 
@@ -807,9 +538,6 @@ oldVal = p.trial.task.stimState;
 
 % Don't do anything if stim doesn't change
 if val == oldVal; return; end
-
-% Indicate that a stim has been turned on or off this frame
-p.trial.stim.changeThisFrame = 1;
 
 p.trial.task.stimState = val;
 

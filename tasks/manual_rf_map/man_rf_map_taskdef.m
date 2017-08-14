@@ -50,19 +50,6 @@ p.trial.task.Timing.MaxITI  = 2.5;  % maximum time period [s] between subsequent
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
-%% RF mapping parameters
-p.trial.RF.spatialRes  = 25;  % Number sections to subdivide the possible visual space into
-p.trial.RF.coarse.temporalRange  = [-0.5, 0]; % Range from each spike to calculate the reverse correlation
-p.trial.RF.temporalRes = 25;  % Number of sections to divide the history into for analysis
-
-p.trial.RF.temporalProfileRefineProportion = 0.2;  % During the coarse mapping, a temproal profile of stims is created, this proporiton of the max is used to cut off the accepted times for the fine mapping
-
-p.trial.RF.maxSpikesPerTrial = 1000;   % Max spikes per trial, for preallocation purposes.
-
-p.trial.RF.channels = 4;  % Which channels of the incoming spike data to use for spikes
-p.trial.RF.sortCodes = 1;  % Which sort codes to use
-
-% ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
@@ -75,45 +62,27 @@ p.trial.stim.FIXSPOT.fixWin = 2;
 p.trial.stim.GRATING.res          = 300;
 p.trial.stim.GRATING.fixWin       = 0;
 
-% Will use a grid based layout to display the stimuli
-p.trial.stim.coarse.xRange = [-10, -2];
-p.trial.stim.coarse.yRange = [-10, -2];
-p.trial.stim.coarse.grdStp = 0.25;
-
-p.trial.stim.fine.extent = 2; % From the max value in the coarse mapping, extend out +- this far
-p.trial.stim.fine.grdStp = 0.1;
-
-
 % For the following parameters, an array can be specified and all possible combinations
 % will be tested.
 
-p.trial.stim.coarse.angle    = [0, 90];
-p.trial.stim.fine.angle      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5];
-
-p.trial.stim.coarse.radius   = 0.75;
-p.trial.stim.fine.radius     = 0.75;
-
+p.trial.stim.angle      = sort([0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5]);
 % spatial frequency (cycles per degree)
-p.trial.stim.coarse.sFreq    = 1.5;
-p.trial.stim.fine.sFreq      = 1.5;
+p.trial.stim.sFreq    = 1.5;
+
+% These should just be one number
+p.trial.stim.GRATING.radius   = 0.75;
 
 % temporal frequency (cycles per second, 0 is stationary)
-p.trial.stim.coarse.tFreq    = 0;
-p.trial.stim.fine.tFreq      = 0;
+p.trial.stim.GRATING.tFreq      = 0;
 
 % contrast
-p.trial.stim.coarse.contrast = 1;
-p.trial.stim.fine.contrast   = 1;
+p.trial.stim.GRATING.contrast = 1;
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
 
 p.trial.behavior.fixation.BreakTime = 0.050;  % minimum time [ms] to identify a fixation break
 p.trial.behavior.fixation.entryTime = 0.150;  % minimum time to stay within fixation window to detect initial fixation start
-
-% ------------------------------------------------------------------------%
-%% Task parameters
-p.trial.task.breakFixCheck = 0.2; % Time after a stimbreak where if task is marked early or stim break is calculated
 
 % ------------------------------------------------------------------------%
 %% Trial duration

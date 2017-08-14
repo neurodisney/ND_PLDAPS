@@ -44,7 +44,7 @@ SS.plot.routine    = 'man_rf_map_plots';    % function for online plotting of se
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'stim.count','stim.iStim','stim.iPos','stim.stage','stim.fine.xRange','stim.fine.yRange','RF.coarse','RF.fine','RF.flag_new','RF.flag_fine'};
+SS.editable = {'stim.iAngle','stim.iSFreq'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
@@ -58,6 +58,8 @@ SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
 SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
 SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
+
+SS.mouse.use = 1;
 
 SS.pldaps.draw.grid.use       = 1;
 
@@ -104,9 +106,6 @@ if strcmp(subjname,'mouse')
     SS.behavior.joystick.use       = 0;
     %SS.datapixx.useForReward       = 0;
     %SS.sound.use                   = 0;
-    
-    % Do manual spiking using the s key
-    SS.tdt.use                    = 1;
     
 end
 % ------------------------------------------------------------------------%
