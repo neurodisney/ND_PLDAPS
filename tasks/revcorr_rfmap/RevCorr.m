@@ -257,8 +257,9 @@ p.trial.RF.spikes = nan(p.trial.RF.maxSpikesPerTrial,1);
 p.trial.RF.nSpikes = 0;
 
 %% Read and forget all the spikes that occured during the ITI
-pds.tdt.readSpikes(p);
-
+if p.trial.tdt.use
+    pds.tdt.readSpikes(p);
+end
 
 % ####################################################################### %
 function TaskDesign(p)
