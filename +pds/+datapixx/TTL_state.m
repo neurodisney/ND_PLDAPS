@@ -1,4 +1,4 @@
-function  timings = TTL_state(chan, state)
+function  timings = TTL_state(chan, state, dur)
 % pds.datapix.TTL    sends a TTL pulse over one of the last 8 bits of the digital output
 % of the DataPixx DB25 connector. If a event code is provided as second 
 % argument an additional code is sent via the first 16 bits (check  
@@ -16,6 +16,12 @@ function  timings = TTL_state(chan, state)
 %
 %
 % wolf zinke & Kia Banaie, Feb 2017
+% Nate Faber, May 2017
+
+% If dur is unspecified, just change the bit indefinitely
+if nargin < 3
+    dur = [];
+end
 
 %% generate a mask covering the 16 bits used for TDT communication
 evntmask = '0000000000000000'; % hardcode for efficiency %repmat('0',1,16);
@@ -27,6 +33,14 @@ chanmask(9-chan) = 1; % add 16 to skip the first 16 bits used for event codes (r
 % needs to be a string
 chanmask = sprintf('%d',chanmask);
 chanmask = bin2dec([chanmask, evntmask]); % use full 24 bits
+
+%% Get the current state of the channel
+% Only need to know this if will be set back after the pulse
+if ~isempty(dur)   
+    currentStates = de2bi(Datapixx('GetDoutValues'),24);
+    initialState = currentStates(16 + chan);   
+end
+
 
 %% set the state oft the DIO channel
 if(nargout == 0)
@@ -66,6 +80,15 @@ else
     timings = [mean(t), dpTime, diff(t)];
 end
 
-
+% reset the channel to its initial state if a dur is specified
+if ~isempty(dur) && state ~= initialState
+    WaitSecs(dur);
+    if(initialState == 1)
+        Datapixx('SetDoutValues', chanmask);
+    else
+        Datapixx('SetDoutValues', 0, chanmask);
+    end
+    Datapixx('RegWrRd');
+end
 
 
