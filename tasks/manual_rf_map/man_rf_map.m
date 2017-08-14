@@ -4,6 +4,8 @@ function p = man_rf_map(p, state)
 %       Left/Right Arrows - change orientation
 %       Up/Down Arrows - change spatial frequency
 %       Enter - Mark stim position and properties
+%       Backspace - Remove last mark
+%       z - Clear all marks
 %
 % Nate Faber, Aug 2017
 
@@ -108,6 +110,8 @@ if(isempty(state))
     p.trial.blocks = blocks;
     
     p.defaultParameters.pldaps.finish = totalTrials;
+    
+    p.trial.stim.marks = {}
     
     new_neuron(p);
    
@@ -474,10 +478,6 @@ function KeyAction(p)
 if(~isempty(p.trial.LastKeyPress))
     
     switch p.trial.LastKeyPress(1)
-        
-        case KbName('n')  % Space for custom key press routines
-            % Start new neuron on next trial
-            p.trial.RF.flag_new = 1;
             
         case KbName('''"') % Apostrophe Key, turn on and off the stimulus
             stim(p,1);
@@ -485,10 +485,23 @@ if(~isempty(p.trial.LastKeyPress))
         case 37 % Enter Key, mark the current stimulus position and properties
             % Allow manual spiking to be triggered if TDT is not used
             
+        case KbName('Backspace')
+            % Remove last mark made
+            p.trial.stim.marks = p.trial.stim.marks(1:end-1);
+            
+        case KbName('z')
+            % Clear all marks
+            p.trial.stim.marks = {};
+            
         case KbName('LeftArrow')
             % Rotate orientation counter clockwise
+            nAngles = length(p.trial.stim.angle);
+            p.trial.stim.iAngle = mod(p.trial.stim.iAngle - 2, nAngles) + 1;
             
-            
+        case KbName('RightArrow')
+            % Rotate orientation clockwise
+            nAngles = length(p.trial.stim.angle);
+            p.trial.stim.iAngle = mod(p.trial.stim.iAngle, nAngles) + 1;
             
             
     end
@@ -571,38 +584,3 @@ switch val
     otherwise
         error('bad stim value')
 end
-
-
-function reshuffle_stims(p)
-% Get the number of stimuli and positions
-nStims = length(p.trial.stim.gratings);
-nLocs = size(p.trial.stim.locations,1);
-
-% Rerandomize the list of stimuli
-indexReference = Shuffle(combvec(1:nStims,1:nLocs)');
-p.trial.stim.iStim = indexReference(:,1);
-p.trial.stim.iPos = indexReference(:,2);
-
-p.trial.stim.count = 1;
-
-function new_neuron(p)
-% Reset to coarse mapping
-p.trial.stim.stage = 'coarse';
-p.trial.stim.count = 0;
-
-% Remove all data
-p.trial.RF.coarse.spikeHyperCube = [];
-p.trial.RF.fine.spikeHyperCube = [];
-p.trial.stim.fine.xRange = NaN;
-p.trial.stim.fine.yRange = NaN;
-
-% Reset flags
-p.trial.RF.flag_new = 0;
-p.trial.RF.flag_fine = 0;
-
-function switch_to_fine(p)
-p.trial.stim.stage = 'fine';
-p.trial.stim.count = 0;
-
-% Reset flag
-p.trial.RF.flag_fine = 0;

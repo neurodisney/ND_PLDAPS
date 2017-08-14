@@ -44,7 +44,7 @@ SS.plot.routine    = 'man_rf_map_plots';    % function for online plotting of se
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'stim.iAngle','stim.iSFreq'};
+SS.editable = {'stim.iAngle','stim.iSFreq', 'stim.marks'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
