@@ -1,4 +1,4 @@
-function  timings = TTL_state(chan, state, dur)
+function  timings = TTL(chan, state, dur)
 % pds.datapix.TTL    sends a TTL pulse over one of the last 8 bits of the digital output
 % of the DataPixx DB25 connector. If a event code is provided as second 
 % argument an additional code is sent via the first 16 bits (check  

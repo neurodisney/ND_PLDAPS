@@ -15,5 +15,5 @@ p.trial.EV.Initiated = p.trial.CurTime;
 p.trial.task.Good = 1;
 
 if(p.trial.datapixx.TTL_trialOn)
-    pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
+    pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
 end

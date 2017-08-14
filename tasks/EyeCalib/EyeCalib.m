@@ -157,7 +157,7 @@ function TaskDesign(p)
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             
             if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
+                pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
             end
  
             p.trial.Timer.trialStart = p.trial.CurTime;

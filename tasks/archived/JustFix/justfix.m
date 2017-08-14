@@ -178,7 +178,7 @@ function TaskDesign(p)
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             
             if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
+                pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
             end
         
             p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.WaitFix;
@@ -298,7 +298,7 @@ function TaskDesign(p)
             p.trial.EV.TaskEnd = p.trial.CurTime;
 
             if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
+                pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 0);
             end
             
             if(p.trial.reward.cnt > 0)

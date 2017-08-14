@@ -106,7 +106,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 p.trial.EV.TaskEnd = p.trial.CurTime;
                 
                 if(p.trial.datapixx.TTL_trialOn)
-                    pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
+                    pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 0);
                 end
                 
                 % End the trial
