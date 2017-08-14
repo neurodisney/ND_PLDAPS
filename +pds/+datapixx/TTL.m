@@ -21,6 +21,11 @@ function  timings = TTL(chan, state, dur)
 % If dur is unspecified, just change the bit indefinitely
 if nargin < 3
     dur = [];
+    
+    if nargin < 2
+        state = 1;
+    end
+    
 end
 
 %% generate a mask covering the 16 bits used for TDT communication
@@ -35,10 +40,11 @@ chanmask = sprintf('%d',chanmask);
 chanmask = bin2dec([chanmask, evntmask]); % use full 24 bits
 
 %% Get the current state of the channel
-% Only need to know this if will be set back after the pulse
-if ~isempty(dur)   
-    currentStates = de2bi(Datapixx('GetDoutValues'),24);
-    initialState = currentStates(16 + chan);   
+currentStates = de2bi(Datapixx('GetDoutValues'),24);
+initialState = currentStates(16 + chan);
+
+if state == initialState
+    warning(['TTL channel ' num2str(chan) ' attempted to be changed to ' num2str(state) ', but was already ' num2str(state)]);
 end
 
 
