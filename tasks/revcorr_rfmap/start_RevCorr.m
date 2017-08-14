@@ -66,7 +66,7 @@ SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
-SS.tdt.use                    = 1; % Get incoming UDP spike data from TDT
+SS.tdt.use                    = 0; % Get incoming UDP spike data from TDT
 
 SS.behavior.fixation.useCalibration = 1;
 SS.behavior.fixation.enableCalib = 0;

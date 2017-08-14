@@ -31,7 +31,7 @@ p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with 
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.task.Timing.WaitFix = 2;    % Time to wait for fixation before NoStart
+p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 
 % Main trial timings
 p.trial.task.fixLatency       = 0.15; % Time to hold fixation before mapping begins
@@ -40,7 +40,7 @@ p.trial.task.fixLatency       = 0.15; % Time to hold fixation before mapping beg
 p.trial.task.stimOnTime       = 0.1;   % How long each stimulus is presented
 p.trial.task.stimOffTime      = 0.1;     % Gaps between succesive stimuli
 
-p.trial.task.jackpotTime      = 3;     % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.jackpotTime      = 4;     % How long stimuli are presented before trial ends and jackpot is given
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
@@ -57,18 +57,18 @@ p.trial.RF.temporalRes = 25;  % Number of sections to divide the history into fo
 
 p.trial.RF.temporalProfileRefineProportion = 0.2;  % During the coarse mapping, a temproal profile of stims is created, this proporiton of the max is used to cut off the accepted times for the fine mapping
 
-p.trial.RF.maxSpikesPerTrial = 100;   % Max spikes per trial, for preallocation purposes.
+p.trial.RF.maxSpikesPerTrial = 1000;   % Max spikes per trial, for preallocation purposes.
 
-p.trial.RF.channels = 1;  % Which channels of the incoming spike data to use for spikes
-p.trial.RF.sortCodes = 1:4;  % Which sort codes to use
+p.trial.RF.channels = 4;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.sortCodes = 1;  % Which sort codes to use
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.color  = 'white';  % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.FIXSPOT.size   = 0.15;        % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin = 2.5;
+p.trial.stim.FIXSPOT.fixWin = 2;
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
@@ -88,7 +88,7 @@ p.trial.stim.fine.grdStp = 0.1;
 % will be tested.
 
 p.trial.stim.coarse.angle    = [0, 90];
-p.trial.stim.fine.angle      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5];   
+p.trial.stim.fine.angle      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5];
 
 p.trial.stim.coarse.radius   = 0.75;
 p.trial.stim.fine.radius     = 0.75;
