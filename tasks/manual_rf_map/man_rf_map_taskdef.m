@@ -71,9 +71,9 @@ p.trial.stim.GRATING.fixWin       = 0;
 % For the following parameters, an array can be specified and all possible combinations
 % will be tested.
 
-p.trial.stim.angle      = sort([0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5]);
+p.trial.stim.angle      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5];
 % spatial frequency (cycles per degree)
-p.trial.stim.sFreq    = sort([0.75, 1.125, 1.5, 2.25, 3.25, 4.5, 5.75]);
+p.trial.stim.sFreq    = [1.5, 2.25, 3.25, 4.5, 5.75, 0.75, 1.125];
 
 % These should just be one number
 p.trial.stim.GRATING.radius   = 0.75;

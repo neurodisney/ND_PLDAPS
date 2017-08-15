@@ -113,7 +113,12 @@ if(isempty(state))
     
     p.trial.stim.marks = {}
     
-    new_neuron(p);
+    % Stim starts disabled
+    p.trial.task.stimEnabled = 0;
+    
+    % Set up initial stim to use
+    p.trial.stim.iAngle = 1;
+    p.trial.stim.iSFreq = 1;
    
     
 else
@@ -159,7 +164,6 @@ else
             % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
             TaskCleanAndSave(p);
-            Calculate_RF(p);
             %% trial end
             
             
@@ -208,7 +212,7 @@ for angle = p.trial.stim.angle
     p.trial.stim.GRATING.angle = angle;
     
     for sFreq = p.trial.stim.sFreq
-        p.trial.GRATING.sFreq = sFreq;
+        p.trial.stim.GRATING.sFreq = sFreq;
         
         % Generate the stimulus
         p.trial.stim.gratings{end+1} = pds.stim.Grating(p);
@@ -395,6 +399,36 @@ end  % switch p.trial.CurrEpoch
 % ####################################################################### %
 function TaskDraw(p)
 %% Custom draw function for this experiment
+ptr = p.trial.display.overlayptr;
+
+%% Draw the marks
+for iMark = 1:length(p.trial.task.marks)
+    mark = p.trial.task.marks{iMark};
+    pos = mark.pos;
+    sz = 8;
+    color = p.trial.display.clut.magentabg;
+    Screen('Drawdots',  ptr, pos', sz, color, [0 0], 0);
+end
+
+%% Draw the a dot when the stimulus is not visible to where it will appear (mouse position)
+
+% Only draw if stimulus is not visible
+if ~(p.trial.task.stimState && p.trial.task.stimEnabled)
+    
+    if p.trial.task.stimEnabled;
+        % If the stimulus is enabled but not visible, show a green dot
+        color = p.trial.display.clut.greenbg;
+    else
+        % If the stimulus is disabled, show a red dot
+        color = p.trial.display.clut.redbg;
+    end
+    
+    pos = p.trial.stim.pos;
+    sz = 6;
+    
+    Screen('Drawdots',  ptr, pos', sz, color, [0 0], 0);
+end
+
 
 
 % ####################################################################### %
@@ -421,11 +455,8 @@ if(~isempty(p.trial.LastKeyPress))
     switch p.trial.LastKeyPress(1)
             
         case KbName('''"') % Apostrophe Key, turn on and off the stimulus
-            if p.trial.task.stimState
-                stim(p,0);
-            else
-                stim(p,1);
-            end
+            p.trial.task.stimEnabled = ~p.trial.task.stimEnabled;
+            updateStim(p)
             
         case 37 % Enter Key, mark the current stimulus position and properties
             % Allow manual spiking to be triggered if TDT is not used
@@ -441,16 +472,30 @@ if(~isempty(p.trial.LastKeyPress))
         case KbName('LeftArrow')
             % Rotate orientation counter clockwise
             nAngles = length(p.trial.stim.angle);
-            p.trial.stim.iAngle = mod(p.trial.stim.iAngle - 2, nAngles) + 1;
+            p.trial.stim.iAngle = mod(p.trial.stim.iAngle, nAngles) + 1;
             % Refresh the stim
-            stim(p,2)
+            updateStim(p)
             
         case KbName('RightArrow')
             % Rotate orientation clockwise
             nAngles = length(p.trial.stim.angle);
-            p.trial.stim.iAngle = mod(p.trial.stim.iAngle, nAngles) + 1;
+            p.trial.stim.iAngle = mod(p.trial.stim.iAngle - 2, nAngles) + 1;            
             % Refresh the stim
-            stim(p,2)
+            updateStim(p)
+            
+        case KbName('UpArrow')
+            % Increase Spatial Frequency
+            nFreqs = length(p.trial.stim.sFreq);
+            p.trial.stim.iSFreq = mod(p.trial.stim.iSFreq, nFreqs) + 1;
+            % Refresh the stim
+            updateStim(p)
+            
+        case KbName('DownArrow')
+            % Decrease Spatial Frequency
+            nFreqs = length(p.trial.stim.sFreq);
+            p.trial.stim.iSFreq = mod(p.trial.stim.iSFreq -2, nFreqs) + 1;
+            % Refresh the stim
+            updateStim(p)
             
             
     end
@@ -471,7 +516,8 @@ if p.trial.mouse.use
     p.trial.stim.pos = [xPos, yPos];
     
     % Move the active stim
-    grating = p.trial.stim.gratings{selectStim(p)};
+    stimNum = selectStim(p);
+    grating = p.trial.stim.gratings{stimNum};
     grating.pos = [xPos, yPos];
 end
 
@@ -497,108 +543,83 @@ elseif ~bool && p.trial.stim.fix.on
 end
 
 
-
 function stim(p,val)
-% 0 turns off the stim
-% 1 turns on the stim
-% 2 changes the stim (if the stim is on)
-
-oldVal = p.trial.task.stimState;
+oldval = p.trial.task.stimState;
 
 % Don't do anything if stim is signalled to turn off and is already off
 % Signalled to turn on and already on,
 % Or signalled to change and is off.
-if val == oldVal || (val == 2 && oldVal == 0); return; end
+if val ~= oldval
+    p.trial.task.stimState = val;
+    updateStim(p)
+end
 
-% stim state stays 1 even if 2 is signalled (signal is just changing)
-p.trial.task.stimState = val;
+function updateStim(p)
 
 % Turn on/off the appropriate generated stimuli
 % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
-switch val
-    case 0
-        %% Turn off all stimuli (as a precaution)
-        for iGrating = length(p.trial.stim.gratings)
-            grating = p.trial.stim.gratings{iGrating};
-            if grating.on
-                % Turn the grating off
-                grating.on = 0;
-                
-                % Strobe that this particular stimulus turned off
-                pds.datapixx.strobe(p.trial.event.STIM_OFF);
-                pds.datapixx.strobe(iGrating);
-            end
-                
-        end
-        p.trial.EV.StimOff = p.trial.CurTime;
-        
-        
-    case 1
-        %% Turn on the correct stimulus
-        % Select the proper stim
-        stimNum = selectStim(p);
-        stim = p.trial.stim.gratings{p.trial.stim.iStim(stimNum)};
-        
-        % Move the stim to the proper position
-        stim.pos = p.trial.stim.pos;
-        
-        % Make the stim visible
-        stim.on = 1;
-        
-        % Record the timings
-        p.trial.EV.StimOn = p.trial.CurTime;
-        
-        % Strobe which stimulus was turned on
-        pds.datapixx.strobe(p.trial.event.STIM_ON);
-        pds.datapixx.strobe(stimNum);
-        
-    case 2
-        %% Update which stimulus is on
-        % Select the proper stim
-        stimNum = selectStim(p);
-        
-        % Turn off all other stimuli
-        for iGrating = length(p.trial.stim.gratings)
-            % Don't turn off the stimulus if it is the one signalled to be on
-            if iGrating == stimNum; continue; end 
-            
-            grating = p.trial.stim.gratings{iGrating};
-            if grating.on
-                % Turn the grating off
-                grating.on = 0;
-                
-                % Strobe that this particular stimulus turned off
-                pds.datapixx.strobe(p.trial.event.STIM_OFF);
-                pds.datapixx.strobe(iGrating);
-            end
-                
-        end
-        
-        % Turn on the stimulus if it isn't already on
+if p.trial.task.stimEnabled && p.trial.task.stimState
+    %% Turn on the appropriate stimulus, or update its properties
+    % Select the proper stim
+    stimNum = selectStim(p);
+    
+    for iGrating = 1:length(p.trial.stim.gratings)
         grating = p.trial.stim.gratings{iGrating};
-        if ~grating.on
-            grating.on = 1;
-            
-            % Record the timings
-            p.trial.EV.StimOn = p.trial.CurTime;
-            
-            % Strobe which stimulus was turned on
-            pds.datapixx.strobe(p.trial.event.STIM_ON);
-            pds.datapixx.strobe(stimNum);
-            
+        
+        if iGrating == stimNum
+            % Turn on the stimulus if it is off
+            if ~grating.on
+                grating.on = 1;
+                
+                % Record the timings
+                p.trial.EV.StimOn = p.trial.CurTime;
+                
+                % Strobe which stimulus was turned on
+                pds.datapixx.strobe(p.trial.event.STIM_ON);
+                pds.datapixx.strobe(stimNum);
+                
+            end
+        
+        else
+            % All other stimuli should be turned off
+            if grating.on
+                % Turn the grating off
+                grating.on = 0;
+                
+                % Strobe that this particular stimulus turned off
+                pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                pds.datapixx.strobe(iGrating);
+            end
         end
+        
+    end
+    
+else
+    %% Turn off all stimuli
+    for iGrating = 1:length(p.trial.stim.gratings)
+        grating = p.trial.stim.gratings{iGrating};
+        if grating.on
+            % Turn the grating off
+            grating.on = 0;
             
-              
-    otherwise
-        error('bad stim value')
+            % Strobe that this particular stimulus turned off
+            pds.datapixx.strobe(p.trial.event.STIM_OFF);
+            pds.datapixx.strobe(iGrating);
+        end
+        
+    end
+    p.trial.EV.StimOff = p.trial.CurTime;
+    
 end
 
 function iStim = selectStim(p)
 % Figures out the right stim number
 iAngle = p.trial.stim.iAngle;
-nAngle = length(p.trial.stim.angle);
 
 iSFreq = p.trial.stim.iSFreq;
+nSFreq = length(p.trial.stim.sFreq);
+
+iStim = (iAngle - 1) * nSFreq + iSFreq;
 
 iStim = (iAngle - 1) * nAngle + iSFreq;
 
