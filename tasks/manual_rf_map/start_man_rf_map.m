@@ -95,7 +95,7 @@ if strcmp(subjname,'mouse')
     
     % Use the mouse as eyeposition
     SS.mouse.use = 1;
-    SS.mouse.useAsEyepos = 1;
+    SS.mouse.useAsEyepos = 0;
     
     % Don't collect any analog channels
     SS.datapixx.adc.PupilChannel   = [];

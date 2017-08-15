@@ -191,15 +191,6 @@ p.trial.task.Good    = 0;
 p.trial.task.fixFix  = 0;
 p.trial.task.stimState = 0;
 
-%% Switch modes or reset RF data based on flags
-if p.trial.RF.flag_fine
-    switch_to_fine(p);
-end
-
-if p.trial.RF.flag_new
-    new_neuron(p);
-end
-
 %% Generate all the visual stimuli
 
 % Fixation spot

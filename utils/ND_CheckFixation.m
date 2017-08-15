@@ -37,12 +37,18 @@ if(p.trial.mouse.useAsEyepos)
         
     end
     
-else
+elseif p.trial.datapixx.useAsEyepos
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
     % calculate a moving average of the eye position for display reasons
     p.trial.eyeX   = p.trial.eyeCalib.gain(1) * (prctile(p.trial.AI.Eye.X(sIdx), 50) - p.trial.eyeCalib.offset(1));
     p.trial.eyeY   = p.trial.eyeCalib.gain(2) * (prctile(p.trial.AI.Eye.Y(sIdx), 50) - p.trial.eyeCalib.offset(2));
+
+
+else
+    % If neither option is enabled just fix the eyepos at 0,0
+    p.trial.eyeX = 0;
+    p.trial.eyeY = 0;
 end
 
 
