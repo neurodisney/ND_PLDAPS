@@ -204,28 +204,17 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 % Gratings
 % Generate all the possible gratings 
 p.trial.stim.gratings = {};
-stimdef = p.trial.stim.(p.trial.stim.stage);
-for angle = stimdef.angle
+for angle = p.trial.stim.angle
     p.trial.stim.GRATING.angle = angle;
     
-    for radius = stimdef.radius
-        p.trial.stim.GRATING.radius = radius;
+    for sFreq = p.trial.stim.sFreq
+        p.trial.GRATING.sFreq = sFreq;
         
-        for sFreq = stimdef.sFreq
-            p.trial.GRATING.sFreq = sFreq;
-            
-            for tFreq = stimdef.tFreq
-                p.trial.GRATING.tFreq = tFreq;
-                
-                for contr = stimdef.contrast
-                    p.trial.GRATING.contrast = contr;
-                    
-                    p.trial.stim.gratings{end+1} = pds.stim.Grating(p);
-                    
-                end
-            end
-        end
+        % Generate the stimulus
+        p.trial.stim.gratings{end+1} = pds.stim.Grating(p);
+        
     end
+    
 end
 
 % Generate all the possible positions for the stimulus to be
@@ -480,7 +469,11 @@ if(~isempty(p.trial.LastKeyPress))
     switch p.trial.LastKeyPress(1)
             
         case KbName('''"') % Apostrophe Key, turn on and off the stimulus
-            stim(p,1);
+            if p.trial.task.stimState
+                stim(p,0);
+            else
+                stim(p,1);
+            end
             
         case 37 % Enter Key, mark the current stimulus position and properties
             % Allow manual spiking to be triggered if TDT is not used
@@ -497,11 +490,15 @@ if(~isempty(p.trial.LastKeyPress))
             % Rotate orientation counter clockwise
             nAngles = length(p.trial.stim.angle);
             p.trial.stim.iAngle = mod(p.trial.stim.iAngle - 2, nAngles) + 1;
+            % Refresh the stim
+            stim(p,2)
             
         case KbName('RightArrow')
             % Rotate orientation clockwise
             nAngles = length(p.trial.stim.angle);
             p.trial.stim.iAngle = mod(p.trial.stim.iAngle, nAngles) + 1;
+            % Refresh the stim
+            stim(p,2)
             
             
     end
@@ -520,6 +517,10 @@ if p.trial.mouse.use
     
     % Set the stim pos to match up with the mouse
     p.trial.stim.pos = [xPos, yPos];
+    
+    % Move the active stim
+    grating = p.trial.stim.gratings{selectStim(p)};
+    grating.pos = [xPos, yPos];
 end
 
 % ####################################################################### %
@@ -546,41 +547,106 @@ end
 
 
 function stim(p,val)
-% Turn on/off or change the stim
+% 0 turns off the stim
+% 1 turns on the stim
+% 2 changes the stim (if the stim is on)
+
 oldVal = p.trial.task.stimState;
 
-% Don't do anything if stim doesn't change
-if val == oldVal; return; end
+% Don't do anything if stim is signalled to turn off and is already off
+% Signalled to turn on and already on,
+% Or signalled to change and is off.
+if val == oldVal || (val == 2 && oldVal == 0); return; end
 
+% stim state stays 1 even if 2 is signalled (signal is just changing)
 p.trial.task.stimState = val;
 
 % Turn on/off the appropriate generated stimuli
 % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
 switch val
     case 0
-        % Turn off all stimuli (as a precaution)
-        for grating = p.trial.stim.gratings
-            grating{1}.on = 0;
+        %% Turn off all stimuli (as a precaution)
+        for iGrating = length(p.trial.stim.gratings)
+            grating = p.trial.stim.gratings{iGrating};
+            if grating.on
+                % Turn the grating off
+                grating.on = 0;
+                
+                % Strobe that this particular stimulus turned off
+                pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                pds.datapixx.strobe(iGrating);
+            end
+                
         end
         p.trial.EV.StimOff = p.trial.CurTime;
-        pds.datapixx.strobe(p.trial.event.STIM_OFF);
+        
         
     case 1
+        %% Turn on the correct stimulus
         % Select the proper stim
-        stimNum = p.trial.stim.count;
+        stimNum = selectStim(p);
         stim = p.trial.stim.gratings{p.trial.stim.iStim(stimNum)};
         
         % Move the stim to the proper position
-        curPos = p.trial.stim.locations(p.trial.stim.iPos(stimNum,:),:);
-        stim.pos = curPos;
+        stim.pos = p.trial.stim.pos;
         
         % Make the stim visible
         stim.on = 1;
         
         % Record the timings
         p.trial.EV.StimOn = p.trial.CurTime;
-        pds.datapixx.strobe(p.trial.event.STIM_ON); 
+        
+        % Strobe which stimulus was turned on
+        pds.datapixx.strobe(p.trial.event.STIM_ON);
+        pds.datapixx.strobe(stimNum);
+        
+    case 2
+        %% Update which stimulus is on
+        % Select the proper stim
+        stimNum = selectStim(p);
+        
+        % Turn off all other stimuli
+        for iGrating = length(p.trial.stim.gratings)
+            % Don't turn off the stimulus if it is the one signalled to be on
+            if iGrating == stimNum; continue; end 
+            
+            grating = p.trial.stim.gratings{iGrating};
+            if grating.on
+                % Turn the grating off
+                grating.on = 0;
+                
+                % Strobe that this particular stimulus turned off
+                pds.datapixx.strobe(p.trial.event.STIM_OFF);
+                pds.datapixx.strobe(iGrating);
+            end
+                
+        end
+        
+        % Turn on the stimulus if it isn't already on
+        grating = p.trial.stim.gratings{iGrating};
+        if ~grating.on
+            grating.on = 1;
+            
+            % Record the timings
+            p.trial.EV.StimOn = p.trial.CurTime;
+            
+            % Strobe which stimulus was turned on
+            pds.datapixx.strobe(p.trial.event.STIM_ON);
+            pds.datapixx.strobe(stimNum);
+            
+        end
+            
               
     otherwise
         error('bad stim value')
 end
+
+function iStim = selectStim(p)
+% Figures out the right stim number
+iAngle = p.trial.stim.iAngle;
+nAngle = length(p.trial.stim.angle);
+
+iSFreq = p.trial.stim.iSFreq;
+
+iStim = (iAngle - 1) * nAngle + iSFreq;
+
