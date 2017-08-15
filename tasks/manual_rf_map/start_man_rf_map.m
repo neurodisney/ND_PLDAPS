@@ -44,7 +44,7 @@ SS.plot.routine    = 'man_rf_map_plots';    % function for online plotting of se
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'stim.iAngle','stim.iSFreq', 'stim.marks'};
+SS.editable = {'stim.iAngle','stim.iSFreq', 'task.marks', 'task.stimEnabled'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
@@ -95,7 +95,7 @@ if strcmp(subjname,'mouse')
     
     % Use the mouse as eyeposition
     SS.mouse.use = 1;
-    SS.mouse.useAsEyepos = 1;
+    SS.mouse.useAsEyepos = 0;
     
     % Don't collect any analog channels
     SS.datapixx.adc.PupilChannel   = [];

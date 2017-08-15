@@ -24,6 +24,12 @@ p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by 
 
 p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
 
+p.trial.reward.Dur            = [0.15 0.15 0.12];
+p.trial.reward.jackpotTime    = 3;
+p.trial.reward.jackpotDur     = 0.5;
+p.trial.reward.nRewards       = [1 3 4];
+p.trial.reward.Period         = [0.25 0.20 0.15];
+
 p.trial.reward.jackpotDur = 0.3;     % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 2;  % number of reward pulses
@@ -40,7 +46,7 @@ p.trial.task.fixLatency       = 0.15; % Time to hold fixation before mapping beg
 p.trial.task.stimOnTime       = 0.1;   % How long each stimulus is presented
 p.trial.task.stimOffTime      = 0.1;     % Gaps between succesive stimuli
 
-p.trial.task.jackpotTime      = 4;     % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.jackpotTime      = 5;     % How long stimuli are presented before trial ends and jackpot is given
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
@@ -65,9 +71,9 @@ p.trial.stim.GRATING.fixWin       = 0;
 % For the following parameters, an array can be specified and all possible combinations
 % will be tested.
 
-p.trial.stim.angle      = sort([0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5]);
+p.trial.stim.angle      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5];
 % spatial frequency (cycles per degree)
-p.trial.stim.sFreq    = sort([0.75, 1.125, 1.5, 2.25, 3.25, 4.5, 5.75]);
+p.trial.stim.sFreq    = [1.5, 2.25, 3.25, 4.5, 5.75, 0.75, 1.125];
 
 % These should just be one number
 p.trial.stim.GRATING.radius   = 0.75;

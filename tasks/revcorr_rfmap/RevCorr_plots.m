@@ -206,7 +206,7 @@ try
         
         % Use visual x axis lables
         set(gca, 'XTick', [0 45 90 135])
-        set(gca, 'XTickLabel',{'|','/','—','\'})
+        set(gca, 'XTickLabel',{'|','\','—','/'})
         
         
     end
