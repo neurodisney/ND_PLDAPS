@@ -217,43 +217,10 @@ for angle = p.trial.stim.angle
     
 end
 
-% Generate all the possible positions for the stimulus to be
-allXPos = stimdef.xRange(1) : stimdef.grdStp : stimdef.xRange(2);
-allYPos = stimdef.yRange(1) : stimdef.grdStp : stimdef.yRange(2);
-p.trial.stim.locations = combvec(allXPos,allYPos)';
-
-
-%% Generate a shuffled list of all possible stimuli and location indices for reference during the experiment
-% Only do this the first trial, because stim sequence should continue between trials
-if p.trial.stim.count == 0;
-reshuffle_stims(p);
-end
-
-%% Preallocate memory for RF-calculations
-maxFrames = p.trial.pldaps.maxFrames;
-
-% Create a 3D matrix representing the locations of stimuli within the visual field across time
-% x,y are 1 when a stimulus is present in that location, 0 otherwise. Each z position represents one frame
-spatialRes = p.trial.RF.spatialRes;
-p.trial.RF.visualField = nan(spatialRes,spatialRes,maxFrames);
-
-% Create a 2D matrix representing the identity of the stimuli that were on
-p.trial.RF.stimsOn = nan(length(p.trial.stim.gratings),maxFrames);
-
-p.trial.RF.spikes = nan(p.trial.RF.maxSpikesPerTrial,1);
-p.trial.RF.nSpikes = 0;
-
-%% Read and forget all the spikes that occured during the ITI
-if p.trial.tdt.use
-    pds.tdt.readSpikes(p);
-end
 
 % ####################################################################### %
 function TaskDesign(p)
 %% main task outline
-
-% This gets set to 1, if a stim is turned on or off this frame
-p.trial.stim.changeThisFrame = 0;
 
 % The different task stages (i.e. 'epochs') are defined here.
 switch p.trial.CurrEpoch
@@ -334,41 +301,7 @@ switch p.trial.CurrEpoch
             if p.trial.CurTime < p.trial.stim.fix.EV.FixStart + p.trial.task.jackpotTime
                 % Jackpot time has not yet been reached
                 
-                % If stim count goes above the total number of generated stimuli/positions, reshuffle the stims and start again
-                if p.trial.stim.count > length(p.trial.stim.iStim)
-                    reshuffle_stims(p);
-                end
-                
-                % When stage is switched to fine, count is reset at 0, display no stims and wait for jackpot
-                if p.trial.stim.count == 0
-                    stim(p,0);
-                    return;
-                end
-                
                 if p.trial.task.stimState
-                    % Keep stim on for stimOn Time
-                    if p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.stimOnTime
-                        % Full stimulus presentation has occurred
-                        % TODO: Record data here
-                        
-                        % Give reward if it is enabled
-                        if p.trial.reward.Dur > 0
-                            pds.reward.give(p, p.trial.reward.Dur);
-                        end
-                        
-                        % Turn stim off
-                        stim(p,0)
-                        
-                        % Increment stim counter
-                        p.trial.stim.count = p.trial.stim.count + 1;
-                    end
-                    
-                elseif ~p.trial.task.stimState
-                    % Wait the stim off period before displaying the next stimuli
-                    if p.trial.CurTime > p.trial.EV.StimOff + p.trial.task.stimOffTime
-                        % Turn stim on
-                        stim(p,1)
-                    end
                     
                 end
                 
@@ -450,10 +383,6 @@ Task_Finish(p);
 for grating = p.trial.stim.gratings
     Screen('Close', grating{1}.texture);
 end
-
-% Remove NaNs at the end of the RF data
-p.trial.RF.visualField(:,:,p.trial.iFrame:end) = [];
-p.trial.RF.stimsOn(:,p.trial.iFrame:end) = [];
 
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
