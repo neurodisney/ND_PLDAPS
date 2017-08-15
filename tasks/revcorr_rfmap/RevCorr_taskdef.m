@@ -116,6 +116,10 @@ p.trial.behavior.fixation.entryTime = 0.150;  % minimum time to stay within fixa
 p.trial.task.breakFixCheck = 0.2; % Time after a stimbreak where if task is marked early or stim break is calculated
 
 % ------------------------------------------------------------------------%
+%% Drug delivery parameters
+p.trial.datapixx.TTL_spritzerDur = 0.01;
+
+% ------------------------------------------------------------------------%
 %% Trial duration
 % maxTrialLength is used to pre-allocate memory at several initialization
 % steps. It specifies a duration in seconds.

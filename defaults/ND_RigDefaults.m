@@ -316,13 +316,16 @@ SS.JoyState.JoyRest     =   0;  % joystick released
 
 % ------------------------------------------------------------------------%
 %% Analog/digital input/output channels
-SS.datapixx.adc.TTLamp      =  3;  % amplitude of TTL pulses via adc
+SS.datapixx.adc.TTLamp       =  3;  % amplitude of TTL pulses via adc
 
-SS.datapixx.TTLdur          = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the TTL pulse
-SS.datapixx.EVdur           = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the strobe signal
+SS.datapixx.TTLdur           = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the TTL pulse
+SS.datapixx.EVdur            = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the strobe signal
 
-SS.datapixx.TTL_trialOn     = 1;   % if 1 set a digital output high while trial is active
-SS.datapixx.TTL_trialOnChan = 1;   % DIO channel used for trial state TTL
+SS.datapixx.TTL_trialOn      = 1;   % if 1 set a digital output high while trial is active
+SS.datapixx.TTL_trialOnChan  = 1;   % DIO channel used for trial state TTL
+
+SS.datapixx.TTL_spritzerChan = 5;
+SS.datapixx.TTL_spritzerDur = 0.01;
 
 % ------------------------------------------------------------------------%
 %% Control screen flips
@@ -344,6 +347,8 @@ SS.key.FixInc  = KbName('=+'); % increase size of fixation window
 SS.key.FixDec  = KbName('-_'); % decrease size of fixation window
 
 SS.key.viewEyeCalib = KbName('insert'); % View the calibration points
+
+SS.key.spritz  = KbName('tab'); % Send a TTL pulse over the analog channel connected to the pico spritzer
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables

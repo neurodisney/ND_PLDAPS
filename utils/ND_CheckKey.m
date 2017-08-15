@@ -80,6 +80,13 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 
                 
             % ----------------------------------------------------------------%
+            case p.trial.key.spritz
+                %% Send a TTL pulse to the picospritzer to trigger drug release
+                chan = p.trial.datapixx.TTL_spritzerChan;
+                dur = p.trial.datapixx.TTL_spritzerDur;
+                pds.datapixx.TTL(chan, 1, dur)
+            
+            % ----------------------------------------------------------------%
             case p.trial.key.pause
             %% pause experiment
 %                 p.trial.pldaps.pause = ~p.trial.pldaps.pause;
