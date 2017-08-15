@@ -214,13 +214,13 @@ for angle = stimdef.angle
         p.trial.stim.GRATING.radius = radius;
         
         for sFreq = stimdef.sFreq
-            p.trial.GRATING.sFreq = sFreq;
+            p.trial.stim.GRATING.sFreq = sFreq;
             
             for tFreq = stimdef.tFreq
-                p.trial.GRATING.tFreq = tFreq;
+                p.trial.stim.GRATING.tFreq = tFreq;
                 
                 for contr = stimdef.contrast
-                    p.trial.GRATING.contrast = contr;
+                    p.trial.stim.GRATING.contrast = contr;
                     
                     p.trial.stim.gratings{end+1} = pds.stim.Grating(p);
                     
