@@ -111,7 +111,7 @@ if(isempty(state))
     
     p.defaultParameters.pldaps.finish = totalTrials;
     
-    p.trial.stim.marks = {}
+    p.trial.task.marks = {};
     
     % Stim starts disabled
     p.trial.task.stimEnabled = 0;
@@ -460,14 +460,17 @@ if(~isempty(p.trial.LastKeyPress))
             
         case 37 % Enter Key, mark the current stimulus position and properties
             % Allow manual spiking to be triggered if TDT is not used
+            placeMark(p)
             
-        case KbName('Backspace')
+        case KbName('BackSpace')
             % Remove last mark made
-            p.trial.stim.marks = p.trial.stim.marks(1:end-1);
+            if ~isempty(p.trial.task.marks)
+                p.trial.task.marks = p.trial.task.marks(1:end-1);
+            end
             
         case KbName('z')
             % Clear all marks
-            p.trial.stim.marks = {};
+            p.trial.task.marks = {};
             
         case KbName('LeftArrow')
             % Rotate orientation counter clockwise
@@ -621,5 +624,9 @@ nSFreq = length(p.trial.stim.sFreq);
 
 iStim = (iAngle - 1) * nSFreq + iSFreq;
 
-iStim = (iAngle - 1) * nAngle + iSFreq;
+function placeMark(p)
+mark.pos = p.trial.stim.pos;
+mark.sFreq = p.trial.stim.sFreq(p.trial.stim.iSFreq);
+mark.angle = p.trial.stim.angle(p.trial.stim.iAngle);
+p.trial.task.marks{end+1} = mark;
 
