@@ -217,6 +217,14 @@ for angle = p.trial.stim.angle
     
 end
 
+%% Set up reward
+nRewards = p.trial.reward.nRewards;
+% Reset the reward counter (separate from iReward to allow for manual rewards)
+p.trial.reward.count = 0;
+% Create arrays for direct reference during reward
+p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
+p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);
+
 
 % ####################################################################### %
 function TaskDesign(p)
@@ -297,30 +305,45 @@ switch p.trial.CurrEpoch
         
         % Still fixating
         if p.trial.stim.fix.fixating
-            
-            if p.trial.CurTime < p.trial.stim.fix.EV.FixStart + p.trial.task.jackpotTime
-                % Jackpot time has not yet been reached
                 
-                if p.trial.task.stimState
-                    
+            % While jackpot time has not yet been reached
+            if p.trial.CurTime < p.trial.EV.epochEnd + p.trial.reward.jackpotTime;
+
+                % If the supplied reward schema doesn't cover until jackpot
+                % time, just repeat the last reward
+                rewardCount = max(min(p.trial.reward.count , length(p.trial.reward.allDurs)),1);                
+                rewardPeriod = p.trial.reward.allPeriods(rewardCount);
+                
+                if p.trial.reward.count == 0
+                    nextRewardTime = p.trial.EV.epochEnd + rewardPeriod;
+                else
+                    nextRewardTime = p.trial.Timer.lastReward + rewardPeriod;
                 end
                 
+                % Wait for rewardPeriod to elapse since last reward, then give the next reward
+                if p.trial.CurTime > nextRewardTime
+
+                    rewardCount = min(rewardCount + 1 , length(p.trial.reward.allDurs));
+                    p.trial.reward.count = p.trial.reward.count + 1;
+
+                    rewardDuration = p.trial.reward.allDurs(rewardCount);                  
+
+                    % Give the reward and update the lastReward time
+                    pds.reward.give(p, rewardDuration);
+                    p.trial.Timer.lastReward = p.trial.CurTime;
+
+                end
+
             else
                 % Monkey has fixated long enough to get the jackpot
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
                 
-                % Do incremental rewards (if enabled)
-                if(p.trial.reward.IncrConsecutive == 1)
-                    AddPulse = find(p.trial.reward.PulseStep <= p.trial.LastHits+1, 1, 'last');
-                    if(~isempty(AddPulse))
-                        p.trial.reward.nPulse = p.trial.reward.nPulse + AddPulse;
-                    end
-                    
-                    fprintf('     REWARD!!!  [%d pulse(s) for %d subsequent correct trials]\n\n', ...
-                        p.trial.reward.nPulse, p.trial.LastHits+1);
-                end
+                % Give JACKPOT!
+                rewardDuration = p.trial.reward.jackpotDur;
+                pds.reward.give(p, rewardDuration);
+                p.trial.Timer.lastReward = p.trial.CurTime;
                 
-                pds.reward.give(p, p.trial.reward.Dur, p.trial.reward.nPulse);
+                % Play sound
                 pds.audio.playDP(p,'jackpot','left');
                 
                 % Record main reward time
