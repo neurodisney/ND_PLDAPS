@@ -117,7 +117,16 @@ p.trial.task.breakFixCheck = 0.2; % Time after a stimbreak where if task is mark
 
 % ------------------------------------------------------------------------%
 %% Drug delivery parameters
-p.trial.datapixx.TTL_spritzerDur = 0.1;
+
+% TTL pulse series for pico spritzer
+p.trial.datapixx.TTL_spritzerChan = 5;        % DIO channel
+p.trial.datapixx.TTL_spritzerDur    = 0.01;   % duration of TTL pulse
+p.trial.datapixx.TTL_spritzerNpulse = 1;      % number of pulses in a series
+p.trial.datapixx.TTL_spritzerPulseGap = 0.01; % gap between subsequent pulses
+
+p.trial.datapixx.TTL_spritzerNseries = 1;     % number of pulse series
+p.trial.datapixx.TTL_spritzerSeriesGap = 30 ; % gap between subsequent series
+
 
 % ------------------------------------------------------------------------%
 %% Trial duration

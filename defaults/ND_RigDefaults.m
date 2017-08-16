@@ -324,8 +324,15 @@ SS.datapixx.EVdur            = [];  % depending on the DAQ sampling rate it migh
 SS.datapixx.TTL_trialOn      = 1;   % if 1 set a digital output high while trial is active
 SS.datapixx.TTL_trialOnChan  = 1;   % DIO channel used for trial state TTL
 
-SS.datapixx.TTL_spritzerChan = 5;
-SS.datapixx.TTL_spritzerDur = 0.01;
+% TTL pulse series for pico spritzer
+SS.datapixx.TTL_spritzerChan = 5;        % DIO channel
+SS.datapixx.TTL_spritzerDur    = 0.01;   % duration of TTL pulse
+SS.datapixx.TTL_spritzerNpulse = 1;      % number of pulses in a series
+SS.datapixx.TTL_spritzerPulseGap = 0.01; % gap between subsequent pulses
+
+SS.datapixx.TTL_spritzerNseries = 1;     % number of pulse series
+SS.datapixx.TTL_spritzerSeriesGap = 30 ; % gap between subsequent series
+
 
 % ------------------------------------------------------------------------%
 %% Control screen flips

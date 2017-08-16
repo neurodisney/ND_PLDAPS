@@ -329,6 +329,16 @@ function pauseLoop(p)
                     p.trial.pldaps.quit = 2;
                     ShowCursor;
                     break;
+                    
+                % ----------------------------------------------------------------%
+                case p.trial.key.spritz
+                % Send a TTL pulse to the picospritzer to trigger drug release
+
+                    ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,    p.trial.datapixx.TTL_spritzerDur, ...
+                                   p.trial.datapixx.TTL_spritzerNpulse,  p.trial.datapixx.TTL_spritzerPulseGap, ...
+                                   p.trial.datapixx.TTL_spritzerNseries, p.trial.datapixx.TTL_spritzerSeriesGap, ...
+                                   p.defaultParameters.event.INJECT);
+                    
 
             end  %  switch qp
         end  % if(any(p.trial.keyboard.firstPressQ))

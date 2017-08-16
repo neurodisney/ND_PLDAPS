@@ -1,9 +1,10 @@
-
 function ND_PulseSeries(chan, PulseDur, Npulse, GapDur, Nseries, SeriesPause, InjStrobe)
+
+% ToDO: detect if pldaps class is passed and derive parameters from there
 
 %% define defaults
 if(~exist('chan','var') || isempty(chan))
-    chan  = 5; % number of pulses in a series
+    chan  = 5; % DIO channel
 end
 
 if(~exist('PulseDur','var') || isempty(PulseDur))
@@ -27,7 +28,7 @@ if(~exist('SeriesPause','var') || isempty(SeriesPause))
 end
 
 if(~exist('InjStrobe','var') || isempty(InjStrobe))
-    InjStrobe = 667; % gap between subsequent sieries
+    InjStrobe = 667; % gap between subsequent series
 end
 
 % check if DataPixx needs to be opened
