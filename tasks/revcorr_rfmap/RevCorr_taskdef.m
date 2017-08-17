@@ -58,8 +58,8 @@ p.trial.RF.temporalProfileRefineProportion = 0.2;  % During the coarse mapping, 
 
 p.trial.RF.maxSpikesPerTrial = 1000;   % Max spikes per trial, for preallocation purposes.
 
-p.trial.RF.channels = 16;  % Which channels of the incoming spike data to use for spikes
-p.trial.RF.sortCodes = 2;  % Which sort codes to use
+p.trial.RF.channels = 1:16;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.sortCodes = 1:4;  % Which sort codes to use
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters

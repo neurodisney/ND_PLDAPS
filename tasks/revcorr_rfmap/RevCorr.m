@@ -113,6 +113,10 @@ if(isempty(state))
     
     p.defaultParameters.pldaps.finish = totalTrials;
     
+    % Load in taskdef file (so that it can be referenced in new_neuron
+    feval(p.trial.task.TaskDef,  p);
+    
+    % Preallocate data and reset counters
     new_neuron(p);
    
     
@@ -536,6 +540,7 @@ end
 % Remove NaNs at the end of the RF data
 p.trial.RF.visualField(:,:,p.trial.iFrame:end) = [];
 p.trial.RF.stimsOn(:,p.trial.iFrame:end) = [];
+p.trial.RF.spikes(p.trial.RF.nSpikes+1:end,:) = [];
 
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
@@ -585,15 +590,16 @@ if nSpikes > 0
         spikeHyperCube(:,:,:,iSpike) = spikeCube;
     end
     
-    % Append this trials spikeHyperCube to the one spanning all trials
-    if ~isfield(rfdef,'spikeHyperCube') || isempty(rfdef.spikeHyperCube)
-        rfdef.spikeHyperCube = spikeHyperCube;
-    else
-        rfdef.spikeHyperCube = cat(4, rfdef.spikeHyperCube, spikeHyperCube);
-    end
+    % Save this trial's spikeHyperCube to p
+    rfdef.spikeHyperCube = spikeHyperCube;
     
     % Average across all spikes
-    rfdef.revCorrCube = mean(rfdef.spikeHyperCube, 4);
+    meanCube = mean(rfdef.spikeHyperCube, 4);
+    
+    % And combine this average with the results from previous trials (weighting, of course, by number of spikes)
+    rfdef.revCorrCube = (meanCube * nSpikes + rfdef.revCorrCube * rfdef.nAllSpikes) / (nSpikes + rfdef.nAllSpikes);
+    rfdef.nAllSpikes = rfdef.nAllSpikes + nSpikes;
+
     
     % Generate a positional heatmap by taking the maximum value across the time dimension
     rfdef.heatmap = max(rfdef.revCorrCube, [], 3);
@@ -856,13 +862,20 @@ p.trial.stim.iPos = indexReference(:,2);
 p.trial.stim.count = 1;
 
 function new_neuron(p)
+sRes = p.trial.RF.spatialRes;
+tRes = p.trial.RF.temporalRes;
+
 % Reset to coarse mapping
 p.trial.stim.stage = 'coarse';
 p.trial.stim.count = 0;
 
+% Reset spike counts
+p.trial.RF.coarse.nAllSpikes = 0;
+p.trial.RF.fine.nAllSpikes = 0;
+
 % Remove all data
-p.trial.RF.coarse.spikeHyperCube = [];
-p.trial.RF.fine.spikeHyperCube = [];
+p.trial.RF.coarse.revCorrCube = zeros(sRes, sRes, tRes);
+p.trial.RF.fine.revCorrCube = zeros(sRes, sRes, tRes);
 p.trial.stim.fine.xRange = NaN;
 p.trial.stim.fine.yRange = NaN;
 
