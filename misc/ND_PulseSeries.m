@@ -35,6 +35,10 @@ end
 if(~ Datapixx('IsReady'))
     Datapixx('Open');
     Datapixx('RegWrRd');
+    
+    closeDPX = 1;
+else
+    closeDPX = 0;
 end
 
 % run pulses
@@ -54,3 +58,8 @@ for(j=1:Nseries)
     end
 end
 
+%% finish up
+
+if(closeDPX)
+    Datapixx('Close');
+end

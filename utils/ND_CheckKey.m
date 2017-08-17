@@ -65,20 +65,18 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
 
             % ----------------------------------------------------------------%
             case p.trial.key.CtrJoy
-            %% Center joystick
-            % set current eye position as expected fixation position
-            if(p.trial.datapixx.useJoystick)
-                p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
-            end
-            
+                %% Center joystick
+                % set current eye position as expected fixation position
+                if(p.trial.datapixx.useJoystick)
+                    p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
+                end
             
             case p.trial.key.viewEyeCalib
                 %% Toggle viewing eye calibration
                 if p.trial.behavior.fixation.useCalibration
                     p.trial.behavior.fixation.enableCalib = not(p.trial.behavior.fixation.enableCalib);
                 end
-                
-                
+                                
             % ----------------------------------------------------------------%
             case p.trial.key.spritz
                 %% Send a TTL pulse to the picospritzer to trigger drug release

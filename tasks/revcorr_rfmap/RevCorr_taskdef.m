@@ -18,7 +18,6 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % ------------------------------------------------------------------------%
 %% Reward
-
 % manual reward from experimenter
 p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
 
@@ -107,7 +106,6 @@ p.trial.stim.fine.contrast   = 1;
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
-
 p.trial.behavior.fixation.BreakTime = 0.050;  % minimum time [ms] to identify a fixation break
 p.trial.behavior.fixation.entryTime = 0.150;  % minimum time to stay within fixation window to detect initial fixation start
 
@@ -117,16 +115,14 @@ p.trial.task.breakFixCheck = 0.2; % Time after a stimbreak where if task is mark
 
 % ------------------------------------------------------------------------%
 %% Drug delivery parameters
-
 % TTL pulse series for pico spritzer
-p.trial.datapixx.TTL_spritzerChan = 5;        % DIO channel
-p.trial.datapixx.TTL_spritzerDur    = 0.01;   % duration of TTL pulse
-p.trial.datapixx.TTL_spritzerNpulse = 1;      % number of pulses in a series
-p.trial.datapixx.TTL_spritzerPulseGap = 0.01; % gap between subsequent pulses
+p.trial.datapixx.TTL_spritzerChan      = 5;    % DIO channel
+p.trial.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
+p.trial.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
+p.trial.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
 
-p.trial.datapixx.TTL_spritzerNseries = 1;     % number of pulse series
-p.trial.datapixx.TTL_spritzerSeriesGap = 30 ; % gap between subsequent series
-
+p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
+p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 
 % ------------------------------------------------------------------------%
 %% Trial duration
