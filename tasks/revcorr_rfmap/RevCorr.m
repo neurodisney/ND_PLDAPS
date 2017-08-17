@@ -113,9 +113,6 @@ if(isempty(state))
     
     p.defaultParameters.pldaps.finish = totalTrials;
     
-    % Load in taskdef file (so that it can be referenced in new_neuron
-    feval(p.trial.task.TaskDef,  p);
-    
     % Preallocate data and reset counters
     new_neuron(p);
    
@@ -594,12 +591,14 @@ if nSpikes > 0
     rfdef.spikeHyperCube = spikeHyperCube;
     
     % Average across all spikes
-    meanCube = mean(rfdef.spikeHyperCube, 4);
+    meanCube = mean(spikeHyperCube, 4);
     
     % And combine this average with the results from previous trials (weighting, of course, by number of spikes)
-    rfdef.revCorrCube = (meanCube * nSpikes + rfdef.revCorrCube * rfdef.nAllSpikes) / (nSpikes + rfdef.nAllSpikes);
-    rfdef.nAllSpikes = rfdef.nAllSpikes + nSpikes;
-
+    if rfdef.nAllSpikes == 0
+        rfdef.revCorrCube = meanCube;
+    else
+        rfdef.revCorrCube = (meanCube * nSpikes + rfdef.revCorrCube * rfdef.nAllSpikes) / (nSpikes + rfdef.nAllSpikes);    
+    end
     
     % Generate a positional heatmap by taking the maximum value across the time dimension
     rfdef.heatmap = max(rfdef.revCorrCube, [], 3);
@@ -687,13 +686,21 @@ if nSpikes > 0
             spikeStimsCube(:,:,iSpike) = spikeStims;
         end
         
-        % Append this trial's spikeStimsCube to the one spanning all trials
-        if ~isfield(rfdef,'spikeStimsCube')
-            rfdef.spikeStimsCube = spikeStimsCube;
+        % Save this trial's spikeStimsCube to p
+        rfdef.spikeStimsCube = spikeStimsCube;
+        
+        % Average across all spikes
+        meanSpikeStimsCube = mean(spikeStimsCube, 3);
+        
+        % And combine this average with the result from previous trials
+        if rfdef.nAllSpikes == 0
+            rfdef.revCorrStims = meanSpikeStimsCube;
         else
-            rfdef.spikeStimsCube = cat(3, rfdef.spikeStimsCube, spikeStimsCube);
+            rfdef.revCorrStims = (meanSpikeStimsCube * nSpikes + rfdef.revCorrStims * rfdef.nAllSpikes) / (nSpikes + rfdef.nAllSpikes);
         end
         
+        % revCorrStims is a 2D matrix (stim, time), with each value being the proportion of spikes that had stim on at time
+        % before it occured.
         
         %% Calculate orientation tuning
         nOrients = length(stimdef.angle);
@@ -715,17 +722,16 @@ if nSpikes > 0
         for iOrient = 1:nOrients
             iStims = stims2angle(:, iOrient);
             
-            % Combine rows of stims with this orientaiton
-            % Should leave a 2D matrix (time, nSpikes)
-            orientSpike = squeeze(any(rfdef.spikeStimsCube(iStims,:,:),1));
-            
-            % Average across all spikes, and take the max value in time as the orientation tuning
-            rfdef.orientationTuning(iOrient) = max(mean(orientSpike,2));
+            % Sum across stims that have the same orientation,
+            % and take the max value in time as the orientation tuning
+            rfdef.orientationTuning(iOrient) = max(sum(rfdef.revCorrStims(iStims,:), 1));
             
         end
         
     end
 
+    % Increment the total spikes
+    rfdef.nAllSpikes = rfdef.nAllSpikes + nSpikes;
     
     % Save rfdef back into p
     p.trial.RF.(p.trial.stim.stage) = rfdef;
@@ -864,8 +870,6 @@ p.trial.stim.iPos = indexReference(:,2);
 p.trial.stim.count = 1;
 
 function new_neuron(p)
-sRes = p.trial.RF.spatialRes;
-tRes = p.trial.RF.temporalRes;
 
 % Reset to coarse mapping
 p.trial.stim.stage = 'coarse';
@@ -876,8 +880,9 @@ p.trial.RF.coarse.nAllSpikes = 0;
 p.trial.RF.fine.nAllSpikes = 0;
 
 % Remove all data
-p.trial.RF.coarse.revCorrCube = zeros(sRes, sRes, tRes);
-p.trial.RF.fine.revCorrCube = zeros(sRes, sRes, tRes);
+p.trial.RF.coarse.revCorrCube = [];
+p.trial.RF.fine.revCorrCube = [];
+p.trial.RF.fine.revCorrStims = [];
 p.trial.stim.fine.xRange = NaN;
 p.trial.stim.fine.yRange = NaN;
 
@@ -886,8 +891,6 @@ p.trial.RF.flag_new = 0;
 p.trial.RF.flag_fine = 0;
 
 function switch_to_fine(p)
-sRes = p.trial.RF.spatialRes;
-tRes = p.trial.RF.temporalRes;
 
 % Switch to fine mapping, or reset the fine mapping step
 p.trial.stim.stage = 'fine';
@@ -898,7 +901,6 @@ p.trial.RF.coarse.spikeHyperCube = [];
 
 % Reset fine data (to allow for retrying fine calibration midway)
 p.trial.RF.fine.nAllSpikes = 0;
-p.trial.RF.fine.revCorrCube = zeros(sRes, sRes, tRes);
 
 % Reset flag
 p.trial.RF.flag_fine = 0;
