@@ -519,7 +519,7 @@ if p.trial.stim.changeThisFrame || iFrame == 1
     
 else
     p.trial.RF.visualField(:,:,iFrame) = p.trial.RF.visualField(:,:,iFrame - 1);
-    p.trial.RF.stimsOn(:,iFrame) = p.trial.RF.stimsOn(:,iFrame);
+    p.trial.RF.stimsOn(:,iFrame) = p.trial.RF.stimsOn(:,iFrame - 1);
 end
 
 % ####################################################################### %
@@ -610,6 +610,8 @@ if nSpikes > 0
     ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
     maxPos = [xSpace(maxCol), ySpace(maxRow)];
     
+    % Save this to the p struct
+    rfdef.maxPos = maxPos;
     
     % Calculate the temporal profile (when stims appeared) for this max location
     rfdef.maxTemporalProfile = squeeze(rfdef.revCorrCube(maxRow, maxCol, :));
@@ -670,7 +672,7 @@ if nSpikes > 0
             
             % Don't interpolate if this spike has the same time as the last one
             if iSpike > 1 && spikeTime == p.trial.RF.spikes(iSpike - 1)
-                spikeHyperCube(:,:,:,iSpike) = spikeHyperCube(:,:,:,iSpike-1);
+                spikeStimsCube(:,:,iSpike) = spikeStimsCube(:,:,iSpike-1);
                 continue;
             end
             
@@ -884,8 +886,19 @@ p.trial.RF.flag_new = 0;
 p.trial.RF.flag_fine = 0;
 
 function switch_to_fine(p)
+sRes = p.trial.RF.spatialRes;
+tRes = p.trial.RF.temporalRes;
+
+% Switch to fine mapping, or reset the fine mapping step
 p.trial.stim.stage = 'fine';
 p.trial.stim.count = 0;
+
+% Clear the last coarse trial's hypercube out of memory so it is not continually resaved to disk
+p.trial.RF.coarse.spikeHyperCube = [];
+
+% Reset fine data (to allow for retrying fine calibration midway)
+p.trial.RF.fine.nAllSpikes = 0;
+p.trial.RF.fine.revCorrCube = zeros(sRes, sRes, tRes);
 
 % Reset flag
 p.trial.RF.flag_fine = 0;

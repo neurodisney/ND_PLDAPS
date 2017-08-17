@@ -111,14 +111,9 @@ try
     % Flip the y axis since imagesc does y reversed for some reason
     set(gca,'YDir','normal')
     colormap(gca,coarse_colmap)
-
-    % Find the location with the highest density of spike responses
-    [maxRow, maxCol] = ind2sub(size(rfdef.heatmap),find(rfdef.heatmap == max(max(rfdef.heatmap)),1));
-    xSpace = linspace(rfdef.xRange(1), rfdef.xRange(2), p.trial.RF.spatialRes);
-    ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
-    maxPos = [xSpace(maxCol), ySpace(maxRow)];
     
     % Draw an x showing where the maxPos is
+    maxPos = rfdef.maxPos;
     hold on;
     plot(maxPos(1),maxPos(2), 'x', 'MarkerSize', 50, 'MarkerEdgeColor', 'r', 'MarkerFaceColor','r')
     hold off;
@@ -172,13 +167,8 @@ try
         colormap(gca,fine_colmap)
         axis square
 
-        % Find the location with the highest density of spike responses
-        [maxRow, maxCol] = ind2sub(size(rfdef.heatmap),find(rfdef.heatmap == max(max(rfdef.heatmap)),1));
-        xSpace = linspace(rfdef.xRange(1), rfdef.xRange(2), p.trial.RF.spatialRes);
-        ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
-        maxPos = [xSpace(maxCol), ySpace(maxRow)];
-
         % Draw an x showing where the maxPos
+        maxPos = rfdef.maxPos;
         hold on;
         plot(maxPos(1),maxPos(2), 'x', 'MarkerSize', 50, 'MarkerEdgeColor', 'r', 'MarkerFaceColor','r')
         hold off;
