@@ -58,8 +58,8 @@ p.trial.RF.temporalProfileRefineProportion = 0.2;  % During the coarse mapping, 
 
 p.trial.RF.maxSpikesPerTrial = 1000;   % Max spikes per trial, for preallocation purposes.
 
-p.trial.RF.channels = 1:16;  % Which channels of the incoming spike data to use for spikes
-p.trial.RF.sortCodes = 1:4;  % Which sort codes to use
+p.trial.RF.channels = 1;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.sortCodes = 2;  % Which sort codes to use
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
@@ -67,7 +67,7 @@ p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color  = 'white';  % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.FIXSPOT.size   = 0.15;        % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin = 2.5;
+p.trial.stim.FIXSPOT.fixWin = 6;
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
