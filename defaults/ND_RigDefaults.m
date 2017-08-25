@@ -111,9 +111,9 @@ switch rig
         SS.tdt.ip                               = '129.59.230.10';
 end
 
-SS.tdt.channels                                 = 16; % Number of ephys channels to analyze in incoming data
+SS.tdt.channels                                 = 24; % Number of ephys channels to analyze in incoming data
 SS.tdt.sortCodes                                = 4;  % Number of units classified per channel. [1, 2, or 4]
-SS.tdt.bitsPerSort                              = 2;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
+SS.tdt.bitsPerSort                              = 4;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
 % ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
