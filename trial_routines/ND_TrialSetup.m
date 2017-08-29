@@ -78,7 +78,10 @@ end
 
 % ------------------------------------------------------------------------%
 %% Spike Server
-% TODO: integrate Tucker Davis system
+% open a TDT connection
+if p.trial.tdt.use
+    pds.tdt.init(p)
+end
 
 % ------------------------------------------------------------------------%
 %% Update summary information for preceding trials

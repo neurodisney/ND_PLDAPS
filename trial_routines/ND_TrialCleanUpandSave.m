@@ -73,6 +73,11 @@ if(p.trial.mouse.use)
 end
 
 %-------------------------------------------------------------------------%
+%% close TDT connection
+if p.trial.tdt.use
+    pds.tdt.close(p)
+end
+%-------------------------------------------------------------------------%
 %% Trial information
 
 % system timing

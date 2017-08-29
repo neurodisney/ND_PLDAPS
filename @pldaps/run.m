@@ -236,12 +236,6 @@ try
         % Close the audio device:
         PsychPortAudio('Close', p.defaultParameters.sound.master);
     end
-
-    % ----------------------------------------------------------------%
-    %% Shut down TDT UDP connection
-    if p.defaultParameters.tdt.use
-        pds.tdt.close(p);
-    end
     
     % ----------------------------------------------------------------%
     %% save the session data to file

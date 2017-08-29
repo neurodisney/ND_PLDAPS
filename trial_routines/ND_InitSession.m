@@ -111,12 +111,6 @@ if(p.trial.sound.use)
 end
 
 %-------------------------------------------------------------------------%
-%% Tucker Davis
-if p.trial.tdt.use
-    p = pds.tdt.init(p);
-end
-
-%-------------------------------------------------------------------------%
 %% Setup Photodiode stimuli
 if(p.trial.pldaps.draw.photodiode.use)    
     szstep = p.trial.pldaps.draw.photodiode.size / 2; % move PD away from edge
