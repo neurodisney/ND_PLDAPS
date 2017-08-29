@@ -118,9 +118,9 @@ try
     textVals = cellfun(@num2str, num2cell(vals), 'UniformOutput', false);
     
     binCenters = (edges(1:end-1) + edges(2:end)) / 2;
-    textHeight = max(vals)+5;
+    textHeight = 1.1 * max(vals);
     heights = repmat(textHeight,length(binCenters),1);
-    ylim([0, max(vals)+10])
+    ylim([0, 1.2 * max(vals)])
     
     text(binCenters,heights,textVals,'horizontalalignment','center')
     
