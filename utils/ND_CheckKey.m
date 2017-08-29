@@ -45,7 +45,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                         end
                     end
                     % Increase the fixation window for fixspots created later
-                    p.trial.stim.fixspot.fixWin = p.trial.stim.fixspot.fixWin + p.trial.behavior.fixation.FixWinStp;
+                    p.trial.stim.FIXSPOT.fixWin = p.trial.stim.FIXSPOT.fixWin + p.trial.behavior.fixation.FixWinStp;
                 end
                 
             % ----------------------------------------------------------------%
@@ -60,25 +60,32 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                         end
                     end
                     % Decrease the fixation window for fixspots created later
-                    p.trial.stim.fixspot.fixWin = p.trial.stim.fixspot.fixWin - p.trial.behavior.fixation.FixWinStp;
+                    p.trial.stim.FIXSPOT.fixWin = p.trial.stim.FIXSPOT.fixWin - p.trial.behavior.fixation.FixWinStp;
                 end
 
             % ----------------------------------------------------------------%
             case p.trial.key.CtrJoy
-            %% Center joystick
-            % set current eye position as expected fixation position
-            if(p.trial.datapixx.useJoystick)
-                p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
-            end
-            
+                %% Center joystick
+                % set current eye position as expected fixation position
+                if(p.trial.datapixx.useJoystick)
+                    p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
+                end
             
             case p.trial.key.viewEyeCalib
                 %% Toggle viewing eye calibration
                 if p.trial.behavior.fixation.useCalibration
                     p.trial.behavior.fixation.enableCalib = not(p.trial.behavior.fixation.enableCalib);
                 end
+                                
+            % ----------------------------------------------------------------%
+            case p.trial.key.spritz
+                %% Send a TTL pulse to the picospritzer to trigger drug release
                 
-                
+                ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,    p.trial.datapixx.TTL_spritzerDur, ...
+                               p.trial.datapixx.TTL_spritzerNpulse,  p.trial.datapixx.TTL_spritzerPulseGap, ...
+                               p.trial.datapixx.TTL_spritzerNseries, p.trial.datapixx.TTL_spritzerSeriesGap, ...
+                               p.defaultParameters.event.INJECT);
+            
             % ----------------------------------------------------------------%
             case p.trial.key.pause
             %% pause experiment
@@ -106,7 +113,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 p.trial.EV.TaskEnd = p.trial.CurTime;
                 
                 if(p.trial.datapixx.TTL_trialOn)
-                    pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
+                    pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 0);
                 end
                 
                 % End the trial

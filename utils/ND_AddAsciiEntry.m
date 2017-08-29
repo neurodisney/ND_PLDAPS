@@ -1,4 +1,4 @@
-function p = ND_AddAsciiEntry(p, Label, VarNm, FRMT)
+function p = ND_AddAsciiEntry(p, Label, VarNm, FRMT, tbl)
 % generate a template for an ASCII trial table
 %
 % This template is a string cell array where each row corresponds to an
@@ -6,11 +6,19 @@ function p = ND_AddAsciiEntry(p, Label, VarNm, FRMT)
 % used in the header, as vaiable name and as format string. This format
 % will be used to write later on data after each trial.
 
-if(~isfield(p.trial.session, 'asciifmt'))
-    p.trial.session.asciifmt = {};
+if nargin < 5
+    tbl = 'session';
 end
 
-pos = size(p.trial.session.asciifmt, 1) + 1; 
+if ~isfield(p.trial.asciitbl, tbl)
+    p.trial.asciitbl.(tbl) = struct;
+end
 
-p.trial.session.asciifmt(pos,:) = {Label, VarNm, FRMT};
+if(~isfield(p.trial.asciitbl.(tbl), 'fmt'))
+    p.trial.asciitbl.(tbl).fmt = {};
+end
+
+pos = size(p.trial.asciitbl.(tbl).fmt, 1) + 1; 
+
+p.trial.asciitbl.(tbl).fmt(pos,:) = {Label, VarNm, FRMT};
 

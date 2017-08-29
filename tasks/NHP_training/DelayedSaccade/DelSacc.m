@@ -41,13 +41,13 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
     
-    p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.grating.pos(1)',         '%.3f');
-    p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.grating.pos(2)',         '%.3f');
-    p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.grating.tFreq',          '%.2f');
-    p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.grating.sFreq',          '%.2f');
-    p = ND_AddAsciiEntry(p, 'lContr',      'p.trial.stim.grating.lowContrast',    '%.1f');
-    p = ND_AddAsciiEntry(p, 'hContr',      'p.trial.stim.grating.highContrast',   '%.1f');
-    p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.grating.radius',       '%.1f');
+    p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.GRATING.pos(1)',         '%.3f');
+    p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.GRATING.pos(2)',         '%.3f');
+    p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
+    p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
+    p = ND_AddAsciiEntry(p, 'lContr',      'p.trial.stim.GRATING.lowContrast',    '%.1f');
+    p = ND_AddAsciiEntry(p, 'hContr',      'p.trial.stim.GRATING.highContrast',   '%.1f');
+    p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.GRATING.radius',       '%.1f');
     
     p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
@@ -198,15 +198,15 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 
 % Gratings
 % Calculate the location
-direction = p.trial.stim.grating.direction;
-magnitude = p.trial.stim.grating.eccentricity;
-p.trial.stim.grating.pos = magnitude * direction / norm(direction);
+direction = p.trial.stim.GRATING.direction;
+magnitude = p.trial.stim.GRATING.eccentricity;
+p.trial.stim.GRATING.pos = magnitude * direction / norm(direction);
 
 % Generate the low contrast stimulus
-p.trial.stim.grating.contrast = p.trial.stim.grating.lowContrast;
+p.trial.stim.GRATING.contrast = p.trial.stim.GRATING.lowContrast;
 p.trial.stim.gratingL = pds.stim.Grating(p);
 % and the high contrast stimulus
-p.trial.stim.grating.contrast = p.trial.stim.grating.highContrast;
+p.trial.stim.GRATING.contrast = p.trial.stim.GRATING.highContrast;
 p.trial.stim.gratingH = pds.stim.Grating(p);
 
 % Assume manual control of the activation of the grating fix windows
@@ -232,7 +232,7 @@ switch p.trial.CurrEpoch
         p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
         
         if(p.trial.datapixx.TTL_trialOn)
-            pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
+            pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
         end
         
         fixspot(p,1);

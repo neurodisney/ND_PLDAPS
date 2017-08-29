@@ -44,8 +44,7 @@ end
 
 p.defaultParameters.session.file     = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
 
-p.defaultParameters.session.asciitbl = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem,'.dat'];
-p.defaultParameters.session.asciifmtstr = '';
+p.defaultParameters.asciitbl.session.file = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem,'.dat'];
 %--------------------------------------------------------------------%
 %% Define Trial function
 % The runTrial function requires trialFunction to be defined, but buried in
@@ -99,16 +98,12 @@ p = ND_TaskEpochs(p);
 %% sanity checks
 
 % there is no point of drawing eye position if it is not recorded
-if(~p.defaultParameters.mouse.useAsEyepos && ~p.defaultParameters.datapixx.useAsEyepos)
+if(~p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.pldaps.draw.eyepos.use = 0;
 end
 
-% if fixation is needed make sure datapixx provides the eye signal
+% Take enough samples
 if(p.defaultParameters.behavior.fixation.use)
-    if(~p.defaultParameters.datapixx.useAsEyepos)
-        p.defaultParameters.datapixx.useAsEyepos = 1;
-    end
-
     if( p.defaultParameters.behavior.fixation.NumSmplCtr > p.defaultParameters.pldaps.draw.eyepos.history)
         p.defaultParameters.behavior.fixation.NumSmplCtr = p.defaultParameters.pldaps.draw.eyepos.history;
     end

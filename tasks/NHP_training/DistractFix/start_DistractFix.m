@@ -1,4 +1,4 @@
-function p = start_FixTrain(subjname, rig, experimenter)
+function p = start_DistractFix(subjname, rig, experimenter)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,
@@ -16,23 +16,22 @@ SS = ND_RigDefaults;    % load default settings according to the current rig set
 %% Define task related functions
 
 % function to set up experiment (and maybe also including the trial function)
-exp_fun = 'FixTrain';
+exp_fun = 'DistractFix';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'FixTrain_taskdef';  % function that provides task specific parameter definitions
-SS.task.AfterTrial = 'FixTrain_aftertrial';  % function that provides runs task specific actions after a trial
-SS.plot.routine    = 'FixTrain_plots';    % function for online plotting of session progress
+SS.task.TaskDef    = 'DistractFix_taskdef';  % function that provides task specific parameter definitions
+SS.task.AfterTrial = 'DistractFix_aftertrial';  % function that provides runs task specific actions after a trial
+SS.plot.routine    = 'DistractFix_plots';    % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.fixWin', 'stim.FIXSPOT.pos'};
+SS.editable = {};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
 SS.sound.use                  = 1;
-SS.sound.useDatapixx          = 1;
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
 SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
@@ -46,10 +45,12 @@ SS.pldaps.draw.grid.use       = 1;
 
 SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
-SS.datapixx.TTL_trialOn       = 1;
+SS.datapixx.TTL_trialOn       = 0;
 
 SS.behavior.fixation.useCalibration = 1;
 SS.behavior.fixation.enableCalib = 0;
+
+SS.behavior.fixation.on = 1; % fixation.on for this task
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
@@ -58,10 +59,10 @@ SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states
 % If there are modification from the default settings needed, copy the
 % needed lines from ND_RigDefaults and alter the values here.
 
-SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
+SS.display.bgColor    = [0.5, 0.5, 0.5];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
-SS.behavior.fixation.FixWin     = 8;
+SS.behavior.fixation.FixWin     = 2.5;
 SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
 
@@ -103,6 +104,7 @@ if strcmp(subjname,'mouse')
     SS.datapixx.useAsEyepos        = 0;
     SS.behavior.joystick.use       = 0;
     %SS.datapixx.useForReward       = 0;
+    %SS.sound.use                   = 0;
     
 end
 % ------------------------------------------------------------------------%

@@ -61,8 +61,14 @@ if(p.trial.behavior.fixation.useCalibration)
 end
 
 % --------------------------------------------------------------------%
+%% Keep TDT UDP connection
+if p.trial.tdt.use
+    p.defaultParameters.tdt.UDP = p.trial.tdt.UDP;
+end
+
+% --------------------------------------------------------------------%
 %% format string for ascii table
-p.defaultParameters.session.asciifmtstr  =  p.trial.session.asciifmtstr;
+p.defaultParameters.asciitbl  =  p.trial.asciitbl;
 % --------------------------------------------------------------------%
 %% figure handle for online plots
 if(p.trial.plot.do_online)

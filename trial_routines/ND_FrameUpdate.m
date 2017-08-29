@@ -6,6 +6,7 @@ function ND_FrameUpdate(p)
 %
 %
 % wolf zinke, Jan. 2017
+% Nate Faber, Aug 2017
 
 
 % ------------------------------------------------------------------------%
@@ -24,6 +25,11 @@ if(~isempty(p.trial.datapixx.adc.channels))
 end
 
 % ------------------------------------------------------------------------%
+%% Get spike data
+if p.trial.tdt.use
+    pds.tdt.readSpikes(p);
+end
+% ------------------------------------------------------------------------%
 %% check joystick state
 % needs to be called after pds.datapixx.adc.getData
 
@@ -39,6 +45,6 @@ end
 
 % ------------------------------------------------------------------------%
 %% check fixation state
-if(p.trial.datapixx.useAsEyepos || p.trial.mouse.useAsEyepos)
+if(p.trial.behavior.fixation.use)
     ND_CheckFixation(p);
  end

@@ -44,7 +44,7 @@ if(isempty(state))
     
     %% Setup fixation window
     % Start fixation window off, and just do manual reward. Can be increased later if desired
-    p.trial.stim.fixspot.fixWin  = 0;
+    p.trial.stim.FIXSPOT.fixWin  = 0;
     
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
@@ -134,7 +134,7 @@ function TaskSetUp(p)
     if(p.trial.task.RandomPos == 1) 
          Xpos = round((rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1));
          Ypos = round((rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2));
-         p.trial.stim.fixspot.pos = [Xpos, Ypos];
+         p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
     end
     
     % Generate the fixspot
@@ -157,7 +157,7 @@ function TaskDesign(p)
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             
             if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
+                pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
             end
  
             p.trial.Timer.trialStart = p.trial.CurTime;
@@ -306,25 +306,25 @@ if(~isempty(p.trial.LastKeyPress))
             gpos = find(p.trial.key.GridKey == p.trial.LastKeyPress(1));
             p.trial.behavior.fixation.GridPos = gpos;
             
-            p.trial.stim.fixspot.pos = p.trial.eyeCalib.Grid_XY(gpos, :);
-            p.trial.stim.fix.pos = p.trial.stim.fixspot.pos;
+            p.trial.stim.FIXSPOT.pos = p.trial.eyeCalib.Grid_XY(gpos, :);
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
             % move target by steps
         case KbName('RightArrow')
-            p.trial.stim.fixspot.pos = p.trial.stim.fixspot.pos + [p.trial.behavior.fixation.FixWinStp, 0];
-            p.trial.stim.fix.pos = p.trial.stim.fixspot.pos;
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixWinStp, 0];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
         case KbName('LeftArrow')
-            p.trial.stim.fixspot.pos = p.trial.stim.fixspot.pos - [p.trial.behavior.fixation.FixWinStp, 0];
-            p.trial.stim.fix.pos = p.trial.stim.fixspot.pos;
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixWinStp, 0];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
         case KbName('UpArrow')
-            p.trial.stim.fixspot.pos = p.trial.stim.fixspot.pos + [0, p.trial.behavior.fixation.FixWinStp];
-            p.trial.stim.fix.pos = p.trial.stim.fixspot.pos;
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixWinStp];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
         case KbName('DownArrow')
-            p.trial.stim.fixspot.pos = p.trial.stim.fixspot.pos - [0, p.trial.behavior.fixation.FixWinStp];
-            p.trial.stim.fix.pos = p.trial.stim.fixspot.pos;
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixWinStp];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
     end
     
 end

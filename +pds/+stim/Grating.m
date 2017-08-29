@@ -48,39 +48,39 @@ methods
         
         %% Load variables
         if nargin < 10 || isempty(fixWin)
-            fixWin = p.trial.stim.grating.fixWin;
+            fixWin = p.trial.stim.GRATING.fixWin;
         end
         
         if nargin < 9 || isempty(alpha)
-            alpha = p.trial.stim.grating.alpha;
+            alpha = p.trial.stim.GRATING.alpha;
         end
         
         if nargin < 8 || isempty(res)
-            res = p.trial.stim.grating.res;
+            res = p.trial.stim.GRATING.res;
         end
         
         if nargin < 7 || isempty(tFreq)
-            tFreq = p.trial.stim.grating.tFreq;
+            tFreq = p.trial.stim.GRATING.tFreq;
         end
                 
         if nargin < 6 || isempty(sFreq)
-            sFreq = p.trial.stim.grating.sFreq;
+            sFreq = p.trial.stim.GRATING.sFreq;
         end
         
         if nargin < 5 || isempty(angle)
-            angle = p.trial.stim.grating.angle;
+            angle = p.trial.stim.GRATING.angle;
         end
         
         if nargin < 4 || isempty(pos)
-            pos = p.trial.stim.grating.pos;
+            pos = p.trial.stim.GRATING.pos;
         end
         
         if nargin < 3 || isempty(contrast)
-            contrast = p.trial.stim.grating.contrast;
+            contrast = p.trial.stim.GRATING.contrast;
         end
         
         if nargin < 2 || isempty(radius)
-            radius = p.trial.stim.grating.radius;
+            radius = p.trial.stim.GRATING.radius;
         end
         
         % Load the superclass
@@ -96,7 +96,7 @@ methods
 
         
         % Unchangeable after loading
-        obj.contrastMethod = p.trial.stim.grating.contrastMethod;
+        obj.contrastMethod = p.trial.stim.GRATING.contrastMethod;
         obj.genTime = p.trial.CurTime;
         obj.srcRect = [0, 0, 2*obj.res + 1, 2*obj.res + 1];
         

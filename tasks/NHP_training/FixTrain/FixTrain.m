@@ -32,7 +32,33 @@ if(isempty(state))
     % --------------------------------------------------------------------%
     %% define ascii output file
     % call this after ND_InitSession to be sure that output directory exists!
-    Trial2Ascii(p, 'init');
+    
+    p = ND_AddAsciiEntry(p, 'Date',        'p.trial.DateStr',                     '%s');
+    p = ND_AddAsciiEntry(p, 'Time',        'p.trial.EV.TaskStartTime',            '%s');
+    p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%s');
+    p = ND_AddAsciiEntry(p, 'Subject',     'p.trial.session.subject',             '%s');
+    p = ND_AddAsciiEntry(p, 'Experiment',  'p.trial.session.experimentSetupFile', '%s');
+    p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
+    p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
+    p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart',   '%d');
+    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.TaskStart',                     '%d');
+    p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
+    p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
+
+    p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
+    p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
+    
+    p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
+    p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
+
+    p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
+    
+    
+    % call this after ND_InitSession to be sure that output directory exists!
+    ND_Trial2Ascii(p, 'init');
 
     % --------------------------------------------------------------------%
     %% Color definitions of stuff shown during the trial
@@ -200,8 +226,7 @@ else
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
         %% trial end
-            Task_Finish(p);
-            Trial2Ascii(p, 'save');
+            TaskCleanAndSave(p);
                         
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
@@ -242,10 +267,10 @@ function TaskSetUp(p)
     if(p.trial.task.RandomPos == 1)
          Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
          Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
-         p.trial.stim.fixspot.pos = [Xpos, Ypos];
+         p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
     end
     
-    p.trial.stim.fixspot.color = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
+    p.trial.stim.FIXSPOT.color = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
     
     %% Make the visual stimuli
     % Fixation spot
@@ -269,7 +294,7 @@ function TaskDesign(p)
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             
             if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
+                pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
             end
            
             switchEpoch(p,'WaitFix')
@@ -412,6 +437,17 @@ function TaskDraw(p)
 
     
 % ####################################################################### %
+function TaskCleanAndSave(p)
+%% Clean up textures, variables, and save useful info to ascii table
+Task_Finish(p);
+
+% Get the text name of the outcome
+p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+
+% Save useful info to an ascii table for plotting
+ND_Trial2Ascii(p, 'save');
+% ####################################################################### %
+
 function KeyAction(p)
 %% task specific action upon key press
     if(~isempty(p.trial.LastKeyPress))
@@ -450,41 +486,4 @@ elseif ~bool && p.trial.stim.fix.on
     pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
 end
 
-
-% ####################################################################### %
-function Trial2Ascii(p, act)
-%% Save trial progress in an ASCII table
-% 'init' creates the file with a header defining all columns
-% 'save' adds a line with the information for the current trial
-%
-% make sure that number of header names is the same as the number of entries
-% to write, also that the position matches.
-
-    switch act
-        case 'init'
-            tblptr = fopen(p.trial.session.asciitbl , 'w');
-
-            fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  FixRT  ',...
-                             'FirstReward  RewCnt  Result  Outcome  FixPeriod  FixColor  ITI FixWin  fixPos_X  fixPos_Y \n']);
-            fclose(tblptr);
-
-        case 'save'
-            if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoFix)  % we might loose the last trial when pressing esc.
-                                
-                trltm = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
-
-                cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-
-                tblptr = fopen(p.trial.session.asciitbl, 'a');
-
-                fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f  %.5f  %.5f  %d  %d  %s  %.5f  %s  %.5f  %.2f  %.2f  %.2f \n' , ...
-                                datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
-                                p.trial.EV.DPX_TaskOn, p.trial.session.subject, p.trial.session.experimentSetupFile, ...
-                                p.trial.pldaps.iTrial, p.trial.Nr, trltm, p.trial.EV.FixStart-p.trial.EV.TaskStart,  ...
-                                p.trial.task.CurRewDelay, p.trial.reward.count, p.trial.outcome.CurrOutcome, cOutCome, ...
-                                p.trial.EV.FixBreak-p.trial.EV.FixStart, p.trial.behavior.fixation.FixCol, p.trial.task.Timing.ITI, ...
-                                p.trial.stim.fix.fixWin, p.trial.stim.fix.pos(1), p.trial.stim.fix.pos(2));
-               fclose(tblptr);
-            end
-    end
         

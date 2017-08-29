@@ -115,6 +115,7 @@ end
 p.trial.task.Good                = 0;    % flag to indicate if an error occurred or the task flow continues. This will be set to 1 when task is on (Task_ON)
 p.trial.CurrEpoch                = NaN;  % keep track of task epochs
 p.trial.CurTime                  = NaN;  % keep track of current time
+p.trial.AllCurTimes              = nan(p.trial.pldaps.maxFrames,1);
 p.trial.behavior.fixation.GotFix =   0;  % assume no fixation at task start
 p.trial.reward.Curr         = p.trial.reward.defaultAmount;  % expected reward amount (set to default amount)
 

@@ -1,4 +1,4 @@
-function SS = ND_RigDefaults(SS)
+function SS = ND_RigDefaults(rig)
 % set default parameters for a rig in the Disney lab.
 %
 % This file summarizes gives an overview of parameters that could be set for
@@ -16,6 +16,13 @@ function SS = ND_RigDefaults(SS)
 %
 %
 % wolf zinke, Oct. 2016
+% Nate Faber, 2017
+
+% If no rig is specified, use rig1
+if nargin < 1 || isempty(rig)
+    rig = 1;
+end
+
 
 % ------------------------------------------------------------------------%
 %% DataPixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
@@ -87,6 +94,26 @@ SS.display.coordMatrix                          = eye(3);% Identity matrix, will
 % ------------------------------------------------------------------------%
 %% EyeLink settings: Eyelink specific parameters
 SS.eyelink.use                                  = 0;     % if 1 use the eyelink module
+
+% ------------------------------------------------------------------------%
+%% Tucker-Davis Technologies: TDT specific parameters for receiving electrophysiological data
+SS.tdt.use                                      = 0;     % Collect UDP packets from the RZ5
+
+% Use the IP address specific to the rig
+switch rig
+    case 1
+        SS.tdt.ip                               = '129.59.230.10';
+        
+%    case 2
+%        SS.tdt.ip                               = 'NO_IP_YET';
+    
+    otherwise
+        SS.tdt.ip                               = '129.59.230.10';
+end
+
+SS.tdt.channels                                 = 24; % Number of ephys channels to analyze in incoming data
+SS.tdt.sortCodes                                = 4;  % Number of units classified per channel. [1, 2, or 4]
+SS.tdt.bitsPerSort                              = 4;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
 % ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
@@ -200,8 +227,8 @@ SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibr
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
 SS.eyeCalib.name                     = 'Default';        % Name of the calibration used. For back referencing in the data later
 SS.eyeCalib.file                     = 'nofile';   % THe file that stores the calibration information
-SS.eyeCalib.defaultGain              = [4.4281 -4.3813];  % default gain, used if no calibration points are entered
-SS.eyeCalib.defaultOffset            = [-2.3334 -1.5129];    % default offset, used if no calibration points are entered
+SS.eyeCalib.defaultGain              = [-3.5622 -3.4474];  % default gain, used if no calibration points are entered
+SS.eyeCalib.defaultOffset            = [0.3528 1.3147];    % default offset, used if no calibration points are entered
 SS.eyeCalib.offsetTweak              = [0, 0];    % Additive tweak to the offset parameter  
 SS.eyeCalib.gainTweak                = [0, 0];    % Additive tweak to the gain parameter
 SS.behavior.fixation.calibTweakMode  = 'off';     % Parameter currently being tweaked
@@ -244,25 +271,25 @@ SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indi
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
 % Fixation spot stimuli
-SS.stim.fixspot.pos     = [0,0];
-SS.stim.fixspot.fixWin  =  4;         % diameter of fixation window in dva
-SS.stim.fixspot.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-SS.stim.fixspot.color   = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
-SS.stim.fixspot.size    = 0.2;        % size of the fixation spot
+SS.stim.FIXSPOT.pos     = [0,0];
+SS.stim.FIXSPOT.fixWin  =  4;         % diameter of fixation window in dva
+SS.stim.FIXSPOT.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+SS.stim.FIXSPOT.color   = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
+SS.stim.FIXSPOT.size    = 0.2;        % size of the fixation spot
 SS.behavior.fixation.fix.pos = [0,0]; % Somethings may rely on this, will be overwritten upon creation of first FixSpot
 
 % Sine Wave Grating stimlui
-SS.stim.grating.sFreq    = 3; % Spatial frequency, cycles/deg
-SS.stim.grating.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
-SS.stim.grating.angle    = 0; % Rotation
-SS.stim.grating.contrast = 1;
-SS.stim.grating.res      = 1000; % Half the size of the texture matrix
-SS.stim.grating.radius   = 1;
-SS.stim.grating.contrastMethod = 'balanced';
-SS.stim.grating.pos      = [0, 0];
-SS.stim.grating.fixWin   =  4;  
-SS.stim.grating.alpha    = 1; % Fully opaque
-% SS.stim.grating.srcRadius  = 500; % Big source to allow for more resolution
+SS.stim.GRATING.sFreq    = 3; % Spatial frequency, cycles/deg
+SS.stim.GRATING.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
+SS.stim.GRATING.angle    = 0; % Rotation
+SS.stim.GRATING.contrast = 1;
+SS.stim.GRATING.res      = 1000; % Half the size of the texture matrix
+SS.stim.GRATING.radius   = 1;
+SS.stim.GRATING.contrastMethod = 'balanced';
+SS.stim.GRATING.pos      = [0, 0];
+SS.stim.GRATING.fixWin   =  4;  
+SS.stim.GRATING.alpha    = 1; % Fully opaque
+% SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 
 
 
@@ -289,13 +316,22 @@ SS.JoyState.JoyRest     =   0;  % joystick released
 
 % ------------------------------------------------------------------------%
 %% Analog/digital input/output channels
-SS.datapixx.adc.TTLamp      =  3;  % amplitude of TTL pulses via adc
+SS.datapixx.adc.TTLamp       =  3;  % amplitude of TTL pulses via adc
 
-SS.datapixx.TTLdur          = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the TTL pulse
-SS.datapixx.EVdur           = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the strobe signal
+SS.datapixx.TTLdur           = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the TTL pulse
+SS.datapixx.EVdur            = [];  % depending on the DAQ sampling rate it might be necessary to ensure a minimum duration of the strobe signal
 
-SS.datapixx.TTL_trialOn     = 1;   % if 1 set a digital output high while trial is active
-SS.datapixx.TTL_trialOnChan = 1;   % DIO channel used for trial state TTL
+SS.datapixx.TTL_trialOn      = 1;   % if 1 set a digital output high while trial is active
+SS.datapixx.TTL_trialOnChan  = 1;   % DIO channel used for trial state TTL
+
+% TTL pulse series for pico spritzer
+SS.datapixx.TTL_spritzerChan      = 5;    % DIO channel
+SS.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
+SS.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
+SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
+
+SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
+SS.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 
 % ------------------------------------------------------------------------%
 %% Control screen flips
@@ -317,6 +353,8 @@ SS.key.FixInc  = KbName('=+'); % increase size of fixation window
 SS.key.FixDec  = KbName('-_'); % decrease size of fixation window
 
 SS.key.viewEyeCalib = KbName('insert'); % View the calibration points
+
+SS.key.spritz  = KbName('tab'); % Send a TTL pulse over the analog channel connected to the pico spritzer
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables
