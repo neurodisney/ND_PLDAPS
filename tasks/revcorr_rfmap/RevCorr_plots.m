@@ -31,7 +31,7 @@ try
    
     %% Plot of fixation time
     % Takes up the top row of the plot. Shows fixation time over the duration of the entire experiment
-    subplot(plotRows, plotCols, 1:plotCols)
+    subplot(plotRows, plotCols, 1:plotCols-1)
     
     % Get and save relavent information
         % Trial times relative to start of experiment
@@ -95,6 +95,37 @@ try
         return;
     end
     %--------------------------------------------------%
+    %% Plot fixation time histogram
+    % Shows the histogram of fixation time
+    subplot(plotRows, plotCols, plotCols)
+    
+    binWidth = 1;
+    ibw = 1 / binWidth;
+    
+    % Get the edges of the histogram bins
+    maxEdge = ceil(max(fixDurs)*ibw)/ibw;
+    edges = 0:ibw:maxEdge;
+    
+    % Plot the histogram
+    h = histogram(fixDurs,edges);
+    
+    % Set up x axis
+    xlim([0,maxEdge]);
+    xlabel('Fixation Duration [s]');
+    
+    % Add labels for each bar
+    vals = h.Values;
+    textVals = cellfun(@num2str, num2cell(vals), 'UniformOutput', false);
+    
+    binCenters = (edges(1:end-1) + edges(2:end)) / 2;
+    textHeight = max(vals)+5;
+    heights = repmat(textHeight,length(binCenters),1);
+    ylim([0, max(vals)+10])
+    
+    text(binCenters,heights,textVals,'horizontalalignment','center')
+    
+    
+    
     
     %% Plot of coarse heatmap
     % Shows where stimuli appeared before spiking activity in the coarse mapping process
