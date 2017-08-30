@@ -80,7 +80,7 @@ end
 %% Spike Server
 % open a TDT connection
 if p.trial.tdt.use
-    pds.tdt.init(p)
+    pds.tdt.init(p);
 end
 
 % ------------------------------------------------------------------------%
