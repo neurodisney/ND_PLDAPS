@@ -49,14 +49,7 @@ try
     iBreak = allOutcomes == p.trial.outcome.FixBreak;
     
     % Fix Times
-    if currOutcome == p.trial.outcome.Correct
-        currFixDur = p.trial.EV.TaskEnd - p.trial.EV.FixStart;
-    elseif currOutcome == p.trial.outcome.FixBreak
-        currFixDur = p.trial.EV.FixBreak - p.trial.EV.FixStart;
-    else
-        currFixDur = NaN;
-    end
-    p.plotdata.fixDur(nTrials, 1) = currFixDur;
+    p.plotdata.fixDur(nTrials, 1) = p.trial.task.fixDur;
     fixDurs = p.plotdata.fixDur;
     
     % Plot it    
