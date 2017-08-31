@@ -27,11 +27,11 @@ cwd = pwd;
 
 cd(pathStr)
 
-gitnfo = getGitInfo;
+% gitnfo = getGitInfo;
 
-p.defaultParameters.pldaps.git.hash   = gitnfo.hash;
-p.defaultParameters.pldaps.git.branch = gitnfo.branch;
-p.defaultParameters.pldaps.git.dir    = pathStr;
+%p.defaultParameters.pldaps.git.hash   = gitnfo.hash;
+%p.defaultParameters.pldaps.git.branch = gitnfo.branch;
+%p.defaultParameters.pldaps.git.dir    = pathStr;
 
 cd(cwd);
 

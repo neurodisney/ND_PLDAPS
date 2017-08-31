@@ -40,8 +40,6 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
     
-    p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.GRATING.pos(1)',         '%.3f');
-    p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.GRATING.pos(2)',         '%.3f');
     p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'contrast',    'p.trial.stim.GRATING.contrast',       '%.1f');
@@ -50,12 +48,9 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimOn',      'p.trial.EV.StimOn',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimOff',     'p.trial.EV.StimOff',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'FixStart',    'p.trial.EV.FixSpotStart',             '%.5f');
     p = ND_AddAsciiEntry(p, 'FixBreak',    'p.trial.EV.FixSpotStop',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimFix',     'p.trial.EV.FixTargetStart',           '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimBreak',   'p.trial.EV.FixTargetStop',            '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixDur',      'p.trial.task.fixDur',                 '%.5f');
     p = ND_AddAsciiEntry(p, 'TaskEnd',     'p.trial.EV.TaskEnd',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
 
@@ -189,6 +184,8 @@ p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 p.trial.task.Good    = 0;
 p.trial.task.fixFix  = 0;
 p.trial.task.stimState = 0;
+
+p.trial.task.fixDur = NaN;
 
 %% Switch modes or reset RF data based on flags
 if p.trial.RF.flag_fine
@@ -440,6 +437,18 @@ switch p.trial.CurrEpoch
         % Grab the fixation stopping and starting values from the stim properties
         p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
         p.trial.EV.FixSpotStop  = p.trial.stim.fix.EV.FixBreak;
+        
+        % Calculate the total fixation duration
+        currOutcome = p.trial.outcome.CurrOutcome;
+        if currOutcome == p.trial.outcome.Correct
+            fixDur = p.trial.EV.TaskEnd - p.trial.EV.FixStart;
+        elseif currOutcome == p.trial.outcome.FixBreak
+            fixDur = p.trial.EV.FixBreak - p.trial.EV.FixStart;
+        else
+            fixDur = NaN;
+        end
+        
+        p.trial.task.fixDur = fixDur;
       
         switchEpoch(p,'ITI');
         
