@@ -67,7 +67,7 @@ if(isempty(state))
     % colors, use entries later in the lookup table for the definition of task related colors.
 
     p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});  
-    
+    p.trial.task.Color_list = {'white'};
     % --------------------------------------------------------------------%
     %% Enable random positions
     p.trial.task.RandomPos = 0;
