@@ -258,7 +258,30 @@ drawnow
         % Use visual x axis lables
         set(gca, 'XTick', [0 45 90 135])
         set(gca, 'XTickLabel',{'|','\','—','/'})
+    end
+
+    function coarseHM_click(imageHandle, eventData)
+        rfdef = p.trial.RF.coarse;
         
+        axesHandle = get(imageHandle, 'Parent');
+        clickPos = get(axesHandle, 'CurrentPoint');
+        
+        xClick = clickPos(1,1);
+        yClick = clickPos(1,2);
+        
+        % Round the click position to the nearest grid position on the heatmap
+        sRes = p.trial.RF.spatialRes;
+        xRange = rfdef.xRange;
+        yRange = rfdef.yRange;
+        
+        xCoord = round( (xClick - xRange(1)) / (diff(xRange) / sRes) ) * (diff(xRange) / sRes) + xRange(1);
+        yCoord = round( (yClick - yRange(1)) / (diff(yRange) / sRes) ) * (diff(yRange) / sRes) + yRange(1);
+        
+        rfdef.maxPos = [xCoord yCoord];
+        p.trial.RF.coarse = rfdef;
+        
+        plot_coarseHeatmap
+        plot_temporalProfile
         
     end
 
