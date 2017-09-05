@@ -244,8 +244,10 @@ function TaskSetUp(p)
     p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial,  ...
                                          p.trial.reward.MaxWaitInitial,  [], [], 1, 0.001);
 
-    p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
-    
+    p.trial.CurrEpoch        = p.trial.epoch.ITI;
+
+    % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
+    p.trial.task.longITI = 1;
       
     % Reward
     nRewards = p.trial.reward.nRewards;
@@ -281,7 +283,29 @@ function TaskDesign(p)
 %% main task outline
 % The different task stages (i.e. 'epochs') are defined here.
     switch p.trial.CurrEpoch
-
+        
+        case p.trial.epoch.ITI
+        %% inter-trial interval: wait until sufficient time has passed from the last trial
+        if p.trial.CurTime < p.trial.EV.PlanStart
+            % All intertrial processing was completed before the ITI expired
+            p.trial.task.longITI = 0;
+            
+        else
+            if isnan(p.trial.EV.PlanStart)
+                % First trial, or after a break
+                p.trial.task.longITI = 0;
+            end
+            
+            % If intertrial processing took too long, display a warning
+            if p.trial.task.longITI
+                disp('Warning: longer ITI than specified');
+            end
+            
+            switchEpoch(p,'TrialStart');
+            
+        end
+        
+        % ----------------------------------------------------------------%  
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
             fixspot(p,1);
@@ -420,12 +444,10 @@ function TaskDesign(p)
         
         % Run standard TaskEnd routine
         Task_OFF(p);
-        switchEpoch(p,'ITI');
         
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.ITI
-        %% inter-trial interval: wait before next trial to start
-            Task_WaitITI(p);
+        % Flag next trial ITI is done at begining
+        p.trial.flagNextTrial = 1;
+        
             
     end  % switch p.trial.CurrEpoch
 

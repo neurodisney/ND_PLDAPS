@@ -36,6 +36,9 @@ p.defaultParameters.outcome.allOutcomes = allOutcomes;
 
 p.defaultParameters.blocks = p.trial.blocks;
 
+% Pass on the ITI timer
+p.defaultParameters.EV.PlanStart = p.trial.EV.NextTrialStart;
+
 % Define a set of variables that should be editable, i.e. pass on information by default
 
 % --------------------------------------------------------------------%
