@@ -352,6 +352,9 @@ switch p.trial.CurrEpoch
                 % Turn the first stim on
                 stim(p,1)
                 
+                % Set the timer for the first reward
+                p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
+                
                 % Transition to the succesful fixation epoch
                 switchEpoch(p,'Fixating')
                 
@@ -380,17 +383,23 @@ switch p.trial.CurrEpoch
                     return;
                 end
                 
+                % Reward if reward period has elapsed
+                if p.trial.CurTime >= p.trial.EV.nextReward
+                    % Give reward if it is enabled
+                    if p.trial.reward.Dur > 0
+                        pds.reward.give(p, p.trial.reward.Dur);
+                    end
+                    
+                    % Reset the reward timer
+                    p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
+                end
+                
                 if p.trial.task.stimState
                     % Keep stim on for stimOn Time
                     if p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.stimOnTime
                         % Full stimulus presentation has occurred
                         % TODO: Record data here
-                        
-                        % Give reward if it is enabled
-                        if p.trial.reward.Dur > 0
-                            pds.reward.give(p, p.trial.reward.Dur);
-                        end
-                        
+                     
                         % Turn stim off
                         stim(p,0)
                         

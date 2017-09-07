@@ -22,6 +22,7 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
+p.trial.reward.Period = 0.3;
 
 p.trial.reward.jackpotDur = 0.3;     % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
