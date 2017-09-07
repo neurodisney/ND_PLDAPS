@@ -35,6 +35,7 @@ p.defaultParameters.EV.PDOff         = NaN; % Photo diode offset
 p.defaultParameters.EV.GoCue         = NaN; % Onset of Go-signal
 p.defaultParameters.EV.FirstReward   = NaN; % First reward given in a trial
 p.defaultParameters.EV.Reward        = NaN; % time of reward delivery
+p.defaultParameters.EV.nextReward    = NaN; % Scheduled time of next reward
 p.defaultParameters.EV.StartRT       = NaN; % response time to start trial after active cue
 p.defaultParameters.EV.RespRT        = NaN; % reaction time
 p.defaultParameters.EV.DPX_TaskOn    = NaN; % Synch time with datapixx for task on
