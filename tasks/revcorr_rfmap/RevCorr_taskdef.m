@@ -25,8 +25,8 @@ p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim pr
 
 p.trial.reward.jackpotDur = 0.3;     % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
-p.trial.reward.nPulse          = 2;  % number of reward pulses
-p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with this trial number
+p.trial.reward.nPulse          = 1;  % number of reward pulses
+p.trial.reward.PulseStep       = [3]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -58,8 +58,10 @@ p.trial.RF.temporalProfileRefineProportion = 0.2;  % During the coarse mapping, 
 
 p.trial.RF.maxSpikesPerTrial = 1000;   % Max spikes per trial, for preallocation purposes.
 
-p.trial.RF.channels = 9;  % Which channels of the incoming spike data to use for spikes
-p.trial.RF.sortCodes = 1:4;  % Which sort codes to use
+% Note: these select which channels to count when listening to spikes
+% To set up how many channels total on the electrode look below in TDT setup section
+p.trial.RF.channels = 18;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.sortCodes = 1;  % Which sort codes to use
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
@@ -67,7 +69,7 @@ p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color  = 'white';  % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.FIXSPOT.size   = 0.15;        % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin = 3;
+p.trial.stim.FIXSPOT.fixWin = 4; 
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
@@ -123,6 +125,12 @@ p.trial.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
 
 p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
 p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
+
+% ------------------------------------------------------------------------%
+%% TDT setup
+p.trial.tdt.channels          = 24; % Number of ephys channels to analyze in incoming data
+p.trial.tdt.sortCodes         = 4;  % Number of units classified per channel. [1, 2, or 4]
+p.trial.tdt.bitsPerSort       = 2;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
 % ------------------------------------------------------------------------%
 %% Trial duration
