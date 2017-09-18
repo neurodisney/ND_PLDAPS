@@ -51,7 +51,7 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% RF mapping parameters
-p.trial.RF.spatialRes  = 25;  % Number sections to subdivide the possible visual space into
+p.trial.RF.spatialRes  = 5;  % Number sections to subdivide the possible visual space into
 p.trial.RF.coarse.temporalRange  = [-0.5, 0]; % Range from each spike to calculate the reverse correlation
 p.trial.RF.temporalRes = 25;  % Number of sections to divide the history into for analysis
 
