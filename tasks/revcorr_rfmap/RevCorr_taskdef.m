@@ -22,12 +22,12 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
-p.trial.reward.Period = 0.3;
+p.trial.reward.Period = 0.40;
 
-p.trial.reward.jackpotDur = 0.3;     % Reward for holding fixation until jackpotTime
+p.trial.reward.jackpotDur = 0.2;     % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1;  % number of reward pulses
-p.trial.reward.PulseStep       = [3]; % increase number of pulses with this trial number
+p.trial.reward.PulseStep       = [2,5]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -40,7 +40,7 @@ p.trial.task.fixLatency       = 0.15; % Time to hold fixation before mapping beg
 p.trial.task.stimOnTime       = 0.1;   % How long each stimulus is presented
 p.trial.task.stimOffTime      = 0.1;     % Gaps between succesive stimuli
 
-p.trial.task.jackpotTime      = 4;     % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.jackpotTime      = 4.5;     % How long stimuli are presented before trial ends and jackpot is given
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
@@ -52,7 +52,7 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 % ------------------------------------------------------------------------%
 %% RF mapping parameters
 p.trial.RF.spatialRes  = 25;  % Number sections to subdivide the possible visual space into
-p.trial.RF.coarse.temporalRange  = [-0.5, 0]; % Range from each spike to calculate the reverse correlation
+p.trial.RF.coarse.temporalRange  = [-0.25, 0]; % Range from each spike to calculate the reverse correlation
 p.trial.RF.temporalRes = 25;  % Number of sections to divide the history into for analysis
 
 p.trial.RF.temporalProfileRefineProportion = 0.2;  % During the coarse mapping, a temproal profile of stims is created, this proporiton of the max is used to cut off the accepted times for the fine mapping
