@@ -59,7 +59,6 @@ if(isempty(state))
     % condition 1
     c1.Nr = 1;
     
-    
     conditions = {c1};
 
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);

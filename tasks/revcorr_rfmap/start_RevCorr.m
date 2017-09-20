@@ -21,11 +21,6 @@ if(~exist('rig','var') || isempty(rig))
     rig = str2num(rigname);
 end
 
-% name of subject. This will be used to create a subdirectory with this name.
-if(~exist('experimenter','var') || isempty(experimenter))
-    experimenter = getenv('USER');
-end
-
 %-------------------------------------------------------------------------%
 %% load default settings into a struct
 SS = ND_RigDefaults(rig);    % load default settings according to the current rig setup
@@ -119,10 +114,6 @@ end
 % ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);
-
-% keep rig/experimenter specific inforamtion
-p.defaultParameters.session.rig          = rig;
-p.defaultParameters.session.experimenter = experimenter;
 
 % ------------------------------------------------------------------------%
 %% run the experiment

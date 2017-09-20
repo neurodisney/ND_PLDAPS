@@ -23,6 +23,7 @@ if nargin < 1 || isempty(rig)
     rig = 1;
 end
 
+SS.defaultParameters.session.rig = rig;
 
 % ------------------------------------------------------------------------%
 %% DataPixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
