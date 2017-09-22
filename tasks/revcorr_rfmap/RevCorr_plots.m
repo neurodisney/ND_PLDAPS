@@ -261,6 +261,9 @@ drawnow
     end
 
     function coarseHM_click(imageHandle, eventData)
+        % Start using the custom position rather than the max pos
+        rfdef.useCustPos = 1;
+        
         rfdef = p.trial.RF.coarse;
         
         axesHandle = get(imageHandle, 'Parent');
