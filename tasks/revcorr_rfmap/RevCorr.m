@@ -927,6 +927,10 @@ p.trial.RF.fine.revCorrStims = [];
 p.trial.stim.fine.xRange = NaN;
 p.trial.stim.fine.yRange = NaN;
 
+% Use automatic position again
+p.trial.RF.coarse.useCustPos = 0;
+p.trial.RF.fine.useCustPos = 0;
+
 % Reset flags
 p.trial.RF.flag_new = 0;
 p.trial.RF.flag_fine = 0;
