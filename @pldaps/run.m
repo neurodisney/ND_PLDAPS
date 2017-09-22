@@ -290,7 +290,7 @@ function pauseLoop(p)
 
         if(any(p.trial.keyboard.firstPressQ))
 
-            qp = find(p.trial.keyboard.firstPressQ); % identify which key was pressed
+            qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
 
             switch qp
 
