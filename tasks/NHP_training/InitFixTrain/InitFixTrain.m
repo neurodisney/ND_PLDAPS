@@ -55,8 +55,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
-    
-    
+       
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
 
@@ -66,14 +65,6 @@ if(isempty(state))
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.
 
-    p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});  
-    p.trial.task.Color_list = {'white'};
-    % --------------------------------------------------------------------%
-    %% Enable random positions
-    p.trial.task.RandomPos = 0;
-    
-    p.trial.task.RandomPosRange = [5, 5];  % range of x and y dva for random position
-    
     % --------------------------------------------------------------------%
     %% Determine conditions and their sequence
     % define conditions (conditions could be passed to the pldaps call as
@@ -81,7 +72,6 @@ if(isempty(state))
     % control of trials, especially the use of blocks, i.e. the repetition
     % of a defined number of trials per condition, needs to be clarified.
 
-    
     % reward series for continous fixation
     % c.reward.MinWaitInitial -  minimum latency to reward after fixation
     % c.reward.MaxWaitInitial -  maximum latency to reward after fixation
@@ -184,6 +174,7 @@ if(isempty(state))
     p.defaultParameters.pldaps.finish = totalTrials;
 
 else
+    
 % ####################################################################### %
 %% Subsequent calls during actual trials
 % execute trial specific commands here.
@@ -303,7 +294,6 @@ function TaskDesign(p)
             end
             
             switchEpoch(p,'TrialStart');
-            
         end
         
         % ----------------------------------------------------------------%  
@@ -345,7 +335,6 @@ function TaskDesign(p)
                     switchEpoch(p,'TaskEnd')                   
                 end
                 
-                
             % If gaze is inside fixation window
             elseif p.trial.task.fixFix == 1
                 
@@ -376,9 +365,7 @@ function TaskDesign(p)
                     
                     % Transition to the succesful fixation epoch
                     switchEpoch(p,'Fixating');
-
                 end
-                
             end
             
         % ----------------------------------------------------------------%
@@ -409,7 +396,6 @@ function TaskDesign(p)
                     % Give the reward and update the lastReward time
                     pds.reward.give(p, rewardDuration);
                     p.trial.Timer.lastReward = p.trial.CurTime;
-
                 end
 
             else
@@ -436,7 +422,6 @@ function TaskDesign(p)
             pds.audio.playDP(p,'breakfix','left');
             switchEpoch(p,'TaskEnd');
             fixspot(p,0);
-                                 
         end
             
         % ----------------------------------------------------------------%
@@ -457,7 +442,6 @@ function TaskDesign(p)
 %% show epoch dependent stimuli
 % go through the task epochs as defined in TaskDesign and draw the stimulus
 % content that needs to be shown during this epoch.
-
     
 % ####################################################################### %
 function TaskCleanAndSave(p)
@@ -469,6 +453,7 @@ p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes
 
 % Save useful info to an ascii table for plotting
 ND_Trial2Ascii(p, 'save');
+
 % ####################################################################### %
 
 function KeyAction(p)

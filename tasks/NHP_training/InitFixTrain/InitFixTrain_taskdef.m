@@ -32,12 +32,17 @@ p.trial.reward.MinWaitInitial = 0.25;
 p.trial.reward.MaxWaitInitial = 0.50;
 
 % ------------------------------------------------------------------------%
+%% Task Blocks
+p.trial.maxTrials_per_Block   =  4;  % how often to repeat each condition within a block
+p.trial.maxBlocks             = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
+
+% ------------------------------------------------------------------------%
 %% Timing
 p.trial.task.Timing.WaitFix = 0.100; % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
-p.trial.task.Timing.MinITI  = 1.5;   % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = 2.5;   % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI  = 0.75;   % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI  = 1.5;   % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
@@ -48,6 +53,14 @@ p.trial.stim.FIXSPOT.type    = 'disc';   % shape of fixation target, options imp
 p.trial.stim.FIXSPOT.size    = 4;        % size of the fixation spot
 p.trial.stim.FIXSPOT.fixWin  = 0;         %
 
+% color options (make sure colors are defined!)
+% p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});  
+p.trial.task.Color_list = {'white'};
+
+% Enable random positions
+p.trial.task.RandomPos = 0;
+p.trial.task.RandomPosRange = [5, 5];  % range of x and y dva for random position
+    
 % ------------------------------------------------------------------------%
 %% Fixation parameters
 p.trial.behavior.fixation.BreakTime = 0.025;  % minimum time [ms] to identify a fixation break

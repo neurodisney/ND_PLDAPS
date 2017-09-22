@@ -24,6 +24,7 @@ end
 %% load default settings into a struct
 SS = ND_RigDefaults(rig);    % load default settings according to the current rig setup
 
+
 %% ################## Edit within the following block ################## %%
 
 %% Define task related functions

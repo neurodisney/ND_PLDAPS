@@ -18,7 +18,7 @@ function SS = ND_RigDefaults(rig)
 % wolf zinke, Oct. 2016
 % Nate Faber, 2017
 
-% If no rig is specified, use rig1
+% If no rig is specified, use rig1 as default
 if nargin < 1 || isempty(rig)
     rig = 1;
 end
