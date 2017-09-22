@@ -319,6 +319,32 @@ function pauseLoop(p)
                     break;
 
                 % ----------------------------------------------------------------%
+                case p.trial.key.enableKeyboard
+                    disableKey = KbName(p.trial.key.disableKeyboard);
+                    ND_CtrlMsg(p,['Normal Keyboard function restored. When done, hit ', disableKey]);
+                    
+                    % Enable the keyboard to allow for normal computer functioning during a break
+                    ShowCursor;
+                    ListenChar(0);
+                    
+                    KbQueueStart;
+                    
+                    while(true)
+                        % Do this until the disableKeyboard key is pressed
+                        [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck();
+                        if any(p.trial.keyboard.firstPressQ)
+                            qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
+                            if qp == p.trial.key.disableKeyboard
+                                ND_CtrlMsg(p, 'Standard PLDAPS mode engaged');
+                                HideCursor;
+                                ListenChar(2);
+                                break;
+                            end
+                        end
+                    end
+                    
+                    
+                % ----------------------------------------------------------------%
                 case p.trial.key.quit
                 % quit experiment
                     p.trial.pldaps.quit = 2;
