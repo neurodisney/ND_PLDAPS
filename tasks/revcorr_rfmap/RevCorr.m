@@ -592,6 +592,11 @@ nSpikes = p.trial.RF.nSpikes;
 stimdef = p.trial.stim.(p.trial.stim.stage);
 rfdef = p.trial.RF.(p.trial.stim.stage);
 
+% Don't add anymore information to matrices if switching to fine or creating a new map
+if p.trial.RF.flag_new || p.trial.RF.flag_fine
+    return;
+end
+
 if nSpikes > 0
     % Preallocate a 4D matrix to hold the visual field information for each spike
     % x,y,time,spike
