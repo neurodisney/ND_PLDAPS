@@ -357,8 +357,10 @@ SS.key.viewEyeCalib = KbName('insert'); % View the calibration points
 
 SS.key.spritz  = KbName('tab'); % Send a TTL pulse over the analog channel connected to the pico spritzer
 
-SS.key.enableKeyboard = KbName('k'); % During a break, use this key to enable standard keyboard input
-SS.key.disableKeyboard = KbName('end'); % If the keyboard is enabled, go back to standard break mode with this key
+% Keys for freeing the keyboard, allowing for use in other programs while the task is going
+SS.pldaps.keyboardFree = 0; % Start with PLDAPS interpretting key strokes.
+SS.key.freeKeyboard = KbName('k'); % Enable standard keyboard input
+SS.key.stopFreeKeyboard = KbName('end'); % If the keyboard is enabled, go back to standard break mode with this key
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables

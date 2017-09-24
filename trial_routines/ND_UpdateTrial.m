@@ -76,6 +76,9 @@ if(p.trial.plot.do_online)
 end
 
 % --------------------------------------------------------------------%
+%% Keep keyboard freedom state
+p.defaultParameters.pldaps.keyboardFree = p.trial.pldaps.keyboardFree;
+% --------------------------------------------------------------------%
 %% editable variables
 if(isfield(p.trial, 'editable') && ~ isempty(p.trial.editable))
     for(i=1:length(p.trial.editable))

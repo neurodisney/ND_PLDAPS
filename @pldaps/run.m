@@ -319,9 +319,9 @@ function pauseLoop(p)
                     break;
 
                 % ----------------------------------------------------------------%
-                case p.trial.key.enableKeyboard
-                    disableKey = KbName(p.trial.key.disableKeyboard);
-                    ND_CtrlMsg(p,['Normal Keyboard function restored. When done, hit ', disableKey]);
+                case p.trial.key.freeKeyboard
+                    disableKey = KbName(p.trial.key.stopFreeKeyboard);
+                    ND_CtrlMsg(p,['Keyboard freed for normal functioning. When done, hit ', disableKey]);
                     
                     % Enable the keyboard to allow for normal computer functioning during a break
                     ShowCursor;
@@ -334,7 +334,7 @@ function pauseLoop(p)
                         [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck();
                         if any(p.trial.keyboard.firstPressQ)
                             qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
-                            if qp == p.trial.key.disableKeyboard
+                            if qp == p.trial.key.stopFreeKeyboard
                                 ND_CtrlMsg(p, 'Standard PLDAPS mode engaged');
                                 HideCursor;
                                 ListenChar(2);

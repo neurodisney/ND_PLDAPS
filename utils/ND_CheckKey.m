@@ -24,6 +24,21 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
 
     p.trial.LastKeyPress = find(p.trial.keyboard.firstPressQ); % identify which key was pressed
     
+    % If the keyboard is freed, don't interpret key presses. Just discard the input
+    if p.trial.pldaps.keyboardFree
+        % Unfree the keyboard if the stopFreeKeyboard key is pressed
+        if any(p.trial.LastKeyPress == p.trial.key.stopFreeKeyboard)
+            p.trial.pldaps.keyboardFree = 0;            
+            ND_CtrlMsg(p, 'Standard PLDAPS mode engaged');
+            ListenChar(2);
+            HideCursor;
+        end
+        
+        % Discard input queue so as not to interpret it
+        p.trial.LastKeyPress = [];
+    end
+        
+    
     for(i=1:length(p.trial.LastKeyPress))
         switch p.trial.LastKeyPress(i)
 
@@ -126,11 +141,17 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 p.trial.pldaps.quit = 2;
                 ShowCursor;
 
-%             % ----------------------------------------------------------------%
-%             case p.trial.key.quit
-%             %%  go into debug mode
-%                 disp('stepped into debugger. Type return to start first trial...')
-%                 keyboard %#ok<MCKBD>
+            % ----------------------------------------------------------------%
+            case p.trial.key.freeKeyboard
+                %% Free the keyboard to be used in other programs
+                p.trial.pldaps.keyboardFree = 1;
+                
+                disableKey = KbName(p.trial.key.stopFreeKeyboard);
+                ND_CtrlMsg(p,['Keyboard freed for normal functioning. When done, hit ', disableKey]);
+                
+                ShowCursor;
+                ListenChar(0);
+
 
         end  %/ switch Kact
     end
