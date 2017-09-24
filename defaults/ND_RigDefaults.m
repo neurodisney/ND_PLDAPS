@@ -133,7 +133,7 @@ SS.sound.useDatapixx                            = 1;
 SS.sound.datapixxVolume                         = 0.9;
 SS.sound.datapixxInternalSpeakerVolume          = 0;
 
-SS.sound.usePsychPortAudio                      = 1;
+SS.sound.usePsychPortAudio                      = 0;
 SS.sound.psychPortVolume                        = 0.9;
 
 % ------------------------------------------------------------------------%

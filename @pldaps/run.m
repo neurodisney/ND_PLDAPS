@@ -233,7 +233,7 @@ try
 
     % ----------------------------------------------------------------%
     %% shut down audio
-    if(p.defaultParameters.sound.use)
+    if p.defaultParameters.sound.use && p.trial.sound.usePsychPortAudio
         % Close the audio device:
         PsychPortAudio('Close', p.defaultParameters.sound.master);
     end
