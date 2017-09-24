@@ -18,7 +18,7 @@ try
     if isempty(p.trial.plot.fig)
         p.trial.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
     else
-        figure(p.trial.plot.fig);
+        set(0, 'CurrentFigure', p.trial.plot.fig);
     end
     
     

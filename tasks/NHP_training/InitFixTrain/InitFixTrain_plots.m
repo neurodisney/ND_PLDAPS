@@ -48,7 +48,7 @@ if(offln == 1)
 elseif(isempty(p.trial.plot.fig) || offln == 1)
     p.trial.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
 else
-    figure(p.trial.plot.fig);
+    set(0, 'CurrentFigure', p.trial.plot.fig);
 end
 
 Ntrials = p.trial.pldaps.iTrial;
