@@ -19,8 +19,9 @@ function SS = ND_RigDefaults(rig)
 % Nate Faber, 2017
 
 % If no rig is specified, use rig1
-if nargin < 1 || isempty(rig)
-    rig = 1;
+if(~exist('rig','var') || isempty(rig))
+    [~, rigname] = system('hostname');
+    rig = str2num(regexp(rigname,'\d+','match','once'));
 end
 
 SS.defaultParameters.session.rig = rig;

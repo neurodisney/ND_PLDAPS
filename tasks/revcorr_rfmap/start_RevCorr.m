@@ -18,7 +18,7 @@ end
 % name of subject. This will be used to create a subdirectory with this name.
 if(~exist('rig','var') || isempty(rig))
     [~, rigname] = system('hostname');
-    rig = str2num(rigname);
+    rig = str2num(regexp(rigname,'\d+','match','once'));
 end
 
 %-------------------------------------------------------------------------%
