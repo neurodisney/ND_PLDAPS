@@ -178,26 +178,34 @@ try
             end
             
         elseif p.trial.pldaps.pause
-        %% interupt experiment    
+        %% pause experiment    
+        
             if(p.trial.pldaps.pause == 1)
                 pds.datapixx.strobe(p.trial.event.PAUSE);
-%                 p.trial.EV.Pause = p.trial.CurTime;
+                
             elseif(p.trial.pldaps.pause == 2)
                 % set screen to break color
                 Screen('FillRect', p.trial.display.overlayptr, ...
-                    p.trial.display.clut.(p.trial.display.breakColor), p.defaultParameters.display.winRect);
-                %Screen('FillRect', p.trial.display.overlayptr, p.trial.display.breakColor);
+                       p.trial.display.clut.(p.trial.display.breakColor), ...
+                       p.defaultParameters.display.winRect);
+                   
                 Screen('Flip', p.trial.display.ptr, 0);
+                
                 pds.datapixx.strobe(p.trial.event.BREAK);
-%                 p.trial.EV.Break = p.trial.CurTime;
+            end
+        
+            KbQueueStart;
+
+            % check for keyboard actions while pausing
+            while(p.trial.pldaps.pause == 1 && p.trial.pldaps.quit < 1)
+                WaitSecs(0.01);
+                ND_CheckKey(p);
             end
             
-            pauseLoop(p);
-
+            pds.datapixx.strobe(p.trial.event.UNPAUSE);
         end
     end  %  while(p.trial.pldaps.iTrial < p.trial.pldaps.finish && p.trial.pldaps.quit ~= 2)
 
-    
     % final update of trial information
     p = ND_AfterTrial(p);
     
@@ -278,90 +286,3 @@ catch me
     fprintf('\r\r')
     keyboard
 end
-
-% ----------------------------------------------------------------%
-%%  Pausing of experiment
-function pauseLoop(p)
-    KbQueueStart;
-    
-    while(true)
-        %the keyboard chechking we only capture ctrl+alt key presses.
-        [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck(); % fast
-
-        if(any(p.trial.keyboard.firstPressQ))
-
-            qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
-
-            switch qp
-
-                % ----------------------------------------------------------------%
-                case p.trial.key.reward
-                % reward
-                % check for manual reward delivery via keyboard
-                    pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
-
-                % ----------------------------------------------------------------%
-                case p.trial.key.pause
-                % un-pause trial
-                    p.trial.pldaps.pause = 0;
-                    ND_CtrlMsg(p,'Pause cancelled.');
-                    pds.datapixx.strobe(p.trial.event.UNPAUSE);
-    %                 p.trial.EV.Unpause = GetSecs;
-                    break;
-
-                % ----------------------------------------------------------------%
-                case p.trial.key.break
-                % un-break trial
-                    p.trial.pldaps.pause = 0;
-                    ND_CtrlMsg(p,'Break cancelled.');
-                    pds.datapixx.strobe(p.trial.event.UNBREAK);
-    %                 p.trial.EV.Unpause = GetSecs;
-                    break;
-
-                % ----------------------------------------------------------------%
-                case p.trial.key.freeKeyboard
-                    disableKey = KbName(p.trial.key.stopFreeKeyboard);
-                    ND_CtrlMsg(p,['Keyboard freed for normal functioning. When done, hit ', disableKey]);
-                    
-                    % Enable the keyboard to allow for normal computer functioning during a break
-                    ShowCursor;
-                    ListenChar(0);
-                    
-                    KbQueueStart;
-                    
-                    while(true)
-                        % Do this until the disableKeyboard key is pressed
-                        [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck();
-                        if any(p.trial.keyboard.firstPressQ)
-                            qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
-                            if qp == p.trial.key.stopFreeKeyboard
-                                ND_CtrlMsg(p, 'Standard PLDAPS mode engaged');
-                                HideCursor;
-                                ListenChar(2);
-                                break;
-                            end
-                        end
-                    end
-                    
-                % ----------------------------------------------------------------%
-                case p.trial.key.quit
-                % quit experiment
-                    p.trial.pldaps.quit = 2;
-                    ShowCursor;
-                    break;
-                    
-                % ----------------------------------------------------------------%
-                case p.trial.key.spritz
-                % Send a TTL pulse to the picospritzer to trigger drug release
-                    ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,      ...
-                                   p.trial.datapixx.TTL_spritzerDur,       ...
-                                   p.trial.datapixx.TTL_spritzerNpulse,    ...
-                                   p.trial.datapixx.TTL_spritzerPulseGap,  ...
-                                   p.trial.datapixx.TTL_spritzerNseries,   ...
-                                   p.trial.datapixx.TTL_spritzerSeriesGap, ...
-                                   p.trial.event.INJECT);
-            end  %  switch qp
-        end  % if(any(p.trial.keyboard.firstPressQ))
-        
-        pause(0.1);
-    end  %  while(true)

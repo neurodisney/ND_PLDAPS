@@ -3,21 +3,21 @@ function p = ND_CheckKey(p)
 % code based on pldap's default trial function.
 % check for key presses and act accordingly.
 %
-% Be careful, in the pldaps run function is also a routine (pauseLoop) to read out key
-% presses with hard coded keys (noticed too late), we need to ensure that our key layout
-% matches the one defined in there.
+% wolf zinke & Nate Faber
 
 [p.trial.keyboard.pressedQ, p.trial.keyboard.firstPressQ, firstRelease, lastPress, lastRelease] = KbQueueCheck(); % fast
 
-if(p.trial.keyboard.pressedQ || any(firstRelease) )
-    p.trial.keyboard.samples =             p.trial.keyboard.samples+1;
-    p.trial.keyboard.samplesTimes(         p.trial.keyboard.samples) = GetSecs;
-    p.trial.keyboard.samplesFrames(        p.trial.keyboard.samples) = p.trial.iFrame;
-    p.trial.keyboard.pressedSamples(     :,p.trial.keyboard.samples) = p.trial.keyboard.pressedQ;
-    p.trial.keyboard.firstPressSamples(  :,p.trial.keyboard.samples) = p.trial.keyboard.firstPressQ;
-    p.trial.keyboard.firstReleaseSamples(:,p.trial.keyboard.samples) = firstRelease;
-    p.trial.keyboard.lastPressSamples(   :,p.trial.keyboard.samples) = lastPress;
-    p.trial.keyboard.lastReleaseSamples( :,p.trial.keyboard.samples) = lastRelease;
+if(p.trial.pldaps.pause ~= 0)
+    if(p.trial.keyboard.pressedQ || any(firstRelease) )
+        p.trial.keyboard.samples =             p.trial.keyboard.samples+1;
+        p.trial.keyboard.samplesTimes(         p.trial.keyboard.samples) = GetSecs;
+        p.trial.keyboard.samplesFrames(        p.trial.keyboard.samples) = p.trial.iFrame;
+        p.trial.keyboard.pressedSamples(     :,p.trial.keyboard.samples) = p.trial.keyboard.pressedQ;
+        p.trial.keyboard.firstPressSamples(  :,p.trial.keyboard.samples) = p.trial.keyboard.firstPressQ;
+        p.trial.keyboard.firstReleaseSamples(:,p.trial.keyboard.samples) = firstRelease;
+        p.trial.keyboard.lastPressSamples(   :,p.trial.keyboard.samples) = lastPress;
+        p.trial.keyboard.lastReleaseSamples( :,p.trial.keyboard.samples) = lastRelease;
+    end
 end
 
 if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key in the buffer, might be worth to modify it in a way that the full buffer is used.
@@ -110,29 +110,35 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 else
                     p.trial.pldaps.pause = 0;
                     ND_CtrlMsg(p,'Pause cancelled.');
+                    pds.datapixx.strobe(p.trial.event.UNPAUSE);
                 end
-% 
+                
             % ----------------------------------------------------------------%
             case p.trial.key.break
             %% break experiment
-                p.trial.pldaps.pause = 2;
-                ND_CtrlMsg(p,'Starting break...');
-                
-                % Finish up the trial
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Break;
-                tms = pds.datapixx.strobe(p.trial.event.TASK_OFF);
-                p.trial.EV.DPX_TaskOff = tms(1);
-                p.trial.EV.TDT_TaskOff = tms(2);
-                
-                p.trial.EV.TaskEnd = p.trial.CurTime;
-                
-                if(p.trial.datapixx.TTL_trialOn)
-                    pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 0);
+                if(~p.trial.pldaps.pause)
+                    p.trial.pldaps.pause = 2;
+                    ND_CtrlMsg(p,'Starting break...');
+
+                    % Finish up the trial
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Break;
+                    tms = pds.datapixx.strobe(p.trial.event.TASK_OFF);
+                    p.trial.EV.DPX_TaskOff = tms(1);
+                    p.trial.EV.TDT_TaskOff = tms(2);
+
+                    p.trial.EV.TaskEnd = p.trial.CurTime;
+
+                    if(p.trial.datapixx.TTL_trialOn)
+                        pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 0);
+                    end
+
+                    % End the trial
+                    p.trial.flagNextTrial = 1;
+                else
+                    p.trial.pldaps.pause = 0;
+                    ND_CtrlMsg(p,'Break cancelled.');
+                    pds.datapixx.strobe(p.trial.event.UNBREAK);
                 end
-                
-                % End the trial
-                p.trial.flagNextTrial = 1;
-                
             % ----------------------------------------------------------------%
             case p.trial.key.quit
             %% quit experiment
@@ -142,14 +148,32 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             % ----------------------------------------------------------------%
             case p.trial.key.freeKeyboard
                 %% Free the keyboard to be used in other programs
-                p.trial.pldaps.keyboardFree = 1;
-                
-                disableKey = KbName(p.trial.key.stopFreeKeyboard);
-                ND_CtrlMsg(p,['Keyboard freed for normal functioning. When done, hit ', disableKey]);
-                
-                ShowCursor;
-                ListenChar(0);
-
+                if(~p.trial.pldaps.pause)
+                    warning('Enabling keyboard outside break/pause not implemented yet!');
+                else
+                    disableKey = KbName(p.trial.key.stopFreeKeyboard);
+                    ND_CtrlMsg(p,['Keyboard freed for normal functioning. When done, hit ', disableKey]);
+                    
+                    % Enable the keyboard to allow for normal computer functioning during a break
+                    ShowCursor;
+                    ListenChar(0);
+                    
+                    KbQueueStart;
+                    
+                    while(true)
+                        % Do this until the disableKeyboard key is pressed
+                        [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck();
+                        if any(p.trial.keyboard.firstPressQ)
+                            qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
+                            if qp == p.trial.key.stopFreeKeyboard
+                                ND_CtrlMsg(p, 'Standard PLDAPS mode engaged');
+                                HideCursor;
+                                ListenChar(2);
+                                break;
+                            end
+                        end
+                    end
+                end
         end  %/ switch Kact
     end
 else
