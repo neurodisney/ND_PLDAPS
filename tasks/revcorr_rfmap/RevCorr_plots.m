@@ -18,7 +18,7 @@ try
     if isempty(p.trial.plot.fig)
         p.trial.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
     else
-        figure(p.trial.plot.fig);
+        set(0, 'CurrentFigure', p.trial.plot.fig);
     end
     
     
@@ -159,17 +159,31 @@ drawnow
         set(gca,'YDir','normal')
         colormap(gca,coarse_colmap)
         
-        % Draw an x showing where the maxPos is
+        % Draw an x showing where the center of the fine mapping will be
         maxPos = rfdef.maxPos;
+        if rfdef.useCustPos
+            selectPos = rfdef.custPos;
+            % If using a custom postion, show a * where the max pos is
+            hold on;
+            maxHandle = plot(maxPos(1),maxPos(2), '*', 'MarkerSize', 8, 'MarkerEdgeColor', 'r');
+            hold off;
+            
+            % Click on the maxPos marker to go back to using maxPos
+            set(maxHandle, 'ButtonDownFcn', @useMaxPos);
+        else
+            selectPos = maxPos;
+        end
+        
         hold on;
-        plot(maxPos(1),maxPos(2), 'x', 'MarkerSize', 50, 'MarkerEdgeColor', 'r', 'MarkerFaceColor','r')
+        plot(selectPos(1),selectPos(2), 'x', 'MarkerSize', 35, 'MarkerEdgeColor', 'r', 'MarkerFaceColor','r')
         hold off;
         
         % Draw a rectangle showing where the fine placement will be
         hold on;
         extent = p.trial.stim.fine.extent;
         rad = p.trial.stim.fine.radius;
-        rect = [maxPos - (extent + rad), 2*(extent + rad), 2*(extent + rad)];
+        corner = [p.trial.stim.fine.xRange(1), p.trial.stim.fine.yRange(1)] - rad;
+        rect = [corner, 2*(extent + rad), 2*(extent + rad)];
         rectangle('Position', rect, 'LineWidth', 2, 'EdgeColor', 'r', 'LineStyle', ':');
         
         axis square;
@@ -185,10 +199,17 @@ drawnow
         % Shows when stimuli appeared relative to spikes
         rfdef = p.trial.RF.coarse;
         
+        % Get the temporal profile
+        if rfdef.useCustPos
+            temporalProfile = squeeze(rfdef.revCorrCube(rfdef.custInd(1), rfdef.custInd(2), :));
+        else
+            temporalProfile = squeeze(rfdef.revCorrCube(rfdef.maxInd(1), rfdef.maxInd(2), :));
+        end
+        
         subplot(plotRows, plotCols, 3*plotCols + [1:2])
         hold off;
         t = linspace(rfdef.temporalRange(1)*1000, rfdef.temporalRange(2)*1000, p.trial.RF.temporalRes);
-        plot(t, rfdef.maxTemporalProfile, 'r')
+        plot(t, temporalProfile, 'r')
         xlabel('Stim temporal profile relative to spikes [ms]')
         ylabel('Proportion');
         
@@ -261,33 +282,61 @@ drawnow
     end
 
     function coarseHM_click(imageHandle, eventData)
-        % Start using the custom position rather than the max pos
-        rfdef.useCustPos = 1;
+        % Only effect change if in coarse mode
+        if strcmp(p.trial.stim.stage, 'coarse')
+            rfdef = p.trial.RF.coarse;
+            
+            % Start using the custom position rather than the max pos
+            rfdef.useCustPos = 1;
+
+            axesHandle = get(imageHandle, 'Parent');
+            clickPos = get(axesHandle, 'CurrentPoint');
+
+            xClick = clickPos(1,1);
+            yClick = clickPos(1,2);
+
+            %% Round the click position to the nearest grid position on the heatmap
+            sRes = p.trial.RF.spatialRes;
+            xRange = rfdef.xRange;
+            yRange = rfdef.yRange;
+            xSpace = linspace(xRange(1), xRange(2), sRes);
+            ySpace = linspace(yRange(1), yRange(2), sRes);
+
+            xInd = round( (xClick - xRange(1)) / (diff(xRange) / (sRes - 1)) ) + 1;
+            yInd = round( (yClick - yRange(1)) / (diff(yRange) / (sRes - 1)) ) + 1;
+            
+            xCoord = xSpace(xInd);
+            yCoord = ySpace(yInd);
+
+            rfdef.custPos = [xCoord, yCoord];
+            rfdef.custInd = [yInd, xInd];
+            
+            % Define the xRange and yRange for the fine stage
+            p.trial.stim.fine.xRange = xCoord + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+            p.trial.stim.fine.yRange = yCoord + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+            
+            
+            p.trial.RF.coarse = rfdef;
+
+            plot_coarseHeatmap
+            plot_temporalProfile
+        end
         
-        rfdef = p.trial.RF.coarse;
-        
-        axesHandle = get(imageHandle, 'Parent');
-        clickPos = get(axesHandle, 'CurrentPoint');
-        
-        xClick = clickPos(1,1);
-        yClick = clickPos(1,2);
-        
-        %% Round the click position to the nearest grid position on the heatmap
-        sRes = p.trial.RF.spatialRes;
-        xRange = rfdef.xRange;
-        yRange = rfdef.yRange;
-        xSpace = linspace(xRange(1), xRange(2), sRes);
-        ySpace = linsapce(yRange(1), yRange(2), sRes);
-        
-        xCoord = round( (xClick - xRange(1)) / (diff(xRange) / (sRes - 1)) ) * (diff(xRange) / (sRes - 1)) + xRange(1);
-        yCoord = round( (yClick - yRange(1)) / (diff(yRange) / (sRes - 1)) ) * (diff(yRange) / (sRes - 1)) + yRange(1);
-        
-        rfdef.maxPos = [xCoord yCoord];
-        p.trial.RF.coarse = rfdef;
-        
-        plot_coarseHeatmap
-        plot_temporalProfile
-        
+    end
+
+    function useMaxPos(imageHandle, eventData)
+        % Swithc back to using the max pos instead of custom position
+        % Only do this if in the coarse mapping mode
+        if strcmp(p.trial.stim.stage, 'coarse')
+            p.trial.RF.coarse.useCustPos = 0;
+            
+            % Define the xRange and yRange for the fine stage
+            p.trial.stim.fine.xRange = p.trial.RF.coarse.maxPos(1) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+            p.trial.stim.fine.yRange = p.trial.RF.coarse.maxPos(2) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+            
+            plot_coarseHeatmap;
+            plot_temporalProfile;
+        end
     end
 
 end

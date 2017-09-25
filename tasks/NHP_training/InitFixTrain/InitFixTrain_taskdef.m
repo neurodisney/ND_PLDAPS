@@ -13,10 +13,6 @@ function p = InitFixTrain_taskdef(p)
 % wolf zinke, Sep. 2017
 
 % ------------------------------------------------------------------------%
-%% Condition/Block design
-p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
-
-% ------------------------------------------------------------------------%
 %% Reward
 
 % manual reward from experimenter
@@ -32,9 +28,10 @@ p.trial.reward.MinWaitInitial = 0.25;
 p.trial.reward.MaxWaitInitial = 0.50;
 
 % ------------------------------------------------------------------------%
-%% Task Blocks
+%% Condition/Block design
 p.trial.maxTrials_per_Block   =  4;  % how often to repeat each condition within a block
 p.trial.maxBlocks             = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
+p.trial.task.EqualCorrect     =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % ------------------------------------------------------------------------%
 %% Timing

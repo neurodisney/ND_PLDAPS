@@ -184,7 +184,8 @@ try
 %                 p.trial.EV.Pause = p.trial.CurTime;
             elseif(p.trial.pldaps.pause == 2)
                 % set screen to break color
-                Screen('FillRect', p.trial.display.ptr, p.trial.display.breakColor);
+                Screen('FillRect', p.trial.display.overlayptr, ...
+                    p.trial.display.clut.(p.trial.display.breakColor), p.defaultParameters.display.winRect);
                 %Screen('FillRect', p.trial.display.overlayptr, p.trial.display.breakColor);
                 Screen('Flip', p.trial.display.ptr, 0);
                 pds.datapixx.strobe(p.trial.event.BREAK);
@@ -232,7 +233,7 @@ try
 
     % ----------------------------------------------------------------%
     %% shut down audio
-    if(p.defaultParameters.sound.use)
+    if p.defaultParameters.sound.use && p.trial.sound.usePsychPortAudio
         % Close the audio device:
         PsychPortAudio('Close', p.defaultParameters.sound.master);
     end
@@ -289,7 +290,7 @@ function pauseLoop(p)
 
         if(any(p.trial.keyboard.firstPressQ))
 
-            qp = find(p.trial.keyboard.firstPressQ); % identify which key was pressed
+            qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
 
             switch qp
 
@@ -317,6 +318,31 @@ function pauseLoop(p)
     %                 p.trial.EV.Unpause = GetSecs;
                     break;
 
+                % ----------------------------------------------------------------%
+                case p.trial.key.freeKeyboard
+                    disableKey = KbName(p.trial.key.stopFreeKeyboard);
+                    ND_CtrlMsg(p,['Keyboard freed for normal functioning. When done, hit ', disableKey]);
+                    
+                    % Enable the keyboard to allow for normal computer functioning during a break
+                    ShowCursor;
+                    ListenChar(0);
+                    
+                    KbQueueStart;
+                    
+                    while(true)
+                        % Do this until the disableKeyboard key is pressed
+                        [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck();
+                        if any(p.trial.keyboard.firstPressQ)
+                            qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
+                            if qp == p.trial.key.stopFreeKeyboard
+                                ND_CtrlMsg(p, 'Standard PLDAPS mode engaged');
+                                HideCursor;
+                                ListenChar(2);
+                                break;
+                            end
+                        end
+                    end
+                    
                 % ----------------------------------------------------------------%
                 case p.trial.key.quit
                 % quit experiment

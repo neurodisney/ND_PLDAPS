@@ -17,12 +17,15 @@ function p = RevCorr_taskdef(p)
 p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % ------------------------------------------------------------------------%
+%% Break color
+p.trial.display.breakColor = 'black';
+% ------------------------------------------------------------------------%
 %% Reward
 % manual reward from experimenter
 p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
-p.trial.reward.Period = 0.45;
+p.trial.reward.Period = 0.30;
 
 p.trial.reward.jackpotDur = 0.2;     % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
@@ -61,7 +64,7 @@ p.trial.RF.maxSpikesPerTrial = 1000;   % Max spikes per trial, for preallocation
 
 % Note: these select which channels to count when listening to spikes
 % To set up how many channels total on the electrode look below in TDT setup section
-p.trial.RF.channels = 18;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.channels = 4;  % Which channels of the incoming spike data to use for spikes
 p.trial.RF.sortCodes = 1;  % Which sort codes to use
 
 % ------------------------------------------------------------------------%

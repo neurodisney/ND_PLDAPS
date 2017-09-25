@@ -592,6 +592,11 @@ nSpikes = p.trial.RF.nSpikes;
 stimdef = p.trial.stim.(p.trial.stim.stage);
 rfdef = p.trial.RF.(p.trial.stim.stage);
 
+% Don't add anymore information to matrices if switching to fine or creating a new map
+if p.trial.RF.flag_new || p.trial.RF.flag_fine
+    return;
+end
+
 if nSpikes > 0
     % Preallocate a 4D matrix to hold the visual field information for each spike
     % x,y,time,spike
@@ -649,30 +654,41 @@ if nSpikes > 0
     xSpace = linspace(rfdef.xRange(1), rfdef.xRange(2), p.trial.RF.spatialRes);
     ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
     maxPos = [xSpace(maxCol), ySpace(maxRow)];
+    maxInd = [maxRow, maxCol];
     
     % Save this to the p struct
     rfdef.maxPos = maxPos;
+    rfdef.maxInd = maxInd;
+    
+    if rfdef.useCustPos
+        selectPos = rfdef.custPos;
+        selectInd = rfdef.custInd;
+    else
+        selectPos = maxPos;
+        selectInd = maxInd;
+    end
     
     % Calculate the temporal profile (when stims appeared) for this max location
-    rfdef.maxTemporalProfile = squeeze(rfdef.revCorrCube(maxRow, maxCol, :));
+    temporalProfile = squeeze(rfdef.revCorrCube(selectInd(1), selectInd(2), :));
+    
     
     % Change processing depending on the stage
     if strcmp(p.trial.stim.stage, 'coarse')
-    
-        % Define the xRange and yRange for the fine stage
-        p.trial.stim.fine.xRange = maxPos(1) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
-        p.trial.stim.fine.yRange = maxPos(2) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
         
+        % Define the xRange and yRange for the fine stage
+        p.trial.stim.fine.xRange = selectPos(1) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+        p.trial.stim.fine.yRange = selectPos(2) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+
         % Find the maximum value in the temporal profile
-        [maxVal, maxIndex] = max(rfdef.maxTemporalProfile);
+        [maxVal, maxIndex] = max(temporalProfile);
         times = linspace(rfdef.temporalRange(1), rfdef.temporalRange(2), p.trial.RF.temporalRes);
         rfdef.timeOfMax = times(maxIndex);
-        
+
         %% Find the times when the temporal profile goes below the threshold proportion of the max value
         thresh = p.trial.RF.temporalProfileRefineProportion * maxVal;
-        
+
         % Get the part of temporal profile before the max value point
-        lowerProf = rfdef.maxTemporalProfile(1:maxIndex);
+        lowerProf = temporalProfile(1:maxIndex);
         % Find the closest point to the max value where the profile goes beneath threshold
         lowerThreshTime = times(find(lowerProf < thresh, 1, 'last'));
         if isempty(lowerThreshTime) || lowerThreshTime < rfdef.temporalRange(1)
@@ -680,16 +696,16 @@ if nSpikes > 0
         else
             minFineRange = lowerThreshTime;
         end
-        
+
         % Get the part of the temporal profile after the max value point
-        upperProf = rfdef.maxTemporalProfile(maxIndex:end);
+        upperProf = temporalProfile(maxIndex:end);
         upperThreshTime = times(maxIndex -1 + find(upperProf < thresh, 1, 'first'));
         if isempty(upperThreshTime) || upperThreshTime > rfdef.temporalRange(2)
             maxFineRange = rfdef.temporalRange(2);
         else
             maxFineRange = upperThreshTime;
         end
-   
+
         % Assign this new temporal range
         p.trial.RF.fine.temporalRange = [minFineRange, maxFineRange];
         

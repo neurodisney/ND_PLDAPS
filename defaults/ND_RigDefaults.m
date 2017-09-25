@@ -18,9 +18,10 @@ function SS = ND_RigDefaults(rig)
 % wolf zinke, Oct. 2016
 % Nate Faber, 2017
 
-% If no rig is specified, use rig1 as default
-if nargin < 1 || isempty(rig)
-    rig = 1;
+% If no rig is specified, use rig1
+if(~exist('rig','var') || isempty(rig))
+    [~, rigname] = system('hostname');
+    rig = str2num(regexp(rigname,'\d+','match','once'));
 end
 
 SS.defaultParameters.session.rig = rig;
@@ -58,7 +59,7 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 % ------------------------------------------------------------------------%
 %% Display settings: specify options for the screen.
 SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
-SS.display.breakColor                           = [0, 0, 0];  % screen color during breaks
+SS.display.breakColor                           = 'black';  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 97;    % screen distance to the observer
 SS.display.heightcm                             = 40;     % height of the visible screen in cm
@@ -104,10 +105,8 @@ SS.tdt.use                                      = 0;     % Collect UDP packets f
 switch rig
     case 1
         SS.tdt.ip                               = '129.59.230.10';
-        
-%    case 2
-%        SS.tdt.ip                               = 'NO_IP_YET';
-    
+%     case 2
+%         SS.tdt.ip                               = 'NO_IP_YET';
     otherwise
         SS.tdt.ip                               = '129.59.230.10';
 end
@@ -133,7 +132,7 @@ SS.sound.useDatapixx                            = 1;
 SS.sound.datapixxVolume                         = 0.9;
 SS.sound.datapixxInternalSpeakerVolume          = 0;
 
-SS.sound.usePsychPortAudio                      = 1;
+SS.sound.usePsychPortAudio                      = 0;
 SS.sound.psychPortVolume                        = 0.9;
 
 % ------------------------------------------------------------------------%
@@ -205,6 +204,12 @@ SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
 SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
 % ------------------------------------------------------------------------%
+%% Condition/Block design
+SS.maxBlocks          = -1;  % max number of blocks to complete; if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
+SS.maxBlockTrials     =  4;  % max number of trials per block, if negative it continues until experimenter quits
+SS.task.EqualCorrect  =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
+
+% ------------------------------------------------------------------------%
 %% Eye tracking
 SS.datapixx.useAsEyepos        = 0;
 
@@ -221,7 +226,6 @@ SS.behavior.fixation.Sample    = 25;       % how many data points to use for det
 SS.behavior.fixation.entryTime = 0.025;    % minimum time [s] before fixation is registered when gaze enters fixation window
 SS.behavior.fixation.BreakTime = 0.05;     % minimum time [s] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
-
 
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibration
@@ -242,14 +246,12 @@ SS.eyeCalib.medFixPos = [];
 SS.behavior.fixation.calibSamples    = 200;    % analog eyesamples in the the datapixx to determine the position of an eye calibration point
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 
-
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.GridPos         = 5;      % cntral fixation position (for pure offset correction)
 
 SS.behavior.fixation.FixWinStp       = 0.25;   % change of the size of the fixation window upon key press
 
 SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use to determine current (median) eye position (has to be smaller than SS.pldaps.draw.eyepos.history)
-
 
 % Define fixation states
 SS.FixState.Current     = NaN;
@@ -291,8 +293,6 @@ SS.stim.GRATING.pos      = [0, 0];
 SS.stim.GRATING.fixWin   =  4;  
 SS.stim.GRATING.alpha    = 1; % Fully opaque
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
-
-
 
 % ------------------------------------------------------------------------%
 %% Joystick
@@ -356,6 +356,11 @@ SS.key.FixDec  = KbName('-_'); % decrease size of fixation window
 SS.key.viewEyeCalib = KbName('insert'); % View the calibration points
 
 SS.key.spritz  = KbName('tab'); % Send a TTL pulse over the analog channel connected to the pico spritzer
+
+% Keys for freeing the keyboard, allowing for use in other programs while the task is going
+SS.pldaps.keyboardFree = 0; % Start with PLDAPS interpretting key strokes.
+SS.key.freeKeyboard = KbName('k'); % Enable standard keyboard input
+SS.key.stopFreeKeyboard = KbName('end'); % If the keyboard is enabled, go back to standard break mode with this key
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables
