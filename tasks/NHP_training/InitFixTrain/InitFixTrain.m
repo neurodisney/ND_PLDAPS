@@ -124,21 +124,14 @@ function TaskSetUp(p)
     % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
     p.trial.task.longITI = 1;
       
-    % Reward
-    nRewards = p.trial.reward.nRewards;
-    
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
-    
-    % Create arrays for direct reference during reward
-    p.trial.reward.allDurs    = repelem(p.trial.reward.Dur,    nRewards);
-    p.trial.reward.allPeriods = repelem(p.trial.reward.Period, nRewards);       
     
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
     p.trial.task.Good   = 0;
     
-    % State for acheiving fixation
+    % State for achieving fixation
     p.trial.task.fixFix = 0;
     
     % if random position is required pick one and move fix spot
@@ -242,10 +235,11 @@ function TaskDesign(p)
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
                     
                     % Reward the monkey
-                    p.trial.reward.count = 1;
-                    pds.reward.give(p, p.trial.reward.allDurs(1));
-                    p.trial.EV.FirstReward   = p.trial.CurTime;
-                    p.trial.Timer.lastReward = p.trial.CurTime;
+                    if(p.trial.reward.GiveInitial == 1)
+                        pds.reward.give(p, p.trial.reward.InitialRew);
+                        p.trial.EV.FirstReward   = p.trial.CurTime;
+                        p.trial.Timer.lastReward = p.trial.CurTime;
+                    end
                     
                     % Transition to the succesful fixation epoch
                     switchEpoch(p,'Fixating');
@@ -265,27 +259,24 @@ function TaskDesign(p)
                 
             rewardPeriod = p.trial.reward.allPeriods(rewardCount);
                 
-                
             % While jackpot time has not yet been reached
             if p.trial.CurTime < p.trial.EV.FirstReward + p.trial.reward.jackpotTime;
 
                 % Wait for rewardPeriod to elapse since last reward, then give the next reward
-                if p.trial.CurTime > p.trial.Timer.lastReward + rewardPeriod
+                if(p.trial.reward.GiveSeries==1)
+                    if p.trial.CurTime > p.trial.Timer.lastReward + rewardPeriod
 
-                    rewardCount = min(rewardCount + 1 , length(p.trial.reward.allDurs));
-                    p.trial.reward.count = p.trial.reward.count + 1;
-
-                    rewardDuration = p.trial.reward.allDurs(rewardCount);                  
-
-                    % Give the reward and update the lastReward time
-                    pds.reward.give(p, rewardDuration);
-                    p.trial.Timer.lastReward = p.trial.CurTime;
+                        cstep = find(p.trial.reward.Step <= p.trial.reward.count, 1, 'last');
+                        
+                        % Give the reward and update the lastReward time
+                        pds.reward.give(p, p.trial.reward.Dur(cstep));
+                        p.trial.Timer.lastReward = p.trial.CurTime;
+                        p.trial.reward.count = p.trial.reward.count + 1;
+                    end
                 end
-
             else
                 % Give JACKPOT!
-                rewardDuration = p.trial.reward.jackpotDur;
-                pds.reward.give(p, rewardDuration);
+                pds.reward.give(p, p.trial.reward.jackpotDur);
                 p.trial.Timer.lastReward = p.trial.CurTime;
 
                 % Best outcome

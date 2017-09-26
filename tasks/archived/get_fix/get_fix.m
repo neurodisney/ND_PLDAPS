@@ -307,6 +307,7 @@ function TaskDraw(p)
             TrialOn(p);
             Target(p, 'TargetDimm');
     end
+    
 % ####################################################################### %
 function KeyAction(p)
 %% task specific action upon key press

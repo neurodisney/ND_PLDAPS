@@ -207,7 +207,7 @@ SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 % ------------------------------------------------------------------------%
 %% Condition/Block design
 SS.Block.maxBlocks      = -1;  % max number of blocks to complete; if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
-SS.Block.maxBlockTrials =  4;  % max number of trials per condition in a block (for unbalanced numbers use an array with the same length as number of condition and specify number per condition)
+SS.Block.maxBlockTrials =  4;  % max number of trials per condition in a block (for unbalanced numbers use an array with the same length as number of condition and specify desired trial number per condition)
 SS.Block.EqualCorrect   =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 SS.Block.GenBlock       =  1;  % Flag to indicate that a block with a new condition list needs to be generated
 c1.Nr = 1;
