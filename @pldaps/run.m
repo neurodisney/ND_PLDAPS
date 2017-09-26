@@ -32,17 +32,17 @@ try
 
     %% Setup and File management
     % define dependent parameter checks and check for consistency (needs to be called before openscreen)
-    p = ND_PrepSession(p);  %
+    p = ND_PrepSession(p); 
 
     %-------------------------------------------------------------------------%
     %% Setup PLDAPS experiment
-    % this still acts on defaultParameters
+    % this still acts on defaultParameters and needs to be called before openscreen
     if(~isfield(p.defaultParameters.session, 'experimentSetupFile') || ...
         isempty(p.defaultParameters.session.experimentSetupFile)    || ...
         ~exist( p.defaultParameters.session.experimentSetupFile, 'file'))
         error('Need a valid specification for the experimental setup file!');
     else
-        feval(p.defaultParameters.session.experimentSetupFile, p); % needs to be called before openscreen
+        feval(p.defaultParameters.session.experimentSetupFile, p); 
     end
 
     %-------------------------------------------------------------------------%
@@ -56,7 +56,7 @@ try
 
     % --------------------------------------------------------------------%
     %% Last chance to check variables
-    if p.trial.pldaps.pause
+    if(p.trial.pldaps.pause)
         disp('Ready to begin trials. Type return to start first trial...')
         pause
         p.trial.pldaps.pause = 0;
@@ -82,10 +82,21 @@ try
     levelsPreTrials = p.defaultParameters.getAllLevels();
 
     %% main trial loop %%
-    while(p.trial.pldaps.iTrial < p.trial.pldaps.finish && p.trial.pldaps.quit ~= 2)
+    while(p.trial.pldaps.quit == 0)
 
         if(~p.trial.pldaps.quit && ~p.trial.pldaps.pause)
 
+            % ----------------------------------------------------------------%
+            %% Block/Condition control
+            
+            
+            
+            % completed all desired trial, finish experiment now
+            if(p.trial.pldaps.iTrial >= p.trial.pldaps.finish)
+                p.trial.pldaps.quit = 1;
+                break;
+            end
+            
             % ----------------------------------------------------------------%
             %% load parameters for next trial
             trialNr = trialNr+1;
@@ -103,14 +114,15 @@ try
             % ----------------------------------------------------------------%
             %% Update information between trials
             % This is right now a very dirty and unsatisfying solution.
-            % PLDAPS seems to overwrite the defaultParameters in the
-            % previous blocks, therefore a bunch of variables are created
-            % that will be passed from p.trial to p.trial by modifying
-            % temporarily the defaultParameters. However, defaultParameters
-            % will be reset every new iteration of this trial loop.
+            % PLDAPS seems to overwrite the defaultParameters in the previous blocks, 
+            % therefore a bunch of variables are created that will be passed from p.trial 
+            % to p.trial by modifying temporarily the defaultParameters. 
+            % However, defaultParameters will be reset every new iteration of this trial loop.
+            %
             % TODO: make the code more flexible to allow changes to the
             % defaultParameters and maybe keep some additonal information
             % in other sub-structs.
+            
             if(trialNr > 1) % this actually is supposed to happen after a trial, hence skip first in loop
  
                 % processes after trial
@@ -123,7 +135,6 @@ try
                 
                % pass some information from the previous trial to the next trial
                 p = ND_UpdateTrial(p);
-                
             end
             
             % ----------------------------------------------------------------%
@@ -136,7 +147,6 @@ try
             end
             
             tmpts = mergeToSingleStruct(p.defaultParameters);
-
 
             % save default parameters to trial data directory
             if(trialNr == 1)

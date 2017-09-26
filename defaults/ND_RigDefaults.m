@@ -196,6 +196,7 @@ SS.pldaps.save.initialParametersMerged          = 1;     % save merged initial p
 SS.pldaps.GetTrialStateTimes = 0;  % create a 2D matrix (trialstate, frame) with timings. This might impair performance therefore disabled per default
 SS.pldaps.GetScreenFlipTimes = 0;  % get each screen refresh time, i.e. wait for synch for each screen update
 SS.pldaps.ptbVerbosity       = 3;  % See here https://github.com/Psychtoolbox-3/Psychtoolbox-3/wiki/FAQ:-Control-Verbosity-and-Debugging
+
 % ------------------------------------------------------------------------%
 %% Reward settings
 SS.datapixx.useForReward      = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
@@ -205,9 +206,12 @@ SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
-SS.maxBlocks          = -1;  % max number of blocks to complete; if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
-SS.maxBlockTrials     =  4;  % max number of trials per block, if negative it continues until experimenter quits
-SS.task.EqualCorrect  =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
+SS.Block.maxBlocks      = -1;  % max number of blocks to complete; if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
+SS.Block.maxBlockTrials =  4;  % max number of trials per condition in a block (for unbalanced numbers use an array with the same length as number of condition and specify number per condition)
+SS.Block.EqualCorrect   =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
+SS.Block.GenBlock       =  1;  % Flag to indicate that a block with a new condition list needs to be generated
+c1.Nr = 1;
+SS.Block.Conditions     = {c1}; % as default only one condition
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
@@ -344,23 +348,31 @@ SS.pldaps.draw.ScreenEventName = 'NULL';  % keep track of times in pldaps data f
 % assign keys to specific functions here and utilize these in the
 % ND_CheckKey function to trigger defined actions.
 KbName('UnifyKeyNames');
-SS.key.reward  = KbName('space');    % trigger reward
-SS.key.quit    = KbName('ESCAPE');   % end experiment
-SS.key.pause   = KbName('p');        % pause the experiment
-SS.key.break   = KbName('b');        % give a break
-SS.key.CtrJoy  = KbName('j');        % set current joystick position as zero
 
-SS.key.FixInc  = KbName('=+'); % increase size of fixation window
-SS.key.FixDec  = KbName('-_'); % decrease size of fixation window
+SS.key.reward    = KbName('space');  % trigger reward
+SS.key.quit      = KbName('ESCAPE'); % end experiment
+SS.key.pause     = KbName('p');      % pause the experiment
+SS.key.break     = KbName('b');      % give a break
+SS.key.CtrJoy    = KbName('j');      % set current joystick position as zero
 
-SS.key.viewEyeCalib = KbName('insert'); % View the calibration points
+% controll fix win
+SS.key.FixInc    = KbName('=+');     % increase size of fixation window
+SS.key.FixDec    = KbName('-_');     % decrease size of fixation window
 
-SS.key.spritz  = KbName('tab'); % Send a TTL pulse over the analog channel connected to the pico spritzer
+% trigger pico spritzer injection
+SS.key.spritz    = KbName('tab');    % Send a TTL pulse over the analog channel connected to the pico spritzer
+
+% block controll
+SS.key.BlockAdvance      = KbName('a'); % advance to next block
+SS.key.BlockEqualCorrect = KbName('s'); % switch between accepting only correct trials or all trials
+
+% view eye calibration on screen
+SS.key.viewEyeCalib      = KbName('insert'); % View the calibration points
 
 % Keys for freeing the keyboard, allowing for use in other programs while the task is going
-SS.pldaps.keyboardFree = 0; % Start with PLDAPS interpretting key strokes.
-SS.key.freeKeyboard = KbName('k'); % Enable standard keyboard input
-SS.key.stopFreeKeyboard = KbName('end'); % If the keyboard is enabled, go back to standard break mode with this key
+SS.pldaps.keyboardFree   = 0; % Start with PLDAPS interpretting key strokes.
+SS.key.freeKeyboard      = KbName('k');   % Enable standard keyboard input
+SS.key.stopFreeKeyboard  = KbName('end'); % If the keyboard is enabled, go back to standard break mode with this key
 
 % ------------------------------------------------------------------------%
 %% initialize field for editable variables

@@ -3,10 +3,14 @@ function p = ND_UpdateTrial(p)
 %
 % wolf zinke, March 2017
 
+% --------------------------------------------------------------------%
+%% update condition/block list
+p = ND_GenCndLst(p);
+p.defaultParameters.blocks = p.trial.blocks;
 
-
-%% The old trial struct is still in memory
-if p.trial.task.Good
+% --------------------------------------------------------------------%
+%% update trial statistics based on current outcome
+if(p.trial.task.Good)
     p.defaultParameters.LastHits   = p.trial.LastHits   + 1; % how many correct trials since last error
     p.defaultParameters.NHits      = p.trial.NHits      + 1; % how many correct trials in total
     p.defaultParameters.NCompleted = p.trial.NCompleted + 1; % number of started trials (excluding not started trials)
@@ -24,9 +28,9 @@ end
 
 % Store the current outcome in the Map of all outcomes
 allOutcomes = p.defaultParameters.outcome.allOutcomes;
-outcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+outcomeStr  = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
 
-if isKey(allOutcomes,outcomeStr)
+if(isKey(allOutcomes,outcomeStr))
     allOutcomes(outcomeStr) = allOutcomes(outcomeStr) + 1;
 else
     allOutcomes(outcomeStr) = 1;
@@ -34,12 +38,8 @@ end
 
 p.defaultParameters.outcome.allOutcomes = allOutcomes;
 
-p.defaultParameters.blocks = p.trial.blocks;
-
 % Pass on the ITI timer
 p.defaultParameters.EV.PlanStart = p.trial.EV.NextTrialStart;
-
-% Define a set of variables that should be editable, i.e. pass on information by default
 
 % --------------------------------------------------------------------%
 %%  keep joystick center position
@@ -70,14 +70,12 @@ p.defaultParameters.asciitbl  =  p.trial.asciitbl;
 %% figure handle for online plots
 if(p.trial.plot.do_online)
     p.defaultParameters.plot.fig = p.trial.plot.fig;
-%     if(isfield(p.defaultParameters.plot, 'data'))
-%         p.defaultParameters.plot.data = p.trial.plot.data;
-%     end
 end
 
 % --------------------------------------------------------------------%
 %% Keep keyboard freedom state
 p.defaultParameters.pldaps.keyboardFree = p.trial.pldaps.keyboardFree;
+
 % --------------------------------------------------------------------%
 %% editable variables
 if(isfield(p.trial, 'editable') && ~ isempty(p.trial.editable))

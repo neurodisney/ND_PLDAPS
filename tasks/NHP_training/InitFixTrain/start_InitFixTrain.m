@@ -1,4 +1,4 @@
-function p = start_InitFixTrain(subjname, rig, experimenter)
+function p = start_InitFixTrain(subjname, rig)
 % main function to run a task - this variant will have settings that uses the Fixtrain 
 % task to calibrate eye position and therefore should be used for initial fixation training.
 %
@@ -100,7 +100,6 @@ if strcmp(subjname,'mouse')
     SS.datapixx.useAsEyepos        = 0;
     SS.behavior.joystick.use       = 0;
     %SS.datapixx.useForReward       = 0;
-    
 end
 
 % ------------------------------------------------------------------------%

@@ -28,12 +28,6 @@ p.trial.reward.MinWaitInitial = 0.25;
 p.trial.reward.MaxWaitInitial = 0.50;
 
 % ------------------------------------------------------------------------%
-%% Condition/Block design
-p.trial.maxTrials_per_Block   =  4;  % how often to repeat each condition within a block
-p.trial.maxBlocks             = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
-p.trial.task.EqualCorrect     =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
-
-% ------------------------------------------------------------------------%
 %% Timing
 p.trial.task.Timing.WaitFix = 0.100; % Time to get a solid fixation before trial ends unsuccessfully
 
@@ -43,6 +37,16 @@ p.trial.task.Timing.MaxITI  = 1.5;   % maximum time period [s] between subsequen
 
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
+
+% ------------------------------------------------------------------------%
+%% Condition/Block design
+p.trial.maxBlocks             = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
+p.trial.task.EqualCorrect     =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
+
+p.trial.maxTrials_per_Block   =  4;  % how often to repeat each condition within a block
+
+
+
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters

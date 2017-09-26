@@ -93,7 +93,6 @@ p = ND_Outcomes(p);
 % task epochs
 p = ND_TaskEpochs(p);
 
-
 % --------------------------------------------------------------------%
 %% sanity checks
 
@@ -183,6 +182,14 @@ if(p.defaultParameters.datapixx.useJoystick == 1)
         p.defaultParameters.datapixx.adc.channelMapping{end+1} = 'AI.Joy.Y';
     end
 end
+
+%-------------------------------------------------------------------------%
+%% initialize conditions and blocks as empty here
+% This is a quck&dirty ad hoc fix to not touch the pldaps call where conditions are defined.
+% We define conditions in the experimental setup file (that will be called after executing the
+% current function) or if nothing is defined use our default definition.
+p.conditions   = {};
+p.trial.blocks = [];
 
 %-------------------------------------------------------------------------%
 %% create p.trial as copy of the default parameters

@@ -36,13 +36,12 @@ pds.datapixx.adc.trialSetup(p); % setup analog data collection from Datapixx
 [getsecs, boxsecs, confidence]          = PsychDataPixx('GetPreciseTime');
 p.trial.timing.datapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
 
-
 % ------------------------------------------------------------------------%
 %% Reward
 %%% prepare reward system and pre-allocate variables for reward timings
-
     p.trial.reward.timeReward = nan(100,2);
     p.trial.reward.iReward     = 0; % counter for reward times
+    
 % ------------------------------------------------------------------------%
 %% eye position
 

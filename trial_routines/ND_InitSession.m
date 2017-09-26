@@ -24,6 +24,15 @@ if isfield(p.defaultParameters, 'task')
 end
 
 % --------------------------------------------------------------------%
+%% Generate Block/Condition series
+if(~isfield(p,'conditions') || isempty(p.conditions))  % check first if the condition list was created in the task setup file
+    p.defaultParameters.Block.GenBlock = 1;
+    p = ND_GenCndLst(p);
+else
+    p.defaultParameters.Block.GenBlock = 0;
+end
+
+% --------------------------------------------------------------------%
 %% pre-allocate frame data
 % The frame allocation can only be set once the pldaps is run, otherwise
 % p.defaultParameters.display.frate will not be available because it is defined in the openscreen call.
@@ -52,11 +61,11 @@ if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
     end
 
     % Draw the joystick meter on the right side of the screen
-    p.trial.pldaps.draw.joystick.pos    = [p.trial.display.winRect(3) - 3 * p.defaultParameters.pldaps.draw.joystick.size(1), 0];
+    p.trial.pldaps.draw.joystick.pos     = [p.trial.display.winRect(3) - 3 * p.defaultParameters.pldaps.draw.joystick.size(1), 0];
 
-    p.trial.pldaps.draw.joystick.sclfac = p.trial.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
+    p.trial.pldaps.draw.joystick.sclfac  = p.trial.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
 
-    p.trial.pldaps.draw.joystick.rect = ND_GetRect(p.trial.pldaps.draw.joystick.pos, ...
+    p.trial.pldaps.draw.joystick.rect    = ND_GetRect(p.trial.pldaps.draw.joystick.pos, ...
                                                                p.trial.pldaps.draw.joystick.size);
 
     p.trial.pldaps.draw.joystick.levelsz =  p.trial.pldaps.draw.joystick.size .* [1.25, 0.01];
@@ -127,8 +136,6 @@ if(p.trial.pldaps.draw.photodiode.use)
     end
         
     p.trial.pldaps.draw.photodiode.rect = ND_GetRect(PDpos, p.trial.pldaps.draw.photodiode.size);
-    
-    
 end
 
 %-------------------------------------------------------------------------%

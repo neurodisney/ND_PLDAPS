@@ -23,21 +23,21 @@ end
 if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key in the buffer, might be worth to modify it in a way that the full buffer is used.
 
     p.trial.LastKeyPress = find(p.trial.keyboard.firstPressQ); % identify which key was pressed
-    
+
     % If the keyboard is freed, don't interpret key presses. Just discard the input
     if(p.trial.pldaps.keyboardFree)
         % Unfree the keyboard if the stopFreeKeyboard key is pressed
-        if any(p.trial.LastKeyPress == p.trial.key.stopFreeKeyboard)
+        if(any(p.trial.LastKeyPress == p.trial.key.stopFreeKeyboard))
             p.trial.pldaps.keyboardFree = 0;            
             ND_CtrlMsg(p, 'Standard PLDAPS mode engaged');
             ListenChar(2);
             HideCursor;
         end
-        
+
         % Discard input queue so as not to interpret it
         p.trial.LastKeyPress = [];
     end
-    
+
     for(i=1:length(p.trial.LastKeyPress))
         switch p.trial.LastKeyPress(i)
 
@@ -46,7 +46,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             %% reward
             % check for manual reward delivery via keyboard
                 pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
-            
+
             % ----------------------------------------------------------------%
             case p.trial.key.FixInc
             %% Fixspot window increase
@@ -61,7 +61,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     % Increase the fixation window for fixspots created later
                     p.trial.stim.FIXSPOT.fixWin = p.trial.stim.FIXSPOT.fixWin + p.trial.behavior.fixation.FixWinStp;
                 end
-                
+
             % ----------------------------------------------------------------%
             case p.trial.key.FixDec
             %% Fixspot window decrease
@@ -79,27 +79,41 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
 
             % ----------------------------------------------------------------%
             case p.trial.key.CtrJoy
-                %% Center joystick
+            %% Center joystick
                 % set current eye position as expected fixation position
                 if(p.trial.datapixx.useJoystick)
                     p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
                 end
-            
+
             case p.trial.key.viewEyeCalib
-                %% Toggle viewing eye calibration
+            %% Toggle viewing eye calibration
                 if(p.trial.behavior.fixation.useCalibration)
                     p.trial.behavior.fixation.enableCalib = not(p.trial.behavior.fixation.enableCalib);
                 end
-                                
+                
+            % ----------------------------------------------------------------%
+            case p.trial.key.BlockAdvance
+            %% advance to new block
+                ND_CtrlMsg(p,'NIY!');
+                
+            % ----------------------------------------------------------------%
+            case p.trial.key.BlockEqualCorrect
+            %% Switch balancing correct trials or all trials
+                if(p.trial.Block.EqualCorrect == 1)
+                    p.Block.EqualCorrect = 0;
+                else
+                    p.Block.EqualCorrect = 1;
+                end
+                
             % ----------------------------------------------------------------%
             case p.trial.key.spritz
-                %% Send a TTL pulse to the picospritzer to trigger drug release
+            %% Send a TTL pulse to the picospritzer to trigger drug release
                 
-                ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,    p.trial.datapixx.TTL_spritzerDur, ...
-                               p.trial.datapixx.TTL_spritzerNpulse,  p.trial.datapixx.TTL_spritzerPulseGap, ...
+                ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,    p.trial.datapixx.TTL_spritzerDur,       ...
+                               p.trial.datapixx.TTL_spritzerNpulse,  p.trial.datapixx.TTL_spritzerPulseGap,  ...
                                p.trial.datapixx.TTL_spritzerNseries, p.trial.datapixx.TTL_spritzerSeriesGap, ...
                                p.trial.event.INJECT);
-            
+
             % ----------------------------------------------------------------%
             case p.trial.key.pause
             %% pause experiment
@@ -112,7 +126,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     ND_CtrlMsg(p,'Pause cancelled.');
                     pds.datapixx.strobe(p.trial.event.UNPAUSE);
                 end
-                
+
             % ----------------------------------------------------------------%
             case p.trial.key.break
             %% break experiment
@@ -139,6 +153,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     ND_CtrlMsg(p,'Break cancelled.');
                     pds.datapixx.strobe(p.trial.event.UNBREAK);
                 end
+
             % ----------------------------------------------------------------%
             case p.trial.key.quit
             %% quit experiment
@@ -146,36 +161,35 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 ShowCursor;
 
             % ----------------------------------------------------------------%
-            case p.trial.key.freeKeyboard
-                %% Free the keyboard to be used in other programs
-                if(~p.trial.pldaps.pause)
-                    warning('Enabling keyboard outside break/pause not implemented yet!');
-                else
-                    disableKey = KbName(p.trial.key.stopFreeKeyboard);
-                    ND_CtrlMsg(p,['Keyboard freed for normal functioning. When done, hit ', disableKey]);
-                    
-                    % Enable the keyboard to allow for normal computer functioning during a break
-                    ShowCursor;
-                    ListenChar(0);
-                    
-                    KbQueueStart;
-                    
-                    while(true)
-                        % Do this until the disableKeyboard key is pressed
-                        [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck();
-                        if any(p.trial.keyboard.firstPressQ)
-                            qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
-                            if qp == p.trial.key.stopFreeKeyboard
-                                ND_CtrlMsg(p, 'Standard PLDAPS mode engaged');
-                                HideCursor;
-                                ListenChar(2);
-                                break;
-                            end
-                        end
-                    end
-                end
-        end  %/ switch Kact
-    end
+            case(p.trial.key.freeKeyboard)
+             %% Free the keyboard to be used in other programs
+                p.trial.pldaps.keyboardFree = 1;
+
+                disableKey = KbName(p.trial.key.stopFreeKeyboard);
+                ND_CtrlMsg(p,['Keyboard freed for normal functioning. When done, hit ', disableKey]);
+
+                ShowCursor;
+                ListenChar(0);
+
+%                  if(p.trial.pldaps.pause)
+%                     KbQueueStart;
+% 
+%                     while(true)
+%                         % Do this until the disableKeyboard key is pressed
+%                         [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck();
+%                         if(any(p.trial.keyboard.firstPressQ))
+%                             qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
+%                             if(qp == p.trial.key.stopFreeKeyboard)
+%                                 ND_CtrlMsg(p, 'Standard PLDAPS mode engaged');
+%                                 HideCursor;
+%                                 ListenChar(2);
+%                                 break;
+%                             end
+%                         end
+%                     end  %  while(true)
+%                  end  %  if(~p.trial.pldaps.pause)
+        end  %  switch p.trial.LastKeyPress(i)
+    end  %  for(i=1:length(p.trial.LastKeyPress))
 else
     p.trial.LastKeyPress = [];
 end %/ if(any(p.trial.keyboard.firstPressQ))
