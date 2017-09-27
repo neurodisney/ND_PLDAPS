@@ -85,7 +85,7 @@ p.trial.Block.maxBlockTrials =  [1, 3, 1];  % how often to repeat each condition
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type    = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size    = 4;        % size of the fixation spot
+p.trial.stim.FIXSPOT.size    = 2;        % size of the fixation spot
 p.trial.stim.FIXSPOT.fixWin  = 8;         %
 
 % color options (make sure colors are defined!)
