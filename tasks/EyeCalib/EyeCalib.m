@@ -16,7 +16,6 @@ end
 %% Call standard routines before executing task related code
 % This carries out standard routines, mainly in respect to hardware interfacing.
 % Be aware that this is done first for each trial state!
-p = ND_GeneralTrialRoutines(p, state);
 
 % ####################################################################### %
 %% Initial call of this function. Use this to define general settings of the experiment/session.
@@ -67,6 +66,8 @@ else
 % ####################################################################### %
 %% Subsequent calls during actual trials
 % execute trial specific commands here.
+
+p = ND_GeneralTrialRoutines(p, state);
 
     switch state
 % ------------------------------------------------------------------------%
@@ -216,9 +217,7 @@ function TaskDesign(p)
                     
                     % Transition to the succesful fixation epoch
                     switchEpoch(p,'Fixating');
-
                 end
-                
             end
             
         % ----------------------------------------------------------------%
@@ -250,7 +249,6 @@ function TaskDesign(p)
                     % Give the reward and update the lastReward time
                     pds.reward.give(p, rewardDuration);
                     p.trial.Timer.lastReward = p.trial.CurTime;
-                    
                 end
         
         % Fixation Break, go to TaskEnd and turn off fixation point    
@@ -258,7 +256,6 @@ function TaskDesign(p)
             p.trial.stim.fix.on = 0;
             p.trial.behavior.fixation.GotFix = 0;
             switchEpoch(p,'TaskEnd');
-                                 
         end
             
         % ----------------------------------------------------------------%
@@ -325,7 +322,6 @@ if(~isempty(p.trial.LastKeyPress))
             p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixWinStp];
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
     end
-    
 end
 
 % ####################################################################### %

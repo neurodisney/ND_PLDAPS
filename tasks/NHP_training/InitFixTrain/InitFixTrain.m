@@ -57,7 +57,7 @@ else
 %% Call standard routines before executing task related code
 % This carries out standard routines, mainly in respect to hardware interfacing.
 % Be aware that this is done first for each trial state!
-    p = ND_GeneralTrialRoutines(p);
+    p = ND_GeneralTrialRoutines(p, state);
 
 % ####################################################################### %
 %% Subsequent calls during actual trials
@@ -94,7 +94,7 @@ else
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
-            TaskDraw(p)
+        %   TaskDraw(p)
             
 % ------------------------------------------------------------------------%
 % DONE AFTER THE MAIN TRIAL LOOP:
@@ -113,17 +113,17 @@ end  %/  if(nargin == 1) [...] else [...]
 function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
-    p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
-                                         p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
+    p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI, ...
+                                         p.trial.task.Timing.MaxITI, [], [], 1, 0.10);
                                      
-    p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial,  ...
-                                         p.trial.reward.MaxWaitInitial,  [], [], 1, 0.001);
+    p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial, ...
+                                         p.trial.reward.MaxWaitInitial, [], [], 1, 0.001);
 
     p.trial.CurrEpoch        = p.trial.epoch.ITI;
 
     % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
     p.trial.task.longITI = 1;
-      
+    
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
     
@@ -141,7 +141,7 @@ function TaskSetUp(p)
          p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
     end
     
-    p.trial.stim.FIXSPOT.color = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
+    p.trial.stim.FIXSPOT.color = p.trial.task.Color_list{mod(p.trial.Block.BlockList(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
     
     %% Make the visual stimuli
     % Fixation spot
@@ -251,25 +251,17 @@ function TaskDesign(p)
         %% Animal has reached fixation criteria and now starts receiving rewards for continued fixation
             
         % Still fixating    
-        if p.trial.stim.fix.fixating
-            
-            % If the supplied reward schema doesn't cover until jackpot
-            % time, just repeat the last reward
-            rewardCount = min(p.trial.reward.count , length(p.trial.reward.allDurs));
-                
-            rewardPeriod = p.trial.reward.allPeriods(rewardCount);
-                
+        if(p.trial.stim.fix.fixating)
             % While jackpot time has not yet been reached
-            if p.trial.CurTime < p.trial.EV.FirstReward + p.trial.reward.jackpotTime;
+            if(p.trial.CurTime < p.trial.EV.FirstReward + p.trial.reward.jackpotTime)
 
                 % Wait for rewardPeriod to elapse since last reward, then give the next reward
                 if(p.trial.reward.GiveSeries==1)
-                    if p.trial.CurTime > p.trial.Timer.lastReward + rewardPeriod
+                    cstep = find(p.trial.reward.Step <= p.trial.reward.count, 1, 'last');
 
-                        cstep = find(p.trial.reward.Step <= p.trial.reward.count, 1, 'last');
-                        
+                    if(p.trial.CurTime > p.trial.Timer.lastReward + p.trial.reward.Period(cstep))                        
                         % Give the reward and update the lastReward time
-                        pds.reward.give(p, p.trial.reward.Dur(cstep));
+                        pds.reward.give(p, p.trial.reward.Dur);
                         p.trial.Timer.lastReward = p.trial.CurTime;
                         p.trial.reward.count = p.trial.reward.count + 1;
                     end
@@ -297,7 +289,7 @@ function TaskDesign(p)
             pds.audio.playDP(p,'breakfix','left');
             switchEpoch(p,'TaskEnd');
             fixspot(p,0);
-        end
+        end  %  if(p.trial.stim.fix.fixating)
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd

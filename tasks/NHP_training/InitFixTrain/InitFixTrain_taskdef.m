@@ -33,7 +33,7 @@ p.trial.reward.MaxWaitInitial = 0.50;
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.task.Timing.WaitFix = 0.100;  % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 5;  % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 0.75;   % minimum time period [s] between subsequent trials
@@ -44,8 +44,8 @@ p.trial.task.Timing.TimeOut =  0;     % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
-p.trial.maxBlocks             = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
-p.trial.task.EqualCorrect     =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
+p.trial.Block.maxBlocks             = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
+p.trial.Block.EqualCorrect     =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % condition 1
 c1.Nr = 1;
@@ -80,13 +80,13 @@ c5.reward.InitialRew      = 0.8;  % duration for initial reward pulse
 
 p.trial.Block.Conditions  = {c1, c2, c3};
 
-p.trial.maxBlockTrials =  [5, 6, 4];  % how often to repeat each condition within a block
+p.trial.Block.maxBlockTrials =  [1, 3, 1];  % how often to repeat each condition within a block
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type    = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.size    = 4;        % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin  = 0;         %
+p.trial.stim.FIXSPOT.fixWin  = 8;         %
 
 % color options (make sure colors are defined!)
 % p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});  

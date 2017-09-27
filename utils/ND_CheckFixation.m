@@ -15,7 +15,7 @@ function p = ND_CheckFixation(p)
 if(p.trial.mouse.useAsEyepos)
     
     % Get the last mouse position
-    iSample = p.trial.mouse.samples;
+    iSample  = p.trial.mouse.samples;
     mousePos = p.trial.mouse.cursorSamples(:,iSample); 
     
     % If manual calibration has been collected, use it. Otherwise, just use the actual mouse position
@@ -24,6 +24,7 @@ if(p.trial.mouse.useAsEyepos)
         offset = p.trial.eyeCalib.offset;
         
         gain = p.trial.eyeCalib.gain;
+        
         % If gain hasn't been changed for a particular axis, just use a gain of 1
         gain(gain == p.trial.eyeCalib.defaultGain) = 1;
         
@@ -40,10 +41,12 @@ if(p.trial.mouse.useAsEyepos)
 elseif p.trial.datapixx.useAsEyepos
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
 
+    
+    
+    
     % calculate a moving average of the eye position for display reasons
     p.trial.eyeX   = p.trial.eyeCalib.gain(1) * (prctile(p.trial.AI.Eye.X(sIdx), 50) - p.trial.eyeCalib.offset(1));
     p.trial.eyeY   = p.trial.eyeCalib.gain(2) * (prctile(p.trial.AI.Eye.Y(sIdx), 50) - p.trial.eyeCalib.offset(2));
-
 
 else
     % If neither option is enabled just fix the eyepos at 0,0

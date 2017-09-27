@@ -212,6 +212,7 @@ SS.Block.EqualCorrect   =  0;  % if set to one, trials within a block are repeat
 SS.Block.GenBlock       =  1;  % Flag to indicate that a block with a new condition list needs to be generated
 c1.Nr = 1;
 SS.Block.Conditions     = {c1}; % as default only one condition
+SS.Block.BlockList      = [];
 
 % ------------------------------------------------------------------------%
 %% Eye tracking

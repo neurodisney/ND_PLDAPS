@@ -85,31 +85,6 @@ try
     while(p.trial.pldaps.quit == 0)
 
         if(~p.trial.pldaps.quit && ~p.trial.pldaps.pause)
-
-            % ----------------------------------------------------------------%
-            %% Block/Condition control
-            
-            
-            
-            % completed all desired trial, finish experiment now
-            if(p.trial.pldaps.iTrial >= p.trial.pldaps.finish)
-                p.trial.pldaps.quit = 1;
-                break;
-            end
-            
-            % ----------------------------------------------------------------%
-            %% load parameters for next trial
-            trialNr = trialNr+1;
-
-            % get information for current condition
-            if(~isempty(p.conditions))
-                p.defaultParameters.addLevels(p.conditions(trialNr), {['Trial', num2str(trialNr), 'Parameters']});
-                p.defaultParameters.setLevels([levelsPreTrials, length(levelsPreTrials)+trialNr]);
-            else
-                p.defaultParameters.setLevels(levelsPreTrials);
-            end
-
-            p.defaultParameters.pldaps.iTrial = trialNr;
             
             % ----------------------------------------------------------------%
             %% Update information between trials
@@ -123,6 +98,26 @@ try
             % defaultParameters and maybe keep some additonal information
             % in other sub-structs.
             
+            % --------------------------------------------------------------------%
+            %% update condition/block list
+            % This has to be done before the block with addLevels and setLevels on defaultParameters
+            p = ND_GenCndLst(p);
+
+            % ----------------------------------------------------------------%
+            %% load parameters for next trial
+            trialNr = trialNr+1;
+            
+            % get information for current condition
+            if(~isempty(p.conditions))
+                p.defaultParameters.addLevels(p.conditions(trialNr), {['Trial', num2str(trialNr), 'Parameters']});
+                
+                p.defaultParameters.setLevels([levelsPreTrials, length(levelsPreTrials)+trialNr]);
+            else
+                p.defaultParameters.setLevels(levelsPreTrials);
+            end
+
+            p.defaultParameters.pldaps.iTrial = trialNr;
+
             if(trialNr > 1) % this actually is supposed to happen after a trial, hence skip first in loop
  
                 % processes after trial
@@ -135,6 +130,12 @@ try
                 
                % pass some information from the previous trial to the next trial
                 p = ND_UpdateTrial(p);
+
+                % completed all desired trial, finish experiment now
+                if(p.trial.pldaps.iTrial > p.trial.pldaps.finish)
+                    p.trial.pldaps.quit = 1;
+                    break;
+                end
             end
             
             % ----------------------------------------------------------------%

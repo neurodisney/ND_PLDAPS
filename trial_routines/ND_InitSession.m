@@ -15,10 +15,10 @@ disp('');
 
 % --------------------------------------------------------------------%
 %% get task parameters
-if isfield(p.defaultParameters, 'task')
-    if(isfield(p.trial.task, 'TaskDef'))
-        if(~isempty(p.trial.task.TaskDef))
-            p = feval(p.trial.task.TaskDef,  p);
+if(isField(p.defaultParameters, 'task'))
+    if(isfield(p.defaultParameters.task, 'TaskDef'))
+        if(~isempty(p.defaultParameters.task.TaskDef))
+            p = feval(p.defaultParameters.task.TaskDef,  p);
         end
     end
 end
@@ -26,10 +26,10 @@ end
 % --------------------------------------------------------------------%
 %% Generate Block/Condition series
 if(~isfield(p,'conditions') || isempty(p.conditions))  % check first if the condition list was created in the task setup file
-    p.defaultParameters.Block.GenBlock = 1;
+    p.trial.Block.GenBlock = 1;
     p = ND_GenCndLst(p);
 else
-    p.defaultParameters.Block.GenBlock = 0;
+    p.trial.Block.GenBlock = 0;
 end
 
 % --------------------------------------------------------------------%

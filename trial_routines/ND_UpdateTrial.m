@@ -5,8 +5,7 @@ function p = ND_UpdateTrial(p)
 
 % --------------------------------------------------------------------%
 %% update condition/block list
-p = ND_GenCndLst(p);
-p.defaultParameters.blocks = p.trial.blocks;
+p.defaultParameters.Block = p.trial.Block;
 
 % --------------------------------------------------------------------%
 %% update trial statistics based on current outcome
