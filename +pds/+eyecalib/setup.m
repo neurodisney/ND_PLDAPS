@@ -18,6 +18,11 @@ if p.trial.behavior.fixation.enableCalib
     p.trial.eyeCalib.name = [p.trial.session.subject, '_', datestr(now,'yyyymmdd') '_EyeCalib_' , datestr(now,'HHMM')];
     p.trial.eyeCalib.file = [p.trial.session.eyeCalibDir, filesep, p.trial.eyeCalib.name, '.mat'];    
     
+    % make sure eye calibration directory exists
+    if(~exist(p.trial.session.eyeCalibDir,'dir'))
+        mkdir(p.trial.session.eyeCalibDir);
+    end
+ 
     % Load in the default gain and offset
     p.trial.eyeCalib.gain = p.trial.eyeCalib.defaultGain;
     p.trial.eyeCalib.offset = p.trial.eyeCalib.defaultOffset;

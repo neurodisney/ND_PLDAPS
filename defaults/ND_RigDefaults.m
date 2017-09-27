@@ -26,6 +26,15 @@ end
 
 SS.defaultParameters.session.rig = rig;
 
+switch rig
+    case 1
+        display('\n\n Loading settings for rig 1... \n\n');
+    case 2
+        display('\n\n Loading settings for rig 2... \n\n');
+    otherwise
+        display('\n\n No rig identified, loading settings for rig1... \n\n');
+end
+
 % ------------------------------------------------------------------------%
 %% DataPixx settings: VPixx device control (Datapixx, ProPixx, VIEWPixx)
 SS.datapixx.use                                 = 1;      % enable control of VPixx devices
@@ -64,9 +73,9 @@ switch rig
         SS.display.heightcm                     = 40;     % height of the visible screen in cm
         SS.display.widthcm                      = 71;     % width  of the visible screen in cm
     case 2
-        SS.display.viewdist                     = 97;   
-        SS.display.heightcm                     = 40;     
-        SS.display.widthcm                      = 71;  
+        SS.display.viewdist                     = 92;   
+        SS.display.heightcm                     = 36;     
+        SS.display.widthcm                      = 63;  
     otherwise
         SS.display.viewdist                     = 97;   
         SS.display.heightcm                     = 40;    
