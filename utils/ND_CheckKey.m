@@ -60,6 +60,8 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     end
                     % Increase the fixation window for fixspots created later
                     p.trial.stim.FIXSPOT.fixWin = p.trial.stim.FIXSPOT.fixWin + p.trial.behavior.fixation.FixWinStp;
+                    
+                    ND_CtrlMsg(p, sprintf('Changed fixation window to %.2f dva.', p.trial.stim.FIXSPOT.fixWin));
                 end
 
             % ----------------------------------------------------------------%
@@ -75,6 +77,8 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     end
                     % Decrease the fixation window for fixspots created later
                     p.trial.stim.FIXSPOT.fixWin = p.trial.stim.FIXSPOT.fixWin - p.trial.behavior.fixation.FixWinStp;
+                    
+                    ND_CtrlMsg(p, sprintf('Changed fixation window to %.2f dva.', p.trial.stim.FIXSPOT.fixWin));
                 end
 
             % ----------------------------------------------------------------%
@@ -85,12 +89,13 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     p.trial.behavior.joystick.Zero = p.trial.behavior.joystick.Zero + [p.trial.joyX, p.trial.joyY];
                 end
 
+            % ----------------------------------------------------------------%
             case p.trial.key.viewEyeCalib
             %% Toggle viewing eye calibration
                 if(p.trial.behavior.fixation.useCalibration)
                     p.trial.behavior.fixation.enableCalib = not(p.trial.behavior.fixation.enableCalib);
                 end
-                
+
             % ----------------------------------------------------------------%
             case p.trial.key.BlockAdvance
             %% advance to new block
@@ -106,20 +111,22 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 else
                     p.trial.Block.GenBlock = 1;
                 end
-                
+
             % ----------------------------------------------------------------%
             case p.trial.key.BlockEqualCorrect
             %% Switch balancing correct trials or all trials
                 if(p.trial.Block.EqualCorrect == 1)
                     p.Block.EqualCorrect = 0;
+                    ND_CtrlMsg(p, 'Accept all trials');
+
                 else
                     p.Block.EqualCorrect = 1;
+                    ND_CtrlMsg(p, 'Accept only correct trials');
                 end
                 
             % ----------------------------------------------------------------%
             case p.trial.key.spritz
             %% Send a TTL pulse to the picospritzer to trigger drug release
-                
                 ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,    p.trial.datapixx.TTL_spritzerDur,       ...
                                p.trial.datapixx.TTL_spritzerNpulse,  p.trial.datapixx.TTL_spritzerPulseGap,  ...
                                p.trial.datapixx.TTL_spritzerNseries, p.trial.datapixx.TTL_spritzerSeriesGap, ...
@@ -182,25 +189,10 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 ShowCursor;
                 ListenChar(0);
 
-%                  if(p.trial.pldaps.pause)
-%                     KbQueueStart;
-% 
-%                     while(true)
-%                         % Do this until the disableKeyboard key is pressed
-%                         [p.trial.keyboard.pressedQ,  p.trial.keyboard.firstPressQ]=KbQueueCheck();
-%                         if(any(p.trial.keyboard.firstPressQ))
-%                             qp = find(p.trial.keyboard.firstPressQ, 1); % identify which key was pressed
-%                             if(qp == p.trial.key.stopFreeKeyboard)
-%                                 ND_CtrlMsg(p, 'Standard PLDAPS mode engaged');
-%                                 HideCursor;
-%                                 ListenChar(2);
-%                                 break;
-%                             end
-%                         end
-%                     end  %  while(true)
-%                  end  %  if(~p.trial.pldaps.pause)
         end  %  switch p.trial.LastKeyPress(i)
     end  %  for(i=1:length(p.trial.LastKeyPress))
 else
     p.trial.LastKeyPress = [];
 end %/ if(any(p.trial.keyboard.firstPressQ))
+
+

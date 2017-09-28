@@ -77,9 +77,12 @@ SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states
 SS.display.bgColor    = [0.5, 0.5, 0.5];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
-SS.behavior.fixation.FixWin     = 8;
-SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
+% SS.behavior.fixation.FixWin     = 8;
+SS.behavior.fixation.FixGridStp = [2, 2]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
+
+SS.stim.FIXSPOT.fixWin  = 6;         %
+
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%

@@ -1,13 +1,13 @@
 function p = InitFixTrain_taskdef(p)
 % Initial fixation training task
-%   
-%   This task should be used to train an animal to keep its gaze continously on a target item 
+%
+%   This task should be used to train an animal to keep its gaze continously on a target item
 %   and basically  prepare for eye calibration. Fixation targets could be shown at random location
-%   or location is manually controlled. ANd depending on the settings, the animal could receive an 
-%   ititial reward when starting to fixate, then receive a series of reward pulses until a specified 
+%   or location is manually controlled. ANd depending on the settings, the animal could receive an
+%   ititial reward when starting to fixate, then receive a series of reward pulses until a specified
 %   fixation time when a large reward will be given.
 %
-% TODO: - 
+% TODO: -
 %
 %
 % wolf zinke, Sep. 2017
@@ -44,8 +44,8 @@ p.trial.task.Timing.TimeOut =  0;     % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
-p.trial.Block.maxBlocks             = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
-p.trial.Block.EqualCorrect     =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
+p.trial.Block.maxBlocks    = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
+p.trial.Block.EqualCorrect =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % condition 1
 c1.Nr = 1;
@@ -77,7 +77,6 @@ c5.reward.MinWaitInitial  = 1.0;  % wait period for initial reward after arrivin
 c5.reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
 c5.reward.InitialRew      = 0.8;  % duration for initial reward pulse
 
-
 p.trial.Block.Conditions  = {c1, c2, c3};
 
 p.trial.Block.maxBlockTrials =  [1, 3, 1];  % how often to repeat each condition within a block
@@ -85,17 +84,17 @@ p.trial.Block.maxBlockTrials =  [1, 3, 1];  % how often to repeat each condition
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type    = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size    = 2;        % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin  = 8;         %
+p.trial.stim.FIXSPOT.size    = 1;        % size of the fixation spot
+% p.trial.stim.FIXSPOT.fixWin  = 6;         %
 
 % color options (make sure colors are defined!)
-% p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});  
+% p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
 p.trial.task.Color_list = {'white'};
 
 % Enable random positions
 p.trial.task.RandomPos = 0;
 p.trial.task.RandomPosRange = [5, 5];  % range of x and y dva for random position
-    
+
 % ------------------------------------------------------------------------%
 %% Fixation parameters
 p.trial.behavior.fixation.BreakTime = 0.025;  % minimum time [ms] to identify a fixation break

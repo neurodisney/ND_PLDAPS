@@ -9,7 +9,7 @@ function p = ND_InitSession(p)
 % wolf zinke, Jan. 2017
 
 disp('****************************************************************')
-disp('>>>>  Initializen Sessions <<<<')
+disp('>>>>  Initializing Sessions <<<<')
 disp('****************************************************************')
 disp('');
 

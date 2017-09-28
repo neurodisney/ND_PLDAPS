@@ -321,28 +321,54 @@ p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes
 % Save useful info to an ascii table for plotting
 ND_Trial2Ascii(p, 'save');
 
+    
 % ####################################################################### %
-
 function KeyAction(p)
 %% task specific action upon key press
-    if(~isempty(p.trial.LastKeyPress))
-
-        switch p.trial.LastKeyPress(1)
+if(~isempty(p.trial.LastKeyPress))
+    
+    switch p.trial.LastKeyPress(1)
+        
+        case KbName('r')  % random position on each trial
+            if(p.trial.task.RandomPos == 0)
+                p.trial.task.RandomPos = 1;
+            else
+                p.trial.task.RandomPos = 0;
+            end
             
-            case KbName('p')  % change color ('paint')
-                 p.trial.task.Color_list = Shuffle(p.trial.task.Color_list);
-                 p.trial.task.FixCol     = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), ...
-                                           length(p.trial.task.Color_list))+1};
-                                       
-            case KbName('r')  % random position on each trial
-                 if(p.trial.task.RandomPos == 0)
-                    p.trial.task.RandomPos = 1;
-                 else
-                    p.trial.task.RandomPos = 0;
-                 end
-        end
+        case KbName('f') % Turn fixation position on and off
+            p.trial.stim.fix.on = ~p.trial.stim.fix.on;
+            
+        case p.trial.key.GridKeyCell
+            % move target to grid positions
+            gpos = find(p.trial.key.GridKey == p.trial.LastKeyPress(1));
+            p.trial.behavior.fixation.GridPos = gpos;
+            
+            p.trial.stim.FIXSPOT.pos = p.trial.eyeCalib.Grid_XY(gpos, :);
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            
+            % move target by steps
+        case KbName('RightArrow')
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixGridStp, 0];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            
+        case KbName('LeftArrow')
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixGridStp, 0];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            
+        case KbName('UpArrow')
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixGridStp];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            
+        case KbName('DownArrow')
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixGridStp];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
     end
-
+end
+    
+    
+    
+    
 % ####################################################################### %
 %% additional inline functions
 % ####################################################################### %

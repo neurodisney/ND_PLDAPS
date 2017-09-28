@@ -39,7 +39,6 @@ if p.trial.behavior.fixation.enableCalib
     p.trial.key.tweakUp       = KbName('PageUp'); % Increase the currently tweaked parameter
     p.trial.key.tweakDown     = KbName('PageDown'); % Decrease the currently tweaked parameter
     
-    
     % save calibration file
     pds.eyecalib.save(p);
     

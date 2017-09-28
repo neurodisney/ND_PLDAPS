@@ -208,7 +208,7 @@ try
             KbQueueStart;
 
             % check for keyboard actions while pausing
-            while(p.trial.pldaps.pause == 1 && p.trial.pldaps.quit < 1)
+            while(p.trial.pldaps.pause > 0 && p.trial.pldaps.quit < 1)
                 WaitSecs(0.01);
                 ND_CheckKey(p);
             end
