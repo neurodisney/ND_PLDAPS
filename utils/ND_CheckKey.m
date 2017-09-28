@@ -37,8 +37,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
         % Discard input queue so as not to interpret it
         p.trial.LastKeyPress = [];
     end
-        
-    
+            
     for(i=1:length(p.trial.LastKeyPress))
         switch p.trial.LastKeyPress(i)
 
