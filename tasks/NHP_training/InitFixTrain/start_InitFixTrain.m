@@ -34,8 +34,8 @@ SS = ND_RigDefaults(rig);    % load default settings according to the current ri
 exp_fun = 'InitFixTrain';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
-SS.pldaps.trialFunction = exp_fun;            % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'InitFixTrain_taskdef';  % function that provides task specific parameter definitions
+SS.pldaps.trialFunction = exp_fun;                % This function is both, set-up for the experiment session as well as the trial function
+SS.task.TaskDef    = 'InitFixTrain_taskdef';      % function that provides task specific parameter definitions
 SS.task.AfterTrial = 'InitFixTrain_aftertrial';   % function that provides runs task specific actions after a trial
 SS.plot.routine    = 'InitFixTrain_plots';        % function for online plotting of session progress
 
@@ -78,11 +78,10 @@ SS.display.bgColor    = [0.5, 0.5, 0.5];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
 % SS.behavior.fixation.FixWin     = 8;
-SS.behavior.fixation.FixGridStp = [2, 2]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
-
-SS.stim.FIXSPOT.fixWin  = 6;         %
-
+SS.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
+SS.behavior.fixation.FixWinStp  = 1;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixSPotStp = 0.25;
+SS.stim.FIXSPOT.fixWin  = 6;         
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
