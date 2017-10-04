@@ -22,18 +22,18 @@ p.trial.reward.ManDur         = 0.2;  % reward duration [s] for reward given by 
 p.trial.reward.Dur            = 0.05;  % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.InitialRew     = 0.1;  % duration of the initial reward
 
-p.trial.reward.jackpotTime    = 5;    % total time required to fixate to get full reward
+p.trial.reward.jackpotTime    = 8;    % total time required to fixate to get full reward
 p.trial.reward.jackpotDur     = 0.25;  % final reward after keeping fixation for the complete time
 
-p.trial.reward.Step           = [0, 3, 6];         % define the number of subsequent rewards after that the next delay period should be used.
-p.trial.reward.Period         = [0.25 0.20 0.15];  % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
+p.trial.reward.Step           = [0, 4, 12];         % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.reward.Period         = [0.4 0.25 0.15];  % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
 p.trial.reward.MinWaitInitial = 0.4;
 p.trial.reward.MaxWaitInitial = 0.6;
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.task.Timing.WaitFix = 8;  % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 6;  % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 0.75;   % minimum time period [s] between subsequent trials
@@ -78,10 +78,10 @@ c5.reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arrivin
 c5.reward.InitialRew      = 0.8;  % duration for initial reward pulse
 
 p.trial.Block.Conditions  = {c1, c2, c3};
-p.trial.Block.Conditions  = {c2};
+p.trial.Block.Conditions  = {c1, c2};
 
 p.trial.Block.maxBlockTrials =  [1, 3, 1];  % how often to repeat each condition within a block
-p.trial.Block.maxBlockTrials =  [1];  % how often to repeat each condition within a block
+p.trial.Block.maxBlockTrials =  [1, 2];  % how often to repeat each condition within a block
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters

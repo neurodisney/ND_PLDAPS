@@ -60,7 +60,7 @@ if(p.trial.pldaps.GetScreenFlipTimes || p.trial.pldaps.draw.ScreenEvent > 0)
         p.trial.pldaps.draw.photodiode.state = 0;
     end
     
-    p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
+%    p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
     
     % p.trial.display.timeLastFrame = ft{1} - p.trial.trstart;
 else
