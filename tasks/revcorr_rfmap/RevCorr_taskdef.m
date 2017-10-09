@@ -25,7 +25,7 @@ p.trial.display.breakColor = 'black';
 p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
-p.trial.reward.Period = 0.30;
+p.trial.reward.Period = 0.20;
 
 p.trial.reward.jackpotDur = 0.2;     % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
@@ -64,7 +64,7 @@ p.trial.RF.maxSpikesPerTrial = 1000;   % Max spikes per trial, for preallocation
 
 % Note: these select which channels to count when listening to spikes
 % To set up how many channels total on the electrode look below in TDT setup section
-p.trial.RF.channels = 4;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.channels = 22;  % Which channels of the incoming spike data to use for spikes
 p.trial.RF.sortCodes = 1;  % Which sort codes to use
 
 % ------------------------------------------------------------------------%
@@ -73,7 +73,7 @@ p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color  = 'white';  % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.FIXSPOT.size   = 0.15;        % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin = 4; 
+p.trial.stim.FIXSPOT.fixWin = 4;
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters

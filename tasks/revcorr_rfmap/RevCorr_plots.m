@@ -224,8 +224,9 @@ drawnow
         if strcmp(p.trial.stim.stage, 'fine')
             hold on;
             rfdef = p.trial.RF.fine;
+            temporalProfile = squeeze(rfdef.revCorrCube(rfdef.maxInd(1), rfdef.maxInd(2), :));
             t = linspace(rfdef.temporalRange(1)*1000, rfdef.temporalRange(2)*1000, p.trial.RF.temporalRes);
-            plot(t, rfdef.maxTemporalProfile,'b');
+            plot(t, temporalProfile,'b');
             hold off;
         end
         
