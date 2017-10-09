@@ -368,23 +368,24 @@ if(~isempty(p.trial.LastKeyPress))
     end
 end
     
-    
 % ####################################################################### %
 %% additional inline functions
 % ####################################################################### %
 function switchEpoch(p,epochName)
-p.trial.CurrEpoch = p.trial.epoch.(epochName);
-p.trial.EV.epochEnd = p.trial.CurTime;
 
-function fixspot(p,bool)
-if bool && ~p.trial.stim.fix.on
-    p.trial.stim.fix.on = 1;
-    p.trial.EV.FixOn = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
-elseif ~bool && p.trial.stim.fix.on
-    p.trial.stim.fix.on = 0;
-    p.trial.EV.FixOff = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
-end
+    p.trial.CurrEpoch   = p.trial.epoch.(epochName);
+    p.trial.EV.epochEnd = p.trial.CurTime;
+
+% ####################################################################### %
+function fixspot(p, bool)
+
+    if(bool && ~p.trial.stim.fix.on)
+        p.trial.stim.fix.on = 1;
+        ND_AddScreenEvent(p, p.trial.event.FIXSPOT_ON, 'FixOn')
+        
+    elseif(~bool && p.trial.stim.fix.on)
+        p.trial.stim.fix.on = 0;
+        ND_AddScreenEvent(p, p.trial.event.FIXSPOT_OFF, 'FixOff')
+    end
 
         
