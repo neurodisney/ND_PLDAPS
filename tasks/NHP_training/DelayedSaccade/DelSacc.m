@@ -14,12 +14,6 @@ if(~exist('state', 'var'))
 end
 
 % ####################################################################### %
-%% Call standard routines before executing task related code
-% This carries out standard routines, mainly in respect to hardware interfacing.
-% Be aware that this is done first for each trial state!
-p = ND_GeneralTrialRoutines(p, state);
-
-% ####################################################################### %
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed.
 % This part corresponds to the experimental setup file and could be a separate
@@ -122,6 +116,12 @@ if(isempty(state))
     p.defaultParameters.pldaps.finish = totalTrials;
     
 else
+    % ####################################################################### %
+    %% Call standard routines before executing task related code
+    % This carries out standard routines, mainly in respect to hardware interfacing.
+    % Be aware that this is done first for each trial state!
+    p = ND_GeneralTrialRoutines(p, state);
+
     % ####################################################################### %
     %% Subsequent calls during actual trials
     % execute trial specific commands here.

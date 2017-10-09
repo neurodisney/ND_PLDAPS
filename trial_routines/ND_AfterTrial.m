@@ -13,7 +13,7 @@ Tnr = p.trial.pldaps.iTrial;
 p.data.NumTrial = Tnr;
 
 p.data.Condition(Tnr, 1) = p.trial.Nr;
-p.data.Good(    Tnr, 1)  = p.trial.task.Good;
+p.data.Good(     Tnr, 1) = p.trial.task.Good;
 
 % --------------------------------------------------------------------%
 %% keep outcomes

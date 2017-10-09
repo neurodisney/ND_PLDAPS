@@ -1,4 +1,4 @@
-function p = start_InitFixTrain(subjname, rig, experimenter)
+function p = start_InitFixTrain(subjname, rig)
 % main function to run a task - this variant will have settings that uses the Fixtrain 
 % task to calibrate eye position and therefore should be used for initial fixation training.
 %
@@ -34,8 +34,8 @@ SS = ND_RigDefaults(rig);    % load default settings according to the current ri
 exp_fun = 'InitFixTrain';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
-SS.pldaps.trialFunction = exp_fun;            % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'InitFixTrain_taskdef';  % function that provides task specific parameter definitions
+SS.pldaps.trialFunction = exp_fun;                % This function is both, set-up for the experiment session as well as the trial function
+SS.task.TaskDef    = 'InitFixTrain_taskdef';      % function that provides task specific parameter definitions
 SS.task.AfterTrial = 'InitFixTrain_aftertrial';   % function that provides runs task specific actions after a trial
 SS.plot.routine    = 'InitFixTrain_plots';        % function for online plotting of session progress
 
@@ -46,7 +46,7 @@ SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.fixWin', 'stim
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
-SS.sound.use                  = 1;
+SS.sound.use                  = 0;
 SS.sound.useDatapixx          = 1;
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
@@ -64,7 +64,7 @@ SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
 % switch here to get calibration functionality
-SS.behavior.fixation.useCalibration = 0;
+SS.behavior.fixation.useCalibration = 1;
 SS.behavior.fixation.enableCalib    = 1;
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
@@ -74,12 +74,14 @@ SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states
 % If there are modification from the default settings needed, copy the
 % needed lines from ND_RigDefaults and alter the values here.
 
-SS.display.bgColor    = [0.5, 0.5, 0.5];  % change background color
+SS.display.bgColor    = [0.25, 0.25, 0.25];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
-SS.behavior.fixation.FixWin     = 8;
-SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
+% SS.behavior.fixation.FixWin     = 8;
+SS.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
+SS.behavior.fixation.FixWinStp  = 1;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixSPotStp = 0.25;
+SS.stim.FIXSPOT.fixWin  = 6;         
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
@@ -100,7 +102,6 @@ if strcmp(subjname,'mouse')
     SS.datapixx.useAsEyepos        = 0;
     SS.behavior.joystick.use       = 0;
     %SS.datapixx.useForReward       = 0;
-    
 end
 
 % ------------------------------------------------------------------------%

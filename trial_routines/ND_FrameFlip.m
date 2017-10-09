@@ -26,7 +26,7 @@ end
 %-------------------------------------------------------------------------%
 %% Flip the screen and keep track of frame timings
 if(p.trial.pldaps.GetScreenFlipTimes || p.trial.pldaps.draw.ScreenEvent > 0)
-    ft=cell(5,1);
+    ft = cell(5,1);
     [ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
     
     if(p.trial.pldaps.draw.ScreenEvent > 0)
@@ -36,7 +36,7 @@ if(p.trial.pldaps.GetScreenFlipTimes || p.trial.pldaps.draw.ScreenEvent > 0)
             if(p.trial.pldaps.draw.photodiode.state == 0)
                 pds.datapixx.strobe(p.trial.event.PD_ON);    
 
-                p.trial.Timer.PhD = ft{1} + (p.trial.pldaps.draw.photodiode.XFrames * p.trial.display.ifi) - p.trial.display.ifi/2; % subtract hal a frame rate to make sure to catch the correct one
+                p.trial.Timer.PhD = ft{1} + (p.trial.pldaps.draw.photodiode.XFrames * p.trial.display.ifi) - p.trial.display.ifi/2; % subtract half a frame rate to make sure to catch the correct one
 
                 p.trial.pldaps.draw.photodiode.cnt = p.trial.pldaps.draw.photodiode.cnt + 1;
                 p.trial.timing.photodiodeTimes(1, p.trial.pldaps.draw.photodiode.cnt) = ft{1};
@@ -60,7 +60,7 @@ if(p.trial.pldaps.GetScreenFlipTimes || p.trial.pldaps.draw.ScreenEvent > 0)
         p.trial.pldaps.draw.photodiode.state = 0;
     end
     
-    p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
+%    p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
     
     % p.trial.display.timeLastFrame = ft{1} - p.trial.trstart;
 else

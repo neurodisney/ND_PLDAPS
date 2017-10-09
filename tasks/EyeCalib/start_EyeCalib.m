@@ -24,6 +24,7 @@ end
 %% load default settings into a struct
 SS = ND_RigDefaults(rig);    % load default settings according to the current rig setup
 
+
 %% ################## Edit within the following block ################## %%
 
 %% Define task related functions
@@ -58,7 +59,7 @@ SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
-SS.behavior.fixation.enableCalib = 1;
+SS.behavior.fixation.enableCalib    = 1;
 SS.behavior.fixation.useCalibration = 1;
 
 SS.behavior.fixation.on = 1; % fixation.on for this task

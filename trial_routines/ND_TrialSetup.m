@@ -6,7 +6,7 @@ function p = ND_TrialSetup(p)
 % wolf zinke, Dec. 2016
 
 % p.trial.timing.flipTimes = zeros(4,p.trial.pldaps.maxFrames);
-p.trial.timing.flipTimes = zeros(5,p.trial.pldaps.maxFrames);
+% p.trial.timing.flipTimes = zeros(5,p.trial.pldaps.maxFrames);
 
 if(p.trial.pldaps.GetTrialStateTimes)
     p.trial.timing.frameStateChangeTimes = nan(9,p.trial.pldaps.maxFrames);
@@ -36,13 +36,12 @@ pds.datapixx.adc.trialSetup(p); % setup analog data collection from Datapixx
 [getsecs, boxsecs, confidence]          = PsychDataPixx('GetPreciseTime');
 p.trial.timing.datapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
 
-
 % ------------------------------------------------------------------------%
 %% Reward
 %%% prepare reward system and pre-allocate variables for reward timings
-
     p.trial.reward.timeReward = nan(100,2);
     p.trial.reward.iReward     = 0; % counter for reward times
+    
 % ------------------------------------------------------------------------%
 %% eye position
 
@@ -87,12 +86,14 @@ end
 %% Update summary information for preceding trials
 outcomeStr = 'Outcomes --  ';
 allKeys = keys(p.trial.outcome.allOutcomes);
+
 for iKey = 1:length(allKeys)
     key = allKeys{iKey};
     outcomeStr = [outcomeStr key ':' mat2str(p.trial.outcome.allOutcomes(key)) '  '];
 end
+
 p.trial.SmryStr = sprintf('Condition: %d  Block: %d -- %d/%d correct trials (%.2f)\n%s', ...
-                   p.trial.Nr, p.trial.blocks(p.trial.pldaps.iTrial), p.trial.NHits, ...
+                   p.trial.Nr, p.trial.Block.BlockList(p.trial.pldaps.iTrial), p.trial.NHits, ...
                    p.trial.pldaps.iTrial, p.trial.cPerf, outcomeStr);
 
 ND_CtrlMsg(p, p.trial.SmryStr);
@@ -118,7 +119,7 @@ end
 p.trial.task.Good                = 0;    % flag to indicate if an error occurred or the task flow continues. This will be set to 1 when task is on (Task_ON)
 p.trial.CurrEpoch                = NaN;  % keep track of task epochs
 p.trial.CurTime                  = NaN;  % keep track of current time
-p.trial.AllCurTimes              = nan(p.trial.pldaps.maxFrames,1);
+p.trial.AllCurTimes              = nan(ceil(p.trial.pldaps.maxFrames),1);
 p.trial.behavior.fixation.GotFix =   0;  % assume no fixation at task start
 p.trial.reward.Curr         = p.trial.reward.defaultAmount;  % expected reward amount (set to default amount)
 

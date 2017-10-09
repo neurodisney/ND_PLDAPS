@@ -14,12 +14,6 @@ if(~exist('state', 'var'))
 end
 
 % ####################################################################### %
-%% Call standard routines before executing task related code
-% This carries out standard routines, mainly in respect to hardware interfacing.
-% Be aware that this is done first for each trial state!
-p = ND_GeneralTrialRoutines(p, state);
-
-% ####################################################################### %
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed.
 % This part corresponds to the experimental setup file and could be a separate
@@ -28,7 +22,6 @@ p = ND_GeneralTrialRoutines(p, state);
 % At this stage, p.trial is not yet defined. All assignments need
 % to go to p.defaultparameters
 if(isempty(state))
-
     % --------------------------------------------------------------------%
     %% define ascii output file
     % call this after ND_InitSession to be sure that output directory exists!
@@ -55,135 +48,17 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
-    
-    
+       
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
 
-    % --------------------------------------------------------------------%
-    %% Color definitions of stuff shown during the trial
-    % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
-    % this is a good place to do so. To avoid conflicts with future changes in the set of default
-    % colors, use entries later in the lookup table for the definition of task related colors.
-
-    p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});  
-    p.trial.task.Color_list = {'white'};
-    % --------------------------------------------------------------------%
-    %% Enable random positions
-    p.trial.task.RandomPos = 0;
-    
-    p.trial.task.RandomPosRange = [5, 5];  % range of x and y dva for random position
-    
-    % --------------------------------------------------------------------%
-    %% Determine conditions and their sequence
-    % define conditions (conditions could be passed to the pldaps call as
-    % cell array, or defined here within the main trial function. The
-    % control of trials, especially the use of blocks, i.e. the repetition
-    % of a defined number of trials per condition, needs to be clarified.
-
-    
-    % reward series for continous fixation
-    % c.reward.MinWaitInitial -  minimum latency to reward after fixation
-    % c.reward.MaxWaitInitial -  maximum latency to reward after fixation
-    % c.reward.nRewards       -  array of how many of each kind of reward
-    % c.reward.Dur            -  array of how long each kind of reward lasts
-    % c.reward.Period         -  the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-    % c.reward.jackpotDur     -  the jackpot is given after all other rewards
-
-    % condition 1
-    c1.Nr = 1;
-    c1.reward.MinWaitInitial = 0.13;
-    c1.reward.MaxWaitInitial = 0.17;
-    c1.reward.nRewards       = [1    8  ];
-    c1.reward.Dur            = [0.04  0.04];
-    c1.reward.Period         = [1    1  ];
-    c1.reward.jackpotDur     = 0.15;
-    
-    c1.nTrials = 100;
-    
-    
-    % condition 2
-    c2.Nr = 2;
-    c2.nTrials = 1000;
-    
-    
-    % condition 3
-    c3.Nr = 3;
-    c3.reward.MinWaitInitial = 0.48;
-    c3.reward.MaxWaitInitial = 0.52;
-    c3.reward.nRewards       = [1    8   ];
-    c3.reward.Dur            = [0.04 0.04];
-    c3.reward.Period         = [1.00 1.00];
-    c3.reward.jackpotDur     = 0.15;
-    c3.nTrials = 25;
-    
-    % condition 4
-    c4.Nr = 4;
-    c4.reward.MinWaitInitial = 0.73;
-    c4.reward.MaxWaitInitial = 0.77;
-    c4.reward.nRewards       = [1    8   ];
-    c4.reward.Dur            = [0.04 0.04]; 
-    c4.reward.Period         = [1.00 1.00];   
-    c4.reward.jackpotDur     = 0.25;
-    c4.nTrials = 75;
-    
-    % condition 5
-    c5.Nr = 5;
-    c5.reward.MinWaitInitial = 0.98;
-    c5.reward.MaxWaitInitial = 1.02;
-    c5.reward.nRewards       = [1    14  ];
-    c5.reward.Dur            = [0.04 0.04];
-    c5.reward.Period         = [0.75 0.75];   
-    c5.reward.jackpotDur     = 0.25;
-    c5.nTrials = 100;
-    
-    % condition 6
-    c6.Nr = 6;
-    c6.reward.MinWaitInitial = 1.23;
-    c6.reward.MaxWaitInitial = 1.27;
-    c6.reward.nRewards       = [1    18  ];
-    c6.reward.Dur            = [0.06 0.06];
-    c6.reward.Period         = [0.60 0.60];   
-    c6.reward.jackpotDur     = 0.25;
-    c6.nTrials = 1000;
-    
-    % condition 7
-    c7.Nr = 7;
-    c7.reward.MinWaitInitial = 1.48;
-    c7.reward.MaxWaitInitial = 1.52;
-    c7.reward.nRewards       = [1    25  ];
-    c7.reward.Dur            = [0.08 0.08];
-    c7.reward.Period         = [0.30 0.30];   
-    c7.reward.jackpotDur     = 0.5;
-    c7.nTrials = 1000;
-    
-    
-    % Fill a conditions list with n of each kind of condition sequentially
-    conditions = cell(1,5000);
-    blocks = nan(1,5000);
-    totalTrials = 0;
-    
-    % Iterate through each condition to fill conditions
-    conditionsIterator = {c2};
-    
-    for iCond = 1:size(conditionsIterator,2)
-        cond = conditionsIterator(iCond);
-        nTrials = cond{1}.nTrials;
-        conditions(1, totalTrials+1:totalTrials+nTrials) = repmat(cond,1,nTrials);
-        blocks(1, totalTrials+1:totalTrials+nTrials) = repmat(iCond,1,nTrials);
-        totalTrials = totalTrials + nTrials;
-    end
-    
-    % Truncate the conditions cell array to it's actualy size
-    conditions = conditions(1:totalTrials);
-    blocks = blocks(1:totalTrials);
-    
-    p.conditions = conditions;  
-    p.trial.blocks = blocks;
-    
-    p.defaultParameters.pldaps.finish = totalTrials;
-
 else
+% ####################################################################### %
+%% Call standard routines before executing task related code
+% This carries out standard routines, mainly in respect to hardware interfacing.
+% Be aware that this is done first for each trial state!
+    p = ND_GeneralTrialRoutines(p, state);
+
 % ####################################################################### %
 %% Subsequent calls during actual trials
 % execute trial specific commands here.
@@ -219,7 +94,7 @@ else
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
-            TaskDraw(p)
+        %   TaskDraw(p)
             
 % ------------------------------------------------------------------------%
 % DONE AFTER THE MAIN TRIAL LOOP:
@@ -238,32 +113,27 @@ end  %/  if(nargin == 1) [...] else [...]
 function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
-    p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
-                                         p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
+    p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI, ...
+                                         p.trial.task.Timing.MaxITI, [], [], 1, 0.10);
                                      
-    p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial,  ...
-                                         p.trial.reward.MaxWaitInitial,  [], [], 1, 0.001);
+    p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial, ...
+                                         p.trial.reward.MaxWaitInitial, [], [], 1, 0.001);
 
     p.trial.CurrEpoch        = p.trial.epoch.ITI;
 
+    p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+
     % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
     p.trial.task.longITI = 1;
-      
-    % Reward
-    nRewards = p.trial.reward.nRewards;
     
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
-    
-    % Create arrays for direct reference during reward
-    p.trial.reward.allDurs    = repelem(p.trial.reward.Dur,    nRewards);
-    p.trial.reward.allPeriods = repelem(p.trial.reward.Period, nRewards);       
     
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
     p.trial.task.Good   = 0;
     
-    % State for acheiving fixation
+    % State for achieving fixation
     p.trial.task.fixFix = 0;
     
     % if random position is required pick one and move fix spot
@@ -273,7 +143,7 @@ function TaskSetUp(p)
          p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
     end
     
-    p.trial.stim.FIXSPOT.color = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
+    p.trial.stim.FIXSPOT.color = p.trial.task.Color_list{mod(p.trial.Block.BlockList(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
     
     %% Make the visual stimuli
     % Fixation spot
@@ -303,7 +173,6 @@ function TaskDesign(p)
             end
             
             switchEpoch(p,'TrialStart');
-            
         end
         
         % ----------------------------------------------------------------%  
@@ -345,7 +214,6 @@ function TaskDesign(p)
                     switchEpoch(p,'TaskEnd')                   
                 end
                 
-                
             % If gaze is inside fixation window
             elseif p.trial.task.fixFix == 1
                 
@@ -369,16 +237,15 @@ function TaskDesign(p)
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
                     
                     % Reward the monkey
-                    p.trial.reward.count = 1;
-                    pds.reward.give(p, p.trial.reward.allDurs(1));
-                    p.trial.EV.FirstReward   = p.trial.CurTime;
-                    p.trial.Timer.lastReward = p.trial.CurTime;
+                    if(p.trial.reward.GiveInitial == 1)
+                        pds.reward.give(p, p.trial.reward.InitialRew);
+                        p.trial.EV.FirstReward   = p.trial.CurTime;
+                        p.trial.Timer.lastReward = p.trial.CurTime;
+                    end
                     
                     % Transition to the succesful fixation epoch
                     switchEpoch(p,'Fixating');
-
                 end
-                
             end
             
         % ----------------------------------------------------------------%
@@ -386,36 +253,24 @@ function TaskDesign(p)
         %% Animal has reached fixation criteria and now starts receiving rewards for continued fixation
             
         % Still fixating    
-        if p.trial.stim.fix.fixating
-            
-            % If the supplied reward schema doesn't cover until jackpot
-            % time, just repeat the last reward
-            rewardCount = min(p.trial.reward.count , length(p.trial.reward.allDurs));
-                
-            rewardPeriod = p.trial.reward.allPeriods(rewardCount);
-                
-                
+        if(p.trial.stim.fix.fixating)
             % While jackpot time has not yet been reached
-            if p.trial.CurTime < p.trial.EV.FirstReward + p.trial.reward.jackpotTime;
+            if(p.trial.CurTime < p.trial.EV.FirstReward + p.trial.reward.jackpotTime)
 
                 % Wait for rewardPeriod to elapse since last reward, then give the next reward
-                if p.trial.CurTime > p.trial.Timer.lastReward + rewardPeriod
+                if(p.trial.reward.GiveSeries==1)
+                    cstep = find(p.trial.reward.Step <= p.trial.reward.count, 1, 'last');
 
-                    rewardCount = min(rewardCount + 1 , length(p.trial.reward.allDurs));
-                    p.trial.reward.count = p.trial.reward.count + 1;
-
-                    rewardDuration = p.trial.reward.allDurs(rewardCount);                  
-
-                    % Give the reward and update the lastReward time
-                    pds.reward.give(p, rewardDuration);
-                    p.trial.Timer.lastReward = p.trial.CurTime;
-
+                    if(p.trial.CurTime > p.trial.Timer.lastReward + p.trial.reward.Period(cstep))                        
+                        % Give the reward and update the lastReward time
+                        pds.reward.give(p, p.trial.reward.Dur);
+                        p.trial.Timer.lastReward = p.trial.CurTime;
+                        p.trial.reward.count = p.trial.reward.count + 1;
+                    end
                 end
-
             else
                 % Give JACKPOT!
-                rewardDuration = p.trial.reward.jackpotDur;
-                pds.reward.give(p, rewardDuration);
+                pds.reward.give(p, p.trial.reward.jackpotDur);
                 p.trial.Timer.lastReward = p.trial.CurTime;
 
                 % Best outcome
@@ -436,8 +291,7 @@ function TaskDesign(p)
             pds.audio.playDP(p,'breakfix','left');
             switchEpoch(p,'TaskEnd');
             fixspot(p,0);
-                                 
-        end
+        end  %  if(p.trial.stim.fix.fixating)
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
@@ -457,7 +311,6 @@ function TaskDesign(p)
 %% show epoch dependent stimuli
 % go through the task epochs as defined in TaskDesign and draw the stimulus
 % content that needs to be shown during this epoch.
-
     
 % ####################################################################### %
 function TaskCleanAndSave(p)
@@ -469,28 +322,53 @@ p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes
 
 % Save useful info to an ascii table for plotting
 ND_Trial2Ascii(p, 'save');
-% ####################################################################### %
 
+    
+% ####################################################################### %
 function KeyAction(p)
 %% task specific action upon key press
-    if(~isempty(p.trial.LastKeyPress))
-
-        switch p.trial.LastKeyPress(1)
+if(~isempty(p.trial.LastKeyPress))
+    
+    switch p.trial.LastKeyPress(1)
+        
+        case KbName('r')  % random position on each trial
+            if(p.trial.task.RandomPos == 0)
+                p.trial.task.RandomPos = 1;
+            else
+                p.trial.task.RandomPos = 0;
+            end
             
-            case KbName('p')  % change color ('paint')
-                 p.trial.task.Color_list = Shuffle(p.trial.task.Color_list);
-                 p.trial.task.FixCol     = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), ...
-                                           length(p.trial.task.Color_list))+1};
-                                       
-            case KbName('r')  % random position on each trial
-                 if(p.trial.task.RandomPos == 0)
-                    p.trial.task.RandomPos = 1;
-                 else
-                    p.trial.task.RandomPos = 0;
-                 end
-        end
+        case KbName('f') % Turn fixation position on and off
+            p.trial.stim.fix.on = ~p.trial.stim.fix.on;
+            
+        case p.trial.key.GridKeyCell
+            % move target to grid positions
+            gpos = find(p.trial.key.GridKey == p.trial.LastKeyPress(1));
+            p.trial.behavior.fixation.GridPos = gpos;
+            
+            p.trial.stim.FIXSPOT.pos = p.trial.eyeCalib.Grid_XY(gpos, :);
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            
+            % move target by steps
+        case KbName('RightArrow')
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixSPotStp, 0];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            
+        case KbName('LeftArrow')
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixSPotStp, 0];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            
+        case KbName('UpArrow')
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixSPotStp];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            
+        case KbName('DownArrow')
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixSPotStp];
+            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
     end
-
+end
+    
+    
 % ####################################################################### %
 %% additional inline functions
 % ####################################################################### %

@@ -13,12 +13,6 @@ if(~exist('state', 'var'))
 end
 
 % ####################################################################### %
-%% Call standard routines before executing task related code
-% This carries out standard routines, mainly in respect to hardware interfacing.
-% Be aware that this is done first for each trial state!
-p = ND_GeneralTrialRoutines(p, state);
-
-% ####################################################################### %
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed.
 % This part corresponds to the experimental setup file and could be a separate
@@ -64,10 +58,15 @@ if(isempty(state))
     p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
 else
-% ####################################################################### %
-%% Subsequent calls during actual trials
-% execute trial specific commands here.
+    % ####################################################################### %
+    %% Call standard routines before executing task related code
+    % This carries out standard routines, mainly in respect to hardware interfacing.
+    % Be aware that this is done first for each trial state!
+    p = ND_GeneralTrialRoutines(p, state);
 
+    % ####################################################################### %
+    %% Subsequent calls during actual trials
+    % execute trial specific commands here.
     switch state
 % ------------------------------------------------------------------------%
 % DONE BEFORE MAIN TRIAL LOOP:
@@ -216,9 +215,7 @@ function TaskDesign(p)
                     
                     % Transition to the succesful fixation epoch
                     switchEpoch(p,'Fixating');
-
                 end
-                
             end
             
         % ----------------------------------------------------------------%
@@ -250,7 +247,6 @@ function TaskDesign(p)
                     % Give the reward and update the lastReward time
                     pds.reward.give(p, rewardDuration);
                     p.trial.Timer.lastReward = p.trial.CurTime;
-                    
                 end
         
         % Fixation Break, go to TaskEnd and turn off fixation point    
@@ -258,7 +254,6 @@ function TaskDesign(p)
             p.trial.stim.fix.on = 0;
             p.trial.behavior.fixation.GotFix = 0;
             switchEpoch(p,'TaskEnd');
-                                 
         end
             
         % ----------------------------------------------------------------%
@@ -310,22 +305,21 @@ if(~isempty(p.trial.LastKeyPress))
             
             % move target by steps
         case KbName('RightArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixWinStp, 0];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixGridStp, 0];
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
         case KbName('LeftArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixWinStp, 0];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixGridStp, 0];
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
         case KbName('UpArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixWinStp];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixGridStp];
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
         case KbName('DownArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixWinStp];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixGridStp];
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
     end
-    
 end
 
 % ####################################################################### %
