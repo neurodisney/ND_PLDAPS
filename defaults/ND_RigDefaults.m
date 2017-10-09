@@ -28,11 +28,11 @@ SS.defaultParameters.session.rig = rig;
 
 switch rig
     case 1
-        display('\n\n Loading settings for rig 1... \n\n');
+        display(sprintf('\n\n Loading settings for rig 1... \n\n'));
     case 2
-        display('\n\n Loading settings for rig 2... \n\n');
+        display(sprintf('\n\n Loading settings for rig 2... \n\n'));
     otherwise
-        display('\n\n No rig identified, loading settings for rig1... \n\n');
+        display(sprintf('\n\n No rig identified, loading settings for rig1... \n\n'));
 end
 
 % ------------------------------------------------------------------------%
@@ -250,7 +250,7 @@ SS.datapixx.adc.PupilChannel   = 2;
 % Saccade parameters
 SS.behavior.fixation.use       =  0;       % does this task require control of eye position
 
-SS.behavior.fixation.on  =  0;       % If not required, fixation states will be ignored
+SS.behavior.fixation.on        =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
 SS.behavior.fixation.entryTime = 0.025;    % minimum time [s] before fixation is registered when gaze enters fixation window
 SS.behavior.fixation.BreakTime = 0.05;     % minimum time [s] to identify a fixation break
@@ -261,8 +261,6 @@ SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibr
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
 SS.eyeCalib.name                     = 'Default';        % Name of the calibration used. For back referencing in the data later
 SS.eyeCalib.file                     = 'nofile';   % THe file that stores the calibration information
-SS.eyeCalib.defaultGain              = [-3.5622 -3.4474];  % default gain, used if no calibration points are entered
-SS.eyeCalib.defaultOffset            = [0.3528 1.3147];    % default offset, used if no calibration points are entered
 SS.eyeCalib.offsetTweak              = [0, 0];    % Additive tweak to the offset parameter  
 SS.eyeCalib.gainTweak                = [0, 0];    % Additive tweak to the gain parameter
 SS.behavior.fixation.calibTweakMode  = 'off';     % Parameter currently being tweaked
@@ -276,11 +274,25 @@ SS.behavior.fixation.calibSamples    = 200;    % analog eyesamples in the the da
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
+SS.behavior.fixation.FixSPotStp      = 0.1;   % change of the size of the fixation window upon key press
 SS.behavior.fixation.GridPos         = 5;      % cntral fixation position (for pure offset correction)
 
 SS.behavior.fixation.FixWinStp       = 0.25;   % change of the size of the fixation window upon key press
 
 SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use to determine current (median) eye position (has to be smaller than SS.pldaps.draw.eyepos.history)
+
+% rig specific eye calibration parameter
+switch rig
+    case 1
+        SS.eyeCalib.defaultGain      = [-3.5622, -3.4474];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [0.3528, 1.3147];    % default offset, used if no calibration points are entered
+     case 2
+        SS.eyeCalib.defaultGain      = [-5, -10];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [0 0];      % default offset, used if no calibration points are entered
+    otherwise
+        SS.eyeCalib.defaultGain      = [-3.5622, -3.4474];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [0 0];    % default offset, used if no calibration points are entered
+end
 
 % Define fixation states
 SS.FixState.Current     = NaN;

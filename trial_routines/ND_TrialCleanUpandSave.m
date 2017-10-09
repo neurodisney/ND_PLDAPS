@@ -17,7 +17,7 @@ end
 %p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
 ft=cell(5,1);
 [ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
-p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
+% p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
 
 %-------------------------------------------------------------------------%
 %% Ensure correct background color and determine trial end and duration

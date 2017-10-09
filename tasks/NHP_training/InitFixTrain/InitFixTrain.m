@@ -121,6 +121,8 @@ function TaskSetUp(p)
 
     p.trial.CurrEpoch        = p.trial.epoch.ITI;
 
+    p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+
     % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
     p.trial.task.longITI = 1;
     
@@ -349,24 +351,22 @@ if(~isempty(p.trial.LastKeyPress))
             
             % move target by steps
         case KbName('RightArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixGridStp, 0];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixSPotStp, 0];
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
         case KbName('LeftArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixGridStp, 0];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixSPotStp, 0];
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
         case KbName('UpArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixGridStp];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixSPotStp];
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
         case KbName('DownArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixGridStp];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixSPotStp];
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
     end
 end
-    
-    
     
     
 % ####################################################################### %
