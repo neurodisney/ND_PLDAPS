@@ -41,7 +41,7 @@ SS.plot.routine    = 'InitFixTrain_plots';        % function for online plotting
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.fixWin', 'stim.FIXSPOT.pos'};
+SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.pos'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
