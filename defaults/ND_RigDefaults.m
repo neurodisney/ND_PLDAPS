@@ -377,8 +377,8 @@ SS.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 
 % ------------------------------------------------------------------------%
 %% Control screen flips
-SS.pldaps.draw.ScreenEvent     = 0;       % no event awaiting, otherwise use event code to be sent to TDT
-SS.pldaps.draw.ScreenEventName = 'NULL';  % keep track of times in pldaps data file
+SS.pldaps.draw.ScreenEvent     = [];      % no event awaiting, otherwise use event code to be sent to TDT
+SS.pldaps.draw.ScreenEventName = {};      % keep track of times in pldaps data file
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments

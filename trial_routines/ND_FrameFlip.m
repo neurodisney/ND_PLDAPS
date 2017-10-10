@@ -6,7 +6,6 @@ function ND_FrameFlip(p)
 %
 % wolf zinke, Jan. 2017
 
-
 %-------------------------------------------------------------------------%
 %% check if photo diode signal needs to be shown or remains on
 PDoff = 0;
@@ -25,46 +24,57 @@ end
 
 %-------------------------------------------------------------------------%
 %% Flip the screen and keep track of frame timings
-if(p.trial.pldaps.GetScreenFlipTimes || p.trial.pldaps.draw.ScreenEvent > 0)
+if(p.trial.pldaps.GetScreenFlipTimes) % debug mode, keep all times
     ft = cell(5,1);
-    [ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
     
-    if(p.trial.pldaps.draw.ScreenEvent > 0)
-        pds.datapixx.strobe(p.trial.pldaps.draw.ScreenEvent);
+    [ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
+    p.trial.timing.flipTimes(:,p.trial.iFrame) = [ft{:}];
+    
+    ft = ft{1};
+    
+elseif(~isempty(p.trial.pldaps.draw.ScreenEvent)) % screen event intended
+    ft = Screen('Flip', p.trial.display.ptr, 0);
+    
+else % do not wait for next screen refresh
+    Screen('Flip', p.trial.display.ptr, 0, 0, 1);  
+end
+
+if(~isempty(p.trial.pldaps.draw.ScreenEvent)) % there is an intended change of the animal display
+
+    for(i=1:length(p.trial.pldaps.draw.ScreenEvent))
+        pds.datapixx.strobe(p.trial.pldaps.draw.ScreenEvent(i));
         
-        if(p.trial.pldaps.draw.photodiode.use) 
-            if(p.trial.pldaps.draw.photodiode.state == 0)
-                pds.datapixx.strobe(p.trial.event.PD_ON);    
-
-                p.trial.Timer.PhD = ft{1} + (p.trial.pldaps.draw.photodiode.XFrames * p.trial.display.ifi) - p.trial.display.ifi/2; % subtract half a frame rate to make sure to catch the correct one
-
-                p.trial.pldaps.draw.photodiode.cnt = p.trial.pldaps.draw.photodiode.cnt + 1;
-                p.trial.timing.photodiodeTimes(1, p.trial.pldaps.draw.photodiode.cnt) = ft{1};
-
-                p.trial.pldaps.draw.photodiode.state = 1;
-            end
+        if(~isempty(p.trial.pldaps.draw.ScreenEventName{i}))
+            p.trial.EV.(p.trial.pldaps.draw.ScreenEventName{i}) = ft;
         end
-        p.trial.EV.(p.trial.pldaps.draw.ScreenEventName) = ft{1};
-        
-        % reset
-        p.trial.pldaps.draw.ScreenEvent     = 0;       
-        p.trial.pldaps.draw.ScreenEventName = 'NULL';  
     end
     
+    % reset
+    p.trial.pldaps.draw.ScreenEvent     = [];       
+    p.trial.pldaps.draw.ScreenEventName = {};  
+end
+
+if(p.trial.pldaps.draw.photodiode.use) 
+% update photo diode state    
+    if(p.trial.pldaps.draw.photodiode.state == 0)
+        pds.datapixx.strobe(p.trial.event.PD_ON);    
+
+        p.trial.Timer.PhD = ft + (p.trial.pldaps.draw.photodiode.XFrames * p.trial.display.ifi) - p.trial.display.ifi/2; % subtract half a frame rate to make sure to catch the correct one
+
+        p.trial.pldaps.draw.photodiode.cnt = p.trial.pldaps.draw.photodiode.cnt + 1;
+        p.trial.timing.photodiodeTimes(1, p.trial.pldaps.draw.photodiode.cnt) = ft;
+
+        p.trial.pldaps.draw.photodiode.state = 1;
+    end
+
     % turn photo diode signal off
     if(p.trial.pldaps.draw.photodiode.use && PDoff == 1) 
         pds.datapixx.strobe(p.trial.event.PD_OFF);    
 
-        p.trial.timing.photodiodeTimes(2, p.trial.pldaps.draw.photodiode.cnt) = ft{1};
+        p.trial.timing.photodiodeTimes(2, p.trial.pldaps.draw.photodiode.cnt) = ft;
 
         p.trial.pldaps.draw.photodiode.state = 0;
     end
-    
-%    p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
-    
-    % p.trial.display.timeLastFrame = ft{1} - p.trial.trstart;
-else
-    Screen('Flip', p.trial.display.ptr, 0, 0, 1);  % do not wait for next screen refresh
 end
 
 %-------------------------------------------------------------------------%
