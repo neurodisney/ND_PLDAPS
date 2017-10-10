@@ -63,6 +63,13 @@ if(p.trial.behavior.fixation.useCalibration)
 end
 
 % --------------------------------------------------------------------%
+%% keep fixation spot window size
+
+if(p.trial.behavior.fixation.use)
+    p.defaultParameters.stim.FIXSPOT.fixWin = p.trial.stim.FIXSPOT.fixWin;
+end
+
+% --------------------------------------------------------------------%
 %% format string for ascii table
 p.defaultParameters.asciitbl  =  p.trial.asciitbl;
 % --------------------------------------------------------------------%
