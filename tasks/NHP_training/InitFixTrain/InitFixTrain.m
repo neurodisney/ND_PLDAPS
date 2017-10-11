@@ -58,7 +58,7 @@ if(isempty(state))
         p = pds.eyecalib.setup(p);
     end
 
-    
+    p.trial.task.RandomPos = 0;
 else
 % ####################################################################### %
 %% Call standard routines before executing task related code
@@ -131,9 +131,6 @@ function TaskSetUp(p)
 
     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
-    % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
-    p.trial.task.longITI = 0;
-
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
     
@@ -165,20 +162,13 @@ function TaskDesign(p)
         
         case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
-            if(p.trial.CurTime < p.trial.EV.PlanStart)
-                % All intertrial processing was completed before the ITI expired
-                p.trial.task.longITI = 0;
+            if(p.trial.CurTime >= p.trial.EV.PlanStar || isnan(p.trial.EV.PlanStart))
 
-            else
-                if(isnan(p.trial.EV.PlanStart))
-                    % First trial, or after a break
-                    p.trial.task.longITI = 0;
-                end
+                Tdiff =  p.trial.CurTime - p.trial.EV.PlanStart;
 
-                % If intertrial processing took too long, display a warning
-                if(p.trial.task.longITI)
-                    warning('ITI exceeded intended duration of by %.2f seconds!', ...
-                             p.trial.CurTime - p.trial.EV.PlanStart)
+                if(Tdiff >= 2*p.trial.display.ifi)
+                % if ITI was longer than 2 frames shoot a warning message    
+                    warning('ITI exceeded intended duration of by %.2f seconds!', Tdiff)
                 end
 
                 ND_SwitchEpoch(p,'TrialStart');
