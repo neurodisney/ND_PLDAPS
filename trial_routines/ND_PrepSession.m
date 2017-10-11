@@ -188,8 +188,8 @@ end
 % This is a quck&dirty ad hoc fix to not touch the pldaps call where conditions are defined.
 % We define conditions in the experimental setup file (that will be called after executing the
 % current function) or if nothing is defined use our default definition.
-p.conditions       = {};
-SS.Block.BlockList = [];
+p.conditions      = {};
+p.Block.BlockList = [];
 
 %-------------------------------------------------------------------------%
 %% create p.trial as copy of the default parameters

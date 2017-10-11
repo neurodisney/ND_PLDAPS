@@ -43,7 +43,7 @@ if(isempty(state))
     
     p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
     p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
-    p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'intITI',      'p.trial.task.Timing.ITI',             '%.5f');
 
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
@@ -52,14 +52,13 @@ if(isempty(state))
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
     
-            
 %-------------------------------------------------------------------------%
 %% eye calibration
-if(~p.trial.behavior.fixation.useCalibration)    
-    p = pds.eyecalib.setup(p);
-end
-    
+    if(~p.trial.behavior.fixation.useCalibration)    
+        p = pds.eyecalib.setup(p);
+    end
 
+    
 else
 % ####################################################################### %
 %% Call standard routines before executing task related code
@@ -133,7 +132,7 @@ function TaskSetUp(p)
 
     % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
     p.trial.task.longITI = 1;
-    
+
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
     
@@ -165,19 +164,20 @@ function TaskDesign(p)
         
         case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
-        if p.trial.CurTime < p.trial.EV.PlanStart
+        if(p.trial.CurTime < p.trial.EV.PlanStart)
             % All intertrial processing was completed before the ITI expired
             p.trial.task.longITI = 0;
             
         else
-            if isnan(p.trial.EV.PlanStart)
+            if(isnan(p.trial.EV.PlanStart))
                 % First trial, or after a break
                 p.trial.task.longITI = 0;
             end
             
             % If intertrial processing took too long, display a warning
-            if p.trial.task.longITI
-                disp('Warning: longer ITI than specified');
+            if(p.trial.task.longITI)
+                warning('ITI exceeded intended duration of by %.2f seconds!', ...
+                         p.trial.CurTime - p.trial.EV.PlanStart)
             end
             
             switchEpoch(p,'TrialStart');
