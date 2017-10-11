@@ -306,19 +306,19 @@ if(~isempty(p.trial.LastKeyPress))
             % move target by steps
         case KbName('RightArrow')
             p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixGridStp, 0];
-            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
             
         case KbName('LeftArrow')
             p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixGridStp, 0];
-            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
             
         case KbName('UpArrow')
             p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixGridStp];
-            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
             
         case KbName('DownArrow')
             p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixGridStp];
-            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
     end
 end
 
