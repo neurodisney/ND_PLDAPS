@@ -34,7 +34,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
     p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
     p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart',   '%d');
-    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.TaskStart',                     '%d');
+    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.FixOn',                     '%d');
     p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
     p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
 
@@ -126,12 +126,13 @@ function TaskSetUp(p)
     p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial, ...
                                          p.trial.reward.MaxWaitInitial, [], [], 1, 0.001);
 
-    p.trial.CurrEpoch        = p.trial.epoch.ITI;
+    % p.trial.CurrEpoch        = p.trial.epoch.ITI;
+    ND_SwitchEpoch(p, 'ITI')
 
     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
     % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
-    p.trial.task.longITI = 1;
+    p.trial.task.longITI = 0;
 
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
