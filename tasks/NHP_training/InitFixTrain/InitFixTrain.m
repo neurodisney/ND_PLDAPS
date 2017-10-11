@@ -51,6 +51,14 @@ if(isempty(state))
        
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
+    
+            
+%-------------------------------------------------------------------------%
+%% eye calibration
+if(~p.trial.behavior.fixation.useCalibration)    
+    p = pds.eyecalib.setup(p);
+end
+    
 
 else
 % ####################################################################### %
@@ -303,7 +311,6 @@ function TaskDesign(p)
         % Flag next trial ITI is done at begining
         p.trial.flagNextTrial = 1;
         
-            
     end  % switch p.trial.CurrEpoch
 
 % ####################################################################### %
