@@ -86,6 +86,8 @@ SS.behavior.fixation.FixWin     = 2.5;
 SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
 
+SS.Block.maxBlockTrials = 10000;
+
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
 
