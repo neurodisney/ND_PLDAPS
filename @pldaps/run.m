@@ -23,7 +23,7 @@ try
     % Ensure we have an experimentSetupFile set and verify output file
 
     %make sure we are not running an experiment twice
-    if(isField(p.defaultParameters, 'session.initTime'))
+    if(isfield(p.defaultParameters, 'session.initTime'))
         warning('pldaps:run', 'pldaps objects appears to have been run before. A new pldaps object is needed for each run');
         return
     else
@@ -79,7 +79,7 @@ try
 
     % --------------------------------------------------------------------%
     %% prepare first trial
-    levelsPreTrials = p.defaultParameters.getAllLevels();
+    preExperimentParameters = p.defaultParameters;
 
     %% main trial loop %%
     while(p.trial.pldaps.quit == 0)
@@ -111,9 +111,9 @@ try
             if(~isempty(p.conditions))
                 p.defaultParameters.addLevels(p.conditions(trialNr), {['Trial', num2str(trialNr), 'Parameters']});
                 
-                p.defaultParameters.setLevels([levelsPreTrials, length(levelsPreTrials)+trialNr]);
+                p.defaultParameters.setLevels([preExperimentParameters, length(preExperimentParameters)+trialNr]);
             else
-                p.defaultParameters.setLevels(levelsPreTrials);
+                p.defaultParameters.setLevels(preExperimentParameters);
             end
 
             p.defaultParameters.pldaps.iTrial = trialNr;
@@ -229,7 +229,7 @@ try
     
     % ----------------------------------------------------------------%
     %% make the session parameterStruct active
-    p.defaultParameters.setLevels(levelsPreTrials);
+    p.defaultParameters.setLevels(preExperimentParameters);
     p.trial = p.defaultParameters;
 
     % ----------------------------------------------------------------%
