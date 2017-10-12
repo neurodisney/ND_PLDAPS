@@ -69,6 +69,10 @@ SS.behavior.fixation.enableCalib    = 1;
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
+
+SS.eyeCalib.defaultOffset = [-19.9321 -23.2293];
+SS.eyeCalib.defaultGain   = [-5, -10];
+
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
 % If there are modification from the default settings needed, copy the

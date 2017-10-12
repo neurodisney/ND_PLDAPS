@@ -34,7 +34,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
     p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
     p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart',   '%d');
-    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.TaskStart',                     '%d');
+    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.FixOn',                     '%d');
     p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
     p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
 
@@ -43,7 +43,7 @@ if(isempty(state))
     
     p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
     p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
-    p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'intITI',      'p.trial.task.Timing.ITI',             '%.5f');
 
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
@@ -51,7 +51,14 @@ if(isempty(state))
        
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
+    
+%-------------------------------------------------------------------------%
+%% eye calibration
+    if(~p.trial.behavior.fixation.useCalibration)    
+        p = pds.eyecalib.setup(p);
+    end
 
+    p.trial.task.RandomPos = 0;
 else
 % ####################################################################### %
 %% Call standard routines before executing task related code
@@ -119,13 +126,11 @@ function TaskSetUp(p)
     p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial, ...
                                          p.trial.reward.MaxWaitInitial, [], [], 1, 0.001);
 
-    p.trial.CurrEpoch        = p.trial.epoch.ITI;
+    % p.trial.CurrEpoch        = p.trial.epoch.ITI;
+    ND_SwitchEpoch(p, 'ITI')
 
     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
-    % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
-    p.trial.task.longITI = 1;
-    
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
     
@@ -157,23 +162,17 @@ function TaskDesign(p)
         
         case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
-        if p.trial.CurTime < p.trial.EV.PlanStart
-            % All intertrial processing was completed before the ITI expired
-            p.trial.task.longITI = 0;
-            
-        else
-            if isnan(p.trial.EV.PlanStart)
-                % First trial, or after a break
-                p.trial.task.longITI = 0;
+            if(p.trial.CurTime >= p.trial.EV.PlanStar || isnan(p.trial.EV.PlanStart))
+
+                Tdiff =  p.trial.CurTime - p.trial.EV.PlanStart;
+
+                if(Tdiff >= 2*p.trial.display.ifi)
+                % if ITI was longer than 2 frames shoot a warning message    
+                    warning('ITI exceeded intended duration of by %.2f seconds!', Tdiff)
+                end
+
+                ND_SwitchEpoch(p,'TrialStart');
             end
-            
-            % If intertrial processing took too long, display a warning
-            if p.trial.task.longITI
-                disp('Warning: longer ITI than specified');
-            end
-            
-            switchEpoch(p,'TrialStart');
-        end
         
         % ----------------------------------------------------------------%  
         case p.trial.epoch.TrialStart
@@ -191,46 +190,46 @@ function TaskDesign(p)
                 pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
             end
            
-            switchEpoch(p,'WaitFix')
+            ND_SwitchEpoch(p,'WaitFix')
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
-            %% Fixation target shown, waiting for a sufficiently held gaze
+        %% Fixation target shown, waiting for a sufficiently held gaze
             
             % Gaze is outside fixation window
-            if p.trial.task.fixFix == 0
+            if(p.trial.task.fixFix == 0)
                
                 % Fixation has occured
-                if p.trial.stim.fix.fixating
+                if(p.trial.stim.fix.fixating)
                     p.trial.task.fixFix = 1;
                 
                 % Time to fixate has expired
-                elseif p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix
+                elseif(p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix)
                     % Turn off fixation spot
                     fixspot(p,0);
                     
                     % Mark trial NoFix, go directly to TaskEnd, do not start task, do not collect reward
                     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
-                    switchEpoch(p,'TaskEnd')                   
+                    ND_SwitchEpoch(p,'TaskEnd')                   
                 end
                 
             % If gaze is inside fixation window
             elseif p.trial.task.fixFix == 1
                 
                 % Fixation ceases
-                if ~p.trial.stim.fix.fixating
+                if(~p.trial.stim.fix.fixating)
                     % Play breakfix sound
-                    pds.audio.playDP(p,'breakfix','left');
+                    pds.audio.playDP(p,'breakfix', 'left');
                     
                     % Turn the fixation spot off
                     fixspot(p,0)
                     
                     % Mark trial as breakfix and end the task
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-                    switchEpoch(p,'TaskEnd');
+                    ND_SwitchEpoch(p,'TaskEnd');
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
-                elseif p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.CurRewDelay
+                elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.CurRewDelay)
                     
                     % Succesful
                     p.trial.task.Good = 1;
@@ -244,7 +243,7 @@ function TaskDesign(p)
                     end
                     
                     % Transition to the succesful fixation epoch
-                    switchEpoch(p,'Fixating');
+                    ND_SwitchEpoch(p, 'Fixating');
                 end
             end
             
@@ -268,6 +267,7 @@ function TaskDesign(p)
                         p.trial.reward.count = p.trial.reward.count + 1;
                     end
                 end
+                
             else
                 % Give JACKPOT!
                 pds.reward.give(p, p.trial.reward.jackpotDur);
@@ -280,16 +280,16 @@ function TaskDesign(p)
                 fixspot(p,0);
                 
                 % End the task
-                switchEpoch(p,'TaskEnd');
+                ND_SwitchEpoch(p,'TaskEnd');
 
                 % Play jackpot sound
                 pds.audio.playDP(p,'jackpot','left');
             end
         
         % Fixation Break, end the trial        
-        elseif ~p.trial.stim.fix.fixating
+        elseif(~p.trial.stim.fix.fixating)
             pds.audio.playDP(p,'breakfix','left');
-            switchEpoch(p,'TaskEnd');
+            ND_SwitchEpoch(p,'TaskEnd');
             fixspot(p,0);
         end  %  if(p.trial.stim.fix.fixating)
             
@@ -303,7 +303,6 @@ function TaskDesign(p)
         % Flag next trial ITI is done at begining
         p.trial.flagNextTrial = 1;
         
-            
     end  % switch p.trial.CurrEpoch
 
 % ####################################################################### %
@@ -371,12 +370,7 @@ end
 % ####################################################################### %
 %% additional inline functions
 % ####################################################################### %
-function switchEpoch(p,epochName)
 
-    p.trial.CurrEpoch   = p.trial.epoch.(epochName);
-    p.trial.EV.epochEnd = p.trial.CurTime;
-
-% ####################################################################### %
 function fixspot(p, bool)
 
     if(bool && ~p.trial.stim.fix.on)

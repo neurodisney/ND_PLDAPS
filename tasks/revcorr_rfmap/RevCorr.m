@@ -285,7 +285,8 @@ switch p.trial.CurrEpoch
             
             % If intertrial processing took too long, display a warning
             if p.trial.task.longITI
-                disp('Warning: longer ITI than specified');
+                warning('ITI exceeded intended duration of by %.2f seconds!', ...
+                         p.trial.CurTime - p.trial.EV.PlanStart)
             end
             
             switchEpoch(p,'TrialStart');

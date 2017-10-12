@@ -12,8 +12,6 @@ function p = setup(p)
 if p.trial.behavior.fixation.enableCalib
     %% Prepare to calibrate the eye position
 
-    % TODO: Allow for loading of previous calibrations as a starting point
-    
     % Name of calibration setup (uses the current time to differentiate different calibrations taken on the same day
     p.trial.eyeCalib.name = [p.trial.session.subject, '_', datestr(now,'yyyymmdd') '_EyeCalib_' , datestr(now,'HHMM')];
     p.trial.eyeCalib.file = [p.trial.session.eyeCalibDir, filesep, p.trial.eyeCalib.name, '.mat'];    
@@ -24,21 +22,37 @@ if p.trial.behavior.fixation.enableCalib
     end
  
     % Load in the default gain and offset
-    p.trial.eyeCalib.gain = p.trial.eyeCalib.defaultGain;
+    p.trial.eyeCalib.gain   = p.trial.eyeCalib.defaultGain;
     p.trial.eyeCalib.offset = p.trial.eyeCalib.defaultOffset;
     
     % define keys used for eye calibration
     KbName('UnifyKeyNames');
-    p.trial.key.resetCalib    = KbName('z');  % Clear the calibration matrices and start over
-    p.trial.key.wipeCalibPos  = KbName('w');  % Clear the calibration points at the current fixPos 
-    p.trial.key.rmLastCalib   = KbName('BackSpace'); % reset offset to previous one
-    p.trial.key.addCalibPoint  = 37; % KbName('Return') returns two numbers;    % accept current fixation
+    p.trial.key.resetCalib    = KbName('z');          % Clear the calibration matrices and start over
+    p.trial.key.wipeCalibPos  = KbName('w');          % Clear the calibration points at the current fixPos 
+    p.trial.key.rmLastCalib   = KbName('BackSpace');  % reset offset to previous one
+    p.trial.key.addCalibPoint  = 37;                  % KbName('Return') returns two numbers;    % accept current fixation
+  
     % Tweak calibration
-    p.trial.key.offsetTweak   = KbName('Home'); % Alternate between xTweak, yTweak, and off
-    p.trial.key.gainTweak     = KbName('End'); % Alternate between xTweak, yTweak, and off
-    p.trial.key.tweakUp       = KbName('PageUp'); % Increase the currently tweaked parameter
-    p.trial.key.tweakDown     = KbName('PageDown'); % Decrease the currently tweaked parameter
+    p.trial.key.offsetTweak   = KbName('Home');       % Alternate between xTweak, yTweak, and off
+    p.trial.key.gainTweak     = KbName('End');        % Alternate between xTweak, yTweak, and off
+    p.trial.key.tweakUp       = KbName('PageUp');     % Increase the currently tweaked parameter
+    p.trial.key.tweakDown     = KbName('PageDown');   % Decrease the currently tweaked parameter
     
+    % check for previous calibration
+    eyeCalibDir = p.trial.session.eyeCalibDir;
+    dailyCalibs = dir([eyeCalibDir,filesep,'*.mat']);
+    
+   if(~isempty(dailyCalibs))
+        promptMessage   = sprintf('Previous claibration file found. \n Load this file?');
+        titleBarCaption = sprintf('Load previous calibration?');
+
+        button = questdlg(promptMessage, titleBarCaption, 'Yes', 'No', 'No');
+        if(strcmpi(button, 'Yes'))
+            calibFileName = [eyeCalibDir, filesep, dailyCalibs(end).name];
+            pds.eyecalib.load(p, calibFileName);
+        end
+    end
+
     % save calibration file
     pds.eyecalib.save(p);
     
@@ -48,15 +62,16 @@ else
     dailyCalibs = dir([eyeCalibDir,filesep,'*.mat']);
     
     % Warn the user if no calibration files exist
-    if isempty(dailyCalibs)
+    if(isempty(dailyCalibs))
         warning('No calibrations performed today. eye position likely highly inaccurate');
         p.trial.eyeCalib.offset = p.trial.eyeCalib.defaultOffset;
-        p.trial.eyeCalib.gain = p.trial.eyeCalib.defaultGain;
+        p.trial.eyeCalib.gain   = p.trial.eyeCalib.defaultGain;
         return;
     end
     
     % define keys used for tweaking eye calibration
     KbName('UnifyKeyNames');
+    
     % Don't allow points to be changed in this mode, only tweaking
     p.trial.key.resetCalib    = [];
     p.trial.key.wipeCalibPos  = [];

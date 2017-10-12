@@ -116,11 +116,11 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             case p.trial.key.BlockEqualCorrect
             %% Switch balancing correct trials or all trials
                 if(p.trial.Block.EqualCorrect == 1)
-                    p.Block.EqualCorrect = 0;
+                    p.trial.Block.EqualCorrect = 0;
                     ND_CtrlMsg(p, 'Accept all trials');
 
                 else
-                    p.Block.EqualCorrect = 1;
+                    p.trial.Block.EqualCorrect = 1;
                     ND_CtrlMsg(p, 'Accept only correct trials');
                 end
                 

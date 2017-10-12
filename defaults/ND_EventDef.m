@@ -44,6 +44,8 @@ p.defaultParameters.EV.DPX_TaskOff   = NaN; % Synch time with datapixx for task 
 p.defaultParameters.EV.TDT_TaskOn    = NaN; % Synch time with TDT for task on
 p.defaultParameters.EV.TDT_TaskOff   = NaN; % Synch time with TDT for task off
 p.defaultParameters.EV.epochEnd      = NaN; % Ending time of the last epoch
+p.defaultParameters.EV.epochTimings  = {};  % Ending time of the last epoch
+p.defaultParameters.EV.epochCnt      = 0;   % Ending time of the last epoch
 
 % p.defaultParameters.EV.Pause       = NaN;  % WZ: These events should be within trials. Pauses and breaks are between trials. Might cause conflicts...
 % p.defaultParameters.EV.Unpause     = NaN;
