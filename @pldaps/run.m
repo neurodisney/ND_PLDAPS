@@ -80,88 +80,43 @@ try
     % --------------------------------------------------------------------%
     %% prepare first trial
     preExperimentParameters = p.defaultParameters;
+    
+    % save default parameters to trial data directory
+    save(fullfile(p.defaultParameters.session.trialdir, ...
+        [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds']), ...
+        '-struct', 'tmpts', '-mat', '-v7.3');
 
     %% main trial loop %%
     while(p.trial.pldaps.quit == 0)
 
         if(~p.trial.pldaps.quit && ~p.trial.pldaps.pause)
-            
-            % ----------------------------------------------------------------%
-            %% Update information between trials
-            % This is right now a very dirty and unsatisfying solution.
-            % PLDAPS seems to overwrite the defaultParameters in the previous blocks, 
-            % therefore a bunch of variables are created that will be passed from p.trial 
-            % to p.trial by modifying temporarily the defaultParameters. 
-            % However, defaultParameters will be reset every new iteration of this trial loop.
-            %
-            % TODO: make the code more flexible to allow changes to the
-            % defaultParameters and maybe keep some additonal information
-            % in other sub-structs.
-            
+            %% Start setting up trial
+            trialNr = trialNr+1;
+            p.defaultParameters.pldaps.iTrial = trialNr;
             % --------------------------------------------------------------------%
+            
             %% update condition/block list
             % This has to be done before the block with addLevels and setLevels on defaultParameters
             p = ND_GenCndLst(p);
 
             % ----------------------------------------------------------------%
-            %% load parameters for next trial
-            trialNr = trialNr+1;
-            
-            % get information for current condition
-            if(~isempty(p.conditions))
-                p.defaultParameters.addLevels(p.conditions(trialNr), {['Trial', num2str(trialNr), 'Parameters']});
-                
-                p.defaultParameters.setLevels([preExperimentParameters, length(preExperimentParameters)+trialNr]);
-            else
-                p.defaultParameters.setLevels(preExperimentParameters);
-            end
-
-            p.defaultParameters.pldaps.iTrial = trialNr;
-
-            
-            
-            % ----------------------------------------------------------------%
-            %% create new trial struct
-
-            % create temporary trial struct
-            if(p.defaultParameters.plot.do_online)
-                figh = p.defaultParameters.plot.fig;
-                p.defaultParameters.plot.fig = []; % avoid saving the figure to data
-            end
-            
-            tmpts = mergeToSingleStruct(p.defaultParameters);
-
-            % save default parameters to trial data directory
-            if(trialNr == 1)
-                save(fullfile(p.defaultParameters.session.trialdir, ...
-                             [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds']), ...
-                             '-struct', 'tmpts', '-mat', '-v7.3');
-            end
-
-            % easiest (and quickest) way to create a deep copy is to save it as mat file and load it again
-            tmp_ptrial = fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct.mat');
-            save(tmp_ptrial, 'tmpts');
-            clear tmpts;
-            load(tmp_ptrial);
-            p.trial = tmpts;
-            
-            if(p.defaultParameters.plot.do_online)
-                p.trial.plot.fig = figh; %dirty ad hoc fix to keep figure handle available
-            end
-            
-            clear tmpts;
-            delete(tmp_ptrial);
+            %% load parameters for next trial and create new trial struct
+            p = ND_LoadCondition(p);
+            p.trial = p.defaultParameters;
 
             % ----------------------------------------------------------------%
-            %% lock defaultsParameters and run current trial
-            p.defaultParameters.setLock(true);
+            %% Run current trial
+            dpPreTrial = p.defaultParameters;
 
             % run trial
             p = feval(p.trial.pldaps.trialMasterFunction,  p);
 
-            % unlock the defaultParameters
-            p.defaultParameters.setLock(false);
-            
+            % Make sure defaultParameters do not change during a trial (should be exclusively done in ND_UpdateTrial
+            dpPostTrial = p.defaultParameters;
+            if ~isequal(dpPreTrial, dpPostTrial)
+                warning('defaultParameters changed within a trial, should only be chaged between trials')
+            end
+                
             % ----------------------------------------------------------------%            
             %% processes after trial
             p = ND_AfterTrial(p);
@@ -181,7 +136,7 @@ try
             end
             
             % ----------------------------------------------------------------%
-            %% pass information from the previous trial to the next trial
+            %% pass information from this trial to the next trial
             p = ND_UpdateTrial(p);
             
             % completed all desired trial, finish experiment now

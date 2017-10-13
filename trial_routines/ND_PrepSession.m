@@ -122,19 +122,19 @@ elseif(p.defaultParameters.plot.do_online && ~isfield(p.defaultParameters.plot, 
 end
 
 % check that each task epoch has a unique number
-if(isField(p.defaultParameters, 'epoch'))
+if(isfield(p.defaultParameters, 'epoch'))
     disp('>>>>  Checking p.defaultParameters.epoch for consistency <<<<')
     CheckUniqueNumbers(p.defaultParameters.epoch);
 end
 
 % check that event codes are unique
-if(isField(p.defaultParameters, 'event'))
+if(isfield(p.defaultParameters, 'event'))
     disp('>>>>  Checking p.defaultParameters.event for consistency <<<<')
     CheckUniqueNumbers(p.defaultParameters.event);
 end
 
 % check that task outcome codes are unique
-if(isField(p.defaultParameters, 'outcome'))
+if(isfield(p.defaultParameters, 'outcome'))
     disp('>>>>  Checking p.defaultParameters.outcome for consistency <<<<')
     CheckUniqueNumbers(p.defaultParameters.outcome);
 end

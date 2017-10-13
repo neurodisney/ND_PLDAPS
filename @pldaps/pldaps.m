@@ -37,13 +37,13 @@ classdef pldaps < handle
         p.defaultParameters = varargin{2};
         
         % Set the subject name
-        p.defaultParameters.session.subject=varagin{1};
+        p.defaultParameters.session.subject=varargin{1};
         
         % Set the experimental setup file
         if isa(varargin{3}, 'function_handle')
-            p.defaultParameters.session.experimentSetupFile=func2str(varagin{3});
+            p.defaultParameters.session.experimentSetupFile=func2str(varargin{3});
         else
-            p.defaultParameters.session.experimentSetupFile=varagin{3};
+            p.defaultParameters.session.experimentSetupFile=varargin{3};
         end
     end 
      
