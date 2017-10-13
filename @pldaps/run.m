@@ -118,25 +118,7 @@ try
 
             p.defaultParameters.pldaps.iTrial = trialNr;
 
-            if(trialNr > 1) % this actually is supposed to happen after a trial, hence skip first in loop
- 
-                % processes after trial
-                p = ND_AfterTrial(p);
-                
-                % make online plots
-                if(p.trial.plot.do_online)
-                    feval(p.trial.plot.routine, p);
-                end
-                
-               % pass some information from the previous trial to the next trial
-                p = ND_UpdateTrial(p);
-
-                % completed all desired trial, finish experiment now
-                if(p.trial.pldaps.iTrial > p.trial.pldaps.finish)
-                    p.trial.pldaps.quit = 1;
-                    break;
-                end
-            end
+            
             
             % ----------------------------------------------------------------%
             %% create new trial struct
@@ -180,12 +162,31 @@ try
             % unlock the defaultParameters
             p.defaultParameters.setLock(false);
             
+            % ----------------------------------------------------------------%            
+            %% processes after trial
+            p = ND_AfterTrial(p);
+            
             % ----------------------------------------------------------------%
-            %% complete trial: save trial data
+            %% Save trial data
             result = saveTrialFile(p);
-
+            
             if(~isempty(result))
                 disp(result.message)
+            end
+            
+            % ----------------------------------------------------------------%
+            %% make online plots
+            if(p.trial.plot.do_online)
+                feval(p.trial.plot.routine, p);
+            end
+            
+            % ----------------------------------------------------------------%
+            %% pass information from the previous trial to the next trial
+            p = ND_UpdateTrial(p);
+            
+            % completed all desired trial, finish experiment now
+            if(p.trial.pldaps.iTrial > p.trial.pldaps.finish)
+                p.trial.pldaps.quit = 1;
             end
             
         elseif p.trial.pldaps.pause
@@ -216,9 +217,6 @@ try
             pds.datapixx.strobe(p.trial.event.UNPAUSE);
         end
     end  %  while(p.trial.pldaps.iTrial < p.trial.pldaps.finish && p.trial.pldaps.quit ~= 2)
-
-    % final update of trial information
-    p = ND_AfterTrial(p);
     
     %% save online plot
     if(p.defaultParameters.plot.do_online)
