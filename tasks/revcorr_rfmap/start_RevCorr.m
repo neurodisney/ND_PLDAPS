@@ -62,7 +62,7 @@ SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
-SS.tdt.use                    = 1; % Get incoming UDP spike data from TDT
+SS.tdt.use                    = 0; % Get incoming UDP spike data from TDT
 
 SS.behavior.fixation.useCalibration = 1;
 SS.behavior.fixation.enableCalib = 0;
@@ -85,6 +85,8 @@ SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to us
 SS.behavior.fixation.FixWin     = 2.5;
 SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
+
+SS.Block.maxBlockTrials = 10000;
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%

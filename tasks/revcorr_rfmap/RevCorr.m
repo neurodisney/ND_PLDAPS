@@ -73,34 +73,34 @@ if(isempty(state))
     % of a defined number of trials per condition, needs to be clarified.
         
     % condition 1
-    c1.Nr = 1;    
-    c1.nTrials = 20000;
+%     c1.Nr = 1;    
+%     c1.nTrials = 20000;
     
-    
-    % Fill a conditions list with n of each kind of condition sequentially
-    conditions = cell(1,5000);
-    blocks = nan(1,5000);
-    totalTrials = 0;
-    
-    % Iterate through each condition to fill conditions
-    conditionsIterator = {c1};
-    
-    for iCond = 1:size(conditionsIterator,2)
-        cond = conditionsIterator(iCond);
-        nTrials = cond{1}.nTrials;
-        conditions(1, totalTrials+1:totalTrials+nTrials) = repmat(cond,1,nTrials);
-        blocks(1, totalTrials+1:totalTrials+nTrials) = repmat(iCond,1,nTrials);
-        totalTrials = totalTrials + nTrials;
-    end
-    
-    % Truncate the conditions cell array to it's actualy size
-    conditions = conditions(1:totalTrials);
-    blocks = blocks(1:totalTrials);
-    
-    p.conditions = conditions;
-    p.trial.blocks = blocks;
-    
-    p.defaultParameters.pldaps.finish = totalTrials;
+%     
+%     % Fill a conditions list with n of each kind of condition sequentially
+%     conditions = cell(1,5000);
+%     blocks = nan(1,5000);
+%     totalTrials = 0;
+%     
+%     % Iterate through each condition to fill conditions
+%     conditionsIterator = {c1};
+%     
+%     for iCond = 1:size(conditionsIterator,2)
+%         cond = conditionsIterator(iCond);
+%         nTrials = cond{1}.nTrials;
+%         conditions(1, totalTrials+1:totalTrials+nTrials) = repmat(cond,1,nTrials);
+%         blocks(1, totalTrials+1:totalTrials+nTrials) = repmat(iCond,1,nTrials);
+%         totalTrials = totalTrials + nTrials;
+%     end
+%     
+%     % Truncate the conditions cell array to it's actualy size
+%     conditions = conditions(1:totalTrials);
+%     blocks = blocks(1:totalTrials);
+%     
+%     p.conditions = conditions;
+%     p.trial.blocks = blocks;
+%     
+%     p.defaultParameters.pldaps.finish = totalTrials;
     
     % Preallocate data and reset counters
     new_neuron(p);
