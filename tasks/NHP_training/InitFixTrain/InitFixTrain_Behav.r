@@ -5,6 +5,9 @@ require(useful)
 require(catspec) 
 require(beanplot)
 
+datadir="/home/rig2-user/Data/ExpData/croc/2017_10_13/InitFixTrain"
+fname=NA
+
 # Function for plotting data from the delayed saccade task
 InitFixTrain_Behav = function(datadir=NA, fname=NA) {
 
@@ -13,10 +16,10 @@ avrgwin  =   180  # moving average window for performance plot in seconds
 avrgstep =     1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
 RTbw     =  0.02  # kernel width for density estimate of response times
 
-Corr_Col        = 'limegreen'
-Early_Col       = 'cornflowerblue' 
-StimBreak_Col   = 'tomato'
-FixBreak_Col    = 'darkgoldenrod1'
+Corr_Col          = 'limegreen'
+Early_Col         = 'cornflowerblue' 
+StimBreak_Col     = 'tomato'
+FixBreak_Col      = 'darkgoldenrod1'
 PostStimBreak_Col = 'violet'
 
 ###########################################################################################
@@ -37,37 +40,15 @@ dt=read.table(fname[1], header=TRUE)
 if(length(fname)>1) {
   for(i in 2:length(fname)) { dt = rbind(dt, read.table(fname[i], header=TRUE))}
 }
-  
-## prepare data
 
-
-###########################################################################################
-# standardize outcomes
-
-
-
-# corrections used before June 30th 2017:
-# dt$Outcome = as.character(dt$Outcome)
-# dt$Outcome[dt$Outcome == 'goodSaccade']  = 'Correct'
-# dt$Outcome[dt$Outcome == 'earlySaccade'] = 'Early'
-# dt$Outcome[dt$Outcome == 'Abort']        = 'FixBreak_BSL'
-# dt$Outcome[dt$Outcome == 'FixBreak']     = 'FixBreak_Stim'
-# dt$Outcome[dt$Outcome == 'wrongSaccade'] = 'FixBreak_Stim'
-# dt$Outcome[dt$Outcome == 'glance']       = 'TargetBreak'
-# dt$Outcome[dt$Outcome == 'TargetBreak']  = 'FixBreak_Trgt'
-# dt$Outcome[dt$Outcome == 'noSaccade']    = 'Miss'
-# dt$Outcome[dt$Outcome == 'Abort' & is.numeric(dt$FixStart)] = 'FixBreak_BSL'
-# dt$Outcome[dt$Outcome == 'Abort' & !is.numeric(dt$FixStart)]= 'NoStart'
-# dt$Outcome[is.nan(dt$FixStart)]= 'NoStart'
-
-SessTimeRng = range(dt$FixSpotOn)
+SessTimeRng    = range(dt$Tstart)
 SessTrialStart = SessTimeRng[1]
 SessTrialEnd   = diff(SessTimeRng)
-Break_trial = which(dt$Outcome == 'Break')
+Break_trial    = which(dt$Outcome == 'Break')
 
 if(length(Break_trial) == 0){
   Break_start = NA
-  Break_end = NA
+  Break_end   = NA
 }else{
   Break_start = (dt$TaskEnd[Break_trial]     - SessTrialStart) / 60
   
@@ -115,19 +96,7 @@ pStim      = pCorr | dt$Outcome == pHoldErr
 
 ###########################################################################################
 # get relevant variables
-Ttime    = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
-FixStart = dt$FixStart   - dt$FixSpotOn
-
-# TDur     = dt$TaskEnd    - dt$FixStart
-# TDur             = dt$StimOn - dt$FixStart + dt$SRT_StimOn
-# TDur[pFixBreak]  = dt$FixBreak[pFixBreak]  - dt$FixStart[pFixBreak]
-
-GoCue    = dt$FixSpotOff - dt$FixStart
-SaccTime = dt$StimFix    - dt$FixSpotOff
-HoldTime = dt$StimBreak  - dt$StimOn
-
-IntGo = dt$StimOn + dt$GoLatency
-IntGo[pStim] = dt$FixSpotOff[pStim]
+Ttime    = (dt$Tstart   - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
 
 ###########################################################################################
 # derive RT times
@@ -162,8 +131,17 @@ par(mar=c(5,5,1,1))
 
 Trng = c(0, SessTrialEnd / 60)
 
+
 ###########################################################################################
-# plot 1: saccade time
+# plot 1: time to fixation
+
+
+p = dt$FixRT > 0.05
+truehist(dt$FixRT[p], h=0.02, col='black',prob=TRUE, xlab='RT [s]', ylab='prportion', main='response times')
+lines(density(dt$FixRT[p],na.rm=TRUE,bw=0.025, kernel='g'),col='red', lw=2)
+
+
+
 Ylim = range(StimSRT, na.rm = TRUE)
 plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
      xlab='', ylab='Time after Target Onset [s]', xaxt="n")

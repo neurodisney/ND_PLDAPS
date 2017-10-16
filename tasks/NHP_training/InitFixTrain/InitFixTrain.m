@@ -162,7 +162,7 @@ function TaskDesign(p)
         
         case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
-            if(p.trial.CurTime >= p.trial.EV.PlanStar || isnan(p.trial.EV.PlanStart))
+            if(p.trial.CurTime >= p.trial.EV.PlanStart || isnan(p.trial.EV.PlanStart))
 
                 Tdiff =  p.trial.CurTime - p.trial.EV.PlanStart;
 
@@ -233,7 +233,7 @@ function TaskDesign(p)
                     
                     % Succesful
                     p.trial.task.Good = 1;
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION;
                     
                     % Reward the monkey
                     if(p.trial.reward.GiveInitial == 1)

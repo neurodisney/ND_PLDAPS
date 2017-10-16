@@ -211,7 +211,7 @@ function TaskDesign(p)
                     p.trial.Timer.Wait  = p.trial.CurTime + p.trial.task.Timing.MaxFix;
                     p.trial.CurrEpoch   = p.trial.epoch.Fixating;
                     
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION; % at least fixation was achieved
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.fixation; % at least fixation was achieved
                     
                     p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.CurRewDelay; % timer for initial reward
                     
