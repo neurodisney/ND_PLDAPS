@@ -5,22 +5,22 @@ require(useful)
 require(catspec) 
 require(beanplot)
 
-datadir="/home/rig2-user/Data/ExpData/croc/2017_10_13/InitFixTrain"
-fname=NA
+#datadir="/home/rig2-user/Data/ExpData/croc/2017_10_13/InitFixTrain"
+#fname=NA
 
 # Function for plotting data from the delayed saccade task
 InitFixTrain_Behav = function(datadir=NA, fname=NA) {
 
 ## specify analysis/graph parameters
-avrgwin  =   180  # moving average window for performance plot in seconds
-avrgstep =     1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
-RTbw     =  0.02  # kernel width for density estimate of response times
+avrgwin  =  180  # moving average window for performance plot in seconds
+avrgstep =    1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
+RTbw     = 0.02  # kernel width for density estimate of response times
+NTbw     =   10  # number of trials to evaluate loess smoothing
 
-Corr_Col          = 'limegreen'
-Early_Col         = 'cornflowerblue' 
-StimBreak_Col     = 'tomato'
-FixBreak_Col      = 'darkgoldenrod1'
-PostStimBreak_Col = 'violet'
+Fix_Col      = 'limegreen'
+JP_Col       = 'cornflowerblue' 
+FixBreak_Col = 'darkgoldenrod1'
+NoFix_Col    = 'grey'
 
 ###########################################################################################
 ## Read in data
@@ -59,7 +59,6 @@ if(length(Break_trial) == 0){
   }
   
   # if last trial started a break, set break end to 
-  #if(length(Break_start) > length(Break_end)) { Break_end = c(Break_end, SessTrialEnd / 60) }
   lastTrial = tail(dt,n=1)
   if(lastTrial$Outcome == 'Break') {
     # If the last trial ended with a break, extend the plot to the current time, if it occurred less than an hour ago
@@ -76,52 +75,38 @@ if(length(Break_trial) == 0){
 
 # get rid of un-started trials
 # (ToDo: keep times when experimenter initiated breaks starts)
-dt = droplevels(subset(dt, dt$Outcome != 'NoFix' & dt$Outcome != 'Break'  & dt$Outcome != 'NoStart'))
+# dtFix = droplevels(subset(dt, dt$Outcome != 'NoFix' & dt$Outcome != 'Break'  & dt$Outcome != 'NoStart'))
 
 Ntrials = length(dt$Outcome)
 
-#dt$Outcome[dt$Outcome == 'NoFix']        = 'NoStart'
 dt$Outcome = as.factor(dt$Outcome)
 
 ###########################################################################################
 # identify outcomes
-pCorr      = dt$Outcome == 'Correct'
-pEarly     = dt$Outcome == 'Early'
-pFalse     = dt$Outcome == 'False'
-pHoldErr   = dt$Outcome == 'TargetBreak'
-pStimBreak = dt$Outcome == 'StimBreak'
+pFix       = dt$Outcome == 'FullFixation' | dt$Outcome == 'Fixation' 
+pNoStart   = dt$Outcome == 'NoStart'
+pNoFix     = dt$Outcome == 'NoFix'
 pFixBreak  = dt$Outcome == 'FixBreak'
-pMiss      = dt$Outcome == 'Miss'
-pStim      = pCorr | dt$Outcome == pHoldErr
+pJackpot   = dt$Outcome == 'Jackpot'
+pBreak     = dt$Outcome == 'Break'
+
+pAllFix = pFix | pFixBreak | pJackpot
 
 ###########################################################################################
 # get relevant variables
 Ttime    = (dt$Tstart   - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
 
 ###########################################################################################
-# derive RT times
-# SRT = dt$FixSpotOff - IntGo
-SRT                = dt$SRT_Go
-SRT[pFixBreak]     = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak] + dt$GoLatency[pFixBreak])
-#SRT[SRT<0 & dt$Outcome == 'Correct'] = SRT[SRT<0 & dt$Outcome == 'Correct'] + dt$GoLatency[SRT<0 & dt$Outcome == 'Correct']
-
-StimSRT            = dt$SRT_StimOn
-StimSRT[pFixBreak] = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak])
-#StimSRT[SRT<0 & dt$Outcome == 'Correct'] = StimSRT[SRT<0 & dt$Outcome == 'Correct'] + dt$GoLatency[SRT<0 & dt$Outcome == 'Correct'] + dt$StimOn[SRT<0 & dt$Outcome == 'Correct'] - dt$FixStart[SRT<0 & dt$Outcome == 'Correct']
-
-# SRT[pStim]  = SaccTime[pStim]
-# SRT[pFalse] = dt$TaskEnd[pStim] - dt$FixSpotOff[pStim]
-
 # create plots
 
 # open figure of defined size
 # Only display figure directly if called from the r environment (not the command line)
 # If we didn't do this, when called from the command line, it would just open briefly and then close when the script ends
 if(interactive()) {
-  x11(width=19.5, height=10.5, pointsize=10, title='DistractFix_Behav')
+  x11(width=19.5, height=10.5, pointsize=10, title='InitFixTrain_Behav')
 } else {
   # Otherwise only save the figure as a pdf.
-  pdf('DistractFix.pdf', 19.5, 10.5, pointsize=10, title='DistractFix_Behav')
+  pdf('InitFixTrain.pdf', 19.5, 10.5, pointsize=10, title='InitFixTrain_Behav')
 }
 
 # create plot layout
@@ -131,64 +116,64 @@ par(mar=c(5,5,1,1))
 
 Trng = c(0, SessTrialEnd / 60)
 
-
 ###########################################################################################
 # plot 1: time to fixation
 
+# pFix       = dt$Outcome == 'FullFixation' | dt$Outcome == 'Fixation' 
+# pNoStart   = dt$Outcome == 'NoStart'
+# pNoFix     = dt$Outcome == 'NoFix'
+# pFixBreak  = dt$Outcome == 'FixBreak'
+# pJackpot   = dt$Outcome == 'Jackpot'
+# pBreak     = dt$Outcome == 'Break'
+# 
+# Fix_Col      = 'limegreen'
+# JP_Col       = 'cornflowerblue' 
+# FixBreak_Col = 'darkgoldenrod1'
+# NoFix_Col    = 'grey'
 
-p = dt$FixRT > 0.05
-truehist(dt$FixRT[p], h=0.02, col='black',prob=TRUE, xlab='RT [s]', ylab='prportion', main='response times')
-lines(density(dt$FixRT[p],na.rm=TRUE,bw=0.025, kernel='g'),col='red', lw=2)
-
-
-
-Ylim = range(StimSRT, na.rm = TRUE)
+Ylim = range(dt$FixRT, na.rm = TRUE)
 plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
      xlab='', ylab='Time after Target Onset [s]', xaxt="n")
 
 if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
-points(Ttime[pCorr],      StimSRT[pCorr],      pch=19, col=Corr_Col)
-points(Ttime[pFixBreak],  StimSRT[pFixBreak],  pch=19, col=FixBreak_Col)
-points(Ttime[pStimBreak], StimSRT[pStimBreak], pch=19, col=StimBreak_Col)
-points(Ttime[pHoldErr],   StimSRT[pHoldErr],   pch=19, col=PostStimBreak_Col)
-points(Ttime[pEarly],     StimSRT[pEarly],     pch=19, col=Early_Col)
-points(Ttime[pMiss],      StimSRT[pMiss],      pch=19, col=Miss_Col)
-points(Ttime[pFalse],     StimSRT[pFalse],     pch=19, col=False_Col)
+points(Ttime[pFix],      dt$FixRT[pFix],       pch=19, col=Fix_Col)
+points(Ttime[pFixBreak], dt$FixRT[pFixBreak],  pch=19, col=FixBreak_Col)
+points(Ttime[pJackpot],  dt$FixRT[pJackpot], pch=19, col=JP_Col)
 
-legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBreak", "Miss", "False"), 
-       pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, PostStimBreak_Col, Miss_Col, False_Col), 
+lines(loess.smooth(Ttime[pAllFix], dt$FixRT[pAllFix], span=NTbw/sum(pAllFix), degree=2, family="gaussian"), col='darkgreen', lw=2)
+
+abline(h=median(dt$FixRT[pAllFix], na.rm=TRUE),lty=2)
+abline(h=mean(  dt$FixRT[pAllFix], na.rm=TRUE),lty=3)
+
+legend("bottom", legend=c("JackPost","Fixation", "FixBreak"), 
+       pch=c(15), col=c(JP_Col, Fix_Col, FixBreak_Col, StimBreak_Col), 
        inset=c(0,-0.4), title=NULL, xpd=NA, cex=2, bty='n', horiz=TRUE, pt.cex=4)
 
 ###########################################################################################
-# plot 2: reaction times
-Ylim = range(SRT, na.rm = TRUE)
-plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Go Cue',
-     xlab='Trial Time [s]', ylab='SRTs [s]')
+# plot 2: Fxation Duration
+Ylim = range(dt$FixPeriod[pAllFix], na.rm = TRUE)
+plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Duration of Fixation',
+     xlab='Trial Time [s]', ylab='Fix Duration [s]')
 
 if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
-points(Ttime[pCorr],      SRT[pCorr],      pch=19, col=Corr_Col)
-points(Ttime[pFixBreak],  SRT[pFixBreak],  pch=19, col=FixBreak_Col)
-points(Ttime[pStimBreak], SRT[pStimBreak], pch=19, col=StimBreak_Col)
-points(Ttime[pHoldErr],   SRT[pHoldErr],   pch=19, col=PostStimBreak_Col)
-points(Ttime[pEarly],     SRT[pEarly],     pch=19, col=Early_Col)
-points(Ttime[pMiss],      SRT[pMiss],      pch=19, col=Miss_Col)
-points(Ttime[pFalse],     SRT[pFalse],     pch=19, col=False_Col)
+points(Ttime[pFix],      dt$FixPeriod[pFix],       pch=19, col=Fix_Col)
+points(Ttime[pFixBreak], dt$FixPeriod[pFixBreak],  pch=19, col=FixBreak_Col)
+points(Ttime[pJackpot],  dt$FixPeriod[pJackpot], pch=19, col=JP_Col)
 
-abline(h=0,lty=2)
+lines(loess.smooth(Ttime[pAllFix], dt$FixPeriod[pAllFix], span=NTbw/sum(pAllFix), degree=2, family="gaussian"), col='darkgreen', lw=2)
+
+abline(h=median(dt$FixPeriod[pAllFix], na.rm=TRUE),lty=2)
+abline(h=mean(  dt$FixPeriod[pAllFix], na.rm=TRUE),lty=3)
 
 ###########################################################################################
 # plot 3: time resolved performance
 Tavrg = seq(from=Trng[1], to=Trng[2], by=avrgstep/60)
 
-Rcorr      = rep(0, length(Tavrg))
-Rfixbreak  = rep(0, length(Tavrg))
-Rstimbreak = rep(0, length(Tavrg))
-Rearly     = rep(0, length(Tavrg))
-Rmiss      = rep(0, length(Tavrg))
-Rfalse     = rep(0, length(Tavrg))
-Rholderr   = rep(0, length(Tavrg))
+RFix      = rep(0, length(Tavrg))
+Rfixbreak = rep(0, length(Tavrg))
+Rjackpot  = rep(0, length(Tavrg))
 
 cnt = 0
 for(i in 1:length(Tavrg)) { 
@@ -198,13 +183,9 @@ for(i in 1:length(Tavrg)) {
   Nall = sum(cpos)
   
   if(Nall > 3){
-    Rcorr[cnt]      = 100 * sum(cpos & pCorr)      /Nall
-    Rfixbreak[cnt]  = 100 * sum(cpos & pFixBreak)  /Nall
-    Rstimbreak[cnt] = 100 * sum(cpos & pStimBreak) /Nall
-    Rearly[cnt]     = 100 * sum(cpos & pEarly)     /Nall
-    Rmiss[cnt]      = 100 * sum(cpos & pMiss)      /Nall
-    Rfalse[cnt]     = 100 * sum(cpos & pFalse)     /Nall
-    Rholderr[cnt]   = 100 * sum(cpos & pHoldErr)   /Nall
+    RFix[cnt]      = 100 * sum(cpos & pFix)      / Nall
+    Rfixbreak[cnt] = 100 * sum(cpos & pFixBreak) / Nall
+    Rjackpot[cnt]  = 100 * sum(cpos & pJackpot)  / Nall
   }
 }
 
@@ -217,65 +198,21 @@ abline(h=50, lty=2)
 abline(h=c(25,75), lty=3)
 abline(h=0, lty=1)
 
-# krnlwht = 0.5
-# krnltyp = 'rectangular'
-# 
-# Time_all   = density(Ttime, bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-# Time_all$y = Time_all$y * sum(is.finite(Ttime)) * krnlwht
-# Time_all$y[Time_all$y<0.05] = NA
-# 
-# if(sum(pCorr) > 1) {
-#   Time_Corr   = density(Ttime[pCorr], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_Corr$y = 100 * (Time_Corr$y * sum(pCorr) * krnlwht) / Time_all$y
-#   lines(Time_Corr, col=Corr_Col, lwd=2.5)
-# }
-# 
-# if(sum(pEarly) > 1) {
-#   Time_Early   = density(Ttime[pEarly], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_Early$y = 100 * (Time_Early$y * sum(pEarly) * krnlwht) / Time_all$y
-#   lines(Time_Early, col=Early_Col, lwd=1)
-# }
-# 
-# if(sum(pFixBreak) > 1) {
-#   Time_FixBreak   = density(Ttime[pFixBreak], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_FixBreak$y = 100 * (Time_FixBreak$y * sum(pFixBreak) * krnlwht) / Time_all$y
-#   lines(Time_FixBreak,  col=FixBreak_Col,   lwd=1)
-# }
-# 
-# if(sum(pStimBreak) > 1) {
-#   Time_StimBreak   = density(Ttime[pStimBreak], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_StimBreak$y = 100 * (Time_StimBreak$y * sum(pStimBreak) * krnlwht) / Time_all$y
-#   lines(Time_StimBreak, col=StimBreak_Col,  lwd=1)
-# }
-# 
-# if(sum(pMiss) > 1) {
-#   Time_Miss   = density(Ttime[pMiss], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_Miss$y = 100 * (Time_Miss$y * sum(pMiss) * krnlwht) / Time_all$y
-#   lines(Time_Miss, col=Miss_Col, lwd=1)
-# }
-# 
-# if(sum(pFalse) > 1) {
-#   Time_False   = density(Ttime[pFalse], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_False$y = 100 * (Time_False$y * sum(pFalse) * krnlwht) / Time_all$y
-#   lines(Time_False, col=False_Col, lwd=1)
-# }
-# 
-# if(sum(pHoldErr) > 1) {
-#   Time_HoldErr   = density(Ttime[pHoldErr], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_HoldErr$y = 100 * (Time_HoldErr$y * sum(pHoldErr) * krnlwht) / Time_all$y
-#   lines(Time_HoldErr, col=PostStimBreak_Col, lwd=1)
-# }
-
-lines(Tavrg, Rcorr,      col=Corr_Col,       lwd=2.5)
+lines(Tavrg, RFix,      col=Fix_Col,       lwd=2.5)
 lines(Tavrg, Rfixbreak,  col=FixBreak_Col,   lwd=1)
-lines(Tavrg, Rstimbreak, col=StimBreak_Col,  lwd=1)
-lines(Tavrg, Rearly,     col=Early_Col,      lwd=1)
-lines(Tavrg, Rmiss,      col=Miss_Col,       lwd=1)
-lines(Tavrg, Rfalse,     col=False_Col,      lwd=1)
-lines(Tavrg, Rholderr,   col=PostStimBreak_Col,  lwd=1)
+lines(Tavrg, Rjackpot, col=JP_Col,  lwd=1)
 
 ###########################################################################################
 # plot 4: RT over Go
+
+
+p = dt$FixRT > 0.05
+truehist(dt$FixRT[p], h=0.02, col='black',prob=TRUE, xlab='RT [s]', ylab='prportion', main='response times')
+lines(density(dt$FixRT[p],na.rm=TRUE,bw=0.025, kernel='g'),col='red', lw=2)
+
+
+
+
 GoSig = dt$GoLatency
 
 plot(GoSig, StimSRT, type='n', xaxs='i', yaxs='i', main = 'RT over GoCue',

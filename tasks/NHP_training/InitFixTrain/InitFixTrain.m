@@ -214,7 +214,7 @@ function TaskDesign(p)
                 end
                 
             % If gaze is inside fixation window
-            elseif p.trial.task.fixFix == 1
+            elseif(p.trial.task.fixFix == 1)
                 
                 % Fixation ceases
                 if(~p.trial.stim.fix.fixating)
