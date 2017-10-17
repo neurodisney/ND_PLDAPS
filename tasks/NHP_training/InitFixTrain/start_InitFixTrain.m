@@ -50,7 +50,7 @@ SS.sound.use                  = 0;
 SS.sound.useDatapixx          = 1;
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
-SS.plot.do_online             = 1; % run online data analysis between two subsequent trials
+SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
 SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
@@ -85,7 +85,7 @@ SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to us
 SS.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.FixWinStp  = 1;    % change of the size of the fixation window upon key press
 SS.behavior.fixation.FixSPotStp = 0.25;
-SS.stim.FIXSPOT.fixWin  = 6;         
+SS.stim.FIXSPOT.fixWin = 6;         
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%

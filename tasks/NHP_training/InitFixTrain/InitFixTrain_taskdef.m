@@ -36,7 +36,7 @@ p.trial.reward.MaxWaitInitial = 0.6;
 p.trial.task.Timing.WaitFix = 2;  % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
-p.trial.task.Timing.MinITI  = 0.75;   % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI  = 0.5;   % minimum time period [s] between subsequent trials
 p.trial.task.Timing.MaxITI  = 1.5;    % maximum time period [s] between subsequent trials
 
 % penalties
@@ -78,16 +78,17 @@ c5.reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arrivin
 c5.reward.InitialRew      = 0.8;  % duration for initial reward pulse
 
 p.trial.Block.Conditions  = {c1, c2, c3};
-p.trial.Block.Conditions  = {c1, c2};
+%p.trial.Block.Conditions  = {c1, c2};
 
 p.trial.Block.maxBlockTrials =  [2, 3, 1];  % how often to repeat each condition within a block
- p.trial.Block.maxBlockTrials =  [1, 2];  % how often to repeat each condition within a block
+%p.trial.Block.maxBlockTrials =  [1, 2];  % how often to repeat each condition within a block
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type    = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size    = 0.4;        % size of the fixation spot
-% p.trial.stim.FIXSPOT.fixWin  = 6;         %
+p.trial.stim.FIXSPOT.size    = 0.35;        % size of the fixation spot
+
+p.trial.behavior.fixation.FixWinStp = 0.05;  % refine resizing of fixation step for this task only(modify default rig settings)
 
 % color options (make sure colors are defined!)
 %p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
@@ -95,7 +96,7 @@ p.trial.task.Color_list = {'white'};
 
 % Enable random positions
 % p.trial.task.RandomPos = 0;
-p.trial.task.RandomPosRange = [5, 5];  % range of x and y dva for random position
+p.trial.task.RandomPosRange = [4, 4];  % range of x and y dva for random position
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
