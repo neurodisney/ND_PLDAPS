@@ -19,14 +19,14 @@ p.trial.reward.GiveInitial    = 1; % If set to 1 reward animal when starting to 
 p.trial.reward.GiveSeries     = 1; % If set to 1 give a continous series of rewards until end of fixation period
 
 p.trial.reward.ManDur         = 0.2;   % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur            = 0.125; % reward duration for pulse in reward series while keeping fixation
-p.trial.reward.InitialRew     = 0.25;  % duration of the initial reward
+p.trial.reward.Dur            = 0.1; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.InitialRew     = 0.2;  % duration of the initial reward
 
-p.trial.reward.jackpotTime    = 6;     % total time required to fixate to get full reward
+p.trial.reward.jackpotTime    = 5;     % total time required to fixate to get full reward
 p.trial.reward.jackpotDur     = 0.4;   % final reward after keeping fixation for the complete time
 
-p.trial.reward.Step           = [0, 4, 12];          % define the number of subsequent rewards after that the next delay period should be used.
-p.trial.reward.Period         = [0.4 0.3 0.2 0.15];  % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
+p.trial.reward.Step           = [0, 4, 8, 12];          % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.reward.Period         = [0.5 0.4 0.3 0.2];  % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
 p.trial.reward.MinWaitInitial = 0.4;
 p.trial.reward.MaxWaitInitial = 0.6;
@@ -80,7 +80,7 @@ c5.reward.InitialRew      = 0.8;  % duration for initial reward pulse
 p.trial.Block.Conditions  = {c1, c2, c3};
 %p.trial.Block.Conditions  = {c1, c2};
 
-p.trial.Block.maxBlockTrials =  [2, 3, 1];  % how often to repeat each condition within a block
+p.trial.Block.maxBlockTrials =  [1, 3, 2];  % how often to repeat each condition within a block
 %p.trial.Block.maxBlockTrials =  [1, 2];  % how often to repeat each condition within a block
 
 % ------------------------------------------------------------------------%

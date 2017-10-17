@@ -233,7 +233,7 @@ function TaskDesign(p)
                     
                     % Succesful
                     p.trial.task.Good = 1;
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;
                     
                     % Reward the monkey
                     if(p.trial.reward.GiveInitial == 1)

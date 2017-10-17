@@ -134,7 +134,7 @@ abline(h=median(dt$FixRT[pAllFix], na.rm=TRUE),lty=2)
 abline(h=mean(  dt$FixRT[pAllFix], na.rm=TRUE),lty=3)
 
 legend("bottom", legend=c("JackPost","Fixation", "FixBreak"), 
-       pch=c(15), col=c(JP_Col, Fix_Col, FixBreak_Col, StimBreak_Col), 
+       pch=c(15), col=c(JP_Col, Fix_Col, FixBreak_Col, Fix_Col), 
        inset=c(0,-0.2), title=NULL, xpd=NA, cex=2, bty='n', horiz=TRUE, pt.cex=4)
 
 ###########################################################################################
@@ -235,9 +235,19 @@ if(interactive()) {
 
 dev.off()
 
+
+
+  
+  
+
 ###########################################################################################
 # Get rough overview
 print(ctab(table(dt$Outcome),addmargins=TRUE))
+
+Nfix  = sum(is.finite(dt$FixPeriod), na.rm=TRUE)
+Nlong = sum(dt$FixPeriod > 1, na.rm=TRUE) 
+
+print(paste(Nlong, ' fixations longer than 1 second (', round(100 * Nlong/Nfix,2) ,'%)',sep=''))
 }
 
 # If this program was called from the command line, load in the datadir and fname arguments
