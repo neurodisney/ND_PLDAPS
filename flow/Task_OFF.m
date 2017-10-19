@@ -21,4 +21,5 @@ if ~p.trial.task.Good
     p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
 end
 
-p.trial.Timer.ITI = p.trial.CurTime + p.trial.task.Timing.ITI;
+p.trial.EV.NextTrialStart = p.trial.CurTime + p.trial.task.Timing.ITI;
+

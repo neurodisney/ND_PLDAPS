@@ -87,8 +87,16 @@ ND_DefineCol(p, 'lBlue',      40, [0.69, 0.69, 1.00]);
 ND_DefineCol(p, 'lBluebg',    41, [0.69, 0.69, 1.00], bgColor);
 ND_DefineCol(p, 'dBlue',      42, [0.00, 0.00, 0.69]);
 ND_DefineCol(p, 'dBluebg',    43, [0.00, 0.00, 0.69], bgColor);
-%ND_DefineCol(p, 'text',       32, [1.00, 1.00, 1.00], bgColor);
 
+% Break colors are bright colors, but muted for the experimenter
+ND_DefineCol(p, 'redBreak',   44, [0.25, 0.00, 0.00], [1.00, 0.00, 0.00]);
+ND_DefineCol(p, 'greenBreak', 45, [0.00, 0.25, 0.00], [0.00, 1.00, 0.00]);
+ND_DefineCol(p, 'blueBreak',  46, [0.00, 0.00, 0.25], [0.00, 0.00, 1.00]);
+ND_DefineCol(p, 'yellowBreak',47, [0.25, 0.25, 0.00], [1.00, 1.00, 0.00]);
+ND_DefineCol(p,'magentaBreak',48, [0.25, 0.00, 0.25], [1.00, 0.00, 1.00]);
+ND_DefineCol(p, 'cyanBreak',  49, [0.00, 0.25, 0.25], [0.00, 1.00, 1.00]);
+ND_DefineCol(p, 'orangeBreak',50, [0.25, 0.10, 0.00], [1.00, 0.40, 0.00]);
+ND_DefineCol(p, 'whiteBreak', 51, [0.25, 0.25, 0.25], [1.00, 1.00, 1.00]);
 
 
 %ND_DefineCol(p, 'targetgood', 50, [0.00, 1.00, 0.00]);

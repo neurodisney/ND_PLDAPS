@@ -14,12 +14,6 @@ if(~exist('state', 'var'))
 end
 
 % ####################################################################### %
-%% Call standard routines before executing task related code
-% This carries out standard routines, mainly in respect to hardware interfacing.
-% Be aware that this is done first for each trial state!
-p = ND_GeneralTrialRoutines(p, state);
-
-% ####################################################################### %
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed.
 % This part corresponds to the experimental setup file and could be a separate
@@ -122,6 +116,12 @@ if(isempty(state))
     
 else
     % ####################################################################### %
+    %% Call standard routines before executing task related code
+    % This carries out standard routines, mainly in respect to hardware interfacing.
+    % Be aware that this is done first for each trial state!
+    p = ND_GeneralTrialRoutines(p, state);
+
+% ####################################################################### %
     %% Subsequent calls during actual trials
     % execute trial specific commands here.
     
@@ -180,8 +180,10 @@ p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
     p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
 
 
-p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
+p.trial.CurrEpoch        = p.trial.epoch.ITI;
 
+% Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
+p.trial.task.longITI = 1;
 
 % Outcome if no fixation occurs at all during the trial
 p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
@@ -217,6 +219,29 @@ function TaskDesign(p)
 % The different task stages (i.e. 'epochs') are defined here.
 switch p.trial.CurrEpoch
     
+    case p.trial.epoch.ITI
+        %% inter-trial interval: wait until sufficient time has passed from the last trial
+        if p.trial.CurTime < p.trial.EV.PlanStart
+            % All intertrial processing was completed before the ITI expired
+            p.trial.task.longITI = 0;
+            
+        else
+            if isnan(p.trial.EV.PlanStart)
+                % First trial, or after a break
+                p.trial.task.longITI = 0;
+            end
+            
+            % If intertrial processing took too long, display a warning
+            if p.trial.task.longITI
+                disp('Warning: longer ITI than specified');
+            end
+            
+            switchEpoch(p,'TrialStart');
+            
+        end
+        
+        % ----------------------------------------------------------------%  
+        
     case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot       
         tms = pds.datapixx.strobe(p.trial.event.TASK_ON);
@@ -408,12 +433,10 @@ switch p.trial.CurrEpoch
         p.trial.EV.FixTargetStart = p.trial.stim.grating.EV.FixStart;
         p.trial.EV.FixTargetStop  = p.trial.stim.grating.EV.FixBreak;
       
-        switchEpoch(p,'ITI');
+        % Flag next trial ITI is done at begining
+        p.trial.flagNextTrial = 1;
         
-        % ----------------------------------------------------------------%
-    case p.trial.epoch.ITI
-        %% inter-trial interval: wait before next trial to start
-        Task_WaitITI(p);
+
         
 end  % switch p.trial.CurrEpoch
 

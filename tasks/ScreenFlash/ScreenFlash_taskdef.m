@@ -1,4 +1,4 @@
-function p = FixTrain_taskdef(p)
+function p = ScreenFlash_taskdef(p)
 % define task parameters for the joystick training task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
@@ -10,7 +10,7 @@ function p = FixTrain_taskdef(p)
 %         keyboard without overwriting it every time by calling this routine
 %
 %
-% wolf zinke, Dec. 2016
+% Nate Faber & wolf zinke, Sep 2017
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
@@ -36,8 +36,8 @@ p.trial.reward.MaxWaitInitial = 0.50;
 p.trial.task.Timing.WaitFix = 0.100;    % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
-p.trial.task.Timing.MinITI  = 1.5;  % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = 3;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI  = 0.75;  % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI  = 1.5;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses

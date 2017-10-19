@@ -1,11 +1,11 @@
-function p = FixTrain_plots(p, offln)
+function p = ScreenFlash_plots(p, offln)
 %% online analysis for joystick training task
 %
 % TODO: - For offline analysis, allow specification of pds file, or open file selector if p is empty.
 %       - add only new trial data but keep the previous without re-doing complete plot
 %
 %
-% wolf zinke, March 2017
+% Nate Faber & wolf zinke, Sep 2017
 
 %% plot parameters
 resp_bin = 25;
@@ -48,7 +48,7 @@ if(offln == 1)
 elseif(isempty(p.trial.plot.fig) || offln == 1)
     p.trial.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
 else
-    set(0, 'CurrentFigure', p.trial.plot.fig);
+    figure(p.trial.plot.fig);
 end
 
 Ntrials = p.trial.pldaps.iTrial;

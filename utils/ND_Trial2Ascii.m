@@ -10,13 +10,14 @@ function ND_Trial2Ascii(p, act, tbl)
 %       - check that format and variable content match, and ensure that it
 %         is one entry per variable.
 
-if nargin < 3
+if(nargin < 3)
     tbl = 'session';
 end
 
-if ~isfield(p.trial.asciitbl, tbl)
+if(~isfield(p.trial.asciitbl, tbl))
     p.trial.asciitbl.(tbl) = struct;
 end
+
 table = p.trial.asciitbl.(tbl);
 
 switch act
@@ -31,7 +32,7 @@ switch act
         % Generate the table file name
         tbldir = p.defaultParameters.session.dir;
         
-        if ~isfield(table, 'file')
+        if(~isfield(table, 'file'))
             if strcmp(tbl,'session')
                 % Default file for the session table
                 table.file = fullfile(tbldir, [p.trial.session.filestem,'.dat']);
@@ -68,7 +69,6 @@ switch act
             fprintf(tblptr, '%s \n', LNstr);
             fclose(tblptr);
         end
-        
 end
 
     

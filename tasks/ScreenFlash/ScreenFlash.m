@@ -1,10 +1,10 @@
-function p = FixTrain(p, state)
+function p = ScreenFlash(p, state)
 % Main trial function for initial fixation training.
 %
 %
 %
-% wolf zinke, Apr. 2017
-% Nate Faber, May 2017
+% Nate Faber & wolf zinke, Sep 2017
+
 
 % ####################################################################### %
 %% define the task name that will be used to create a sub-structure in the trial struct
@@ -251,13 +251,12 @@ function TaskSetUp(p)
       
     % Reward
     nRewards = p.trial.reward.nRewards;
-    
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
-    
     % Create arrays for direct reference during reward
-    p.trial.reward.allDurs    = repelem(p.trial.reward.Dur,    nRewards);
-    p.trial.reward.allPeriods = repelem(p.trial.reward.Period, nRewards);       
+    p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
+    p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);       
+    
     
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
@@ -453,7 +452,7 @@ function TaskDesign(p)
     end  % switch p.trial.CurrEpoch
 
 % ####################################################################### %
-%function TaskDraw(p)
+function TaskDraw(p)
 %% show epoch dependent stimuli
 % go through the task epochs as defined in TaskDesign and draw the stimulus
 % content that needs to be shown during this epoch.

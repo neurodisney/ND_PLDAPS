@@ -33,25 +33,22 @@ end
 % fixation related
 if(p.defaultParameters.behavior.fixation.use)
 
-    p.defaultParameters.outcome.FIXATION      =   1000;
+    p.defaultParameters.outcome.Fixation      =   1000;
     p.defaultParameters.outcome.NoFix         =   3010;
     p.defaultParameters.outcome.FixBreak      =   3011;
-    p.defaultParameters.outcome.FullFixation  =   3012;
     p.defaultParameters.outcome.Jackpot       =   3013;
     p.defaultParameters.outcome.TargetBreak   =   3014;
     p.defaultParameters.outcome.StimBreak     =   3015;
     p.defaultParameters.outcome.PostStimBreak =   3016;
-    
 end
 
 % Saccade outcomes
 p.defaultParameters.outcome.goodSaccade       = 4001;
-p.defaultParameters.outcome.noSaccade         = 4002;     % Saccade was supposed to happen but none did
+p.defaultParameters.outcome.noSaccade         = 4002;  % Saccade was supposed to happen but none did
 p.defaultParameters.outcome.earlySaccade      = 4003;
-p.defaultParameters.outcome.lateSaccade       = 4004;     % Saccade still occured, but after it was supposed to.
+p.defaultParameters.outcome.lateSaccade       = 4004;  % Saccade still occured, but after it was supposed to.
 p.defaultParameters.outcome.wrongSaccade      = 4005;  % saccade to wrong target or in wrong direction
 p.defaultParameters.outcome.glance            = 4006;  % saccade made to target, but not held for long enough
-
 
 %% get a string representation of the outcome
 p.defaultParameters.outcome.codenames = fieldnames(p.defaultParameters.outcome);

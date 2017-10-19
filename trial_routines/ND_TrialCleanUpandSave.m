@@ -17,7 +17,7 @@ end
 %p.trial.timing.flipTimes(:, p.trial.iFrame) = deal(Screen('Flip', p.trial.display.ptr, 0));
 ft=cell(5,1);
 [ft{:}] = Screen('Flip', p.trial.display.ptr, 0);
-p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
+% p.trial.timing.flipTimes(:,p.trial.iFrame)=[ft{:}];
 
 %-------------------------------------------------------------------------%
 %% Ensure correct background color and determine trial end and duration
@@ -72,6 +72,11 @@ if(p.trial.mouse.use)
     p.trial.mouse.samplesTimes(      :, p.trial.mouse.samples+1:end) = [];
 end
 
+%-------------------------------------------------------------------------%
+%% close TDT connection
+if p.trial.tdt.use
+    pds.tdt.close(p)
+end
 %-------------------------------------------------------------------------%
 %% Trial information
 
