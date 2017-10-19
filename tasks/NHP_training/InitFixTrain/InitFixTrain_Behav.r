@@ -1,9 +1,10 @@
 #!/usr/bin/Rscript
 
 ## load required packages
-require(useful)
-require(catspec) 
-require(beanplot)
+require(catspec, quietly=TRUE) 
+require(plotrix, quietly=TRUE) 
+#require(useful, quietly=TRUE)
+#require(beanplot, quietly=TRUE)
 
 #datadir="/home/rig2-user/Data/ExpData/croc/2017_10_13/InitFixTrain"
 #fname=NA
@@ -133,7 +134,7 @@ lines(loess.smooth(Ttime[pAllFix], dt$FixRT[pAllFix], span=NTbw/sum(pAllFix), de
 abline(h=median(dt$FixRT[pAllFix], na.rm=TRUE),lty=2)
 abline(h=mean(  dt$FixRT[pAllFix], na.rm=TRUE),lty=3)
 
-legend("bottom", legend=c("JackPost","Fixation", "FixBreak"), 
+legend("bottom", legend=c("JackPot","Fixation", "FixBreak"), 
        pch=c(15), col=c(JP_Col, Fix_Col, FixBreak_Col, Fix_Col), 
        inset=c(0,-0.2), title=NULL, xpd=NA, cex=2, bty='n', horiz=TRUE, pt.cex=4)
 
@@ -177,17 +178,23 @@ for(i in 1:length(Tavrg)) {
 }
 
 plot(Trng, c(0, 100), type='n', xaxs='i', yaxs='i', main = 'Performance',
-     ylim=c(0, max(c(RFix, Rfixbreak, Rjackpot))), xlab='Trial Time [s]', ylab='performance [s]', cex=1.25)
+     ylim=c(0, max(c(RFix+Rfixbreak+Rjackpot))), xlab='Trial Time [s]', ylab='performance [s]', cex=1.25)
 
-if(length(Break_end) > 1){  for(i in 1:length(Break_end)){  rect(Break_start[i], 0, Break_end[i], 100, angle = 0, col='gray', border=FALSE) } }
+polygon(c(Tavrg, rev(Tavrg)), c(RFix, RFix*0), col = Fix_Col)
+polygon(c(Tavrg, rev(Tavrg)), c(RFix+Rjackpot, rev(RFix)), col = JP_Col)
+polygon(c(Tavrg, rev(Tavrg)), c(RFix+Rjackpot+Rfixbreak, rev(RFix+Rjackpot)), col = FixBreak_Col)
+
+if(length(Break_end) > 1){  
+  for(i in 1:length(Break_end)){  
+    rect(Break_start[i], 0, Break_end[i], 100, angle = 0, col='gray', border=FALSE) } }
 
 abline(h=50, lty=2)
 abline(h=c(25,75), lty=3)
 abline(h=0, lty=1)
 
-lines(Tavrg, RFix,      col=Fix_Col,       lwd=2.5)
-lines(Tavrg, Rfixbreak,  col=FixBreak_Col,   lwd=1)
-lines(Tavrg, Rjackpot, col=JP_Col,  lwd=1)
+#lines(Tavrg, RFix,      col=Fix_Col,       lwd=2.5)
+#lines(Tavrg, Rfixbreak, col=FixBreak_Col,   lwd=1)
+#lines(Tavrg, Rjackpot,  col=JP_Col,  lwd=1)
 
 ###########################################################################################
 # plot 4: Fixation RT
@@ -202,6 +209,9 @@ RTdense = density(dt$FixRT[p],na.rm=TRUE, bw=RTbw, kernel='g')
 RTdense$y = RTdense$y * RTdense$bw * sum(p)
 lines(RTdense,col='red', lw=2)
 
+abline(v=median(dt$FixRT[pAllFix], na.rm=TRUE),lty=2, col='blue', lwd=2.5)
+abline(v=mean(  dt$FixRT[pAllFix], na.rm=TRUE),lty=3, col='blue', lwd=2.5)
+
 ###########################################################################################
 # plot 5: Fixation durations
 p = is.finite(dt$FixPeriod)
@@ -215,16 +225,90 @@ Fdurdense = density(dt$FixPeriod[p],na.rm=TRUE,bw=RTbw, kernel='g')
 Fdurdense$y = Fdurdense$y * Fdurdense$bw * sum(p)
 lines(Fdurdense,col='red', lwd=2)
 
+abline(v=median(dt$FixPeriod[p], na.rm=TRUE),lty=2, col='blue', lwd=2.5)
+abline(v=mean(  dt$FixPeriod[p], na.rm=TRUE),lty=3, col='blue', lwd=2.5)
+
 ###########################################################################################
 # plot 6: cumulative histogram of fixation durations
+Nfix  = sum(is.finite(dt$FixPeriod), na.rm=TRUE)
+Nlong = sum(dt$FixPeriod > 1, na.rm=TRUE) 
+Plong = round(100 * Nlong/Nfix,2)
+
 plot(sort(dt$FixPeriod[p]), sum(p):1, type="l" , lwd=2.5, col='blue', xaxs='i', yaxs='i', 
      main='Duration of Fixation', xlab='Fixation Duration [s]', ylab='count [s]', cex=1.25)
 
 abline(h=seq(from=10, by=10, to=sum(p)), lty=3, col='lightgrey')
 abline(v=seq(from=0.1, by=0.1, to=max(dt$FixPeriod[p],na.rm=TRUE)), lty=3, col='lightgrey')
 
-abline(h=sum(dt$FixPeriod[p]>1), lty=2, col='red')
-abline(v=1, lty=2, col='red')
+abline(h=Nlong, lty=2, col='red')
+abline(v=1,     lty=2, col='red')
+
+text(1, Nlong+0.025*Nfix, labels=paste(Nlong, ' (',Plong ,'%)',sep=''), pos=4, offset = 0.01, cex=1.5, col='red')
+
+###########################################################################################
+# plot 7: Fixation duration dependent on first reward
+Ylim = range(dt$FixPeriod[pAllFix], na.rm = TRUE)
+Xlim = range(dt$FirstReward[pAllFix])
+
+plot(Xlim, Ylim, type='n', xaxs='i', yaxs='i', main='First Reward',
+     xlab='time of first reward [s]', ylab='Fix Duration [s]', cex=1.25)
+
+points(dt$FirstReward[pFix],      dt$FixPeriod[pFix],      pch=19, col=Fix_Col)
+points(dt$FirstReward[pFixBreak], dt$FixPeriod[pFixBreak], pch=19, col=FixBreak_Col)
+points(dt$FirstReward[pJackpot],  dt$FixPeriod[pJackpot],  pch=19, col=JP_Col)
+
+abline(lm(dt$FixPeriod[pAllFix]~dt$FirstReward[pAllFix]), col='blue', lty=2, lwd=2.5)
+
+###########################################################################################
+# plot 8: Performace in respect to first reward
+brks <- seq(min(dt$FirstReward[pAllFix]), max(dt$FirstReward[pAllFix]), length=11)
+bins =cut(dt$FirstReward[pAllFix], breaks = brks) 
+Xbin = brks[-length(brks)] + mean(diff(brks))/2
+
+Prew  = 100*prop.table(table(bins,1-pFixBreak[pAllFix]),margin=1)[,2]
+Fmed  = tapply(dt$FixPeriod[pAllFix], bins, median, na.rm=TRUE)
+Favrg = tapply(dt$FixPeriod[pAllFix], bins, mean,   na.rm=TRUE)
+
+par(mar=c(5, 5, 5, 6))
+
+# plot fixation times
+Yl1 = c(0, 1.05 * max(Favrg))
+plot(Xbin, Favrg, pch=16, axes=FALSE, ylim=Yl1, xlim=range(dt$FirstReward[pAllFix], na.rm=TRUE), 
+     xlab="", ylab="", xaxs='i', yaxs='i',  type="b",col="blue", main="Performance", lty=3, lwd=2)
+
+lines( Xbin, Fmed, col="blue", lty=2, lwd=2)
+points(Xbin, Fmed, col="blue",  pch=16)
+
+box()
+axis(2, ylim=Yl1, col="blue", las=1, col.axis="blue")  ## las=1 makes horizontal labels
+mtext("Fixation Duration [s]",side=2, line=2.5, col="blue")
+
+
+par(new=TRUE) # Allow a second plot on the same graph
+
+## Plot the second plot and put axis scale on right
+Yl2 = c(0, 1.05 * max(Prew))
+plot(Xbin, Prew, pch=15, ylim=Yl2, xlim=range(dt$FirstReward[pAllFix], na.rm=TRUE), 
+     xlab="", ylab="", xaxs='i', yaxs='i', axes=FALSE, type="b", col="red")
+## a little farther out (line=4) to make room for labels
+mtext("Fixation Rate [%]", side=4, col="red", line=4) 
+axis(4, ylim=Yl2, col="red", col.axis="red", las=1)
+
+## Draw the time axis
+axis(1, pretty(c(brks[1]-0.05*diff(range(brks)), max(brks)+0.05*diff(range(brks))), 6))
+mtext("Time to first reward [s]", side=1, col="black", line=2.5)  
+
+mtext(table(bins), side=3, at=Xbin)
+
+## Add Legend
+#legend("topleft",legend=c("Beta Gal","Cell Density"),
+#       text.col=c("black","red"),pch=c(16,15),col=c("black","red"))
+
+
+
+#twoord.plot(2:10, seq(3, 7, by=0.5) + rnorm(9),
+#            1:15, rev(60:74) + rnorm(15), 
+#            type= c("l", "l"), xaxt = 'n', yaxt = 'n')
 
 ###########################################################################################
 # save plot as pdf
@@ -235,19 +319,17 @@ if(interactive()) {
 
 dev.off()
 
-
-
-  
-  
-
 ###########################################################################################
 # Get rough overview
+print('##############################################')
+print('')
 print(ctab(table(dt$Outcome),addmargins=TRUE))
-
-Nfix  = sum(is.finite(dt$FixPeriod), na.rm=TRUE)
-Nlong = sum(dt$FixPeriod > 1, na.rm=TRUE) 
-
-print(paste(Nlong, ' fixations longer than 1 second (', round(100 * Nlong/Nfix,2) ,'%)',sep=''))
+print('')
+print(paste('Session duration: ', round(Trng[2],2), ' minutes' ,sep=''))
+print('')
+print(paste(Nlong, ' fixations longer than 1 second (', Plong ,'%)',sep=''))
+print('')
+print('##############################################')
 }
 
 # If this program was called from the command line, load in the datadir and fname arguments
