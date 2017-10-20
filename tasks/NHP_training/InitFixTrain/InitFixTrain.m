@@ -52,6 +52,10 @@ if(isempty(state))
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
     
+p.trial.reward.MinWaitInitial  = 0.05; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+p.trial.reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+    
+    
 %-------------------------------------------------------------------------%
 %% eye calibration
     if(~p.trial.behavior.fixation.useCalibration)    
@@ -264,7 +268,7 @@ function TaskDesign(p)
                         % Give the reward and update the lastReward time
                         pds.reward.give(p, p.trial.reward.Dur);
                         p.trial.Timer.lastReward = p.trial.CurTime;
-                        p.trial.reward.count = p.trial.reward.count + 1;
+                        p.trial.reward.count     = p.trial.reward.count + 1;
                     end
                 end
                 

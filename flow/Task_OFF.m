@@ -16,7 +16,7 @@ if(p.trial.datapixx.TTL_trialOn)
 end
 
 % determine ITI
-if ~p.trial.task.Good
+if(~p.trial.task.Good)
     % Timeout if task not performed correctly
     p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
 end
