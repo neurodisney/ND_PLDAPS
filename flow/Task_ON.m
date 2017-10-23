@@ -8,12 +8,9 @@ tms = pds.datapixx.strobe(p.trial.event.TASK_ON); % WZ ToDo: Utilize the other t
 p.trial.EV.DPX_TaskOn = tms(1);
 p.trial.EV.TDT_TaskOn = tms(2);
 
-p.trial.EV.StartRT   = p.trial.CurTime - p.trial.EV.TaskStart;
-
-p.trial.EV.Initiated = p.trial.CurTime;
-
 p.trial.task.Good = 1;
 
 if(p.trial.datapixx.TTL_trialOn)
     pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
 end
+

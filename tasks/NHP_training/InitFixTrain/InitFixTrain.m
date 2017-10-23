@@ -52,9 +52,9 @@ if(isempty(state))
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
     
-p.trial.reward.MinWaitInitial  = 0.05; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-p.trial.reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-    
+    % just initialize here, will be overwritten by conditions
+    p.trial.reward.MinWaitInitial  = 0.05;
+    p.trial.reward.MaxWaitInitial  = 0.1; 
     
 %-------------------------------------------------------------------------%
 %% eye calibration
@@ -64,6 +64,7 @@ p.trial.reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward afte
 
     p.trial.task.RandomPos = 0;
 else
+    
 % ####################################################################### %
 %% Call standard routines before executing task related code
 % This carries out standard routines, mainly in respect to hardware interfacing.
@@ -130,7 +131,6 @@ function TaskSetUp(p)
     p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial, ...
                                          p.trial.reward.MaxWaitInitial, [], [], 1, 0.001);
 
-    % p.trial.CurrEpoch        = p.trial.epoch.ITI;
     ND_SwitchEpoch(p, 'ITI')
 
     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
@@ -166,34 +166,19 @@ function TaskDesign(p)
         
         case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
-            if(p.trial.CurTime >= p.trial.EV.PlanStart || isnan(p.trial.EV.PlanStart))
-
-                Tdiff =  p.trial.CurTime - p.trial.EV.PlanStart;
-
-                if(Tdiff >= 2*p.trial.display.ifi)
-                % if ITI was longer than 2 frames shoot a warning message    
-                    warning('ITI exceeded intended duration of by %.2f seconds!', Tdiff)
-                end
-
-                ND_SwitchEpoch(p,'TrialStart');
-            end
+            Task_WaitITI(p);
         
         % ----------------------------------------------------------------%  
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
-            fixspot(p,1);
         
-            tms = pds.datapixx.strobe(p.trial.event.TASK_ON); 
-            p.trial.EV.DPX_TaskOn = tms(1);
-            p.trial.EV.TDT_TaskOn = tms(2);
+            Task_ON(p);
 
-            p.trial.EV.TaskStart = p.trial.CurTime;
+            p.trial.EV.TaskStart     = p.trial.CurTime;
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             
-            if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
-            end
-           
+            fixspot(p,1);
+            
             ND_SwitchEpoch(p,'WaitFix')
             
         % ----------------------------------------------------------------%
@@ -325,7 +310,6 @@ p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes
 
 % Save useful info to an ascii table for plotting
 ND_Trial2Ascii(p, 'save');
-
     
 % ####################################################################### %
 function KeyAction(p)
@@ -344,15 +328,15 @@ if(~isempty(p.trial.LastKeyPress))
         case KbName('f') % Turn fixation position on and off
             p.trial.stim.fix.on = ~p.trial.stim.fix.on;
             
+        % move target to grid positions
         case p.trial.key.GridKeyCell
-            % move target to grid positions
             gpos = find(p.trial.key.GridKey == p.trial.LastKeyPress(1));
             p.trial.behavior.fixation.GridPos = gpos;
             
             p.trial.stim.FIXSPOT.pos = p.trial.eyeCalib.Grid_XY(gpos, :);
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
             
-            % move target by steps
+        % move target by steps
         case KbName('RightArrow')
             p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixSPotStp, 0];
             p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;

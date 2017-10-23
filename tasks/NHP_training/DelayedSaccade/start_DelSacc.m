@@ -7,7 +7,6 @@ function p = start_DelSacc(subjname, rig, experimenter)
 % wolf zinke, Apr. 2017
 % Nate Faber, May 2017
 
-
 % ------------------------------------------------------------------------%
 %% Set default variables
 % name of subject. This will be used to create a subdirectory with this name.
@@ -82,7 +81,6 @@ SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation w
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
-
 
 % ------------------------------------------------------------------------%
 %% create the pldaps class
