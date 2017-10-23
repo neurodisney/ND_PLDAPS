@@ -33,10 +33,10 @@ SS = ND_RigDefaults(rig);    % load default settings according to the current ri
 exp_fun = 'DelSacc';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
-SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'DelSacc_taskdef';  % function that provides task specific parameter definitions
+SS.pldaps.trialFunction = exp_fun;          % This function is both, set-up for the experiment session as well as the trial function
+SS.task.TaskDef    = 'DelSacc_taskdef';     % function that provides task specific parameter definitions
 SS.task.AfterTrial = 'DelSacc_aftertrial';  % function that provides runs task specific actions after a trial
-SS.plot.routine    = 'DelSacc_plots';    % function for online plotting of session progress
+SS.plot.routine    = 'DelSacc_plots';       % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
@@ -83,25 +83,7 @@ SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation w
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
 
-% ------------------------------------------------------------------------%
-%% Special debug mode variables
-if strcmp(subjname,'mouse')
-    
-    % Use the mouse as eyeposition
-    SS.mouse.use = 1;
-    SS.mouse.useAsEyepos = 1;
-    
-    % Don't collect any analog channels
-    SS.datapixx.adc.PupilChannel   = [];
-    SS.datapixx.adc.XEyeposChannel = [];
-    SS.datapixx.adc.YEyeposChannel = [];
-    %SS.datapixx.adc.RewardChannel  = [];  
-    SS.datapixx.useAsEyepos        = 0;
-    SS.behavior.joystick.use       = 0;
-    %SS.datapixx.useForReward       = 0;
-    %SS.sound.use                   = 0;
-    
-end
+
 % ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);

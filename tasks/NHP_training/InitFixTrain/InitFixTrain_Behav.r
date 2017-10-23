@@ -304,6 +304,13 @@ plot(Xbin, Prew, pch=15, ylim=Yl2, xlim=range(dt$FirstReward[pAllFix], na.rm=TRU
 mtext("Fixation Rate [%]", side=4, col="red", line=4) 
 axis(4, ylim=Yl2, col="red", col.axis="red", las=1)
 
+# IRew  = density(dt$FirstReward[pAllFix], bw="SJ",    cut=TRUE, na.rm=TRUE)
+FDens = density(dt$FirstReward[pFix],    bw=IRew$bw, cut=TRUE, na.rm=TRUE, from=IRew$x[1], to=max(IRew$x))
+BDens = density(dt$FirstReward[pFixBreak],  bw=IRew$bw, cut=TRUE, na.rm=TRUE, from=IRew$x[1], to=max(IRew$x))
+
+FDens$y = 100 * FDens$y/(FDens$y+BDens$y)
+lines(FDens, col='salmon')
+
 ## Draw the time axis
 axis(1, pretty(c(brks[1]-0.05*diff(range(brks)), max(brks)+0.05*diff(range(brks))), 6))
 mtext("Time to first reward [s]", side=1, col="black", line=2.5)  
