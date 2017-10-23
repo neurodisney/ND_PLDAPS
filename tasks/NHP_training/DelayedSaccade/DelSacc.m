@@ -183,62 +183,18 @@ switch p.trial.CurrEpoch
     case p.trial.epoch.TrialStart
      %% trial starts with onset of fixation spot       
         Task_ON(p);
+        ND_FixSpot(p,1);
         
         p.trial.EV.TaskStart     = p.trial.CurTime;
         p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
                 
-        fixspot(p,1);
-        
         switchEpoch(p,'WaitFix');
         
     % ----------------------------------------------------------------%
     case p.trial.epoch.WaitFix
     %% Fixation target shown, waiting for a sufficiently held gaze
-        
-        % Gaze is outside fixation window
-        if(p.trial.task.fixFix == 0)
-            
-            % Fixation has occured
-            if(p.trial.stim.fix.fixating)
-                p.trial.task.fixFix = 1;
-                
-                % Time to fixate has expired
-            elseif(p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix)
-                
-                % Long enough fixation did not occur, failed trial
-                p.trial.task.Good = 0;
-                p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
-                
-                % Go directly to TaskEnd, do not start task, do not collect reward
-                fixspot(p,0);
-                switchEpoch(p,'TaskEnd');
-            end
-            
-            % If gaze is inside fixation window
-        elseif(p.trial.task.fixFix == 1)
-            
-            % Fixation ceases
-            if(~p.trial.stim.fix.fixating)
-                
-                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-                % Turn off the spot and end the trial
-                fixspot(p,0);
-                switchEpoch(p,'TaskEnd');
-                
-                % Fixation has been held for long enough
-            elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.fixLatency)
-                
-                % Reward the monkey if there is initial reward for this trial
-                if(p.trial.reward.initialFixRwd > 0)
-                    pds.reward.give(p, p.trial.reward.initialFixRwd);
-                    p.trial.EV.FirstReward = p.trial.CurTime;
-                end
-                
-                % Transition to the succesful fixation epoch
-                switchEpoch(p,'Fixating')
-            end
-        end
-        
+        Task_WaitFixStart(p);
+
     % ----------------------------------------------------------------%
     case p.trial.epoch.Fixating
     %% Initial reward has been given (if it is not 0), now stim target will appear
@@ -253,13 +209,12 @@ switch p.trial.CurrEpoch
                 end
                 
             else
-                
                 % Must maintain fixation (inhibit saccade) until central
                 % fixation spot disappears
                 if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.centerOffLatency)
                     
                     % Saccade has been inhibited long enough. Make the central fix spot disappear
-                    fixspot(p,0);
+                    ND_FixSpot(p,0);
    
                     % Make the stim high contrast
                     stim(p,2)
@@ -283,7 +238,7 @@ switch p.trial.CurrEpoch
             end
             
             % Turn off fixspot and stim
-            fixspot(p,0);
+            ND_FixSpot(p,0);
             stim(p,0);
         end
         
@@ -306,7 +261,7 @@ switch p.trial.CurrEpoch
                     
                     % Turn the stim off and fixation off
                     stim(p,0)
-                    fixspot(p,0)
+                    ND_FixSpot(p,0)
                     
                     % Mark trial early and end task
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
@@ -326,7 +281,7 @@ switch p.trial.CurrEpoch
 
                         % Turn the stim off and fixation off
                         stim(p,0)
-                        fixspot(p,0)
+                        ND_FixSpot(p,0)
                         
                         % Play an incorrect sound
                         pds.audio.playDP(p,'incorrect','left');
@@ -342,7 +297,7 @@ switch p.trial.CurrEpoch
 
                 % Turn the stim off and fixation off
                 stim(p,0);
-                fixspot(p,0);
+                ND_FixSpot(p,0);
 
                 % Play an incorrect sound
                 pds.audio.playDP(p,'incorrect','left');
@@ -471,19 +426,6 @@ if(~isempty(p.trial.LastKeyPress))
     
 end
 
-% ####################################################################### %
-function fixspot(p, bool)
-
-    if(bool && ~p.trial.stim.fix.on)
-        p.trial.stim.fix.on = 1;
-        p.trial.EV.FixOn = p.trial.CurTime;
-        pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
-        
-    elseif(~bool && p.trial.stim.fix.on)
-        p.trial.stim.fix.on = 0;
-        p.trial.EV.FixOff = p.trial.CurTime;
-        pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
-    end
 
 % ####################################################################### %
 function stim(p, val)
@@ -503,14 +445,17 @@ function stim(p, val)
         case 0
             p.trial.stim.gratingL.on = 0;
             p.trial.stim.gratingH.on = 0;
+            
         case 1
             p.trial.stim.gratingL.on = 1;
             p.trial.stim.gratingH.on = 0;
             p.trial.stim.gratingH.fixActive = 1;
+            
         case 2
             p.trial.stim.gratingL.on = 0;
             p.trial.stim.gratingH.on = 1;
-            p.trial.stim.gratingH.fixActive = 1;        
+            p.trial.stim.gratingH.fixActive = 1;    
+            
         otherwise
             error('bad stim value')
     end
@@ -520,10 +465,12 @@ function stim(p, val)
         % Stim is turning off
         p.trial.EV.StimOff = p.trial.CurTime;
         pds.datapixx.strobe(p.trial.event.STIM_OFF);    
+        
     elseif oldVal == 0
         % Stim is turning on
         p.trial.EV.StimOn = p.trial.CurTime;
         pds.datapixx.strobe(p.trial.event.STIM_ON);   
+        
     else
         % Stim is changing
         p.trial.EV.StimChange = p.trial.CurTime;

@@ -256,6 +256,8 @@ SS.behavior.fixation.entryTime = 0.025;    % minimum time [s] before fixation is
 SS.behavior.fixation.BreakTime = 0.05;     % minimum time [s] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
 
+SS.behavior.fixation.MinFixStart = 0.1;    % minimum time gaze has to be in fixation window to start trial, if GiveInitial == 1 after this period a reward is given
+
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibration
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
