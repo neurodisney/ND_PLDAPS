@@ -208,7 +208,7 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 p.trial.stim.gratings = {};
 stimdef = p.trial.stim.(p.trial.stim.stage);
 for angle = stimdef.angle
-    p.trial.stim.GRATING.angle = angle;
+    p.trial.stim.GRATING.ori = angle;
     
     for radius = stimdef.radius
         p.trial.stim.GRATING.radius = radius;

@@ -39,7 +39,7 @@ SS.plot.routine    = 'DelSacc_plots';       % function for online plotting of se
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {};
+SS.editable = {'task.RandomPos', 'stim.GRATING.PosAngle', 'behavior.fixation.FixWin'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
@@ -61,7 +61,7 @@ SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
 SS.behavior.fixation.useCalibration = 1;
-SS.behavior.fixation.enableCalib = 0;
+SS.behavior.fixation.enableCalib    = 0;
 
 SS.behavior.fixation.on = 1; % fixation.on for this task
 
@@ -75,9 +75,6 @@ SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states
 SS.display.bgColor    = [0.5, 0.5, 0.5];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
-SS.behavior.fixation.FixWin     = 2.5;
-SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%

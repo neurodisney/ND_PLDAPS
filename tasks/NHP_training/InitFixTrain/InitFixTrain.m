@@ -52,6 +52,12 @@ if(isempty(state))
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
     
+    % basic fixation spot parameters
+    p.trial.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
+    p.trial.behavior.fixation.FixWinStp  = 1;      % change of the size of the fixation window upon key press
+    p.trial.behavior.fixation.FixSPotStp = 0.25;
+    p.trial.stim.FIXSPOT.fixWin          = 6;         
+    
     % just initialize here, will be overwritten by conditions
     p.trial.reward.MinWaitInitial  = 0.05;
     p.trial.reward.MaxWaitInitial  = 0.1; 

@@ -276,7 +276,7 @@ SS.behavior.fixation.calibSamples    = 200;    % analog eyesamples in the the da
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixSPotStp      = 0.1;   % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixSPotStp      = 0.1;    % change of the size of the fixation window upon key press
 SS.behavior.fixation.GridPos         = 5;      % cntral fixation position (for pure offset correction)
 
 SS.behavior.fixation.FixWinStp       = 0.25;   % change of the size of the fixation window upon key press

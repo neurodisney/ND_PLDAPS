@@ -2,7 +2,7 @@ function p = Task_WaitITI(p)
 % Wait until the defined trial start time is reached
 %
 %
-% wolf zinke, March 2017
+% wolf zinke, Oct 2017
 
 if(p.trial.CurTime >= p.trial.EV.PlanStart || isnan(p.trial.EV.PlanStart))
 

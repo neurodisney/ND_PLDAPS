@@ -2,7 +2,7 @@ function p = Task_WaitFixStart(p)
 % default actions when the task starts
 %
 %
-% wolf zinke, March 2017
+% wolf zinke & Nate Faber, Oct 2017
 
 % Gaze is outside fixation window
 if(p.trial.task.fixFix == 0)
@@ -23,7 +23,7 @@ if(p.trial.task.fixFix == 0)
         ND_SwitchEpoch(p,'TaskEnd');
     end
 
-    % If gaze is inside fixation window
+% If gaze is inside fixation window
 elseif(p.trial.task.fixFix == 1)
 
     % Fixation ceases
