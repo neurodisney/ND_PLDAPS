@@ -2,7 +2,7 @@
 
 ## load required packages
 require(useful)
-require(catspec) 
+require(catspec)
 require(beanplot)
 
 # Function for plotting data from the delayed saccade task
@@ -14,12 +14,12 @@ avrgstep =     1  # step between two subsequent moving average windows (should b
 RTbw     =  0.02  # kernel width for density estimate of response times
 
 Corr_Col        = 'limegreen'
-Early_Col       = 'cornflowerblue' 
+Early_Col       = 'cornflowerblue'
 StimBreak_Col   = 'tomato'
 FixBreak_Col    = 'darkgoldenrod1'
 TargetBreak_Col = 'violet'
-Miss_Col        = 'khaki1' 
-False_Col       = 'lightsalmon4' 
+Miss_Col        = 'khaki1'
+False_Col       = 'lightsalmon4'
 
 ###########################################################################################
 ## Read in data
@@ -39,7 +39,7 @@ dt=read.table(fname[1], header=TRUE)
 if(length(fname)>1) {
   for(i in 2:length(fname)) { dt = rbind(dt, read.table(fname[i], header=TRUE))}
 }
-  
+
 ## prepare data
 
 
@@ -72,14 +72,14 @@ if(length(Break_trial) == 0){
   Break_end = NA
 }else{
   Break_start = (dt$TaskEnd[Break_trial]     - SessTrialStart) / 60
-  
+
   if(max(Break_trial) <= length(dt$FixSpotOn)){
     Break_end = (dt$FixSpotOn[Break_trial+1] - SessTrialStart) / 60
   }else{
     Break_end = (dt$FixSpotOn[Break_trial[-length(Break_trial)]+1] - SessTrialStart) / 60
   }
-  
-  # if last trial started a break, set break end to 
+
+  # if last trial started a break, set break end to
   #if(length(Break_start) > length(Break_end)) { Break_end = c(Break_end, SessTrialEnd / 60) }
   lastTrial = tail(dt,n=1)
   if(lastTrial$Outcome == 'Break') {
@@ -88,7 +88,7 @@ if(length(Break_trial) == 0){
     if(currentTime - lastTrial$TaskEnd < 3600) {
         # Extend the plot to now
         SessTrialEnd = currentTime - SessTrialStart
-        
+
         # Add the final break
         Break_end[length(Break_end)] = SessTrialEnd / 60
     }
@@ -135,11 +135,11 @@ IntGo[pStim] = dt$FixSpotOff[pStim]
 # derive RT times
 # SRT = dt$FixSpotOff - IntGo
 SRT                = dt$SRT_Go
-SRT[pFixBreak]     = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak] + dt$GoLatency[pFixBreak])
+#SRT[pFixBreak]     = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak] + dt$GoLatency[pFixBreak])
 #SRT[SRT<0 & dt$Outcome == 'Correct'] = SRT[SRT<0 & dt$Outcome == 'Correct'] + dt$GoLatency[SRT<0 & dt$Outcome == 'Correct']
 
 StimSRT            = dt$SRT_StimOn
-StimSRT[pFixBreak] = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak])
+#StimSRT[pFixBreak] = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak])
 #StimSRT[SRT<0 & dt$Outcome == 'Correct'] = StimSRT[SRT<0 & dt$Outcome == 'Correct'] + dt$GoLatency[SRT<0 & dt$Outcome == 'Correct'] + dt$StimOn[SRT<0 & dt$Outcome == 'Correct'] - dt$FixStart[SRT<0 & dt$Outcome == 'Correct']
 
 # SRT[pStim]  = SaccTime[pStim]
@@ -160,7 +160,7 @@ if(interactive()) {
 # create plot layout
 pllyt = matrix(c(1,1,1,1,1,1,1, 2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,5,6,10,10,11,11,  7,8,9,10,10,11,11 ), 5, 7, byrow=TRUE)
 layout(pllyt,  heights=c(2,2,1.5,2.5,2.5))
-par(mar=c(5,5,1,1)) 
+par(mar=c(5,5,1,1))
 
 Trng = c(0, SessTrialEnd / 60)
 
@@ -180,8 +180,8 @@ points(Ttime[pEarly],     StimSRT[pEarly],     pch=19, col=Early_Col)
 points(Ttime[pMiss],      StimSRT[pMiss],      pch=19, col=Miss_Col)
 points(Ttime[pFalse],     StimSRT[pFalse],     pch=19, col=False_Col)
 
-legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBreak", "Miss", "False"), 
-       pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, Miss_Col, False_Col), 
+legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBreak", "Miss", "False"),
+       pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, Miss_Col, False_Col),
        inset=c(0,-0.4), title=NULL, xpd=NA, cex=2, bty='n', horiz=TRUE, pt.cex=4)
 
 ###########################################################################################
@@ -215,12 +215,12 @@ Rfalse     = rep(0, length(Tavrg))
 Rholderr   = rep(0, length(Tavrg))
 
 cnt = 0
-for(i in 1:length(Tavrg)) { 
+for(i in 1:length(Tavrg)) {
   cnt = cnt + 1
   cpos = Ttime > Tavrg[cnt]-avrgwin/120 &  Ttime < Tavrg[cnt]+avrgwin/120
-  
+
   Nall = sum(cpos)
-  
+
   if(Nall > 3){
     Rcorr[cnt]      = 100 * sum(cpos & pCorr)      /Nall
     Rfixbreak[cnt]  = 100 * sum(cpos & pFixBreak)  /Nall
@@ -243,47 +243,47 @@ abline(h=0, lty=1)
 
 # krnlwht = 0.5
 # krnltyp = 'rectangular'
-# 
+#
 # Time_all   = density(Ttime, bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
 # Time_all$y = Time_all$y * sum(is.finite(Ttime)) * krnlwht
 # Time_all$y[Time_all$y<0.05] = NA
-# 
+#
 # if(sum(pCorr) > 1) {
 #   Time_Corr   = density(Ttime[pCorr], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
 #   Time_Corr$y = 100 * (Time_Corr$y * sum(pCorr) * krnlwht) / Time_all$y
 #   lines(Time_Corr, col=Corr_Col, lwd=2.5)
 # }
-# 
+#
 # if(sum(pEarly) > 1) {
 #   Time_Early   = density(Ttime[pEarly], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
 #   Time_Early$y = 100 * (Time_Early$y * sum(pEarly) * krnlwht) / Time_all$y
 #   lines(Time_Early, col=Early_Col, lwd=1)
 # }
-# 
+#
 # if(sum(pFixBreak) > 1) {
 #   Time_FixBreak   = density(Ttime[pFixBreak], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
 #   Time_FixBreak$y = 100 * (Time_FixBreak$y * sum(pFixBreak) * krnlwht) / Time_all$y
 #   lines(Time_FixBreak,  col=FixBreak_Col,   lwd=1)
 # }
-# 
+#
 # if(sum(pStimBreak) > 1) {
 #   Time_StimBreak   = density(Ttime[pStimBreak], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
 #   Time_StimBreak$y = 100 * (Time_StimBreak$y * sum(pStimBreak) * krnlwht) / Time_all$y
 #   lines(Time_StimBreak, col=StimBreak_Col,  lwd=1)
 # }
-# 
+#
 # if(sum(pMiss) > 1) {
 #   Time_Miss   = density(Ttime[pMiss], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
 #   Time_Miss$y = 100 * (Time_Miss$y * sum(pMiss) * krnlwht) / Time_all$y
 #   lines(Time_Miss, col=Miss_Col, lwd=1)
 # }
-# 
+#
 # if(sum(pFalse) > 1) {
 #   Time_False   = density(Ttime[pFalse], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
 #   Time_False$y = 100 * (Time_False$y * sum(pFalse) * krnlwht) / Time_all$y
 #   lines(Time_False, col=False_Col, lwd=1)
 # }
-# 
+#
 # if(sum(pHoldErr) > 1) {
 #   Time_HoldErr   = density(Ttime[pHoldErr], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
 #   Time_HoldErr$y = 100 * (Time_HoldErr$y * sum(pHoldErr) * krnlwht) / Time_all$y
@@ -363,7 +363,7 @@ All_Cnt$counts = 0.2 * max(all_vals_Y) * All_Cnt$counts / max(All_Cnt$counts)
 
 plot(All_Cnt, xaxs='i', yaxs='i', main='Response after Target Onset', xlim=range(all_vals_X), ylim=range(all_vals_Y),
      ylab='count', xlab='Trial Duration [s]', col='gray50', border=NA)
-    
+
 if(sum(pCorr) > 1) {
   lines(TDurhit, lwd=2, col=Corr_Col)
 }
@@ -517,7 +517,7 @@ if(length(FixBreak_Cnt)  == 0 ) {FixBreak_Cnt  = All_Cnt * 0}
 if(length(StimBreak_Cnt) == 0 ) {StimBreak_Cnt = All_Cnt * 0}
 if(length(Early_Cnt)     == 0 ) {Early_Cnt     = All_Cnt * 0}
 
-PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt) 
+PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt)
 
 x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col), border=NA,
             main='Location Performance', xlab='Target Location [degree]', ylab='Proportion [%]', xaxt="n")
@@ -530,7 +530,7 @@ box()
 
 ###########################################################################################
 # plot 10: Delay dependent SRT
-RespP      = pCorr | pEarly | pHoldErr 
+RespP      = pCorr | pEarly | pHoldErr
 SRTresp    = SRT[RespP]
 DelCatresp = DelCat[RespP]
 
@@ -557,7 +557,7 @@ plrng = range(SRTresp)
 beanplot(SRTresp ~ Result*PosCatresp, ll = 0.1,
          main = "Location dependent SRT", side = "both", xlab="Delay [s]", ylab='Response Time [s]', bw=RTbw,
          col = list(Corr_Col, c(Early_Col, "black")), overallline='median', beanlinese='median', what=c(0,1,1,1))
-         
+
 abline(h=median(SRTresp[Result== 'Correct']), col=Corr_Col,  lty=2, lwd=2.5)
 abline(h=median(SRTresp[Result== 'Early']),   col=Early_Col, lty=2, lwd=2.5)
 abline(h=0, col="black", lty=2, lwd=1.5)
@@ -590,7 +590,7 @@ if(!interactive()) {
     datadir = NA
     fname = NA
   }
-  
+
   # Run the function
   DelSacc_Behav(datadir, fname)
 }

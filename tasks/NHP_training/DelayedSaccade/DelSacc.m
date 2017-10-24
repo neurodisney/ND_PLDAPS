@@ -207,7 +207,6 @@ function TaskDesign(p)
 
             if(p.trial.CurrEpoch == p.trial.epoch.Fixating)
             % fixation just started, initialize fixation epoch
-                p.trial.task.Good = 1;
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;           
 
                 % initial rewardfor fixation start
@@ -331,7 +330,7 @@ function TaskDesign(p)
                 % then give reward and mark trial good
                 if(p.trial.CurTime > p.trial.stim.gratingH.EV.FixStart + p.trial.task.minTargetFixTime)
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
-
+                    p.trial.task.Good = 1;
                     if(p.trial.reward.IncrConsecutive == 1)
                         AddPulse = find(p.trial.reward.PulseStep <= p.trial.LastHits+1, 1, 'last');
                         if(~isempty(AddPulse))
@@ -360,7 +359,7 @@ function TaskDesign(p)
 
                     % Turn the stim off
                     stim(p,0);
-
+                    p.trial.task.Good = 0;
                     % Play an incorrect sound
                     pds.audio.playDP(p,'incorrect','left');
 
@@ -385,7 +384,8 @@ function TaskDesign(p)
                 else
                     p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
                 end
-
+                p.trial.task.Good = 0;
+                
                 ND_SwitchEpoch(p,'TaskEnd')
             end
 
@@ -452,9 +452,10 @@ if(~isempty(p.trial.LastKeyPress))
             
             p.trial.stim.GRATING.PosAngle = p.trial.stim.GRATING.GridAngles(gpos);
 
-            p.trial.stim.GRATING.pos = pol2cart(deg2rad(p.trial.stim.GRATING.PosAngle), ...
-                                                p.trial.stim.GRATING.eccentricity);
-
+            [Gx, Gy] = pol2cart(deg2rad(p.trial.stim.GRATING.PosAngle), ...
+                                    p.trial.stim.GRATING.eccentricity);
+            p.trial.stim.GRATING.pos = [Gx, Gy];
+                                
             % Assume manual control of the activation of the grating fix windows
             p.trial.stim.gratingL.pos = p.trial.stim.GRATING.pos;
             p.trial.stim.gratingH.pos = p.trial.stim.GRATING.pos;
@@ -519,8 +520,8 @@ function Calculate_SRT(p)
 
         case {'FixBreak'}
             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
-            p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.fixLatency + p.trial.task.stimLatency);
-            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.fixLatency + p.trial.task.stimLatency + p.trial.task.centerOffLatency);
+            p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency);
+            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency + p.trial.task.centerOffLatency);
 
         case {'StimBreak', 'Early'}
             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
