@@ -155,11 +155,11 @@ function TaskSetUp(p)
     % get grating location
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)        
-         p.trial.stim.GRATING.PosAngle = datasample(0:360,1);
+         p.trial.stim.GRATING.PosAngle = datasample(p.trial.stim.GRATING.RandAngles, 1);
     end
 
     [Gx, Gy] = pol2cart(deg2rad(p.trial.stim.GRATING.PosAngle), ...
-                                        p.trial.stim.GRATING.eccentricity);
+                                p.trial.stim.GRATING.eccentricity);
     p.trial.stim.GRATING.pos = [Gx, Gy];
     
     % Generate the low contrast stimulus
@@ -174,8 +174,8 @@ function TaskSetUp(p)
     p.trial.stim.gratingL.autoFixWin = 0;
     p.trial.stim.gratingH.autoFixWin = 0;
 
-    % stim starts off
-    p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast
+    p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast -> stim starts off
+    
     p.trial.task.centerOffLatency = ND_GetITI(p.trial.task.MinWaitGo, p.trial.task.MaxWaitGo); % Time from stim appearing to fixspot disappearing
 
 % ####################################################################### %
@@ -448,17 +448,23 @@ if(~isempty(p.trial.LastKeyPress))
                         
         % move target to grid positions
         case p.trial.key.GridKeyCell
-            gpos = p.trial.key.GridKey == p.trial.LastKeyPress(1);
+            gpos = find(p.trial.key.GridKey == p.trial.LastKeyPress(1));
             
-            p.trial.stim.GRATING.PosAngle = p.trial.stim.GRATING.GridAngles(gpos);
+            if(gpos ~= 5)
+                if(gpos > 5) % center position not used
+                    gpos = gpos - 1;
+                end
 
-            [Gx, Gy] = pol2cart(deg2rad(p.trial.stim.GRATING.PosAngle), ...
-                                    p.trial.stim.GRATING.eccentricity);
-            p.trial.stim.GRATING.pos = [Gx, Gy];
-                                
-            % Assume manual control of the activation of the grating fix windows
-            p.trial.stim.gratingL.pos = p.trial.stim.GRATING.pos;
-            p.trial.stim.gratingH.pos = p.trial.stim.GRATING.pos;
+                p.trial.stim.GRATING.PosAngle = p.trial.stim.GRATING.GridAngles(gpos);
+
+                [Gx, Gy] = pol2cart(deg2rad(p.trial.stim.GRATING.PosAngle), ...
+                                        p.trial.stim.GRATING.eccentricity);
+                p.trial.stim.GRATING.pos = [Gx, Gy];
+
+                % Assume manual control of the activation of the grating fix windows
+                p.trial.stim.gratingL.pos = p.trial.stim.GRATING.pos;
+                p.trial.stim.gratingH.pos = p.trial.stim.GRATING.pos;
+            end
     end
 end
 

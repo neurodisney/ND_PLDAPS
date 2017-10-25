@@ -21,9 +21,9 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % manual reward from experimenter
 p.trial.reward.GiveInitial = 1;    % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew  = 0.05; % duration of the initial reward
+p.trial.reward.InitialRew  = 0.01; % duration of the initial reward
 p.trial.reward.ManDur      = 0.2;  % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.65;  % Reward for completing the task successfully
+p.trial.reward.Dur         = 0.5;  % Reward for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1;  % number of reward pulses
@@ -31,16 +31,16 @@ p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with 
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = 0.15; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
+p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.25, 0.75); % Time from initial reward to stim appearing
-p.trial.task.centerOffLatency = ND_GetITI(0.25, 0.8); % Time from stim appearing to fixspot disappearing
+p.trial.task.stimLatency      = ND_GetITI(0.75, 0.75); % Time from initial reward to stim appearing
+%p.trial.task.centerOffLatency = ND_GetITI(0.25, 0.8); % Time from stim appearing to fixspot disappearing
 
-p.trial.task.saccadeTimeout   = 1.5;   % Time allowed to make the saccade to the stim before error
-p.trial.task.minSaccReactTime = 0.1;   % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
+p.trial.task.saccadeTimeout   = 2.5;   % Time allowed to make the saccade to the stim before error
+p.trial.task.minSaccReactTime = 0.05;   % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 0.25;   % Must fixate on target for at least this time before it counts
 
 % inter-trial interval
@@ -48,7 +48,7 @@ p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent
 p.trial.task.Timing.MaxITI  = 2.5;  % maximum time period [s] between subsequent trials
 
 % penalties
-p.trial.task.Timing.TimeOut =  1;   % Time [s] out for incorrect responses
+p.trial.task.Timing.TimeOut =  2;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
@@ -106,11 +106,11 @@ c10.task.MinWaitGo  = 0.95; % min wait period for fixation spot to disapear
 c10.task.MaxWaitGo  = 0.105; % max wait period for fixation spot to disapear
 
 p.trial.Block.Conditions     = { c1, c2, c3};
-p.trial.Block.maxBlockTrials =  [3, 4, 2]; 
+p.trial.Block.maxBlockTrials =  [3, 4, 1]; 
 
 
-p.trial.Block.Conditions     = { c1, c2};
-p.trial.Block.maxBlockTrials =  [5, 2]; 
+%p.trial.Block.Conditions     = { c1, c2};
+%p.trial.Block.maxBlockTrials =  [5, 2]; 
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters

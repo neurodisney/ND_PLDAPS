@@ -56,7 +56,7 @@ if(isempty(state))
     p.trial.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
     p.trial.behavior.fixation.FixWinStp  = 1;      % change of the size of the fixation window upon key press
     p.trial.behavior.fixation.FixSPotStp = 0.25;
-    p.trial.stim.FIXSPOT.fixWin          = 6;         
+    p.trial.stim.FIXSPOT.fixWin          = 4;         
     
     % just initialize here, will be overwritten by conditions
     p.trial.reward.MinWaitInitial  = 0.05;
