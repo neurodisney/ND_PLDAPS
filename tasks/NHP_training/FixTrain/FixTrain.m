@@ -14,12 +14,6 @@ if(~exist('state', 'var'))
 end
 
 % ####################################################################### %
-%% Call standard routines before executing task related code
-% This carries out standard routines, mainly in respect to hardware interfacing.
-% Be aware that this is done first for each trial state!
-p = ND_GeneralTrialRoutines(p, state);
-
-% ####################################################################### %
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed.
 % This part corresponds to the experimental setup file and could be a separate
@@ -67,7 +61,7 @@ if(isempty(state))
     % colors, use entries later in the lookup table for the definition of task related colors.
 
     p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});  
-    
+    p.trial.task.Color_list = {'white'};
     % --------------------------------------------------------------------%
     %% Enable random positions
     p.trial.task.RandomPos = 0;
@@ -184,9 +178,15 @@ if(isempty(state))
     p.defaultParameters.pldaps.finish = totalTrials;
 
 else
-% ####################################################################### %
-%% Subsequent calls during actual trials
-% execute trial specific commands here.
+    % ####################################################################### %
+    %% Call standard routines before executing task related code
+    % This carries out standard routines, mainly in respect to hardware interfacing.
+    % Be aware that this is done first for each trial state!
+    p = ND_GeneralTrialRoutines(p, state);
+
+    % ####################################################################### %
+    %% Subsequent calls during actual trials
+    % execute trial specific commands here.
 
     switch state
 % ------------------------------------------------------------------------%
@@ -244,17 +244,20 @@ function TaskSetUp(p)
     p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial,  ...
                                          p.trial.reward.MaxWaitInitial,  [], [], 1, 0.001);
 
-    p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
-    
+    p.trial.CurrEpoch        = p.trial.epoch.ITI;
+
+    % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
+    p.trial.task.longITI = 1;
       
     % Reward
     nRewards = p.trial.reward.nRewards;
+    
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
-    % Create arrays for direct reference during reward
-    p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
-    p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);       
     
+    % Create arrays for direct reference during reward
+    p.trial.reward.allDurs    = repelem(p.trial.reward.Dur,    nRewards);
+    p.trial.reward.allPeriods = repelem(p.trial.reward.Period, nRewards);       
     
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
@@ -281,7 +284,29 @@ function TaskDesign(p)
 %% main task outline
 % The different task stages (i.e. 'epochs') are defined here.
     switch p.trial.CurrEpoch
-
+        
+        case p.trial.epoch.ITI
+        %% inter-trial interval: wait until sufficient time has passed from the last trial
+        if p.trial.CurTime < p.trial.EV.PlanStart
+            % All intertrial processing was completed before the ITI expired
+            p.trial.task.longITI = 0;
+            
+        else
+            if isnan(p.trial.EV.PlanStart)
+                % First trial, or after a break
+                p.trial.task.longITI = 0;
+            end
+            
+            % If intertrial processing took too long, display a warning
+            if p.trial.task.longITI
+                disp('Warning: longer ITI than specified');
+            end
+            
+            switchEpoch(p,'TrialStart');
+            
+        end
+        
+        % ----------------------------------------------------------------%  
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
             fixspot(p,1);
@@ -294,7 +319,7 @@ function TaskDesign(p)
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             
             if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
+                pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
             end
            
             switchEpoch(p,'WaitFix')
@@ -341,7 +366,7 @@ function TaskDesign(p)
                     
                     % Succesful
                     p.trial.task.Good = 1;
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;
                     
                     % Reward the monkey
                     p.trial.reward.count = 1;
@@ -420,17 +445,15 @@ function TaskDesign(p)
         
         % Run standard TaskEnd routine
         Task_OFF(p);
-        switchEpoch(p,'ITI');
         
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.ITI
-        %% inter-trial interval: wait before next trial to start
-            Task_WaitITI(p);
+        % Flag next trial ITI is done at begining
+        p.trial.flagNextTrial = 1;
+        
             
     end  % switch p.trial.CurrEpoch
 
 % ####################################################################### %
-function TaskDraw(p)
+%function TaskDraw(p)
 %% show epoch dependent stimuli
 % go through the task epochs as defined in TaskDesign and draw the stimulus
 % content that needs to be shown during this epoch.

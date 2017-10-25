@@ -44,7 +44,7 @@ end
 
 methods
     % The constructor method
-    function obj = Grating(p, radius, contrast, pos, angle, sFreq, tFreq, res, alpha, fixWin)
+    function obj = Grating(p, radius, contrast, pos, ori, sFreq, tFreq, res, alpha, fixWin)
         
         %% Load variables
         if nargin < 10 || isempty(fixWin)
@@ -67,8 +67,8 @@ methods
             sFreq = p.trial.stim.GRATING.sFreq;
         end
         
-        if nargin < 5 || isempty(angle)
-            angle = p.trial.stim.GRATING.angle;
+        if nargin < 5 || isempty(ori)
+            ori = p.trial.stim.GRATING.ori;
         end
         
         if nargin < 4 || isempty(pos)
@@ -86,13 +86,13 @@ methods
         % Load the superclass
         obj@pds.stim.BaseStim(p, pos, fixWin);
        
-        obj.alpha = alpha;
-        obj.res = res;
-        obj.tFreq = tFreq;
-        obj.sFreq = sFreq;
-        obj.angle = angle;
-        obj.contrast = contrast;
+        obj.alpha  = alpha;
+        obj.res    = res;
+        obj.tFreq  = tFreq;
+        obj.sFreq  = sFreq;
+        obj.angle  = ori;
         obj.radius = radius;
+        obj.contrast = contrast;
 
         
         % Unchangeable after loading

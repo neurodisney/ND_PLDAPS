@@ -19,27 +19,34 @@ disp('');
 % This should be used to store times when these events happened (to data
 % file or if needed for later use in the task program)
 
-p.defaultParameters.EV.TrialStart  = NaN; % Trial start time
-p.defaultParameters.EV.TaskStart   = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
-p.defaultParameters.EV.TaskEnd     = NaN; % actual task end
-p.defaultParameters.EV.Initiated   = NaN; % animal intiated the task
-p.defaultParameters.EV.StimOn      = NaN; % Stimulus Onset 
-p.defaultParameters.EV.StimOff     = NaN; % Stimulus Offset
-p.defaultParameters.EV.StimChange  = NaN; % Stimulus Change
-p.defaultParameters.EV.FixOn       = NaN; % Onset of fixation spot
-p.defaultParameters.EV.FixOff      = NaN; % Offset of fixation spot
-p.defaultParameters.EV.PDOn        = NaN; % Photo diode onset
-p.defaultParameters.EV.PDOff       = NaN; % Photo diode offset
-p.defaultParameters.EV.GoCue       = NaN; % Onset of Go-signal
-p.defaultParameters.EV.FirstReward = NaN; % First reward given in a trial
-p.defaultParameters.EV.Reward      = NaN; % time of reward delivery
-p.defaultParameters.EV.StartRT     = NaN; % response time to start trial after active cue
-p.defaultParameters.EV.RespRT      = NaN; % reaction time
-p.defaultParameters.EV.DPX_TaskOn  = NaN; % Synch time with datapixx for task on
-p.defaultParameters.EV.DPX_TaskOff = NaN; % Synch time with datapixx for task off
-p.defaultParameters.EV.TDT_TaskOn  = NaN; % Synch time with TDT for task on
-p.defaultParameters.EV.TDT_TaskOff = NaN; % Synch time with TDT for task off
-p.defaultParameters.EV.epochEnd    = NaN; % Ending time of the last epoch
+p.defaultParameters.EV.TrialStart    = NaN; % Trial start time
+p.defaultParameters.EV.PlanStart     = NaN; % The planned task start time based on ITI
+p.defaultParameters.EV.TaskStart     = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
+p.defaultParameters.EV.TaskStartTime = NaN; % Holds a DateStr of the time the task starts
+p.defaultParameters.EV.TaskEnd       = NaN; % actual task end
+p.defaultParameters.EV.NextTrialStart= NaN; % When the next task should start (based on ITI and passed to next trial)
+p.defaultParameters.EV.Initiated     = NaN; % animal intiated the task
+p.defaultParameters.EV.StimOn        = NaN; % Stimulus Onset 
+p.defaultParameters.EV.StimOff       = NaN; % Stimulus Offset
+p.defaultParameters.EV.StimChange    = NaN; % Stimulus Change
+p.defaultParameters.EV.FixOn         = NaN; % Onset of fixation spot
+p.defaultParameters.EV.FixOff        = NaN; % Offset of fixation spot
+p.defaultParameters.EV.PDOn          = NaN; % Photo diode onset
+p.defaultParameters.EV.PDOff         = NaN; % Photo diode offset
+p.defaultParameters.EV.GoCue         = NaN; % Onset of Go-signal
+p.defaultParameters.EV.InitReward    = NaN; % initial reward given for just fixatin
+p.defaultParameters.EV.FirstReward   = NaN; % First reward given in a trial
+p.defaultParameters.EV.Reward        = NaN; % time of reward delivery
+p.defaultParameters.EV.nextReward    = NaN; % Scheduled time of next reward
+p.defaultParameters.EV.StartRT       = NaN; % response time to start trial after active cue
+p.defaultParameters.EV.RespRT        = NaN; % reaction time
+p.defaultParameters.EV.DPX_TaskOn    = NaN; % Synch time with datapixx for task on
+p.defaultParameters.EV.DPX_TaskOff   = NaN; % Synch time with datapixx for task off
+p.defaultParameters.EV.TDT_TaskOn    = NaN; % Synch time with TDT for task on
+p.defaultParameters.EV.TDT_TaskOff   = NaN; % Synch time with TDT for task off
+p.defaultParameters.EV.epochEnd      = NaN; % Ending time of the last epoch
+p.defaultParameters.EV.epochTimings  = {};  % Ending time of the last epoch
+p.defaultParameters.EV.epochCnt      = 0;   % Ending time of the last epoch
 
 % p.defaultParameters.EV.Pause       = NaN;  % WZ: These events should be within trials. Pauses and breaks are between trials. Might cause conflicts...
 % p.defaultParameters.EV.Unpause     = NaN;

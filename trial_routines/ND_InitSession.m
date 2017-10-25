@@ -9,18 +9,27 @@ function p = ND_InitSession(p)
 % wolf zinke, Jan. 2017
 
 disp('****************************************************************')
-disp('>>>>  Initializen Sessions <<<<')
+disp('>>>>  Initializing Sessions <<<<')
 disp('****************************************************************')
 disp('');
 
 % --------------------------------------------------------------------%
 %% get task parameters
-if isfield(p.defaultParameters, 'task')
-    if(isfield(p.trial.task, 'TaskDef'))
-        if(~isempty(p.trial.task.TaskDef))
-            p = feval(p.trial.task.TaskDef,  p);
+if(isField(p.defaultParameters, 'task'))
+    if(isfield(p.defaultParameters.task, 'TaskDef'))
+        if(~isempty(p.defaultParameters.task.TaskDef))
+            p = feval(p.defaultParameters.task.TaskDef,  p);
         end
     end
+end
+
+% --------------------------------------------------------------------%
+%% Generate Block/Condition series
+if(~isfield(p,'conditions') || isempty(p.conditions))  % check first if the condition list was created in the task setup file
+    p.trial.Block.GenBlock = 1;
+    p = ND_GenCndLst(p);
+else
+    p.trial.Block.GenBlock = 0;
 end
 
 % --------------------------------------------------------------------%
@@ -52,11 +61,11 @@ if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
     end
 
     % Draw the joystick meter on the right side of the screen
-    p.trial.pldaps.draw.joystick.pos    = [p.trial.display.winRect(3) - 3 * p.defaultParameters.pldaps.draw.joystick.size(1), 0];
+    p.trial.pldaps.draw.joystick.pos     = [p.trial.display.winRect(3) - 3 * p.defaultParameters.pldaps.draw.joystick.size(1), 0];
 
-    p.trial.pldaps.draw.joystick.sclfac = p.trial.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
+    p.trial.pldaps.draw.joystick.sclfac  = p.trial.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
 
-    p.trial.pldaps.draw.joystick.rect = ND_GetRect(p.trial.pldaps.draw.joystick.pos, ...
+    p.trial.pldaps.draw.joystick.rect    = ND_GetRect(p.trial.pldaps.draw.joystick.pos, ...
                                                                p.trial.pldaps.draw.joystick.size);
 
     p.trial.pldaps.draw.joystick.levelsz =  p.trial.pldaps.draw.joystick.size .* [1.25, 0.01];
@@ -111,12 +120,6 @@ if(p.trial.sound.use)
 end
 
 %-------------------------------------------------------------------------%
-%% Tucker Davis
-if p.trial.tdt.use
-    p = pds.tdt.init(p);
-end
-
-%-------------------------------------------------------------------------%
 %% Setup Photodiode stimuli
 if(p.trial.pldaps.draw.photodiode.use)    
     szstep = p.trial.pldaps.draw.photodiode.size / 2; % move PD away from edge
@@ -133,8 +136,6 @@ if(p.trial.pldaps.draw.photodiode.use)
     end
         
     p.trial.pldaps.draw.photodiode.rect = ND_GetRect(PDpos, p.trial.pldaps.draw.photodiode.size);
-    
-    
 end
 
 %-------------------------------------------------------------------------%

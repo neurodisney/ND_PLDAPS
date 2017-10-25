@@ -18,12 +18,7 @@ end
 % name of subject. This will be used to create a subdirectory with this name.
 if(~exist('rig','var') || isempty(rig))
     [~, rigname] = system('hostname');
-    rig = str2num(rigname);
-end
-
-% name of subject. This will be used to create a subdirectory with this name.
-if(~exist('experimenter','var') || isempty(experimenter))
-    experimenter = getenv('USER');
+    rig = str2num(regexp(rigname,'\d+','match','once'));
 end
 
 %-------------------------------------------------------------------------%
@@ -45,7 +40,8 @@ SS.plot.routine    = 'RevCorr_plots';    % function for online plotting of sessi
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'stim.count','stim.iStim','stim.iPos','stim.stage','stim.fine.xRange','stim.fine.yRange','RF.coarse','RF.fine','RF.flag_new','RF.flag_fine'};
+SS.editable = {'stim.count', 'stim.iStim', 'stim.iPos', 'stim.stage', 'stim.fine.xRange', 'stim.fine.yRange',...
+    'RF.coarse','RF.fine','RF.flag_new', 'RF.flag_fine'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
@@ -66,7 +62,7 @@ SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
-SS.tdt.use                    = 1; % Get incoming UDP spike data from TDT
+SS.tdt.use                    = 0; % Get incoming UDP spike data from TDT
 
 SS.behavior.fixation.useCalibration = 1;
 SS.behavior.fixation.enableCalib = 0;
@@ -74,6 +70,9 @@ SS.behavior.fixation.enableCalib = 0;
 SS.behavior.fixation.on = 1; % fixation.on for this task
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
+
+% Use mouse to click on figures
+SS.mouse.use
 
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
@@ -87,38 +86,14 @@ SS.behavior.fixation.FixWin     = 2.5;
 SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
 
+SS.Block.maxBlockTrials = 10000;
+
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
 
 % ------------------------------------------------------------------------%
-%% Special debug mode variables
-if strcmp(subjname,'mouse')
-    
-    % Use the mouse as eyeposition
-    SS.mouse.use = 1;
-    SS.mouse.useAsEyepos = 1;
-    
-    % Don't collect any analog channels
-    SS.datapixx.adc.PupilChannel   = [];
-    SS.datapixx.adc.XEyeposChannel = [];
-    SS.datapixx.adc.YEyeposChannel = [];
-    %SS.datapixx.adc.RewardChannel  = [];  
-    SS.datapixx.useAsEyepos        = 0;
-    SS.behavior.joystick.use       = 0;
-    %SS.datapixx.useForReward       = 0;
-    %SS.sound.use                   = 0;
-    
-    % Do manual spiking using the s key
-    SS.tdt.use                    = 1;
-    
-end
-% ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);
-
-% keep rig/experimenter specific inforamtion
-p.defaultParameters.session.rig          = rig;
-p.defaultParameters.session.experimenter = experimenter;
 
 % ------------------------------------------------------------------------%
 %% run the experiment

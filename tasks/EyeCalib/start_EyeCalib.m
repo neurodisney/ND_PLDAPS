@@ -6,9 +6,24 @@ function p = start_EyeCalib(subjname, rig, experimenter)
 %
 % wolf zinke, Apr. 2017
 
+% ------------------------------------------------------------------------%
+%% Set default variables
+
+% name of subject. This will be used to create a subdirectory with this name.
+if(~exist('subjname','var') || isempty(subjname))
+    subjname = 'tst';
+end
+
+% name of subject. This will be used to create a subdirectory with this name.
+if(~exist('rig','var') || isempty(rig))
+    [~, rigname] = system('hostname');
+    rig = str2num(rigname(4));
+end
+
 %-------------------------------------------------------------------------%
 %% load default settings into a struct
-SS = ND_RigDefaults;    % load default settings according to the current rig setup
+SS = ND_RigDefaults(rig);    % load default settings according to the current rig setup
+
 
 %% ################## Edit within the following block ################## %%
 
@@ -44,7 +59,7 @@ SS.datapixx.useAsEyepos       = 1;
 SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
-SS.behavior.fixation.enableCalib = 1;
+SS.behavior.fixation.enableCalib    = 1;
 SS.behavior.fixation.useCalibration = 1;
 
 SS.behavior.fixation.on = 1; % fixation.on for this task
@@ -67,49 +82,8 @@ SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation w
 %% ### Do not change code below [unless you know what you are doing]! ### %%
 
 % ------------------------------------------------------------------------%
-%% Set default variables
-
-% name of subject. This will be used to create a subdirectory with this name.
-if(~exist('subjname','var') || isempty(subjname))
-    subjname = 'tst';
-end
-
-% name of subject. This will be used to create a subdirectory with this name.
-if(~exist('rig','var') || isempty(rig))
-    [~, rigname] = system('hostname');
-    rig = str2num(rigname(4));
-end
-
-% name of subject. This will be used to create a subdirectory with this name.
-if(~exist('experimenter','var') || isempty(experimenter))
-    experimenter = getenv('USER');
-end
-
-% ------------------------------------------------------------------------%
-%% Special debug mode variables
-if strcmp(subjname,'mouse')
-    
-    % Use the mouse as eyeposition
-    SS.mouse.use = 1;
-    SS.mouse.useAsEyepos = 1;
-    
-    % Don't collect any analog channels
-    SS.datapixx.adc.PupilChannel   = [];
-    SS.datapixx.adc.XEyeposChannel = [];
-    SS.datapixx.adc.YEyeposChannel = [];
-    %SS.datapixx.adc.RewardChannel  = [];  
-    SS.datapixx.useAsEyepos        = 0;
-    SS.behavior.joystick.use       = 0;
-    %SS.datapixx.useForReward       = 0;
-    
-end
-% ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);
-
-% keep rig/experimenter specific inforamtion
-p.defaultParameters.session.rig          = rig;
-p.defaultParameters.session.experimenter = experimenter;
 
 % ------------------------------------------------------------------------%
 %% run the experiment

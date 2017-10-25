@@ -33,7 +33,7 @@ p.trial.reward.MaxWaitInitial = 0.50;
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.task.Timing.WaitFix = 6;    % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 0.100;    % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.5;  % minimum time period [s] between subsequent trials
@@ -45,7 +45,8 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size    = 0.15;        % size of the fixation spot
+p.trial.stim.FIXSPOT.size    = 50;        % size of the fixation spot
+p.trial.stim.FIXSPOT.fixWin  = 0;         %
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

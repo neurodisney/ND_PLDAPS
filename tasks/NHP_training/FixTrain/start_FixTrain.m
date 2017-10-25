@@ -26,7 +26,7 @@ SS.plot.routine    = 'FixTrain_plots';    % function for online plotting of sess
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.fixWin', 'stim.FIXSPOT.pos'};
+SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.pos'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
@@ -58,7 +58,7 @@ SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states
 % If there are modification from the default settings needed, copy the
 % needed lines from ND_RigDefaults and alter the values here.
 
-SS.display.bgColor    = [0.2, 0.2, 0.2];  % change background color
+SS.display.bgColor    = [0, 0, 0];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
 SS.behavior.fixation.FixWin     = 8;
@@ -87,24 +87,6 @@ if(~exist('experimenter','var') || isempty(experimenter))
     experimenter = getenv('USER');
 end
 
-% ------------------------------------------------------------------------%
-%% Special debug mode variables
-if strcmp(subjname,'mouse')
-    
-    % Use the mouse as eyeposition
-    SS.mouse.use = 1;
-    SS.mouse.useAsEyepos = 1;
-    
-    % Don't collect any analog channels
-    SS.datapixx.adc.PupilChannel   = [];
-    SS.datapixx.adc.XEyeposChannel = [];
-    SS.datapixx.adc.YEyeposChannel = [];
-    %SS.datapixx.adc.RewardChannel  = [];  
-    SS.datapixx.useAsEyepos        = 0;
-    SS.behavior.joystick.use       = 0;
-    %SS.datapixx.useForReward       = 0;
-    
-end
 % ------------------------------------------------------------------------%
 %% create the pldaps class
 p = pldaps(subjname, SS, exp_fun);

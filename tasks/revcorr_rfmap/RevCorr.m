@@ -13,12 +13,6 @@ if(~exist('state', 'var'))
 end
 
 % ####################################################################### %
-%% Call standard routines before executing task related code
-% This carries out standard routines, mainly in respect to hardware interfacing.
-% Be aware that this is done first for each trial state!
-p = ND_GeneralTrialRoutines(p, state);
-
-% ####################################################################### %
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed.
 % This part corresponds to the experimental setup file and could be a separate
@@ -40,8 +34,6 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
     
-    p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.GRATING.pos(1)',         '%.3f');
-    p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.GRATING.pos(2)',         '%.3f');
     p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'contrast',    'p.trial.stim.GRATING.contrast',       '%.1f');
@@ -50,12 +42,9 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimOn',      'p.trial.EV.StimOn',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimOff',     'p.trial.EV.StimOff',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'FixStart',    'p.trial.EV.FixSpotStart',             '%.5f');
     p = ND_AddAsciiEntry(p, 'FixBreak',    'p.trial.EV.FixSpotStop',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimFix',     'p.trial.EV.FixTargetStart',           '%.5f');
-    p = ND_AddAsciiEntry(p, 'StimBreak',   'p.trial.EV.FixTargetStop',            '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixDur',      'p.trial.task.fixDur',                 '%.5f');
     p = ND_AddAsciiEntry(p, 'TaskEnd',     'p.trial.EV.TaskEnd',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
 
@@ -84,39 +73,46 @@ if(isempty(state))
     % of a defined number of trials per condition, needs to be clarified.
         
     % condition 1
-    c1.Nr = 1;    
-    c1.nTrials = 20000;
+%     c1.Nr = 1;    
+%     c1.nTrials = 20000;
     
+%     
+%     % Fill a conditions list with n of each kind of condition sequentially
+%     conditions = cell(1,5000);
+%     blocks = nan(1,5000);
+%     totalTrials = 0;
+%     
+%     % Iterate through each condition to fill conditions
+%     conditionsIterator = {c1};
+%     
+%     for iCond = 1:size(conditionsIterator,2)
+%         cond = conditionsIterator(iCond);
+%         nTrials = cond{1}.nTrials;
+%         conditions(1, totalTrials+1:totalTrials+nTrials) = repmat(cond,1,nTrials);
+%         blocks(1, totalTrials+1:totalTrials+nTrials) = repmat(iCond,1,nTrials);
+%         totalTrials = totalTrials + nTrials;
+%     end
+%     
+%     % Truncate the conditions cell array to it's actualy size
+%     conditions = conditions(1:totalTrials);
+%     blocks = blocks(1:totalTrials);
+%     
+%     p.conditions = conditions;
+%     p.trial.blocks = blocks;
+%     
+%     p.defaultParameters.pldaps.finish = totalTrials;
     
-    % Fill a conditions list with n of each kind of condition sequentially
-    conditions = cell(1,5000);
-    blocks = nan(1,5000);
-    totalTrials = 0;
-    
-    % Iterate through each condition to fill conditions
-    conditionsIterator = {c1};
-    
-    for iCond = 1:size(conditionsIterator,2)
-        cond = conditionsIterator(iCond);
-        nTrials = cond{1}.nTrials;
-        conditions(1, totalTrials+1:totalTrials+nTrials) = repmat(cond,1,nTrials);
-        blocks(1, totalTrials+1:totalTrials+nTrials) = repmat(iCond,1,nTrials);
-        totalTrials = totalTrials + nTrials;
-    end
-    
-    % Truncate the conditions cell array to it's actualy size
-    conditions = conditions(1:totalTrials);
-    blocks = blocks(1:totalTrials);
-    
-    p.conditions = conditions;
-    p.trial.blocks = blocks;
-    
-    p.defaultParameters.pldaps.finish = totalTrials;
-    
+    % Preallocate data and reset counters
     new_neuron(p);
    
     
 else
+    % ####################################################################### %
+    %% Call standard routines before executing task related code
+    % This carries out standard routines, mainly in respect to hardware interfacing.
+    % Be aware that this is done first for each trial state!
+    p = ND_GeneralTrialRoutines(p, state);
+    
     % ####################################################################### %
     %% Subsequent calls during actual trials
     % execute trial specific commands here.
@@ -179,8 +175,10 @@ p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
     p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
 
 
-p.trial.CurrEpoch        = p.trial.epoch.TrialStart;
+p.trial.CurrEpoch        = p.trial.epoch.ITI;
 
+% Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
+%p.trial.task.longITI = 1;
 
 % Outcome if no fixation occurs at all during the trial
 p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
@@ -188,6 +186,8 @@ p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 p.trial.task.Good    = 0;
 p.trial.task.fixFix  = 0;
 p.trial.task.stimState = 0;
+
+p.trial.task.fixDur = NaN;
 
 %% Switch modes or reset RF data based on flags
 if p.trial.RF.flag_fine
@@ -208,19 +208,19 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 p.trial.stim.gratings = {};
 stimdef = p.trial.stim.(p.trial.stim.stage);
 for angle = stimdef.angle
-    p.trial.stim.GRATING.angle = angle;
+    p.trial.stim.GRATING.ori = angle;
     
     for radius = stimdef.radius
         p.trial.stim.GRATING.radius = radius;
         
         for sFreq = stimdef.sFreq
-            p.trial.GRATING.sFreq = sFreq;
+            p.trial.stim.GRATING.sFreq = sFreq;
             
             for tFreq = stimdef.tFreq
-                p.trial.GRATING.tFreq = tFreq;
+                p.trial.stim.GRATING.tFreq = tFreq;
                 
                 for contr = stimdef.contrast
-                    p.trial.GRATING.contrast = contr;
+                    p.trial.stim.GRATING.contrast = contr;
                     
                     p.trial.stim.gratings{end+1} = pds.stim.Grating(p);
                     
@@ -257,8 +257,9 @@ p.trial.RF.spikes = nan(p.trial.RF.maxSpikesPerTrial,1);
 p.trial.RF.nSpikes = 0;
 
 %% Read and forget all the spikes that occured during the ITI
-pds.tdt.readSpikes(p);
-
+if p.trial.tdt.use
+    pds.tdt.readSpikes(p);
+end
 
 % ####################################################################### %
 function TaskDesign(p)
@@ -270,6 +271,30 @@ p.trial.stim.changeThisFrame = 0;
 % The different task stages (i.e. 'epochs') are defined here.
 switch p.trial.CurrEpoch
     
+    case p.trial.epoch.ITI
+        %% inter-trial interval: wait until sufficient time has passed from the last trial
+        Task_WaitITI(p);        
+%         if p.trial.CurTime < p.trial.EV.PlanStart
+%             % All intertrial processing was completed before the ITI expired
+%             p.trial.task.longITI = 0;
+%             
+%         else
+%             if isnan(p.trial.EV.PlanStart)
+%                 % First trial, or after a break
+%                 p.trial.task.longITI = 0;
+%             end
+%             
+%             % If intertrial processing took too long, display a warning
+%             if p.trial.task.longITI
+%                 warning('ITI exceeded intended duration of by %.2f seconds!', ...
+%                          p.trial.CurTime - p.trial.EV.PlanStart)
+%             end
+%             
+%             switchEpoch(p,'TrialStart');
+%             
+%         end
+        
+        % ----------------------------------------------------------------%    
     case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot       
         tms = pds.datapixx.strobe(p.trial.event.TASK_ON);
@@ -280,7 +305,7 @@ switch p.trial.CurrEpoch
         p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
         
         if(p.trial.datapixx.TTL_trialOn)
-            pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
+            pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
         end
         
         fixspot(p,1);
@@ -329,6 +354,9 @@ switch p.trial.CurrEpoch
                 % Turn the first stim on
                 stim(p,1)
                 
+                % Set the timer for the first reward
+                p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
+                
                 % Transition to the succesful fixation epoch
                 switchEpoch(p,'Fixating')
                 
@@ -357,17 +385,23 @@ switch p.trial.CurrEpoch
                     return;
                 end
                 
+                % Reward if reward period has elapsed
+                if p.trial.CurTime >= p.trial.EV.nextReward
+                    % Give reward if it is enabled
+                    if p.trial.reward.Dur > 0
+                        pds.reward.give(p, p.trial.reward.Dur);
+                    end
+                    
+                    % Reset the reward timer
+                    p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
+                end
+                
                 if p.trial.task.stimState
                     % Keep stim on for stimOn Time
                     if p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.stimOnTime
                         % Full stimulus presentation has occurred
                         % TODO: Record data here
-                        
-                        % Give reward if it is enabled
-                        if p.trial.reward.Dur > 0
-                            pds.reward.give(p, p.trial.reward.Dur);
-                        end
-                        
+                     
                         % Turn stim off
                         stim(p,0)
                         
@@ -438,13 +472,24 @@ switch p.trial.CurrEpoch
         % Grab the fixation stopping and starting values from the stim properties
         p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
         p.trial.EV.FixSpotStop  = p.trial.stim.fix.EV.FixBreak;
+        
+        % Calculate the total fixation duration
+        currOutcome = p.trial.outcome.CurrOutcome;
+        if currOutcome == p.trial.outcome.Correct
+            fixDur = p.trial.EV.TaskEnd - p.trial.EV.FixStart;
+        elseif currOutcome == p.trial.outcome.FixBreak
+            fixDur = p.trial.EV.FixBreak - p.trial.EV.FixStart;
+        else
+            fixDur = NaN;
+        end
+        
+        p.trial.task.fixDur = fixDur;
       
-        switchEpoch(p,'ITI');
+        
+        % Flag next trial ITI is done at begining
+        p.trial.flagNextTrial = 1;
         
         % ----------------------------------------------------------------%
-    case p.trial.epoch.ITI
-        %% inter-trial interval: wait before next trial to start
-        Task_WaitITI(p);
         
 end  % switch p.trial.CurrEpoch
 
@@ -514,7 +559,7 @@ if p.trial.stim.changeThisFrame || iFrame == 1
     
 else
     p.trial.RF.visualField(:,:,iFrame) = p.trial.RF.visualField(:,:,iFrame - 1);
-    p.trial.RF.stimsOn(:,iFrame) = p.trial.RF.stimsOn(:,iFrame);
+    p.trial.RF.stimsOn(:,iFrame) = p.trial.RF.stimsOn(:,iFrame - 1);
 end
 
 % ####################################################################### %
@@ -535,6 +580,7 @@ end
 % Remove NaNs at the end of the RF data
 p.trial.RF.visualField(:,:,p.trial.iFrame:end) = [];
 p.trial.RF.stimsOn(:,p.trial.iFrame:end) = [];
+p.trial.RF.spikes(p.trial.RF.nSpikes+1:end,:) = [];
 
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
@@ -547,6 +593,11 @@ function Calculate_RF(p)
 nSpikes = p.trial.RF.nSpikes;
 stimdef = p.trial.stim.(p.trial.stim.stage);
 rfdef = p.trial.RF.(p.trial.stim.stage);
+
+% Don't add anymore information to matrices if switching to fine or creating a new map
+if p.trial.RF.flag_new || p.trial.RF.flag_fine
+    return;
+end
 
 if nSpikes > 0
     % Preallocate a 4D matrix to hold the visual field information for each spike
@@ -584,15 +635,18 @@ if nSpikes > 0
         spikeHyperCube(:,:,:,iSpike) = spikeCube;
     end
     
-    % Append this trials spikeHyperCube to the one spanning all trials
-    if ~isfield(rfdef,'spikeHyperCube') || isempty(rfdef.spikeHyperCube)
-        rfdef.spikeHyperCube = spikeHyperCube;
-    else
-        rfdef.spikeHyperCube = cat(4, rfdef.spikeHyperCube, spikeHyperCube);
-    end
+    % Save this trial's spikeHyperCube to p
+    rfdef.spikeHyperCube = spikeHyperCube;
     
     % Average across all spikes
-    rfdef.revCorrCube = mean(rfdef.spikeHyperCube, 4);
+    meanCube = mean(spikeHyperCube, 4);
+    
+    % And combine this average with the results from previous trials (weighting, of course, by number of spikes)
+    if rfdef.nAllSpikes == 0
+        rfdef.revCorrCube = meanCube;
+    else
+        rfdef.revCorrCube = (meanCube * nSpikes + rfdef.revCorrCube * rfdef.nAllSpikes) / (nSpikes + rfdef.nAllSpikes);    
+    end
     
     % Generate a positional heatmap by taking the maximum value across the time dimension
     rfdef.heatmap = max(rfdef.revCorrCube, [], 3);
@@ -602,28 +656,41 @@ if nSpikes > 0
     xSpace = linspace(rfdef.xRange(1), rfdef.xRange(2), p.trial.RF.spatialRes);
     ySpace = linspace(rfdef.yRange(1), rfdef.yRange(2), p.trial.RF.spatialRes);
     maxPos = [xSpace(maxCol), ySpace(maxRow)];
+    maxInd = [maxRow, maxCol];
     
+    % Save this to the p struct
+    rfdef.maxPos = maxPos;
+    rfdef.maxInd = maxInd;
+    
+    if rfdef.useCustPos
+        selectPos = rfdef.custPos;
+        selectInd = rfdef.custInd;
+    else
+        selectPos = maxPos;
+        selectInd = maxInd;
+    end
     
     % Calculate the temporal profile (when stims appeared) for this max location
-    rfdef.maxTemporalProfile = squeeze(rfdef.revCorrCube(maxRow, maxCol, :));
+    temporalProfile = squeeze(rfdef.revCorrCube(selectInd(1), selectInd(2), :));
+    
     
     % Change processing depending on the stage
     if strcmp(p.trial.stim.stage, 'coarse')
-    
-        % Define the xRange and yRange for the fine stage
-        p.trial.stim.fine.xRange = maxPos(1) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
-        p.trial.stim.fine.yRange = maxPos(2) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
         
+        % Define the xRange and yRange for the fine stage
+        p.trial.stim.fine.xRange = selectPos(1) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+        p.trial.stim.fine.yRange = selectPos(2) + [-p.trial.stim.fine.extent, p.trial.stim.fine.extent];
+
         % Find the maximum value in the temporal profile
-        [maxVal, maxIndex] = max(rfdef.maxTemporalProfile);
+        [maxVal, maxIndex] = max(temporalProfile);
         times = linspace(rfdef.temporalRange(1), rfdef.temporalRange(2), p.trial.RF.temporalRes);
         rfdef.timeOfMax = times(maxIndex);
-        
+
         %% Find the times when the temporal profile goes below the threshold proportion of the max value
         thresh = p.trial.RF.temporalProfileRefineProportion * maxVal;
-        
+
         % Get the part of temporal profile before the max value point
-        lowerProf = rfdef.maxTemporalProfile(1:maxIndex);
+        lowerProf = temporalProfile(1:maxIndex);
         % Find the closest point to the max value where the profile goes beneath threshold
         lowerThreshTime = times(find(lowerProf < thresh, 1, 'last'));
         if isempty(lowerThreshTime) || lowerThreshTime < rfdef.temporalRange(1)
@@ -631,16 +698,16 @@ if nSpikes > 0
         else
             minFineRange = lowerThreshTime;
         end
-        
+
         % Get the part of the temporal profile after the max value point
-        upperProf = rfdef.maxTemporalProfile(maxIndex:end);
+        upperProf = temporalProfile(maxIndex:end);
         upperThreshTime = times(maxIndex -1 + find(upperProf < thresh, 1, 'first'));
         if isempty(upperThreshTime) || upperThreshTime > rfdef.temporalRange(2)
             maxFineRange = rfdef.temporalRange(2);
         else
             maxFineRange = upperThreshTime;
         end
-   
+
         % Assign this new temporal range
         p.trial.RF.fine.temporalRange = [minFineRange, maxFineRange];
         
@@ -663,7 +730,7 @@ if nSpikes > 0
             
             % Don't interpolate if this spike has the same time as the last one
             if iSpike > 1 && spikeTime == p.trial.RF.spikes(iSpike - 1)
-                spikeHyperCube(:,:,:,iSpike) = spikeHyperCube(:,:,:,iSpike-1);
+                spikeStimsCube(:,:,iSpike) = spikeStimsCube(:,:,iSpike-1);
                 continue;
             end
             
@@ -678,13 +745,21 @@ if nSpikes > 0
             spikeStimsCube(:,:,iSpike) = spikeStims;
         end
         
-        % Append this trial's spikeStimsCube to the one spanning all trials
-        if ~isfield(rfdef,'spikeStimsCube')
-            rfdef.spikeStimsCube = spikeStimsCube;
+        % Save this trial's spikeStimsCube to p
+        rfdef.spikeStimsCube = spikeStimsCube;
+        
+        % Average across all spikes
+        meanSpikeStimsCube = mean(spikeStimsCube, 3);
+        
+        % And combine this average with the result from previous trials
+        if rfdef.nAllSpikes == 0
+            rfdef.revCorrStims = meanSpikeStimsCube;
         else
-            rfdef.spikeStimsCube = cat(3, rfdef.spikeStimsCube, spikeStimsCube);
+            rfdef.revCorrStims = (meanSpikeStimsCube * nSpikes + rfdef.revCorrStims * rfdef.nAllSpikes) / (nSpikes + rfdef.nAllSpikes);
         end
         
+        % revCorrStims is a 2D matrix (stim, time), with each value being the proportion of spikes that had stim on at time
+        % before it occured.
         
         %% Calculate orientation tuning
         nOrients = length(stimdef.angle);
@@ -706,17 +781,16 @@ if nSpikes > 0
         for iOrient = 1:nOrients
             iStims = stims2angle(:, iOrient);
             
-            % Combine rows of stims with this orientaiton
-            % Should leave a 2D matrix (time, nSpikes)
-            orientSpike = squeeze(any(rfdef.spikeStimsCube(iStims,:,:),1));
-            
-            % Average across all spikes, and take the max value in time as the orientation tuning
-            rfdef.orientationTuning(iOrient) = max(mean(orientSpike,2));
+            % Sum across stims that have the same orientation,
+            % and take the max value in time as the orientation tuning
+            rfdef.orientationTuning(iOrient) = max(sum(rfdef.revCorrStims(iStims,:), 1));
             
         end
         
     end
 
+    % Increment the total spikes
+    rfdef.nAllSpikes = rfdef.nAllSpikes + nSpikes;
     
     % Save rfdef back into p
     p.trial.RF.(p.trial.stim.stage) = rfdef;
@@ -855,23 +929,41 @@ p.trial.stim.iPos = indexReference(:,2);
 p.trial.stim.count = 1;
 
 function new_neuron(p)
+
 % Reset to coarse mapping
 p.trial.stim.stage = 'coarse';
 p.trial.stim.count = 0;
 
+% Reset spike counts
+p.trial.RF.coarse.nAllSpikes = 0;
+p.trial.RF.fine.nAllSpikes = 0;
+
 % Remove all data
-p.trial.RF.coarse.spikeHyperCube = [];
-p.trial.RF.fine.spikeHyperCube = [];
+p.trial.RF.coarse.revCorrCube = [];
+p.trial.RF.fine.revCorrCube = [];
+p.trial.RF.fine.revCorrStims = [];
 p.trial.stim.fine.xRange = NaN;
 p.trial.stim.fine.yRange = NaN;
+
+% Use automatic position again
+p.trial.RF.coarse.useCustPos = 0;
+p.trial.RF.fine.useCustPos = 0;
 
 % Reset flags
 p.trial.RF.flag_new = 0;
 p.trial.RF.flag_fine = 0;
 
 function switch_to_fine(p)
+
+% Switch to fine mapping, or reset the fine mapping step
 p.trial.stim.stage = 'fine';
 p.trial.stim.count = 0;
+
+% Clear the last coarse trial's hypercube out of memory so it is not continually resaved to disk
+p.trial.RF.coarse.spikeHyperCube = [];
+
+% Reset fine data (to allow for retrying fine calibration midway)
+p.trial.RF.fine.nAllSpikes = 0;
 
 % Reset flag
 p.trial.RF.flag_fine = 0;

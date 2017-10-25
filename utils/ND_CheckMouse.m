@@ -29,3 +29,8 @@ p.trial.mouse.buttonPressSamples( :, iSamples) = buttons';
 % Store this in mouse.newButtons. 1 = newly pressed, 0 = no change, -1 = newly released
 lastButtons = p.trial.mouse.buttonPressSamples(:, max(iSamples - 1, 1));
 p.trial.mouse.newButtons = buttons' - lastButtons;
+
+% If a new button has been pressed, redraw figures in case clicking occurs on the figures and that is a defined action
+if any(p.trial.mouse.newButtons) && p.trial.plot.do_online
+    drawnow
+end

@@ -12,13 +12,14 @@ p.trial.EV.TDT_TaskOff = tms(2);
 p.trial.EV.TaskEnd = p.trial.CurTime;
 
 if(p.trial.datapixx.TTL_trialOn)
-    pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan,0);
+    pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan,0);
 end
 
 % determine ITI
-if ~p.trial.task.Good
+if(~p.trial.task.Good)
     % Timeout if task not performed correctly
     p.trial.task.Timing.ITI = p.trial.task.Timing.ITI + p.trial.task.Timing.TimeOut;
 end
 
-p.trial.Timer.ITI = p.trial.CurTime + p.trial.task.Timing.ITI;
+p.trial.EV.NextTrialStart = p.trial.CurTime + p.trial.task.Timing.ITI;
+

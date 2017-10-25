@@ -45,6 +45,6 @@ end
 
 % ------------------------------------------------------------------------%
 %% check fixation state
-if(p.trial.datapixx.useAsEyepos || p.trial.mouse.useAsEyepos)
+if(p.trial.behavior.fixation.use)
     ND_CheckFixation(p);
  end

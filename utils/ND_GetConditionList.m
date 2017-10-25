@@ -22,6 +22,6 @@ for(cblk = 1:maxBlocks)
 end
 
 p.conditions   = cnd(CNDlst);
-p.trial.blocks = BLKlst; % WZ: added this to pldaps, seems that they do not use the concept of blocks
+p.trial.Block.BlockList = BLKlst; 
 
 p.defaultParameters.pldaps.finish = maxTrials;

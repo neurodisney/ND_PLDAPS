@@ -51,9 +51,6 @@ if(isempty(state))
     % control of trials, especially the use of blocks, i.e. the repetition
     % of a defined number of trials per condition, needs to be clarified.
 
-    maxTrials_per_BlockCond = 4;
-    maxBlocks = 1000;
-
     % condition 1
     c1.Nr = 1;
     c1.task.Timing.MinHoldTime = 2.5;
@@ -310,6 +307,7 @@ function TaskDraw(p)
             TrialOn(p);
             Target(p, 'TargetDimm');
     end
+    
 % ####################################################################### %
 function KeyAction(p)
 %% task specific action upon key press

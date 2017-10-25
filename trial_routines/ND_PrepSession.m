@@ -13,6 +13,29 @@ disp('>>>>  Preparing Sessions <<<<')
 disp('****************************************************************')
 disp('');
 
+% ------------------------------------------------------------------------%
+%% Special debug mode variables
+% set parameters according to a debug/testing mode
+if(strcmp(p.defaultParameters.session.subject,'mouse') || strcmp(p.defaultParameters.session.subject,'debug') || ...
+   strcmp(p.defaultParameters.session.subject,'test'))
+    
+    if(strcmp(p.defaultParameters.session.subject,'mouse'))
+    % Use the mouse as eyeposition
+        p.defaultParameters.mouse.use = 1;
+        p.defaultParameters.mouse.useAsEyepos = 1;
+    end
+    
+    % Don't collect any analog channels
+    p.defaultParameters.datapixx.adc.PupilChannel     = [];
+    p.defaultParameters.datapixx.adc.XEyeposChannel   = [];
+    p.defaultParameters.datapixx.adc.YEyeposChannel   = [];
+    % p.defaultParameters.datapixx.adc.RewardChannel  = [];  
+    p.defaultParameters.datapixx.useAsEyepos          = 0;
+    p.defaultParameters.behavior.joystick.use         = 0;
+    % p.defaultParameters.datapixx.useForReward       = 0;
+    % p.defaultParameters.sound.use                   = 0;
+end
+
 p.defaultParameters.DateStr = datestr(p.defaultParameters.session.initTime,'yyyy_mm_dd');
 
 % --------------------------------------------------------------------%
@@ -93,21 +116,16 @@ p = ND_Outcomes(p);
 % task epochs
 p = ND_TaskEpochs(p);
 
-
 % --------------------------------------------------------------------%
 %% sanity checks
 
 % there is no point of drawing eye position if it is not recorded
-if(~p.defaultParameters.mouse.useAsEyepos && ~p.defaultParameters.datapixx.useAsEyepos)
+if(~p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.pldaps.draw.eyepos.use = 0;
 end
 
-% if fixation is needed make sure datapixx provides the eye signal
+% Take enough samples
 if(p.defaultParameters.behavior.fixation.use)
-    if(~p.defaultParameters.datapixx.useAsEyepos)
-        p.defaultParameters.datapixx.useAsEyepos = 1;
-    end
-
     if( p.defaultParameters.behavior.fixation.NumSmplCtr > p.defaultParameters.pldaps.draw.eyepos.history)
         p.defaultParameters.behavior.fixation.NumSmplCtr = p.defaultParameters.pldaps.draw.eyepos.history;
     end
@@ -187,6 +205,14 @@ if(p.defaultParameters.datapixx.useJoystick == 1)
         p.defaultParameters.datapixx.adc.channelMapping{end+1} = 'AI.Joy.Y';
     end
 end
+
+%-------------------------------------------------------------------------%
+%% initialize conditions and blocks as empty here
+% This is a quck&dirty ad hoc fix to not touch the pldaps call where conditions are defined.
+% We define conditions in the experimental setup file (that will be called after executing the
+% current function) or if nothing is defined use our default definition.
+p.conditions      = {};
+%p.Block.BlockList = [];
 
 %-------------------------------------------------------------------------%
 %% create p.trial as copy of the default parameters

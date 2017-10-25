@@ -155,8 +155,8 @@ function TaskSetUp(p)
         
     p.trial.reward.Curr  = p.trial.reward.InitialRew; % determine reward amount based on number of previous correct trials
         
-    p.trial.task.Good                = 1;  % assume no error untill error occurs
-    p.trial.reward.cnt          = 0;  % counter for received rewardsw
+    p.trial.task.Good                = 1;  % assume no error until error occurs
+    p.trial.reward.cnt          = 0;  % counter for received rewards
     p.trial.behavior.fixation.GotFix = 0;
      
     p.trial.task.FixCol = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
@@ -178,7 +178,7 @@ function TaskDesign(p)
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             
             if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 1);
+                pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
             end
         
             p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.WaitFix;
@@ -211,7 +211,7 @@ function TaskDesign(p)
                     p.trial.Timer.Wait  = p.trial.CurTime + p.trial.task.Timing.MaxFix;
                     p.trial.CurrEpoch   = p.trial.epoch.Fixating;
                     
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION; % at least fixation was achieved
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.fixation; % at least fixation was achieved
                     
                     p.trial.Timer.Reward = p.trial.CurTime + p.trial.task.CurRewDelay; % timer for initial reward
                     
@@ -298,7 +298,7 @@ function TaskDesign(p)
             p.trial.EV.TaskEnd = p.trial.CurTime;
 
             if(p.trial.datapixx.TTL_trialOn)
-                pds.datapixx.TTL_state(p.trial.datapixx.TTL_trialOnChan, 0);
+                pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 0);
             end
             
             if(p.trial.reward.cnt > 0)
