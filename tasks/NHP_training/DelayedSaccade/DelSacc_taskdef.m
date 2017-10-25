@@ -106,11 +106,11 @@ c10.task.MinWaitGo  = 0.95; % min wait period for fixation spot to disapear
 c10.task.MaxWaitGo  = 0.105; % max wait period for fixation spot to disapear
 
 p.trial.Block.Conditions     = { c1, c2, c3};
-p.trial.Block.maxBlockTrials =  [3, 4, 2]; 
+p.trial.Block.maxBlockTrials =  [3, 4, 2];
 
 
 p.trial.Block.Conditions     = { c1, c2};
-p.trial.Block.maxBlockTrials =  [5, 2]; 
+p.trial.Block.maxBlockTrials =  [5, 2];
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
@@ -126,15 +126,28 @@ p.trial.stim.GRATING.fixWin   = 4;
 
 % spatial & temporal frequency
 % p.trial.stim.GRATING.sFreq  = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
-p.trial.stim.GRATING.sFreq    = 2;  % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
+%p.trial.stim.GRATING.sFreq    = 2;  % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
 p.trial.stim.GRATING.tFreq    = 0;  % temporal frequency of grating; drift speed, 0 is stationary
-p.trial.stim.GRATING.ori      = 45; % orientation of grating 
+%p.trial.stim.GRATING.ori      = 45; % orientation of grating
 p.trial.stim.GRATING.radius   = 1;  % radius of grating patch
 
 % Grating position
+% position and angle assignment
+%      ____________________
+%     |  135 |  90  |   45 |
+%     |  (7) |  (8) |  (9) |
+%     |______|______|______|
+%     |  180 |      |   0  |
+%     |  (4) |  *   |  (6) |
+%     |______|______|______|
+%     |  225 |  270 |  315 |
+%     |  (1) |  (2) |  (3) |
+%     |______|______|______|
+%
+
 p.trial.stim.GRATING.eccentricity = 4;
-p.trial.stim.GRATING.GridAngles   = 0:45:359;  % angular position of grating for the 8 keypad controlled locations
-p.trial.stim.GRATING.AngleArray   = 0:30:359;  % 
+p.trial.stim.GRATING.GridAngles   = [225, 270, 315, 180, 0, 135, 90, 45]; % angular position of grating for the 8 keypad controlled locations
+p.trial.stim.GRATING.AngleArray   = 0:30:359;  %
 p.trial.stim.GRATING.RandAngles   = 0:15:359;  % if in random mode chose an angle from this list
 
 % grating contrast

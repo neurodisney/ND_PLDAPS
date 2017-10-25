@@ -22,7 +22,7 @@ end
 % At this stage, p.trial is not yet defined. All assignments need
 % to go to p.defaultparameters
 if(isempty(state))
-    
+
     % --------------------------------------------------------------------%
     %% define ascii output file
     p = ND_AddAsciiEntry(p, 'Date',        'p.trial.DateStr',                     '%s');
@@ -34,15 +34,17 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
-    
+
     p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.GRATING.pos(1)',         '%.3f');
     p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.GRATING.pos(2)',         '%.3f');
+    p = ND_AddAsciiEntry(p, 'Eccentricity','p.trial.stim.GRATING.eccentricity',   '%.3f');
+    p = ND_AddAsciiEntry(p, 'AnglePos',    'p.trial.stim.GRATING.PosAngle',       '%.3f');
     p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'lContr',      'p.trial.stim.GRATING.lowContrast',    '%.1f');
     p = ND_AddAsciiEntry(p, 'hContr',      'p.trial.stim.GRATING.highContrast',   '%.1f');
     p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.GRATING.radius',       '%.1f');
-    
+
     p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
@@ -66,15 +68,19 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'RewPulses',   'p.trial.reward.nPulse',               '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwdDur',  'p.trial.reward.InitialRew * ~isnan(p.trial.EV.InitReward)', '%.5f');
     p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
-    
+
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
-    
+
     %% initialize target parameters
-    p.trial.stim.GRATING.PosAngle    = datasample(0:30:359, 1);
     p.trial.behavior.fixation.FixWin = 5;
     p.trial.task.RandomPos = 0;
-    
+
+    % define random grating parameters for each session
+    p.trial.stim.GRATING.PosAngle = datasample(0:15:359, 1);
+    p.trial.stim.GRATING.sFreq    = datasample(1:0.25:8, 1);  % spatial frequency as cycles per degree
+    p.trial.stim.GRATING.ori      = datasample(0:15:179, 1);; % orientation of grating
+
 else
     % ####################################################################### %
     %% Call standard routines before executing task related code
@@ -85,7 +91,7 @@ else
     % ####################################################################### %
     %% Subsequent calls during actual trials
     % execute trial specific commands here.
-    
+
     switch state
         % ------------------------------------------------------------------------%
         % DONE BEFORE MAIN TRIAL LOOP:
@@ -95,13 +101,13 @@ else
         % prepare everything for the trial, including allocation of stimuli
         % and all other more time demanding stuff.
             TaskSetUp(p);
-            
+
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
         %% trial preparation
         % just prior to actual trial start, use it for time sensitive preparations;
             p.trial.EV.TrialStart = p.trial.CurTime;
-            
+
         % ------------------------------------------------------------------------%
         % DONE DURING THE MAIN TRIAL LOOP:
         % ----------------------------------------------------------------%
@@ -112,20 +118,20 @@ else
                 KeyAction(p);
             end
             TaskDesign(p);
-            
+
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
             TaskDraw(p);
-            
+
         % ------------------------------------------------------------------------%
         % DONE AFTER THE MAIN TRIAL LOOP:
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
         %% trial end
             TaskCleanAndSave(p);
-            
+
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
 
@@ -154,14 +160,14 @@ function TaskSetUp(p)
 
     % get grating location
     % if random position is required pick one and move fix spot
-    if(p.trial.task.RandomPos == 1)        
+    if(p.trial.task.RandomPos == 1)
          p.trial.stim.GRATING.PosAngle = datasample(0:360,1);
     end
 
     [Gx, Gy] = pol2cart(deg2rad(p.trial.stim.GRATING.PosAngle), ...
                                         p.trial.stim.GRATING.eccentricity);
     p.trial.stim.GRATING.pos = [Gx, Gy];
-    
+
     % Generate the low contrast stimulus
     p.trial.stim.GRATING.contrast = p.trial.stim.GRATING.lowContrast;
     p.trial.stim.gratingL = pds.stim.Grating(p);
@@ -184,14 +190,14 @@ function TaskDesign(p)
     % The different task stages (i.e. 'epochs') are defined here.
     switch p.trial.CurrEpoch
 
-        % ----------------------------------------------------------------%  
+        % ----------------------------------------------------------------%
         case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
             Task_WaitITI(p);
 
-        % ----------------------------------------------------------------%  
+        % ----------------------------------------------------------------%
         case p.trial.epoch.TrialStart
-         %% trial starts with onset of fixation spot       
+         %% trial starts with onset of fixation spot
             Task_ON(p);
             ND_FixSpot(p, 1);
 
@@ -207,7 +213,7 @@ function TaskDesign(p)
 
             if(p.trial.CurrEpoch == p.trial.epoch.Fixating)
             % fixation just started, initialize fixation epoch
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;           
+                p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;
 
                 % initial rewardfor fixation start
                 if(p.trial.reward.GiveInitial == 1)
@@ -215,19 +221,19 @@ function TaskDesign(p)
                     pds.reward.give(p, p.trial.reward.InitialRew);
                 end
             end
-            
+
             % ----------------------------------------------------------------%
         case p.trial.epoch.Fixating
         %% Initial reward has been given (if it is not 0), now stim target will appear
 
             % Still fixating
-            if(p.trial.stim.fix.fixating)            
+            if(p.trial.stim.fix.fixating)
                 % Wait stim latency before showing reward
                 if(~p.trial.task.stimState)
                     if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
                         stim(p, 1) % Turn on stim
                     end
-                    
+
                 else
                     % Must maintain fixation (inhibit saccade) until central
                     % fixation spot disappears
@@ -238,7 +244,7 @@ function TaskDesign(p)
                         ND_AddScreenEvent(p, p.trial.event.GOCUE, 'GoCue');
 
                         stim(p, 2) % Make the stim high contrast
-                        
+
                         % Change to the saccade epoch
                         ND_SwitchEpoch(p, 'Saccade');
                     end
@@ -251,7 +257,7 @@ function TaskDesign(p)
                 if(p.trial.task.stimState)
                     % If the stim is on, need to determine whether it is an early saccade
                     % or a stimBreak. Calculated in the BreakFixCheck epoch
-                    ND_SwitchEpoch(p, 'BreakFixCheck'); 
+                    ND_SwitchEpoch(p, 'BreakFixCheck');
                 else
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
                     ND_SwitchEpoch(p, 'TaskEnd')
@@ -321,7 +327,7 @@ function TaskDesign(p)
                     % Play an incorrect sound
                     pds.audio.playDP(p, 'incorrect', 'left');
 
-                    ND_SwitchEpoch(p, 'TaskEnd')              
+                    ND_SwitchEpoch(p, 'TaskEnd')
                 end
             else
                 % Animal is currently fixating on target
@@ -385,7 +391,7 @@ function TaskDesign(p)
                     p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
                 end
                 p.trial.task.Good = 0;
-                
+
                 ND_SwitchEpoch(p,'TaskEnd')
             end
 
@@ -436,26 +442,26 @@ ND_Trial2Ascii(p, 'save');
 function KeyAction(p)
 %% task specific action upon key press
 if(~isempty(p.trial.LastKeyPress))
-    
+
     switch p.trial.LastKeyPress(1)
-        
+
         case KbName('r')  % random position of target on each trial
             if(p.trial.task.RandomPos)
                 p.trial.task.RandomPos = 0;
             else
                 p.trial.task.RandomPos = 1;
             end
-                        
+
         % move target to grid positions
         case p.trial.key.GridKeyCell
             gpos = p.trial.key.GridKey == p.trial.LastKeyPress(1);
-            
+
             p.trial.stim.GRATING.PosAngle = p.trial.stim.GRATING.GridAngles(gpos);
 
             [Gx, Gy] = pol2cart(deg2rad(p.trial.stim.GRATING.PosAngle), ...
                                     p.trial.stim.GRATING.eccentricity);
             p.trial.stim.GRATING.pos = [Gx, Gy];
-                                
+
             % Assume manual control of the activation of the grating fix windows
             p.trial.stim.gratingL.pos = p.trial.stim.GRATING.pos;
             p.trial.stim.gratingH.pos = p.trial.stim.GRATING.pos;
@@ -469,7 +475,7 @@ function stim(p, val)
 
     % Don't do anything if stim doesn't change
     if(val == oldVal)
-        return; 
+        return;
     end
 
     p.trial.task.stimState = val;
@@ -480,17 +486,17 @@ function stim(p, val)
         case 0
             p.trial.stim.gratingL.on = 0;
             p.trial.stim.gratingH.on = 0;
-            
+
         case 1
             p.trial.stim.gratingL.on = 1;
             p.trial.stim.gratingH.on = 0;
             p.trial.stim.gratingH.fixActive = 1;
-            
+
         case 2
             p.trial.stim.gratingL.on = 0;
             p.trial.stim.gratingH.on = 1;
-            p.trial.stim.gratingH.fixActive = 1;    
-            
+            p.trial.stim.gratingH.fixActive = 1;
+
         otherwise
             error('bad stim value')
     end
@@ -499,11 +505,11 @@ function stim(p, val)
     if(val == 0)
         % Stim is turning off
         ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
-        
+
     elseif(oldVal == 0)
         % Stim is turning on
         ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
-        
+
     else
         % Stim is changing
         ND_AddScreenEvent(p, p.trial.event.STIM_CHNG, 'StimChange');
