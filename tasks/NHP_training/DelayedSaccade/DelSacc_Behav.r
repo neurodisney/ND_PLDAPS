@@ -46,22 +46,6 @@ if(length(fname)>1) {
 ###########################################################################################
 # standardize outcomes
 
-
-
-# corrections used before June 30th 2017:
-# dt$Outcome = as.character(dt$Outcome)
-# dt$Outcome[dt$Outcome == 'goodSaccade']  = 'Correct'
-# dt$Outcome[dt$Outcome == 'earlySaccade'] = 'Early'
-# dt$Outcome[dt$Outcome == 'Abort']        = 'FixBreak_BSL'
-# dt$Outcome[dt$Outcome == 'FixBreak']     = 'FixBreak_Stim'
-# dt$Outcome[dt$Outcome == 'wrongSaccade'] = 'FixBreak_Stim'
-# dt$Outcome[dt$Outcome == 'glance']       = 'TargetBreak'
-# dt$Outcome[dt$Outcome == 'TargetBreak']  = 'FixBreak_Trgt'
-# dt$Outcome[dt$Outcome == 'noSaccade']    = 'Miss'
-# dt$Outcome[dt$Outcome == 'Abort' & is.numeric(dt$FixStart)] = 'FixBreak_BSL'
-# dt$Outcome[dt$Outcome == 'Abort' & !is.numeric(dt$FixStart)]= 'NoStart'
-# dt$Outcome[is.nan(dt$FixStart)]= 'NoStart'
-
 SessTimeRng = range(dt$FixSpotOn)
 SessTrialStart = SessTimeRng[1]
 SessTrialEnd   = diff(SessTimeRng)
@@ -117,34 +101,35 @@ pStim      = pCorr | dt$Outcome == pHoldErr
 
 ###########################################################################################
 # get relevant variables
-Ttime    = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
-FixStart = dt$FixStart   - dt$FixSpotOn
+Ttime     = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
 
-# TDur     = dt$TaskEnd    - dt$FixStart
-# TDur             = dt$StimOn - dt$FixStart + dt$SRT_StimOn
-# TDur[pFixBreak]  = dt$FixBreak[pFixBreak]  - dt$FixStart[pFixBreak]
+#% position and angle assignment
+#%      ____________________
+#%     |  135 |  90  |   45 |
+#%     |  (7) |  (8) |  (9) |
+#%     |______|______|______|
+#%     |  180 |      |   0  |
+#%     |  (4) |  *   |  (6) |
+#%     |______|______|______|
+#%     |  225 |  270 |  315 |
+#%     |  (1) |  (2) |  (3) |
+#%     |______|______|______|
+#%
 
-GoCue    = dt$FixSpotOff - dt$FixStart
-SaccTime = dt$StimFix    - dt$FixSpotOff
-HoldTime = dt$StimBreak  - dt$StimOn
+if("AnglePos" %in% colnames(dt)){
+  TPos = dt$AnglePos
+}else{
+    TPos = round(cart2pol(dt$StimPosX, dt$StimPosY,degree=TRUE)$theta)
+}
 
-IntGo = dt$StimOn + dt$GoLatency
-IntGo[pStim] = dt$FixSpotOff[pStim]
+TPos[TPos > 180] = Tpos - 360
+TPos = as.factor(TPos)
+
+# derive RT times
+SRT     = dt$SRT_Go
+StimSRT = dt$SRT_StimOn
 
 ###########################################################################################
-# derive RT times
-# SRT = dt$FixSpotOff - IntGo
-SRT                = dt$SRT_Go
-#SRT[pFixBreak]     = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak] + dt$GoLatency[pFixBreak])
-#SRT[SRT<0 & dt$Outcome == 'Correct'] = SRT[SRT<0 & dt$Outcome == 'Correct'] + dt$GoLatency[SRT<0 & dt$Outcome == 'Correct']
-
-StimSRT            = dt$SRT_StimOn
-#StimSRT[pFixBreak] = dt$FixBreak[pFixBreak] - (dt$FixStart[pFixBreak] + dt$StimLatency[pFixBreak])
-#StimSRT[SRT<0 & dt$Outcome == 'Correct'] = StimSRT[SRT<0 & dt$Outcome == 'Correct'] + dt$GoLatency[SRT<0 & dt$Outcome == 'Correct'] + dt$StimOn[SRT<0 & dt$Outcome == 'Correct'] - dt$FixStart[SRT<0 & dt$Outcome == 'Correct']
-
-# SRT[pStim]  = SaccTime[pStim]
-# SRT[pFalse] = dt$TaskEnd[pStim] - dt$FixSpotOff[pStim]
-
 # create plots
 
 # open figure of defined size
@@ -240,55 +225,6 @@ if(length(Break_end) > 1){  for(i in 1:length(Break_end)){  rect(Break_start[i],
 abline(h=50, lty=2)
 abline(h=c(25,75), lty=3)
 abline(h=0, lty=1)
-
-# krnlwht = 0.5
-# krnltyp = 'rectangular'
-#
-# Time_all   = density(Ttime, bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-# Time_all$y = Time_all$y * sum(is.finite(Ttime)) * krnlwht
-# Time_all$y[Time_all$y<0.05] = NA
-#
-# if(sum(pCorr) > 1) {
-#   Time_Corr   = density(Ttime[pCorr], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_Corr$y = 100 * (Time_Corr$y * sum(pCorr) * krnlwht) / Time_all$y
-#   lines(Time_Corr, col=Corr_Col, lwd=2.5)
-# }
-#
-# if(sum(pEarly) > 1) {
-#   Time_Early   = density(Ttime[pEarly], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_Early$y = 100 * (Time_Early$y * sum(pEarly) * krnlwht) / Time_all$y
-#   lines(Time_Early, col=Early_Col, lwd=1)
-# }
-#
-# if(sum(pFixBreak) > 1) {
-#   Time_FixBreak   = density(Ttime[pFixBreak], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_FixBreak$y = 100 * (Time_FixBreak$y * sum(pFixBreak) * krnlwht) / Time_all$y
-#   lines(Time_FixBreak,  col=FixBreak_Col,   lwd=1)
-# }
-#
-# if(sum(pStimBreak) > 1) {
-#   Time_StimBreak   = density(Ttime[pStimBreak], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_StimBreak$y = 100 * (Time_StimBreak$y * sum(pStimBreak) * krnlwht) / Time_all$y
-#   lines(Time_StimBreak, col=StimBreak_Col,  lwd=1)
-# }
-#
-# if(sum(pMiss) > 1) {
-#   Time_Miss   = density(Ttime[pMiss], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_Miss$y = 100 * (Time_Miss$y * sum(pMiss) * krnlwht) / Time_all$y
-#   lines(Time_Miss, col=Miss_Col, lwd=1)
-# }
-#
-# if(sum(pFalse) > 1) {
-#   Time_False   = density(Ttime[pFalse], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_False$y = 100 * (Time_False$y * sum(pFalse) * krnlwht) / Time_all$y
-#   lines(Time_False, col=False_Col, lwd=1)
-# }
-#
-# if(sum(pHoldErr) > 1) {
-#   Time_HoldErr   = density(Ttime[pHoldErr], bw=krnlwht, na.rm=TRUE, kernel=krnltyp)
-#   Time_HoldErr$y = 100 * (Time_HoldErr$y * sum(pHoldErr) * krnlwht) / Time_all$y
-#   lines(Time_HoldErr, col=TargetBreak_Col, lwd=1)
-# }
 
 lines(Tavrg, Rcorr,      col=Corr_Col,       lwd=2.5)
 lines(Tavrg, Rfixbreak,  col=FixBreak_Col,   lwd=1)
@@ -500,9 +436,6 @@ box()
 
 ###########################################################################################
 # plot 9: Position dependent performance
-TPos = cart2pol(dt$StimPosX, dt$StimPosY,degree=TRUE)$theta
-TPos[TPos==315] = -45
-TPos = as.factor(TPos)
 
 All_Cnt       = as.numeric(table(TPos))
 Hit_Cnt       = as.numeric(table(TPos[pCorr]))
@@ -573,7 +506,7 @@ dev.off()
 
 ###########################################################################################
 # Get rough overview
-print(ctab(table(dt$Outcome),addmargins=TRUE))
+print(ctab(table(dt$Outcome), addmargins=TRUE))
 }
 
 # If this program was called from the command line, load in the datadir and fname arguments
