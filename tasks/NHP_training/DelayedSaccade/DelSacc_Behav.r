@@ -9,7 +9,7 @@ require(beanplot)
 DelSacc_Behav = function(datadir=NA, fname=NA) {
 
 ## specify analysis/graph parameters
-avrgwin  =   180  # moving average window for performance plot in seconds
+avrgwin  =   120  # moving average window for performance plot in seconds
 avrgstep =     1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
 RTbw     =  0.02  # kernel width for density estimate of response times
 
@@ -41,7 +41,6 @@ if(length(fname)>1) {
 }
 
 ## prepare data
-
 
 ###########################################################################################
 # standardize outcomes
@@ -125,7 +124,6 @@ if("AnglePos" %in% colnames(dt)){
     TPos = round(cart2pol(dt$StimPosX, dt$StimPosY,degree=TRUE)$theta)
 }
 
-TPos[TPos > 180] = TPos - 360
 TPos = as.factor(TPos)
 
 # derive RT times

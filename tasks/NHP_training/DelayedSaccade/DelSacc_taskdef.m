@@ -24,10 +24,10 @@ p.trial.task.ShowHelp = 1; % Moves the fixation spot towards target location
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.GiveInitial = 1;    % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew  = 0.05; % duration of the initial reward
-p.trial.reward.ManDur      = 0.2;  % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.75;  % Reward for completing the task successfully
+p.trial.reward.GiveInitial = 0;    % If set to 1 reward animal when starting to fixate
+p.trial.reward.InitialRew  = 0.01; % duration of the initial reward
+p.trial.reward.ManDur      = 0.1;  % reward duration [s] for reward given by keyboard presses
+p.trial.reward.Dur         = 0.1;  % Reward for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1;  % number of reward pulses
@@ -142,7 +142,7 @@ c10.Nr = 10;
 c10.task.MinWaitGo  = 0.95; % min wait period for fixation spot to disapear
 c10.task.MaxWaitGo  = 0.105; % max wait period for fixation spot to disapear
 
-p.trial.Block.Conditions     = { c1, c2, c3};
+p.trial.Block.Conditions     = { c1, c2,c3};
 p.trial.Block.maxBlockTrials =  [3, 4, 1]; 
 
 %p.trial.Block.Conditions     = { c1, c2};
