@@ -17,17 +17,58 @@ function p = DelSacc_taskdef(p)
 p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % ------------------------------------------------------------------------%
+%% Task modifier
+p.trial.task.ShowHelp = 1; % Moves the fixation spot towards target location
+
+% ------------------------------------------------------------------------%
 %% Reward
 
 % manual reward from experimenter
 p.trial.reward.GiveInitial = 1;    % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew  = 0.01; % duration of the initial reward
+p.trial.reward.InitialRew  = 0.05; % duration of the initial reward
 p.trial.reward.ManDur      = 0.2;  % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.5;  % Reward for completing the task successfully
+p.trial.reward.Dur         = 0.75;  % Reward for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1;  % number of reward pulses
 p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with this trial number
+
+% ------------------------------------------------------------------------%
+%% Grating stimuli parameters
+p.trial.stim.GRATING.fixWin  = 3;
+
+% spatial & temporal frequency
+% p.trial.stim.GRATING.sFreq  = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
+%p.trial.stim.GRATING.sFreq    = 2;  % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
+p.trial.stim.GRATING.tFreq    = 0;  % temporal frequency of grating; drift speed, 0 is stationary
+%p.trial.stim.GRATING.ori      = 45; % orientation of grating
+p.trial.stim.GRATING.radius   = 0.75;  % radius of grating patch
+
+% position and angle assignment
+%      ____________________
+%     |  135 |  90  |   45 |
+%     |  (7) |  (8) |  (9) |
+%     |______|______|______|
+%     |  180 |      |   0  |
+%     |  (4) |  *   |  (6) |
+%     |______|______|______|
+%     |  225 |  270 |  315 |
+%     |  (1) |  (2) |  (3) |
+%     |______|______|______|
+
+p.trial.stim.GRATING.eccentricity = 3;
+p.trial.stim.GRATING.GridAngles   = [225, 270, 315, 180, 0, 135, 90, 45]; % angular position of grating for the 8 keypad controlled locations
+p.trial.stim.GRATING.AngleArray   = 0:30:359;  %
+p.trial.stim.GRATING.RandAngles   = 0:15:359;  % if in random mode chose an angle from this list
+
+% grating contrast
+% currcont = datasample([0.01, 0.02, 0.05, 0.1, 0.2], 1);
+%currcont = 0.3;
+
+p.trial.stim.GRATING.lowContrast  = 0;  % grating contrast value when stim.on = 1
+p.trial.stim.GRATING.highContrast = 0;  % grating contrast value when stim.on = 2
+
+p.trial.stim.GRATING.res          = 300;
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -36,16 +77,15 @@ p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust f
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.75, 0.75); % Time from initial reward to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.25, 0.25); % Time from initial reward to stim appearing
 %p.trial.task.centerOffLatency = ND_GetITI(0.25, 0.8); % Time from stim appearing to fixspot disappearing
 
 p.trial.task.saccadeTimeout   = 2.5;  % Time allowed to make the saccade to the stim before error
-p.trial.task.minSaccReactTime = 0.05; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
+p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 0.25; % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25; % ad short delay after correct response before turning stimuli off
-p.trial.task.Timing.MinITI    = 1.0;  % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI    = 2.5;  % maximum time period [s] between subsequent trials
-p.trial.task.Timing.TimeOut    =  2;  % Time-out[s]  for incorrect responses
+p.trial.task.Timing.TimeOut   =  1.5;  % Time-out[s]  for incorrect responses
+p.trial.task.Timing.ITI       = ND_GetITI(0.75,  1.5,  [], [], 1, 0.10);
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
@@ -113,47 +153,8 @@ p.trial.Block.maxBlockTrials =  [3, 4, 1];
 p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color  = 'magenta';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size   = 0.2;       % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin = 2.5;
-
-% ------------------------------------------------------------------------%
-%% Grating stimuli parameters
-p.trial.stim.GRATING.fixWin  = 3;
-
-% spatial & temporal frequency
-% p.trial.stim.GRATING.sFreq  = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
-%p.trial.stim.GRATING.sFreq    = 2;  % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
-p.trial.stim.GRATING.tFreq    = 0;  % temporal frequency of grating; drift speed, 0 is stationary
-%p.trial.stim.GRATING.ori      = 45; % orientation of grating
-p.trial.stim.GRATING.radius   = 1;  % radius of grating patch
-
-% Grating position
-% position and angle assignment
-%      ____________________
-%     |  135 |  90  |   45 |
-%     |  (7) |  (8) |  (9) |
-%     |______|______|______|
-%     |  180 |      |   0  |
-%     |  (4) |  *   |  (6) |
-%     |______|______|______|
-%     |  225 |  270 |  315 |
-%     |  (1) |  (2) |  (3) |
-%     |______|______|______|
-%
-
-p.trial.stim.GRATING.eccentricity = 4;
-p.trial.stim.GRATING.GridAngles   = [225, 270, 315, 180, 0, 135, 90, 45]; % angular position of grating for the 8 keypad controlled locations
-p.trial.stim.GRATING.AngleArray   = 0:30:359;  %
-p.trial.stim.GRATING.RandAngles   = 0:15:359;  % if in random mode chose an angle from this list
-
-% grating contrast
-% currcont = datasample([0.01, 0.02, 0.05, 0.1, 0.2], 1);
-currcont = 0.3;
-
-p.trial.stim.GRATING.lowContrast  = 0.2;  % grating contrast value when stim.on = 1
-p.trial.stim.GRATING.highContrast = 0.75;  % grating contrast value when stim.on = 2
-
-p.trial.stim.GRATING.res          = 300;
+p.trial.stim.FIXSPOT.size   = 0.15;       % size of the fixation spot
+%p.trial.stim.FIXSPOT.fixWin = 2.5;
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

@@ -78,8 +78,8 @@ if(isempty(state))
 
     % define random grating parameters for each session
     p.trial.stim.GRATING.PosAngle = datasample(0:15:359, 1);
-    p.trial.stim.GRATING.sFreq    = datasample(1:0.25:8, 1);  % spatial frequency as cycles per degree
-    p.trial.stim.GRATING.ori      = datasample(0:15:179, 1);; % orientation of grating
+    p.trial.stim.GRATING.sFreq    = datasample(1:0.25:6, 1); % spatial frequency as cycles per degree
+    p.trial.stim.GRATING.ori      = datasample(0:15:179, 1); % orientation of grating
 
 else
     % ####################################################################### %
@@ -123,7 +123,7 @@ else
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
-        %    TaskDraw(p);
+           TaskDraw(p);
 
         % ------------------------------------------------------------------------%
         % DONE AFTER THE MAIN TRIAL LOOP:
@@ -143,9 +143,6 @@ end  %/  if(nargin == 1) [...] else [...]
 function TaskSetUp(p)
     %% main task outline
     % Determine everything here that can be specified/calculated before the actual trial start
-    p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
-                                         p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
-    ND_SwitchEpoch(p, 'ITI')
 
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
@@ -184,6 +181,8 @@ function TaskSetUp(p)
     
     p.trial.task.centerOffLatency = ND_GetITI(p.trial.task.MinWaitGo, p.trial.task.MaxWaitGo); % Time from stim appearing to fixspot disappearing
 
+    ND_SwitchEpoch(p, 'ITI')
+    
 % ####################################################################### %
 function TaskDesign(p)
     %% main task outline
@@ -420,8 +419,16 @@ function TaskDesign(p)
     end  % switch p.trial.CurrEpoch
 
 % ####################################################################### %
-% function TaskDraw(p)
+function TaskDraw(p)
 %% Custom draw function for this experiment
+
+    % show helping cue by moving fixation spot to target location
+    if(p.trial.task.ShowHelp == 1 && p.trial.task.stimState == 2)
+        HelpRect = ND_GetRect(p.trial.stim.GRATING.pos, 2*p.trial.stim.FIXSPOT.size);
+
+        Screen('FillOval',  p.trial.display.overlayptr, ...
+            p.trial.display.clut.(p.trial.stim.FIXSPOT.color), HelpRect);
+    end
 
 % ####################################################################### %
 function TaskCleanAndSave(p)
@@ -482,51 +489,54 @@ end
 
 % ####################################################################### %
 function stim(p, val)
-    % Turn on/off or change the stim
-    oldVal = p.trial.task.stimState;
-
     % Don't do anything if stim doesn't change
-    if(val == oldVal)
-        return;
+    if(val ~= p.trial.task.stimState)
+ 
+        oldVal = p.trial.task.stimState;
+        p.trial.task.stimState = val;
+
+        % Turn on/off the appropriate generated stimuli
+        % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
+        switch val
+            case 0
+                p.trial.stim.gratingL.on = 0;
+                p.trial.stim.gratingH.on = 0;
+
+            case 1
+                p.trial.stim.gratingL.on = 1;
+                p.trial.stim.gratingH.on = 0;
+                p.trial.stim.gratingH.fixActive = 1;
+
+            case 2
+                p.trial.stim.gratingL.on = 0;
+                p.trial.stim.gratingH.on = 1;
+                p.trial.stim.gratingH.fixActive = 1;
+
+    %             if(p.trial.task.ShowHelp)
+    %                 HelpRect = ND_GetRect(p.trial.stim.GRATING.pos, p.trial.stim.FIXSPOT.size);
+    % 
+    %                 Screen('FillOval',  p.trial.display.overlayptr, ...
+    %                     p.trial.display.clut.(p.trial.stim.FIXSPOT.color), HelpRect);
+    %             end
+
+            otherwise
+                error('bad stim value')
+        end
+
+        % Record the change timing
+        if(val == 0)
+            % Stim is turning off
+            ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
+
+        elseif(oldVal == 0)
+            % Stim is turning on
+            ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+
+        else
+            % Stim is changing
+            ND_AddScreenEvent(p, p.trial.event.STIM_CHNG, 'StimChange');
+        end
     end
-
-    p.trial.task.stimState = val;
-
-    % Turn on/off the appropriate generated stimuli
-    % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
-    switch val
-        case 0
-            p.trial.stim.gratingL.on = 0;
-            p.trial.stim.gratingH.on = 0;
-
-        case 1
-            p.trial.stim.gratingL.on = 1;
-            p.trial.stim.gratingH.on = 0;
-            p.trial.stim.gratingH.fixActive = 1;
-
-        case 2
-            p.trial.stim.gratingL.on = 0;
-            p.trial.stim.gratingH.on = 1;
-            p.trial.stim.gratingH.fixActive = 1;
-
-        otherwise
-            error('bad stim value')
-    end
-
-    % Record the change timing
-    if(val == 0)
-        % Stim is turning off
-        ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
-
-    elseif(oldVal == 0)
-        % Stim is turning on
-        ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
-
-    else
-        % Stim is changing
-        ND_AddScreenEvent(p, p.trial.event.STIM_CHNG, 'StimChange');
-    end
-
 % ####################################################################### %
 function Calculate_SRT(p)
 

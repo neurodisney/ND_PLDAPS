@@ -99,6 +99,9 @@ pFixBreak  = dt$Outcome == 'FixBreak'
 pMiss      = dt$Outcome == 'Miss'
 pStim      = pCorr | dt$Outcome == pHoldErr
 
+pAll = pCorr | pHoldErr | pEarly | pFixBreak | pStimBreak
+
+
 ###########################################################################################
 # get relevant variables
 Ttime     = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
@@ -122,7 +125,7 @@ if("AnglePos" %in% colnames(dt)){
     TPos = round(cart2pol(dt$StimPosX, dt$StimPosY,degree=TRUE)$theta)
 }
 
-TPos[TPos > 180] = Tpos - 360
+TPos[TPos > 180] = TPos - 360
 TPos = as.factor(TPos)
 
 # derive RT times
@@ -292,6 +295,13 @@ if(sum(pStimBreak) > 1) {
   all_vals_Y = c(all_vals_Y, TDurstimbreak$y)
 }
 
+
+TDurall   = density(StimSRT[pAll], bw=RTbw, na.rm=TRUE)
+TDurall$y = TDurall$y  * sum(pAll)  * RTbw
+all_vals_X = c(all_vals_X, TDurall$x)
+all_vals_Y = c(all_vals_Y, TDurall$y)
+
+
 GoBrks  = seq(from=floor(min(dt$GoLatency*10))/10, to=ceiling(max(dt$GoLatency*10))/10, by=RTbw)
 All_Cnt = hist(dt$GoLatency, GoBrks, plot=FALSE, na.rm=TRUE)
 
@@ -299,6 +309,8 @@ All_Cnt$counts = 0.2 * max(all_vals_Y) * All_Cnt$counts / max(All_Cnt$counts)
 
 plot(All_Cnt, xaxs='i', yaxs='i', main='Response after Target Onset', xlim=range(all_vals_X), ylim=range(all_vals_Y),
      ylab='count', xlab='Trial Duration [s]', col='gray50', border=NA)
+
+lines(TDurall, lwd=2, col='darkgrey')
 
 if(sum(pCorr) > 1) {
   lines(TDurhit, lwd=2, col=Corr_Col)
@@ -365,8 +377,15 @@ if(sum(pStimBreak) > 1) {
   all_vals_Y = c(all_vals_Y, RTstimbreak$y)
 }
 
+RTall   = density(SRT[pAll], bw=RTbw, na.rm=TRUE)
+RTall$y = RTall$y  * sum(pAll)  * RTbw
+all_vals_X = c(all_vals_X, RTall$x)
+all_vals_Y = c(all_vals_Y, RTall$y)
+
 plot(range(all_vals_X), range(all_vals_Y), type='n', xaxs='i', yaxs='i', main='Response after Go Cue',
      ylab='count', xlab='SRTs [s]')
+
+lines(RTall, lwd=2, col='darkgrey')
 
 if(sum(pCorr) > 1) {
   lines(RThit, lwd=2, col=Corr_Col)
