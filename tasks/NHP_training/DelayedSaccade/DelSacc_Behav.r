@@ -1,15 +1,15 @@
 #!/usr/bin/Rscript
 
 ## load required packages
-require(useful)
-require(catspec)
-require(beanplot)
+require(useful,   quietly=TRUE)
+require(catspec,  quietly=TRUE)
+require(beanplot, quietly=TRUE)
 
 # Function for plotting data from the delayed saccade task
 DelSacc_Behav = function(datadir=NA, fname=NA) {
 
 ## specify analysis/graph parameters
-avrgwin  =   120  # moving average window for performance plot in seconds
+avrgwin  =   180  # moving average window for performance plot in seconds
 avrgstep =     1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
 RTbw     =  0.02  # kernel width for density estimate of response times
 
@@ -45,10 +45,10 @@ if(length(fname)>1) {
 ###########################################################################################
 # standardize outcomes
 
-SessTimeRng = range(dt$FixSpotOn)
+SessTimeRng    = range(c(dt$FixSpotOn, dt$FixSpotOff), na.rm=TRUE)
 SessTrialStart = SessTimeRng[1]
 SessTrialEnd   = diff(SessTimeRng)
-Break_trial = which(dt$Outcome == 'Break')
+Break_trial    = which(dt$Outcome == 'Break')
 
 if(length(Break_trial) == 0){
   Break_start = NA
@@ -80,9 +80,10 @@ if(length(Break_trial) == 0){
 
 # get rid of un-started trials
 # (ToDo: keep times when experimenter initiated breaks starts)
-dt = droplevels(subset(dt, dt$Outcome != 'NoFix' & dt$Outcome != 'Break'  & dt$Outcome != 'NoStart'))
+#dt = droplevels(subset(dt, dt$Outcome != 'NoFix' & dt$Outcome != 'Break'  & dt$Outcome != 'NoStart'))
+#dt = droplevels(subset(dt, dt$Outcome != 'NoFix' & dt$Outcome != 'Break'  & dt$Outcome != 'NoStart'))
 
-Ntrials = length(dt$Outcome)
+
 
 #dt$Outcome[dt$Outcome == 'NoFix']        = 'NoStart'
 dt$Outcome = as.factor(dt$Outcome)
@@ -98,9 +99,10 @@ pFixBreak  = dt$Outcome == 'FixBreak'
 pMiss      = dt$Outcome == 'Miss'
 pStim      = pCorr | dt$Outcome == pHoldErr
 
-pAll = pCorr | pHoldErr | pEarly | pFixBreak | pStimBreak
+# pAll       = pCorr | pHoldErr | pEarly | pFixBreak | pStimBreak
 
-
+pAll       = dt$Outcome != 'NoStart' & dt$Outcome != 'NoFix' & dt$Outcome != 'Break'
+Ntrials = sum(pAll)
 ###########################################################################################
 # get relevant variables
 Ttime     = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
@@ -203,11 +205,11 @@ Rholderr   = rep(0, length(Tavrg))
 cnt = 0
 for(i in 1:length(Tavrg)) {
   cnt = cnt + 1
-  cpos = Ttime > Tavrg[cnt]-avrgwin/120 &  Ttime < Tavrg[cnt]+avrgwin/120
+  cpos = Ttime > Tavrg[cnt]-avrgwin/120 & Ttime < Tavrg[cnt]+avrgwin/120 & pAll == 1
 
   Nall = sum(cpos)
 
-  if(Nall > 3){
+  if(Nall > 1){
     Rcorr[cnt]      = 100 * sum(cpos & pCorr)      /Nall
     Rfixbreak[cnt]  = 100 * sum(cpos & pFixBreak)  /Nall
     Rstimbreak[cnt] = 100 * sum(cpos & pStimBreak) /Nall
@@ -293,15 +295,13 @@ if(sum(pStimBreak) > 1) {
   all_vals_Y = c(all_vals_Y, TDurstimbreak$y)
 }
 
-
-TDurall   = density(StimSRT[pAll], bw=RTbw, na.rm=TRUE)
-TDurall$y = TDurall$y  * sum(pAll)  * RTbw
+TDurall    = density(StimSRT[pAll], bw=RTbw, na.rm=TRUE)
+TDurall$y  = TDurall$y  * sum(pAll)  * RTbw
 all_vals_X = c(all_vals_X, TDurall$x)
 all_vals_Y = c(all_vals_Y, TDurall$y)
 
-
 GoBrks  = seq(from=floor(min(dt$GoLatency*10))/10, to=ceiling(max(dt$GoLatency*10))/10, by=RTbw)
-All_Cnt = hist(dt$GoLatency, GoBrks, plot=FALSE, na.rm=TRUE)
+All_Cnt = hist(dt$GoLatency, breaks=GoBrks, plot=FALSE)
 
 All_Cnt$counts = 0.2 * max(all_vals_Y) * All_Cnt$counts / max(All_Cnt$counts)
 
@@ -408,7 +408,6 @@ if(sum(pStimBreak) > 1) {
 abline(v=median(SRT[pCorr], na.rm=TRUE), col=Corr_Col, lty=3, lwd=2)
 abline(v=median(SRT[pEarly], na.rm=TRUE), col=Early_Col, lty=3, lwd=2)
 
-
 ###########################################################################################
 # plot 7: performance barplot
 All_perf =  c(sum(pCorr), sum(pEarly), sum(pFixBreak), sum(pStimBreak), sum(pHoldErr), sum(pFalse), sum(pMiss))
@@ -430,12 +429,12 @@ NumCond = 6  # -1 because it defines start and end of interval
 DelBrks = seq(floor(min(GoSig*10))/10, ceiling(max(GoSig*10))/10, length=NumCond)
 DelCat  = as.factor(cut(GoSig, breaks=DelBrks, labels= as.character(1:(NumCond-1))))
 
-All_Cnt       = hist(GoSig,             DelBrks, plot=FALSE)$counts
-Hit_Cnt       = hist(GoSig[pCorr],      DelBrks, plot=FALSE)$counts
-HoldErr_Cnt   = hist(GoSig[pHoldErr],   DelBrks, plot=FALSE)$counts
-FixBreak_Cnt  = hist(GoSig[pFixBreak],  DelBrks, plot=FALSE)$counts
-StimBreak_Cnt = hist(GoSig[pStimBreak], DelBrks, plot=FALSE)$counts
-Early_Cnt     = hist(GoSig[pEarly],     DelBrks, plot=FALSE)$counts
+All_Cnt       = hist(GoSig,             breaks=DelBrks, plot=FALSE)$counts
+Hit_Cnt       = hist(GoSig[pCorr],      breaks=DelBrks, plot=FALSE)$counts
+HoldErr_Cnt   = hist(GoSig[pHoldErr],   breaks=DelBrks, plot=FALSE)$counts
+FixBreak_Cnt  = hist(GoSig[pFixBreak],  breaks=DelBrks, plot=FALSE)$counts
+StimBreak_Cnt = hist(GoSig[pStimBreak], breaks=DelBrks, plot=FALSE)$counts
+Early_Cnt     = hist(GoSig[pEarly],     breaks=DelBrks, plot=FALSE)$counts
 
 PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt)
 
@@ -523,7 +522,14 @@ dev.off()
 
 ###########################################################################################
 # Get rough overview
-print(ctab(table(dt$Outcome), addmargins=TRUE))
+print(ctab(table(dt$Outcome[pAll]), addmargins=TRUE))
+
+Twork  = dt$FixSpotOff[pAll] - dt$FixSpotOn[pAll]
+Pwork  = round(100 * sum(Twork, na.rm=TRUE) / SessTrialEnd, 2)
+Ptrial = round(100*sum(pAll)/length(pAll), 2)
+
+print(paste('Animal started ', Ptrial, '% of all trials (', Ntrials,') and worked ', Pwork, '% (',round(sum(Twork, na.rm=TRUE)/60,2),' min) of the session time (',round(SessTrialEnd/60,2),' min).', sep=''))
+
 }
 
 # If this program was called from the command line, load in the datadir and fname arguments
