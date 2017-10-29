@@ -22,6 +22,9 @@ if(isfield(p.trial.task, 'TaskDef'))
 end
 
 % ------------------------------------------------------------------------%
+%% Frame number
+p.trial.iFrame = 1;
+% ------------------------------------------------------------------------%
 %% Photo Diode
 if(p.trial.pldaps.draw.photodiode.use)
     p.trial.timing.photodiodeTimes         = nan(2,p.trial.pldaps.maxFrames);

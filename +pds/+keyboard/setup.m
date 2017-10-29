@@ -121,13 +121,13 @@ if scan && isMac
         
     end
 end
-p.trial.keyboard.codes=kb;
+p.defaultParameters.keyboard.codes=kb;
 
 pds.keyboard.clearBuffer(p);
 
  [~, firstPress]=KbQueueCheck();
  
- p.trial.keyboard.nCodes=length(firstPress);
+ p.defaultParameters.keyboard.nCodes=length(firstPress);
 
 % [kb.keyIsDown, ~, kb.keyCode] = KbCheck(-1);
 

@@ -4,30 +4,30 @@ function p = ND_GenCndLst(p)
 %
 % wolf zinke, Sep. 2017
 
-if(p.trial.Block.GenBlock == 1)  
+if(p.defaultParameters.Block.GenBlock == 1)  
 %% generate a new block
     % if there is a desired number of blocks use this to pre-allocate, 
     % otherwise add one block after another
-    if(p.trial.Block.maxBlocks < 0)
+    if(p.defaultParameters.Block.maxBlocks < 0)
         maxBlocks = 1;
     else
         maxBlocks = p.Block.maxBlocks;
     end
     
     % if blocks are added continously check the last block number
-    if(isempty(p.trial.Block.BlockList))
+    if(isempty(p.defaultParameters.Block.BlockList))
         lastBlock = 0;
     else
-        lastBlock = p.trial.Block.BlockList(end);
+        lastBlock = p.defaultParameters.Block.BlockList(end);
     end
 
-    Ncond = length(p.trial.Block.Conditions); % how many conditions do we have
+    Ncond = length(p.defaultParameters.Block.Conditions); % how many conditions do we have
 
-    maxTrialsCond = p.trial.Block.maxBlockTrials;
+    maxTrialsCond = p.defaultParameters.Block.maxBlockTrials;
     
     if(length(maxTrialsCond) == 1)
         maxTrialsCond = repmat(maxTrialsCond, 1, Ncond);
-    elseif(length(p.trial.Block.maxBlockTrials) ~= Ncond)
+    elseif(length(p.defaultParameters.Block.maxBlockTrials) ~= Ncond)
         error('List of number of trials per condition must match number of conditions!');
     end
 
@@ -42,8 +42,8 @@ if(p.trial.Block.GenBlock == 1)
     % is the total number of trials pre-defiend or do we run until experimenter break?
     maxTrials = maxTrials_per_Block * maxBlocks;   % total number of trials for all blocks
 
-    if(p.trial.Block.maxBlocks > 0)
-        p.trial.pldaps.finish = maxTrials;
+    if(p.defaultParameters.Block.maxBlocks > 0)
+        p.defaultParameters.pldaps.finish = maxTrials;
     end
 
     % pre-allocate
@@ -57,39 +57,39 @@ if(p.trial.Block.GenBlock == 1)
         BLKlst(Blk:Blk+maxTrials_per_Block-1) = i + lastBlock;
     end
 
-    p.conditions   = [p.conditions, p.trial.Block.Conditions(CNDlst)];
-    p.trial.Block.BlockList = [p.trial.Block.BlockList, BLKlst]; 
+    p.conditions   = [p.conditions, p.defaultParameters.Block.Conditions(CNDlst)];
+    p.defaultParameters.Block.BlockList = [p.defaultParameters.Block.BlockList, BLKlst]; 
 
-    p.trial.Block.GenBlock = 0; % just generated a block, so no need to do it again
+    p.defaultParameters.Block.GenBlock = 0; % just generated a block, so no need to do it again
 
 else
 %% update condition/block list
 
     % do we need to repeat conditions?
-    if(p.trial.Block.EqualCorrect && ~p.trial.pldaps.goodtrial) % need to check if success, repeat if not    
-        curCND = p.conditions{p.trial.pldaps.iTrial};
-        curBLK = p.trial.Block.BlockList(p.trial.pldaps.iTrial);
+    if(p.defaultParameters.Block.EqualCorrect && ~p.defaultParameters.pldaps.goodtrial) % need to check if success, repeat if not    
+        curCND = p.conditions{p.defaultParameters.pldaps.iTrial};
+        curBLK = p.defaultParameters.Block.BlockList(p.defaultParameters.pldaps.iTrial);
 
         poslst = 1:length(p.conditions);
-        cpos   = find(poslst > p.trial.pldaps.iTrial & p.trial.Block.BlockList == curBLK);
+        cpos   = find(poslst > p.defaultParameters.pldaps.iTrial & p.defaultParameters.Block.BlockList == curBLK);
 
         InsPos = cpos(randi(length(cpos))); % determine random position in the current block for repetition
 
         p.conditions   = [p.conditions(  1:InsPos-1), curCND,  p.conditions(  InsPos:end)];
-        p.trial.Block.BlockList = [p.trial.Block.BlockList(1:InsPos-1), curBLK,  p.trial.Block.BlockList(InsPos:end)];
+        p.defaultParameters.Block.BlockList = [p.defaultParameters.Block.BlockList(1:InsPos-1), curBLK,  p.defaultParameters.Block.BlockList(InsPos:end)];
 
-        if(isfinite(p.trial.pldaps.finish))
-            p.trial.pldaps.finish = p.trial.pldaps.finish + 1; % added a required trial
+        if(isfinite(p.defaultParameters.pldaps.finish))
+            p.defaultParameters.pldaps.finish = p.defaultParameters.pldaps.finish + 1; % added a required trial
         end
     end
     
     % Do we need to generate a new block?
-    if(p.trial.pldaps.iTrial == length(p.conditions) && ~isfinite(p.trial.pldaps.finish))
-         p.trial.Block.GenBlock = 1;
+    if(p.defaultParameters.pldaps.iTrial == length(p.conditions) && ~isfinite(p.defaultParameters.pldaps.finish))
+         p.defaultParameters.Block.GenBlock = 1;
          p = ND_GenCndLst(p);
          
-    elseif(p.trial.pldaps.iTrial == p.trial.pldaps.finish)
-        p.trial.pldaps.quit = 1;
+    elseif(p.defaultParameters.pldaps.iTrial == p.defaultParameters.pldaps.finish)
+        p.defaultParameters.pldaps.quit = 1;
     end
 end
 

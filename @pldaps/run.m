@@ -44,7 +44,7 @@ try
     else
         feval(p.defaultParameters.session.experimentSetupFile, p); 
     end
-
+    
     %-------------------------------------------------------------------------%
     %% Open PLDAPS windows
     % Open PsychToolbox Screen
@@ -56,7 +56,7 @@ try
 
     % --------------------------------------------------------------------%
     %% Last chance to check variables
-    if(p.trial.pldaps.pause)
+    if(p.defaultParameters.pldaps.pause)
         disp('Ready to begin trials. Type return to start first trial...')
         pause
         p.trial.pldaps.pause = 0;

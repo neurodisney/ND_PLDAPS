@@ -214,10 +214,6 @@ end
 p.conditions      = {};
 %p.Block.BlockList = [];
 
-%-------------------------------------------------------------------------%
-%% create p.trial as copy of the default parameters
-p.trial = p.defaultParameters;
-
 % --------------------------------------------------------------------%
 %% helper functions
 

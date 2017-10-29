@@ -53,6 +53,8 @@ SS.datapixx.GetPreciseTime.maxDuration          = 0.015;  % maximum duration in 
 SS.datapixx.GetPreciseTime.optMinwinThreshold   = 1.2e-4; % Minimum Threshold that defines a good estimate to end before maxDuration
 SS.datapixx.GetPreciseTime.syncmode             = 2;      % syncmode: accepted values are 1,2,3
 
+SS.datapixx.LogOnsetTimestampLevel              = 2;
+
 % adc: Continuously collect and store adc data from Datapixx.
 SS.datapixx.adc.bufferAddress                   = [];     % typically left empty.
 SS.datapixx.adc.channelGains                    = 1;      % Apply a gain to collected data.
@@ -144,6 +146,9 @@ SS.tdt.bitsPerSort                              = 4;  % Bits used to encode numb
 SS.mouse.use                                    = 0;     % collect and store mouse positions
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
 
+% Some vestigal parameters from PLDAPS class defaults
+SS.mouse.useLocalCoordinates                    = 0;
+SS.mouse.initialCoordinates                     = [];
 % ------------------------------------------------------------------------%
 %% Sound: control sound playback
 SS.sound.use                                    = 0;     % toggle use of sound   !!!
@@ -189,7 +194,7 @@ SS.pldaps.draw.eyepos.use                       = 0;     % enable drawing of the
 
 % frame rate: control drawing of a frame rate history to see frame drops.
 SS.pldaps.draw.framerate.location               = [-30, -10]; % location (XY) of the plot in degrees of visual angle.
-SS.pldaps.draw.framerate.nSecond                = 5;          % number of seconds to show the history for
+SS.pldaps.draw.framerate.nSeconds               = 5;          % number of seconds to show the history for
 SS.pldaps.draw.framerate.show                   = 0;          % draw the frame rate. need use to be enabled as well
 SS.pldaps.draw.framerate.size                   = [10, 5];    % size (XY) of the plot in degrees of visual angle.
 SS.pldaps.draw.framerate.use                    = 1;          % set to true to collect data needed to show frame rate.

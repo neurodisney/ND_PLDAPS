@@ -45,7 +45,7 @@ if ~isempty(p.defaultParameters.datapixx.propixxIntensity)
     disp('Changing Propixx Projector Intensity')
     disp('****************************************************************')
 
-    command = ['./propixx-brightness.expect ', mat2str(p.trial.datapixx.propixxIntensity)];
+    command = ['./propixx-brightness.expect ', mat2str(p.defaultParameters.datapixx.propixxIntensity)];
     [~,~] = system(command);
 end
 
