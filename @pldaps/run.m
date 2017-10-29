@@ -72,11 +72,19 @@ try
     HideCursor
 
     p.trial.flagNextTrial  = 0; % flag for ending the trial
-    p.trial.iFrame         = 1; % frame index
+    p.trial.pldaps.quit = 0;
+    p.trial.pldaps.pause = 0;
 
     trialNr = 0;
     p.trial.pldaps.iTrial = 0;
 
+    % --------------------------------------------------------------------%
+    %% Load any p.trial alterations in p.defaultParameters
+    % Assume any thing loaded into p.trial by this point should be kept and load it into defaultParameters
+    if ~isempty(p.trial)
+        p.defaultParameters = ND_AlterSubStruct(p.defaultParameters, p.trial);
+    end
+    
     % --------------------------------------------------------------------%
     %% prepare first trial
     preExperimentParameters = p.defaultParameters;
@@ -84,7 +92,7 @@ try
     % save default parameters to trial data directory
     save(fullfile(p.defaultParameters.session.trialdir, ...
         [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds']), ...
-        '-struct', 'tmpts', '-mat', '-v7.3');
+        '-struct', 'preExperimentParameters', '-mat', '-v7.3');
 
     %% main trial loop %%
     while(p.trial.pldaps.quit == 0)
@@ -113,8 +121,12 @@ try
 
             % Make sure defaultParameters do not change during a trial (should be exclusively done in ND_UpdateTrial
             dpPostTrial = p.defaultParameters;
-            if ~isequal(dpPreTrial, dpPostTrial)
+            if ~isequaln(dpPreTrial, dpPostTrial)
                 warning('defaultParameters changed within a trial, should only be chaged between trials')
+                % Iterate through the two structs to find the differences (for debugging purposes)
+                [~, preDifferent, postDifferent] = ND_CompareStructs(dpPreTrial, dpPostTrial);
+                % Display the postDifferent struct
+                disp(postDifferent)
             end
                 
             % ----------------------------------------------------------------%            
@@ -179,11 +191,6 @@ try
                   [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pdf']);
         p.defaultParameters.plot.fig = []; % avoid saving the figure to data
     end
-    
-    % ----------------------------------------------------------------%
-    %% make the session parameterStruct active
-    p.defaultParameters.setLevels(preExperimentParameters);
-    p.trial = p.defaultParameters;
 
     % ----------------------------------------------------------------%
     %% return cursor and command-line control
@@ -214,11 +221,11 @@ try
     %% save the session data to file
     
     % save defaultParameters as they are at the end of the session
-    tmpts = mergeToSingleStruct(p.defaultParameters);
+    postExperimentParameters =p.defaultParameters;
 
     save(fullfile(p.defaultParameters.session.trialdir, ...
              [p.defaultParameters.session.filestem, '_FinalDefaultParameters.pds']), ...
-             '-struct', 'tmpts', '-mat', '-v7.3');
+             '-struct', 'postExperimentParameters', '-mat', '-v7.3');
 
 % ----------------------------------------------------------------%
     %% close screens
