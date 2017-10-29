@@ -41,7 +41,7 @@ SS.plot.routine    = 'InitFixTrain_plots';        % function for online plotting
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.fixWin', 'stim.FIXSPOT.pos'};
+SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.pos'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
@@ -50,7 +50,7 @@ SS.sound.use                  = 0;
 SS.sound.useDatapixx          = 1;
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
-SS.plot.do_online             = 1; % run online data analysis between two subsequent trials
+SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
 SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
@@ -69,6 +69,10 @@ SS.behavior.fixation.enableCalib    = 1;
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
+
+%SS.eyeCalib.defaultOffset = [-19.9321 -23.2293];
+%SS.eyeCalib.defaultGain   = [-5, -10];
+
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
 % If there are modification from the default settings needed, copy the
@@ -77,32 +81,8 @@ SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states
 SS.display.bgColor    = [0.25, 0.25, 0.25];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
-% SS.behavior.fixation.FixWin     = 8;
-SS.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixWinStp  = 1;    % change of the size of the fixation window upon key press
-SS.behavior.fixation.FixSPotStp = 0.25;
-SS.stim.FIXSPOT.fixWin  = 6;         
-
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
-
-% ------------------------------------------------------------------------%
-%% Special debug mode variables
-if strcmp(subjname,'mouse')
-    
-    % Use the mouse as eyeposition
-    SS.mouse.use = 1;
-    SS.mouse.useAsEyepos = 1;
-    
-    % Don't collect any analog channels
-    SS.datapixx.adc.PupilChannel   = [];
-    SS.datapixx.adc.XEyeposChannel = [];
-    SS.datapixx.adc.YEyeposChannel = [];
-    %SS.datapixx.adc.RewardChannel  = [];  
-    SS.datapixx.useAsEyepos        = 0;
-    SS.behavior.joystick.use       = 0;
-    %SS.datapixx.useForReward       = 0;
-end
 
 % ------------------------------------------------------------------------%
 %% create the pldaps class

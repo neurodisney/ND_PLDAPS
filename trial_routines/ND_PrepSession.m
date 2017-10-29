@@ -13,6 +13,29 @@ disp('>>>>  Preparing Sessions <<<<')
 disp('****************************************************************')
 disp('');
 
+% ------------------------------------------------------------------------%
+%% Special debug mode variables
+% set parameters according to a debug/testing mode
+if(strcmp(p.defaultParameters.session.subject,'mouse') || strcmp(p.defaultParameters.session.subject,'debug') || ...
+   strcmp(p.defaultParameters.session.subject,'test'))
+    
+    if(strcmp(p.defaultParameters.session.subject,'mouse'))
+    % Use the mouse as eyeposition
+        p.defaultParameters.mouse.use = 1;
+        p.defaultParameters.mouse.useAsEyepos = 1;
+    end
+    
+    % Don't collect any analog channels
+    p.defaultParameters.datapixx.adc.PupilChannel     = [];
+    p.defaultParameters.datapixx.adc.XEyeposChannel   = [];
+    p.defaultParameters.datapixx.adc.YEyeposChannel   = [];
+    % p.defaultParameters.datapixx.adc.RewardChannel  = [];  
+    p.defaultParameters.datapixx.useAsEyepos          = 0;
+    p.defaultParameters.behavior.joystick.use         = 0;
+    % p.defaultParameters.datapixx.useForReward       = 0;
+    % p.defaultParameters.sound.use                   = 0;
+end
+
 p.defaultParameters.DateStr = datestr(p.defaultParameters.session.initTime,'yyyy_mm_dd');
 
 % --------------------------------------------------------------------%
@@ -188,8 +211,8 @@ end
 % This is a quck&dirty ad hoc fix to not touch the pldaps call where conditions are defined.
 % We define conditions in the experimental setup file (that will be called after executing the
 % current function) or if nothing is defined use our default definition.
-p.conditions       = {};
-SS.Block.BlockList = [];
+p.conditions      = {};
+%p.Block.BlockList = [];
 
 %-------------------------------------------------------------------------%
 %% create p.trial as copy of the default parameters

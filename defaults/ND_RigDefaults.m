@@ -137,7 +137,7 @@ end
 
 SS.tdt.channels                                 = 16; % Number of ephys channels to analyze in incoming data
 SS.tdt.sortCodes                                = 4;  % Number of units classified per channel. [1, 2, or 4]
-SS.tdt.bitsPerSort                              = 2;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
+SS.tdt.bitsPerSort                              = 4;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
 % ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
@@ -256,6 +256,8 @@ SS.behavior.fixation.entryTime = 0.025;    % minimum time [s] before fixation is
 SS.behavior.fixation.BreakTime = 0.05;     % minimum time [s] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
 
+SS.behavior.fixation.MinFixStart = 0.1;    % minimum time gaze has to be in fixation window to start trial, if GiveInitial == 1 after this period a reward is given
+
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibration
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
@@ -274,7 +276,7 @@ SS.behavior.fixation.calibSamples    = 200;    % analog eyesamples in the the da
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixSPotStp      = 0.1;   % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixSPotStp      = 0.1;    % change of the size of the fixation window upon key press
 SS.behavior.fixation.GridPos         = 5;      % cntral fixation position (for pure offset correction)
 
 SS.behavior.fixation.FixWinStp       = 0.25;   % change of the size of the fixation window upon key press
@@ -284,11 +286,13 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 % rig specific eye calibration parameter
 switch rig
     case 1
-        SS.eyeCalib.defaultGain      = [-3.5622, -3.4474];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [0.3528, 1.3147];    % default offset, used if no calibration points are entered
-     case 2
-        SS.eyeCalib.defaultGain      = [-5, -10];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [0 0];      % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [-8.438,-8.293];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [0.748,4.534];    % default offset, used if no calibration points are entered
+     
+    case 2
+        SS.eyeCalib.defaultGain      = [-15.34 -17.65];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.273 -1.052];  % default offset, used if no calibration points are entered
+        
     otherwise
         SS.eyeCalib.defaultGain      = [-3.5622, -3.4474];  % default gain, used if no calibration points are entered
         SS.eyeCalib.defaultOffset    = [0 0];    % default offset, used if no calibration points are entered
@@ -377,8 +381,8 @@ SS.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 
 % ------------------------------------------------------------------------%
 %% Control screen flips
-SS.pldaps.draw.ScreenEvent     = 0;       % no event awaiting, otherwise use event code to be sent to TDT
-SS.pldaps.draw.ScreenEventName = 'NULL';  % keep track of times in pldaps data file
+SS.pldaps.draw.ScreenEvent     = [];      % no event awaiting, otherwise use event code to be sent to TDT
+SS.pldaps.draw.ScreenEventName = {};      % keep track of times in pldaps data file
 
 % ------------------------------------------------------------------------%
 %% Keyboard assignments

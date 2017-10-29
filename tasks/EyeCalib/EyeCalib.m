@@ -184,7 +184,7 @@ function TaskDesign(p)
                
                 % Fixation has occured
                 if p.trial.FixState.Current == p.trial.FixState.FixIn
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; %Will become FullFixation upon holding long enough
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak; %Will become Fixation upon holding long enough
                     p.trial.behavior.fixation.GotFix = 1;
                     p.trial.Timer.fixStart = p.trial.CurTime;
                 end
@@ -203,7 +203,7 @@ function TaskDesign(p)
                     
                     % Succesful
                     p.trial.task.Good = 1;
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;
                     
                     % Record when the monkey started fixating
                     p.trial.EV.FixStart = p.trial.Timer.fixStart;
@@ -306,19 +306,19 @@ if(~isempty(p.trial.LastKeyPress))
             % move target by steps
         case KbName('RightArrow')
             p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixGridStp, 0];
-            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
             
         case KbName('LeftArrow')
             p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixGridStp, 0];
-            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
             
         case KbName('UpArrow')
             p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixGridStp];
-            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
             
         case KbName('DownArrow')
             p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixGridStp];
-            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
+            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
     end
 end
 

@@ -18,8 +18,7 @@ else
     p.defaultParameters.LastHits   = 0;     % how many correct trials since last error
 end
 
-if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && ...
-        p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)
+if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)
     p.defaultParameters.NCompleted = p.trial.NCompleted + 1; % number of started trials (excluding not started trials)
 else
     p.defaultParameters.NCompleted = p.trial.NCompleted;
@@ -63,8 +62,15 @@ if(p.trial.behavior.fixation.useCalibration)
 end
 
 % --------------------------------------------------------------------%
+%% keep fixation spot window size
+if(p.trial.behavior.fixation.use)
+    p.defaultParameters.stim.FIXSPOT.fixWin = p.trial.stim.FIXSPOT.fixWin;
+end
+
+% --------------------------------------------------------------------%
 %% format string for ascii table
 p.defaultParameters.asciitbl  =  p.trial.asciitbl;
+
 % --------------------------------------------------------------------%
 %% figure handle for online plots
 if(p.trial.plot.do_online)

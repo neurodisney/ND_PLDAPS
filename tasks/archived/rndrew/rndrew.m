@@ -216,7 +216,7 @@ function RandRew(p)
                 pds.datapixx.strobe(p.trial.event.FIXATION);
                 p.trial.behavior.fixation.GotFix = 1;
                 p.trial.Timer.Reward = p.trial.CurTime + p.trial.reward.Lag; 
-                p.trial.outcome.CurrOutcome = p.trial.outcome.FIXATION;
+                p.trial.outcome.CurrOutcome = p.trial.outcome.fixation;
 
             elseif(p.trial.behavior.fixation.GotFix == 1 && p.trial.FixState.Current == p.trial.FixState.FixOut)
                 % first time break detected

@@ -8,7 +8,7 @@ function p = ND_CheckFixation(p)
 %
 % TODO: Define sample based on a time period not number of samples.
 %
-% wolf zinke, Jan. 2017
+% wolf zinke, Jan 2017
 % Nate Faber, May 2017
 
 %% get eye position data
@@ -40,9 +40,6 @@ if(p.trial.mouse.useAsEyepos)
     
 elseif p.trial.datapixx.useAsEyepos
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
-
-    
-    
     
     % calculate a moving average of the eye position for display reasons
     p.trial.eyeX   = p.trial.eyeCalib.gain(1) * (prctile(p.trial.AI.Eye.X(sIdx), 50) - p.trial.eyeCalib.offset(1));
@@ -53,7 +50,6 @@ else
     p.trial.eyeX = 0;
     p.trial.eyeY = 0;
 end
-
 
 %% update eye position history (per frame)
 if(p.trial.pldaps.draw.eyepos.use)
@@ -68,3 +64,4 @@ for i = 1:length(p.trial.stim.allStims)
     stim = p.trial.stim.allStims{i};
     checkFix(stim,p);
 end
+

@@ -34,6 +34,7 @@ p.defaultParameters.EV.FixOff        = NaN; % Offset of fixation spot
 p.defaultParameters.EV.PDOn          = NaN; % Photo diode onset
 p.defaultParameters.EV.PDOff         = NaN; % Photo diode offset
 p.defaultParameters.EV.GoCue         = NaN; % Onset of Go-signal
+p.defaultParameters.EV.InitReward    = NaN; % initial reward given for just fixatin
 p.defaultParameters.EV.FirstReward   = NaN; % First reward given in a trial
 p.defaultParameters.EV.Reward        = NaN; % time of reward delivery
 p.defaultParameters.EV.nextReward    = NaN; % Scheduled time of next reward
@@ -44,6 +45,8 @@ p.defaultParameters.EV.DPX_TaskOff   = NaN; % Synch time with datapixx for task 
 p.defaultParameters.EV.TDT_TaskOn    = NaN; % Synch time with TDT for task on
 p.defaultParameters.EV.TDT_TaskOff   = NaN; % Synch time with TDT for task off
 p.defaultParameters.EV.epochEnd      = NaN; % Ending time of the last epoch
+p.defaultParameters.EV.epochTimings  = {};  % Ending time of the last epoch
+p.defaultParameters.EV.epochCnt      = 0;   % Ending time of the last epoch
 
 % p.defaultParameters.EV.Pause       = NaN;  % WZ: These events should be within trials. Pauses and breaks are between trials. Might cause conflicts...
 % p.defaultParameters.EV.Unpause     = NaN;

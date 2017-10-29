@@ -75,107 +75,6 @@ if(isempty(state))
     % control of trials, especially the use of blocks, i.e. the repetition
     % of a defined number of trials per condition, needs to be clarified.
 
-    
-    % reward series for continous fixation
-    % c.reward.MinWaitInitial -  minimum latency to reward after fixation
-    % c.reward.MaxWaitInitial -  maximum latency to reward after fixation
-    % c.reward.nRewards       -  array of how many of each kind of reward
-    % c.reward.Dur            -  array of how long each kind of reward lasts
-    % c.reward.Period         -  the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-    % c.reward.jackpotDur     -  the jackpot is given after all other rewards
-
-    % condition 1
-    c1.Nr = 1;
-    c1.reward.MinWaitInitial = 0.13;
-    c1.reward.MaxWaitInitial = 0.17;
-    c1.reward.nRewards       = [1    8  ];
-    c1.reward.Dur            = [0.04  0.04];
-    c1.reward.Period         = [1    1  ];
-    c1.reward.jackpotDur     = 0.15;
-    
-    c1.nTrials = 100;
-    
-    
-    % condition 2
-    c2.Nr = 2;
-    c2.nTrials = 1000;
-    
-    
-    % condition 3
-    c3.Nr = 3;
-    c3.reward.MinWaitInitial = 0.48;
-    c3.reward.MaxWaitInitial = 0.52;
-    c3.reward.nRewards       = [1    8   ];
-    c3.reward.Dur            = [0.04 0.04];
-    c3.reward.Period         = [1.00 1.00];
-    c3.reward.jackpotDur     = 0.15;
-    c3.nTrials = 25;
-    
-    % condition 4
-    c4.Nr = 4;
-    c4.reward.MinWaitInitial = 0.73;
-    c4.reward.MaxWaitInitial = 0.77;
-    c4.reward.nRewards       = [1    8   ];
-    c4.reward.Dur            = [0.04 0.04]; 
-    c4.reward.Period         = [1.00 1.00];   
-    c4.reward.jackpotDur     = 0.25;
-    c4.nTrials = 75;
-    
-    % condition 5
-    c5.Nr = 5;
-    c5.reward.MinWaitInitial = 0.98;
-    c5.reward.MaxWaitInitial = 1.02;
-    c5.reward.nRewards       = [1    14  ];
-    c5.reward.Dur            = [0.04 0.04];
-    c5.reward.Period         = [0.75 0.75];   
-    c5.reward.jackpotDur     = 0.25;
-    c5.nTrials = 100;
-    
-    % condition 6
-    c6.Nr = 6;
-    c6.reward.MinWaitInitial = 1.23;
-    c6.reward.MaxWaitInitial = 1.27;
-    c6.reward.nRewards       = [1    18  ];
-    c6.reward.Dur            = [0.06 0.06];
-    c6.reward.Period         = [0.60 0.60];   
-    c6.reward.jackpotDur     = 0.25;
-    c6.nTrials = 1000;
-    
-    % condition 7
-    c7.Nr = 7;
-    c7.reward.MinWaitInitial = 1.48;
-    c7.reward.MaxWaitInitial = 1.52;
-    c7.reward.nRewards       = [1    25  ];
-    c7.reward.Dur            = [0.08 0.08];
-    c7.reward.Period         = [0.30 0.30];   
-    c7.reward.jackpotDur     = 0.5;
-    c7.nTrials = 1000;
-    
-    
-    % Fill a conditions list with n of each kind of condition sequentially
-    conditions = cell(1,5000);
-    blocks = nan(1,5000);
-    totalTrials = 0;
-    
-    % Iterate through each condition to fill conditions
-    conditionsIterator = {c2};
-    
-    for iCond = 1:size(conditionsIterator,2)
-        cond = conditionsIterator(iCond);
-        nTrials = cond{1}.nTrials;
-        conditions(1, totalTrials+1:totalTrials+nTrials) = repmat(cond,1,nTrials);
-        blocks(1, totalTrials+1:totalTrials+nTrials) = repmat(iCond,1,nTrials);
-        totalTrials = totalTrials + nTrials;
-    end
-    
-    % Truncate the conditions cell array to it's actualy size
-    conditions = conditions(1:totalTrials);
-    blocks = blocks(1:totalTrials);
-    
-    p.conditions = conditions;  
-    p.trial.blocks = blocks;
-    
-    p.defaultParameters.pldaps.finish = totalTrials;
 
 else
     % ####################################################################### %
@@ -272,7 +171,7 @@ function TaskSetUp(p)
          p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
     end
     
-    p.trial.stim.FIXSPOT.color = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), length(p.trial.task.Color_list))+1};
+    p.trial.stim.FIXSPOT.color = 'white';
     
     %% Make the visual stimuli
     % Fixation spot
@@ -365,7 +264,7 @@ function TaskDesign(p)
                     
                     % Succesful
                     p.trial.task.Good = 1;
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;
                     
                     % Reward the monkey
                     p.trial.reward.count = 1;

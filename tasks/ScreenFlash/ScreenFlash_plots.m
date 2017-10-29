@@ -100,7 +100,7 @@ try
         % Determine the indices where the various outcomes occured
         OC      = Results(fp);
         iBreak  = OC == p.trial.outcome.FixBreak;
-        iFix    = OC == p.trial.outcome.FullFixation;
+        iFix    = OC == p.trial.outcome.Fixation;
         iJkpt   = OC == p.trial.outcome.Jackpot;
         
         %% get plots

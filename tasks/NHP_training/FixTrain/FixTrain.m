@@ -366,7 +366,7 @@ function TaskDesign(p)
                     
                     % Succesful
                     p.trial.task.Good = 1;
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FullFixation;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;
                     
                     % Reward the monkey
                     p.trial.reward.count = 1;
