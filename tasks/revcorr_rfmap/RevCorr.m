@@ -178,7 +178,7 @@ p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
 p.trial.CurrEpoch        = p.trial.epoch.ITI;
 
 % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
-p.trial.task.longITI = 1;
+%p.trial.task.longITI = 1;
 
 % Outcome if no fixation occurs at all during the trial
 p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
@@ -208,7 +208,7 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 p.trial.stim.gratings = {};
 stimdef = p.trial.stim.(p.trial.stim.stage);
 for angle = stimdef.angle
-    p.trial.stim.GRATING.angle = angle;
+    p.trial.stim.GRATING.ori = angle;
     
     for radius = stimdef.radius
         p.trial.stim.GRATING.radius = radius;
@@ -273,25 +273,26 @@ switch p.trial.CurrEpoch
     
     case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
-        if p.trial.CurTime < p.trial.EV.PlanStart
-            % All intertrial processing was completed before the ITI expired
-            p.trial.task.longITI = 0;
-            
-        else
-            if isnan(p.trial.EV.PlanStart)
-                % First trial, or after a break
-                p.trial.task.longITI = 0;
-            end
-            
-            % If intertrial processing took too long, display a warning
-            if p.trial.task.longITI
-                warning('ITI exceeded intended duration of by %.2f seconds!', ...
-                         p.trial.CurTime - p.trial.EV.PlanStart)
-            end
-            
-            switchEpoch(p,'TrialStart');
-            
-        end
+        Task_WaitITI(p);        
+%         if p.trial.CurTime < p.trial.EV.PlanStart
+%             % All intertrial processing was completed before the ITI expired
+%             p.trial.task.longITI = 0;
+%             
+%         else
+%             if isnan(p.trial.EV.PlanStart)
+%                 % First trial, or after a break
+%                 p.trial.task.longITI = 0;
+%             end
+%             
+%             % If intertrial processing took too long, display a warning
+%             if p.trial.task.longITI
+%                 warning('ITI exceeded intended duration of by %.2f seconds!', ...
+%                          p.trial.CurTime - p.trial.EV.PlanStart)
+%             end
+%             
+%             switchEpoch(p,'TrialStart');
+%             
+%         end
         
         % ----------------------------------------------------------------%    
     case p.trial.epoch.TrialStart

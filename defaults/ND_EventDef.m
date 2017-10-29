@@ -34,6 +34,7 @@ p.defaultParameters.EV.FixOff        = NaN; % Offset of fixation spot
 p.defaultParameters.EV.PDOn          = NaN; % Photo diode onset
 p.defaultParameters.EV.PDOff         = NaN; % Photo diode offset
 p.defaultParameters.EV.GoCue         = NaN; % Onset of Go-signal
+p.defaultParameters.EV.InitReward    = NaN; % initial reward given for just fixatin
 p.defaultParameters.EV.FirstReward   = NaN; % First reward given in a trial
 p.defaultParameters.EV.Reward        = NaN; % time of reward delivery
 p.defaultParameters.EV.nextReward    = NaN; % Scheduled time of next reward
