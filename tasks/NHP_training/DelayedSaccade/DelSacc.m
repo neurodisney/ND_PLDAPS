@@ -77,7 +77,6 @@ if(isempty(state))
     
     p.trial.task.RandomPos    = 0;
     p.trial.task.RandomPar    = 0;
-    p.trial.task.EqualCorrect = 0; 
 
     % define random grating parameters for each session
     p.trial.stim.GRATING.RandAngles = 0:15:359;  % if in random mode chose an angle from this list

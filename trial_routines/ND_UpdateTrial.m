@@ -69,7 +69,7 @@ end
 
 % --------------------------------------------------------------------%
 %% Block control
-p.defaultParameters.EqualCorrect = p.trial.task.EqualCorrect;
+p.defaultParameters.Block.EqualCorrect = p.trial.Block.EqualCorrect;
 
 % --------------------------------------------------------------------%
 %% format string for ascii table

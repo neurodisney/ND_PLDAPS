@@ -13,10 +13,6 @@ function p = DelSacc_taskdef(p)
 % wolf zinke, Dec. 2016
 
 % ------------------------------------------------------------------------%
-%% Condition/Block design
-%p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
-
-% ------------------------------------------------------------------------%
 %% Task modifier
 p.trial.task.ShowHelp = 1; % Moves the fixation spot towards target location
 
@@ -27,7 +23,7 @@ p.trial.task.ShowHelp = 1; % Moves the fixation spot towards target location
 p.trial.reward.GiveInitial = 0;     % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew  = 0.01;  % duration of the initial reward
 p.trial.reward.ManDur      = 0.1;   % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.025;   % Reward for completing the task successfully
+p.trial.reward.Dur         = 0.4;   % Reward for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1; % number of reward pulses
@@ -43,8 +39,8 @@ p.trial.stim.GRATING.fixWin  = 3;
 p.trial.stim.GRATING.tFreq    = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 p.trial.stim.GRATING.radius   = 0.75;  % radius of grating patch
 
-p.trial.stim.GRATING.sFreqLst = 0.25:0.1:6; % spatial frequency as cycles per degree
-p.trial.stim.GRATING.OriLst   = 0:15:179; % orientation of grating
+% p.trial.stim.GRATING.sFreqLst = 0.25:0.1:6; % spatial frequency as cycles per degree
+% p.trial.stim.GRATING.OriLst   = 0:15:179; % orientation of grating
 
 % position and angle assignment
 %      ____________________
@@ -64,7 +60,7 @@ p.trial.stim.GRATING.AngleArray   = 0:30:359;  %
 p.trial.stim.GRATING.RandAngles   = 0:15:359;  % if in random mode chose an angle from this list
 
 % grating contrast
-p.trial.stim.GRATING.lowContrast  = 0.3;  % grating contrast value when stim.on = 1
+p.trial.stim.GRATING.lowContrast  = 0.15;  % grating contrast value when stim.on = 1
 p.trial.stim.GRATING.highContrast = 0.65;  % grating contrast value when stim.on = 2
 
 p.trial.stim.GRATING.res          = 300;
@@ -88,7 +84,6 @@ p.trial.task.Timing.ITI       = ND_GetITI(0.75,  1.25,  [], [], 1, 0.10);
 % ------------------------------------------------------------------------%
 %% Condition/Block design
 p.trial.Block.maxBlocks    = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
-p.trial.Block.EqualCorrect =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % condition 1
 c1.Nr = 1;
@@ -140,8 +135,8 @@ c10.Nr = 10;
 c10.task.MinWaitGo  = 0.95; % min wait period for fixation spot to disapear
 c10.task.MaxWaitGo  = 0.105; % max wait period for fixation spot to disapear
 
-p.trial.Block.Conditions     = {c1, c2, c3, c4, c5, c6};
-p.trial.Block.maxBlockTrials =  [2, 2, 4, 4, 3, 1]; 
+p.defaultParameters.Block.Conditions     = {c1, c2, c3, c4, c5, c6, c7};
+p.defaultParameters.Block.maxBlockTrials =  [4, 4, 4, 3,  2,  2, 1]; 
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
