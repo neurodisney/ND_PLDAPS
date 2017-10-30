@@ -39,7 +39,8 @@ SS.plot.routine    = 'DelSacc_plots';       % function for online plotting of se
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos', 'stim.GRATING.PosAngle', 'behavior.fixation.FixWin'};
+SS.editable = {'task.RandomPos', 'stim.GRATING.PosAngle', 'behavior.fixation.FixWin', 'stim.GRATING.sFreq', ...
+               'stim.GRATING.ori', 'task.RandomPar'};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
