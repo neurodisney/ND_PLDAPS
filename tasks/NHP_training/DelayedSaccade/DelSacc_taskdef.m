@@ -14,7 +14,7 @@ function p = DelSacc_taskdef(p)
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
-p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
+%p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % ------------------------------------------------------------------------%
 %% Task modifier
@@ -27,7 +27,7 @@ p.trial.task.ShowHelp = 1; % Moves the fixation spot towards target location
 p.trial.reward.GiveInitial = 0;     % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew  = 0.01;  % duration of the initial reward
 p.trial.reward.ManDur      = 0.1;   % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.05;   % Reward for completing the task successfully
+p.trial.reward.Dur         = 0.025;   % Reward for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1; % number of reward pulses
@@ -42,6 +42,9 @@ p.trial.stim.GRATING.fixWin  = 3;
 % p.trial.stim.GRATING.ori    = 45; % orientation of grating
 p.trial.stim.GRATING.tFreq    = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 p.trial.stim.GRATING.radius   = 0.75;  % radius of grating patch
+
+p.trial.stim.GRATING.sFreqLst = 0.25:0.1:6; % spatial frequency as cycles per degree
+p.trial.stim.GRATING.OriLst   = 0:15:179; % orientation of grating
 
 % position and angle assignment
 %      ____________________

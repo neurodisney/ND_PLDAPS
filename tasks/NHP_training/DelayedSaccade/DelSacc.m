@@ -73,13 +73,20 @@ if(isempty(state))
     ND_Trial2Ascii(p, 'init');
 
     %% initialize target parameters
-    p.trial.behavior.fixation.FixWin = 5;
-    p.trial.task.RandomPos = 0;
+    p.trial.behavior.fixation.FixWin = 3;
+    
+    p.trial.task.RandomPos    = 0;
+    p.trial.task.RandomPar    = 0;
+    p.trial.task.EqualCorrect = 0; 
 
     % define random grating parameters for each session
-    p.trial.stim.GRATING.PosAngle = datasample(0:15:359, 1);
-    p.trial.stim.GRATING.sFreq    = datasample(1:0.25:6, 1); % spatial frequency as cycles per degree
-    p.trial.stim.GRATING.ori      = datasample(0:15:179, 1); % orientation of grating
+    p.trial.stim.GRATING.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
+    p.trial.stim.GRATING.sFreqLst   = 0.25:0.1:6; % spatial frequency as cycles per degree
+    p.trial.stim.GRATING.OriLst     = 0:15:179; % orientation of grating
+    
+    p.trial.stim.GRATING.PosAngle = datasample(p.trial.stim.GRATING.RandAngles, 1);
+    p.trial.stim.GRATING.sFreq    = datasample(p.trial.stim.GRATING.sFreqLst,   1); % spatial frequency as cycles per degree
+    p.trial.stim.GRATING.ori      = datasample(p.trial.stim.GRATING.OriLst,     1); % orientation of grating
 
 else
     % ####################################################################### %
@@ -159,6 +166,11 @@ function TaskSetUp(p)
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)        
          p.trial.stim.GRATING.PosAngle = datasample(p.trial.stim.GRATING.RandAngles, 1);
+    end
+    
+    if(p.trial.task.RandomPar == 1)      
+        p.trial.stim.GRATING.sFreq = datasample(p.trial.stim.GRATING.sFreqLst, 1); % spatial frequency as cycles per degree
+        p.trial.stim.GRATING.ori   = datasample(p.trial.stim.GRATING.OriLst,   1); % orientation of grating
     end
 
     [Gx, Gy] = pol2cart(deg2rad(p.trial.stim.GRATING.PosAngle), ...
@@ -464,6 +476,18 @@ if(~isempty(p.trial.LastKeyPress))
             else
                 p.trial.task.RandomPos = 1;
             end
+            
+        % randomly select a new spatial frequency
+        case KbName('f') 
+            p.trial.stim.GRATING.sFreq = datasample(p.trial.stim.GRATING.sFreqLst,   1); % spatial frequency as cycles per degree
+            
+        % randomly select a new grating orientation
+        case KbName('o')  
+            p.trial.stim.GRATING.ori = datasample(p.trial.stim.GRATING.OriLst,     1); % orientation of grating
+            
+        % select grating parameters at random for every trial    
+        case KbName('g')  % randomly select a new grating orientation
+            p.trial.task.RandomPar = abs(p.trial.task.RandomPar - 1);
 
         % move target to grid positions
         case p.trial.key.GridKeyCell
@@ -512,13 +536,6 @@ function stim(p, val)
                 p.trial.stim.gratingH.on = 1;
                 p.trial.stim.gratingH.fixActive = 1;
 
-    %             if(p.trial.task.ShowHelp)
-    %                 HelpRect = ND_GetRect(p.trial.stim.GRATING.pos, p.trial.stim.FIXSPOT.size);
-    % 
-    %                 Screen('FillOval',  p.trial.display.overlayptr, ...
-    %                     p.trial.display.clut.(p.trial.stim.FIXSPOT.color), HelpRect);
-    %             end
-
             otherwise
                 error('bad stim value')
         end
@@ -537,6 +554,7 @@ function stim(p, val)
             ND_AddScreenEvent(p, p.trial.event.STIM_CHNG, 'StimChange');
         end
     end
+    
 % ####################################################################### %
 function Calculate_SRT(p)
 
@@ -568,3 +586,6 @@ function Calculate_SRT(p)
             p.trial.task.SRT_Go       = NaN;
     end
 
+    
+    
+    
