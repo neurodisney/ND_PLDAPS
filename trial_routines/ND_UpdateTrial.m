@@ -68,6 +68,10 @@ if(p.trial.behavior.fixation.use)
 end
 
 % --------------------------------------------------------------------%
+%% Block control
+p.defaultParameters.EqualCorrect = p.trial.task.EqualCorrect;
+
+% --------------------------------------------------------------------%
 %% format string for ascii table
 p.defaultParameters.asciitbl  =  p.trial.asciitbl;
 
