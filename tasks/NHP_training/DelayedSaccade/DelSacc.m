@@ -73,19 +73,19 @@ if(isempty(state))
     ND_Trial2Ascii(p, 'init');
 
     %% initialize target parameters
-    p.trial.behavior.fixation.FixWin = 3;
+    p.defaultParameters.behavior.fixation.FixWin = 3;
     
-    p.trial.task.RandomPos    = 0;
-    p.trial.task.RandomPar    = 0;
+    p.defaultParameters.task.RandomPos    = 0;
+    p.defaultParameters.task.RandomPar    = 0;
 
     % define random grating parameters for each session
-    p.trial.stim.GRATING.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
-    p.trial.stim.GRATING.sFreqLst   = 0.25:0.1:6; % spatial frequency as cycles per degree
-    p.trial.stim.GRATING.OriLst     = 0:15:179; % orientation of grating
+    p.defaultParameters.stim.GRATING.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
+    p.defaultParameters.stim.GRATING.sFreqLst   = 0.25:0.1:6; % spatial frequency as cycles per degree
+    p.defaultParameters.stim.GRATING.OriLst     = 0:15:179; % orientation of grating
     
-    p.trial.stim.GRATING.PosAngle = datasample(p.trial.stim.GRATING.RandAngles, 1);
-    p.trial.stim.GRATING.sFreq    = datasample(p.trial.stim.GRATING.sFreqLst,   1); % spatial frequency as cycles per degree
-    p.trial.stim.GRATING.ori      = datasample(p.trial.stim.GRATING.OriLst,     1); % orientation of grating
+    p.defaultParameters.stim.GRATING.PosAngle = datasample(p.defaultParameters.stim.GRATING.RandAngles, 1);
+    p.defaultParameters.stim.GRATING.sFreq    = datasample(p.defaultParameters.stim.GRATING.sFreqLst,   1); % spatial frequency as cycles per degree
+    p.defaultParameters.stim.GRATING.ori      = datasample(p.defaultParameters.stim.GRATING.OriLst,     1); % orientation of grating
 
 else
     % ####################################################################### %

@@ -53,22 +53,22 @@ if(isempty(state))
     ND_Trial2Ascii(p, 'init');
     
     % basic fixation spot parameters
-    p.trial.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
-    p.trial.behavior.fixation.FixWinStp  = 1;      % change of the size of the fixation window upon key press
-    p.trial.behavior.fixation.FixSPotStp = 0.25;
-    p.trial.stim.FIXSPOT.fixWin          = 4;         
+    p.defaultParameters.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
+    p.defaultParameters.behavior.fixation.FixWinStp  = 1;      % change of the size of the fixation window upon key press
+    p.defaultParameters.behavior.fixation.FixSPotStp = 0.25;
+    p.defaultParameters.stim.FIXSPOT.fixWin          = 4;         
     
     % just initialize here, will be overwritten by conditions
-    p.trial.reward.MinWaitInitial  = 0.05;
-    p.trial.reward.MaxWaitInitial  = 0.1; 
+    p.defaultParameters.reward.MinWaitInitial  = 0.05;
+    p.defaultParameters.reward.MaxWaitInitial  = 0.1; 
     
 %-------------------------------------------------------------------------%
 %% eye calibration
-    if(~p.trial.behavior.fixation.useCalibration)    
+    if(~p.defaultParameters.behavior.fixation.useCalibration)    
         p = pds.eyecalib.setup(p);
     end
 
-    p.trial.task.RandomPos = 0;
+    p.defaultParameters.task.RandomPos = 0;
 else
     
 % ####################################################################### %
