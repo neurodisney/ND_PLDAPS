@@ -147,6 +147,13 @@ p.defaultParameters.event.SOUND_ON      = 180;     % stimulus onset
 p.defaultParameters.event.MICROSTIM     = 666;     % microstimulation pulse onset
 p.defaultParameters.event.INJECT        = 667;     % start of pressure injection
 p.defaultParameters.event.IONTO         = 668;     % start of iontophoretic drug delivery
+% ------------------------------------------------------------------------%
+%% Note: 77xx block reserved for stim types
+% These are encoded in the actual stim class files, but are put here for easy reference
+% BaseStim = 7700
+% FixSpot = 7701
+% Grating = 7702
+
 
 % ------------------------------------------------------------------------%
 %% System encodes

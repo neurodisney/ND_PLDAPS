@@ -42,6 +42,14 @@ properties (SetAccess = private, Hidden = true)
     srcRect
 end
 
+properties (Constant)
+    % Integer to define object (for sending event code)
+    classCode = 7702;
+    
+    % This cell array determines the order of properties when the propertyArray attribute is calculated
+    recordProps = {'xpos','ypos','radius','angle','contrast','sfreq','tfreq'};
+end
+
 methods
     % The constructor method
     function obj = Grating(p, radius, contrast, pos, ori, sFreq, tFreq, res, alpha, fixWin)
@@ -87,15 +95,14 @@ methods
         obj@pds.stim.BaseStim(p, pos, fixWin);
        
         obj.alpha  = alpha;
-        obj.res    = res;
         obj.tFreq  = tFreq;
-        obj.sFreq  = sFreq;
         obj.angle  = ori;
-        obj.radius = radius;
-        obj.contrast = contrast;
-
         
         % Unchangeable after loading
+        obj.res    = res;
+        obj.sFreq  = sFreq;
+        obj.radius = radius;
+        obj.contrast = contrast;
         obj.contrastMethod = p.trial.stim.GRATING.contrastMethod;
         obj.genTime = p.trial.CurTime;
         obj.srcRect = [0, 0, 2*obj.res + 1, 2*obj.res + 1];
