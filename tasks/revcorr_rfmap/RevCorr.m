@@ -823,6 +823,10 @@ if(~isempty(p.trial.LastKeyPress))
                 p.trial.RF.spikes(p.trial.RF.nSpikes) = p.trial.CurTime;
             end
             
+        case KbName('t')
+            % Enable/Disable TDT
+            p.trial.tdt.use = ~p.trial.tdt.use;
+            
     end
     
 end

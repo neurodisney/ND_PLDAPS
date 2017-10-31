@@ -38,6 +38,11 @@ p.defaultParameters.outcome.allOutcomes = allOutcomes;
 
 % Pass on the ITI timer
 p.defaultParameters.EV.PlanStart = p.trial.EV.NextTrialStart;
+% --------------------------------------------------------------------%
+%%  Keep TDT use
+% If TDT times out, disable it until manually reneabled
+p.defaultParameters.tdt.use = p.trial.tdt.use;
+
 
 % --------------------------------------------------------------------%
 %%  keep joystick center position
