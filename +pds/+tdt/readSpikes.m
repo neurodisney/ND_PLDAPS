@@ -14,8 +14,8 @@ function readSpikes(p)
 %
 % Nate Faber, August 2017
 
-nChannels = p.trial.tdt.channels;
-nSorts = p.trial.tdt.sortCodes;
+nChannels   = p.trial.tdt.channels;
+nSorts      = p.trial.tdt.sortCodes;
 bitsPerSort = p.trial.tdt.bitsPerSort;
 
 % Initialize the return array
@@ -28,7 +28,7 @@ udp = p.trial.tdt.UDP;
 
 
 % Flush the input buffer if there is any data waiting
-if udp.U.BytesAvailable > 0
+if(udp.U.BytesAvailable > 0)
     udp.read
 end
 
@@ -50,7 +50,7 @@ reshaped = reshape(bits, [bitsPerSort, nSorts, nChannels]);
 binaryCounts = permute(reshaped, [2,1,3]);
 
 % For each channel compute the number of spiked that have occured in each sort unit
-for iChannel = 1:nChannels
+for(iChannel = 1:nChannels)
     spikeCounts(iChannel,:) = bi2de(binaryCounts(:,:,iChannel));
 end
 

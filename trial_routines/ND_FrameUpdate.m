@@ -47,7 +47,7 @@ end
 if(p.trial.behavior.fixation.use)
     ND_CheckFixation(p);
 end
- 
+
 % ------------------------------------------------------------------------%
 %% check drug application
 if(p.trial.Drug.DoStim)

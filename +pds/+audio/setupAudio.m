@@ -5,13 +5,13 @@ function p = setupAudio(p)
 if p.defaultParameters.sound.use && isfield(p.defaultParameters.pldaps.dirs, 'wavfiles')
     
     % Get every filename of the sounds in the wavfiles directory 
-    soundDir = p.defaultParameters.pldaps.dirs.wavfiles;
+    soundDir      = p.defaultParameters.pldaps.dirs.wavfiles;
     soundDirFiles = dir(soundDir);
     soundDirFiles = {soundDirFiles.name};
-    soundFiles = find(~cellfun(@isempty,strfind(soundDirFiles,'.wav')));
+    soundFiles    = find(~cellfun(@isempty, strfind(soundDirFiles,'.wav')));
     
     % Setup to write to Datapixx, if enabled
-    if p.defaultParameters.sound.useDatapixx
+    if(p.defaultParameters.sound.useDatapixx)
         Datapixx('InitAudio');
         Datapixx('SetAudioVolume', [p.defaultParameters.sound.datapixxVolume, p.defaultParameters.sound.datapixxInternalSpeakerVolume]);
         Datapixx('RegWrRd');
@@ -21,7 +21,7 @@ if p.defaultParameters.sound.use && isfield(p.defaultParameters.pldaps.dirs, 'wa
     end
     
     % Setup to write to PsychPortAudio, if enabled
-    if p.defaultParameters.sound.usePsychPortAudio
+    if(p.defaultParameters.sound.usePsychPortAudio)
         InitializePsychSound;
         
         % open a PsychPortAudio master device. Master devices themselves are
@@ -30,7 +30,7 @@ if p.defaultParameters.sound.use && isfield(p.defaultParameters.pldaps.dirs, 'wa
         % Each slave can be controlled independently to playback or record
         % sound through a subset of the channels of the master device. This
         % basically allows to virtualize a soundcard.
-        if ~isempty(p.defaultParameters.sound.deviceid)
+        if(~isempty(p.defaultParameters.sound.deviceid))
             devices = PsychPortAudio('GetDevices');
             deviceId = [devices.DeviceIndex] == p.defaultParameters.sound.deviceid;
             p.defaultParameters.sound.master = PsychPortAudio('Open', deviceId, 1+8, 1, devices(deviceId).DefaultSampleRate, 2);
@@ -45,7 +45,7 @@ if p.defaultParameters.sound.use && isfield(p.defaultParameters.pldaps.dirs, 'wa
     end
     
     %% Iterate through all the wav files
-    for iFile = soundFiles
+    for(iFile = soundFiles)
         filename = soundDirFiles{iFile};
         filepath = fullfile(soundDir, filename);
         
@@ -65,18 +65,18 @@ if p.defaultParameters.sound.use && isfield(p.defaultParameters.pldaps.dirs, 'wa
         p.defaultParameters.sound.(name).nChannels = nChannels;
         
         %% Load the sound into device memory for Datapixx
-        if p.defaultParameters.sound.useDatapixx
+        if(p.defaultParameters.sound.useDatapixx)
             p.defaultParameters.sound.(name).buf = nextBuf;
             [nextBuf,~,overflow] = Datapixx('WriteAudioBuffer', wav, nextBuf);
-            if overflow==1
+            if(overflow == 1)
                 disp('Too many sound files provided; failed to load all sounds.')
             end
         end
         
         %% Load the sound into device memory PsychPortAudio
-        if p.defaultParameters.sound.usePsychPortAudio
+        if(p.defaultParameters.sound.usePsychPortAudio)
             % If wav file is a mono stream, duplicate into a stereo stream
-            if nChannels == 1
+            if(nChannels == 1)
                 wav = [wav;wav];
             end
             
