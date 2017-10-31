@@ -32,12 +32,16 @@ p.trial.reward.MinWaitInitial = 0.25;
 p.trial.reward.MaxWaitInitial = 0.50;
 
 % ------------------------------------------------------------------------%
+%% Drug
+p.trial.task.useDrug = 0;
+
+% ------------------------------------------------------------------------%
 %% Timing
 p.trial.task.Timing.WaitFix = 0.100;    % Time to get a solid fixation before trial ends unsuccessfully
-
+p.trial.task.Timing.drugFlashDelay = 0.3;
 % inter-trial interval
-p.trial.task.Timing.MinITI  = 0.75;  % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = 1.5;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI  = 0.45;  % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI  = 1.2;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses

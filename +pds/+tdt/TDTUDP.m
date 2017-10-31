@@ -77,8 +77,8 @@ classdef TDTUDP < handle
                 else
                     try
                         obj.SOCK = pnet('udpsocket', obj.UDP_PORT);
-                        pnet(obj.SOCK, 'setwritetimeout', 1);
-                        pnet(obj.SOCK, 'setreadtimeout', 1);
+                        pnet(obj.SOCK, 'setwritetimeout', 0.2);
+                        pnet(obj.SOCK, 'setreadtimeout', 0.2);
                         pnet(obj.SOCK, 'udpconnect', 'hostname', obj.TDT_UDP_HOSTNAME);
                     catch
                         error('problem creating UDP socket')
