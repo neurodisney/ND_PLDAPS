@@ -124,9 +124,9 @@ try
             if ~isequaln(dpPreTrial, dpPostTrial)
                 warning('defaultParameters changed within a trial, should only be chaged between trials')
                 % Iterate through the two structs to find the differences (for debugging purposes)
-                [~, preDifferent, postDifferent] = ND_CompareStructs(dpPreTrial, dpPostTrial);
+                % [~, preDifferent, postDifferent] = ND_CompareStructs(dpPreTrial, dpPostTrial);
                 % Display the postDifferent struct
-                disp(postDifferent)
+               % disp(postDifferent)
             end
                 
             % ----------------------------------------------------------------%            
