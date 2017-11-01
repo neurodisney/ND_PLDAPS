@@ -21,17 +21,7 @@ properties (SetAccess = protected)
     fixating = 0            % Boolean for fixation
     looking = 0             % Less stringent than fixation. Eye is in the fix window
     
-end
-
-properties (Dependent)
-    xpos
-    ypos
     
-    % The attribute the generates a cell of values for transmitting as event codes
-    propertyArray
-end
-
-properties (Constant)
     % Integer to define object (for sending event code)
     classCode = 7701;
     
@@ -43,7 +33,14 @@ properties (Constant)
     
     % This cell array determines the order of properties when the propertyArray attribute is calculated
     recordProps = {'xpos','ypos'};
+end
+
+properties (Dependent)
+    xpos
+    ypos
     
+    % The attribute the generates a cell of values for transmitting as event codes
+    propertyArray
 end
     
 
@@ -173,8 +170,13 @@ methods
         % Queue up the signals (for accurate temporal precision)
         ND_AddScreenEvent(obj.p, obj.p.trial.event.(event), eventName);
         
-        % Record the stimulus in the stimRecord for signal transmission after the trial is over
-        obj.p.trial.stim.stimRecord{end+1} = obj.propertyArray;
+        % When stim first comes on, record the stimulus in the stimRecord for signal transmission after the trial is over
+        if value
+            propArray = obj.propertyArray;
+            if length(propArray) > 1
+                obj.p.trial.stim.stimRecord{end+1} = obj.propertyArray;
+            end
+        end
         
         %% If enabled, automatically turn on fixation checking when object becomes visible
         if value && obj.autoFixWin           
@@ -186,24 +188,26 @@ methods
     %% Methods for getting dependent variables
     
     function value = get.xpos(obj)
-        obj.pos(1)
+        value = obj.pos(1);
     end
     
     function value = get.ypos(obj)
-        obj.pos(2)
+        value = obj.pos(2);
     end
     
     function array = get.propertyArray(obj)
-        nVals = 1 + length(obj.recordProps)
+        nVals = 1 + length(obj.recordProps);
         array = zeros(1, nVals);
         
         % Array starts with a code identifying the objects type
-        array(1) = obj.classCode
+        array(1) = obj.classCode;
         
         for i = 2:nVals
             prop = obj.recordProps{i-1};
             array(i) = obj.(prop);
         end
+    
+    end
     
 end
 

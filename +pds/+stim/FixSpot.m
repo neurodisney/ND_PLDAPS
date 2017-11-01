@@ -8,21 +8,6 @@ properties
     color
 end
 
-properties (Constant)
-    % Integer to define object (for sending event code)
-    classCode = 7701;
-    
-    % Events are different for the fixspot class
-    onSignal  = struct('event', 'FIXSPOT_ON', ...
-        'name', 'FixOn');
-    offSignal = struct('event', 'FIXSPOT_OFF', ...
-        'name', 'FixOff');
-    
-    % This cell array determines the order of properties when the propertyArray attribute is calculated
-    % Fixspot is not counted as a stimulus, so it should not record its properties
-    recordProps = {};
-end
-
 methods
     
     function obj = FixSpot(p,pos,size,type,color,fixWin)
@@ -48,6 +33,18 @@ methods
         
         % Load the BaseStim superclass
         obj@pds.stim.BaseStim(p, pos, fixWin)
+        
+        % Integer to define object (for sending event code)
+        obj.classCode = 7701;
+        
+        % Fixspot is not counted as a stimulus, so it should not record its properties
+        obj.recordProps = {};
+        
+        % Events are different for the fixspot class
+        obj.onSignal  = struct('event', 'FIXSPOT_ON', ...
+            'name', 'FixOn');
+        obj.offSignal = struct('event', 'FIXSPOT_OFF', ...
+            'name', 'FixOff');
         
         obj.color = color;
         obj.type = type;

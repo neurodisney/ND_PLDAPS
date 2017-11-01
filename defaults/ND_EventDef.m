@@ -148,7 +148,15 @@ p.defaultParameters.event.MICROSTIM     = 666;     % microstimulation pulse onse
 p.defaultParameters.event.INJECT        = 667;     % start of pressure injection
 p.defaultParameters.event.IONTO         = 668;     % start of iontophoretic drug delivery
 % ------------------------------------------------------------------------%
-%% Note: 77xx block reserved for stim types
+%% Stim Property Blocks
+% Sent at the end of the trial to give information about each shown stimulus
+% One-to-one correspondence with StimOn signals
+
+p.defaultParameters.event.STIMPROP_BLOCK_ON  = 7501;  % Start of the stimProp Block
+p.defaultParameters.event.STIMPROP           = 7575;  % Start of a new stimulus
+p.defaultParameters.event.STIMPROP_BLOCK_OFF = 7500;  % End of stim prop block
+
+% Note: 77xx block reserved for stim types
 % These are encoded in the actual stim class files, but are put here for easy reference
 % BaseStim = 7700
 % FixSpot = 7701

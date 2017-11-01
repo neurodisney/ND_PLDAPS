@@ -25,7 +25,7 @@ properties
     alpha
 end
 
-properties (SetAccess = private)
+properties (SetAccess = protected)
     sFreq
     contrastMethod
     radius
@@ -40,15 +40,10 @@ properties (SetAccess = private, Hidden = true)
     texture % The actual texture used for drawing
     pcmult
     srcRect
+    
+    
 end
 
-properties (Constant)
-    % Integer to define object (for sending event code)
-    classCode = 7702;
-    
-    % This cell array determines the order of properties when the propertyArray attribute is calculated
-    recordProps = {'xpos','ypos','radius','angle','contrast','sfreq','tfreq'};
-end
 
 methods
     % The constructor method
@@ -93,7 +88,13 @@ methods
         
         % Load the superclass
         obj@pds.stim.BaseStim(p, pos, fixWin);
-       
+        
+        % Integer to define object (for sending event code)
+        obj.classCode = 7702;
+        
+        % This cell array determines the order of properties when the propertyArray attribute is calculated
+        obj.recordProps = {'xpos','ypos','radius','angle','contrast','sFreq','tFreq'};
+
         obj.alpha  = alpha;
         obj.tFreq  = tFreq;
         obj.angle  = ori;
