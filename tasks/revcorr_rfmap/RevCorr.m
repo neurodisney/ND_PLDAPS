@@ -794,6 +794,10 @@ if(~isempty(p.trial.LastKeyPress))
                 p.trial.RF.spikes(p.trial.RF.nSpikes) = p.trial.CurTime;
             end
             
+        case KbName('t')
+            % Enable/Disable TDT
+            p.trial.tdt.use = ~p.trial.tdt.use;
+            
     end
     
 end
@@ -802,7 +806,7 @@ end
 
 function ProcessSpikes(p)
 % Get all the incoming spikes from TDT and then process the spike counts
-if p.trial.tdt.use
+if p.trial.tdt.use && isfield(p.trial.tdt, 'spikes')
     % Load in the spikes
     spikes = p.trial.tdt.spikes;
     

@@ -3,4 +3,4 @@ function p = load(p,eyeCalibrationFile)
 
 loadedStruct = load(eyeCalibrationFile);
 
-p.trial.eyeCalib = loadedStruct.eyeCalib;
+p.defaultParameters.eyeCalib = loadedStruct.eyeCalib;

@@ -376,14 +376,25 @@ SS.datapixx.EVdur            = [];  % depending on the DAQ sampling rate it migh
 SS.datapixx.TTL_trialOn      = 1;   % if 1 set a digital output high while trial is active
 SS.datapixx.TTL_trialOnChan  = 1;   % DIO channel used for trial state TTL
 
-% TTL pulse series for pico spritzer
+% ------------------------------------------------------------------------%
+%% TTL pulse series for pico spritzer
 SS.datapixx.TTL_spritzerChan      = 5;    % DIO channel
 SS.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
 SS.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
 SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
 
 SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
-SS.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
+SS.datapixx.TTL_spritzerSeriesGap = 30;   % gap between subsequent series
+
+% ------------------------------------------------------------------------%
+%% Stimulation/Drug Injection
+SS.Drug.DoStim     = 0;       % activate module to control drug application
+SS.Drug.StimTrial  = 0;       % Is the current trial a drug trial
+SS.Drug.StimTrial  = 0;       % Is the current trial a drug trial
+SS.Drug.StimDesign = 'block'; % What design (block, random, condition)
+SS.Drug.StimTime   = 0;       % application time relative to task start
+SS.Drug.LastStim   = NaN;     % when was the last drug applicatio
+SS.Drug.StimBlock  = 'trial'; % how to define a block, based on 'trial' or based on 'time'
 
 % ------------------------------------------------------------------------%
 %% Control screen flips

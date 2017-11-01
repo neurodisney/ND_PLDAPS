@@ -14,7 +14,7 @@ function p = DelSacc_taskdef(p)
 
 % ------------------------------------------------------------------------%
 %% Task modifier
-p.trial.task.ShowHelp = 1; % Moves the fixation spot towards target location
+p.trial.task.ShowHelp = 0; % Moves the fixation spot towards target location
 
 % ------------------------------------------------------------------------%
 %% Reward
@@ -23,7 +23,7 @@ p.trial.task.ShowHelp = 1; % Moves the fixation spot towards target location
 p.trial.reward.GiveInitial = 0;     % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew  = 0.01;  % duration of the initial reward
 p.trial.reward.ManDur      = 0.1;   % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.4;   % Reward for completing the task successfully
+p.trial.reward.Dur         = 0.5;   % Reward for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1; % number of reward pulses
@@ -31,7 +31,7 @@ p.trial.reward.PulseStep       = [2, 3, 4, 5]; % increase number of pulses with 
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
-p.trial.stim.GRATING.fixWin  = 3;
+p.trial.stim.GRATING.fixWin  = 2.5;
 
 % spatial & temporal frequency
 % p.trial.stim.GRATING.sFreq  = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
@@ -60,7 +60,7 @@ p.trial.stim.GRATING.AngleArray   = 0:30:359;  %
 p.trial.stim.GRATING.RandAngles   = 0:15:359;  % if in random mode chose an angle from this list
 
 % grating contrast
-p.trial.stim.GRATING.lowContrast  = 0.15;  % grating contrast value when stim.on = 1
+p.trial.stim.GRATING.lowContrast  = 0.2;  % grating contrast value when stim.on = 1
 p.trial.stim.GRATING.highContrast = 0.65;  % grating contrast value when stim.on = 2
 
 p.trial.stim.GRATING.res          = 300;
@@ -72,7 +72,7 @@ p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust f
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.25, 0.25); % Time from initial reward to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.4, 0.4); % Time from initial reward to stim appearing
 
 p.trial.task.saccadeTimeout   = 2.5;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
@@ -136,7 +136,14 @@ c10.task.MinWaitGo  = 0.95; % min wait period for fixation spot to disapear
 c10.task.MaxWaitGo  = 0.105; % max wait period for fixation spot to disapear
 
 p.defaultParameters.Block.Conditions     = {c1, c2, c3, c4, c5, c6, c7};
-p.defaultParameters.Block.maxBlockTrials =  [4, 4, 4, 3,  2,  2, 1]; 
+p.defaultParameters.Block.maxBlockTrials =  [3, 4, 4, 3,  2,  2, 1]; 
+
+p.defaultParameters.Block.Conditions     = {c1, c2, c3,c4, c5};
+p.defaultParameters.Block.maxBlockTrials =  [2, 3, 4, 3,   1]; 
+
+p.defaultParameters.Block.Conditions     = {c1, c2, c3};
+p.defaultParameters.Block.maxBlockTrials =  [2, 3, 4]; 
+
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters

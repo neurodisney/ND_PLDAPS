@@ -156,6 +156,8 @@ function TaskSetUp(p)
     p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
     p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);       
     
+    % Drug Signal Sent
+    p.trial.task.drugSent = 0;
     
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
@@ -200,14 +202,29 @@ function TaskDesign(p)
                 disp('Warning: longer ITI than specified');
             end
             
-            switchEpoch(p,'TrialStart');
+            switchEpoch(p,'WaitStart');
             
         end
         
         % ----------------------------------------------------------------%  
+        case p.trial.epoch.WaitStart
+            %% Send the TTL pulse to the arduino to dispense drug
+            if p.trial.task.useDrug && ~p.trial.task.drugSent
+                ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,    p.trial.datapixx.TTL_spritzerDur,       ...
+                               p.trial.datapixx.TTL_spritzerNpulse,  p.trial.datapixx.TTL_spritzerPulseGap,  ...
+                               p.trial.datapixx.TTL_spritzerNseries, p.trial.datapixx.TTL_spritzerSeriesGap, ...
+                               p.trial.event.INJECT);
+                           
+                p.trial.task.drugSent = 1;
+            end
+            
+            if p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.Timing.drugFlashDelay
+                switchEpoch(p,'TrialStart');
+            end
+        % ----------------------------------------------------------------%  
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
-            fixspot(p,1);
+            ND_FixSpot(p,1);
         
             tms = pds.datapixx.strobe(p.trial.event.TASK_ON); 
             p.trial.EV.DPX_TaskOn = tms(1);
@@ -220,7 +237,7 @@ function TaskDesign(p)
                 pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
             end
            
-            switchEpoch(p,'WaitFix')
+            switchEpoch(p,'WaitFix');
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
@@ -236,7 +253,7 @@ function TaskDesign(p)
                 % Time to fixate has expired
                 elseif p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix
                     % Turn off fixation spot
-                    fixspot(p,0);
+                    ND_FixSpot(p,0);
                     
                     % Mark trial NoFix, go directly to TaskEnd, do not start task, do not collect reward
                     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
@@ -253,7 +270,7 @@ function TaskDesign(p)
                     pds.audio.playDP(p,'breakfix','left');
                     
                     % Turn the fixation spot off
-                    fixspot(p,0)
+                    ND_FixSpot(p,0)
                     
                     % Mark trial as breakfix and end the task
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
@@ -320,7 +337,7 @@ function TaskDesign(p)
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
 
                 % Turn off fixation spot
-                fixspot(p,0);
+                ND_FixSpot(p,0);
                 
                 % End the task
                 switchEpoch(p,'TaskEnd');
@@ -333,7 +350,7 @@ function TaskDesign(p)
         elseif ~p.trial.stim.fix.fixating
             pds.audio.playDP(p,'breakfix','left');
             switchEpoch(p,'TaskEnd');
-            fixspot(p,0);
+            ND_FixSpot(p,0);
                                  
         end
             

@@ -124,9 +124,9 @@ try
             if ~isequaln(dpPreTrial, dpPostTrial)
                 warning('defaultParameters changed within a trial, should only be chaged between trials')
                 % Iterate through the two structs to find the differences (for debugging purposes)
-                [~, preDifferent, postDifferent] = ND_CompareStructs(dpPreTrial, dpPostTrial);
+                % [~, preDifferent, postDifferent] = ND_CompareStructs(dpPreTrial, dpPostTrial);
                 % Display the postDifferent struct
-                disp(postDifferent)
+               % disp(postDifferent)
             end
                 
             % ----------------------------------------------------------------%            
@@ -221,16 +221,16 @@ try
     %% save the session data to file
     
     % save defaultParameters as they are at the end of the session
-    postExperimentParameters =p.defaultParameters;
+    postExperimentParameters = p.defaultParameters; %#ok<*NASGU>
 
     save(fullfile(p.defaultParameters.session.trialdir, ...
-             [p.defaultParameters.session.filestem, '_FinalDefaultParameters.pds']), ...
-             '-struct', 'postExperimentParameters', '-mat', '-v7.3');
+                 [p.defaultParameters.session.filestem, '_FinalDefaultParameters.pds']), ...
+                 '-struct', 'postExperimentParameters', '-mat', '-v7.3');
 
 % ----------------------------------------------------------------%
     %% close screens
     if(~p.defaultParameters.datapixx.use && p.defaultParameters.display.useOverlay)
-        glDeleteTextures(2,glGenTextures(1));
+        glDeleteTextures(2, glGenTextures(1));
     end
 
     Screen('CloseAll');
@@ -239,8 +239,8 @@ try
 
 catch me
     sca
-    if(isfield(p, 'trial.sound.use'))
-        if(p.trial.sound.use)
+    if(isfield(p, 'defaultParameters.sound.use'))
+        if(p.defaultParameters.sound.use)
             PsychPortAudio('Close');
         end
     end

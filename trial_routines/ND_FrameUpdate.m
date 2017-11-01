@@ -32,7 +32,6 @@ end
 % ------------------------------------------------------------------------%
 %% check joystick state
 % needs to be called after pds.datapixx.adc.getData
-
 if(p.trial.datapixx.useJoystick)
     ND_CheckJoystick(p);
 end
@@ -47,4 +46,12 @@ end
 %% check fixation state
 if(p.trial.behavior.fixation.use)
     ND_CheckFixation(p);
- end
+end
+
+% ------------------------------------------------------------------------%
+%% check drug application
+if(p.trial.Drug.DoStim)
+    ND_GiveDrug(p);
+end
+ 
+
