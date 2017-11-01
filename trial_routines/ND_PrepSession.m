@@ -19,21 +19,27 @@ disp('');
 if(strcmp(p.defaultParameters.session.subject,'mouse') || strcmp(p.defaultParameters.session.subject,'debug') || ...
    strcmp(p.defaultParameters.session.subject,'test'))
     
-    if(strcmp(p.defaultParameters.session.subject,'mouse'))
-    % Use the mouse as eyeposition
-        p.defaultParameters.mouse.use = 1;
-        p.defaultParameters.mouse.useAsEyepos = 1;
+    % right now, only 'mouse' triggers a special configuration
+    switch p.defaultParameters.session.subject
+        case 'mouse'
+            % Use the mouse as eyeposition
+            p.defaultParameters.mouse.use                     = 1;
+            p.defaultParameters.mouse.useAsEyepos             = 1;
+
+            % Don't collect any analog channels
+            p.defaultParameters.datapixx.adc.PupilChannel     = [];
+            p.defaultParameters.datapixx.adc.XEyeposChannel   = [];
+            p.defaultParameters.datapixx.adc.YEyeposChannel   = [];
+            % p.defaultParameters.datapixx.adc.RewardChannel  = [];  
+            p.defaultParameters.datapixx.useAsEyepos          = 0;
+            p.defaultParameters.behavior.joystick.use         = 0;
+            % p.defaultParameters.datapixx.useForReward       = 0;
+            % p.defaultParameters.sound.use                   = 0;
+        case 'debug'
+            
+        case 'test'
+            
     end
-    
-    % Don't collect any analog channels
-    p.defaultParameters.datapixx.adc.PupilChannel     = [];
-    p.defaultParameters.datapixx.adc.XEyeposChannel   = [];
-    p.defaultParameters.datapixx.adc.YEyeposChannel   = [];
-    % p.defaultParameters.datapixx.adc.RewardChannel  = [];  
-    p.defaultParameters.datapixx.useAsEyepos          = 0;
-    p.defaultParameters.behavior.joystick.use         = 0;
-    % p.defaultParameters.datapixx.useForReward       = 0;
-    % p.defaultParameters.sound.use                   = 0;
 end
 
 p.defaultParameters.DateStr = datestr(p.defaultParameters.session.initTime,'yyyy_mm_dd');

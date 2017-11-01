@@ -35,7 +35,7 @@ elseif(p.trial.task.fixFix == 1)
         % Fixation has been held for long enough
     elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.behavior.fixation.MinFixStart)
         % Transition to the succesful fixation epoch
-        ND_SwitchEpoch(p,'Fixating')
+        ND_SwitchEpoch(p,'Fixating');
     end
 end
 

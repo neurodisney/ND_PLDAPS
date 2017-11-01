@@ -46,6 +46,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             %% reward
             % check for manual reward delivery via keyboard
                 pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
+                ND_CtrlMsg(p, 'Click... Reward delivered.');
 
             % ----------------------------------------------------------------%
             case p.trial.key.FixInc
@@ -111,6 +112,8 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                 else
                     p.trial.Block.GenBlock = 1;
                 end
+                
+                ND_CtrlMsg(p, 'Advanced to next Block');
 
             % ----------------------------------------------------------------%
             case p.trial.key.BlockEqualCorrect
@@ -131,6 +134,7 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                                p.trial.datapixx.TTL_spritzerNpulse,  p.trial.datapixx.TTL_spritzerPulseGap,  ...
                                p.trial.datapixx.TTL_spritzerNseries, p.trial.datapixx.TTL_spritzerSeriesGap, ...
                                p.trial.event.INJECT);
+                ND_CtrlMsg(p, 'Trigger for drug delivery issued!');
 
             % ----------------------------------------------------------------%
             case p.trial.key.pause

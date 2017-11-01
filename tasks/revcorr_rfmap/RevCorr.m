@@ -261,7 +261,7 @@ switch p.trial.CurrEpoch
 %                          p.trial.CurTime - p.trial.EV.PlanStart)
 %             end
 %             
-%             switchEpoch(p,'TrialStart');
+%             ND_SwitchEpoch(p,'TrialStart');
 %             
 %         end
         
@@ -281,7 +281,7 @@ switch p.trial.CurrEpoch
         
         fixspot(p,1);
         
-        switchEpoch(p,'WaitFix');
+        ND_SwitchEpoch(p,'WaitFix');
         
         % ----------------------------------------------------------------%
     case p.trial.epoch.WaitFix
@@ -303,10 +303,9 @@ switch p.trial.CurrEpoch
                 
                 % Go directly to TaskEnd, do not start task, do not collect reward
                 fixspot(p,0);
-                switchEpoch(p,'TaskEnd');
+                ND_SwitchEpoch(p,'TaskEnd');
                 
             end
-            
             
             % If gaze is inside fixation window
         elseif p.trial.task.fixFix == 1
@@ -317,7 +316,7 @@ switch p.trial.CurrEpoch
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
                 % Turn off the spot and end the trial
                 fixspot(p,0);
-                switchEpoch(p,'TaskEnd');
+                ND_SwitchEpoch(p,'TaskEnd');
                 
                 % Fixation has been held for long enough
             elseif (p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.fixLatency)
@@ -329,10 +328,9 @@ switch p.trial.CurrEpoch
                 p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
                 
                 % Transition to the succesful fixation epoch
-                switchEpoch(p,'Fixating')
+                ND_SwitchEpoch(p,'Fixating')
                 
             end
-            
         end
         
         % ----------------------------------------------------------------%
@@ -415,7 +413,7 @@ switch p.trial.CurrEpoch
                 stim(p,0);
                 
                 p.trial.task.Good = 1;
-                switchEpoch(p,'TaskEnd');
+                ND_SwitchEpoch(p,'TaskEnd');
                 
             end
                 
@@ -425,7 +423,7 @@ switch p.trial.CurrEpoch
             pds.audio.playDP(p,'breakfix','left');
             
             p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-            switchEpoch(p,'TaskEnd')
+            ND_SwitchEpoch(p,'TaskEnd')
             
             % Turn off fixspot and stim
             fixspot(p,0);
@@ -828,11 +826,6 @@ end
 
 %% additional inline functions
 % ####################################################################### %
-function switchEpoch(p,epochName)
-p.trial.CurrEpoch = p.trial.epoch.(epochName);
-p.trial.EV.epochEnd = p.trial.CurTime;
-
-
 
 function fixspot(p,bool)
 if bool && ~p.trial.stim.fix.on
@@ -844,7 +837,6 @@ elseif ~bool && p.trial.stim.fix.on
     p.trial.EV.FixOff = p.trial.CurTime;
     pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
 end
-
 
 
 function stim(p,val)

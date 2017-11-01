@@ -162,7 +162,7 @@ function TaskSetUp(p)
     % Fixation spot
     p.trial.stim.fix = pds.stim.FixSpot(p);
     
-    ND_SwitchEpoch(p, 'ITI')  % define first task epoch
+    ND_SwitchEpoch(p, 'ITI');  % define first task epoch
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -184,7 +184,7 @@ function TaskDesign(p)
             p.trial.EV.TaskStart     = p.trial.CurTime;
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             
-            ND_SwitchEpoch(p,'WaitFix')
+            ND_SwitchEpoch(p,'WaitFix');
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix

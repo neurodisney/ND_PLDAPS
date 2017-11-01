@@ -4,7 +4,7 @@ function p = ND_LoadCondition(p)
 
 % Nate Faber, Oct 2017
 iTrial = p.defaultParameters.pldaps.iTrial;
-cond = p.conditions{iTrial};
+cond   = p.conditions{iTrial};
 
 p.defaultParameters = ND_AlterSubStruct(p.defaultParameters, cond);
 

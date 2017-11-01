@@ -22,7 +22,6 @@ end
 % At this stage, p.trial is not yet defined. All assignments need
 % to go to p.defaultparameters
 if(isempty(state))
-
     % --------------------------------------------------------------------%
     %% define ascii output file
     p = ND_AddAsciiEntry(p, 'Date',        'p.trial.DateStr',                     '%s');
@@ -75,17 +74,17 @@ if(isempty(state))
     %% initialize target parameters
     p.defaultParameters.behavior.fixation.FixWin = 3;
     
-    p.defaultParameters.task.RandomPos    = 0;
-    p.defaultParameters.task.RandomPar    = 0;
+    p.defaultParameters.task.RandomPos = 0; % if 1, randomly change the grating location each trial
+    p.defaultParameters.task.RandomPar = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
 
     % define random grating parameters for each session
     p.defaultParameters.stim.GRATING.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
-    p.defaultParameters.stim.GRATING.sFreqLst   = 0.25:0.1:6; % spatial frequency as cycles per degree
+    p.defaultParameters.stim.GRATING.sFreqLst   = 1:0.2:6; % spatial frequency as cycles per degree
     p.defaultParameters.stim.GRATING.OriLst     = 0:15:179; % orientation of grating
     
-    p.defaultParameters.stim.GRATING.PosAngle = datasample(p.defaultParameters.stim.GRATING.RandAngles, 1);
-    p.defaultParameters.stim.GRATING.sFreq    = datasample(p.defaultParameters.stim.GRATING.sFreqLst,   1); % spatial frequency as cycles per degree
-    p.defaultParameters.stim.GRATING.ori      = datasample(p.defaultParameters.stim.GRATING.OriLst,     1); % orientation of grating
+    p.defaultParameters.stim.GRATING.PosAngle   = datasample(p.defaultParameters.stim.GRATING.RandAngles, 1);
+    p.defaultParameters.stim.GRATING.sFreq      = datasample(p.defaultParameters.stim.GRATING.sFreqLst,   1); % spatial frequency as cycles per degree
+    p.defaultParameters.stim.GRATING.ori        = datasample(p.defaultParameters.stim.GRATING.OriLst,     1); % orientation of grating
 
 else
     % ####################################################################### %
@@ -192,7 +191,7 @@ function TaskSetUp(p)
     
     p.trial.task.centerOffLatency = ND_GetITI(p.trial.task.MinWaitGo, p.trial.task.MaxWaitGo); % Time from stim appearing to fixspot disappearing
 
-    ND_SwitchEpoch(p, 'ITI')
+    ND_SwitchEpoch(p, 'ITI');
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -204,7 +203,6 @@ function TaskDesign(p)
         case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
             Task_WaitITI(p);
-
         % ----------------------------------------------------------------%
         case p.trial.epoch.TrialStart
          %% trial starts with onset of fixation spot
@@ -215,7 +213,6 @@ function TaskDesign(p)
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
 
             ND_SwitchEpoch(p,'WaitFix');
-
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
         %% Fixation target shown, waiting for a sufficiently held gaze
@@ -231,11 +228,10 @@ function TaskDesign(p)
                     pds.reward.give(p, p.trial.reward.InitialRew);
                 end
             end
-
+            
             % ----------------------------------------------------------------%
         case p.trial.epoch.Fixating
         %% Initial reward has been given (if it is not 0), now stim target will appear
-
             % Still fixating
             if(p.trial.stim.fix.fixating)
                 % Wait stim latency before showing reward
@@ -281,7 +277,6 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.Saccade
         %% Central fixation spot has disappeared. Animal must quickly saccade to stim to get the main reward
-
             if(~p.trial.task.stimFix)
                 % Animal has not yet saccaded to target
                 % Need to check if no saccade has been made or if a wrong saccade has been made
@@ -415,7 +410,6 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
-           
             Task_OFF(p); % Run standard TaskEnd routine
 
             % Grab the fixation stopping and starting values from the stim properties

@@ -43,7 +43,6 @@ p.defaultParameters.EV.PlanStart = p.trial.EV.NextTrialStart;
 % If TDT times out, disable it until manually reneabled
 p.defaultParameters.tdt.use = p.trial.tdt.use;
 
-
 % --------------------------------------------------------------------%
 %%  keep joystick center position
 if(p.trial.datapixx.useJoystick)
@@ -74,7 +73,11 @@ end
 
 % --------------------------------------------------------------------%
 %% Block control
-p.defaultParameters.Block.EqualCorrect = p.trial.Block.EqualCorrect;
+p.defaultParameters.Block.EqualCorrect   = p.trial.Block.EqualCorrect;
+p.defaultParameters.Block.Conditions     = p.trial.Block.Conditions;
+p.defaultParameters.Block.maxBlockTrials = p.trial.Block.maxBlockTrials; 
+p.defaultParameters.Block.GenBlock       = p.trial.Block.GenBlock;
+p.defaultParameters.Block.BlockList      = p.trial.Block.BlockList;
 
 % --------------------------------------------------------------------%
 %% format string for ascii table
