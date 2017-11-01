@@ -23,6 +23,11 @@ bitsPerSort = p.trial.tdt.bitsPerSort;
 % Channels x SortCodes
 spikeCounts = zeros(nChannels, nSorts);
 
+% Initialize TDT if it is not
+if ~isfield(p.trial.tdt, 'UDP')
+    pds.tdt.init(p)
+end
+
 
 udp = p.trial.tdt.UDP;
 

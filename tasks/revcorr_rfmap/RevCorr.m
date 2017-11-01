@@ -806,7 +806,7 @@ end
 
 function ProcessSpikes(p)
 % Get all the incoming spikes from TDT and then process the spike counts
-if p.trial.tdt.use
+if p.trial.tdt.use && isfield(p.trial.tdt, 'spikes')
     % Load in the spikes
     spikes = p.trial.tdt.spikes;
     
