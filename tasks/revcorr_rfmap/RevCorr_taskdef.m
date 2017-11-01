@@ -64,8 +64,8 @@ p.trial.RF.maxSpikesPerTrial = 1000;   % Max spikes per trial, for preallocation
 
 % Note: these select which channels to count when listening to spikes
 % To set up how many channels total on the electrode look below in TDT setup section
-p.trial.RF.channels = 10;  % Which channels of the incoming spike data to use for spikes
-p.trial.RF.sortCodes = 2;  % Which sort codes to use
+p.trial.RF.channels = 13;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.sortCodes = 1;  % Which sort codes to use
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
