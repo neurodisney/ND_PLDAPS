@@ -46,7 +46,7 @@ switch state
 %         ND_CtrlMsg(p, 'frameDraw.');
 
     % ----------------------------------------------------------------%
-    case p.trial.pldaps.trialStates.trialCleanUpandSave;
+    case p.trial.pldaps.trialStates.frameFlip;
     %% Flip the graphic buffer and show next frame
         ND_FrameFlip(p);
 %         ND_CtrlMsg(p, 'trialCleanUpandSave.');
