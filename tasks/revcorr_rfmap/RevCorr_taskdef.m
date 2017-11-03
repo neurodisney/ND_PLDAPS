@@ -25,9 +25,9 @@ p.trial.display.breakColor = 'black';
 p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
-p.trial.reward.Period = 0.35;
+p.trial.reward.Period = 0.40;
 
-p.trial.reward.jackpotDur = 0.17;     % Reward for holding fixation until jackpotTime
+p.trial.reward.jackpotDur = 0.15;     % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1;  % number of reward pulses
 p.trial.reward.PulseStep       = [2,5]; % increase number of pulses with this trial number
@@ -64,7 +64,7 @@ p.trial.RF.maxSpikesPerTrial = 1000;   % Max spikes per trial, for preallocation
 
 % Note: these select which channels to count when listening to spikes
 % To set up how many channels total on the electrode look below in TDT setup section
-p.trial.RF.channels = 13;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.channels = 11;  % Which channels of the incoming spike data to use for spikes
 p.trial.RF.sortCodes = 1;  % Which sort codes to use
 
 % ------------------------------------------------------------------------%

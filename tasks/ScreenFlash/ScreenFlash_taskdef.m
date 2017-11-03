@@ -42,8 +42,8 @@ p.trial.task.Timing.WaitFix = 0.100;    % Time to get a solid fixation before tr
 drugFlashDelay = 0.75;
 p.trial.task.Timing.drugFlashDelay = drugFlashDelay;
 
-minInterFlash = 20;
-maxInterFlash = 20;
+minInterFlash = 5;
+maxInterFlash = 5;
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = max(0.25, minInterFlash - drugFlashDelay);  % minimum time period [s] between subsequent trials
