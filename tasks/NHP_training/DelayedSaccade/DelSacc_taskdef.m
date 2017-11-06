@@ -23,7 +23,7 @@ p.trial.task.ShowHelp = 0; % Moves the fixation spot towards target location
 p.trial.reward.GiveInitial = 0;     % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew  = 0.01;  % duration of the initial reward
 p.trial.reward.ManDur      = 0.1;   % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.05;   % Reward for completing the task successfully
+p.trial.reward.Dur         = 0.1;  % Reward for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1; % number of reward pulses
@@ -60,7 +60,7 @@ p.trial.stim.GRATING.AngleArray   = 0:30:359;  %
 p.trial.stim.GRATING.RandAngles   = 0:15:359;  % if in random mode chose an angle from this list
 
 % grating contrast
-p.trial.stim.GRATING.lowContrast  = 0.5;  % grating contrast value when stim.on = 1
+p.trial.stim.GRATING.lowContrast  = 0.25;  % grating contrast value when stim.on = 1
 p.trial.stim.GRATING.highContrast = 0.65;  % grating contrast value when stim.on = 2
 
 p.trial.stim.GRATING.res          = 300;
@@ -72,14 +72,14 @@ p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust f
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.5, 0.75); % Time from initial reward to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.75, 1.25); % Time from fixation onset to stim appearing
 
-p.trial.task.saccadeTimeout   =  2.5;  % Time allowed to make the saccade to the stim before error
+p.trial.task.saccadeTimeout   = 0.75;  % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
-p.trial.task.minTargetFixTime = 0.25;  % Must fixate on target for at least this time before it counts
+p.trial.task.minTargetFixTime = 0.5;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
-p.trial.task.Timing.TimeOut   =    2;  % Time-out[s]  for incorrect responses
-p.trial.task.Timing.ITI       = ND_GetITI(1,  2,  [], [], 1, 0.10);
+p.trial.task.Timing.TimeOut   =  2.5;  % Time-out[s]  for incorrect responses
+p.trial.task.Timing.ITI       = ND_GetITI(0.75,  1.25,  [], [], 1, 0.10);
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
@@ -138,12 +138,11 @@ c10.task.MaxWaitGo  = 0.105; % max wait period for fixation spot to disapear
 p.defaultParameters.Block.Conditions     = {c1, c2, c3, c4, c5, c6, c7, c8, c9};
 p.defaultParameters.Block.maxBlockTrials =  [1, 2, 3, 4,  4,  3, 3, 2,1]; 
 
-p.defaultParameters.Block.Conditions     = {c2, c3, c4, c5, c6};
-p.defaultParameters.Block.maxBlockTrials =  [2, 3, 4, 3, 2]; 
+p.defaultParameters.Block.Conditions     = {c2, c3, c4, c5, c6, c7, c8, c9};
+p.defaultParameters.Block.maxBlockTrials =  [1, 3, 4, 4, 3, 2, 1, 1]; 
 
-p.defaultParameters.Block.Conditions     = {c9};
-p.defaultParameters.Block.maxBlockTrials =  5; 
-
+% p.defaultParameters.Block.Conditions     = {c9};
+% p.defaultParameters.Block.maxBlockTrials =  5; 
 
 % p.defaultParameters.Block.Conditions     = {c1, c2, c3};
 % p.defaultParameters.Block.maxBlockTrials =  [2, 3, 4]; 

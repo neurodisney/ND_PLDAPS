@@ -72,7 +72,7 @@ if(isempty(state))
     ND_Trial2Ascii(p, 'init');
 
     %% initialize target parameters
-    p.defaultParameters.behavior.fixation.FixWin = 3;
+    p.defaultParameters.behavior.fixation.FixWin = 2.5;
     
     p.defaultParameters.task.RandomPos = 0; % if 1, randomly change the grating location each trial
     p.defaultParameters.task.RandomPar = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
@@ -266,7 +266,7 @@ function TaskDesign(p)
                     ND_SwitchEpoch(p, 'BreakFixCheck');
                 else
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-                    ND_SwitchEpoch(p, 'TaskEnd')
+                    ND_SwitchEpoch(p, 'TaskEnd');
                 end
 
                 % Turn off fixspot and stim
@@ -291,12 +291,12 @@ function TaskDesign(p)
                         pds.audio.playDP(p, 'breakfix','left');
 
                         % Turn the stim off and fixation off
-                        stim(p,0)
-                        ND_FixSpot(p,0)
+                        stim(p,0);
+                        ND_FixSpot(p,0);
 
                         % Mark trial early and end task
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
-                        ND_SwitchEpoch(p, 'TaskEnd')
+                        ND_SwitchEpoch(p, 'TaskEnd');
 
                     elseif(p.trial.stim.gratingH.fixating)
                         % Real reaction to GO cue and has acheived fixation
@@ -310,8 +310,8 @@ function TaskDesign(p)
                             p.trial.outcome.CurrOutcome = p.trial.outcome.False;
 
                             % Turn the stim off and fixation off
-                            stim(p,0)
-                            ND_FixSpot(p,0)
+                            stim(p,0);
+                            ND_FixSpot(p,0);
 
                             % Play an incorrect sound
                             pds.audio.playDP(p, 'incorrect', 'left');
@@ -332,7 +332,7 @@ function TaskDesign(p)
                     % Play an incorrect sound
                     pds.audio.playDP(p, 'incorrect', 'left');
 
-                    ND_SwitchEpoch(p, 'TaskEnd')
+                    ND_SwitchEpoch(p, 'TaskEnd');
                 end
             else
                 % Animal is currently fixating on target
@@ -395,7 +395,7 @@ function TaskDesign(p)
                     p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
                 end
 
-                ND_SwitchEpoch(p,'TaskEnd')
+                ND_SwitchEpoch(p,'TaskEnd');
             end
 
         % ----------------------------------------------------------------%
@@ -403,8 +403,8 @@ function TaskDesign(p)
         %% wait before turning all stuff off
             if(p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.Timing.WaitEnd)
                 % Turn off stim
-                stim(p,0)
-                ND_SwitchEpoch(p,'TaskEnd')
+                stim(p,0);
+                ND_SwitchEpoch(p,'TaskEnd');
             end
             
         % ----------------------------------------------------------------%
@@ -464,23 +464,33 @@ if(~isempty(p.trial.LastKeyPress))
     switch p.trial.LastKeyPress(1)
 
         case KbName('r')  % random position of target on each trial
-            if(p.trial.task.RandomPos)
-                p.trial.task.RandomPos = 0;
+             p.trial.task.RandomPos = abs(p.trial.task.RandomPos - 1);
+             
+           if(p.trial.task.RandomPos)
+                ND_CtrlMsg(p, 'Random Grating location on each trial.');
             else
-                p.trial.task.RandomPos = 1;
+                ND_CtrlMsg(p, 'Grating location is kept constant.');
             end
             
         % randomly select a new spatial frequency
         case KbName('f') 
             p.trial.stim.GRATING.sFreq = datasample(p.trial.stim.GRATING.sFreqLst,   1); % spatial frequency as cycles per degree
+            ND_CtrlMsg(p, 'Grating spatial frequency changed.');
             
         % randomly select a new grating orientation
         case KbName('o')  
             p.trial.stim.GRATING.ori = datasample(p.trial.stim.GRATING.OriLst,     1); % orientation of grating
+            ND_CtrlMsg(p, 'Grating orientation changed.');
             
         % select grating parameters at random for every trial    
         case KbName('g')  % randomly select a new grating orientation
             p.trial.task.RandomPar = abs(p.trial.task.RandomPar - 1);
+            
+            if(p.trial.task.RandomPar)
+                ND_CtrlMsg(p, 'Random Grating parameter on each trial.');
+            else
+                ND_CtrlMsg(p, 'Grating parameter are kept constant.');
+            end
 
         % move target to grid positions
         case p.trial.key.GridKeyCell
@@ -500,6 +510,8 @@ if(~isempty(p.trial.LastKeyPress))
                 % Assume manual control of the activation of the grating fix windows
                 p.trial.stim.gratingL.pos = p.trial.stim.GRATING.pos;
                 p.trial.stim.gratingH.pos = p.trial.stim.GRATING.pos;
+                
+                ND_CtrlMsg(p, ['Moved Grating to array location ', int2str(gpos), '.']);
             end
     end
 end
