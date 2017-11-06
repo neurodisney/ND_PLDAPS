@@ -91,8 +91,8 @@ c9.Nr = 9;
 c9.reward.MinWaitInitial  = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
 c9.reward.MaxWaitInitial  = 2;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
 
-p.defaultParameters.Block.Conditions     = { c3, c4, c5, c6};
-p.defaultParameters.Block.maxBlockTrials =  [2, 4, 5,2]; 
+p.trial.Block.Conditions     = { c3, c4, c5, c6};
+p.trial.Block.maxBlockTrials =  [2, 4, 5,2]; 
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters

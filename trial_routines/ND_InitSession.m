@@ -20,6 +20,11 @@ if(isfield(p.defaultParameters, 'task'))
     end
 end
 
+% Save any task parameters as defaults for the session
+if ~isempty(p.trial)
+    p.defaultParameters = ND_AlterSubStruct(p.defaultParameters, p.trial);
+end
+
 % --------------------------------------------------------------------%
 %% Generate Block/Condition series
 if(~isfield(p,'conditions') || isempty(p.conditions))  % check first if the condition list was created in the task setup file

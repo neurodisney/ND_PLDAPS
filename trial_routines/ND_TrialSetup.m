@@ -21,6 +21,12 @@ if(isfield(p.trial.task, 'TaskDef'))
     end
 end
 
+% If the conditions are changed within the task parameters advance to the next block
+% so that they take effect on the subsequent trial.
+if ~isequaln(p.defaultParameters.Block, p.trial.Block)
+    ND_BlockAdvance(p);
+end
+
 % ------------------------------------------------------------------------%
 %% Frame number
 p.trial.iFrame = 1;
