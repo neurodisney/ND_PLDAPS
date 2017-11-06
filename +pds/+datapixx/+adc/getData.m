@@ -35,12 +35,12 @@ p.trial.datapixx.adc.dataSampleCount = endi;
 
 p.trial.datapixx.adc.dataSampleTimes(inds)=bufferTimetags;
 
-nMaps=length(p.defaultParameters.datapixx.adc.channelMappingChannels);
+nMaps=length(p.trial.datapixx.adc.channelMappingChannels);
 
 for(imap=1:nMaps)
 %     iChannels=p.trial.datapixx.adc.channelMappingChannels{imap};
-    iSub = p.defaultParameters.datapixx.adc.channelMappingSubs{imap};
+    iSub = p.trial.datapixx.adc.channelMappingSubs{imap};
     iSub(end).subs{2} = inds;
 
-    p = subsasgn(p, iSub,bufferData(p.defaultParameters.datapixx.adc.channelMappingChannelInds{imap},:));
+    p = subsasgn(p, iSub,bufferData(p.trial.datapixx.adc.channelMappingChannelInds{imap},:));
 end
