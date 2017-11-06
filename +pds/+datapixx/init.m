@@ -93,7 +93,7 @@ Datapixx('SetDoutValues',0);
 Datapixx('RegWrRd');
 
 %start adc data collection if requested
-%pds.datapixx.adc.start(p);
+pds.datapixx.adc.start(p);
 
 
 if p.defaultParameters.display.useOverlay==1 % Datapixx overlay

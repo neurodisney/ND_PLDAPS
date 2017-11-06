@@ -15,7 +15,7 @@ maxDataSamplesPerTrial = size(p.trial.datapixx.adc.dataSampleTimes, 2);
 %TODO? 1. stop recording if during trial only requested.
 
 %prune Data structs
-nMaps = length(p.defaultParameters.datapixx.adc.channelMappingChannels);
+nMaps = length(p.trial.datapixx.adc.channelMappingChannels);
 
 if(p.trial.datapixx.adc.dataSampleCount < maxDataSamplesPerTrial/2)
     inds = 1:p.trial.datapixx.adc.dataSampleCount;
@@ -24,7 +24,7 @@ if(p.trial.datapixx.adc.dataSampleCount < maxDataSamplesPerTrial/2)
     for(imap=1:nMaps)
 
         %     iChannels=p.trial.datapixx.adc.channelMappingChannels{imap};
-        iSub = p.defaultParameters.datapixx.adc.channelMappingSubs{imap};
+        iSub = p.trial.datapixx.adc.channelMappingSubs{imap};
         iSub(end).subs{2} = inds;
         iSub(end).subs{1} = ':';
 
@@ -37,7 +37,7 @@ elseif(p.trial.datapixx.adc.dataSampleCount < maxDataSamplesPerTrial)
     for(imap = 1:nMaps)
 
         %     iChannels=p.trial.datapixx.adc.channelMappingChannels{imap};
-        iSub = p.defaultParameters.datapixx.adc.channelMappingSubs{imap};
+        iSub = p.trial.datapixx.adc.channelMappingSubs{imap};
         iSub(end).subs{2} = inds;
         iSub(end).subs{1} = ':';
 
