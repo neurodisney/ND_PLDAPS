@@ -4,12 +4,13 @@ classdef BaseStim < handle
 %
 % Nate Faber, July 2017
 
-properties
+properties (AbortSet = true)
     pos = [0,0]
     on = 0;                 % Visibility
     fixWin = 0
     fixActive = 0;          % Whether or not this stim is is checked for eye fixation
     autoFixWin = 1;         % If fixActive automatically turns on/off with stim and eye movement
+    p                       % Holds the handle for p
 end
 
 properties (SetAccess = protected)
@@ -19,7 +20,29 @@ properties (SetAccess = protected)
     fixWinRect              % The bounding box of the fixation window, used for drawing the window
     fixating = 0            % Boolean for fixation
     looking = 0             % Less stringent than fixation. Eye is in the fix window
+    
+    
+    % Integer to define object (for sending event code)
+    classCode = 7701;
+    
+    % Signals to send upon turning on or off
+    onSignal  = struct('event', 'STIM_ON', ...
+        'name', 'StimOn');
+    offSignal = struct('event', 'STIM_OFF', ...
+        'name', 'StimOff');
+    
+    % This cell array determines the order of properties when the propertyArray attribute is calculated
+    recordProps = {'xpos','ypos'};
 end
+
+properties (Dependent)
+    xpos
+    ypos
+    
+    % The attribute the generates a cell of values for transmitting as event codes
+    propertyArray
+end
+    
 
 
 methods
@@ -35,6 +58,9 @@ methods
         
         obj.fixWin = fixWin;
         obj.pos = pos;
+        
+        % Store the handle for the PLDAPS object
+        obj.p = p;
         
         % Initialize EV struct to contain NaNs
         obj.EV.FixEntry = NaN;
@@ -108,9 +134,11 @@ methods
             end
         end
     end
+    
+    
         
     %---------------------------------------------%
-    % Methods to run on changes of properties
+    %% Methods to run on changes of properties
     
     function obj = set.fixWin(obj,value)
         % Ensure fixWin stays nonnegative
@@ -129,10 +157,56 @@ methods
     function obj = set.on(obj,value)
         obj.on = value;
         
-        if value && obj.autoFixWin
-            % Automatically turn on fixation checking when object becomes visible
+        %% Signal that object is turning on or off
+        % Get the event/name
+        if value
+            event     = obj.onSignal.event;
+            eventName = obj.onSignal.name;
+        else
+            event     = obj.offSignal.event;
+            eventName = obj.offSignal.name;
+        end
+        
+        % Queue up the signals (for accurate temporal precision)
+        ND_AddScreenEvent(obj.p, obj.p.trial.event.(event), eventName);
+        
+        % When stim first comes on, record the stimulus in the stimRecord for signal transmission after the trial is over
+        if value
+            propArray = obj.propertyArray;
+            if length(propArray) > 1
+                obj.p.trial.stim.stimRecord{end+1} = obj.propertyArray;
+            end
+        end
+        
+        %% If enabled, automatically turn on fixation checking when object becomes visible
+        if value && obj.autoFixWin           
             obj.fixActive = 1;
         end
+    end
+    
+    %------------------------------------------%
+    %% Methods for getting dependent variables
+    
+    function value = get.xpos(obj)
+        value = obj.pos(1);
+    end
+    
+    function value = get.ypos(obj)
+        value = obj.pos(2);
+    end
+    
+    function array = get.propertyArray(obj)
+        nVals = 1 + length(obj.recordProps);
+        array = zeros(1, nVals);
+        
+        % Array starts with a code identifying the objects type
+        array(1) = obj.classCode;
+        
+        for i = 2:nVals
+            prop = obj.recordProps{i-1};
+            array(i) = obj.(prop);
+        end
+    
     end
     
 end

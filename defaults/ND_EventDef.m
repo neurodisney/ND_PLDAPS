@@ -147,6 +147,21 @@ p.defaultParameters.event.SOUND_ON      = 180;     % stimulus onset
 p.defaultParameters.event.MICROSTIM     = 666;     % microstimulation pulse onset
 p.defaultParameters.event.INJECT        = 667;     % start of pressure injection
 p.defaultParameters.event.IONTO         = 668;     % start of iontophoretic drug delivery
+% ------------------------------------------------------------------------%
+%% Stim Property Blocks
+% Sent at the end of the trial to give information about each shown stimulus
+% One-to-one correspondence with StimOn signals
+
+p.defaultParameters.event.STIMPROP_BLOCK_ON  = 7501;  % Start of the stimProp Block
+p.defaultParameters.event.STIMPROP           = 7575;  % Start of a new stimulus
+p.defaultParameters.event.STIMPROP_BLOCK_OFF = 7500;  % End of stim prop block
+
+% Note: 77xx block reserved for stim types
+% These are encoded in the actual stim class files, but are put here for easy reference
+% BaseStim = 7700
+% FixSpot = 7701
+% Grating = 7702
+
 
 % ------------------------------------------------------------------------%
 %% System encodes
@@ -183,6 +198,8 @@ p.defaultParameters.event.DO_8       = 2328;
 p.defaultParameters.event.TRIAL_HDR_ON  = 9901;
 p.defaultParameters.event.TRIAL_HDR_OFF = 9900;
 
+p.defaultParameters.event.TRIAL_FTR_ON  = 9911;
+p.defaultParameters.event.TRIAL_FTR_OFF = 9910;
 % TODO: encode trial states (and task epochs)?
 
 %% task/stimulus parameters (NIY!)

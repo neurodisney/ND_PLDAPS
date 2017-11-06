@@ -8,8 +8,11 @@ function p = ND_TrialCleanUpandSave(p)
 % wolf zinke, Dec. 2016
 
 %-------------------------------------------------------------------------%
-%% dump trial header
+%% dump trial metadata
 if(~p.trial.pldaps.quit) % skip if trial was interrupted (WZ: this will loose last trial info! Just a quick fix to avoid errors.)
+    % Send info about any stims shown
+    ND_SendStimRecord(p);
+    
     ND_TrialHDR(p);
 end
 

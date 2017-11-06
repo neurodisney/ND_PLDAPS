@@ -6,7 +6,7 @@ result= [];
 if(~p.trial.pldaps.nosave)
     try
 
-        if(p.defaultParameters.plot.do_online)
+        if(p.trial.plot.do_online)
             figh = p.trial.plot.fig;
             p.trial.plot.fig = []; % avoid saving the figure to data
         end
@@ -20,7 +20,7 @@ if(~p.trial.pldaps.nosave)
 
         save(fullfile(p.defaultParameters.session.trialdir, flnm), '-struct','ctrial','-mat','-v7.3');
         
-        if(p.defaultParameters.plot.do_online)
+        if(p.trial.plot.do_online)
             p.trial.plot.fig = figh; %dirty ad hoc fix to keep figure handle available
         end
         

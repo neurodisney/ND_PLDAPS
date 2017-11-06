@@ -830,12 +830,8 @@ end
 function fixspot(p,bool)
 if bool && ~p.trial.stim.fix.on
     p.trial.stim.fix.on = 1;
-    p.trial.EV.FixOn = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
 elseif ~bool && p.trial.stim.fix.on
     p.trial.stim.fix.on = 0;
-    p.trial.EV.FixOff = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
 end
 
 
@@ -859,8 +855,6 @@ switch val
         for grating = p.trial.stim.gratings
             grating{1}.on = 0;
         end
-        p.trial.EV.StimOff = p.trial.CurTime;
-        pds.datapixx.strobe(p.trial.event.STIM_OFF);
         
     case 1
         % Select the proper stim
@@ -873,10 +867,6 @@ switch val
         
         % Make the stim visible
         stim.on = 1;
-        
-        % Record the timings
-        p.trial.EV.StimOn = p.trial.CurTime;
-        pds.datapixx.strobe(p.trial.event.STIM_ON); 
               
     otherwise
         error('bad stim value')
