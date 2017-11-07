@@ -71,9 +71,9 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 switch rig
     case 1
-        SS.display.viewdist                     = 97;    % screen distance to the observer
-        SS.display.heightcm                     = 40;     % height of the visible screen in cm
-        SS.display.widthcm                      = 71;     % width  of the visible screen in cm
+        SS.display.viewdist                     = 98.5; % screen distance to the observer
+        SS.display.heightcm                     = 40.5; % height of the visible screen in cm
+        SS.display.widthcm                      = 73.5; % width  of the visible screen in cm
     case 2
         SS.display.viewdist                     = 92;   
         SS.display.heightcm                     = 36;     
