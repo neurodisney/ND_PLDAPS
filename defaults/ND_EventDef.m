@@ -93,19 +93,20 @@ p.defaultParameters.event.BREAK         = 3899; % Pause the experiment
 p.defaultParameters.event.UNBREAK       = 3889; % Unpause the experiment
 
 % response related
-p.defaultParameters.event.RESP_CORR     = 1110; % correct response occurred
-p.defaultParameters.event.RESP_EARLY    = 1111; % early response occurred
-p.defaultParameters.event.RESP_PREMAT   = 1112; % premature (early) response occurred, after go signal but too early to be true
-p.defaultParameters.event.RESP_FALSE    = 1113; % false response occurred
-p.defaultParameters.event.RESP_LATE     = 1114; % late response occurred
+p.defaultParameters.event.RESP_CORR        = 1110; % correct response occurred
+p.defaultParameters.event.RESP_EARLY       = 1111; % early response occurred
+p.defaultParameters.event.RESP_PREMAT      = 1112; % premature (early) response occurred, after go signal but too early to be true
+p.defaultParameters.event.RESP_FALSE       = 1113; % false response occurred
+p.defaultParameters.event.RESP_FALSE_EARLY = 1116; % early response towards wrong stimulus
+p.defaultParameters.event.RESP_LATE        = 1114; % late response occurred
 
 % fixation related
-p.defaultParameters.event.FIXSPOT_ON    = 110;  % onset of fixation spot
-p.defaultParameters.event.FIXSPOT_OFF   = 111;  % offset of fixation spot
-p.defaultParameters.event.FIX_IN        = 2000;      % gaze enters fixation window
-p.defaultParameters.event.FIX_OUT       = 2001;      % gaze leaves fixation window
-p.defaultParameters.event.FIXATION      = 2002;      % gaze has been in the fix window long enought ot be considered a fix
-p.defaultParameters.event.FIX_BREAK     = 2003;      % gaze has left fix window for long enough to be considered a fix break
+p.defaultParameters.event.FIXSPOT_ON    =  110; % onset of fixation spot
+p.defaultParameters.event.FIXSPOT_OFF   =  111; % offset of fixation spot
+p.defaultParameters.event.FIX_IN        = 2000; % gaze enters fixation window
+p.defaultParameters.event.FIX_OUT       = 2001; % gaze leaves fixation window
+p.defaultParameters.event.FIXATION      = 2002; % gaze has been in the fix window long enought ot be considered a fix
+p.defaultParameters.event.FIX_BREAK     = 2003; % gaze has left fix window for long enough to be considered a fix break
 
 % refinement of fixation break times
 % ToDo: WZ - need to check what encodes should/need to be used as events and
@@ -122,7 +123,6 @@ p.defaultParameters.event.JOY_PRESS     = 2100;    % joystick press detected
 p.defaultParameters.event.JOY_RELEASE   = 2101;    % joystick release detected
 p.defaultParameters.event.JOY_ON        = 2110;      % joystick elevation above pressing threshold
 p.defaultParameters.event.JOY_OFF       = 2111;      % joystick elevation below releasing threshold
-
 
 % visual stimulus
 p.defaultParameters.event.STIM_ON       = 130;     % stimulus onset

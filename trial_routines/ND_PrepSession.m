@@ -71,7 +71,7 @@ if(~exist(p.defaultParameters.session.trialdir,'dir'))
     mkdir(p.defaultParameters.session.trialdir);
 end
 
-p.defaultParameters.session.file     = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
+p.defaultParameters.session.file          = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
 
 p.defaultParameters.asciitbl.session.file = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem,'.dat'];
 %--------------------------------------------------------------------%
@@ -98,7 +98,7 @@ end
 % --------------------------------------------------------------------%
 %% initialize the random number generator
 % verify how this affects pldaps
-rng('shuffle', 'twister');
+p.defaultParameters.session.RandomSeed = rng('shuffle', 'twister');
 
 % --------------------------------------------------------------------%
 %% Set some defaults

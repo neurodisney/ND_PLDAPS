@@ -1,4 +1,4 @@
-function p = DelSacc_taskdef(p)
+function p = CtrChng_taskdef(p)
 % define task parameters for the joystick training task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
@@ -31,35 +31,17 @@ p.trial.reward.PulseStep       = [2, 4, 6, 8]; % increase number of pulses with 
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
+p.trial.stim.PosX    = 3;
+
 p.trial.stim.GRATING.fixWin  = 2.5;
 
-% spatial & temporal frequency
-% p.trial.stim.GRATING.sFreq  = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
-% p.trial.stim.GRATING.ori    = 45; % orientation of grating
-p.trial.stim.GRATING.tFreq    = 0;  % temporal frequency of grating; drift speed, 0 is stationary
-p.trial.stim.GRATING.radius   = 0.75;  % radius of grating patch
+p.trial.stim.GRATING.radius  = 0.75;  % radius of grating patch
 
-% p.trial.stim.GRATING.sFreqLst = 0.25:0.1:6; % spatial frequency as cycles per degree
-% p.trial.stim.GRATING.OriLst   = 0:15:179; % orientation of grating
+p.trial.stim.GridPos = linspace(-3,3,9); % position on y axis
 
-% position and angle assignment
-%      ____________________
-%     |  135 |  90  |   45 |
-%     |  (7) |  (8) |  (9) |
-%     |______|______|______|
-%     |  180 |      |   0  |
-%     |  (4) |  *   |  (6) |
-%     |______|______|______|
-%     |  225 |  270 |  315 |
-%     |  (1) |  (2) |  (3) |
-%     |______|______|______|
-
-p.trial.stim.GRATING.eccentricity = 3;
-p.trial.stim.GRATING.GridAngles   = [225, 270, 315, 180, 0, 135, 90, 45]; % angular position of grating for the 8 keypad controlled locations
-p.trial.stim.GRATING.AngleArray   = 0:30:359;  %
-p.trial.stim.GRATING.RandAngles   = 0:15:359;  % if in random mode chose an angle from this list
-
+p.trial.stim.GRATING.tFreq   = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 % grating contrast
+
 p.trial.stim.GRATING.lowContrast  = 0.4;  % grating contrast value when stim.on = 1
 p.trial.stim.GRATING.highContrast = 0.6;  % grating contrast value when stim.on = 2
 
