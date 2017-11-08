@@ -28,8 +28,8 @@ if nStims > 0
                 pds.datapixx.strobe(property);
             
             else
-                % Otherwise, convert it to the corresponding 16-bit integer representing the double
-                signal = typecast(property, 'uint16');
+                % Otherwise, save 2 decimal points of precision (must divide by 100 later)
+                signal = round(property * 100); 
                 pds.datapixx.strobe(signal);
             end
                 
