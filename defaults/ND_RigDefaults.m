@@ -75,9 +75,9 @@ switch rig
         SS.display.heightcm                     = 40.5; % height of the visible screen in cm
         SS.display.widthcm                      = 73.5; % width  of the visible screen in cm
     case 2
-        SS.display.viewdist                     = 92;   
-        SS.display.heightcm                     = 36;     
-        SS.display.widthcm                      = 63;  
+        SS.display.viewdist                     = 83;   
+        SS.display.heightcm                     = 39;     
+        SS.display.widthcm                      = 70;  
     otherwise
         SS.display.viewdist                     = 97;   
         SS.display.heightcm                     = 40;    

@@ -237,7 +237,7 @@ function TaskDesign(p)
                 % Wait stim latency before showing reward
                 if(~p.trial.task.stimState)
                     if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
-                        stim(p, 1) % Turn on stim
+                        stim(p, 1); % Turn on stim
                     end
 
                 else
@@ -450,8 +450,8 @@ function TaskCleanAndSave(p)
     % Calculate the Saccadic Response Time for easy plotting
     Calculate_SRT(p);
 
-% Save useful info to an ascii table for plotting
-ND_Trial2Ascii(p, 'save');
+    % Save useful info to an ascii table for plotting
+    ND_Trial2Ascii(p, 'save');
 
 % ####################################################################### %
 %% additional inline functions
@@ -542,7 +542,7 @@ function stim(p, val)
                 p.trial.stim.gratingH.fixActive = 1;
 
             otherwise
-                error('bad stim value')
+                error('bad stim value');
         end
 
         % Record the change timing
@@ -585,7 +585,7 @@ function Calculate_SRT(p)
             p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - p.trial.EV.FixOff;
 
         otherwise
-            warning('Calculate_SRT: unrecognized outcome')
+            warning('Calculate_SRT: unrecognized outcome');
             p.trial.task.SRT_FixStart = NaN;
             p.trial.task.SRT_StimOn   = NaN;
             p.trial.task.SRT_Go       = NaN;
