@@ -1,7 +1,7 @@
 function ND_SendStimRecord(p)
 %% Send the record of all the stims that have been shown
 
-stimRecord = p.trial.stim.stimRecord;
+stimRecord = p.trial.stim.record.arrays;
 nStims = length(stimRecord);
 
 if nStims > 0

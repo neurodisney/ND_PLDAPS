@@ -39,8 +39,11 @@ properties (Dependent)
     xpos
     ypos
     
+    % This attribute has all the current properties of the object when called
+    propertyStruct
     % The attribute the generates a cell of values for transmitting as event codes
     propertyArray
+    
 end
     
 
@@ -172,10 +175,7 @@ methods
         
         % When stim first comes on, record the stimulus in the stimRecord for signal transmission after the trial is over
         if value
-            propArray = obj.propertyArray;
-            if length(propArray) > 1
-                obj.p.trial.stim.stimRecord{end+1} = obj.propertyArray;
-            end
+            saveProperties(obj);
         end
         
         %% If enabled, automatically turn on fixation checking when object becomes visible
@@ -207,6 +207,17 @@ methods
             array(i) = obj.(prop);
         end
     
+    end
+    
+    function propStruct = get.propertyStruct(obj)
+        nVals = length(obj.recordProps);
+        propStruct = struct;
+        
+        propStruct.classCode = obj.classCode;
+        for i = 1:nVals
+            prop = obj.recordProps{i};
+            propStruct.(prop) = obj.(prop);
+        end
     end
     
 end
@@ -300,6 +311,13 @@ methods (Access = private)
             
         end
     end
+    
+    function saveProperties(obj)
+        obj.p.trial.stim.record.arrays{end+1} = obj.propertyArray;
+        obj.p.trial.stim.record.structs{end+1} = obj.propertyStruct;
+    end
+        
+        
 end
 
 end
