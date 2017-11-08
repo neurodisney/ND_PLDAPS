@@ -29,7 +29,7 @@ if nStims > 0
             
             else
                 % Otherwise, save 2 decimal points of precision (must divide by 100 later)
-                signal = round(property * 100); 
+                signal = typecast(cast(round(property * 100), 'int16'), 'uint16'); 
                 pds.datapixx.strobe(signal);
             end
                 
