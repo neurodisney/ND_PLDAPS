@@ -22,13 +22,11 @@ switch state
     % and all other more time demanding stuff.
         p = ND_TrialSetup(p);
 
-
     % ----------------------------------------------------------------%
     case p.trial.pldaps.trialStates.trialPrepare
     %% trial preparation
     % just prior to actual trial start, use it for time sensitive preparations;
         p = ND_TrialPrepare(p); % this defines the actual trial start time
-
 
 % ####################################################################### %
 % DONE DURING THE MAIN TRIAL LOOP:
@@ -36,20 +34,17 @@ switch state
     case p.trial.pldaps.trialStates.frameUpdate
     %% collect data (i.e. a hardware module) and store it
         ND_FrameUpdate(p);
-%         ND_CtrlMsg(p, 'frameUpdate.');
     
     % ----------------------------------------------------------------%
     case p.trial.pldaps.trialStates.frameDraw
     %% Display stuff on the screen
     % Just call graphic routines, avoid any computations
         ND_FrameDraw(p);
-%         ND_CtrlMsg(p, 'frameDraw.');
 
     % ----------------------------------------------------------------%
     case p.trial.pldaps.trialStates.frameFlip;
     %% Flip the graphic buffer and show next frame
         ND_FrameFlip(p);
-%         ND_CtrlMsg(p, 'trialCleanUpandSave.');
 
 % ####################################################################### %
 % DONE AFTER THE MAIN TRIAL LOOP:
@@ -57,7 +52,6 @@ switch state
     case p.trial.pldaps.trialStates.trialCleanUpandSave
     %% trial end
         p = ND_TrialCleanUpandSave(p); % end all trial related processes
-%         ND_CtrlMsg(p, 'trialCleanUpandSave.');
 
 % ####################################################################### %
 % DONE BETWEEN SUBSEQUENT TRIALS:

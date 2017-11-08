@@ -74,10 +74,10 @@ end
 % --------------------------------------------------------------------%
 %% Block control
 p.defaultParameters.Block.EqualCorrect   = p.trial.Block.EqualCorrect;
-p.defaultParameters.Block.Conditions     = p.trial.Block.Conditions;
-p.defaultParameters.Block.maxBlockTrials = p.trial.Block.maxBlockTrials; 
 p.defaultParameters.Block.GenBlock       = p.trial.Block.GenBlock;
 p.defaultParameters.Block.BlockList      = p.trial.Block.BlockList;
+% p.defaultParameters.Block.Conditions     = p.trial.Block.Conditions;
+% p.defaultParameters.Block.maxBlockTrials = p.trial.Block.maxBlockTrials; 
 
 % --------------------------------------------------------------------%
 %% format string for ascii table

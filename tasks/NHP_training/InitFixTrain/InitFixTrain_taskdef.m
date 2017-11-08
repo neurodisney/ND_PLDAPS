@@ -15,18 +15,18 @@ function p = InitFixTrain_taskdef(p)
 % ------------------------------------------------------------------------%
 %% Reward
 % manual reward from experimenter
-p.trial.reward.GiveInitial    = 0; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew     = 0.2; % duration of the initial reward
+p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
+p.trial.reward.InitialRew   = 0.2; % duration of the initial reward
 
-p.trial.reward.GiveSeries     = 1; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur            = 0.2; % reward duration for pulse in reward series while keeping fixation
-p.trial.reward.Step           = [0, 4, 8, 12];     % define the number of subsequent rewards after that the next delay period should be used.
-p.trial.reward.Period         = [0.4 0.3 0.2 0.15]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
+p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
+p.trial.reward.Dur          = 0.05; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Step         = [0, 4, 8, 12];     % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
-p.trial.reward.ManDur         = 0.2; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur       = 0.2; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime    = 4;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur     = 0.75;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotTime  = 4;     % total time required to fixate to get full reward
+p.trial.reward.jackpotDur   = 0.75;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -91,8 +91,8 @@ c9.Nr = 9;
 c9.reward.MinWaitInitial  = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
 c9.reward.MaxWaitInitial  = 2;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
 
-p.trial.Block.Conditions     = { c3, c4, c5, c6};
-p.trial.Block.maxBlockTrials =  [2, 4, 5,2]; 
+p.trial.Block.Conditions     = { c3, c4, c5};
+p.trial.Block.maxBlockTrials =  [2, 2, 2]; 
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
