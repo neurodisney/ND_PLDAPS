@@ -72,6 +72,10 @@ methods
         end
     end
     
+    function saveProperties(obj)
+        % Fixspot should not save its properties. Overwrites superclass function
+    end
+    
 end
     
 end

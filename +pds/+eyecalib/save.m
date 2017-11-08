@@ -3,6 +3,6 @@ function p = save(p)
 %
 % Nate Faber, May 2017
  
-eyeCalib = p.defaultParameters.eyeCalib;
+eyeCalib = p.trial.eyeCalib;
 
 save(eyeCalib.file,'eyeCalib');

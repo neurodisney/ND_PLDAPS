@@ -51,10 +51,7 @@ if p.defaultParameters.behavior.fixation.enableCalib
             calibFileName = [eyeCalibDir, filesep, dailyCalibs(end).name];
             pds.eyecalib.load(p, calibFileName);
         end
-    end
-
-    % save calibration file
-    pds.eyecalib.save(p);
+   end
     
 else
     %% Load the most recent eye position of the day

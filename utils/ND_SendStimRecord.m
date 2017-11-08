@@ -1,7 +1,7 @@
 function ND_SendStimRecord(p)
 %% Send the record of all the stims that have been shown
 
-stimRecord = p.trial.stim.stimRecord;
+stimRecord = p.trial.stim.record.arrays;
 nStims = length(stimRecord);
 
 if nStims > 0
@@ -28,8 +28,8 @@ if nStims > 0
                 pds.datapixx.strobe(property);
             
             else
-                % Otherwise, convert it to the corresponding 16-bit integer representing the double
-                signal = typecast(property, 'uint16');
+                % Otherwise, save 2 decimal points of precision (must divide by 100 later)
+                signal = round(property * 100); 
                 pds.datapixx.strobe(signal);
             end
                 

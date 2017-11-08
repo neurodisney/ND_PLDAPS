@@ -39,11 +39,14 @@ properties (SetAccess = private, Hidden = true)
     genTime %When the grating was created (to calculate drifting phase)
     texture % The actual texture used for drawing
     pcmult
-    srcRect
-    
-    
+    srcRect   
 end
 
+properties (Dependent)
+    % For sending signals values must be between -327 and +327
+    % Thus oreintation always returns angle between -179.99 and 180
+    orientation
+end
 
 methods
     % The constructor method
@@ -93,7 +96,7 @@ methods
         obj.classCode = 7702;
         
         % This cell array determines the order of properties when the propertyArray attribute is calculated
-        obj.recordProps = {'xpos','ypos','radius','angle','contrast','sFreq','tFreq'};
+        obj.recordProps = {'xpos','ypos','radius','orientation','contrast','sFreq','tFreq'};
 
         obj.alpha  = alpha;
         obj.tFreq  = tFreq;
@@ -180,6 +183,14 @@ methods
             Screen('DrawTexture', window, obj.texture, obj.srcRect, destRect, obj.angle, filterMode, ...
                 obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
         end
+    end
+    
+    %------------------------------------------%
+    %% Methods for getting dependent variables
+    
+    function value = get.orientation(obj)
+        % Return angle, but always within the range [-180, 180]
+        value = mod(obj.angle + 180, 360) - 180;
     end
     
 end

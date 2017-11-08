@@ -312,8 +312,9 @@ SS.FixState.breakingFix = 0.75;  % Gaze has momentarily left fixation window
 
 % ------------------------------------------------------------------------%
 %% Stimuli
-SS.stim.allStims = {}; % Cell array to store references of all the stims created
-SS.stim.stimRecord = {}; % Cell array to store arrays of properties each time a stimuli comes on.
+SS.stim.allStims       = {}; % Cell array to store references of all the stims created
+SS.stim.record.arrays  = {}; % Cell array to store arrays of properties each time a stimuli comes on.
+SS.stim.record.structs = {}; % Cell array to store the properties of stims as they come on (but in struct form).
 
 % Default position for stimuli to be generated
 SS.stim.pos = [0,0];
