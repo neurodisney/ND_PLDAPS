@@ -1,4 +1,4 @@
-function p = DelSacc(p, state)
+function p = CtrChng(p, state)
 % Main trial function for initial fixation training.
 %
 %
@@ -34,10 +34,9 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
 
-    p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.GRATING.pos(1)',         '%.3f');
-    p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.GRATING.pos(2)',         '%.3f');
-    p = ND_AddAsciiEntry(p, 'Eccentricity','p.trial.stim.GRATING.eccentricity',   '%.3f');
-    p = ND_AddAsciiEntry(p, 'AnglePos',    'p.trial.stim.GRATING.PosAngle',       '%.3f');
+    p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.GRATING.posX',         '%.3f');
+    p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.GRATING.posY',         '%.3f');
+    p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.TARGET.eccentricity',   '%.3f');
     p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'lContr',      'p.trial.stim.GRATING.lowContrast',    '%.1f');
@@ -74,17 +73,24 @@ if(isempty(state))
     %% initialize target parameters
     p.defaultParameters.behavior.fixation.FixWin = 2.5;
     
-    p.defaultParameters.task.RandomPos = 0; % if 1, randomly change the grating location each trial
-    p.defaultParameters.task.RandomPar = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
+    p.defaultParameters.task.RandomHemi = 0; % if 1, randomly pick left or right hemifield
+    p.defaultParameters.task.RandomPos  = 0; % if 1, randomly change the grating location each trial
+    p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
+
+    p.defaultParameters.task.EqualStim = 1; % both gratings have the same spatial frequency and orientation
+    p.defaultParameters.task.ShowDist  = 1; % Display both, target and distractor grating
 
     % define random grating parameters for each session
-    p.defaultParameters.stim.GRATING.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
-    p.defaultParameters.stim.GRATING.sFreqLst   = 1:0.2:6; % spatial frequency as cycles per degree
-    p.defaultParameters.stim.GRATING.OriLst     = 0:15:179; % orientation of grating
+    p.defaultParameters.stim.PosYlst    = -3:0.1:3;  % range of possible positions on Y axis
+    p.defaultParameters.stim.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
+    p.defaultParameters.stim.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
+    p.defaultParameters.stim.sFreqLst   = 1:0.2:6;   % spatial frequency as cycles per degree
+    p.defaultParameters.stim.OriLst     = 0:15:179;  % orientation of grating
     
-    p.defaultParameters.stim.GRATING.PosAngle   = datasample(p.defaultParameters.stim.GRATING.RandAngles, 1);
-    p.defaultParameters.stim.GRATING.sFreq      = datasample(p.defaultParameters.stim.GRATING.sFreqLst,   1); % spatial frequency as cycles per degree
-    p.defaultParameters.stim.GRATING.ori        = datasample(p.defaultParameters.stim.GRATING.OriLst,     1); % orientation of grating
+    p.defaultParameters.stim.Hemi  = datasample(['l', 'r'], 1);
+    p.defaultParameters.stim.PosY  = datasample(p.defaultParameters.stim.PosYlst, 1);
+    p.defaultParameters.stim.GRATING.sFreq = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
+    p.defaultParameters.stim.GRATING.ori   = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
 
 else
     % ####################################################################### %
@@ -163,29 +169,53 @@ function TaskSetUp(p)
     % get grating location
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)        
-         p.trial.stim.GRATING.PosAngle = datasample(p.trial.stim.GRATING.RandAngles, 1);
+         p.trial.stim.PosY = datasample(p.trial.stim.PosYlst, 1);
+    end
+
+    if(p.trial.task.RandomHemi == 1)        
+         p.trial.stim.Hemi  = datasample(['l', 'r'], 1);
     end
     
+    if(p.trial.stim.Hemi == 'l')
+        p.trial.stim.PosX = -1* p.trial.stim.PosX;
+    end
+    
+    p.trial.stim.PosX = -1* p.trial.stim.PosX; % Distractor in opposite hemifield
+
+    % determine grating parameters
     if(p.trial.task.RandomPar == 1)      
-        p.trial.stim.GRATING.sFreq = datasample(p.trial.stim.GRATING.sFreqLst, 1); % spatial frequency as cycles per degree
-        p.trial.stim.GRATING.ori   = datasample(p.trial.stim.GRATING.OriLst,   1); % orientation of grating
+        p.trial.stim.TARGET.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
+        p.trial.stim.TARGET.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
     end
 
-    [Gx, Gy] = pol2cart(deg2rad(p.trial.stim.GRATING.PosAngle), ...
-                                p.trial.stim.GRATING.eccentricity);
-    p.trial.stim.GRATING.pos = [Gx, Gy];
+    % Create target
+    % Generate the low contrast target stimulus
+    p.trial.stim.GRATING.pos        = [p.trial.stim.PosX, p.trial.stim.PosY];
+    p.trial.stim.GRATING.contrast   = p.trial.stim.GRATING.lowContrast;
+    p.trial.stim.grating_target     = pds.stim.Grating(p);
 
-    % Generate the low contrast stimulus
-    p.trial.stim.GRATING.contrast = p.trial.stim.GRATING.lowContrast;
-    p.trial.stim.gratingL = pds.stim.Grating(p);
+    % and the high contrast target stimulus
+    p.trial.stim.GRATING.contrast    = p.trial.stim.GRATING.highContrast;
+    p.trial.stim.grating_target_chng = pds.stim.Grating(p);
 
-    % and the high contrast stimulus
-    p.trial.stim.GRATING.contrast = p.trial.stim.GRATING.highContrast;
-    p.trial.stim.gratingH = pds.stim.Grating(p);
+    
+    % create distractor
+    % determine grating parameters
+    if(p.trial.task.RandomPar == 1 &&p.trial.task.EqualStim == 0)
+        p.trial.stim.GRATING.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
+        p.trial.stim.GRATING.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
+    end
+        
+    % Generate the low contrast distractor stimulus
+    p.trial.stim.GRATING.pos        = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
+    p.trial.stim.GRATING.contrast   = p.trial.stim.GRATING.lowContrast;
+    p.trial.stim.grating_distractor = pds.stim.Grating(p);
+    
 
     % Assume manual control of the activation of the grating fix windows
-    p.trial.stim.gratingL.autoFixWin = 0;
-    p.trial.stim.gratingH.autoFixWin = 0;
+    p.trial.stim.grating_target.autoFixWin      = 0;
+    p.trial.stim.grating_target_chng.autoFixWin = 0;
+    p.trial.stim.grating_distractor.autoFixWin  = 0;
 
     p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast -> stim starts off
     
@@ -246,7 +276,7 @@ function TaskDesign(p)
                     if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.centerOffLatency)
 
                         % Saccade has been inhibited long enough. Make the central fix spot disappear
-                        ND_FixSpot(p, 0);
+                        % ND_FixSpot(p, 0);
                         ND_AddScreenEvent(p, p.trial.event.GOCUE, 'GoCue');
 
                         stim(p, 2) % Make the stim high contrast
@@ -256,7 +286,7 @@ function TaskDesign(p)
                     end
                 end
 
-                % Fixation Break, end the trial
+            % Fixation Break, end the trial
             elseif(~p.trial.stim.fix.fixating)
                 pds.audio.playDP(p, 'breakfix', 'left');
 
@@ -474,12 +504,12 @@ if(~isempty(p.trial.LastKeyPress))
             
         % randomly select a new spatial frequency
         case KbName('f') 
-            p.trial.stim.GRATING.sFreq = datasample(p.trial.stim.GRATING.sFreqLst,   1); % spatial frequency as cycles per degree
+            p.trial.stim.GRATING.sFreq = datasample(p.trial.stim.GRATING.sFreqLst, 1); % spatial frequency as cycles per degree
             ND_CtrlMsg(p, 'Grating spatial frequency changed.');
             
         % randomly select a new grating orientation
         case KbName('o')  
-            p.trial.stim.GRATING.ori = datasample(p.trial.stim.GRATING.OriLst,     1); % orientation of grating
+            p.trial.stim.GRATING.ori = datasample(p.trial.stim.GRATING.OriLst, 1); % orientation of grating
             ND_CtrlMsg(p, 'Grating orientation changed.');
             
         % select grating parameters at random for every trial    
@@ -492,27 +522,49 @@ if(~isempty(p.trial.LastKeyPress))
                 ND_CtrlMsg(p, 'Grating parameter are kept constant.');
             end
 
+        % select grating parameters at random for every trial    
+        case KbName('h')  % randomly select a new grating orientation
+            p.trial.task.RandomHemi = abs(p.trial.task.RandomPar - 1);
+            
+            if(p.trial.task.RandomPar)
+                ND_CtrlMsg(p, 'Random hemifield for target on each trial.');
+            else
+                ND_CtrlMsg(p, 'Target will be shown in the same hemifield for subsequent trials.');
+            end
+            
+         % move target to left or right hemifield    
+        case KbName('UpArrow')
+            p.trial.task.ShowDist = abs(p.trial.task.RandomPar - 1);
+            
+            if(p.trial.task.ShowDist)
+                ND_CtrlMsg(p, 'Both, target and distractor stimuli are shown.');
+            else
+            ND_CtrlMsg(p, 'Only target stimulus is shown.');
+            end
+            
+        case KbName('DownArrow')
+            p.trial.task.EqualStim = abs(p.trial.task.RandomPar - 1);
+            
+            if(p.trial.task.EqualStim)
+                ND_CtrlMsg(p, 'Both, target and distractor, have same gratingparameters.');
+            else
+            ND_CtrlMsg(p, 'Target and distractor grating parameters are different.');
+            end
+
+            % move target to left or right hemifield    
+        case KbName('RightArrow')
+            p.trial.stim.Hemi  = 'r';
+            ND_CtrlMsg(p, 'Target in right hemifield.');
+            
+        case KbName('LeftArrow')
+            p.trial.stim.Hemi  = 'l';
+            ND_CtrlMsg(p, 'Target in left hemifield.');
+            
         % move target to grid positions
         case p.trial.key.GridKeyCell
-            gpos = find(p.trial.key.GridKey == p.trial.LastKeyPress(1));
-            
-            if(gpos ~= 5)
-                if(gpos > 5) % center position not used
-                    gpos = gpos - 1;
-                end
-
-                p.trial.stim.GRATING.PosAngle = p.trial.stim.GRATING.GridAngles(gpos);
-
-                [Gx, Gy] = pol2cart(deg2rad(p.trial.stim.GRATING.PosAngle), ...
-                                        p.trial.stim.GRATING.eccentricity);
-                p.trial.stim.GRATING.pos = [Gx, Gy];
-
-                % Assume manual control of the activation of the grating fix windows
-                % p.trial.stim.gratingL.pos = p.trial.stim.GRATING.pos;
-                % p.trial.stim.gratingH.pos = p.trial.stim.GRATING.pos;
-                
-                ND_CtrlMsg(p, ['Moved Grating to array location ', int2str(gpos), '.']);
-            end
+            gpos = p.trial.key.GridKey == p.trial.LastKeyPress(1);
+            p.trial.stim.PosY = p.trial.stim.GridPos(gpos);
+            ND_CtrlMsg(p, ['Moved Grating to Y ', num2str(p.trial.stim.GRATING.PosY, '%.2f'), '.']);
     end
 end
 
@@ -528,19 +580,30 @@ function stim(p, val)
         % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
         switch val
             case 0
-                p.trial.stim.gratingL.on = 0;
-                p.trial.stim.gratingH.on = 0;
-
+                p.trial.stim.grating_distractor.on  = 0;
+                p.trial.stim.grating_target.on      = 0;
+                p.trial.stim.grating_target_chng.on = 0;
+                
             case 1
-                p.trial.stim.gratingL.on = 1;
-                p.trial.stim.gratingH.on = 0;
-                p.trial.stim.gratingH.fixActive = 1;
+                p.trial.stim.grating_target.on        = 1;
+                p.trial.stim.grating_target_chng.on   = 0;
+                p.trial.stim.grating_target.fixActive = 1;
+
+                if(p.trial.task.ShowDist)
+                    p.trial.stim.grating_distractor.on  = 1;
+                    p.trial.stim.grating_distractor.fixActive = 1;
+                end
 
             case 2
-                p.trial.stim.gratingL.on = 0;
-                p.trial.stim.gratingH.on = 1;
-                p.trial.stim.gratingH.fixActive = 1;
+                p.trial.stim.grating_target.on        = 0;
+                p.trial.stim.grating_target_chng.on   = 1;
+                p.trial.stim.grating_target.fixActive = 1;
 
+                if(p.trial.task.ShowDist)
+                    p.trial.stim.grating_distractor.on  = 1;
+                    p.trial.stim.grating_distractor.fixActive = 1;
+                end
+                
             otherwise
                 error('bad stim value');
         end
