@@ -40,6 +40,7 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.outcome.TargetBreak   =   3014;
     p.defaultParameters.outcome.StimBreak     =   3015;
     p.defaultParameters.outcome.PostStimBreak =   3016;
+    p.defaultParameters.outcome.git commit   =   3017;
 end
 
 % Saccade outcomes

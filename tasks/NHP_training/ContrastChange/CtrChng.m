@@ -33,10 +33,10 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
-
-    p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.GRATING.posX',         '%.3f');
-    p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.GRATING.posY',         '%.3f');
-    p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.TARGET.eccentricity',   '%.3f');
+ 
+    p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.GRATING.posX',           '%.3f');
+    p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.GRATING.posY',           '%.3f');
+    p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.TARGET.eccentricity',    '%.3f');
     p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'lContr',      'p.trial.stim.GRATING.lowContrast',    '%.1f');
@@ -48,13 +48,15 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
     p = ND_AddAsciiEntry(p, 'StimOn',      'p.trial.EV.StimOn',                   '%.5f');
     p = ND_AddAsciiEntry(p, 'StimOff',     'p.trial.EV.StimOff',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimChange',  'p.trial.EV.StimChange',               '%.5f');
+    p = ND_AddAsciiEntry(p, 'GoCue',       'p.trial.EV.GoCue',                    '%.5f');
     p = ND_AddAsciiEntry(p, 'FixStart',    'p.trial.EV.FixSpotStart',             '%.5f');
     p = ND_AddAsciiEntry(p, 'FixBreak',    'p.trial.EV.FixSpotStop',              '%.5f');
     p = ND_AddAsciiEntry(p, 'StimFix',     'p.trial.EV.FixTargetStart',           '%.5f');
     p = ND_AddAsciiEntry(p, 'StimBreak',   'p.trial.EV.FixTargetStop',            '%.5f');
     p = ND_AddAsciiEntry(p, 'TaskEnd',     'p.trial.EV.TaskEnd',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'GoLatency',   'p.trial.task.centerOffLatency',       '%.5f');
+    p = ND_AddAsciiEntry(p, 'GoLatency',   'p.trial.task.ChangeTime',       '%.5f');
     p = ND_AddAsciiEntry(p, 'StimLatency', 'p.trial.task.stimLatency',            '%.5f');
     p = ND_AddAsciiEntry(p, 'SRT_FixStart','p.trial.task.SRT_FixStart',           '%.5f');
     p = ND_AddAsciiEntry(p, 'SRT_StimOn',  'p.trial.task.SRT_StimOn',             '%.5f');
@@ -65,7 +67,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Reward',      'p.trial.EV.Reward',                   '%.5f');
     p = ND_AddAsciiEntry(p, 'RewPulses',   'p.trial.reward.nPulse',               '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwdDur',  'p.trial.reward.InitialRew * ~isnan(p.trial.EV.InitReward)', '%.5f');
-    p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
+    p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',            '%.5f');
 
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
@@ -77,8 +79,8 @@ if(isempty(state))
     p.defaultParameters.task.RandomPos  = 0; % if 1, randomly change the grating location each trial
     p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
 
-    p.defaultParameters.task.EqualStim = 1; % both gratings have the same spatial frequency and orientation
-    p.defaultParameters.task.ShowDist  = 1; % Display both, target and distractor grating
+    p.defaultParameters.task.EqualStim  = 1; % both gratings have the same spatial frequency and orientation
+    p.defaultParameters.task.ShowDist   = 1; % Display both, target and distractor grating
 
     % define random grating parameters for each session
     p.defaultParameters.stim.PosYlst    = -3:0.1:3;  % range of possible positions on Y axis
@@ -217,7 +219,7 @@ function TaskSetUp(p)
 
     p.trial.task.stimState = 0;   % 0 is off, 1 is low contrast, 2 is high contrast -> stim starts off
     
-    p.trial.task.centerOffLatency = ND_GetITI(p.trial.task.MinWaitGo, p.trial.task.MaxWaitGo); % Time from stim appearing to fixspot disappearing
+    p.trial.task.ChangeTime = ND_GetITI(p.trial.task.MinWaitGo, p.trial.task.MaxWaitGo); % Time from stim appearing to fixspot disappearing
 
     ND_SwitchEpoch(p, 'ITI');
     
@@ -259,7 +261,7 @@ function TaskDesign(p)
                 end
             end
             
-            % ----------------------------------------------------------------%
+        % ----------------------------------------------------------------%
         case p.trial.epoch.Fixating
         %% Initial reward has been given (if it is not 0), now stim target will appear
             % Still fixating
@@ -271,18 +273,16 @@ function TaskDesign(p)
                     end
 
                 else
-                    % Must maintain fixation (inhibit saccade) until central
-                    % fixation spot disappears
-                    if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.centerOffLatency)
+                    % Must maintain fixation (inhibit saccade) until contrast change of grating
+                    if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.ChangeTime)
 
-                        % Saccade has been inhibited long enough. Make the central fix spot disappear
-                        % ND_FixSpot(p, 0);
+                        % Saccade has been inhibited long enough. Target contrast change.
+                        
+                        stim(p, 2) % Make the stim high contrast
                         ND_AddScreenEvent(p, p.trial.event.GOCUE, 'GoCue');
 
-                        stim(p, 2) % Make the stim high contrast
-
                         % Change to the saccade epoch
-                        ND_SwitchEpoch(p, 'Saccade');
+                        ND_SwitchEpoch(p, 'WaitSaccade');
                     end
                 end
 
@@ -305,7 +305,7 @@ function TaskDesign(p)
             end
 
         % ----------------------------------------------------------------%
-        case p.trial.epoch.Saccade
+        case p.trial.epoch.WaitSaccade
         %% Central fixation spot has disappeared. Animal must quickly saccade to stim to get the main reward
             if(~p.trial.task.stimFix)
                 % Animal has not yet saccaded to target
@@ -331,17 +331,26 @@ function TaskDesign(p)
                     elseif(p.trial.stim.grating_target.fixating)
                         % Real reaction to GO cue and has acheived fixation
                         p.trial.task.stimFix = 1;
+                        
                     elseif(p.trial.stim.grating_distractor.fixating)
-                        % Real reaction to GO cue and has acheived fixation
-                        p.trial.task.stimFix = 1;
+                        % wrong item chosen
+                        % Play breakfix sound
+                        pds.audio.playDP(p, 'incorrect','left');
+
+                        % Turn the stim off and fixation off
+                        stim(p,0);
+                        ND_FixSpot(p,0);
+
+                        % Mark trial early and end task
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                        ND_SwitchEpoch(p, 'TaskEnd');
                     end
-                    
 
                 elseif(~p.trial.stim.fix.fixating)
                     % Eye has left the central fixation spot. Wait a breifly for eye to arrive
                         if(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
                             % Eye has saccaded somewhere besides the target
-                            p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
 
                             % Turn the stim off and fixation off
                             stim(p,0);
@@ -368,7 +377,7 @@ function TaskDesign(p)
 
                     ND_SwitchEpoch(p, 'TaskEnd');
                 end
-            else
+            else  % stimFix == 1
                 % Animal is currently fixating on target
 
                 % Wait for animal to hold fixation for the required length of time
@@ -423,8 +432,12 @@ function TaskDesign(p)
                 medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
 
                 % Determine if the medPos is in the fixation window for the stim
-                if(inFixWin(p.trial.stim.gratingH, medPos))
+                if(inFixWin(p.trial.stim.grating_target, medPos))
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                    
+                elseif(inFixWin(p.trial.stim.grating_distractor, medPos))
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                    
                 else
                     p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
                 end
@@ -639,12 +652,12 @@ function Calculate_SRT(p)
         case {'FixBreak'}
             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
             p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency);
-            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency + p.trial.task.centerOffLatency);
+            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency + p.trial.task.ChangeTime);
 
         case {'StimBreak', 'Early'}
             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
             p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
-            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.centerOffLatency);
+            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.ChangeTime);
 
         case {'False', 'Correct', 'TargetBreak'}
             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;

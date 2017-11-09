@@ -50,6 +50,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'StimOn',      'p.trial.EV.StimOn',                   '%.5f');
     p = ND_AddAsciiEntry(p, 'StimOff',     'p.trial.EV.StimOff',                  '%.5f');
     p = ND_AddAsciiEntry(p, 'StimChange',  'p.trial.EV.StimChange',               '%.5f');
+    p = ND_AddAsciiEntry(p, 'GoCue',       'p.trial.EV.GoCue',                    '%.5f');
     p = ND_AddAsciiEntry(p, 'FixStart',    'p.trial.EV.FixSpotStart',             '%.5f');
     p = ND_AddAsciiEntry(p, 'FixBreak',    'p.trial.EV.FixSpotStop',              '%.5f');
     p = ND_AddAsciiEntry(p, 'StimFix',     'p.trial.EV.FixTargetStart',           '%.5f');
@@ -308,7 +309,7 @@ function TaskDesign(p)
                     % Eye has left the central fixation spot. Wait a breifly for eye to arrive
                         if(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
                             % Eye has saccaded somewhere besides the target
-                            p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
 
                             % Turn the stim off and fixation off
                             stim(p,0);
