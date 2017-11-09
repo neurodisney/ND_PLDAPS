@@ -198,7 +198,6 @@ function TaskSetUp(p)
     p.trial.stim.GRATING.contrast    = p.trial.stim.GRATING.highContrast;
     p.trial.stim.grating_target_chng = pds.stim.Grating(p);
 
-    
     % create distractor
     % determine grating parameters
     if(p.trial.task.RandomPar == 1 &&p.trial.task.EqualStim == 0)
@@ -209,8 +208,7 @@ function TaskSetUp(p)
     % Generate the low contrast distractor stimulus
     p.trial.stim.GRATING.pos        = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
     p.trial.stim.GRATING.contrast   = p.trial.stim.GRATING.lowContrast;
-    p.trial.stim.grating_distractor = pds.stim.Grating(p);
-    
+    p.trial.stim.grating_distractor = pds.stim.Grating(p);    
 
     % Assume manual control of the activation of the grating fix windows
     p.trial.stim.grating_target.autoFixWin      = 0;
@@ -233,6 +231,7 @@ function TaskDesign(p)
         case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
             Task_WaitITI(p);
+            
         % ----------------------------------------------------------------%
         case p.trial.epoch.TrialStart
          %% trial starts with onset of fixation spot
@@ -243,6 +242,7 @@ function TaskDesign(p)
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
 
             ND_SwitchEpoch(p,'WaitFix');
+            
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
         %% Fixation target shown, waiting for a sufficiently held gaze
@@ -311,7 +311,7 @@ function TaskDesign(p)
                 % Animal has not yet saccaded to target
                 % Need to check if no saccade has been made or if a wrong saccade has been made
 
-                if(p.trial.stim.gratingH.looking)
+                if(p.trial.stim.grating_target.looking)
                     % Animal has saccaded to stim
 
                     % Make sure that saccade was actually a reaction to the go cue,
@@ -328,10 +328,14 @@ function TaskDesign(p)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
                         ND_SwitchEpoch(p, 'TaskEnd');
 
-                    elseif(p.trial.stim.gratingH.fixating)
+                    elseif(p.trial.stim.grating_target.fixating)
+                        % Real reaction to GO cue and has acheived fixation
+                        p.trial.task.stimFix = 1;
+                    elseif(p.trial.stim.grating_distractor.fixating)
                         % Real reaction to GO cue and has acheived fixation
                         p.trial.task.stimFix = 1;
                     end
+                    
 
                 elseif(~p.trial.stim.fix.fixating)
                     % Eye has left the central fixation spot. Wait a breifly for eye to arrive

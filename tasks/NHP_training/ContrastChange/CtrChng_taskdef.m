@@ -132,8 +132,8 @@ p.trial.stim.FIXSPOT.size   = 0.15;       % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
-p.trial.behavior.fixation.BreakTime = 0.050;  % minimum time [ms] to identify a fixation break
-p.trial.behavior.fixation.entryTime = 0.150;  % minimum time to stay within fixation window to detect initial fixation start
+p.trial.behavior.fixation.BreakTime = 0.05;  % minimum time [ms] to identify a fixation break
+p.trial.behavior.fixation.entryTime = 0.10;  % minimum time to stay within fixation window to detect initial fixation start
 
 % ------------------------------------------------------------------------%
 %% Task parameters
