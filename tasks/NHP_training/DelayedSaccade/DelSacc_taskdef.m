@@ -28,6 +28,9 @@ p.trial.reward.Dur         = 0.4;  % Reward for completing the task successfully
 p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1; % number of reward pulses
 p.trial.reward.PulseStep       = [2, 4, 6, 8]; % increase number of pulses with this trial number
+p.trial.reward.IncrementTrial  = [150, 300, 500, 600]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur    = [0.05 0.2, 0.45, 0.6]; % increase number of pulses with this trial number
+
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters

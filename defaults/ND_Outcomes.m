@@ -16,8 +16,9 @@ disp('');
 
 p.defaultParameters.outcome.Correct           =   1004;  % correct performance, no error occurred
 p.defaultParameters.outcome.Abort             =   2;     % early joystick release prior stimulus onset
-p.defaultParameters.outcome.Early             =   3005;  % release prior to response window
+p.defaultParameters.outcome.Early             =   3005;  % correct response selection prior to go signal
 p.defaultParameters.outcome.False             =   3006;  % wrong response within response window
+p.defaultParameters.outcome.EarlyFalse        =   3018;  % wrong response selection prior to go signal
 p.defaultParameters.outcome.Late              =   5;     % response occurred after response window
 p.defaultParameters.outcome.Miss              =   3007;  % no response at a reasonable time
 p.defaultParameters.outcome.NoStart           =   3004;  % trial not started
@@ -40,7 +41,7 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.outcome.TargetBreak   =   3014;
     p.defaultParameters.outcome.StimBreak     =   3015;
     p.defaultParameters.outcome.PostStimBreak =   3016;
-    p.defaultParameters.outcome.git commit   =   3017;
+    p.defaultParameters.outcome.NoTargetFix   =   3017;
 end
 
 % Saccade outcomes

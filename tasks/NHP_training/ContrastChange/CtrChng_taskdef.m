@@ -23,11 +23,13 @@ p.trial.task.ShowHelp = 0; % Moves the fixation spot towards target location
 p.trial.reward.GiveInitial = 0;     % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew  = 0.01;  % duration of the initial reward
 p.trial.reward.ManDur      = 0.1;   % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.05;  % Reward for completing the task successfully
+p.trial.reward.Dur         = 0.5;  % Reward for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1; % number of reward pulses
 p.trial.reward.PulseStep       = [2, 4, 6, 8]; % increase number of pulses with this trial number
+p.trial.reward.IncrementTrial  = [150, 300, 500, 600]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur    = [0.05 0.2, 0.45, 0.6]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
@@ -42,8 +44,8 @@ p.trial.stim.GridPos = linspace(-3,3,9); % position on y axis
 p.trial.stim.GRATING.tFreq   = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 % grating contrast
 
-p.trial.stim.GRATING.lowContrast  = 0.4;  % grating contrast value when stim.on = 1
-p.trial.stim.GRATING.highContrast = 0.6;  % grating contrast value when stim.on = 2
+p.trial.stim.GRATING.lowContrast  = 0.35;  % grating contrast value when stim.on = 1
+p.trial.stim.GRATING.highContrast = 0.75;  % grating contrast value when stim.on = 2
 
 p.trial.stim.GRATING.res          = 300;
 
@@ -54,13 +56,13 @@ p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust f
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.75, 1.25); % Time from fixation onset to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.5, 1.25); % Time from fixation onset to stim appearing
 
 p.trial.task.saccadeTimeout   = 0.75;  % Time allowed to make the saccade to the stim before error
-p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
-p.trial.task.minTargetFixTime = 0.75;  % Must fixate on target for at least this time before it counts
+p.trial.task.minSaccReactTime = 0.05; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
+p.trial.task.minTargetFixTime = 0.5;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
-p.trial.task.Timing.TimeOut   =  2.5;  % Time-out[s]  for incorrect responses
+p.trial.task.Timing.TimeOut   =  1;  % Time-out[s]  for incorrect responses
 p.trial.task.Timing.ITI       = ND_GetITI(0.75,  1.25,  [], [], 1, 0.10);
 
 % ------------------------------------------------------------------------%
@@ -69,59 +71,55 @@ p.trial.Block.maxBlocks    = -1;  % if negative blocks continue until experiment
 
 % condition 1
 c1.Nr = 1;
-c1.task.MinWaitGo  = 0.05; % min wait period for fixation spot to disapear
-c1.task.MaxWaitGo  = 0.15; % max wait period for fixation spot to disapear
+c1.task.MinWaitGo  = 0.25; % min wait period for fixation spot to disapear
+c1.task.MaxWaitGo  = 0.50; % max wait period for fixation spot to disapear
 
 % condition 2
 c2.Nr = 2;
-c2.task.MinWaitGo  = 0.15; % min wait period for fixation spot to disapear
-c2.task.MaxWaitGo  = 0.25; % max wait period for fixation spot to disapear
+c2.task.MinWaitGo  = 0.50; % min wait period for fixation spot to disapear
+c2.task.MaxWaitGo  = 0.75; % max wait period for fixation spot to disapear
 
 % condition 3
 c3.Nr = 3;
-c3.task.MinWaitGo  = 0.25; % min wait period for fixation spot to disapear
-c3.task.MaxWaitGo  = 0.35; % max wait period for fixation spot to disapear
+c3.task.MinWaitGo  = 0.75; % min wait period for fixation spot to disapear
+c3.task.MaxWaitGo  = 1.00; % max wait period for fixation spot to disapear
 
 % condition 4
 c4.Nr = 4;
-c4.task.MinWaitGo  = 0.35; % min wait period for fixation spot to disapear
-c4.task.MaxWaitGo  = 0.45; % max wait period for fixation spot to disapear
+c4.task.MinWaitGo  = 1.00; % min wait period for fixation spot to disapear
+c4.task.MaxWaitGo  = 1.25; % max wait period for fixation spot to disapear
 
 % condition 5
 c5.Nr = 5;
-c5.task.MinWaitGo  = 0.45; % min wait period for fixation spot to disapear
-c5.task.MaxWaitGo  = 0.55; % max wait period for fixation spot to disapear
+c5.task.MinWaitGo  = 1.25; % min wait period for fixation spot to disapear
+c5.task.MaxWaitGo  = 1.50; % max wait period for fixation spot to disapear
 
 % condition 6
 c6.Nr = 6;
-c6.task.MinWaitGo  = 0.55; % min wait period for fixation spot to disapear
-c6.task.MaxWaitGo  = 0.65; % max wait period for fixation spot to disapear
+c6.task.MinWaitGo  = 1.50; % min wait period for fixation spot to disapear
+c6.task.MaxWaitGo  = 1.75; % max wait period for fixation spot to disapear
 
 % condition 7
 c7.Nr = 7;
-c7.task.MinWaitGo  = 0.65; % min wait period for fixation spot to disapear
-c7.task.MaxWaitGo  = 0.75; % max wait period for fixation spot to disapear
+c7.task.MinWaitGo  = 1.75; % min wait period for fixation spot to disapear
+c7.task.MaxWaitGo  = 2.00; % max wait period for fixation spot to disapear
 
 % condition 8
 c8.Nr = 8;
-c8.task.MinWaitGo  = 0.75; % min wait period for fixation spot to disapear
-c8.task.MaxWaitGo  = 0.85; % max wait period for fixation spot to disapear
+c8.task.MinWaitGo  = 2.00; % min wait period for fixation spot to disapear
+c8.task.MaxWaitGo  = 2.25; % max wait period for fixation spot to disapear
 
 % condition 9
 c9.Nr = 9;
-c9.task.MinWaitGo  = 0.85; % min wait period for fixation spot to disapear
-c9.task.MaxWaitGo  = 0.95; % max wait period for fixation spot to disapear
+c9.task.MinWaitGo  = 2.25; % min wait period for fixation spot to disapear
+c9.task.MaxWaitGo  = 2.50; % max wait period for fixation spot to disapear
 
-% condition 10
-c10.Nr = 10;
-c10.task.MinWaitGo  = 0.95;  % min wait period for fixation spot to disapear
-c10.task.MaxWaitGo  = 1.05;  % max wait period for fixation spot to disapear
 
-p.defaultParameters.Block.Conditions     = {c1, c2, c3, c4, c5, c6, c7, c8, c9};
-p.defaultParameters.Block.maxBlockTrials =  [1, 2, 3, 4,  4,  3, 3, 2,1]; 
+p.defaultParameters.Block.Conditions     = {c1, c2, c3, c4};
+p.defaultParameters.Block.maxBlockTrials =  [1, 3, 4, 2];
 
-p.defaultParameters.Block.Conditions     = {c2, c3, c4, c5, c6, c7, c8, c9, c10};
-p.defaultParameters.Block.maxBlockTrials =  [1, 3, 4, 4, 3, 3, 2, 1, 1]; 
+p.defaultParameters.Block.Conditions     = {c1, c2, c3};
+p.defaultParameters.Block.maxBlockTrials =  [1, 3,  1];
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters

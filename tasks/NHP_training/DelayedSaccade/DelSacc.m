@@ -357,7 +357,15 @@ function TaskDesign(p)
                                  p.trial.reward.nPulse, p.trial.LastHits+1);
                     end
 
-                    pds.reward.give(p, p.trial.reward.Dur, p.trial.reward.nPulse);
+                    % increase reward after defined number of correct trials
+                    AddDur = find(p.trial.reward.IncrementDur <= p.trial.NHits+1, 1, 'last');
+                    if(~isempty(AddDur))
+                        AddDur = p.trial.reward.IncrementDur(AddDur);
+                    else
+                        AddDur = 0;
+                    end
+
+                    pds.reward.give(p, p.trial.reward.Dur+AddDur, p.trial.reward.nPulse);
                     pds.audio.playDP(p,'reward','left');
 
                     % Record main reward time
