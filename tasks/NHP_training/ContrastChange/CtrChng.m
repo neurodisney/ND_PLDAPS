@@ -219,6 +219,20 @@ function TaskSetUp(p)
 
     p.trial.task.ChangeTime = ND_GetITI(p.trial.task.MinWaitGo, p.trial.task.MaxWaitGo); % Time from stim appearing to fixspot disappearing
 
+    % add additional reward pulses for subsequent correct trials
+    if(p.trial.reward.IncrConsecutive == 1)
+        AddPulse = find(p.trial.reward.PulseStep <= p.trial.LastHits+1, 1, 'last');
+        if(~isempty(AddPulse))
+            p.trial.reward.nPulse = p.trial.reward.nPulse + AddPulse;
+        end
+    end
+
+    % increase reward after defined number of correct trials
+    AddDur = find(p.trial.reward.IncrementTrial <= p.trial.NHits+1, 1, 'last');
+    if(~isempty(AddDur))
+        p.trial.reward.Dur = p.trial.reward.Dur + p.trial.reward.IncrementDur(AddDur);
+    end
+
     ND_SwitchEpoch(p, 'ITI');
 
 % ####################################################################### %
@@ -384,26 +398,7 @@ function TaskDesign(p)
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
                     p.trial.task.Good = 1;
 
-                    % add additional reward pulses for subsequent correct trials
-                    if(p.trial.reward.IncrConsecutive == 1)
-                        AddPulse = find(p.trial.reward.PulseStep <= p.trial.LastHits+1, 1, 'last');
-                        if(~isempty(AddPulse))
-                            p.trial.reward.nPulse = p.trial.reward.nPulse + AddPulse;
-                        end
-
-                        fprintf('     REWARD!!!  [%d pulse(s) for %d subsequent correct trials]\n\n', ...
-                                 p.trial.reward.nPulse, p.trial.LastHits+1);
-                    end
-
-                    % increase reward after defined number of correct trials
-                    AddDur = find(p.trial.reward.IncrementDur <= p.trial.NHits+1, 1, 'last');
-                    if(~isempty(AddDur))
-                        AddDur = p.trial.reward.IncrementDur(AddDur);
-                    else
-                        AddDur = 0;
-                    end
-
-                    pds.reward.give(p, p.trial.reward.Dur+AddDur, p.trial.reward.nPulse);
+                    pds.reward.give(p, p.trial.reward.Dur, p.trial.reward.nPulse);
                     pds.audio.playDP(p,'reward','left');
 
                     % Record main reward time
@@ -465,12 +460,13 @@ function TaskDesign(p)
             Task_OFF(p); % Run standard TaskEnd routine
 
             % Grab the fixation stopping and starting values from the stim properties
-            p.trial.EV.FixSpotStart   = p.trial.stim.fix.EV.FixStart;
-            p.trial.EV.FixSpotStop    = p.trial.stim.fix.EV.FixBreak;
+            p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
+            p.trial.EV.FixSpotStop  = p.trial.stim.fix.EV.FixBreak;
 
             if(~isnan(p.trial.stim.grating_target.EV.FixStart))
                 p.trial.EV.FixStimStart = p.trial.stim.grating_target.EV.FixStart;
                 p.trial.EV.FixStimStop  = p.trial.stim.grating_target.EV.FixBreak;
+
             elseif(~isnan(p.trial.stim.grating_distractor.EV.FixStart))
                 p.trial.EV.FixStimStart = p.trial.stim.grating_distractor.EV.FixStart;
                 p.trial.EV.FixStimStop  = p.trial.stim.grating_distractor.EV.FixBreak;
@@ -522,7 +518,8 @@ if(~isempty(p.trial.LastKeyPress))
 
     switch p.trial.LastKeyPress(1)
 
-        case KbName('r')  % random position of target on each trial
+        % random position of target on each trial
+        case KbName('r') 
              p.trial.task.RandomPos = abs(p.trial.task.RandomPos - 1);
 
            if(p.trial.task.RandomPos)
@@ -571,6 +568,7 @@ if(~isempty(p.trial.LastKeyPress))
                 ND_CtrlMsg(p, 'Only target stimulus is shown.');
             end
 
+        % determine wether both gratings have same orientation and spatial frequency
         case KbName('DownArrow')
             p.trial.task.EqualStim = abs(p.trial.task.EqualStim - 1);
 
@@ -580,7 +578,7 @@ if(~isempty(p.trial.LastKeyPress))
                 ND_CtrlMsg(p, 'Target and distractor grating parameters are different.');
             end
 
-            % move target to left or right hemifield
+        % move target to left or right hemifield
         case KbName('RightArrow')
             p.trial.stim.Hemi  = 'r';
             ND_CtrlMsg(p, 'Target in right hemifield.');
@@ -619,7 +617,7 @@ function stim(p, val)
                 p.trial.stim.grating_target.fixActive = 1;
 
                 if(p.trial.task.ShowDist)
-                    p.trial.stim.grating_distractor.on  = 1;
+                    p.trial.stim.grating_distractor.on        = 1;
                     p.trial.stim.grating_distractor.fixActive = 1;
                 end
 
@@ -629,7 +627,7 @@ function stim(p, val)
                 p.trial.stim.grating_target.fixActive = 1;
 
                 if(p.trial.task.ShowDist)
-                    p.trial.stim.grating_distractor.on  = 1;
+                    p.trial.stim.grating_distractor.on        = 1;
                     p.trial.stim.grating_distractor.fixActive = 1;
                 end
 
