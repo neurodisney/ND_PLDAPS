@@ -75,6 +75,7 @@ methods
         p.trial.stim.allStims{end+1} = obj;
     end
     
+    %---------------------------------------------%
     function checkFix(obj,p)        
         if p.trial.behavior.fixation.use
             point = [p.trial.eyeX, p.trial.eyeY];
@@ -83,7 +84,7 @@ methods
             obj.eyeDist = dist(obj, point);
             
             % Check fixation state
-            getFixState(obj,p) 
+            getFixState(obj, p) 
             
             % Update the fixation variables
             switch obj.fixState
@@ -103,14 +104,17 @@ methods
         end
     end
     
+    %---------------------------------------------%
     function bool = inFixWin(obj, point)
         bool = dist(obj, point) <= obj.fixWin/2;
     end
     
+    %---------------------------------------------%
     function dist = dist(obj, point)
         dist = sqrt( sum( (obj.pos - point).^2 ) );
     end
     
+    %---------------------------------------------%
     function draw(obj,p)
         % Just draw a dot at the position for the base stimulus.
         % This function can and should be replaced by subclasses
@@ -119,6 +123,7 @@ methods
         end
     end
     
+    %---------------------------------------------%
     function drawFixWin(obj,p)
         %% Draw the fixation window around the stimulus
         if obj.fixActive
@@ -143,6 +148,7 @@ methods
     %---------------------------------------------%
     %% Methods to run on changes of properties
     
+    %---------------------------------------------%
     function obj = set.fixWin(obj,value)
         % Ensure fixWin stays nonnegative
         obj.fixWin = max(value,0);        
@@ -151,12 +157,14 @@ methods
         obj.fixWinRect = ND_GetRect(obj.pos, obj.fixWin);
     end
     
+    %---------------------------------------------%
     function obj = set.pos(obj,value)
         % Automatically adjust the fixWinRect if the objects position changes
         obj.pos = value;
         obj.fixWinRect = ND_GetRect(obj.pos, obj.fixWin);
     end
     
+    %---------------------------------------------%
     function obj = set.on(obj,value)
         obj.on = value;
         
@@ -191,10 +199,12 @@ methods
         value = obj.pos(1);
     end
     
+    %---------------------------------------------%
     function value = get.ypos(obj)
         value = obj.pos(2);
     end
     
+    %---------------------------------------------%
     function array = get.propertyArray(obj)
         nVals = 1 + length(obj.recordProps);
         array = zeros(1, nVals);
@@ -209,6 +219,7 @@ methods
     
     end
     
+    %---------------------------------------------%
     function propStruct = get.propertyStruct(obj)
         nVals = length(obj.recordProps);
         propStruct = struct;
@@ -312,6 +323,7 @@ methods (Access = private)
         end
     end
     
+    %---------------------------------------------%
     function saveProperties(obj)
         obj.p.trial.stim.record.arrays{end+1}  = obj.propertyArray;
         obj.p.trial.stim.record.structs{end+1} = obj.propertyStruct;

@@ -115,12 +115,12 @@ methods
             case 'raw'
                 % Always centered at 0.5, will not match bg at low contrasts
                 obj.bgOffset = 0.5;
-                obj.pcmult = obj.contrast / 2;
+                obj.pcmult   = obj.contrast / 2;
                 
             case 'bgshift'
                 % Will match bg at low contrasts, but not be correct at high contrasts.
                 obj.bgOffset = p.trial.display.bgColor(1);
-                obj.pcmult = obj.contrast / 2;
+                obj.pcmult   = obj.contrast / 2;
                 
             case 'balanced'
                 % Probably the best bet. This will be background at 0 contrast, and white - black = contrast

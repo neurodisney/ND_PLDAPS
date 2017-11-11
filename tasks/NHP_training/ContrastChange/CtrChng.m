@@ -286,13 +286,15 @@ function TaskDesign(p)
 
                 else
                     % Must maintain fixation (inhibit saccade) until contrast change of grating
-                    if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.ChangeTime)
+                    if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.ChangeTime && p.trial.task.stimState < 2)
 
                         % Saccade has been inhibited long enough. Target contrast change.
 
                         stim(p, 2) % Make the stim high contrast
                         ND_AddScreenEvent(p, p.trial.event.GOCUE, 'GoCue');
 
+                    elseif(p.trial.CurTime >  p.trial.EV.GoCue + p.trial.task.minSaccReactTime)
+                    % wait some time until reall stimulus drivven saccades would occur
                         % Change to the saccade epoch
                         ND_SwitchEpoch(p, 'WaitSaccade');
                     end
@@ -320,62 +322,47 @@ function TaskDesign(p)
         case p.trial.epoch.WaitSaccade
         %% Central fixation spot has disappeared. Animal must quickly saccade to stim to get the main reward
             if(~p.trial.task.stimFix)
-                % Animal has not yet saccaded to target
+            % Animal has not yet saccaded to target
                 % Need to check if no saccade has been made or if a wrong saccade has been made
 
-                if(p.trial.stim.grating_target.looking)
-                    % Animal has saccaded to stim
+                if(p.trial.stim.grating_target.fixating)
+                % Animal has saccaded to stim
 
-                    % Make sure that saccade was actually a reaction to the go cue, rather than a lucky precocious saccade
-                    if(p.trial.stim.fix.EV.FixBreak < p.trial.EV.FixOff + p.trial.task.minSaccReactTime)
-                        % Play breakfix sound
-                        pds.audio.playDP(p, 'breakfix','left');
+                    p.trial.task.stimFix = 1;
+
+                elseif(p.trial.stim.grating_distractor.looking)
+                % wrong item chosen
+                    % Play breakfix sound
+                    pds.audio.playDP(p, 'incorrect','left');
+
+                    % Turn the stim off and fixation off
+                    stim(p,0);
+                    ND_FixSpot(p,0);
+
+                    % Mark trial (early) false and end task
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                    
+                    ND_SwitchEpoch(p, 'TaskEnd');
+
+                elseif(~p.trial.stim.fix.fixating)
+                % Eye has left the central fixation spot. Wait a breifly for eye to arrive
+                    if(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
+                        % Eye has saccaded somewhere besides the target
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
 
                         % Turn the stim off and fixation off
                         stim(p,0);
                         ND_FixSpot(p,0);
 
-                        % Mark trial early and end task
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
-                        ND_SwitchEpoch(p, 'TaskEnd');
+                        % Play an incorrect sound
+                        pds.audio.playDP(p, 'incorrect', 'left');
 
-                    elseif(p.trial.stim.grating_target.fixating)
-                        % Real reaction to GO cue and has acheived fixation
-                        p.trial.task.stimFix = 1;
-
-                    elseif(p.trial.stim.grating_distractor.looking)
-                        % wrong item chosen
-                        % Play breakfix sound
-                        pds.audio.playDP(p, 'incorrect','left');
-
-                        % Turn the stim off and fixation off
-                        stim(p,0);
-                        ND_FixSpot(p,0);
-
-                        % Mark trial early and end task
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
+                        % End the trial
                         ND_SwitchEpoch(p, 'TaskEnd');
                     end
 
-                elseif(~p.trial.stim.fix.fixating)
-                    % Eye has left the central fixation spot. Wait a breifly for eye to arrive
-                        if(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
-                            % Eye has saccaded somewhere besides the target
-                            p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
-
-                            % Turn the stim off and fixation off
-                            stim(p,0);
-                            ND_FixSpot(p,0);
-
-                            % Play an incorrect sound
-                            pds.audio.playDP(p, 'incorrect', 'left');
-
-                            % End the trial
-                            ND_SwitchEpoch(p, 'TaskEnd');
-                        end
-
                 elseif(p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout)
-                    % If no saccade has been made before the time runs out, end the trial
+                % If no saccade has been made before the time runs out, end the trial
 
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
 
@@ -389,7 +376,7 @@ function TaskDesign(p)
                     ND_SwitchEpoch(p, 'TaskEnd');
                 end
             else  % stimFix == 1
-                % Animal is currently fixating on target
+            % Animal is currently fixating on target
 
                 % Wait for animal to hold fixation for the required length of time
                 % then give reward and mark trial good
@@ -407,7 +394,7 @@ function TaskDesign(p)
                     ND_SwitchEpoch(p,'WaitEnd');
 
                 elseif(~p.trial.stim.grating_target.fixating)
-                    % If animal's gaze leaves window, end the task and do not give reward
+                % If animal's gaze leaves window, end the task and do not give reward
                     p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
 
                     % Turn the stim off
@@ -660,13 +647,13 @@ function Calculate_SRT(p)
             p.trial.task.SRT_Go       = NaN;
 
         case {'FixBreak'}
-            p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
+            p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop -  p.trial.EV.FixSpotStart;
             p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency);
             p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency + p.trial.task.ChangeTime);
 
         case {'StimBreak', 'Early', 'EarlyFalse', 'NoTargetFix'}
-            p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
-            p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
+            p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop -  p.trial.EV.FixSpotStart;
+            p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop -  p.trial.EV.StimOn;
             p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.ChangeTime);
 
         case {'False', 'Correct', 'TargetBreak'}

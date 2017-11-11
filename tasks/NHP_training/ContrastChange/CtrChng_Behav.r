@@ -469,7 +469,7 @@ box()
 
 ###########################################################################################
 # plot 8: Delay dependent performance
-NumCond = 7  # -1 because it defines start and end of interval
+NumCond = 5  # -1 because it defines start and end of interval
 
 DelBrks = seq(floor(min(GoSig*10))/10, ceiling(max(GoSig*10))/10, length=NumCond)
 DelCat  = as.factor(cut(GoSig, breaks=DelBrks, labels= as.character(1:(NumCond-1))))

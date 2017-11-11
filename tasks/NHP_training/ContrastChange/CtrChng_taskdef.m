@@ -23,12 +23,12 @@ p.trial.task.ShowHelp = 0; % Moves the fixation spot towards target location
 p.trial.reward.GiveInitial = 0;     % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew  = 0.01;  % duration of the initial reward
 p.trial.reward.ManDur      = 0.1;   % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.5;  % Reward for completing the task successfully
+p.trial.reward.Dur         = 0.05;  % Reward for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1; % number of reward pulses
 p.trial.reward.PulseStep       = [2, 4, 6, 8]; % increase number of pulses with this trial number
-p.trial.reward.IncrementTrial  = [150, 300, 500, 600]; % increase number of pulses with this trial number
+p.trial.reward.IncrementTrial  = [100, 250, 400, 500]; % increase number of pulses with this trial number
 p.trial.reward.IncrementDur    = [0.05 0.2, 0.45, 0.6]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
@@ -59,10 +59,10 @@ p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 p.trial.task.stimLatency      = ND_GetITI(0.5, 1.25); % Time from fixation onset to stim appearing
 
 p.trial.task.saccadeTimeout   = 0.75;  % Time allowed to make the saccade to the stim before error
-p.trial.task.minSaccReactTime = 0.05; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
+p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 0.5;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
-p.trial.task.Timing.TimeOut   =  1;  % Time-out[s]  for incorrect responses
+p.trial.task.Timing.TimeOut   =  2;  % Time-out[s]  for incorrect responses
 p.trial.task.Timing.ITI       = ND_GetITI(0.75,  1.25,  [], [], 1, 0.10);
 
 % ------------------------------------------------------------------------%
@@ -115,11 +115,11 @@ c9.task.MinWaitGo  = 2.25; % min wait period for fixation spot to disapear
 c9.task.MaxWaitGo  = 2.50; % max wait period for fixation spot to disapear
 
 
-p.defaultParameters.Block.Conditions     = {c1, c2, c3, c4};
-p.defaultParameters.Block.maxBlockTrials =  [1, 3, 4, 2];
+p.trial.Block.Conditions     = {c1, c2, c3, c4};
+p.trial.Block.maxBlockTrials =  [1, 3, 4, 2];
 
-p.defaultParameters.Block.Conditions     = {c1, c2, c3};
-p.defaultParameters.Block.maxBlockTrials =  [1, 3,  1];
+p.trial.Block.Conditions     = {c1, c2, c3, c4, c5, c5};
+p.trial.Block.maxBlockTrials =  [1, 3,  4,  3, 2, 1];
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
