@@ -50,6 +50,7 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.epoch.Fixating      =   32;  % Ongoing fixation
     p.defaultParameters.epoch.LostFix       =   33;  % fixation break detected, wait to verify clear break
     p.defaultParameters.epoch.Saccade       =   34;  % saccade needed
+    p.defaultParameters.epoch.WaitSaccade   =   36;  % waiting for saccade response
     p.defaultParameters.epoch.BreakFixCheck =   35;  % Fixation break has occured, check where eyes have gone
 end
 

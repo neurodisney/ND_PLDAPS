@@ -19,7 +19,7 @@ properties (SetAccess = protected)
     EV = struct             % Struct of timing arrays to store when things happen to the stim
     fixWinRect              % The bounding box of the fixation window, used for drawing the window
     fixating = 0            % Boolean for fixation
-    looking = 0             % Less stringent than fixation. Eye is in the fix window
+    looking  = 0            % Less stringent than fixation. Eye is in the fix window
     
     
     % Integer to define object (for sending event code)
@@ -75,6 +75,7 @@ methods
         p.trial.stim.allStims{end+1} = obj;
     end
     
+    %---------------------------------------------%
     function checkFix(obj,p)        
         if p.trial.behavior.fixation.use
             point = [p.trial.eyeX, p.trial.eyeY];
@@ -83,34 +84,37 @@ methods
             obj.eyeDist = dist(obj, point);
             
             % Check fixation state
-            getFixState(obj,p) 
+            getFixState(obj, p) 
             
             % Update the fixation variables
             switch obj.fixState
                 case 'startingFix'
                     obj.fixating = 0;
-                    obj.looking = 1;
+                    obj.looking  = 1;
                 case 'FixIn'
                     obj.fixating = 1;
-                    obj.looking = 1;
+                    obj.looking  = 1;
                 case 'breakingFix'
                     obj.fixating = 1;
-                    obj.looking = 0;
+                    obj.looking  = 0;
                 case 'FixOut'
                     obj.fixating = 0;
-                    obj.looking = 0;
+                    obj.looking  = 0;
             end
         end
     end
     
+    %---------------------------------------------%
     function bool = inFixWin(obj, point)
         bool = dist(obj, point) <= obj.fixWin/2;
     end
     
+    %---------------------------------------------%
     function dist = dist(obj, point)
         dist = sqrt( sum( (obj.pos - point).^2 ) );
     end
     
+    %---------------------------------------------%
     function draw(obj,p)
         % Just draw a dot at the position for the base stimulus.
         % This function can and should be replaced by subclasses
@@ -119,6 +123,7 @@ methods
         end
     end
     
+    %---------------------------------------------%
     function drawFixWin(obj,p)
         %% Draw the fixation window around the stimulus
         if obj.fixActive
@@ -143,6 +148,7 @@ methods
     %---------------------------------------------%
     %% Methods to run on changes of properties
     
+    %---------------------------------------------%
     function obj = set.fixWin(obj,value)
         % Ensure fixWin stays nonnegative
         obj.fixWin = max(value,0);        
@@ -151,12 +157,14 @@ methods
         obj.fixWinRect = ND_GetRect(obj.pos, obj.fixWin);
     end
     
+    %---------------------------------------------%
     function obj = set.pos(obj,value)
         % Automatically adjust the fixWinRect if the objects position changes
         obj.pos = value;
         obj.fixWinRect = ND_GetRect(obj.pos, obj.fixWin);
     end
     
+    %---------------------------------------------%
     function obj = set.on(obj,value)
         obj.on = value;
         
@@ -191,10 +199,12 @@ methods
         value = obj.pos(1);
     end
     
+    %---------------------------------------------%
     function value = get.ypos(obj)
         value = obj.pos(2);
     end
     
+    %---------------------------------------------%
     function array = get.propertyArray(obj)
         nVals = 1 + length(obj.recordProps);
         array = zeros(1, nVals);
@@ -209,6 +219,7 @@ methods
     
     end
     
+    %---------------------------------------------%
     function propStruct = get.propertyStruct(obj)
         nVals = length(obj.recordProps);
         propStruct = struct;
@@ -233,7 +244,7 @@ methods (Access = private)
                     % Fixation was just activated, determine the starting state
                     if obj.eyeDist <= obj.fixWin/2
                         obj.fixState = 'FixIn';
-                        obj.EV.FixStart = p.trial.CurTime;
+                        obj.EV.FixStart     = p.trial.CurTime;
                         p.trial.EV.FixStart = p.trial.CurTime;
                     else
                         obj.fixState = 'FixOut';
@@ -246,7 +257,7 @@ methods (Access = private)
                     if obj.eyeDist <= obj.fixWin/2
                         pds.datapixx.strobe(p.trial.event.FIX_IN);
                         obj.fixState = 'startingFix';
-                        obj.EV.FixEntry = p.trial.CurTime;
+                        obj.EV.FixEntry     = p.trial.CurTime;
                         p.trial.EV.FixEntry = p.trial.CurTime;
                     else
                         % If the stim is off, deactivate the stim
@@ -267,7 +278,7 @@ methods (Access = private)
                     elseif p.trial.CurTime >= obj.EV.FixEntry + p.trial.behavior.fixation.entryTime
                         pds.datapixx.strobe(p.trial.event.FIXATION);
                         obj.fixState = 'FixIn';
-                        obj.EV.FixStart = obj.EV.FixEntry;
+                        obj.EV.FixStart     = obj.EV.FixEntry;
                         p.trial.EV.FixStart = obj.EV.FixEntry;
                     end
                     
@@ -280,7 +291,7 @@ methods (Access = private)
                         
                         % Set state to fixbreak to ascertain if this is just jitter (time out of fixation window is very short)
                         obj.fixState = 'breakingFix';
-                        obj.EV.FixLeave = p.trial.CurTime;
+                        obj.EV.FixLeave     = p.trial.CurTime;
                         p.trial.EV.FixLeave = p.trial.CurTime;
                     end
                     
@@ -296,7 +307,7 @@ methods (Access = private)
                     elseif p.trial.CurTime > obj.EV.FixLeave + p.trial.behavior.fixation.BreakTime
                         pds.datapixx.strobe(p.trial.event.FIX_BREAK);
                         obj.fixState = 'FixOut';
-                        obj.EV.FixBreak = obj.EV.FixLeave;
+                        obj.EV.FixBreak     = obj.EV.FixLeave;
                         p.trial.EV.FixBreak = obj.EV.FixLeave;
                     end
 
@@ -312,8 +323,9 @@ methods (Access = private)
         end
     end
     
+    %---------------------------------------------%
     function saveProperties(obj)
-        obj.p.trial.stim.record.arrays{end+1} = obj.propertyArray;
+        obj.p.trial.stim.record.arrays{end+1}  = obj.propertyArray;
         obj.p.trial.stim.record.structs{end+1} = obj.propertyStruct;
     end
         

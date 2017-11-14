@@ -49,6 +49,8 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
     p = ND_AddAsciiEntry(p, 'StimOn',      'p.trial.EV.StimOn',                   '%.5f');
     p = ND_AddAsciiEntry(p, 'StimOff',     'p.trial.EV.StimOff',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'StimChange',  'p.trial.EV.StimChange',               '%.5f');
+    p = ND_AddAsciiEntry(p, 'GoCue',       'p.trial.EV.GoCue',                    '%.5f');
     p = ND_AddAsciiEntry(p, 'FixStart',    'p.trial.EV.FixSpotStart',             '%.5f');
     p = ND_AddAsciiEntry(p, 'FixBreak',    'p.trial.EV.FixSpotStop',              '%.5f');
     p = ND_AddAsciiEntry(p, 'StimFix',     'p.trial.EV.FixTargetStart',           '%.5f');
@@ -307,7 +309,7 @@ function TaskDesign(p)
                     % Eye has left the central fixation spot. Wait a breifly for eye to arrive
                         if(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
                             % Eye has saccaded somewhere besides the target
-                            p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
 
                             % Turn the stim off and fixation off
                             stim(p,0);
@@ -355,7 +357,15 @@ function TaskDesign(p)
                                  p.trial.reward.nPulse, p.trial.LastHits+1);
                     end
 
-                    pds.reward.give(p, p.trial.reward.Dur, p.trial.reward.nPulse);
+                    % increase reward after defined number of correct trials
+                    AddDur = find(p.trial.reward.IncrementDur <= p.trial.NHits+1, 1, 'last');
+                    if(~isempty(AddDur))
+                        AddDur = p.trial.reward.IncrementDur(AddDur);
+                    else
+                        AddDur = 0;
+                    end
+
+                    pds.reward.give(p, p.trial.reward.Dur+AddDur, p.trial.reward.nPulse);
                     pds.audio.playDP(p,'reward','left');
 
                     % Record main reward time
@@ -582,7 +592,7 @@ function Calculate_SRT(p)
         case {'False', 'Correct', 'TargetBreak'}
             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
             p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
-            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - p.trial.EV.FixOff;
+            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - p.trial.EV.StimChange;
 
         otherwise
             warning('Calculate_SRT: unrecognized outcome');

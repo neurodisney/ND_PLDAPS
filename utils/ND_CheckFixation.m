@@ -35,7 +35,6 @@ if(p.trial.mouse.useAsEyepos)
         % If no calibration has been specified, just use the actualy position of the mouse
         p.trial.eyeX = mousePos(1);
         p.trial.eyeY = mousePos(2);
-        
     end
     
 elseif(p.trial.datapixx.useAsEyepos)

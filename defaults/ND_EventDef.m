@@ -74,6 +74,9 @@ if(p.defaultParameters.behavior.fixation.use)
     % Target
     p.defaultParameters.EV.FixTargetStart = NaN; % Start of fixation on target
     p.defaultParameters.EV.FixTargetStop  = NaN; % Stop of fixation on target
+
+    p.defaultParameters.EV.FixStimStart = NaN; % Start of fixation on target
+    p.defaultParameters.EV.FixStimStop  = NaN; % Stop of fixation on target
 end
 
 % ------------------------------------------------------------------------%

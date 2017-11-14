@@ -132,6 +132,12 @@ TPos = as.factor(TPos)
 SRT     = dt$SRT_Go
 StimSRT = dt$SRT_StimOn
 
+corp = pCorr == 1 | pHoldErr == 1
+StimSRT[corp] = dt$FixBreak[corp]  - dt$StimOn[corp]
+StimSRT[corp] = SRT[corp] + dt$GoLatency[corp]
+
+# StimSRT[corp] = (dt$FixBreak[corp] - dt$StimOn[corp])+ (dt$FixSpotOff[corp]
+
 ###########################################################################################
 # create plots
 
@@ -139,16 +145,21 @@ StimSRT = dt$SRT_StimOn
 # Only display figure directly if called from the r environment (not the command line)
 # If we didn't do this, when called from the command line, it would just open briefly and then close when the script ends
 if(interactive()) {
-  x11(width=19.5, height=10.5, pointsize=10, title='DelSacc_Behav')
+  x11(width=20.5, height=10.5, pointsize=20, title='DelSacc_Behav')
 } else {
   # Otherwise only save the figure as a pdf.
-  pdf('DelSacc.pdf', 19.5, 10.5, pointsize=10, title='DelSacc_Behav')
+  pdf('DelSacc.pdf', 20.5, 10.5, pointsize=12, title='DelSacc_Behav')
 }
 
 # create plot layout
-pllyt = matrix(c(1,1,1,1,1,1,1, 2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,5,6,10,10,11,11,  7,8,9,10,10,11,11 ), 5, 7, byrow=TRUE)
-layout(pllyt,  heights=c(2,2,1.5,2.5,2.5))
-par(mar=c(5,5,1,1))
+#pllyt = matrix(c(1,1,1,1,1,1,1, 2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,5,6,10,10,11,11,  7,8,9,10,10,11,11 ), 5, 7, byrow=TRUE)
+pllyt = matrix(c(1,1,1,1,1,1,1,1,
+                 2,2,2,2,2,2,2,2,
+                 3,3,3,3,3,3,3,3,
+                 4,4,5,5,6,6,8,7,
+                 4,4,5,5,6,6,9,9), 5, 8, byrow=TRUE)
+layout(pllyt,  heights=c(2.5,2.5,2,2.75,2.75))
+par(mar=c(5,5,2,0.5))
 
 Trng = c(0, SessTrialEnd / 60)
 
@@ -168,6 +179,8 @@ points(Ttime[pEarly],     StimSRT[pEarly],     pch=19, col=Early_Col)
 points(Ttime[pMiss],      StimSRT[pMiss],      pch=19, col=Miss_Col)
 points(Ttime[pFalse],     StimSRT[pFalse],     pch=19, col=False_Col)
 
+abline(h=0,lty=2)
+
 legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBreak", "Miss", "False"),
        pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, Miss_Col, False_Col),
        inset=c(0,-0.4), title=NULL, xpd=NA, cex=2, bty='n', horiz=TRUE, pt.cex=4)
@@ -176,7 +189,7 @@ legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBre
 # plot 2: reaction times
 Ylim = range(SRT, na.rm = TRUE)
 plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Go Cue',
-     xlab='Trial Time [s]', ylab='SRTs [s]')
+     xlab='', ylab='SRTs [s]', xaxt="n")
 
 if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
@@ -418,13 +431,13 @@ All_col = c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, F
 x = barplot(100*All_perf/Ntrials, beside=TRUE, col=All_col, xaxt="n", main='Session Performance', ylab='Proportion [%]', border=NA)
 
 text(cex=0.9, x=x-.25, y=-1.5, All_typ, xpd=TRUE, srt=45, pos=1, offset=1)
-text(cex=1.5, x=x, y=0, All_perf, xpd=TRUE, srt=0, pos=3, offset=0.1)
+text(cex=1.2, x=x, y=0, All_perf, xpd=TRUE, srt=0, pos=3, offset=0.1)
 
 box()
 
 ###########################################################################################
 # plot 8: Delay dependent performance
-NumCond = 6  # -1 because it defines start and end of interval
+NumCond = 7  # -1 because it defines start and end of interval
 
 DelBrks = seq(floor(min(GoSig*10))/10, ceiling(max(GoSig*10))/10, length=NumCond)
 DelCat  = as.factor(cut(GoSig, breaks=DelBrks, labels= as.character(1:(NumCond-1))))
@@ -446,39 +459,12 @@ stp = unique(diff(colMeans(x)))
 lblpos = seq(from=1, to=NumCond*stp, by=stp)-0.5
 
 text(cex=1,   x=lblpos, y=-1.5, DelBrks, xpd=TRUE, srt=0, pos=1, offset=0.5)
-text(cex=1.5, x=xl,     y=0,    All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
+text(cex=1.2, x=xl,     y=0,    All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
 
 box()
 
-###########################################################################################
-# plot 9: Position dependent performance
-
-All_Cnt       = as.numeric(table(TPos))
-Hit_Cnt       = as.numeric(table(TPos[pCorr]))
-HoldErr_Cnt   = as.numeric(table(TPos[pHoldErr]))
-FixBreak_Cnt  = as.numeric(table(TPos[pFixBreak]))
-StimBreak_Cnt = as.numeric(table(TPos[pStimBreak]))
-Early_Cnt     = as.numeric(table(TPos[pEarly]))
-
-if(length(Hit_Cnt)       == 0 ) {Hit_Cnt       = All_Cnt * 0}
-if(length(HoldErr_Cnt)   == 0 ) {HoldErr_Cnt   = All_Cnt * 0}
-if(length(FixBreak_Cnt)  == 0 ) {FixBreak_Cnt  = All_Cnt * 0}
-if(length(StimBreak_Cnt) == 0 ) {StimBreak_Cnt = All_Cnt * 0}
-if(length(Early_Cnt)     == 0 ) {Early_Cnt     = All_Cnt * 0}
-
-PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt)
-
-x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col), border=NA,
-            main='Location Performance', xlab='Target Location [degree]', ylab='Proportion [%]', xaxt="n")
-xl = colMeans(x)
-
-text(cex=1, x=colMeans(x), y=0, levels(TPos), xpd=TRUE, srt=0, pos=1, offset=0.5)
-text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
-
-box()
-
-###########################################################################################
-# plot 10: Delay dependent SRT
+# ###########################################################################################
+# plot 9: Delay dependent SRT
 RespP      = pCorr | pEarly | pHoldErr
 SRTresp    = SRT[RespP]
 DelCatresp = DelCat[RespP]
@@ -496,20 +482,48 @@ abline(h=median(SRTresp[Result== 'Correct']), col=Corr_Col,  lty=2, lwd=2.5)
 abline(h=median(SRTresp[Result== 'Early']),   col=Early_Col, lty=2, lwd=2.5)
 abline(h=0, col="black", lty=2, lwd=1.5)
 
-###########################################################################################
-# plot 11: Location dependent SRT
-PosCatresp = TPos[RespP]
 
-# plrng = c(min(SRTresp[Result== 'Early']), max(SRTresp[Result== 'Correct']))
-plrng = range(SRTresp)
-
-beanplot(SRTresp ~ Result*PosCatresp, ll = 0.1,
-         main = "Location dependent SRT", side = "both", xlab="Delay [s]", ylab='Response Time [s]', bw=RTbw,
-         col = list(Corr_Col, c(Early_Col, "black")), overallline='median', beanlinese='median', what=c(0,1,1,1))
-
-abline(h=median(SRTresp[Result== 'Correct']), col=Corr_Col,  lty=2, lwd=2.5)
-abline(h=median(SRTresp[Result== 'Early']),   col=Early_Col, lty=2, lwd=2.5)
-abline(h=0, col="black", lty=2, lwd=1.5)
+# ###########################################################################################
+# # plot 9: Position dependent performance
+#
+# All_Cnt       = as.numeric(table(TPos))
+# Hit_Cnt       = as.numeric(table(TPos[pCorr]))
+# HoldErr_Cnt   = as.numeric(table(TPos[pHoldErr]))
+# FixBreak_Cnt  = as.numeric(table(TPos[pFixBreak]))
+# StimBreak_Cnt = as.numeric(table(TPos[pStimBreak]))
+# Early_Cnt     = as.numeric(table(TPos[pEarly]))
+#
+# if(length(Hit_Cnt)       == 0 ) {Hit_Cnt       = All_Cnt * 0}
+# if(length(HoldErr_Cnt)   == 0 ) {HoldErr_Cnt   = All_Cnt * 0}
+# if(length(FixBreak_Cnt)  == 0 ) {FixBreak_Cnt  = All_Cnt * 0}
+# if(length(StimBreak_Cnt) == 0 ) {StimBreak_Cnt = All_Cnt * 0}
+# if(length(Early_Cnt)     == 0 ) {Early_Cnt     = All_Cnt * 0}
+#
+# PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt)
+#
+# x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col), border=NA,
+#             main='Location Performance', xlab='Target Location [degree]', ylab='Proportion [%]', xaxt="n")
+# xl = colMeans(x)
+#
+# text(cex=1, x=colMeans(x), y=0, levels(TPos), xpd=TRUE, srt=0, pos=1, offset=0.5)
+# text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
+#
+# box()
+#
+# ###########################################################################################
+# # plot 11: Location dependent SRT
+# PosCatresp = TPos[RespP]
+#
+# # plrng = c(min(SRTresp[Result== 'Early']), max(SRTresp[Result== 'Correct']))
+# plrng = range(SRTresp)
+#
+# beanplot(SRTresp ~ Result*PosCatresp, ll = 0.1,
+#          main = "Location dependent SRT", side = "both", xlab="Delay [s]", ylab='Response Time [s]', bw=RTbw,
+#          col = list(Corr_Col, c(Early_Col, "black")), overallline='median', beanlinese='median', what=c(0,1,1,1))
+#
+# abline(h=median(SRTresp[Result== 'Correct']), col=Corr_Col,  lty=2, lwd=2.5)
+# abline(h=median(SRTresp[Result== 'Early']),   col=Early_Col, lty=2, lwd=2.5)
+# abline(h=0, col="black", lty=2, lwd=1.5)
 
 ###########################################################################################
 # save plot as pdf
