@@ -38,7 +38,7 @@ if(is.na(fname)) {
 dt=read.table(fname[1], header=TRUE)
 
 if(length(fname)>1) {
-  for(i in 2:length(fname)) { dt = rbind(dt, read.table(fname[i], header=TRUE))}
+  for(i in 2:length(fname)) { dt = rbind(dt, read.table(fname[i], header=TRUE, fill = TRUE))}
 }
 
 ## prepare data
@@ -101,25 +101,28 @@ pStim       = pCorr | dt$Outcome == pHoldErr
 
 # pAll       = pCorr | pHoldErr | pEarly | pFixBreak | pStimBreak
 
-pAll       = dt$Outcome != 'NoStart' & dt$Outcome != 'NoFix' & dt$Outcome != 'Break'
-Ntrials    = sum(pAll)
+pAll        = dt$Outcome != 'NoStart' & dt$Outcome != 'NoFix' & dt$Outcome != 'Break'
+Ntrials     = sum(pAll)
 
 ###########################################################################################
 # get relevant variables
 Ttime     = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
 
-corp = pCorr == 1 | pHoldErr == 1 | pFalse == 1
+corp = pCorr == 1 | pHoldErr == 1 | pFalse   == 1
+corp = corp  == 1 & is.finite(dt$SRT_StimOn) == 1 & is.finite(dt$GoLatency)
 
 # derive RT times
-SRT     = dt$SRT_Go
+SRT       = dt$SRT_Go
 SRT[corp] = dt$SRT_StimOn[corp]
 
 StimSRT = dt$SRT_StimOn
 
-# StimSRT[corp] = dt$FixBreak[corp]  - dt$StimOn[corp]
+#print(dt$SRT_StimOn[pFalse])
+
+#StimSRT[corp] = dt$FixBreak[corp]  - dt$StimOn[corp]  + (dt$GoCue[corp])
 StimSRT[corp] = StimSRT[corp] + (dt$GoLatency[corp])
 
-# StimSRT[corp] = (dt$FixBreak[corp] - dt$StimOn[corp])+ (dt$FixSpotOff[corp]
+# StimSRT[corp] = (dt$FixBreak[corp] - dt$StimOn[corp])+ dt$FixSpotOff[corp]
 
 ###########################################################################################
 # create plots
@@ -131,7 +134,8 @@ if(interactive()) {
   x11(width=20.5, height=10.5, pointsize=20, title='CtrChng_Behav')
 } else {
   # Otherwise only save the figure as a pdf.
-  pdf('DelSacc.pdf', 20.5, 10.5, pointsize=12, title='CtrChng_Behav')
+  pdf( paste('CtrChng_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='CtrChng_Behav')
+  
 }
 
 # create plot layout
@@ -140,7 +144,7 @@ pllyt = matrix(c(1,1,1,1,1,1,1,1,
                  2,2,2,2,2,2,2,2,
                  3,3,3,3,3,3,3,3,
                  4,4,5,5,6,6,8,7,
-                 4,4,5,5,6,6,9,9), 5, 8, byrow=TRUE)
+                 4,4,5,5,6,6,9,10), 5, 8, byrow=TRUE)
 layout(pllyt,  heights=c(2.5,2.5,2,2.75,2.75))
 par(mar=c(5,5,2,0.5))
 
@@ -261,49 +265,49 @@ abline(h=0, lty=2)
 all_vals_X = c()
 all_vals_Y = c()
 
-if(sum(pCorr) > 1) {
+if(sum(pCorr) > 4) {
   TDurhit   = density(StimSRT[pCorr], bw=RTbw, na.rm=TRUE)
-  TDurhit$y = TDurhit$y  * sum(pCorr)  * RTbw
+  TDurhit$y = TDurhit$y * sum(pCorr) * RTbw
   all_vals_X = c(all_vals_X, TDurhit$x)
   all_vals_Y = c(all_vals_Y, TDurhit$y)
 }
 
-if(sum(pHoldErr) > 1) {
+if(sum(pHoldErr) > 4) {
   TDurhold   = density(StimSRT[pHoldErr], bw=RTbw, na.rm=TRUE)
-  TDurhold$y = TDurhold$y  * sum(pHoldErr)  * RTbw
+  TDurhold$y = TDurhold$y * sum(pHoldErr) * RTbw
   all_vals_X = c(all_vals_X, TDurhold$x)
   all_vals_Y = c(all_vals_Y, TDurhold$y)
 }
 
-if(sum(pEarly) > 1) {
+if(sum(pEarly) > 4) {
   TDurearly   = density(StimSRT[pEarly], bw=RTbw, na.rm=TRUE)
-  TDurearly$y = TDurearly$y  * sum(pEarly)  * RTbw
+  TDurearly$y = TDurearly$y  * sum(pEarly) * RTbw
   all_vals_X = c(all_vals_X, TDurearly$x)
   all_vals_Y = c(all_vals_Y, TDurearly$y)
 }
 
-if(sum(pFalse) > 1) {
+if(sum(pFalse) > 4) {
   TDurfalse   = density(StimSRT[pFalse], bw=RTbw, na.rm=TRUE)
-  TDurfalse$y = TDurfalse$y  * sum(pFalse)  * RTbw
+  TDurfalse$y = TDurfalse$y * sum(pFalse) * RTbw
   all_vals_X = c(all_vals_X, TDurfalse$x)
   all_vals_Y = c(all_vals_Y, TDurfalse$y)
 }
 
-if(sum(pEarlyFalse) > 1) {
+if(sum(pEarlyFalse) > 4) {
   TDurfalseearly   = density(StimSRT[pEarlyFalse], bw=RTbw, na.rm=TRUE)
-  TDurfalseearly$y = TDurfalseearly$y  * sum(pEarlyFalse)  * RTbw
+  TDurfalseearly$y = TDurfalseearly$y * sum(pEarlyFalse)  * RTbw
   all_vals_X = c(all_vals_X, TDurfalseearly$x)
   all_vals_Y = c(all_vals_Y, TDurfalseearly$y)
 }
 
-if(sum(pFixBreak) > 1) {
+if(sum(pFixBreak) > 4) {
   TDurfixbreak   = density(StimSRT[pFixBreak], bw=RTbw, na.rm=TRUE)
-  TDurfixbreak$y = TDurfixbreak$y  * sum(pFixBreak)  * RTbw
+  TDurfixbreak$y = TDurfixbreak$y * sum(pFixBreak) * RTbw
   all_vals_X = c(all_vals_X, TDurfixbreak$x)
   all_vals_Y = c(all_vals_Y, TDurfixbreak$y)
 }
 
-if(sum(pStimBreak) > 1) {
+if(sum(pStimBreak) > 4) {
   TDurstimbreak   = density(StimSRT[pStimBreak], bw=RTbw, na.rm=TRUE)
   TDurstimbreak$y = TDurstimbreak$y  * sum(pStimBreak)  * RTbw
   all_vals_X = c(all_vals_X, TDurstimbreak$x)
@@ -325,35 +329,35 @@ plot(All_Cnt, xaxs='i', yaxs='i', main='Response after Target Onset', xlim=range
 
 lines(TDurall, lwd=2, col='darkgrey')
 
-if(sum(pCorr) > 1) {
+if(sum(pCorr) > 4) {
   lines(TDurhit, lwd=2, col=Corr_Col)
 }
 
-if(sum(pHoldErr) > 1) {
+if(sum(pHoldErr) > 4) {
   lines(TDurhold, lwd=2, col=TargetBreak_Col)
 }
 
-if(sum(pEarly) > 1) {
+if(sum(pEarly) > 4) {
   lines(TDurearly, lwd=2, col=Early_Col)
 }
 
-if(sum(pFalse) > 1) {
+if(sum(pFalse) > 4) {
   lines(TDurfalse, lwd=2, col=False_Col)
 }
 
-if(sum(pEarlyFalse) > 1) {
+if(sum(pEarlyFalse) > 4) {
   lines(TDurfalseearly, lwd=2, col=EarlyFalse_Col)
 }
 
-if(sum(pFixBreak) > 1) {
+if(sum(pFixBreak) > 4) {
   lines(TDurfixbreak, lwd=2, col=FixBreak_Col)
 }
 
-if(sum(pStimBreak) > 1) {
+if(sum(pStimBreak) > 4) {
   lines(TDurstimbreak, lwd=2, col=StimBreak_Col)
 }
 
-abline(v=median(StimSRT[pCorr], na.rm=TRUE), col=Corr_Col, lty=2, lwd=2)
+abline(v=median(StimSRT[pCorr],  na.rm=TRUE), col=Corr_Col,  lty=2, lwd=2)
 abline(v=median(StimSRT[pEarly], na.rm=TRUE), col=Early_Col, lty=2, lwd=2)
 
 box()
@@ -363,49 +367,49 @@ box()
 all_vals_X = c()
 all_vals_Y = c()
 
-if(sum(pCorr) > 1) {
+if(sum(pCorr) > 4) {
   RThit   = density(SRT[pCorr], bw=RTbw, na.rm=TRUE)
   RThit$y = RThit$y  * sum(pCorr)  * RTbw
   all_vals_X = c(all_vals_X, RThit$x)
   all_vals_Y = c(all_vals_Y, RThit$y)
 }
 
-if(sum(pHoldErr) > 1) {
+if(sum(pHoldErr) > 4) {
   RThold   = density(SRT[pHoldErr], bw=RTbw, na.rm=TRUE)
   RThold$y = RThold$y  * sum(pHoldErr)  * RTbw
   all_vals_X = c(all_vals_X, RThold$x)
   all_vals_Y = c(all_vals_Y, RThold$y)
 }
 
-if(sum(pEarly) > 1) {
+if(sum(pEarly) > 4) {
   RTearly   = density(SRT[pEarly], bw=RTbw, na.rm=TRUE)
   RTearly$y = RTearly$y  * sum(pEarly)  * RTbw
   all_vals_X = c(all_vals_X, RTearly$x)
   all_vals_Y = c(all_vals_Y, RTearly$y)
 }
 
-if(sum(pFalse) > 1) {
+if(sum(pFalse) > 4) {
   RTfalse   = density(SRT[pFalse], bw=RTbw, na.rm=TRUE)
   RTfalse$y = RTfalse$y  * sum(pFalse)  * RTbw
   all_vals_X = c(all_vals_X, RTfalse$x)
   all_vals_Y = c(all_vals_Y, RTfalse$y)
 }
 
-if(sum(pEarlyFalse) > 1) {
+if(sum(pEarlyFalse) > 4) {
   RTfalseearly   = density(SRT[pEarlyFalse], bw=RTbw, na.rm=TRUE)
   RTfalseearly$y = RTfalseearly$y  * sum(pEarlyFalse)  * RTbw
   all_vals_X = c(all_vals_X, RTfalseearly$x)
   all_vals_Y = c(all_vals_Y, RTfalseearly$y)
 }
 
-if(sum(pFixBreak) > 1) {
+if(sum(pFixBreak) > 4) {
   RTfixbreak   = density(SRT[pFixBreak], bw=RTbw, na.rm=TRUE)
   RTfixbreak$y = RTfixbreak$y  * sum(pFixBreak)  * RTbw
   all_vals_X = c(all_vals_X, RTfixbreak$x)
   all_vals_Y = c(all_vals_Y, RTfixbreak$y)
 }
 
-if(sum(pStimBreak) > 1) {
+if(sum(pStimBreak) > 4) {
   RTstimbreak   = density(SRT[pStimBreak], bw=RTbw, na.rm=TRUE)
   RTstimbreak$y = RTstimbreak$y  * sum(pStimBreak)  * RTbw
   all_vals_X = c(all_vals_X, RTstimbreak$x)
@@ -422,31 +426,31 @@ plot(range(all_vals_X), range(all_vals_Y), type='n', xaxs='i', yaxs='i', main='R
 
 lines(RTall, lwd=2, col='darkgrey')
 
-if(sum(pCorr) > 1) {
+if(sum(pCorr) > 4) {
   lines(RThit, lwd=2, col=Corr_Col)
 }
 
-if(sum(pHoldErr) > 1) {
+if(sum(pHoldErr) > 4) {
   lines(RThold, lwd=2, col=TargetBreak_Col)
 }
 
-if(sum(pEarly) > 1) {
+if(sum(pEarly) > 4) {
   lines(RTearly, lwd=2, col=Early_Col)
 }
 
-if(sum(pFalse) > 1) {
+if(sum(pFalse) > 4) {
   lines(RTfalse, lwd=2, col=False_Col)
 }
 
-if(sum(pEarlyFalse) > 1) {
+if(sum(pEarlyFalse) > 4) {
   lines(RTfalseearly, lwd=2, col=EarlyFalse_Col)
 }
 
-if(sum(pFixBreak) > 1) {
+if(sum(pFixBreak) > 4) {
   lines(RTfixbreak, lwd=2, col=FixBreak_Col)
 }
 
-if(sum(pStimBreak) > 1) {
+if(sum(pStimBreak) > 4) {
   lines(RTstimbreak, lwd=2, col=StimBreak_Col)
 }
 
@@ -516,16 +520,36 @@ abline(h=median(SRTresp[Result== 'Correct']), col=Corr_Col,  lty=2, lwd=2.5)
 abline(h=median(SRTresp[Result== 'Early']),   col=Early_Col, lty=2, lwd=2.5)
 abline(h=0, col="black", lty=2, lwd=1.5)
 
-
-# ###########################################################################################
-# # plot 9: Position dependent performance
+###########################################################################################
+# plot 10: hemifield dependent performance
 #
-# All_Cnt       = as.numeric(table(TPos))
-# Hit_Cnt       = as.numeric(table(TPos[pCorr]))
-# HoldErr_Cnt   = as.numeric(table(TPos[pHoldErr]))
-# FixBreak_Cnt  = as.numeric(table(TPos[pFixBreak]))
-# StimBreak_Cnt = as.numeric(table(TPos[pStimBreak]))
-# Early_Cnt     = as.numeric(table(TPos[pEarly]))
+# Lpos = dt$Hemi == 'l'
+# Rpos = dt$Hemi == 'r'
+#
+# All_perf =  c(sum(pCorr==1 & Lpos==1), sum(pEarly==1 & Lpos==1), sum(pFalse==1 & Lpos==1), sum(pEarlyFalse==1 & Lpos==1))
+#
+# All_typ = c('Correct', 'Early', 'FixBreak', 'StimBreak', 'TargetBreak', 'False', 'EarlyFalse', 'Miss')
+# All_col = c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, False_Col, EarlyFalse_Col, Miss_Col)
+#
+# x = barplot(100*All_perf/Ntrials, beside=TRUE, col=All_col, xaxt="n", main='Session Performance', ylab='Proportion [%]', border=NA)
+#
+# text(cex=0.9, x=x-.25, y=-1.5, All_typ, xpd=TRUE, srt=45, pos=1, offset=1)
+# text(cex=1.2, x=x,     y=0,   All_perf, xpd=TRUE, srt=0,  pos=3, offset=0.1)
+#
+# box()
+#
+# # ###########################################################################################
+# # # plot 10: Position dependent performance
+# RespTrial = pCorr==1 | pEarly==1 | pFalse==1 | pEarlyFalse==1
+#
+# Rpos = dt$Hemi == 'r'
+#
+# All_Cnt       = as.numeric(table(Rpos[RespTrial]))
+# Hit_Cnt       = as.numeric(table(Rpos[pCorr]))
+# Early_Cnt   = as.numeric(table(Rpos[pHoldErr]))
+# False_Cnt  = as.numeric(table(Rpos[pFixBreak]))
+# StimBreak_Cnt = as.numeric(table(Rpos[pStimBreak]))
+# Early_Cnt     = as.numeric(table(Rpos[pEarly]))
 #
 # if(length(Hit_Cnt)       == 0 ) {Hit_Cnt       = All_Cnt * 0}
 # if(length(HoldErr_Cnt)   == 0 ) {HoldErr_Cnt   = All_Cnt * 0}
@@ -543,7 +567,7 @@ abline(h=0, col="black", lty=2, lwd=1.5)
 # text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
 #
 # box()
-#
+
 # ###########################################################################################
 # # plot 11: Location dependent SRT
 # PosCatresp = TPos[RespP]
@@ -563,7 +587,7 @@ abline(h=0, col="black", lty=2, lwd=1.5)
 # save plot as pdf
 if(interactive()) {
   # Save the figure to pdf
-  dev.copy(pdf, 'DelSacc.pdf', 19.5, 10.5, pointsize=10, title='DelSacc_Behav')
+  dev.copy(pdf, paste('CtrChng_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='CtrChng')
 }
 
 dev.off()

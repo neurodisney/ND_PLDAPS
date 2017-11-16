@@ -40,6 +40,7 @@ p.defaultParameters.EV.Reward        = NaN; % time of reward delivery
 p.defaultParameters.EV.nextReward    = NaN; % Scheduled time of next reward
 p.defaultParameters.EV.StartRT       = NaN; % response time to start trial after active cue
 p.defaultParameters.EV.RespRT        = NaN; % reaction time
+p.defaultParameters.EV.Response      = NaN; % reaction time
 p.defaultParameters.EV.DPX_TaskOn    = NaN; % Synch time with datapixx for task on
 p.defaultParameters.EV.DPX_TaskOff   = NaN; % Synch time with datapixx for task off
 p.defaultParameters.EV.TDT_TaskOn    = NaN; % Synch time with TDT for task on

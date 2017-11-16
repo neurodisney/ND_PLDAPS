@@ -61,6 +61,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'SRT_FixStart','p.trial.task.SRT_FixStart',           '%.5f');
     p = ND_AddAsciiEntry(p, 'SRT_StimOn',  'p.trial.task.SRT_StimOn',             '%.5f');
     p = ND_AddAsciiEntry(p, 'SRT_Go',      'p.trial.task.SRT_Go',                 '%.5f');
+    p = ND_AddAsciiEntry(p, 'Response',    'p.trial.EV.Response',                 '%.5f');
 
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwd',     'p.trial.EV.InitReward',               '%.5f');
@@ -228,10 +229,8 @@ function TaskSetUp(p)
     end
 
     % increase reward after defined number of correct trials
-    AddDur = find(p.trial.reward.IncrementTrial <= p.trial.NHits+1, 1, 'last');
-    if(~isempty(AddDur))
-        p.trial.reward.Dur = p.trial.reward.Dur + p.trial.reward.IncrementDur(AddDur);
-    end
+    RewDur = find(p.trial.reward.IncrementTrial > p.trial.NHits+1, 1, 'first');
+    p.trial.reward.Dur = p.trial.reward.IncrementDur(RewDur);
 
     ND_SwitchEpoch(p, 'ITI');
 
@@ -310,6 +309,8 @@ function TaskDesign(p)
                     ND_SwitchEpoch(p, 'BreakFixCheck');
                 else
                     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+                    p.trial.EV.Response = p.trial.stim.fix.EV.FixBreak;
+
                     ND_SwitchEpoch(p, 'TaskEnd');
                 end
 
@@ -340,15 +341,19 @@ function TaskDesign(p)
                     ND_FixSpot(p,0);
 
                     % Mark trial (early) false and end task
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                    p.trial.outcome.CurrOutcome  = p.trial.outcome.False;
                     
+                    % time to early to detect proper fixation break, thus set the time here explicitly
+                    p.trial.EV.Response          = p.trial.EV.FixLeave;
+
                     ND_SwitchEpoch(p, 'TaskEnd');
 
                 elseif(~p.trial.stim.fix.fixating)
-                % Eye has left the central fixation spot. Wait a breifly for eye to arrive
+                % Eye has left the central fixation spot. Wait a briefly for eye to arrive
                     if(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
                         % Eye has saccaded somewhere besides the target
                         p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
+                        p.trial.EV.Response         = p.trial.EV.FixLeave;
 
                         % Turn the stim off and fixation off
                         stim(p,0);
@@ -383,6 +388,7 @@ function TaskDesign(p)
                 if(p.trial.CurTime > p.trial.stim.grating_target.EV.FixStart + p.trial.task.minTargetFixTime)
 
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
+                    p.trial.EV.Response         = p.trial.EV.FixLeave;
                     p.trial.task.Good = 1;
 
                     pds.reward.give(p, p.trial.reward.Dur, p.trial.reward.nPulse);
@@ -396,6 +402,7 @@ function TaskDesign(p)
                 elseif(~p.trial.stim.grating_target.fixating)
                 % If animal's gaze leaves window, end the task and do not give reward
                     p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
+                    p.trial.EV.Response         = p.trial.EV.FixLeave;
 
                     % Turn the stim off
                     stim(p,0);
@@ -417,6 +424,8 @@ function TaskDesign(p)
                 % Get the median eye position in the delay
                 frames = ceil(p.trial.display.frate * delay);
                 medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
+
+                p.trial.EV.Response = p.trial.EV.FixLeave;
 
                 % Determine if the medPos is in the fixation window for the stim
                 if(inFixWin(p.trial.stim.grating_target, medPos))
@@ -445,10 +454,6 @@ function TaskDesign(p)
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
             Task_OFF(p); % Run standard TaskEnd routine
-
-            % Grab the fixation stopping and starting values from the stim properties
-            p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
-            p.trial.EV.FixSpotStop  = p.trial.stim.fix.EV.FixBreak;
 
             if(~isnan(p.trial.stim.grating_target.EV.FixStart))
                 p.trial.EV.FixStimStart = p.trial.stim.grating_target.EV.FixStart;
@@ -640,8 +645,15 @@ function stim(p, val)
 % ####################################################################### %
 function Calculate_SRT(p)
 
+    % Grab the fixation stopping and starting values from the stim properties
+    p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
+    
+    if(~strcmp(p.trial.outcome.CurrOutcomeStr,'False'))
+        p.trial.EV.FixSpotStop  = p.trial.stim.fix.EV.FixBreak;
+    end
+
     switch p.trial.outcome.CurrOutcomeStr
-        case {'NoStart', 'Break', 'Miss'}
+        case {'NoStart', 'Break', 'Miss', 'NoFix'}
             p.trial.task.SRT_FixStart = NaN;
             p.trial.task.SRT_StimOn   = NaN;
             p.trial.task.SRT_Go       = NaN;
@@ -659,7 +671,7 @@ function Calculate_SRT(p)
         case {'False', 'Correct', 'TargetBreak'}
             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
             p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
-            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - p.trial.EV.FixOff;
+            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - p.trial.EV.StimChange;
 
         otherwise
             warning(['Calculate_SRT: unrecognized outcome: ', p.trial.outcome.CurrOutcomeStr]);
