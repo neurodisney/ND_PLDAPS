@@ -187,9 +187,8 @@ try
     
     %% save online plot
     if(p.defaultParameters.plot.do_online)
-        ND_fig2pdf(p.trial.plot.fig, ...
+        ND_fig2pdf(p.plotdata.fig, ...
                   [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pdf']);
-        p.defaultParameters.plot.fig = []; % avoid saving the figure to data
     end
 
     % ----------------------------------------------------------------%

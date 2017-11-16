@@ -15,10 +15,10 @@ try
     fine_colmap = 'bone';
     
     %% Initialize Plot
-    if isempty(p.trial.plot.fig)
-        p.trial.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
+    if ~isfield(p.plotdata, 'fig')
+        p.plotdata.fig = figure('Position', fig_sz, 'Units', 'normalized');
     else
-        set(0, 'CurrentFigure', p.trial.plot.fig);
+        set(0, 'CurrentFigure', p.plotdata.fig);
     end
     
     
@@ -40,14 +40,19 @@ try
     end
     
     %% Plot coarse tuning information
-    plot_coarseHeatmap
-    plot_temporalProfile
+    % Only plot if any data exists to generate it
+    if isfield(p.trial.RF.coarse, 'heatmap')
+        plot_coarseHeatmap
+        plot_temporalProfile
+    end
     
     %% Plot fine tuning information
     % Only plot fine plots if fine stage is active
     if strcmp(p.trial.stim.stage, 'fine')
-        plot_fineHeatmap
-        plot_orientationTuning
+        if isfield(p.trial.RF.fine, 'heatmap')
+            plot_fineHeatmap
+            plot_orientationTuning
+        end
     end
     
 catch me
@@ -104,7 +109,7 @@ drawnow
         
         ylabel('fixation duration [s]');
         xlabel('trial time [min]');
-        ylim([0, max(fixDurs)]);
+        ylim([0, nanmax(max(fixDurs),3)]);
         if nTrials > 1
             xlim([0, max(times)]);
         end

@@ -84,12 +84,6 @@ p.defaultParameters.Block.BlockList      = p.trial.Block.BlockList;
 p.defaultParameters.asciitbl  =  p.trial.asciitbl;
 
 % --------------------------------------------------------------------%
-%% figure handle for online plots
-if(p.trial.plot.do_online)
-    p.defaultParameters.plot.fig = p.trial.plot.fig;
-end
-
-% --------------------------------------------------------------------%
 %% Keep keyboard freedom state
 p.defaultParameters.pldaps.keyboardFree = p.trial.pldaps.keyboardFree;
 
