@@ -147,7 +147,7 @@ if(p.defaultParameters.plot.do_online && ~exist(p.defaultParameters.plot.routine
     warning('Plotting routine for online analysis not found, disabled plotting!');
     p.defaultParameters.plot.do_online  =  0;
 elseif(p.defaultParameters.plot.do_online && ~isfield(p.defaultParameters.plot, 'fig'))
-    p.defaultParameters.plot.fig = [];
+    p.plotdata.fig = [];
 end
 
 % check that each task epoch has a unique number

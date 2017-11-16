@@ -6,22 +6,22 @@ result= [];
 if(~p.trial.pldaps.nosave)
     try
 
-        if(p.trial.plot.do_online)
-            figh = p.trial.plot.fig;
-            p.trial.plot.fig = []; % avoid saving the figure to data
-        end
-
         ctrial = p.trial;
         if(p.trial.pldaps.iTrial == 0)
             flnm = [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds'];
         else
             flnm = [p.defaultParameters.session.filestem, '_T', num2str(p.trial.pldaps.iTrial, '%.5d'), '.pds'];
         end
+        
+        if(p.trial.plot.do_online && isfield(p.plotdata, 'fig'))
+            figh = p.plotdata.fig;
+            p.plotdata.fig = []; % avoid saving the figure to data
+        end
 
         save(fullfile(p.defaultParameters.session.trialdir, flnm), '-struct','ctrial','-mat','-v7.3');
         
-        if(p.trial.plot.do_online)
-            p.trial.plot.fig = figh; %dirty ad hoc fix to keep figure handle available
+        if(p.trial.plot.do_online && isfield(p.plotdata, 'fig'))
+            p.plotdata.fig = figh; %dirty ad hoc fix to keep figure handle available
         end
         
         
