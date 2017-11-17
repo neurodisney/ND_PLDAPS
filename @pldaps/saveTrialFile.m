@@ -3,9 +3,9 @@ function result = saveTrialFile(p)
 % result = saveTrialFile(p)
 result= [];
 
-if(~p.trial.pldaps.nosave)
+if(p.trial.pldaps.save_nostart == 1 || p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart)
     try
-
+        
         ctrial = p.trial;
         if(p.trial.pldaps.iTrial == 0)
             flnm = [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds'];
@@ -17,7 +17,7 @@ if(~p.trial.pldaps.nosave)
             figh = p.plotdata.fig;
             p.plotdata.fig = []; % avoid saving the figure to data
         end
-
+        
         save(fullfile(p.defaultParameters.session.trialdir, flnm), '-struct','ctrial','-mat','-v7.3');
         
         if(p.trial.plot.do_online && isfield(p.plotdata, 'fig'))
@@ -26,6 +26,6 @@ if(~p.trial.pldaps.nosave)
         
         
     catch result
-         warning('pldaps:saveTrialFile','Failed to save temp file in %s', p.defaultParameters.session.trialdir)
+        warning('pldaps:saveTrialFile','Failed to save temp file in %s', p.defaultParameters.session.trialdir)
     end
 end

@@ -135,10 +135,12 @@ try
             
             % ----------------------------------------------------------------%
             %% Save trial data
-            result = saveTrialFile(p);
-            
-            if(~isempty(result))
-                disp(result.message)
+            if(~p.trial.pldaps.nosave)
+                result = saveTrialFile(p);
+                
+                if(~isempty(result))
+                    disp(result.message)
+                end
             end
             
             % ----------------------------------------------------------------%
