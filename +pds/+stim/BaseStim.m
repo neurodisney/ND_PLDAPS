@@ -143,7 +143,11 @@ methods
         end
     end
     
-    
+    %---------------------------------------------%
+    function cleanup(obj)
+        %% Removes handle to p and handles any other clean up operations
+        obj.p = [];
+    end
         
     %---------------------------------------------%
     %% Methods to run on changes of properties

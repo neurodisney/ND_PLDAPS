@@ -34,6 +34,13 @@ p.trial.trialend      = vblTime;
 p.trial.trialduration = vblTime - p.trial.trstart;
 
 %-------------------------------------------------------------------------%
+%% Run clean up on all stimuli
+for iStim = 1:length(p.trial.stim.allStims)
+    stim = p.trial.stim.allStims{iStim};
+    cleanup(stim);
+end
+
+%-------------------------------------------------------------------------%
 %% end DataPixx ( since we use it no if querry needed
 p.trial.datapixx.datapixxstoptime = Datapixx('GetTime'); % WZ: Does this need to be called first or could it be combined with the following if block?
 

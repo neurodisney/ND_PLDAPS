@@ -486,11 +486,6 @@ function TaskCleanAndSave(p)
 %% Clean up textures, variables, and save useful info to ascii table
     Task_Finish(p);
 
-    % Destroy the grating textures generated to save memory
-    Screen('Close', p.trial.stim.grating_target.texture);
-    Screen('Close', p.trial.stim.grating_target_chng.texture);
-    Screen('Close', p.trial.stim.grating_distractor.texture);
-
     % Get the text name of the outcome
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
 

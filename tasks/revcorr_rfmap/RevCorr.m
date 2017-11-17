@@ -541,11 +541,6 @@ function TaskCleanAndSave(p)
 %% Clean up textures, variables, and save useful info to ascii table
 Task_Finish(p);
 
-% Destroy the two grating textures generated to save memory
-for grating = p.trial.stim.gratings
-    Screen('Close', grating{1}.texture);
-end
-
 % Remove NaNs at the end of the RF data
 p.trial.RF.visualField(:,:,p.trial.iFrame:end) = [];
 p.trial.RF.stimsOn(:,p.trial.iFrame:end) = [];
