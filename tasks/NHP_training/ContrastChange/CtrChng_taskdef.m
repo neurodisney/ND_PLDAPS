@@ -23,13 +23,13 @@ p.trial.task.ShowHelp = 0; % Moves the fixation spot towards target location
 p.trial.reward.GiveInitial = 0;     % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew  = 0.01;  % duration of the initial reward
 p.trial.reward.ManDur      = 0.05;  % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.025; % Reward for completing the task successfully
+%p.trial.reward.Dur         = 0.025; % Reward for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1; % number of reward pulses
 p.trial.reward.PulseStep       = [2, 4, 6, 8]; % increase number of pulses with this trial number
-p.trial.reward.IncrementTrial  = [  150,  300, 400,  500, 600,  650]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur    = [0.25, 0.5, 0.75, 0.25, 0.5, 0.75]; % increase number of pulses with this trial number
+p.trial.reward.IncrementTrial  = [ 150,   250, 350,  450,  500, 600]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur    = [0.05, 0.075, 0.1, 0.15, 0.25, 0.5]; % increase number of pulses with this trial number
 
 % ----------------------------------- -------------------------------------%
 %% Grating stimuli parameters
