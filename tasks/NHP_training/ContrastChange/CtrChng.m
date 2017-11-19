@@ -627,11 +627,11 @@ function stim(p, val)
             % Stim is turning off
             ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
 
-        elseif(oldVal == 0)
+        elseif(val == 1)
             % Stim is turning on
             ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
 
-        else
+        elseif(val == 2)
             % Stim is changing
             ND_AddScreenEvent(p, p.trial.event.STIM_CHNG, 'StimChange');
         end

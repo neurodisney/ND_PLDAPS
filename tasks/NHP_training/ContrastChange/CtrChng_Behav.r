@@ -53,9 +53,9 @@ Break_trial    = which(dt$Outcome == 'Break')
 
 if(length(Break_trial) == 0){
   Break_start = NA
-  Break_end = NA
+  Break_end   = NA
 }else{
-  Break_start = (dt$TaskEnd[Break_trial]     - SessTrialStart) / 60
+  Break_start = (dt$TaskEnd[Break_trial] - SessTrialStart) / 60
 
   if(max(Break_trial) <= length(dt$FixSpotOn)){
     Break_end = (dt$FixSpotOn[Break_trial+1] - SessTrialStart) / 60
@@ -108,19 +108,21 @@ Ntrials     = sum(pAll)
 # get relevant variables
 Ttime     = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
 
-corp = pCorr == 1 | pHoldErr == 1 | pFalse   == 1
-corp = corp  == 1 & is.finite(dt$SRT_StimOn) == 1 & is.finite(dt$GoLatency)
+corp = pCorr == 1 | pHoldErr == 1 | pFalse == 1
+# corp = pCorr == 1 | pHoldErr == 1 
+#corp = corp  == 1 & is.finite(dt$SRT_StimOn) == 1 & is.finite(dt$GoLatency)
 
 # derive RT times
 SRT       = dt$SRT_Go
-SRT[corp] = dt$SRT_StimOn[corp]
+# SRT[corp] = dt$SRT_StimOn[corp]
+SRT[corp] = dt$Response[corp] - dt$StimChange[corp]
 
 StimSRT = dt$SRT_StimOn
 
 #print(dt$SRT_StimOn[pFalse])
 
 #StimSRT[corp] = dt$FixBreak[corp]  - dt$StimOn[corp]  + (dt$GoCue[corp])
-StimSRT[corp] = StimSRT[corp] + (dt$GoLatency[corp])
+StimSRT[corp] = dt$GoLatency[corp] + SRT[corp]
 
 # StimSRT[corp] = (dt$FixBreak[corp] - dt$StimOn[corp])+ dt$FixSpotOff[corp]
 
