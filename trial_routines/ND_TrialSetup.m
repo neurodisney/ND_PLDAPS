@@ -1,5 +1,5 @@
 function p = ND_TrialSetup(p)
-% prepare data collection and initialise everything needed
+% prepare data collection and initialize everything needed
 % in part taken from trialSetup in the PLDAPS pldapsDefaultTrialFunction
 %
 %
@@ -8,6 +8,13 @@ function p = ND_TrialSetup(p)
 % p.trial.timing.flipTimes = zeros(4,p.trial.pldaps.maxFrames);
 % p.trial.timing.flipTimes = zeros(5,p.trial.pldaps.maxFrames);
 
+% --------------------------------------------------------------------%
+%% initialize the random number generator
+% verify how this affects pldaps
+p.trial.RandomSeed = rng('shuffle', 'twister');
+
+% --------------------------------------------------------------------%
+%% 
 if(p.trial.pldaps.GetTrialStateTimes)
     p.trial.timing.frameStateChangeTimes = nan(9,p.trial.pldaps.maxFrames);
 end
@@ -30,6 +37,7 @@ end
 % ------------------------------------------------------------------------%
 %% Frame number
 p.trial.iFrame = 1;
+
 % ------------------------------------------------------------------------%
 %% Photo Diode
 if(p.trial.pldaps.draw.photodiode.use)

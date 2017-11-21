@@ -6,7 +6,8 @@ result= [];
 if(p.trial.pldaps.save_nostart == 1 || p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart)
     try
         
-        ctrial = p.trial;
+        ctrial = p.trial; %#ok<*NASGU>
+        
         if(p.trial.pldaps.iTrial == 0)
             flnm = [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds'];
         else
@@ -23,7 +24,6 @@ if(p.trial.pldaps.save_nostart == 1 || p.trial.outcome.CurrOutcome ~= p.trial.ou
         if(p.trial.plot.do_online && isfield(p.plotdata, 'fig'))
             p.plotdata.fig = figh; %dirty ad hoc fix to keep figure handle available
         end
-        
         
     catch result
         warning('pldaps:saveTrialFile','Failed to save temp file in %s', p.defaultParameters.session.trialdir)

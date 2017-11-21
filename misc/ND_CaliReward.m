@@ -49,3 +49,6 @@ if(Datapixx('IsReady') && ~keep_open)
     Datapixx('Close');
 end
 
+close(h);
+
+

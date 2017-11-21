@@ -96,11 +96,6 @@ end
 % end
 
 % --------------------------------------------------------------------%
-%% initialize the random number generator
-% verify how this affects pldaps
-p.defaultParameters.session.RandomSeed = rng('shuffle', 'twister');
-
-% --------------------------------------------------------------------%
 %% Set some defaults
 
 % trial states

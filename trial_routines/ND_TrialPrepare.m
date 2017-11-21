@@ -39,7 +39,6 @@ if(p.trial.Drug.DoStim)
     p.trial.Drug.StimTime   = 0;
 end
 
-
 %-------------------------------------------------------------------------%
 %% Get last Screen Flip prior to trial
 % This should be the last step before the main trial loop starts

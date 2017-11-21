@@ -36,7 +36,7 @@ if(p.defaultParameters.Block.GenBlock == 1)
     % ordered list of conditions for a single block
     BlockCondSet = [];
     for(i = 1:Ncond)
-        BlockCondSet = [BlockCondSet, repmat(i, 1, maxTrialsCond(i))];
+        BlockCondSet = [BlockCondSet, repmat(i, 1, maxTrialsCond(i))]; %#ok<AGROW>
     end
 
     % is the total number of trials pre-defiend or do we run until experimenter break?
@@ -66,20 +66,23 @@ else
 %% update condition/block list
 
     % do we need to repeat conditions?
-    if(p.defaultParameters.Block.EqualCorrect && ~p.defaultParameters.pldaps.goodtrial) % need to check if success, repeat if not    
-        curCND = p.conditions{p.defaultParameters.pldaps.iTrial};
-        curBLK = p.defaultParameters.Block.BlockList(p.defaultParameters.pldaps.iTrial);
+    if(p.defaultParameters.Block.EqualCorrect) % need to check if success, repeat if not    
+        % if(p.defaultParameters.pldaps.good) % WZ: verify that this is the correct flag to use
+        if(p.trial.outcome.CurrOutcome ~= p.defaultParameters.outcome.Correct)    
+            curCND = p.conditions{p.defaultParameters.pldaps.iTrial};
+            curBLK = p.defaultParameters.Block.BlockList(p.defaultParameters.pldaps.iTrial);
 
-        poslst = 1:length(p.conditions);
-        cpos   = find(poslst > p.defaultParameters.pldaps.iTrial & p.defaultParameters.Block.BlockList == curBLK);
+            poslst = 1:length(p.conditions);
+            cpos   = find(poslst > p.defaultParameters.pldaps.iTrial & p.defaultParameters.Block.BlockList == curBLK);
 
-        InsPos = cpos(randi(length(cpos))); % determine random position in the current block for repetition
+            InsPos = cpos(randi(length(cpos))); % determine random position in the current block for repetition
 
-        p.conditions   = [p.conditions(  1:InsPos-1), curCND,  p.conditions(  InsPos:end)];
-        p.defaultParameters.Block.BlockList = [p.defaultParameters.Block.BlockList(1:InsPos-1), curBLK,  p.defaultParameters.Block.BlockList(InsPos:end)];
+            p.conditions   = [p.conditions(  1:InsPos-1), curCND,  p.conditions(  InsPos:end)];
+            p.defaultParameters.Block.BlockList = [p.defaultParameters.Block.BlockList(1:InsPos-1), curBLK,  p.defaultParameters.Block.BlockList(InsPos:end)];
 
-        if(isfinite(p.defaultParameters.pldaps.finish))
-            p.defaultParameters.pldaps.finish = p.defaultParameters.pldaps.finish + 1; % added a required trial
+            if(isfinite(p.defaultParameters.pldaps.finish))
+                p.defaultParameters.pldaps.finish = p.defaultParameters.pldaps.finish + 1; % added a required trial
+            end
         end
     end
     
