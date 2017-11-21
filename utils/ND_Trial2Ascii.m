@@ -14,14 +14,14 @@ if(nargin < 3)
     tbl = 'session';
 end
 
-if(~isfield(p.trial.asciitbl, tbl))
-    p.trial.asciitbl.(tbl) = struct;
-end
-
-table = p.trial.asciitbl.(tbl);
-
 switch act
     case 'init'
+        
+        if(~isfield(p.defaultParameters.asciitbl, tbl))
+            p.defaultParameters.asciitbl.(tbl) = struct;
+        end
+        
+        table = p.defaultParameters.asciitbl.(tbl);
         
         if(~isfield(table, 'fmt'))
             error('No ascii format defined yet');
@@ -35,9 +35,9 @@ switch act
         if(~isfield(table, 'file'))
             if strcmp(tbl,'session')
                 % Default file for the session table
-                table.file = fullfile(tbldir, [p.trial.session.filestem,'.dat']);
+                table.file = fullfile(tbldir, [p.defaultParameters.session.filestem,'.dat']);
             else
-                table.file = fullfile(tbldir, [p.trial.session.filestem, '_', tbl, '.dat']);
+                table.file = fullfile(tbldir, [p.defaultParameters.session.filestem, '_', tbl, '.dat']);
             end
             p.trial.asciitbl.(tbl).file = table.file;
         end
@@ -55,6 +55,12 @@ switch act
         end
         
     case 'save'
+        
+        if(~isfield(p.trial.asciitbl, tbl))
+            p.trial.asciitbl.(tbl) = struct;
+        end
+        
+        table = p.trial.asciitbl.(tbl);
         
         Ndt = size(table.fmt, 1);
         

@@ -23,7 +23,7 @@ try
     % Ensure we have an experimentSetupFile set and verify output file
 
     %make sure we are not running an experiment twice
-    if(isField(p.defaultParameters, 'session.initTime'))
+    if(isfield(p.defaultParameters, 'session.initTime'))
         warning('pldaps:run', 'pldaps objects appears to have been run before. A new pldaps object is needed for each run');
         return
     else
@@ -44,7 +44,7 @@ try
     else
         feval(p.defaultParameters.session.experimentSetupFile, p); 
     end
-
+    
     %-------------------------------------------------------------------------%
     %% Open PLDAPS windows
     % Open PsychToolbox Screen
@@ -56,7 +56,7 @@ try
 
     % --------------------------------------------------------------------%
     %% Last chance to check variables
-    if(p.trial.pldaps.pause)
+    if(p.defaultParameters.pldaps.pause)
         disp('Ready to begin trials. Type return to start first trial...')
         pause
         p.trial.pldaps.pause = 0;
@@ -72,120 +72,90 @@ try
     HideCursor
 
     p.trial.flagNextTrial  = 0; % flag for ending the trial
-    p.trial.iFrame         = 1; % frame index
+    p.trial.pldaps.quit = 0;
+    p.trial.pldaps.pause = 0;
 
     trialNr = 0;
     p.trial.pldaps.iTrial = 0;
 
     % --------------------------------------------------------------------%
+    %% Load any p.trial alterations in p.defaultParameters
+    % Assume any thing loaded into p.trial by this point should be kept and load it into defaultParameters
+    if ~isempty(p.trial)
+        p.defaultParameters = ND_AlterSubStruct(p.defaultParameters, p.trial);
+    end
+    
+    % --------------------------------------------------------------------%
     %% prepare first trial
-    levelsPreTrials = p.defaultParameters.getAllLevels();
+    preExperimentParameters = p.defaultParameters;
+    
+    % save default parameters to trial data directory
+    save(fullfile(p.defaultParameters.session.trialdir, ...
+        [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds']), ...
+        '-struct', 'preExperimentParameters', '-mat', '-v7.3');
 
     %% main trial loop %%
     while(p.trial.pldaps.quit == 0)
 
         if(~p.trial.pldaps.quit && ~p.trial.pldaps.pause)
-            
-            % ----------------------------------------------------------------%
-            %% Update information between trials
-            % This is right now a very dirty and unsatisfying solution.
-            % PLDAPS seems to overwrite the defaultParameters in the previous blocks, 
-            % therefore a bunch of variables are created that will be passed from p.trial 
-            % to p.trial by modifying temporarily the defaultParameters. 
-            % However, defaultParameters will be reset every new iteration of this trial loop.
-            %
-            % TODO: make the code more flexible to allow changes to the
-            % defaultParameters and maybe keep some additonal information
-            % in other sub-structs.
-            
+            %% Start setting up trial
+            trialNr = trialNr+1;
+            p.defaultParameters.pldaps.iTrial = trialNr;
             % --------------------------------------------------------------------%
+            
             %% update condition/block list
             % This has to be done before the block with addLevels and setLevels on defaultParameters
             p = ND_GenCndLst(p);
 
             % ----------------------------------------------------------------%
-            %% load parameters for next trial
-            trialNr = trialNr+1;
-            
-            % get information for current condition
-            if(~isempty(p.conditions))
-                p.defaultParameters.addLevels(p.conditions(trialNr), {['Trial', num2str(trialNr), 'Parameters']});
-                
-                p.defaultParameters.setLevels([levelsPreTrials, length(levelsPreTrials)+trialNr]);
-            else
-                p.defaultParameters.setLevels(levelsPreTrials);
-            end
-
-            p.defaultParameters.pldaps.iTrial = trialNr;
-
-            if(trialNr > 1) % this actually is supposed to happen after a trial, hence skip first in loop
- 
-                % processes after trial
-                p = ND_AfterTrial(p);
-                
-                % make online plots
-                if(p.trial.plot.do_online)
-                    feval(p.trial.plot.routine, p);
-                end
-                
-               % pass some information from the previous trial to the next trial
-                p = ND_UpdateTrial(p);
-
-                % completed all desired trial, finish experiment now
-                if(p.trial.pldaps.iTrial > p.trial.pldaps.finish)
-                    p.trial.pldaps.quit = 1;
-                    break;
-                end
-            end
-            
-            % ----------------------------------------------------------------%
-            %% create new trial struct
-
-            % create temporary trial struct
-            if(p.defaultParameters.plot.do_online)
-                figh = p.defaultParameters.plot.fig;
-                p.defaultParameters.plot.fig = []; % avoid saving the figure to data
-            end
-            
-            tmpts = mergeToSingleStruct(p.defaultParameters);
-
-            % save default parameters to trial data directory
-            if(trialNr == 1)
-                save(fullfile(p.defaultParameters.session.trialdir, ...
-                             [p.defaultParameters.session.filestem, '_InitialDefaultParameters.pds']), ...
-                             '-struct', 'tmpts', '-mat', '-v7.3');
-            end
-
-            % easiest (and quickest) way to create a deep copy is to save it as mat file and load it again
-            tmp_ptrial = fullfile(p.defaultParameters.session.tmpdir, 'deepTrialStruct.mat');
-            save(tmp_ptrial, 'tmpts');
-            clear tmpts;
-            load(tmp_ptrial);
-            p.trial = tmpts;
-            
-            if(p.defaultParameters.plot.do_online)
-                p.trial.plot.fig = figh; %dirty ad hoc fix to keep figure handle available
-            end
-            
-            clear tmpts;
-            delete(tmp_ptrial);
+            %% load parameters for next trial and create new trial struct
+            p = ND_LoadCondition(p);
+            p.trial = p.defaultParameters;
 
             % ----------------------------------------------------------------%
-            %% lock defaultsParameters and run current trial
-            p.defaultParameters.setLock(true);
+            %% Run current trial
+            dpPreTrial = p.defaultParameters;
 
             % run trial
             p = feval(p.trial.pldaps.trialMasterFunction,  p);
 
-            % unlock the defaultParameters
-            p.defaultParameters.setLock(false);
+            % Make sure defaultParameters do not change during a trial (should be exclusively done in ND_UpdateTrial
+            dpPostTrial = p.defaultParameters;
+            if ~isequaln(dpPreTrial, dpPostTrial)
+                warning('defaultParameters changed within a trial, should only be chaged between trials')
+                % Iterate through the two structs to find the differences (for debugging purposes)
+                % [~, preDifferent, postDifferent] = ND_CompareStructs(dpPreTrial, dpPostTrial);
+                % Display the postDifferent struct
+               % disp(postDifferent)
+            end
+                
+            % ----------------------------------------------------------------%            
+            %% processes after trial
+            p = ND_AfterTrial(p);
             
             % ----------------------------------------------------------------%
-            %% complete trial: save trial data
-            result = saveTrialFile(p);
-
-            if(~isempty(result))
-                disp(result.message)
+            %% Save trial data
+            if(~p.trial.pldaps.nosave)
+                result = saveTrialFile(p);
+                
+                if(~isempty(result))
+                    disp(result.message)
+                end
+            end
+            
+            % ----------------------------------------------------------------%
+            %% make online plots
+            if(p.trial.plot.do_online)
+                feval(p.trial.plot.routine, p);
+            end
+            
+            % ----------------------------------------------------------------%
+            %% pass information from this trial to the next trial
+            p = ND_UpdateTrial(p);
+            
+            % completed all desired trial, finish experiment now
+            if(p.trial.pldaps.iTrial > p.trial.pldaps.finish)
+                p.trial.pldaps.quit = 1;
             end
             
         elseif p.trial.pldaps.pause
@@ -216,21 +186,12 @@ try
             pds.datapixx.strobe(p.trial.event.UNPAUSE);
         end
     end  %  while(p.trial.pldaps.iTrial < p.trial.pldaps.finish && p.trial.pldaps.quit ~= 2)
-
-    % final update of trial information
-    p = ND_AfterTrial(p);
     
     %% save online plot
     if(p.defaultParameters.plot.do_online)
-        ND_fig2pdf(p.trial.plot.fig, ...
+        ND_fig2pdf(p.plotdata.fig, ...
                   [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pdf']);
-        p.defaultParameters.plot.fig = []; % avoid saving the figure to data
     end
-    
-    % ----------------------------------------------------------------%
-    %% make the session parameterStruct active
-    p.defaultParameters.setLevels(levelsPreTrials);
-    p.trial = p.defaultParameters;
 
     % ----------------------------------------------------------------%
     %% return cursor and command-line control
@@ -261,16 +222,16 @@ try
     %% save the session data to file
     
     % save defaultParameters as they are at the end of the session
-    tmpts = mergeToSingleStruct(p.defaultParameters);
+    postExperimentParameters = p.defaultParameters; %#ok<*NASGU>
 
     save(fullfile(p.defaultParameters.session.trialdir, ...
-             [p.defaultParameters.session.filestem, '_FinalDefaultParameters.pds']), ...
-             '-struct', 'tmpts', '-mat', '-v7.3');
+                 [p.defaultParameters.session.filestem, '_FinalDefaultParameters.pds']), ...
+                 '-struct', 'postExperimentParameters', '-mat', '-v7.3');
 
 % ----------------------------------------------------------------%
     %% close screens
     if(~p.defaultParameters.datapixx.use && p.defaultParameters.display.useOverlay)
-        glDeleteTextures(2,glGenTextures(1));
+        glDeleteTextures(2, glGenTextures(1));
     end
 
     Screen('CloseAll');
@@ -279,8 +240,8 @@ try
 
 catch me
     sca
-    if(isfield(p, 'trial.sound.use'))
-        if(p.trial.sound.use)
+    if(isfield(p, 'defaultParameters.sound.use'))
+        if(p.defaultParameters.sound.use)
             PsychPortAudio('Close');
         end
     end

@@ -20,7 +20,7 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.ManDur         = 0.2;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur         = 0.1;         % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.Dur            = [0.15 0.15 0.12];
 p.trial.reward.jackpotTime    = 3;
@@ -32,12 +32,22 @@ p.trial.reward.MinWaitInitial = 0.25;
 p.trial.reward.MaxWaitInitial = 0.50;
 
 % ------------------------------------------------------------------------%
+%% Drug
+p.trial.task.useDrug = 0;
+
+% ------------------------------------------------------------------------%
 %% Timing
 p.trial.task.Timing.WaitFix = 0.100;    % Time to get a solid fixation before trial ends unsuccessfully
 
+drugFlashDelay = 0.2;
+p.trial.task.Timing.drugFlashDelay = drugFlashDelay;
+
+minInterFlash = 1;
+maxInterFlash = 1;
+
 % inter-trial interval
-p.trial.task.Timing.MinITI  = 0.75;  % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = 1.5;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI  = max(0.25, minInterFlash - drugFlashDelay);  % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI  = max(0.25, maxInterFlash - drugFlashDelay);    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses

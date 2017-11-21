@@ -14,8 +14,8 @@ function readSpikes(p)
 %
 % Nate Faber, August 2017
 
-nChannels = p.trial.tdt.channels;
-nSorts = p.trial.tdt.sortCodes;
+nChannels   = p.trial.tdt.channels;
+nSorts      = p.trial.tdt.sortCodes;
 bitsPerSort = p.trial.tdt.bitsPerSort;
 
 % Initialize the return array
@@ -23,35 +23,46 @@ bitsPerSort = p.trial.tdt.bitsPerSort;
 % Channels x SortCodes
 spikeCounts = zeros(nChannels, nSorts);
 
+% Initialize TDT if it is not
+if ~isfield(p.trial.tdt, 'UDP')
+    pds.tdt.init(p)
+end
+
 
 udp = p.trial.tdt.UDP;
 
 
 % Flush the input buffer if there is any data waiting
-if udp.U.BytesAvailable > 0
+if(udp.U.BytesAvailable > 0)
     udp.read
 end
 
 % Signal to TDT to send a count of spikes
 udp.write(0);
 
-% Read back the data TDT sends back
-udp.read;
-data = udp.data;
+% If Synapse is not running, this read will return an error catch it.
+try
+    % Read back the data TDT sends back
+    udp.read;
+    data = udp.data;
 
-% Data returned is in 32 bit words, as uint32. Turn them into arrays of bits
-% The array is transposed to align the bits properly for reshaping
-bits = de2bi(data, 32)';
+    % Data returned is in 32 bit words, as uint32. Turn them into arrays of bits
+    % The array is transposed to align the bits properly for reshaping
+    bits = de2bi(data, 32)';
 
-% Reshape the bits array into a 3D matrix (bits, sortCodes, Channels)
-reshaped = reshape(bits, [bitsPerSort, nSorts, nChannels]);
+    % Reshape the bits array into a 3D matrix (bits, sortCodes, Channels)
+    reshaped = reshape(bits, [bitsPerSort, nSorts, nChannels]);
 
-% change the order of the dimensions so that bi2de can function
-binaryCounts = permute(reshaped, [2,1,3]);
+    % change the order of the dimensions so that bi2de can function
+    binaryCounts = permute(reshaped, [2,1,3]);
 
-% For each channel compute the number of spiked that have occured in each sort unit
-for iChannel = 1:nChannels
-    spikeCounts(iChannel,:) = bi2de(binaryCounts(:,:,iChannel));
+    % For each channel compute the number of spiked that have occured in each sort unit
+    for iChannel = 1:nChannels
+        spikeCounts(iChannel,:) = bi2de(binaryCounts(:,:,iChannel));
+    end
+catch
+    warning('TDT enabled, but no spike info received. Check that Synapse is running. Disabling TDT for now...')
+    p.trial.tdt.use = 0;
 end
 
 % Save the data back into p

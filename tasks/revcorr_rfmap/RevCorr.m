@@ -72,39 +72,10 @@ if(isempty(state))
     % control of trials, especially the use of blocks, i.e. the repetition
     % of a defined number of trials per condition, needs to be clarified.
         
-    % condition 1
-%     c1.Nr = 1;    
-%     c1.nTrials = 20000;
+
     
-%     
-%     % Fill a conditions list with n of each kind of condition sequentially
-%     conditions = cell(1,5000);
-%     blocks = nan(1,5000);
-%     totalTrials = 0;
-%     
-%     % Iterate through each condition to fill conditions
-%     conditionsIterator = {c1};
-%     
-%     for iCond = 1:size(conditionsIterator,2)
-%         cond = conditionsIterator(iCond);
-%         nTrials = cond{1}.nTrials;
-%         conditions(1, totalTrials+1:totalTrials+nTrials) = repmat(cond,1,nTrials);
-%         blocks(1, totalTrials+1:totalTrials+nTrials) = repmat(iCond,1,nTrials);
-%         totalTrials = totalTrials + nTrials;
-%     end
-%     
-%     % Truncate the conditions cell array to it's actualy size
-%     conditions = conditions(1:totalTrials);
-%     blocks = blocks(1:totalTrials);
-%     
-%     p.conditions = conditions;
-%     p.trial.blocks = blocks;
-%     
-%     p.defaultParameters.pldaps.finish = totalTrials;
-    
-    % Preallocate data and reset counters
-    new_neuron(p);
-   
+    %% Preallocate data and reset counters
+    new_neuron(p);   
     
 else
     % ####################################################################### %
@@ -178,7 +149,7 @@ p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
 p.trial.CurrEpoch        = p.trial.epoch.ITI;
 
 % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
-p.trial.task.longITI = 1;
+%p.trial.task.longITI = 1;
 
 % Outcome if no fixation occurs at all during the trial
 p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
@@ -208,7 +179,7 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 p.trial.stim.gratings = {};
 stimdef = p.trial.stim.(p.trial.stim.stage);
 for angle = stimdef.angle
-    p.trial.stim.GRATING.angle = angle;
+    p.trial.stim.GRATING.ori = angle;
     
     for radius = stimdef.radius
         p.trial.stim.GRATING.radius = radius;
@@ -273,25 +244,26 @@ switch p.trial.CurrEpoch
     
     case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
-        if p.trial.CurTime < p.trial.EV.PlanStart
-            % All intertrial processing was completed before the ITI expired
-            p.trial.task.longITI = 0;
-            
-        else
-            if isnan(p.trial.EV.PlanStart)
-                % First trial, or after a break
-                p.trial.task.longITI = 0;
-            end
-            
-            % If intertrial processing took too long, display a warning
-            if p.trial.task.longITI
-                warning('ITI exceeded intended duration of by %.2f seconds!', ...
-                         p.trial.CurTime - p.trial.EV.PlanStart)
-            end
-            
-            switchEpoch(p,'TrialStart');
-            
-        end
+        Task_WaitITI(p);        
+%         if p.trial.CurTime < p.trial.EV.PlanStart
+%             % All intertrial processing was completed before the ITI expired
+%             p.trial.task.longITI = 0;
+%             
+%         else
+%             if isnan(p.trial.EV.PlanStart)
+%                 % First trial, or after a break
+%                 p.trial.task.longITI = 0;
+%             end
+%             
+%             % If intertrial processing took too long, display a warning
+%             if p.trial.task.longITI
+%                 warning('ITI exceeded intended duration of by %.2f seconds!', ...
+%                          p.trial.CurTime - p.trial.EV.PlanStart)
+%             end
+%             
+%             ND_SwitchEpoch(p,'TrialStart');
+%             
+%         end
         
         % ----------------------------------------------------------------%    
     case p.trial.epoch.TrialStart
@@ -309,7 +281,7 @@ switch p.trial.CurrEpoch
         
         fixspot(p,1);
         
-        switchEpoch(p,'WaitFix');
+        ND_SwitchEpoch(p,'WaitFix');
         
         % ----------------------------------------------------------------%
     case p.trial.epoch.WaitFix
@@ -331,10 +303,9 @@ switch p.trial.CurrEpoch
                 
                 % Go directly to TaskEnd, do not start task, do not collect reward
                 fixspot(p,0);
-                switchEpoch(p,'TaskEnd');
+                ND_SwitchEpoch(p,'TaskEnd');
                 
             end
-            
             
             % If gaze is inside fixation window
         elseif p.trial.task.fixFix == 1
@@ -345,7 +316,7 @@ switch p.trial.CurrEpoch
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
                 % Turn off the spot and end the trial
                 fixspot(p,0);
-                switchEpoch(p,'TaskEnd');
+                ND_SwitchEpoch(p,'TaskEnd');
                 
                 % Fixation has been held for long enough
             elseif (p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.fixLatency)
@@ -357,10 +328,9 @@ switch p.trial.CurrEpoch
                 p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
                 
                 % Transition to the succesful fixation epoch
-                switchEpoch(p,'Fixating')
+                ND_SwitchEpoch(p,'Fixating')
                 
             end
-            
         end
         
         % ----------------------------------------------------------------%
@@ -443,7 +413,7 @@ switch p.trial.CurrEpoch
                 stim(p,0);
                 
                 p.trial.task.Good = 1;
-                switchEpoch(p,'TaskEnd');
+                ND_SwitchEpoch(p,'TaskEnd');
                 
             end
                 
@@ -453,7 +423,7 @@ switch p.trial.CurrEpoch
             pds.audio.playDP(p,'breakfix','left');
             
             p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-            switchEpoch(p,'TaskEnd')
+            ND_SwitchEpoch(p,'TaskEnd')
             
             % Turn off fixspot and stim
             fixspot(p,0);
@@ -570,11 +540,6 @@ function TaskDraw(p)
 function TaskCleanAndSave(p)
 %% Clean up textures, variables, and save useful info to ascii table
 Task_Finish(p);
-
-% Destroy the two grating textures generated to save memory
-for grating = p.trial.stim.gratings
-    Screen('Close', grating{1}.texture);
-end
 
 % Remove NaNs at the end of the RF data
 p.trial.RF.visualField(:,:,p.trial.iFrame:end) = [];
@@ -822,6 +787,10 @@ if(~isempty(p.trial.LastKeyPress))
                 p.trial.RF.spikes(p.trial.RF.nSpikes) = p.trial.CurTime;
             end
             
+        case KbName('t')
+            % Enable/Disable TDT
+            p.trial.tdt.use = ~p.trial.tdt.use;
+            
     end
     
 end
@@ -830,7 +799,7 @@ end
 
 function ProcessSpikes(p)
 % Get all the incoming spikes from TDT and then process the spike counts
-if p.trial.tdt.use
+if p.trial.tdt.use && isfield(p.trial.tdt, 'spikes')
     % Load in the spikes
     spikes = p.trial.tdt.spikes;
     
@@ -852,23 +821,13 @@ end
 
 %% additional inline functions
 % ####################################################################### %
-function switchEpoch(p,epochName)
-p.trial.CurrEpoch = p.trial.epoch.(epochName);
-p.trial.EV.epochEnd = p.trial.CurTime;
-
-
 
 function fixspot(p,bool)
 if bool && ~p.trial.stim.fix.on
     p.trial.stim.fix.on = 1;
-    p.trial.EV.FixOn = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
 elseif ~bool && p.trial.stim.fix.on
     p.trial.stim.fix.on = 0;
-    p.trial.EV.FixOff = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
 end
-
 
 
 function stim(p,val)
@@ -891,8 +850,6 @@ switch val
         for grating = p.trial.stim.gratings
             grating{1}.on = 0;
         end
-        p.trial.EV.StimOff = p.trial.CurTime;
-        pds.datapixx.strobe(p.trial.event.STIM_OFF);
         
     case 1
         % Select the proper stim
@@ -905,10 +862,6 @@ switch val
         
         % Make the stim visible
         stim.on = 1;
-        
-        % Record the timings
-        p.trial.EV.StimOn = p.trial.CurTime;
-        pds.datapixx.strobe(p.trial.event.STIM_ON); 
               
     otherwise
         error('bad stim value')

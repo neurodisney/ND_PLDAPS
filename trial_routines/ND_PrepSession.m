@@ -13,6 +13,35 @@ disp('>>>>  Preparing Sessions <<<<')
 disp('****************************************************************')
 disp('');
 
+% ------------------------------------------------------------------------%
+%% Special debug mode variables
+% set parameters according to a debug/testing mode
+if(strcmp(p.defaultParameters.session.subject,'mouse') || strcmp(p.defaultParameters.session.subject,'debug') || ...
+   strcmp(p.defaultParameters.session.subject,'test'))
+    
+    % right now, only 'mouse' triggers a special configuration
+    switch p.defaultParameters.session.subject
+        case 'mouse'
+            % Use the mouse as eyeposition
+            p.defaultParameters.mouse.use                     = 1;
+            p.defaultParameters.mouse.useAsEyepos             = 1;
+
+            % Don't collect any analog channels
+            p.defaultParameters.datapixx.adc.PupilChannel     = [];
+            p.defaultParameters.datapixx.adc.XEyeposChannel   = [];
+            p.defaultParameters.datapixx.adc.YEyeposChannel   = [];
+            % p.defaultParameters.datapixx.adc.RewardChannel  = [];  
+            p.defaultParameters.datapixx.useAsEyepos          = 0;
+            p.defaultParameters.behavior.joystick.use         = 0;
+            % p.defaultParameters.datapixx.useForReward       = 0;
+            % p.defaultParameters.sound.use                   = 0;
+        case 'debug'
+            
+        case 'test'
+            
+    end
+end
+
 p.defaultParameters.DateStr = datestr(p.defaultParameters.session.initTime,'yyyy_mm_dd');
 
 % --------------------------------------------------------------------%
@@ -42,7 +71,7 @@ if(~exist(p.defaultParameters.session.trialdir,'dir'))
     mkdir(p.defaultParameters.session.trialdir);
 end
 
-p.defaultParameters.session.file     = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
+p.defaultParameters.session.file          = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem, '.pds'];
 
 p.defaultParameters.asciitbl.session.file = [p.defaultParameters.session.dir, filesep, p.defaultParameters.session.filestem,'.dat'];
 %--------------------------------------------------------------------%
@@ -65,11 +94,6 @@ end
 %     isempty(p.defaultParameters.pldaps.experimentAfterTrialsFunction) )
 %     p.defaultParameters.pldaps.experimentAfterTrialsFunction = 'ND_AfterTrial';  % a function to be called after each trial.
 % end
-
-% --------------------------------------------------------------------%
-%% initialize the random number generator
-% verify how this affects pldaps
-rng('shuffle', 'twister');
 
 % --------------------------------------------------------------------%
 %% Set some defaults
@@ -118,23 +142,23 @@ if(p.defaultParameters.plot.do_online && ~exist(p.defaultParameters.plot.routine
     warning('Plotting routine for online analysis not found, disabled plotting!');
     p.defaultParameters.plot.do_online  =  0;
 elseif(p.defaultParameters.plot.do_online && ~isfield(p.defaultParameters.plot, 'fig'))
-    p.defaultParameters.plot.fig = [];
+    p.plotdata.fig = [];
 end
 
 % check that each task epoch has a unique number
-if(isField(p.defaultParameters, 'epoch'))
+if(isfield(p.defaultParameters, 'epoch'))
     disp('>>>>  Checking p.defaultParameters.epoch for consistency <<<<')
     CheckUniqueNumbers(p.defaultParameters.epoch);
 end
 
 % check that event codes are unique
-if(isField(p.defaultParameters, 'event'))
+if(isfield(p.defaultParameters, 'event'))
     disp('>>>>  Checking p.defaultParameters.event for consistency <<<<')
     CheckUniqueNumbers(p.defaultParameters.event);
 end
 
 % check that task outcome codes are unique
-if(isField(p.defaultParameters, 'outcome'))
+if(isfield(p.defaultParameters, 'outcome'))
     disp('>>>>  Checking p.defaultParameters.outcome for consistency <<<<')
     CheckUniqueNumbers(p.defaultParameters.outcome);
 end
@@ -190,10 +214,6 @@ end
 % current function) or if nothing is defined use our default definition.
 p.conditions      = {};
 %p.Block.BlockList = [];
-
-%-------------------------------------------------------------------------%
-%% create p.trial as copy of the default parameters
-p.trial = p.defaultParameters;
 
 % --------------------------------------------------------------------%
 %% helper functions

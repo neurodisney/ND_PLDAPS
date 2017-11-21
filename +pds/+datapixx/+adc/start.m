@@ -37,10 +37,11 @@ function p = start(p)
 %% build the AdcChListCode
 
 
-AdcChListCode = zeros(2,length(p.trial.datapixx.adc.channels));
-AdcChListCode(1,:)=p.trial.datapixx.adc.channels;
-if ~isempty(p.trial.datapixx.adc.channelModes)
-	AdcChListCode(2,:)=p.trial.datapixx.adc.channelModes; %i.e. channelMode can be a common scalar or a vector
+AdcChListCode      = zeros(2,length(p.defaultParameters.datapixx.adc.channels));
+AdcChListCode(1,:) = p.defaultParameters.datapixx.adc.channels;
+
+if(~isempty(p.defaultParameters.datapixx.adc.channelModes))
+	AdcChListCode(2,:) = p.defaultParameters.datapixx.adc.channelModes; %i.e. channelMode can be a common scalar or a vector
 end
 
 %% prepare mapping of the data
@@ -48,65 +49,79 @@ end
 % Got a big WTF on your face? read up on subsref, subsasgn and substruct
 % we need this to dynamically access data deep inside a multilevel struct
 % without using eval.
-S.type='.';
-S.subs='trial';
+S.type = '.';
+S.subs = 'trial';
 
-if ischar(p.trial.datapixx.adc.channelMapping)
-    p.trial.datapixx.adc.channelMapping={p.trial.datapixx.adc.channelMapping};
+if(ischar(p.defaultParameters.datapixx.adc.channelMapping))
+    p.defaultParameters.datapixx.adc.channelMapping = {p.defaultParameters.datapixx.adc.channelMapping};
 end
 
-if length(p.trial.datapixx.adc.channelMapping)==1
-    p.trial.datapixx.adc.channelMapping=repmat(p.trial.datapixx.adc.channelMapping,[1,length(p.trial.datapixx.adc.channels)]);
+if(length(p.defaultParameters.datapixx.adc.channelMapping) == 1)
+    p.defaultParameters.datapixx.adc.channelMapping = repmat(p.defaultParameters.datapixx.adc.channelMapping,[1,length(p.defaultParameters.datapixx.adc.channels)]);
 end
-maps=unique(p.trial.datapixx.adc.channelMapping);
+maps = unique(p.defaultParameters.datapixx.adc.channelMapping);
 
-p.trial.datapixx.adc.channelMappingSubs=cell(size(maps));
-p.trial.datapixx.adc.channelMappingChannels=cell(size(maps));
-p.trial.datapixx.adc.channelMappingChannelInds=cell(size(maps));
-p.trial.datapixx.adc.XEyeposChannelSubs=[];
-p.trial.datapixx.adc.YEyeposChannelSubs=[];
-for imap=1:length(maps)
-    p.trial.datapixx.adc.channelMappingChannelInds{imap}=strcmp(p.trial.datapixx.adc.channelMapping,maps(imap));
-    p.trial.datapixx.adc.channelMappingChannels{imap}=p.trial.datapixx.adc.channels(p.trial.datapixx.adc.channelMappingChannelInds{imap});
-    levels=textscan(maps{imap},'%s','delimiter','.');
-    levels=levels{1};
-    if maps{imap}(1)=='.'
-        levels(1)=[];
+p.defaultParameters.datapixx.adc.channelMappingSubs        = cell(size(maps));
+p.defaultParameters.datapixx.adc.channelMappingChannels    = cell(size(maps));
+p.defaultParameters.datapixx.adc.channelMappingChannelInds = cell(size(maps));
+p.defaultParameters.datapixx.adc.XEyeposChannelSubs = [];
+p.defaultParameters.datapixx.adc.YEyeposChannelSubs = [];
+
+for(imap=1:length(maps))
+    p.defaultParameters.datapixx.adc.channelMappingChannelInds{imap} = strcmp(p.defaultParameters.datapixx.adc.channelMapping,maps(imap));
+    p.defaultParameters.datapixx.adc.channelMappingChannels{imap}    = p.defaultParameters.datapixx.adc.channels(p.defaultParameters.datapixx.adc.channelMappingChannelInds{imap});
+   
+    levels = textscan(maps{imap}, '%s', 'delimiter','.');
+    levels = levels{1};
+    
+    if(maps{imap}(1)=='.')
+        levels(1) = [];
     end
 
-    Snew=repmat(S,[1 length(levels)]);
-    [Snew.subs]=deal(levels{:});
-    S2=S;
-    S2.type='()';
-    S2.subs={1:length(p.trial.datapixx.adc.channelMappingChannels{imap}), 1};
+    Snew = repmat(S,[1 length(levels)]);
+    [Snew.subs] = deal(levels{:});
+    S2      = S;
+    S2.type = '()';
+    S2.subs = {1:length(p.defaultParameters.datapixx.adc.channelMappingChannels{imap}), 1};
 
-    p.trial.datapixx.adc.channelMappingSubs{imap}=[S Snew S2];
+    p.defaultParameters.datapixx.adc.channelMappingSubs{imap} = [S Snew S2];
 
-    if ~isempty(p.trial.datapixx.adc.XEyeposChannel) && ismember(p.trial.datapixx.adc.XEyeposChannel,p.trial.datapixx.adc.channelMappingChannels{imap})
-        S2.subs{1}=find(p.trial.datapixx.adc.channelMappingChannels{imap}==p.trial.datapixx.adc.XEyeposChannel);
-        p.trial.datapixx.adc.XEyeposChannelSubs=[S Snew S2];
+    if(~isempty(p.defaultParameters.datapixx.adc.XEyeposChannel) && ...
+       ismember(p.defaultParameters.datapixx.adc.XEyeposChannel, p.defaultParameters.datapixx.adc.channelMappingChannels{imap}))
+       
+        S2.subs{1} = find(p.defaultParameters.datapixx.adc.channelMappingChannels{imap} == p.defaultParameters.datapixx.adc.XEyeposChannel);
+        p.defaultParameters.datapixx.adc.XEyeposChannelSubs = [S Snew S2];
     end
     
-    if ~isempty(p.trial.datapixx.adc.YEyeposChannel) && ismember(p.trial.datapixx.adc.YEyeposChannel,p.trial.datapixx.adc.channelMappingChannels{imap})
-        S2.subs{1}=find(p.trial.datapixx.adc.channelMappingChannels{imap}==p.trial.datapixx.adc.YEyeposChannel);
-        p.trial.datapixx.adc.YEyeposChannelSubs=[S Snew S2];
+    if(~isempty(p.defaultParameters.datapixx.adc.YEyeposChannel) && ...
+       ismember(p.defaultParameters.datapixx.adc.YEyeposChannel,p.defaultParameters.datapixx.adc.channelMappingChannels{imap}))
+        
+        S2.subs{1} = find(p.defaultParameters.datapixx.adc.channelMappingChannels{imap} == p.defaultParameters.datapixx.adc.YEyeposChannel);
+        p.defaultParameters.datapixx.adc.YEyeposChannelSubs = [S Snew S2];
     end
 end
 
-p.trial.datapixx.adc.dataSampleCount=0;
+p.defaultParameters.datapixx.adc.dataSampleCount = 0;
 
 Datapixx('StopAllSchedules')
 Datapixx('RegWrRd')
 
 % set the schedule:
-Datapixx('SetAdcSchedule', p.trial.datapixx.adc.startDelay, p.trial.datapixx.adc.srate, p.trial.datapixx.adc.maxSamples, AdcChListCode, p.trial.datapixx.adc.bufferAddress, p.trial.datapixx.adc.numBufferFrames);
-Datapixx('DisableDacAdcLoopback');           % Replace this with DisableDacAdcLoopback to collect real data
-Datapixx('DisableAdcFreeRunning');          % For microsecond-precise sample windows
+Datapixx('SetAdcSchedule', p.defaultParameters.datapixx.adc.startDelay, p.defaultParameters.datapixx.adc.srate, ...
+                           p.defaultParameters.datapixx.adc.maxSamples, AdcChListCode, ...
+                           p.defaultParameters.datapixx.adc.bufferAddress, p.defaultParameters.datapixx.adc.numBufferFrames);
+
+Datapixx('DisableDacAdcLoopback'); % Replace this with DisableDacAdcLoopback to collect real data
+Datapixx('DisableAdcFreeRunning'); % For microsecond-precise sample windows
 Datapixx('StartAdcSchedule')
 Datapixx('RegWrRd')
 
 % timing:
-p.trial.datapixx.adc.startDatapixxTime = Datapixx('GetTime'); %GetSecs;
-p.trial.datapixx.adc.startPldapsTime = GetSecs;
+p.defaultParameters.datapixx.adc.startDatapixxTime = Datapixx('GetTime'); %GetSecs;
+p.defaultParameters.datapixx.adc.startPldapsTime   = GetSecs;
+
 [getsecs, boxsecs, confidence] = PsychDataPixx('GetPreciseTime');
-p.trial.datapixx.adc.startDatapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
+
+p.defaultParameters.datapixx.adc.startDatapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
+
+

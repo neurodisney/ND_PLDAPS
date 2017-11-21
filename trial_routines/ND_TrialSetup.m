@@ -1,5 +1,5 @@
 function p = ND_TrialSetup(p)
-% prepare data collection and initialise everything needed
+% prepare data collection and initialize everything needed
 % in part taken from trialSetup in the PLDAPS pldapsDefaultTrialFunction
 %
 %
@@ -8,6 +8,13 @@ function p = ND_TrialSetup(p)
 % p.trial.timing.flipTimes = zeros(4,p.trial.pldaps.maxFrames);
 % p.trial.timing.flipTimes = zeros(5,p.trial.pldaps.maxFrames);
 
+% --------------------------------------------------------------------%
+%% initialize the random number generator
+% verify how this affects pldaps
+p.trial.RandomSeed = rng('shuffle', 'twister');
+
+% --------------------------------------------------------------------%
+%% 
 if(p.trial.pldaps.GetTrialStateTimes)
     p.trial.timing.frameStateChangeTimes = nan(9,p.trial.pldaps.maxFrames);
 end
@@ -20,6 +27,16 @@ if(isfield(p.trial.task, 'TaskDef'))
         p = feval(p.trial.task.TaskDef,  p);
     end
 end
+
+% If the conditions are changed within the task parameters advance to the next block
+% so that they take effect on the subsequent trial.
+if ~isequaln(p.defaultParameters.Block, p.trial.Block)
+    ND_BlockAdvance(p);
+end
+
+% ------------------------------------------------------------------------%
+%% Frame number
+p.trial.iFrame = 1;
 
 % ------------------------------------------------------------------------%
 %% Photo Diode
@@ -122,7 +139,7 @@ p.trial.CurTime                  = NaN;  % keep track of current time
 p.trial.AllCurTimes              = nan(ceil(p.trial.pldaps.maxFrames),1);
 p.trial.behavior.fixation.GotFix =   0;  % assume no fixation at task start
 p.trial.reward.Curr         = p.trial.reward.defaultAmount;  % expected reward amount (set to default amount)
-
+p.trial.outcome.CurrOutcome = p.trial.outcome.TaskStart;
 % ------------------------------------------------------------------------%
 %% Initialize default Timer
 p.trial.Timer.Wait     = 0; % general timer that waits for an amount of time to expire

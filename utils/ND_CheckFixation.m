@@ -19,7 +19,7 @@ if(p.trial.mouse.useAsEyepos)
     mousePos = p.trial.mouse.cursorSamples(:,iSample); 
     
     % If manual calibration has been collected, use it. Otherwise, just use the actual mouse position
-    if any(p.trial.eyeCalib.offset ~= p.trial.eyeCalib.defaultOffset)
+    if(any(p.trial.eyeCalib.offset ~= p.trial.eyeCalib.defaultOffset))
      
         offset = p.trial.eyeCalib.offset;
         
@@ -35,15 +35,14 @@ if(p.trial.mouse.useAsEyepos)
         % If no calibration has been specified, just use the actualy position of the mouse
         p.trial.eyeX = mousePos(1);
         p.trial.eyeY = mousePos(2);
-        
     end
     
-elseif p.trial.datapixx.useAsEyepos
+elseif(p.trial.datapixx.useAsEyepos)
     sIdx = (p.trial.datapixx.adc.dataSampleCount - p.trial.behavior.fixation.Sample + 1) : p.trial.datapixx.adc.dataSampleCount;  % determine the position of the sample. If this causes problems with negative values in the first trial, make sure to use only positive indices.
     
     % calculate a moving average of the eye position for display reasons
-    p.trial.eyeX   = p.trial.eyeCalib.gain(1) * (prctile(p.trial.AI.Eye.X(sIdx), 50) - p.trial.eyeCalib.offset(1));
-    p.trial.eyeY   = p.trial.eyeCalib.gain(2) * (prctile(p.trial.AI.Eye.Y(sIdx), 50) - p.trial.eyeCalib.offset(2));
+    p.trial.eyeX = p.trial.eyeCalib.gain(1) * (prctile(p.trial.AI.Eye.X(sIdx), 50) - p.trial.eyeCalib.offset(1));
+    p.trial.eyeY = p.trial.eyeCalib.gain(2) * (prctile(p.trial.AI.Eye.Y(sIdx), 50) - p.trial.eyeCalib.offset(2));
 
 else
     % If neither option is enabled just fix the eyepos at 0,0
@@ -60,7 +59,7 @@ if(p.trial.pldaps.draw.eyepos.use)
 end
 
 %% Update the fixation state of all the stimuli on the screen
-for i = 1:length(p.trial.stim.allStims)
+for(i = 1:length(p.trial.stim.allStims))
     stim = p.trial.stim.allStims{i};
     checkFix(stim,p);
 end

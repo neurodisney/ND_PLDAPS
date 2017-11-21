@@ -23,8 +23,8 @@ p.defaultParameters.epoch.GetReady        =  -1;  % Wait to initialize task
 p.defaultParameters.epoch.WaitStart       =   1;  % Wait for a joystick press to indicate readiness to work on a trial
 p.defaultParameters.epoch.WaitResponse    =   2;  % Wait for task response (saccade or joystick state change)
 p.defaultParameters.epoch.TrialStart      =   3;  % trial starts for animal
+p.defaultParameters.epoch.WaitEnd         =  14;  % trial completed (successful or not)
 p.defaultParameters.epoch.TaskEnd         =  11;  % trial completed (successful or not)
-
 
 p.defaultParameters.epoch.WaitTarget      =   8;  % wait for target onset
 p.defaultParameters.epoch.WaitGo          =   9;  % delay period before response is required
@@ -50,6 +50,7 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.epoch.Fixating      =   32;  % Ongoing fixation
     p.defaultParameters.epoch.LostFix       =   33;  % fixation break detected, wait to verify clear break
     p.defaultParameters.epoch.Saccade       =   34;  % saccade needed
+    p.defaultParameters.epoch.WaitSaccade   =   36;  % waiting for saccade response
     p.defaultParameters.epoch.BreakFixCheck =   35;  % Fixation break has occured, check where eyes have gone
 end
 

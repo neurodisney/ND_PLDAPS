@@ -47,7 +47,6 @@ if state == initialState
     warning(['TTL channel ' num2str(chan) ' attempted to be changed to ' num2str(state) ', but was already ' num2str(state)]);
 end
 
-
 %% set the state oft the DIO channel
 if(nargout == 0)
     if(state == 1)
@@ -71,6 +70,7 @@ else
     else
         Datapixx('SetDoutValues', 0, chanmask);
     end
+    
     Datapixx('SetMarker');
 
     t(1)=GetSecs;
@@ -89,11 +89,13 @@ end
 % reset the channel to its initial state if a dur is specified
 if ~isempty(dur) && state ~= initialState
     WaitSecs(dur);
+    
     if(initialState == 1)
         Datapixx('SetDoutValues', chanmask);
     else
         Datapixx('SetDoutValues', 0, chanmask);
     end
+    
     Datapixx('RegWrRd');
 end
 

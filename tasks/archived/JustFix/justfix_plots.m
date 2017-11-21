@@ -44,12 +44,12 @@ end
 %% initialize plot
 if(offln == 1)
     figure('Position', fig_sz, 'Units', 'normalized');
-elseif(isempty(p.defaultParameters.plot.fig ) || offln == 1)
-    p.defaultParameters.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
+elseif(isempty(p.plotdata.fig ) || offln == 1)
+    p.plotdata.fig = figure('Position', fig_sz, 'Units', 'normalized');
     drawnow
     return;
 else
-    figure(p.defaultParameters.plot.fig);
+    figure(p.plotdata.fig);
 end
 
 Ntrials  = length(p.data);

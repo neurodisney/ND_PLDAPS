@@ -45,10 +45,10 @@ end
 %% initialize plot
 if(offln == 1)
     figure('Position', fig_sz, 'Units', 'normalized');
-elseif(isempty(p.trial.plot.fig) || offln == 1)
-    p.trial.plot.fig = figure('Position', fig_sz, 'Units', 'normalized');
+elseif(isempty(p.plotdata.fig) || offln == 1)
+    p.plotdata.fig = figure('Position', fig_sz, 'Units', 'normalized');
 else
-    set(0, 'CurrentFigure', p.trial.plot.fig);
+    set(0, 'CurrentFigure', p.plotdata.fig);
 end
 
 Ntrials = p.trial.pldaps.iTrial;

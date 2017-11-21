@@ -34,7 +34,7 @@ switch state
     case p.trial.pldaps.trialStates.frameUpdate
     %% collect data (i.e. a hardware module) and store it
         ND_FrameUpdate(p);
-
+    
     % ----------------------------------------------------------------%
     case p.trial.pldaps.trialStates.frameDraw
     %% Display stuff on the screen

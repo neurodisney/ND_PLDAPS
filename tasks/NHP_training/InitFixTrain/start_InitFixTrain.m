@@ -70,8 +70,8 @@ SS.behavior.fixation.enableCalib    = 1;
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
 
-SS.eyeCalib.defaultOffset = [-19.9321 -23.2293];
-SS.eyeCalib.defaultGain   = [-5, -10];
+%SS.eyeCalib.defaultOffset = [-19.9321 -23.2293];
+%SS.eyeCalib.defaultGain   = [-5, -10];
 
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
@@ -81,32 +81,8 @@ SS.eyeCalib.defaultGain   = [-5, -10];
 SS.display.bgColor    = [0.25, 0.25, 0.25];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
-% SS.behavior.fixation.FixWin     = 8;
-SS.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixWinStp  = 1;    % change of the size of the fixation window upon key press
-SS.behavior.fixation.FixSPotStp = 0.25;
-SS.stim.FIXSPOT.fixWin = 6;         
-
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
-
-% ------------------------------------------------------------------------%
-%% Special debug mode variables
-if strcmp(subjname,'mouse')
-    
-    % Use the mouse as eyeposition
-    SS.mouse.use = 1;
-    SS.mouse.useAsEyepos = 1;
-    
-    % Don't collect any analog channels
-    SS.datapixx.adc.PupilChannel   = [];
-    SS.datapixx.adc.XEyeposChannel = [];
-    SS.datapixx.adc.YEyeposChannel = [];
-    %SS.datapixx.adc.RewardChannel  = [];  
-    SS.datapixx.useAsEyepos        = 0;
-    SS.behavior.joystick.use       = 0;
-    %SS.datapixx.useForReward       = 0;
-end
 
 % ------------------------------------------------------------------------%
 %% create the pldaps class

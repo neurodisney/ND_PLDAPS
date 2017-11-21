@@ -10,15 +10,15 @@ if nargin < 5
     tbl = 'session';
 end
 
-if ~isfield(p.trial.asciitbl, tbl)
-    p.trial.asciitbl.(tbl) = struct;
+if ~isfield(p.defaultParameters.asciitbl, tbl)
+    p.defaultParameters.asciitbl.(tbl) = struct;
 end
 
-if(~isfield(p.trial.asciitbl.(tbl), 'fmt'))
-    p.trial.asciitbl.(tbl).fmt = {};
+if(~isfield(p.defaultParameters.asciitbl.(tbl), 'fmt'))
+    p.defaultParameters.asciitbl.(tbl).fmt = {};
 end
 
-pos = size(p.trial.asciitbl.(tbl).fmt, 1) + 1; 
+pos = size(p.defaultParameters.asciitbl.(tbl).fmt, 1) + 1; 
 
-p.trial.asciitbl.(tbl).fmt(pos,:) = {Label, VarNm, FRMT};
+p.defaultParameters.asciitbl.(tbl).fmt(pos,:) = {Label, VarNm, FRMT};
 

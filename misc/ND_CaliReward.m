@@ -22,6 +22,7 @@ if (~exist('gap','var') || isempty(gap))
     gap = 1.0; 
 end
 
+h = waitbar(0,'Initializing DataPixx...');
 
 % init Datapixx:
 if(~Datapixx('IsReady'))
@@ -33,12 +34,21 @@ else
 end
 
 for(i=1:nrep) 
-    ND_FlushReward(rewtm); 
-    WaitSecs(gap); 
-end
+%     disp('**********************');
+%     disp(['Pulse ',int2str(i), '/', int2str(nrep)]);
 
+    waitbar(i/nrep, h, sprintf('%d pulses out of %d ...',i, nrep))
+    
+    evalc(sprintf('ND_FlushReward(%f)',rewtm)); 
+    WaitSecs(gap); 
+    
+%     disp('');
+end
 
 if(Datapixx('IsReady') && ~keep_open)
     Datapixx('Close');
 end
+
+close(h);
+
 

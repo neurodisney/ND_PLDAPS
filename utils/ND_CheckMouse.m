@@ -9,7 +9,7 @@ function p = ND_CheckMouse(p)
 
 [cursorX, cursorY,buttons] = GetMouse();
 
-iSamples =    p.trial.mouse.samples+1;
+iSamples = p.trial.mouse.samples+1;
 p.trial.mouse.samples = iSamples;
 p.trial.mouse.samplesTimes(iSamples) = GetSecs;
 
@@ -20,7 +20,6 @@ p.trial.mouse.cursorPxSamples(:, iSamples) = [cursorX; cursorY];
 p.trial.mouse.cursorSamples(:, iSamples) = px2screen(p, cursorX, cursorY);
 
 %% Process Mouse buttons
-
 % First get the state of the current buttons, and store it in the history
 p.trial.mouse.buttons = buttons;
 p.trial.mouse.buttonPressSamples( :, iSamples) = buttons';
@@ -31,6 +30,6 @@ lastButtons = p.trial.mouse.buttonPressSamples(:, max(iSamples - 1, 1));
 p.trial.mouse.newButtons = buttons' - lastButtons;
 
 % If a new button has been pressed, redraw figures in case clicking occurs on the figures and that is a defined action
-if any(p.trial.mouse.newButtons) && p.trial.plot.do_online
-    drawnow
+if(any(p.trial.mouse.newButtons) && p.trial.plot.do_online)
+    drawnow;
 end

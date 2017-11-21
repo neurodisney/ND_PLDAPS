@@ -1,13 +1,11 @@
-function p=playDP(p,soundName,audioChannel)
-
-%play a sound that has been buffered in the datapixx audiobuffer
-%input: p pldaps structure
+function p=playDP(p, soundName, audioChannel)
+% play a sound that has been buffered in the datapixx audiobuffer
+% input: p pldaps structure
 % soundName: string specifying wavfile to be played
 % audioChannel: 'left', 'right', or 'both' specifying which speaker channel
 %               defaults to 'both'
 
-if p.trial.sound.use
-    
+if(p.trial.sound.use)
     % Default audioChannels
     if ~exist('audioChannel','var') || isempty(audioChannel)
         audioChannel = 'both';

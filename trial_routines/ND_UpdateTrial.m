@@ -18,8 +18,7 @@ else
     p.defaultParameters.LastHits   = 0;     % how many correct trials since last error
 end
 
-if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && ...
-        p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)
+if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)
     p.defaultParameters.NCompleted = p.trial.NCompleted + 1; % number of started trials (excluding not started trials)
 else
     p.defaultParameters.NCompleted = p.trial.NCompleted;
@@ -39,6 +38,10 @@ p.defaultParameters.outcome.allOutcomes = allOutcomes;
 
 % Pass on the ITI timer
 p.defaultParameters.EV.PlanStart = p.trial.EV.NextTrialStart;
+% --------------------------------------------------------------------%
+%%  Keep TDT use
+% If TDT times out, disable it until manually reneabled
+p.defaultParameters.tdt.use = p.trial.tdt.use;
 
 % --------------------------------------------------------------------%
 %%  keep joystick center position
@@ -64,19 +67,21 @@ end
 
 % --------------------------------------------------------------------%
 %% keep fixation spot window size
-
 if(p.trial.behavior.fixation.use)
     p.defaultParameters.stim.FIXSPOT.fixWin = p.trial.stim.FIXSPOT.fixWin;
 end
 
 % --------------------------------------------------------------------%
+%% Block control
+p.defaultParameters.Block.EqualCorrect   = p.trial.Block.EqualCorrect;
+p.defaultParameters.Block.GenBlock       = p.trial.Block.GenBlock;
+p.defaultParameters.Block.BlockList      = p.trial.Block.BlockList;
+% p.defaultParameters.Block.Conditions     = p.trial.Block.Conditions;
+% p.defaultParameters.Block.maxBlockTrials = p.trial.Block.maxBlockTrials; 
+
+% --------------------------------------------------------------------%
 %% format string for ascii table
 p.defaultParameters.asciitbl  =  p.trial.asciitbl;
-% --------------------------------------------------------------------%
-%% figure handle for online plots
-if(p.trial.plot.do_online)
-    p.defaultParameters.plot.fig = p.trial.plot.fig;
-end
 
 % --------------------------------------------------------------------%
 %% Keep keyboard freedom state

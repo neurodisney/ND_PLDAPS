@@ -45,7 +45,7 @@ if ~isempty(p.defaultParameters.datapixx.propixxIntensity)
     disp('Changing Propixx Projector Intensity')
     disp('****************************************************************')
 
-    command = ['./propixx-brightness.expect ', mat2str(p.trial.datapixx.propixxIntensity)];
+    command = ['./propixx-brightness.expect ', mat2str(p.defaultParameters.datapixx.propixxIntensity)];
     [~,~] = system(command);
 end
 
@@ -118,7 +118,7 @@ disp('****************************************************************')
 disp('****************************************************************')
 disp('Adding DisplayColorCorrection to FinalFormatting')
 disp('****************************************************************')
-if isField(p.defaultParameters, 'display.gamma.power')
+if isfield(p.defaultParameters, 'display.gamma.power')
     PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'SimpleGamma');
 else
 	PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'LookupTable');
@@ -309,7 +309,7 @@ else
 end
 
 % % Set gamma lookup table
-if isField(p.defaultParameters, 'display.gamma')
+if isfield(p.defaultParameters, 'display.gamma')
     disp('****************************************************************')
     disp('****************************************************************')
     disp('Loading gamma correction')

@@ -8,8 +8,11 @@ function p = ND_TrialCleanUpandSave(p)
 % wolf zinke, Dec. 2016
 
 %-------------------------------------------------------------------------%
-%% dump trial header
+%% dump trial metadata
 if(~p.trial.pldaps.quit) % skip if trial was interrupted (WZ: this will loose last trial info! Just a quick fix to avoid errors.)
+    % Send info about any stims shown
+    ND_SendStimRecord(p);
+    
     ND_TrialHDR(p);
 end
 
@@ -29,6 +32,13 @@ vblTime = Screen('Flip', p.trial.display.ptr,0);
 
 p.trial.trialend      = vblTime;
 p.trial.trialduration = vblTime - p.trial.trstart;
+
+%-------------------------------------------------------------------------%
+%% Run clean up on all stimuli
+for iStim = 1:length(p.trial.stim.allStims)
+    stim = p.trial.stim.allStims{iStim};
+    cleanup(stim);
+end
 
 %-------------------------------------------------------------------------%
 %% end DataPixx ( since we use it no if querry needed
@@ -75,7 +85,7 @@ end
 %-------------------------------------------------------------------------%
 %% close TDT connection
 if p.trial.tdt.use
-    pds.tdt.close(p)
+    pds.tdt.close(p);
 end
 %-------------------------------------------------------------------------%
 %% Trial information

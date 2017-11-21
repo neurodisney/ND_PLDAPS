@@ -7,7 +7,7 @@ function dva = ND_pxl2dva(pxl, p)
 if(isnumeric(p))
     ppdva = p;
 else
-    ppdva = p.trial.display.ppd;
+    ppdva = p.defaultParameters.display.ppd;
 end
 
 dva = pxl ./ ppdva;

@@ -25,7 +25,7 @@ properties
     alpha
 end
 
-properties (SetAccess = private)
+properties (SetAccess = protected)
     sFreq
     contrastMethod
     radius
@@ -39,12 +39,18 @@ properties (SetAccess = private, Hidden = true)
     genTime %When the grating was created (to calculate drifting phase)
     texture % The actual texture used for drawing
     pcmult
-    srcRect
+    srcRect   
+end
+
+properties (Dependent)
+    % For sending signals values must be between -327 and +327
+    % Thus oreintation always returns angle between -179.99 and 180
+    orientation
 end
 
 methods
     % The constructor method
-    function obj = Grating(p, radius, contrast, pos, angle, sFreq, tFreq, res, alpha, fixWin)
+    function obj = Grating(p, radius, contrast, pos, ori, sFreq, tFreq, res, alpha, fixWin)
         
         %% Load variables
         if nargin < 10 || isempty(fixWin)
@@ -67,8 +73,8 @@ methods
             sFreq = p.trial.stim.GRATING.sFreq;
         end
         
-        if nargin < 5 || isempty(angle)
-            angle = p.trial.stim.GRATING.angle;
+        if nargin < 5 || isempty(ori)
+            ori = p.trial.stim.GRATING.ori;
         end
         
         if nargin < 4 || isempty(pos)
@@ -85,17 +91,22 @@ methods
         
         % Load the superclass
         obj@pds.stim.BaseStim(p, pos, fixWin);
-       
-        obj.alpha = alpha;
-        obj.res = res;
-        obj.tFreq = tFreq;
-        obj.sFreq = sFreq;
-        obj.angle = angle;
-        obj.contrast = contrast;
-        obj.radius = radius;
+        
+        % Integer to define object (for sending event code)
+        obj.classCode = 7702;
+        
+        % This cell array determines the order of properties when the propertyArray attribute is calculated
+        obj.recordProps = {'xpos','ypos','radius','orientation','contrast','sFreq','tFreq'};
 
+        obj.alpha  = alpha;
+        obj.tFreq  = tFreq;
+        obj.angle  = ori;
         
         % Unchangeable after loading
+        obj.res    = res;
+        obj.sFreq  = sFreq;
+        obj.radius = radius;
+        obj.contrast = contrast;
         obj.contrastMethod = p.trial.stim.GRATING.contrastMethod;
         obj.genTime = p.trial.CurTime;
         obj.srcRect = [0, 0, 2*obj.res + 1, 2*obj.res + 1];
@@ -104,12 +115,12 @@ methods
             case 'raw'
                 % Always centered at 0.5, will not match bg at low contrasts
                 obj.bgOffset = 0.5;
-                obj.pcmult = obj.contrast / 2;
+                obj.pcmult   = obj.contrast / 2;
                 
             case 'bgshift'
                 % Will match bg at low contrasts, but not be correct at high contrasts.
                 obj.bgOffset = p.trial.display.bgColor(1);
-                obj.pcmult = obj.contrast / 2;
+                obj.pcmult   = obj.contrast / 2;
                 
             case 'balanced'
                 % Probably the best bet. This will be background at 0 contrast, and white - black = contrast
@@ -172,6 +183,21 @@ methods
             Screen('DrawTexture', window, obj.texture, obj.srcRect, destRect, obj.angle, filterMode, ...
                 obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
         end
+    end
+    
+    function cleanup(obj)
+        %% Handle cleanup operations
+        cleanup@pds.stim.BaseStim(obj);
+        Screen('Close', obj.texture);
+        
+    end
+    
+    %------------------------------------------%
+    %% Methods for getting dependent variables
+    
+    function value = get.orientation(obj)
+        % Return angle, but always within the range [-180, 180]
+        value = mod(obj.angle + 180, 360) - 180;
     end
     
 end

@@ -85,13 +85,15 @@ dt$Outcome = as.factor(dt$Outcome)
 ###########################################################################################
 # identify outcomes
 pFix       = dt$Outcome == 'FullFixation' | dt$Outcome == 'Fixation' 
-pNoStart   = dt$Outcome == 'NoStart'
-pNoFix     = dt$Outcome == 'NoFix'
-pFixBreak  = dt$Outcome == 'FixBreak'
-pJackpot   = dt$Outcome == 'Jackpot'
-pBreak     = dt$Outcome == 'Break'
+pFix       = pFix & is.finite(dt$FixPeriod)
+pNoStart   = dt$Outcome == 'NoStart' | is.finite(dt$FixPeriod)==0
+pNoFix     = dt$Outcome == 'NoFix'    & is.finite(dt$FixPeriod)
+pFixBreak  = dt$Outcome == 'FixBreak' & is.finite(dt$FixPeriod)
+pJackpot   = dt$Outcome == 'Jackpot'  & is.finite(dt$FixPeriod)
+pBreak     = dt$Outcome == 'Break'    & is.finite(dt$FixPeriod)
 
 pAllFix = pFix | pFixBreak | pJackpot
+pAllFix = pAllFix==1 & is.finite(dt$FixPeriod)==1
 
 ###########################################################################################
 # get relevant variables
@@ -119,7 +121,7 @@ Trng = c(0, SessTrialEnd / 60)
 
 ###########################################################################################
 # plot 1: time to fixation
-Ylim = range(dt$FixRT, na.rm = TRUE)
+Ylim = range(dt$FixRT, na.rm=TRUE)
 plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
      xlab='', ylab='Time after Target Onset [s]', xaxt="n", cex=1.25)
 
@@ -129,7 +131,7 @@ points(Ttime[pFix],      dt$FixRT[pFix],       pch=19, col=Fix_Col)
 points(Ttime[pFixBreak], dt$FixRT[pFixBreak],  pch=19, col=FixBreak_Col)
 points(Ttime[pJackpot],  dt$FixRT[pJackpot], pch=19, col=JP_Col)
 
-lines(loess.smooth(Ttime[pAllFix], dt$FixRT[pAllFix], span=NTbw/sum(pAllFix), degree=2, family="gaussian"), col='darkgreen', lw=2)
+lines(loess.smooth(Ttime[pAllFix], dt$FixRT[pAllFix], span=NTbw/sum(pAllFix), degree=2, family="gaussian", na.rm=TRUE), col='darkgreen', lw=2)
 
 abline(h=median(dt$FixRT[pAllFix], na.rm=TRUE),lty=2)
 abline(h=mean(  dt$FixRT[pAllFix], na.rm=TRUE),lty=3)
@@ -253,6 +255,11 @@ Xlim = range(dt$FirstReward[pAllFix])
 plot(Xlim, Ylim, type='n', xaxs='i', yaxs='i', main='First Reward',
      xlab='time of first reward [s]', ylab='Fix Duration [s]', cex=1.25)
 
+IRew   = density(dt$FirstReward[pAllFix], bw="SJ", cut=TRUE, na.rm=TRUE)
+IRew$y = Ylim[2] * (IRew$y/(max(IRew$y)))
+
+lines(IRew, lwd=2, col='darkgrey')
+
 points(dt$FirstReward[pFix],      dt$FixPeriod[pFix],      pch=19, col=Fix_Col)
 points(dt$FirstReward[pFixBreak], dt$FixPeriod[pFixBreak], pch=19, col=FixBreak_Col)
 points(dt$FirstReward[pJackpot],  dt$FixPeriod[pJackpot],  pch=19, col=JP_Col)
@@ -261,7 +268,7 @@ abline(lm(dt$FixPeriod[pAllFix]~dt$FirstReward[pAllFix]), col='blue', lty=2, lwd
 
 ###########################################################################################
 # plot 8: Performace in respect to first reward
-brks <- seq(min(dt$FirstReward[pAllFix]), max(dt$FirstReward[pAllFix]), length=11)
+brks <- seq(min(dt$FirstReward[pAllFix], na.rm=TRUE), max(dt$FirstReward[pAllFix], na.rm=TRUE), length=11)
 bins =cut(dt$FirstReward[pAllFix], breaks = brks) 
 Xbin = brks[-length(brks)] + mean(diff(brks))/2
 
@@ -278,11 +285,14 @@ plot(Xbin, Favrg, pch=16, axes=FALSE, ylim=Yl1, xlim=range(dt$FirstReward[pAllFi
 
 lines( Xbin, Fmed, col="blue", lty=2, lwd=2)
 points(Xbin, Fmed, col="blue",  pch=16)
+IRew = density(dt$FirstReward[pAllFix], bw="SJ", cut=TRUE, na.rm=TRUE)
+IRew$y = 0.25*max(Favrg) * (IRew$y/(max(IRew$y)))
+
+lines(IRew, lwd=2, col='darkgrey')
 
 box()
 axis(2, ylim=Yl1, col="blue", las=1, col.axis="blue")  ## las=1 makes horizontal labels
 mtext("Fixation Duration [s]",side=2, line=2.5, col="blue")
-
 
 par(new=TRUE) # Allow a second plot on the same graph
 
@@ -293,6 +303,13 @@ plot(Xbin, Prew, pch=15, ylim=Yl2, xlim=range(dt$FirstReward[pAllFix], na.rm=TRU
 ## a little farther out (line=4) to make room for labels
 mtext("Fixation Rate [%]", side=4, col="red", line=4) 
 axis(4, ylim=Yl2, col="red", col.axis="red", las=1)
+
+# IRew  = density(dt$FirstReward[pAllFix], bw="SJ",    cut=TRUE, na.rm=TRUE)
+FDens = density(dt$FirstReward[pFix],    bw=IRew$bw, cut=TRUE, na.rm=TRUE, from=IRew$x[1], to=max(IRew$x))
+BDens = density(dt$FirstReward[pFixBreak],  bw=IRew$bw, cut=TRUE, na.rm=TRUE, from=IRew$x[1], to=max(IRew$x))
+
+FDens$y = 100 * FDens$y/(FDens$y+BDens$y)
+lines(FDens, col='salmon')
 
 ## Draw the time axis
 axis(1, pretty(c(brks[1]-0.05*diff(range(brks)), max(brks)+0.05*diff(range(brks))), 6))

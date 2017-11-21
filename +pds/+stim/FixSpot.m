@@ -34,6 +34,18 @@ methods
         % Load the BaseStim superclass
         obj@pds.stim.BaseStim(p, pos, fixWin)
         
+        % Integer to define object (for sending event code)
+        obj.classCode = 7701;
+        
+        % Fixspot is not counted as a stimulus, so it should not record its properties
+        obj.recordProps = {};
+        
+        % Events are different for the fixspot class
+        obj.onSignal  = struct('event', 'FIXSPOT_ON', ...
+            'name', 'FixOn');
+        obj.offSignal = struct('event', 'FIXSPOT_OFF', ...
+            'name', 'FixOff');
+        
         obj.color = color;
         obj.type = type;
         obj.size = size;
@@ -58,6 +70,10 @@ methods
                     error('Unknown type of fixation spot: %s', p.trial.behavior.fixation.FixType);
             end
         end
+    end
+    
+    function saveProperties(obj)
+        % Fixspot should not save its properties. Overwrites superclass function
     end
     
 end

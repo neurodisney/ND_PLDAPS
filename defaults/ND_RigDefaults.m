@@ -53,6 +53,8 @@ SS.datapixx.GetPreciseTime.maxDuration          = 0.015;  % maximum duration in 
 SS.datapixx.GetPreciseTime.optMinwinThreshold   = 1.2e-4; % Minimum Threshold that defines a good estimate to end before maxDuration
 SS.datapixx.GetPreciseTime.syncmode             = 2;      % syncmode: accepted values are 1,2,3
 
+SS.datapixx.LogOnsetTimestampLevel              = 2;
+
 % adc: Continuously collect and store adc data from Datapixx.
 SS.datapixx.adc.bufferAddress                   = [];     % typically left empty.
 SS.datapixx.adc.channelGains                    = 1;      % Apply a gain to collected data.
@@ -69,13 +71,13 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 switch rig
     case 1
-        SS.display.viewdist                     = 97;    % screen distance to the observer
-        SS.display.heightcm                     = 40;     % height of the visible screen in cm
-        SS.display.widthcm                      = 71;     % width  of the visible screen in cm
+        SS.display.viewdist                     = 98.5; % screen distance to the observer
+        SS.display.heightcm                     = 40.5; % height of the visible screen in cm
+        SS.display.widthcm                      = 73.5; % width  of the visible screen in cm
     case 2
-        SS.display.viewdist                     = 92;   
-        SS.display.heightcm                     = 36;     
-        SS.display.widthcm                      = 63;  
+        SS.display.viewdist                     = 83;   
+        SS.display.heightcm                     = 39;     
+        SS.display.widthcm                      = 70;  
     otherwise
         SS.display.viewdist                     = 97;   
         SS.display.heightcm                     = 40;    
@@ -137,13 +139,16 @@ end
 
 SS.tdt.channels                                 = 16; % Number of ephys channels to analyze in incoming data
 SS.tdt.sortCodes                                = 4;  % Number of units classified per channel. [1, 2, or 4]
-SS.tdt.bitsPerSort                              = 2;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
+SS.tdt.bitsPerSort                              = 4;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
 % ------------------------------------------------------------------------%
 %% Mouse settings: configure how mouse data should be handled
 SS.mouse.use                                    = 0;     % collect and store mouse positions
 SS.mouse.useAsEyepos                            = 0;     % toggle use of mouse to set eyeX and eyeY
 
+% Some vestigal parameters from PLDAPS class defaults
+SS.mouse.useLocalCoordinates                    = 0;
+SS.mouse.initialCoordinates                     = [];
 % ------------------------------------------------------------------------%
 %% Sound: control sound playback
 SS.sound.use                                    = 0;     % toggle use of sound   !!!
@@ -165,6 +170,7 @@ SS.pldaps.finish                                = inf;   % Number of trials to r
 SS.pldaps.maxPriority                           = 1;     % Switch to PTB to maxpriority during the trial? See MaxPriority('?')
 SS.pldaps.maxTrialLength                        = 25;    % Maximum duration of a trial in seconds. Used to allocate memory.
 SS.pldaps.nosave                                = 0;     % disables saving of data when true. see .pldaps.save for more control
+SS.pldaps.save_nostart                          = 0;     % do not save pds files if the trial was not started
 SS.pldaps.pass                                  = 0;     % indicator of behavior (i.e. fixations) should always be assumed to be good.
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
 SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
@@ -189,7 +195,7 @@ SS.pldaps.draw.eyepos.use                       = 0;     % enable drawing of the
 
 % frame rate: control drawing of a frame rate history to see frame drops.
 SS.pldaps.draw.framerate.location               = [-30, -10]; % location (XY) of the plot in degrees of visual angle.
-SS.pldaps.draw.framerate.nSecond                = 5;          % number of seconds to show the history for
+SS.pldaps.draw.framerate.nSeconds               = 5;          % number of seconds to show the history for
 SS.pldaps.draw.framerate.show                   = 0;          % draw the frame rate. need use to be enabled as well
 SS.pldaps.draw.framerate.size                   = [10, 5];    % size (XY) of the plot in degrees of visual angle.
 SS.pldaps.draw.framerate.use                    = 1;          % set to true to collect data needed to show frame rate.
@@ -256,6 +262,8 @@ SS.behavior.fixation.entryTime = 0.025;    % minimum time [s] before fixation is
 SS.behavior.fixation.BreakTime = 0.05;     % minimum time [s] to identify a fixation break
 SS.behavior.fixation.GotFix    = 0;        % state indicating if currently fixation is acquired
 
+SS.behavior.fixation.MinFixStart = 0.1;    % minimum time gaze has to be in fixation window to start trial, if GiveInitial == 1 after this period a reward is given
+
 % Calibration of eye position
 SS.behavior.fixation.useCalibration  = 1;         % load mat file for eye calibration
 SS.behavior.fixation.enableCalib     = 0;         % allow changing the current eye calibration parameters
@@ -274,7 +282,7 @@ SS.behavior.fixation.calibSamples    = 200;    % analog eyesamples in the the da
 SS.behavior.fixation.NSmpls          = 50;     % how many datapixx samples of the eye position to be used to calculate the median
 
 SS.behavior.fixation.FixGridStp      = [2, 2]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixSPotStp      = 0.1;   % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixSPotStp      = 0.1;    % change of the size of the fixation window upon key press
 SS.behavior.fixation.GridPos         = 5;      % cntral fixation position (for pure offset correction)
 
 SS.behavior.fixation.FixWinStp       = 0.25;   % change of the size of the fixation window upon key press
@@ -284,13 +292,13 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 % rig specific eye calibration parameter
 switch rig
     case 1
-        SS.eyeCalib.defaultGain      = [-3.5622, -3.4474];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [0.3528, 1.3147];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [-8.438,-8.293];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [0.748,4.534];    % default offset, used if no calibration points are entered
      
     case 2
-        SS.eyeCalib.defaultGain      = [-5, -10];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [0 0];      % default offset, used if no calibration points are entered
-
+        SS.eyeCalib.defaultGain      = [-15.34 -17.65];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.273 -1.052];  % default offset, used if no calibration points are entered
+        
     otherwise
         SS.eyeCalib.defaultGain      = [-3.5622, -3.4474];  % default gain, used if no calibration points are entered
         SS.eyeCalib.defaultOffset    = [0 0];    % default offset, used if no calibration points are entered
@@ -305,7 +313,9 @@ SS.FixState.breakingFix = 0.75;  % Gaze has momentarily left fixation window
 
 % ------------------------------------------------------------------------%
 %% Stimuli
-SS.stim.allStims = {}; % Cell array to store references of all the stims created
+SS.stim.allStims       = {}; % Cell array to store references of all the stims created
+SS.stim.record.arrays  = {}; % Cell array to store arrays of properties each time a stimuli comes on.
+SS.stim.record.structs = {}; % Cell array to store the properties of stims as they come on (but in struct form).
 
 % Default position for stimuli to be generated
 SS.stim.pos = [0,0];
@@ -368,14 +378,25 @@ SS.datapixx.EVdur            = [];  % depending on the DAQ sampling rate it migh
 SS.datapixx.TTL_trialOn      = 1;   % if 1 set a digital output high while trial is active
 SS.datapixx.TTL_trialOnChan  = 1;   % DIO channel used for trial state TTL
 
-% TTL pulse series for pico spritzer
+% ------------------------------------------------------------------------%
+%% TTL pulse series for pico spritzer
 SS.datapixx.TTL_spritzerChan      = 5;    % DIO channel
 SS.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
 SS.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
 SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
 
 SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
-SS.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
+SS.datapixx.TTL_spritzerSeriesGap = 30;   % gap between subsequent series
+
+% ------------------------------------------------------------------------%
+%% Stimulation/Drug Injection
+SS.Drug.DoStim     = 0;       % activate module to control drug application
+SS.Drug.StimTrial  = 0;       % Is the current trial a drug trial
+SS.Drug.StimTrial  = 0;       % Is the current trial a drug trial
+SS.Drug.StimDesign = 'block'; % What design (block, random, condition)
+SS.Drug.StimTime   = 0;       % application time relative to task start
+SS.Drug.LastStim   = NaN;     % when was the last drug applicatio
+SS.Drug.StimBlock  = 'trial'; % how to define a block, based on 'trial' or based on 'time'
 
 % ------------------------------------------------------------------------%
 %% Control screen flips
