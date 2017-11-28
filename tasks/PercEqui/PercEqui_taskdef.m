@@ -1,4 +1,4 @@
-function p = CtrChng_taskdef(p)
+function p = PercEqui_taskdef(p)
 % define task parameters for the joystick training task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online

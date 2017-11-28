@@ -10,6 +10,8 @@ function ND_CaliReward(rewtm, nrep, gap)
 %
 % wolf zinke, March 2017
 
+%-------------------------------------------------------------------------%
+%% check input arguments
 if (~exist('rewtm','var') || isempty(rewtm))
     error('What are you doing? You need at least know what reward duration to measure!'); 
 end
@@ -22,9 +24,10 @@ if (~exist('gap','var') || isempty(gap))
     gap = 1.0; 
 end
 
+%-------------------------------------------------------------------------%
+%% init Datapixx:
 h = waitbar(0,'Initializing DataPixx...');
 
-% init Datapixx:
 if(~Datapixx('IsReady'))
     Datapixx('Open');
     Datapixx('RegWrRd');
@@ -33,18 +36,17 @@ else
     keep_open = 1;
 end
 
+%-------------------------------------------------------------------------%
+%% run series of reward pulses
 for(i=1:nrep) 
-%     disp('**********************');
-%     disp(['Pulse ',int2str(i), '/', int2str(nrep)]);
-
     waitbar(i/nrep, h, sprintf('%d pulses out of %d ...',i, nrep))
     
     evalc(sprintf('ND_FlushReward(%f)',rewtm)); 
     WaitSecs(gap); 
-    
-%     disp('');
 end
 
+%-------------------------------------------------------------------------%
+%% close DataPixx
 if(Datapixx('IsReady') && ~keep_open)
     Datapixx('Close');
 end
