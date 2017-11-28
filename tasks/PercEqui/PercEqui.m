@@ -254,21 +254,9 @@ function TaskDesign(p)
         %% Fixation target shown, waiting for a sufficiently held gaze
             Task_WaitFixStart(p);
 
-            if(p.trial.CurrEpoch == p.trial.epoch.Fixating)
-            % fixation just started, initialize fixation epoch
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;
-
-                % initial rewardfor fixation start
-                if(p.trial.reward.GiveInitial == 1)
-                    p.trial.EV.InitReward = p.trial.CurTime;
-                    pds.reward.give(p, p.trial.reward.InitialRew);
-                end
-            end
-
         % ----------------------------------------------------------------%
         case p.trial.epoch.Fixating
-        %% Initial reward has been given (if it is not 0), now stim target will appear
-            % Still fixating
+        %% check fixation until target stimulus will appear
             if(p.trial.stim.fix.fixating)
                 if(~p.trial.task.stimState)
                     if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
