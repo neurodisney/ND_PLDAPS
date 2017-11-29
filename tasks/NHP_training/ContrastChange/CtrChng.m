@@ -587,7 +587,6 @@ function stim(p, val)
     % Don't do anything if stim doesn't change
     if(val ~= p.trial.task.stimState)
 
-        oldVal = p.trial.task.stimState;
         p.trial.task.stimState = val;
 
         % Turn on/off the appropriate generated stimuli

@@ -1,130 +1,70 @@
 function p = PercEqui_taskdef(p)
-% define task parameters for the joystick training task.
+% define task parameters for the point of subjective equality task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
 % modifications of the task.
 %
-% TODO: - Make sure that changed parameters are kept in the data file, i.e.
-%         that there is some log when changes happened
-%       - read in only changes in order to allow quicker manipulations via the
-%         keyboard without overwriting it every time by calling this routine
 %
 %
-% wolf zinke, Dec. 2016
-
-% ------------------------------------------------------------------------%
-%% Task modifier
-p.trial.task.ShowHelp = 0; % Moves the fixation spot towards target location
+% wolf zinke, Dec. 2017
 
 % ------------------------------------------------------------------------%
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.GiveInitial = 0;     % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew  = 0.01;  % duration of the initial reward
-p.trial.reward.ManDur      = 0.05;  % reward duration [s] for reward given by keyboard presses
-
-p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
-p.trial.reward.nPulse          = 1; % number of reward pulses
-p.trial.reward.PulseStep       = [2, 4, 6, 8]; % increase number of pulses with this trial number
-p.trial.reward.IncrementTrial  = [  50, 200,  250,  300,  400,  500]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur    = [0.075, 0.15, 0.175, 0.2, 0.25, 0.5]; % increase number of pulses with this trial number
-
-% ----------------------------------- -------------------------------------%
-%% Grating stimuli parameters
-p.trial.stim.PosX    = 3;
-
-p.trial.stim.GRATING.fixWin  = 2.5;
-
-p.trial.stim.GRATING.radius  = 0.75;  % radius of grating patch
-
-p.trial.stim.GridPos = linspace(-3,3,9); % position on y axis
-
-p.trial.stim.GRATING.tFreq   = 0;  % temporal frequency of grating; drift speed, 0 is stationary
-% grating contrast
-p.trial.stim.GRATING.lowContrast  = 0.4;  % grating contrast value when stim.on = 1
-% p.trial.stim.GRATING.highContrast = 0.5;  % grating contrast value when stim.on = 2
-p.trial.stim.GRATING.highContrast = datasample(0.425:0.05:0.65, 1);
-
-p.trial.stim.GRATING.res          = 300;
+p.trial.reward.ManDur          = 0.05;  % reward duration [s] for reward given by keyboard presses
+p.trial.reward.IncrementTrial  = [  50, 200,  300,  400,  500,  600, 700 ]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur    = [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
+p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust fixation
 
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.5, 1.25); % Time from fixation onset to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.75, 1.25); % Time from fixation onset to stim appearing
 
-p.trial.task.saccadeTimeout   = 0.5;  % Time allowed to make the saccade to the stim before error
+p.trial.task.saccadeTimeout   = 0.5;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 0.75;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
-p.trial.task.Timing.TimeOut   =  4;  % Time-out[s]  for incorrect responses
-p.trial.task.Timing.ITI       = ND_GetITI(0.75,  1.25,  [], [], 1, 0.10);
+p.trial.task.Timing.TimeOut   =  4;    % Time-out[s]  for incorrect responses
+p.trial.task.Timing.ITI       = ND_GetITI(1.25,  1.75,  [], [], 1, 0.10);
+
+% ----------------------------------- -------------------------------------%
+%% Grating stimuli parameters
+p.trial.stim.GRATING.fixWin = 2.5;
+p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
+p.trial.stim.GRATING.tFreq  = 0;  % temporal frequency of grating; drift speed, 0 is stationary
+p.trial.stim.GRATING.res    = 300;
+
+% grating contrast
+p.trial.stim.Ref.Contrast = 0.5;
+
+ctrng = ((logspace(0,1,9)-1)*0.05);
+p.trial.stim.trgtconts = [fliplr(0.5 - ctrng(2:end)), 0.5 + ctrng(2:end)];
+% p.trial.stim.GRATING.TargetContrast = datasample(p.trial.stim.trgtconts, 1);
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
 p.trial.Block.maxBlocks    = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
 
-% condition 1
-c1.Nr = 1;
-c1.task.MinWaitGo  = 0.25; % min wait period for fixation spot to disapear
-c1.task.MaxWaitGo  = 0.50; % max wait period for fixation spot to disapear
+% target contrast defines a condition
+p.trial.Block.Conditions = {};
+for(i=1:length(p.trial.stim.trgtconts))
+    c.Nr = i;
+    p.trial.Block.Conditions = [p.trial.Block.Conditions, c];
+end
 
-% condition 2
-c2.Nr = 2;
-c2.task.MinWaitGo  = 0.50; % min wait period for fixation spot to disapear
-c2.task.MaxWaitGo  = 0.75; % max wait period for fixation spot to disapear
-
-% condition 3
-c3.Nr = 3;
-c3.task.MinWaitGo  = 0.75; % min wait period for fixation spot to disapear
-c3.task.MaxWaitGo  = 1.00; % max wait period for fixation spot to disapear
-
-% condition 4
-c4.Nr = 4;
-c4.task.MinWaitGo  = 1.00; % min wait period for fixation spot to disapear
-c4.task.MaxWaitGo  = 1.25; % max wait period for fixation spot to disapear
-
-% condition 5
-c5.Nr = 5;
-c5.task.MinWaitGo  = 1.25; % min wait period for fixation spot to disapear
-c5.task.MaxWaitGo  = 1.50; % max wait period for fixation spot to disapear
-
-% condition 6
-c6.Nr = 6;
-c6.task.MinWaitGo  = 1.50; % min wait period for fixation spot to disapear
-c6.task.MaxWaitGo  = 1.75; % max wait period for fixation spot to disapear
-
-% condition 7
-c7.Nr = 7;
-c7.task.MinWaitGo  = 1.75; % min wait period for fixation spot to disapear
-c7.task.MaxWaitGo  = 2.00; % max wait period for fixation spot to disapear
-
-% condition 8
-c8.Nr = 8;
-c8.task.MinWaitGo  = 2.00; % min wait period for fixation spot to disapear
-c8.task.MaxWaitGo  = 2.25; % max wait period for fixation spot to disapear
-
-% condition 9
-c9.Nr = 9;
-c9.task.MinWaitGo  = 2.25; % min wait period for fixation spot to disapear
-c9.task.MaxWaitGo  = 2.50; % max wait period for fixation spot to disapear
-
-p.trial.Block.Conditions     = {c1, c2, c3, c4};
-p.trial.Block.maxBlockTrials =  [1, 3, 4, 2];
-
-p.trial.Block.Conditions     = { c2, c3, c4, c5, c6, c7};
-p.trial.Block.maxBlockTrials =  [2,  3,  4,  4,  4,  3];
+p.trial.Block.maxBlockTrials =  10;
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos    = [0,0];
-p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.color  = 'magenta';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size   = 0.15;       % size of the fixation spot
+p.trial.stim.FIXSPOT.type   = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.FIXSPOT.color  = 'cyan';   % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size   = 0.15;     % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
@@ -134,10 +74,4 @@ p.trial.behavior.fixation.entryTime = 0.10;  % minimum time to stay within fixat
 % ------------------------------------------------------------------------%
 %% Task parameters
 p.trial.task.breakFixCheck = 0.2; % Time after a stimbreak where if task is marked early or stim break is calculated
-
-% ------------------------------------------------------------------------%
-%% Trial duration
-% maxTrialLength is used to pre-allocate memory at several initialization
-% steps. It specifies a duration in seconds.
-p.trial.pldaps.maxTrialLength = 15;
 
