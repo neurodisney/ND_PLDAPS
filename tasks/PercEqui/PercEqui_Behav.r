@@ -7,7 +7,7 @@ require(beanplot, quietly=TRUE)
 
 # Function for plotting data from the delayed saccade task
 DelSacc_Behav = function(datadir=NA, fname=NA) {
-
+ 
 ## specify analysis/graph parameters
 avrgwin  =   180  # moving average window for performance plot in seconds
 avrgstep =     1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
@@ -106,25 +106,11 @@ Ntrials     = sum(pAll)
 
 ###########################################################################################
 # get relevant variables
-Ttime     = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
-
-corp = pCorr == 1 | pHoldErr == 1 | pFalse == 1
-# corp = pCorr == 1 | pHoldErr == 1 
-#corp = corp  == 1 & is.finite(dt$SRT_StimOn) == 1 & is.finite(dt$GoLatency)
+Ttime   = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
 
 # derive RT times
-SRT       = dt$SRT_Go
-# SRT[corp] = dt$SRT_StimOn[corp]
-SRT[corp] = dt$Response[corp] - dt$StimChange[corp]
-
-StimSRT = dt$SRT_StimOn
-
-#print(dt$SRT_StimOn[pFalse])
-
-#StimSRT[corp] = dt$FixBreak[corp]  - dt$StimOn[corp]  + (dt$GoCue[corp])
-StimSRT[corp] = dt$GoLatency[corp] + SRT[corp]
-
-# StimSRT[corp] = (dt$FixBreak[corp] - dt$StimOn[corp])+ dt$FixSpotOff[corp]
+SRT     = dt$SRT_StimOn
+FixSRT  = dt$SRT_FixStart
 
 ###########################################################################################
 # create plots
@@ -141,7 +127,6 @@ if(interactive()) {
 }
 
 # create plot layout
-#pllyt = matrix(c(1,1,1,1,1,1,1, 2,2,2,2,2,2,2, 3,3,3,3,3,3,3, 4,5,6,10,10,11,11,  7,8,9,10,10,11,11 ), 5, 7, byrow=TRUE)
 pllyt = matrix(c(1,1,1,1,1,1,1,1,
                  2,2,2,2,2,2,2,2,
                  3,3,3,3,3,3,3,3,
@@ -154,20 +139,20 @@ Trng = c(0, SessTrialEnd / 60)
 
 ###########################################################################################
 # plot 1: saccade time
-Ylim = range(StimSRT, na.rm = TRUE)
+Ylim = range(FixSRT, na.rm = TRUE)
 plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
      xlab='', ylab='Time after Target Onset [s]', xaxt="n")
 
 if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
-points(Ttime[pCorr],       StimSRT[pCorr],       pch=19, col=Corr_Col)
-points(Ttime[pFixBreak],   StimSRT[pFixBreak],   pch=19, col=FixBreak_Col)
-points(Ttime[pStimBreak],  StimSRT[pStimBreak],  pch=19, col=StimBreak_Col)
-points(Ttime[pHoldErr],    StimSRT[pHoldErr],    pch=19, col=TargetBreak_Col)
-points(Ttime[pEarly],      StimSRT[pEarly],      pch=19, col=Early_Col)
-points(Ttime[pMiss],       StimSRT[pMiss],       pch=19, col=Miss_Col)
-points(Ttime[pFalse],      StimSRT[pFalse],      pch=19, col=False_Col)
-points(Ttime[pEarlyFalse], StimSRT[pEarlyFalse], pch=19, col=EarlyFalse_Col)
+points(Ttime[pCorr],       FixSRT[pCorr],       pch=19, col=Corr_Col)
+points(Ttime[pFixBreak],   FixSRT[pFixBreak],   pch=19, col=FixBreak_Col)
+points(Ttime[pStimBreak],  FixSRT[pStimBreak],  pch=19, col=StimBreak_Col)
+points(Ttime[pHoldErr],    FixSRT[pHoldErr],    pch=19, col=TargetBreak_Col)
+points(Ttime[pEarly],      FixSRT[pEarly],      pch=19, col=Early_Col)
+points(Ttime[pMiss],       FixSRT[pMiss],       pch=19, col=Miss_Col)
+points(Ttime[pFalse],      FixSRT[pFalse],      pch=19, col=False_Col)
+points(Ttime[pEarlyFalse], FixSRT[pEarlyFalse], pch=19, col=EarlyFalse_Col)
 
 abline(h=0,lty=2)
 
@@ -245,19 +230,19 @@ lines(Tavrg, Rearlyfalse, col=EarlyFalse_Col,  lwd=1)
 
 ###########################################################################################
 # plot 4: RT over Go
-GoSig = dt$GoLatency
+GoSig = dt$StimLatency
 
-plot(GoSig, StimSRT, type='n', xaxs='i', yaxs='i', main = 'RT over GoCue',
+plot(GoSig, FixSRT, type='n', xaxs='i', yaxs='i', main = 'RT over GoCue',
      ylab='Time after Target Onset[s]', xlab='Contrast change [s]')
 
-points(GoSig[pCorr],       StimSRT[pCorr],       pch=19, col=Corr_Col)
-points(GoSig[pFixBreak],   StimSRT[pFixBreak],   pch=19, col=FixBreak_Col)
-points(GoSig[pStimBreak],  StimSRT[pStimBreak],  pch=19, col=StimBreak_Col)
-points(GoSig[pHoldErr],    StimSRT[pHoldErr],    pch=19, col=TargetBreak_Col)
-points(GoSig[pEarly],      StimSRT[pEarly],      pch=19, col=Early_Col)
-points(GoSig[pMiss],       StimSRT[pMiss],       pch=19, col=Miss_Col)
-points(GoSig[pFalse],      StimSRT[pFalse],      pch=19, col=False_Col)
-points(GoSig[pEarlyFalse], StimSRT[pEarlyFalse], pch=19, col=EarlyFalse_Col)
+points(GoSig[pCorr],       FixSRT[pCorr],       pch=19, col=Corr_Col)
+points(GoSig[pFixBreak],   FixSRT[pFixBreak],   pch=19, col=FixBreak_Col)
+points(GoSig[pStimBreak],  FixSRT[pStimBreak],  pch=19, col=StimBreak_Col)
+points(GoSig[pHoldErr],    FixSRT[pHoldErr],    pch=19, col=TargetBreak_Col)
+points(GoSig[pEarly],      FixSRT[pEarly],      pch=19, col=Early_Col)
+points(GoSig[pMiss],       FixSRT[pMiss],       pch=19, col=Miss_Col)
+points(GoSig[pFalse],      FixSRT[pFalse],      pch=19, col=False_Col)
+points(GoSig[pEarlyFalse], FixSRT[pEarlyFalse], pch=19, col=EarlyFalse_Col)
 
 lines(GoSig, GoSig, lty=3, col='black')
 abline(h=0, lty=2)
@@ -268,61 +253,61 @@ all_vals_X = c()
 all_vals_Y = c()
 
 if(sum(pCorr) > 4) {
-  TDurhit   = density(StimSRT[pCorr], bw=RTbw, na.rm=TRUE)
+  TDurhit   = density(FixSRT[pCorr], bw=RTbw, na.rm=TRUE)
   TDurhit$y = TDurhit$y * sum(pCorr) * RTbw
   all_vals_X = c(all_vals_X, TDurhit$x)
   all_vals_Y = c(all_vals_Y, TDurhit$y)
 }
 
 if(sum(pHoldErr) > 4) {
-  TDurhold   = density(StimSRT[pHoldErr], bw=RTbw, na.rm=TRUE)
+  TDurhold   = density(FixSRT[pHoldErr], bw=RTbw, na.rm=TRUE)
   TDurhold$y = TDurhold$y * sum(pHoldErr) * RTbw
   all_vals_X = c(all_vals_X, TDurhold$x)
   all_vals_Y = c(all_vals_Y, TDurhold$y)
 }
 
 if(sum(pEarly) > 4) {
-  TDurearly   = density(StimSRT[pEarly], bw=RTbw, na.rm=TRUE)
+  TDurearly   = density(FixSRT[pEarly], bw=RTbw, na.rm=TRUE)
   TDurearly$y = TDurearly$y  * sum(pEarly) * RTbw
   all_vals_X = c(all_vals_X, TDurearly$x)
   all_vals_Y = c(all_vals_Y, TDurearly$y)
 }
 
 if(sum(pFalse) > 4) {
-  TDurfalse   = density(StimSRT[pFalse], bw=RTbw, na.rm=TRUE)
+  TDurfalse   = density(FixSRT[pFalse], bw=RTbw, na.rm=TRUE)
   TDurfalse$y = TDurfalse$y * sum(pFalse) * RTbw
   all_vals_X = c(all_vals_X, TDurfalse$x)
   all_vals_Y = c(all_vals_Y, TDurfalse$y)
 }
 
 if(sum(pEarlyFalse) > 4) {
-  TDurfalseearly   = density(StimSRT[pEarlyFalse], bw=RTbw, na.rm=TRUE)
+  TDurfalseearly   = density(FixSRT[pEarlyFalse], bw=RTbw, na.rm=TRUE)
   TDurfalseearly$y = TDurfalseearly$y * sum(pEarlyFalse)  * RTbw
   all_vals_X = c(all_vals_X, TDurfalseearly$x)
   all_vals_Y = c(all_vals_Y, TDurfalseearly$y)
 }
 
 if(sum(pFixBreak) > 4) {
-  TDurfixbreak   = density(StimSRT[pFixBreak], bw=RTbw, na.rm=TRUE)
+  TDurfixbreak   = density(FixSRT[pFixBreak], bw=RTbw, na.rm=TRUE)
   TDurfixbreak$y = TDurfixbreak$y * sum(pFixBreak) * RTbw
   all_vals_X = c(all_vals_X, TDurfixbreak$x)
   all_vals_Y = c(all_vals_Y, TDurfixbreak$y)
 }
 
 if(sum(pStimBreak) > 4) {
-  TDurstimbreak   = density(StimSRT[pStimBreak], bw=RTbw, na.rm=TRUE)
+  TDurstimbreak   = density(FixSRT[pStimBreak], bw=RTbw, na.rm=TRUE)
   TDurstimbreak$y = TDurstimbreak$y  * sum(pStimBreak)  * RTbw
   all_vals_X = c(all_vals_X, TDurstimbreak$x)
   all_vals_Y = c(all_vals_Y, TDurstimbreak$y)
 }
 
-TDurall    = density(StimSRT[pAll], bw=RTbw, na.rm=TRUE)
+TDurall    = density(FixSRT[pAll], bw=RTbw, na.rm=TRUE)
 TDurall$y  = TDurall$y  * sum(pAll)  * RTbw
 all_vals_X = c(all_vals_X, TDurall$x)
 all_vals_Y = c(all_vals_Y, TDurall$y)
 
-GoBrks  = seq(from=floor(min(dt$GoLatency*10))/10, to=ceiling(max(dt$GoLatency*10))/10, by=RTbw)
-All_Cnt = hist(dt$GoLatency, breaks=GoBrks, plot=FALSE)
+GoBrks  = seq(from=floor(min(dt$StimLatency*10))/10, to=ceiling(max(dt$StimLatency*10))/10, by=RTbw)
+All_Cnt = hist(dt$StimLatency, breaks=GoBrks, plot=FALSE)
 
 All_Cnt$counts = 0.2 * max(all_vals_Y) * All_Cnt$counts / max(All_Cnt$counts)
 
