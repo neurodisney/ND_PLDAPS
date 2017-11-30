@@ -45,7 +45,9 @@ p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%
 p = ND_AddAsciiEntry(p, 'StimLatency', 'p.trial.task.stimLatency',            '%.5f');
 p = ND_AddAsciiEntry(p, 'SRT_FixStart','p.trial.task.SRT_FixStart',           '%.5f');
 p = ND_AddAsciiEntry(p, 'SRT_StimOn',  'p.trial.task.SRT_StimOn',             '%.5f');
-p = ND_AddAsciiEntry(p, 'Response',    'p.trial.EV.Response',                 '%.5f');
+p = ND_AddAsciiEntry(p, 'EV_FixBreak', 'p.trial.stim.fix.EV.FixBreak',        '%.5f');
+p = ND_AddAsciiEntry(p, 'EV_FixLeave', 'p.trial.EV.FixLeave',                 '%.5f');
+p = ND_AddAsciiEntry(p, 'EV_FixStart', 'p.trial.stim.fix.EV.FixStart;',       '%.5f');
 
 p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
 p = ND_AddAsciiEntry(p, 'Reward',      'p.trial.EV.Reward',                   '%.5f');
@@ -78,6 +80,10 @@ p.defaultParameters.stim.PosY       = datasample(p.defaultParameters.stim.PosYls
 p.defaultParameters.stim.Ref.sFreq  = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
 p.defaultParameters.stim.Ref.ori    = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
 
+p.defaultParameters.task.SRT          = NaN;
+p.defaultParameters.task.SRT_FixStart = NaN;
+p.defaultParameters.task.SRT_StimOn   = NaN;
+p.defaultParameters.task.Response     = NaN;
 
 % ------------------------------------------------------------------------%
 %% Trial duration

@@ -218,7 +218,7 @@ function TaskDesign(p)
             % Fixation Break, end the trial
             elseif(~p.trial.stim.fix.fixating)
                 pds.audio.playDP(p, 'breakfix', 'left');
-
+                
                 ND_SwitchEpoch(p, 'BreakFixCheck');
             end
 
@@ -232,7 +232,7 @@ function TaskDesign(p)
             % gaze left fixation spot, check what the response is    
                 ND_SwitchEpoch(p, 'CheckResponse');
 
-            elseif(p.trial.CurTime > p.trial.EV.FixOff + p.trial.task.saccadeTimeout)
+            elseif(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeTimeout)
             % If no saccade has been made before the time runs out, end the trial
 
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
@@ -266,14 +266,12 @@ function TaskDesign(p)
                     p.trial.outcome.CurrOutcome = p.trial.outcome.False;
                     
                     % time to early to detect proper fixation break, thus set the time here explicitly
-                    p.trial.EV.Response         = p.trial.EV.FixLeave;
 
                     ND_SwitchEpoch(p, 'TaskEnd');
 
                 elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
                 % gaze away from fixation spot but not item selected: fix break
                     p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
-                    p.trial.EV.Response         = p.trial.EV.FixLeave;
 
                     % Turn the stim off and fixation off
                     stim(p,0);
@@ -295,7 +293,6 @@ function TaskDesign(p)
                 if(p.trial.CurTime > p.trial.stim.(p.trial.stim.SaccadeTarget).EV.FixStart + p.trial.task.minTargetFixTime)
 
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
-                    p.trial.EV.Response         = p.trial.EV.FixLeave;
                     p.trial.task.Good = 1;
 
                     pds.reward.give(p, p.trial.reward.Dur);
@@ -309,7 +306,6 @@ function TaskDesign(p)
                 elseif(~p.trial.stim.(p.trial.stim.SaccadeTarget).fixating)
                 % If animal's gaze leaves window, end the task and do not give reward
                     p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
-                    p.trial.EV.Response         = p.trial.EV.FixLeave;
 
                     % Play an incorrect sound
                     pds.audio.playDP(p, 'incorrect', 'left');
@@ -325,7 +321,6 @@ function TaskDesign(p)
             delay = p.trial.task.breakFixCheck;
             if(p.trial.task.stimState == 0)
                 p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-                p.trial.EV.Response         = p.trial.stim.fix.EV.FixBreak;
 
                 ND_SwitchEpoch(p, 'TaskEnd');
             
@@ -333,8 +328,6 @@ function TaskDesign(p)
                 % Get the median eye position in the delay
                 frames = ceil(p.trial.display.frate * delay);
                 medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
-
-                p.trial.EV.Response = p.trial.EV.FixLeave;
 
                 % Determine if the medPos is in the fixation window for the stim
                 if(inFixWin(p.trial.stim.(p.trial.stim.SaccadeTarget), medPos))
@@ -514,11 +507,8 @@ function stim(p, val)
 function Calculate_SRT(p)
     % Grab the fixation stopping and starting values from the stim properties
     p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
+    p.trial.EV.FixSpotStop  = p.trial.EV.FixLeave;
     
-    if(~strcmp(p.trial.outcome.CurrOutcomeStr,'False'))
-        p.trial.EV.FixSpotStop  = p.trial.stim.fix.EV.FixBreak;
-    end
-
     switch p.trial.outcome.CurrOutcomeStr
         case {'NoStart', 'Break', 'Miss', 'NoFix'}
             p.trial.task.SRT_FixStart = NaN;
