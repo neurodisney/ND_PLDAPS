@@ -6,8 +6,8 @@ require(catspec,  quietly=TRUE)
 require(beanplot, quietly=TRUE)
 
 # Function for plotting data from the delayed saccade task
-DelSacc_Behav = function(datadir=NA, fname=NA) {
- 
+PercEqui_Behav = function(datadir=NA, fname=NA) {
+
 ## specify analysis/graph parameters
 avrgwin  =   180  # moving average window for performance plot in seconds
 avrgstep =     1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
@@ -123,7 +123,7 @@ if(interactive()) {
 } else {
   # Otherwise only save the figure as a pdf.
   pdf( paste('PercEqui_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='PercEqui_Behav')
-  
+
 }
 
 # create plot layout

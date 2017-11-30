@@ -1,7 +1,7 @@
 function p = PercEqui_init(p)
 % Initialisation for the PercEqui task
 %
-% Define the format of the ASCII table and all variables that will be kept constant 
+% Define the format of the ASCII table and all variables that will be kept constant
 % throughout the experiment.
 %
 % wolf zinke, Nov. 2017
@@ -49,6 +49,8 @@ p = ND_AddAsciiEntry(p, 'EV_FixBreak', 'p.trial.stim.fix.EV.FixBreak',        '%
 p = ND_AddAsciiEntry(p, 'EV_FixLeave', 'p.trial.EV.FixLeave',                 '%.5f');
 p = ND_AddAsciiEntry(p, 'EV_FixStart', 'p.trial.stim.fix.EV.FixStart;',       '%.5f');
 
+p = ND_AddAsciiEntry(p, 'TargetSel',   'p.trial.task.TargetSel',                '%d');
+
 p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
 p = ND_AddAsciiEntry(p, 'Reward',      'p.trial.EV.Reward',                   '%.5f');
 p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)', '%.5f');
@@ -92,4 +94,3 @@ p.defaultParameters.task.Response     = NaN;
 p.defaultParameters.pldaps.maxTrialLength = 15;
 
 
-    
