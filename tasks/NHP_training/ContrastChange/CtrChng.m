@@ -36,7 +36,7 @@ if(isempty(state))
 
     p = ND_AddAsciiEntry(p, 'StimPosX',    'p.trial.stim.PosX',                   '%.3f');
     p = ND_AddAsciiEntry(p, 'StimPosY',    'p.trial.stim.PosY',                   '%.3f');
-    p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.Hemi',                   '%.3f');
+    p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.Hemi',                   '%s');
     p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
     p = ND_AddAsciiEntry(p, 'lContr',      'p.trial.stim.GRATING.lowContrast',    '%.1f');

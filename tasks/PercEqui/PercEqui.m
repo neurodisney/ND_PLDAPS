@@ -101,7 +101,6 @@ function TaskSetUp(p)
     % Fixation spot
     p.trial.stim.fix = pds.stim.FixSpot(p);
 
-
     % determine grating parameters
     if(p.trial.task.RandomPar == 1)
         p.trial.stim.Ref.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
@@ -115,7 +114,7 @@ function TaskSetUp(p)
     end
 
     if(p.trial.task.RandomHemi == 1)
-        p.trial.stim.Hemi  = datasample(['l', 'r'], 1);
+        p.trial.stim.Hemi = datasample(['l', 'r'], 1);
     end
 
     % define both gratings

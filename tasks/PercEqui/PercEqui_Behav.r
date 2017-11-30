@@ -119,10 +119,10 @@ FixSRT  = dt$SRT_FixStart
 # Only display figure directly if called from the r environment (not the command line)
 # If we didn't do this, when called from the command line, it would just open briefly and then close when the script ends
 if(interactive()) {
-  x11(width=20.5, height=10.5, pointsize=20, title='CtrChng_Behav')
+  x11(width=20.5, height=10.5, pointsize=20, title='PercEqui_Behav')
 } else {
   # Otherwise only save the figure as a pdf.
-  pdf( paste('CtrChng_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='CtrChng_Behav')
+  pdf( paste('PercEqui_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='PercEqui_Behav')
   
 }
 
@@ -273,12 +273,12 @@ if(sum(pEarly) > 4) {
   all_vals_Y = c(all_vals_Y, TDurearly$y)
 }
 
-if(sum(pFalse) > 4) {
-  TDurfalse   = density(FixSRT[pFalse], bw=RTbw, na.rm=TRUE)
-  TDurfalse$y = TDurfalse$y * sum(pFalse) * RTbw
-  all_vals_X = c(all_vals_X, TDurfalse$x)
-  all_vals_Y = c(all_vals_Y, TDurfalse$y)
-}
+# if(sum(pFalse) > 4) {
+#   TDurfalse   = density(FixSRT[pFalse], bw=RTbw, na.rm=TRUE)
+#   TDurfalse$y = TDurfalse$y * sum(pFalse) * RTbw
+#   all_vals_X = c(all_vals_X, TDurfalse$x)
+#   all_vals_Y = c(all_vals_Y, TDurfalse$y)
+# }
 
 if(sum(pEarlyFalse) > 4) {
   TDurfalseearly   = density(FixSRT[pEarlyFalse], bw=RTbw, na.rm=TRUE)
@@ -328,9 +328,9 @@ if(sum(pEarly) > 4) {
   lines(TDurearly, lwd=2, col=Early_Col)
 }
 
-if(sum(pFalse) > 4) {
-  lines(TDurfalse, lwd=2, col=False_Col)
-}
+# if(sum(pFalse) > 4) {
+#   lines(TDurfalse, lwd=2, col=False_Col)
+# }
 
 if(sum(pEarlyFalse) > 4) {
   lines(TDurfalseearly, lwd=2, col=EarlyFalse_Col)
@@ -344,8 +344,8 @@ if(sum(pStimBreak) > 4) {
   lines(TDurstimbreak, lwd=2, col=StimBreak_Col)
 }
 
-abline(v=median(StimSRT[pCorr],  na.rm=TRUE), col=Corr_Col,  lty=2, lwd=2)
-abline(v=median(StimSRT[pEarly], na.rm=TRUE), col=Early_Col, lty=2, lwd=2)
+abline(v=median(FixSRT[pCorr],  na.rm=TRUE), col=Corr_Col,  lty=2, lwd=2)
+abline(v=median(FixSRT[pEarly], na.rm=TRUE), col=Early_Col, lty=2, lwd=2)
 
 box()
 
@@ -375,12 +375,12 @@ if(sum(pEarly) > 4) {
   all_vals_Y = c(all_vals_Y, RTearly$y)
 }
 
-if(sum(pFalse) > 4) {
-  RTfalse   = density(SRT[pFalse], bw=RTbw, na.rm=TRUE)
-  RTfalse$y = RTfalse$y  * sum(pFalse)  * RTbw
-  all_vals_X = c(all_vals_X, RTfalse$x)
-  all_vals_Y = c(all_vals_Y, RTfalse$y)
-}
+# if(sum(pFalse) > 4) {
+#   RTfalse   = density(SRT[pFalse], bw=RTbw, na.rm=TRUE)
+#   RTfalse$y = RTfalse$y  * sum(pFalse)  * RTbw
+#   all_vals_X = c(all_vals_X, RTfalse$x)
+#   all_vals_Y = c(all_vals_Y, RTfalse$y)
+# }
 
 if(sum(pEarlyFalse) > 4) {
   RTfalseearly   = density(SRT[pEarlyFalse], bw=RTbw, na.rm=TRUE)
@@ -425,9 +425,9 @@ if(sum(pEarly) > 4) {
   lines(RTearly, lwd=2, col=Early_Col)
 }
 
-if(sum(pFalse) > 4) {
-  lines(RTfalse, lwd=2, col=False_Col)
-}
+# if(sum(pFalse) > 4) {
+#   lines(RTfalse, lwd=2, col=False_Col)
+# }
 
 if(sum(pEarlyFalse) > 4) {
   lines(RTfalseearly, lwd=2, col=EarlyFalse_Col)
@@ -574,7 +574,7 @@ abline(h=0, col="black", lty=2, lwd=1.5)
 # save plot as pdf
 if(interactive()) {
   # Save the figure to pdf
-  dev.copy(pdf, paste('CtrChng_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='CtrChng')
+  dev.copy(pdf, paste('PercEqui_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='PercEqui')
 }
 
 dev.off()
