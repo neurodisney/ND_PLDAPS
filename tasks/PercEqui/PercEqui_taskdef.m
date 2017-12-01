@@ -25,11 +25,11 @@ p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 % Main trial timings
 p.trial.task.stimLatency      = ND_GetITI(0.75, 1.5); % Time from fixation onset to stim appearing
 
-p.trial.task.saccadeTimeout   = 0.5;   % Time allowed to make the saccade to the stim before error
+p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
-p.trial.task.minTargetFixTime = 0.75;  % Must fixate on target for at least this time before it counts
+p.trial.task.minTargetFixTime = 1;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
-p.trial.task.Timing.TimeOut   =  4;    % Time-out[s]  for incorrect responses
+p.trial.task.Timing.TimeOut   =  2.5;  % Time-out[s]  for incorrect responses
 p.trial.task.Timing.ITI       = ND_GetITI(1.25,  1.75,  [], [], 1, 0.10);
 
 % ----------------------------------- -------------------------------------%
@@ -60,7 +60,7 @@ for(i=1:length(p.trial.stim.trgtconts))
     p.trial.Block.Conditions = [p.trial.Block.Conditions, c];
 end
 
-p.trial.Block.maxBlockTrials =  10;
+p.trial.Block.maxBlockTrials = 10;
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters

@@ -74,7 +74,10 @@ p.defaultParameters.stim.PosX       = 3;
 
 p.defaultParameters.stim.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
 p.defaultParameters.stim.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
-p.defaultParameters.stim.sFreqLst   = 1.5:0.2:5; % spatial frequency as cycles per degree
+%p.defaultParameters.stim.sFreqLst   = 1.5:0.2:5; % spatial frequency as cycles per degree
+
+p.defaultParameters.stim.sFreqLst   = [2, 3, 4]; % spatial frequency as cycles per degree
+
 p.defaultParameters.stim.OriLst     = 0:15:179;  % orientation of grating
 
 p.defaultParameters.stim.Hemi       = datasample(['l', 'r'], 1);

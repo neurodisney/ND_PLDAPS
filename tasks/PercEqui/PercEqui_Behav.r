@@ -273,12 +273,12 @@ if(sum(pEarly) > 4) {
   all_vals_Y = c(all_vals_Y, TDurearly$y)
 }
 
-# if(sum(pFalse) > 4) {
-#   TDurfalse   = density(FixSRT[pFalse], bw=RTbw, na.rm=TRUE)
-#   TDurfalse$y = TDurfalse$y * sum(pFalse) * RTbw
-#   all_vals_X = c(all_vals_X, TDurfalse$x)
-#   all_vals_Y = c(all_vals_Y, TDurfalse$y)
-# }
+ if(sum(pFalse) > 4) {
+   TDurfalse   = density(FixSRT[pFalse], bw=RTbw, na.rm=TRUE)
+  TDurfalse$y = TDurfalse$y * sum(pFalse) * RTbw
+   all_vals_X = c(all_vals_X, TDurfalse$x)
+   all_vals_Y = c(all_vals_Y, TDurfalse$y)
+ }
 
 if(sum(pEarlyFalse) > 4) {
   TDurfalseearly   = density(FixSRT[pEarlyFalse], bw=RTbw, na.rm=TRUE)
@@ -328,9 +328,9 @@ if(sum(pEarly) > 4) {
   lines(TDurearly, lwd=2, col=Early_Col)
 }
 
-# if(sum(pFalse) > 4) {
-#   lines(TDurfalse, lwd=2, col=False_Col)
-# }
+ if(sum(pFalse) > 4) {
+   lines(TDurfalse, lwd=2, col=False_Col)
+ }
 
 if(sum(pEarlyFalse) > 4) {
   lines(TDurfalseearly, lwd=2, col=EarlyFalse_Col)
@@ -375,12 +375,12 @@ if(sum(pEarly) > 4) {
   all_vals_Y = c(all_vals_Y, RTearly$y)
 }
 
-# if(sum(pFalse) > 4) {
-#   RTfalse   = density(SRT[pFalse], bw=RTbw, na.rm=TRUE)
-#   RTfalse$y = RTfalse$y  * sum(pFalse)  * RTbw
-#   all_vals_X = c(all_vals_X, RTfalse$x)
-#   all_vals_Y = c(all_vals_Y, RTfalse$y)
-# }
+ if(sum(pFalse) > 4) {
+   RTfalse   = density(SRT[pFalse], bw=RTbw, na.rm=TRUE)
+   RTfalse$y = RTfalse$y  * sum(pFalse)  * RTbw
+   all_vals_X = c(all_vals_X, RTfalse$x)
+   all_vals_Y = c(all_vals_Y, RTfalse$y)
+ }
 
 if(sum(pEarlyFalse) > 4) {
   RTfalseearly   = density(SRT[pEarlyFalse], bw=RTbw, na.rm=TRUE)
@@ -425,9 +425,9 @@ if(sum(pEarly) > 4) {
   lines(RTearly, lwd=2, col=Early_Col)
 }
 
-# if(sum(pFalse) > 4) {
-#   lines(RTfalse, lwd=2, col=False_Col)
-# }
+ if(sum(pFalse) > 4) {
+   lines(RTfalse, lwd=2, col=False_Col)
+ }
 
 if(sum(pEarlyFalse) > 4) {
   lines(RTfalseearly, lwd=2, col=EarlyFalse_Col)
@@ -607,7 +607,7 @@ if(!interactive()) {
   }
 
   # Run the function
-  DelSacc_Behav(datadir, fname)
+  PercEqui_Behav(datadir, fname)
 }
 
 
