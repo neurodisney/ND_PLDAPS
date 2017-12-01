@@ -35,13 +35,13 @@ RespPos = dt$Outcome == 'Correct' | dt$Outcome == 'False' | dt$Outcome == 'Targe
 
 dt = droplevels(subset(dt, RespPos))
 
-allContr = sort(unique(dt$TargetContr))
-ContrCnt = as.numeric(table(dt$TargetContr))
-vCtr = ContrCnt > 20
-
-vPos = dt$TargetContr %in% allContr[vCtr]
-
-dt = droplevels(subset(dt, vPos))
+# allContr = sort(unique(dt$TargetContr))
+# ContrCnt = as.numeric(table(dt$TargetContr))
+# vCtr = ContrCnt > 20
+# 
+# vPos = dt$TargetContr %in% allContr[vCtr]
+# 
+# dt = droplevels(subset(dt, vPos))
 
 # correct item chosen, ignore target breaks
 CorrItm = dt$Good 
@@ -67,8 +67,15 @@ fitA = quickpsy(d=dt, x=TargetContr, k=TrgtSel,   fun=cum_normal_fun,
 plotcurves(fitA)
 
 fitS = quickpsy(d=dt, x=TargetContr, k=TrgtSel,  grouping = .(Hemi), fun=logistic_fun,
-                B=100, bootstrap='nonparametric' , xmin=0, xmax=1, lapses=F, guess=T)
+                B=10, bootstrap='nonparametric' , xmin=0, xmax=1, lapses=T, guess=F)
 plotcurves(fitS)
+
+
+fit3 = quickpsy(d=dt, x=TargetContr, k=TrgtSel,  grouping = .(RefSpFreq), fun=cum_normal_fun,
+                B=100, bootstrap='parametric' , xmin=0, xmax=1, lapses=F, guess=T)
+plotcurves(fit3)
+
+
 
 RTbw=0.250
 cpos = dt$Good==1
