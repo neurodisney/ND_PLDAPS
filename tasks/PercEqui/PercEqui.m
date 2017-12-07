@@ -98,6 +98,10 @@ function TaskSetUp(p)
     p.trial.task.stimFix   = 0;
     p.trial.task.stimState = 0;  % 0 is off, 1 is on
 
+    p.trial.task.SRT_FixStart = NaN;
+    p.trial.task.SRT_StimOn   = NaN;
+
+    
     %% Generate all the visual stimuli
     % Fixation spot
     p.trial.stim.fix = pds.stim.FixSpot(p);
@@ -112,6 +116,7 @@ function TaskSetUp(p)
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
         p.trial.stim.PosY = datasample(p.trial.stim.PosYlst, 1);
+        p.trial.stim.PosX = datasample(p.trial.stim.PosXlst, 1);
     end
 
     if(p.trial.task.RandomHemi == 1)
@@ -220,6 +225,9 @@ function TaskDesign(p)
             elseif(~p.trial.stim.fix.fixating)
                 pds.audio.playDP(p, 'breakfix', 'left');
 
+                p.trial.task.SRT_FixStart = p.trial.EV.FixLeave -  p.trial.stim.fix.EV.FixStart;
+                p.trial.task.SRT_StimOn   = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
+
                 ND_SwitchEpoch(p, 'BreakFixCheck');
             end
 
@@ -260,7 +268,10 @@ function TaskDesign(p)
                         case 'reference'
                              p.trial.task.TargetSel = 0;
                     end
-
+                    
+                    p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                    p.trial.task.SRT_StimOn   = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                    
                 elseif(p.trial.stim.(p.trial.stim.SaccadeDistractor).looking)
                 % wrong item chosen
                     % Play breakfix sound
@@ -280,6 +291,9 @@ function TaskDesign(p)
 
                     ND_SwitchEpoch(p, 'TaskEnd');
 
+                    p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                    p.trial.task.SRT_StimOn   = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                    
                 elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
                 % gaze away from fixation spot but not item selected: fix break
                     p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
@@ -290,6 +304,9 @@ function TaskDesign(p)
                     % End the trial
                     ND_SwitchEpoch(p, 'TaskEnd');
 
+                    p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                    p.trial.task.SRT_StimOn   = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                    
                 elseif(p.trial.stim.fix.looking)
                 % returned in time to fixation spot, not considered a response saccade yet
                      ND_SwitchEpoch(p, 'WaitSaccade');
@@ -516,28 +533,24 @@ function Calculate_SRT(p)
     p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
     p.trial.EV.FixSpotStop  = p.trial.EV.FixLeave;
 
-    switch p.trial.outcome.CurrOutcomeStr
-        case {'NoStart', 'Break', 'Miss', 'NoFix'}
-            p.trial.task.SRT_FixStart = NaN;
-            p.trial.task.SRT_StimOn   = NaN;
-
-        case {'FixBreak'}
-            p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop -  p.trial.EV.FixSpotStart;
-            p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency);
-
-        case {'StimBreak', 'Early', 'EarlyFalse', 'NoTargetFix'}
-            p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop -  p.trial.EV.FixSpotStart;
-            p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop -  p.trial.EV.StimOn;
-
-        case {'False', 'Correct', 'TargetBreak'}
-            p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
-            p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
-
-        otherwise
-            warning(['Calculate_SRT: unrecognized outcome: ', p.trial.outcome.CurrOutcomeStr]);
-            p.trial.task.SRT_FixStart = NaN;
-            p.trial.task.SRT_StimOn   = NaN;
-    end
+%     switch p.trial.outcome.CurrOutcomeStr
+%         case {'NoStart', 'Break', 'Miss', 'NoFix'}
+%             p.trial.task.SRT_FixStart = NaN;
+%             p.trial.task.SRT_StimOn   = NaN;
+% 
+%         case {'FixBreak'}
+%             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop -  p.trial.EV.FixSpotStart;
+%             p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency);
+% 
+%         case {'StimBreak', 'Early', 'EarlyFalse', 'NoTargetFix', 'False', 'Correct', 'TargetBreak'}
+%             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop -  p.trial.EV.FixSpotStart;
+%             p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop -  p.trial.EV.StimOn;
+%             
+%         otherwise
+%             warning(['Calculate_SRT: unrecognized outcome: ', p.trial.outcome.CurrOutcomeStr]);
+%             p.trial.task.SRT_FixStart = NaN;
+%             p.trial.task.SRT_StimOn   = NaN;
+%     end
 
 
 

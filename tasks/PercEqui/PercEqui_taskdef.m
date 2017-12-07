@@ -13,8 +13,8 @@ function p = PercEqui_taskdef(p)
 
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.05;  % reward duration [s] for reward given by keyboard presses
-p.trial.reward.IncrementTrial = [  50, 200,  300,  400,  500,  600, 700 ]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur   = [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4]; % increase number of pulses with this trial number
+p.trial.reward.IncrementTrial = [ 100, 250,  350, 425,  500, 550, 700]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur   = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -34,10 +34,16 @@ p.trial.task.Timing.ITI       = ND_GetITI(1.25,  1.75,  [], [], 1, 0.10);
 
 % ----------------------------------- -------------------------------------%
 %% Grating stimuli parameters
-p.trial.stim.GRATING.fixWin = 2.5;
-p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
+%p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 p.trial.stim.GRATING.tFreq  = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 p.trial.stim.GRATING.res    = 300;
+p.trial.stim.GRATING.fixWin = 2;  %*p.trial.stim.GRATING.radius;
+
+p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % radius of grating patch
+% p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
+p.trial.stim.PosX    = 3;
+p.trial.stim.PosY    = datasample([-2.5, 0, 2.5], 1);
+p.trial.stim.PosY    =  0;
 
 % grating contrast
 p.trial.stim.Ref.Contrast = 0.5;

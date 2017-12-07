@@ -112,6 +112,14 @@ Ttime   = (dt$FixSpotOn - SessTrialStart) / 60  # in minutes, define trial start
 SRT     = dt$SRT_StimOn
 FixSRT  = dt$SRT_FixStart
 
+
+FixSRT = dt$EV_FixLeave - dt$EV_FixStart
+SRT    = dt$EV_FixLeave - dt$StimOn
+
+p = is.na(SRT)
+SRT[p] = dt$EV_FixLeave[p] - (dt$EV_FixStart[p] + dt$StimLatency[p])
+
+
 ###########################################################################################
 # create plots
 

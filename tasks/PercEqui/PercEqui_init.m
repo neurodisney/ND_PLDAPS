@@ -60,7 +60,7 @@ ND_Trial2Ascii(p, 'init');
 
 
 %% initialize target parameters
-p.defaultParameters.behavior.fixation.FixWin = 2.5;
+p.defaultParameters.behavior.fixation.FixWin = 2;
 
 p.defaultParameters.task.RandomHemi = 0; % if 1, randomly pick left or right hemifield
 p.defaultParameters.task.RandomPos  = 0; % if 1, randomly change the grating location each trial
@@ -69,19 +69,21 @@ p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and
 p.defaultParameters.task.EqualStim  = 1; % both gratings have the same spatial frequency and orientation
 
 % define random grating parameters for each session
-p.defaultParameters.stim.PosYlst    = -3:0.1:3;  % range of possible positions on Y axis
-p.defaultParameters.stim.PosX       = 3;
+%p.defaultParameters.stim.PosYlst    = -3:0.1:3;  % range of possible positions on Y axis
+%p.defaultParameters.stim.PosYlst    = [-2.5, 0, 2.5];  % range of possible positions on Y axis
+%p.defaultParameters.stim.PosXlst    = [2, 4, 5];
+p.defaultParameters.stim.PosYlst    = -2;  % range of possible positions on Y axis
+p.defaultParameters.stim.PosXlst    =  3;
 
-p.defaultParameters.stim.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
 p.defaultParameters.stim.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
 %p.defaultParameters.stim.sFreqLst   = 1.5:0.2:5; % spatial frequency as cycles per degree
-
-p.defaultParameters.stim.sFreqLst   = [2, 3, 4]; % spatial frequency as cycles per degree
+p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
 
 p.defaultParameters.stim.OriLst     = 0:15:179;  % orientation of grating
 
 p.defaultParameters.stim.Hemi       = datasample(['l', 'r'], 1);
 p.defaultParameters.stim.PosY       = datasample(p.defaultParameters.stim.PosYlst, 1);
+p.defaultParameters.stim.PosX       = datasample(p.defaultParameters.stim.PosXlst, 1);
 p.defaultParameters.stim.Ref.sFreq  = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
 p.defaultParameters.stim.Ref.ori    = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
 
