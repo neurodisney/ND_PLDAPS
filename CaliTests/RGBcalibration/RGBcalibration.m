@@ -30,14 +30,9 @@ if(isempty(state))
          p.defaultParameters.RGB.GreyNames{i} = ['RGB_', int2str(100*p.defaultParameters.RGB.GreySteps(i))];
          ND_DefineCol(p, p.defaultParameters.RGB.GreyNames{i}, i+100, p.defaultParameters.RGB.GreySteps(i));
      end
-
-     p.defaultParameters.stim.FIXSPOT.type    = 'rect';  % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-     p.defaultParameters.stim.FIXSPOT.size    = 5;        % size of the fixation spot
-     p.defaultParameters.stim.FIXSPOT.fixWin  = 0;         %\
-     
-     
+    
  %% displace fixation window and fixation target
-    p.defaultParameters.task.fixrect = ND_GetRect([0,0], 4);  
+    p.defaultParameters.task.fixrect = ND_GetRect([0,0], 6);  
     
     Screen('Preference', 'TextAntiAliasing', 1);
     Screen('Preference', 'DefaultFontSize',  8);
@@ -62,11 +57,6 @@ else
         % prepare everything for the trial, including allocation of stimuli
         % and all other more time demanding stuff.
             TaskSetUp(p);
-            
-        % ----------------------------------------------------------------%
-        case p.trial.pldaps.trialStates.trialPrepare
-        %% trial preparation
-        % just prior to actual trial start, use it for time sensitive preparations;
             
 % ------------------------------------------------------------------------%
 % DONE DURING THE MAIN TRIAL LOOP:
@@ -117,7 +107,6 @@ function TaskDraw(p)
     Screen('FillRect', p.trial.display.overlayptr, ...
                        p.trial.display.clut.(p.trial.RGB.GreyNames{p.trial.RGB.CurrPos}), ...
                        p.trial.task.fixrect);
-
 
 % Save useful info to an ascii table for plotting
 % ####################################################################### %
