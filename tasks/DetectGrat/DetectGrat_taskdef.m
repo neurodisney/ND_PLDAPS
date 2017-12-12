@@ -1,4 +1,4 @@
-function p = PercEqui_taskdef(p)
+function p = DetectGrat_taskdef(p)
 % define task parameters for the point of subjective equality task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
@@ -25,35 +25,39 @@ p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 % Main trial timings
 p.trial.task.stimLatency      = ND_GetITI(0.75, 1.5); % Time from fixation onset to stim appearing
 
-p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to the stim before error
+p.trial.task.saccadeTimeout   = 1.5;   % Time allowed to make the saccade to the stim before error
+
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 1;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
 p.trial.task.Timing.TimeOut   =  2.5;  % Time-out[s]  for incorrect responses
-p.trial.task.Timing.ITI       = ND_GetITI(1.25,  1.75,  [], [], 1, 0.10);
+p.trial.task.Timing.ITI       = ND_GetITI(1.5,  2,  [], [], 1, 0.10);
 
 % ----------------------------------- -------------------------------------%
 %% Grating stimuli parameters
-%p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
+% p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 p.trial.stim.GRATING.tFreq  = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 p.trial.stim.GRATING.res    = 300;
 p.trial.stim.GRATING.fixWin = 2;  %*p.trial.stim.GRATING.radius;
 
 p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % radius of grating patch
 p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
-p.trial.stim.PosX    = 3;
-p.trial.stim.PosX    = datasample([ 2, 2.5, 3, 3.5], 1);
-p.trial.stim.PosY    = 0;
+
+p.trial.stim.EccLst = [ 2, 3,   4];
+p.trial.stim.AngLst = [45, 0, -45];
+
 
 % grating contrast
-p.trial.stim.Ref.Contrast = 0.5;
 
 ctrng = ((logspace(0,1,9)-1)*0.04);
 p.trial.stim.trgtconts = [fliplr(0.5 - ctrng(2:end)), 0.5 + ctrng(2:end)];
 
-% p.trial.stim.trgtconts = [fliplr(0.5 - ctrng(4:end)), 0.5 + ctrng(4:end)];
 
-% p.trial.stim.GRATING.TargetContrast = datasample(p.trial.stim.trgtconts, 1);
+p.trial.stim.trgtconts = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8];
+
+p.trial.stim.RespThr = 0.25; % contrast where it can be assumed the grating is seen
+
+
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design

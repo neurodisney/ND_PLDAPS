@@ -1,4 +1,4 @@
-function p = PercEqui_init(p)
+function p = DetectGrat_init(p)
 % Initialisation for the PercEqui task
 %
 % Define the format of the ASCII table and all variables that will be kept constant
@@ -18,16 +18,13 @@ p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%
 p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
 
 p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.Hemi',                     '%s');
-p = ND_AddAsciiEntry(p, 'RefSpFreq',   'p.trial.stim.Ref.sFreq',              '%.4f');
-p = ND_AddAsciiEntry(p, 'RefOri',      'p.trial.stim.Ref.sFreq',              '%.4f');
-p = ND_AddAsciiEntry(p, 'RefContr',    'p.trial.stim.Ref.Contrast',           '%.4f');
 p = ND_AddAsciiEntry(p, 'TargetSpFreq','p.trial.stim.Trgt.sFreq',             '%.4f');
 p = ND_AddAsciiEntry(p, 'TargetOri',   'p.trial.stim.Trgt.sFreq',             '%.4f');
 p = ND_AddAsciiEntry(p, 'TargetContr', 'p.trial.stim.Trgt.Contrast',          '%.4f');
-p = ND_AddAsciiEntry(p, 'RefX',        'p.trial.stim.Ref.Pos(1)',             '%.2f');
-p = ND_AddAsciiEntry(p, 'RefY',        'p.trial.stim.Ref.Pos(2)',             '%.2f');
-p = ND_AddAsciiEntry(p, 'TargetX',     'p.trial.stim.Trgt.Pos(1)',            '%.2f');
-p = ND_AddAsciiEntry(p, 'TargetY',     'p.trial.stim.Trgt.Pos(2)',            '%.2f');
+p = ND_AddAsciiEntry(p, 'PosX',        'p.trial.stim.PosX',                   '%.2f');
+p = ND_AddAsciiEntry(p, 'PosY',        'p.trial.stim.PosY',                   '%.2f');
+p = ND_AddAsciiEntry(p, 'Eccentricity','p.trial.stim.Ecc',                    '%.2f');
+p = ND_AddAsciiEntry(p, 'Angle',       'p.trial.stim.Ang',                    '%.2f');
 
 p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.GRATING.radius',       '%.1f');
 
@@ -36,8 +33,6 @@ p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%
 p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
 p = ND_AddAsciiEntry(p, 'StimOn',      'p.trial.EV.StimOn',                   '%.5f');
 p = ND_AddAsciiEntry(p, 'StimOff',     'p.trial.EV.StimOff',                  '%.5f');
-p = ND_AddAsciiEntry(p, 'FixStart',    'p.trial.EV.FixSpotStart',             '%.5f');
-p = ND_AddAsciiEntry(p, 'FixBreak',    'p.trial.EV.FixSpotStop',              '%.5f');
 p = ND_AddAsciiEntry(p, 'StimFix',     'p.trial.EV.FixStimStart',             '%.5f');
 p = ND_AddAsciiEntry(p, 'StimBreak',   'p.trial.EV.FixStimStop',              '%.5f');
 p = ND_AddAsciiEntry(p, 'TaskEnd',     'p.trial.EV.TaskEnd',                  '%.5f');
@@ -58,34 +53,38 @@ p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.R
 % call this after ND_InitSession to be sure that output directory exists!
 ND_Trial2Ascii(p, 'init');
 
-
 %% initialize target parameters
 p.defaultParameters.stim.FIXSPOT.fixWin = 2;
 
 p.defaultParameters.task.RandomHemi = 0; % if 1, randomly pick left or right hemifield
-p.defaultParameters.task.RandomPos  = 0; % if 1, randomly change the grating location each trial
 p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
-
-p.defaultParameters.task.EqualStim  = 1; % both gratings have the same spatial frequency and orientation
+p.defaultParameters.task.RandomEcc  = 0; % if 1, randomly change the grating eccentricity each trial
+p.defaultParameters.task.RandomAng  = 0; % if 1, randomly change the grating angular position each trial
 
 % define random grating parameters for each session
-%p.defaultParameters.stim.PosYlst    = -3:0.1:3;  % range of possible positions on Y axis
-%p.defaultParameters.stim.PosYlst    = [-2.5, 0, 2.5];  % range of possible positions on Y axis
-%p.defaultParameters.stim.PosXlst    = [2, 4, 5];
 p.defaultParameters.stim.PosYlst    = -2;  % range of possible positions on Y axis
 p.defaultParameters.stim.PosXlst    =  3;
 
-p.defaultParameters.stim.RandAngles = 0:15:359;  % if in random mode chose an angle from this list
-%p.defaultParameters.stim.sFreqLst   = 1.5:0.2:5; % spatial frequency as cycles per degree
-p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
+% define grid locations used by key selection
+p.defaultParameters.stim.EccLst = [2, 3, 4, 2, 3, 4, 2, 3, 4];
+p.defaultParameters.stim.AngLst = [45, 45, 45, 0, 0, 0, -45, -45, -45];
 
+[p.defaultParameters.stim.GridX, p.defaultParameters.stim.GridY] = ...
+    pol2cart(p.defaultParameters.stim.AngLst, p.defaultParameters.stim.EccLst);
+
+% get a random location to start with
+cPos = randi(length(p.defaultParameters.stim.GridX));
+p.defaultParameters.stim.Ecc = p.defaultParameters.stim.EccLst(cPos);
+p.defaultParameters.stim.Ang = p.defaultParameters.stim.AngLst(cPos);
+p.defaultParameters.stim.PosY       = p.defaultParameters.stim.GridX(cPos);
+p.defaultParameters.stim.PosX       = p.defaultParameters.stim.GridY(cPos);
+
+p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
 p.defaultParameters.stim.OriLst     = 0:15:179;  % orientation of grating
 
 p.defaultParameters.stim.Hemi       = datasample(['l', 'r'], 1);
-p.defaultParameters.stim.PosY       = datasample(p.defaultParameters.stim.PosYlst, 1);
-p.defaultParameters.stim.PosX       = datasample(p.defaultParameters.stim.PosXlst, 1);
-p.defaultParameters.stim.Ref.sFreq  = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
-p.defaultParameters.stim.Ref.ori    = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
+p.defaultParameters.stim.Trgt.sFreq = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
+p.defaultParameters.stim.Trgt.ori   = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
 
 p.defaultParameters.task.SRT          = NaN;
 p.defaultParameters.task.SRT_FixStart = NaN;
