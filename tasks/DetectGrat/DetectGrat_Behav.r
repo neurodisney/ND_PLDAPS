@@ -130,7 +130,7 @@ if(interactive()) {
   x11(width=20.5, height=10.5, pointsize=20, title='DetectGrat_Behav')
 } else {
   # Otherwise only save the figure as a pdf.
-  pdf( paste('PercEqui_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='DetectGrat_Behav')
+  pdf( paste('DetectGrat_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='DetectGrat_Behav')
 
 }
 

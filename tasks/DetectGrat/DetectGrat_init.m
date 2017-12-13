@@ -17,12 +17,17 @@ p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%
 p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
 p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
 
+p = ND_AddAsciiEntry(p, 'RandomHemi',  'p.trial.task.RandomHemi',             '%d');
+p = ND_AddAsciiEntry(p, 'RandomPar',   'p.trial.task.RandomPar',              '%d');
+p = ND_AddAsciiEntry(p, 'RandomEcc',   'p.trial.task.RandomEcc',              '%d');
+p = ND_AddAsciiEntry(p, 'RandomAng',   'p.trial.task.RandomAng',              '%d');
+
 p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.Hemi',                     '%s');
 p = ND_AddAsciiEntry(p, 'TargetSpFreq','p.trial.stim.Trgt.sFreq',             '%.4f');
 p = ND_AddAsciiEntry(p, 'TargetOri',   'p.trial.stim.Trgt.sFreq',             '%.4f');
 p = ND_AddAsciiEntry(p, 'TargetContr', 'p.trial.stim.Trgt.Contrast',          '%.4f');
-p = ND_AddAsciiEntry(p, 'PosX',        'p.trial.stim.PosX',                   '%.2f');
-p = ND_AddAsciiEntry(p, 'PosY',        'p.trial.stim.PosY',                   '%.2f');
+p = ND_AddAsciiEntry(p, 'PosX',        'p.trial.stim.GRATING.pos(1)',         '%.2f');
+p = ND_AddAsciiEntry(p, 'PosY',        'p.trial.stim.GRATING.pos(2)',         '%.2f');
 p = ND_AddAsciiEntry(p, 'Eccentricity','p.trial.stim.Ecc',                    '%.2f');
 p = ND_AddAsciiEntry(p, 'Angle',       'p.trial.stim.Ang',                    '%.2f');
 
@@ -46,7 +51,7 @@ p = ND_AddAsciiEntry(p, 'EV_FixStart', 'p.trial.stim.fix.EV.FixStart;',       '%
 
 p = ND_AddAsciiEntry(p, 'TargetSel',   'p.trial.task.TargetSel',                '%d');
 
-p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
+p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.FIXSPOT.fixWin',    '%.5f');
 p = ND_AddAsciiEntry(p, 'Reward',      'p.trial.EV.Reward',                   '%.5f');
 p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)', '%.5f');
 
