@@ -48,6 +48,7 @@ end
 if (mu < minval)
     error('Minimum ITI tme can not exceed mean ITI time!');
 end
+
 mu = mu - minval;
 
 %% get values
@@ -72,11 +73,19 @@ switch lower(rndmeth)
         R = pptb_randChi2(mu, size(n)) + minval;
         pos = find(R > maxval);
 
-        for(i=1:length(pos))
-            while(R(pos) > maxval)
-                R(pos) = pptb_randChi2(mu,1,1) + minval;
-            end
+%         for(i=1:length(pos))
+%             while(R(pos) > maxval)
+%                 R(pos) = pptb_randChi2(mu,1,1) + minval;
+%                 
+%             end
+%         end
+        
+
+        while(~isempty(pos))
+            R(pos) = ND_GetITI(minval, maxval, rndmeth, mu+minval, length(pos), step);
+            pos = find(R > maxval);
         end
+
 
     % --------------------------------------------------------------------%
     %% gamma
@@ -84,11 +93,17 @@ switch lower(rndmeth)
        R = randg(mu,size(n)) + minval;
        pos = find(R > maxval);
 
-        for(i=1:length(pos))
-            while(R(pos) > maxval)
-                R(pos) = randg(mu,1,1) + minval;
-            end
+%         for(i=1:length(pos))
+%             while(R(pos) > maxval)
+%                 R(pos) = randg(mu,1,1) + minval;
+%             end
+%         end
+
+        while(~isempty(pos))
+            R(pos) = ND_GetITI(minval, maxval, rndmeth, mu+minval, length(pos), step);
+            pos = find(R > maxval);
         end
+
 
     % --------------------------------------------------------------------%
     %% poisson

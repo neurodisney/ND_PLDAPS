@@ -22,6 +22,7 @@ disp('');
 p.defaultParameters.epoch.GetReady        =  -1;  % Wait to initialize task
 p.defaultParameters.epoch.WaitStart       =   1;  % Wait for a joystick press to indicate readiness to work on a trial
 p.defaultParameters.epoch.WaitResponse    =   2;  % Wait for task response (saccade or joystick state change)
+p.defaultParameters.epoch.CheckResponse   =   4;  % A response occurred, check if it was a correct one
 p.defaultParameters.epoch.TrialStart      =   3;  % trial starts for animal
 p.defaultParameters.epoch.WaitEnd         =  14;  % trial completed (successful or not)
 p.defaultParameters.epoch.TaskEnd         =  11;  % trial completed (successful or not)

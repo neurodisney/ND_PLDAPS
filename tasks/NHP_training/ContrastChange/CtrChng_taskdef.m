@@ -1,13 +1,8 @@
 function p = CtrChng_taskdef(p)
-% define task parameters for the joystick training task.
+% define task parameters for the contrast detection task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
 % modifications of the task.
-%
-% TODO: - Make sure that changed parameters are kept in the data file, i.e.
-%         that there is some log when changes happened
-%       - read in only changes in order to allow quicker manipulations via the
-%         keyboard without overwriting it every time by calling this routine
 %
 %
 % wolf zinke, Dec. 2016
@@ -28,7 +23,7 @@ p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewar
 p.trial.reward.nPulse          = 1; % number of reward pulses
 p.trial.reward.PulseStep       = [2, 4, 6, 8]; % increase number of pulses with this trial number
 p.trial.reward.IncrementTrial  = [  50, 200,  250,  300,  400,  500]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur    = [0.075, 0.1, 0.15, 0.175, 0.25, 0.5]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur    = [0.075, 0.15, 0.175, 0.2, 0.25, 0.5]; % increase number of pulses with this trial number
 
 % ----------------------------------- -------------------------------------%
 %% Grating stimuli parameters
@@ -43,8 +38,8 @@ p.trial.stim.GridPos = linspace(-3,3,9); % position on y axis
 p.trial.stim.GRATING.tFreq   = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 % grating contrast
 p.trial.stim.GRATING.lowContrast  = 0.4;  % grating contrast value when stim.on = 1
-p.trial.stim.GRATING.highContrast = 0.45;  % grating contrast value when stim.on = 2
-% p.trial.stim.GRATING.highContrast = datasample(0.425:0.05:0.65, 1);
+% p.trial.stim.GRATING.highContrast = 0.5;  % grating contrast value when stim.on = 2
+p.trial.stim.GRATING.highContrast = datasample(0.425:0.05:0.65, 1);
 
 p.trial.stim.GRATING.res          = 300;
 
@@ -117,7 +112,7 @@ p.trial.Block.Conditions     = {c1, c2, c3, c4};
 p.trial.Block.maxBlockTrials =  [1, 3, 4, 2];
 
 p.trial.Block.Conditions     = { c2, c3, c4, c5, c6, c7};
-p.trial.Block.maxBlockTrials =  [2,  3,  4,  4,  3, 2];
+p.trial.Block.maxBlockTrials =  [2,  3,  4,  4,  4,  3];
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters

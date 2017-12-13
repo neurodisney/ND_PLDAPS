@@ -85,12 +85,11 @@ end
 
 if(p.defaultParameters.behavior.fixation.use)
     p = pds.fixation.setup(p);
-end
 
-%-------------------------------------------------------------------------%
-%% eye calibration
-if(p.defaultParameters.behavior.fixation.useCalibration)    
-    p = pds.eyecalib.setup(p);
+    %% eye calibration
+    if(p.defaultParameters.behavior.fixation.useCalibration)    
+        p = pds.eyecalib.setup(p);
+    end
 end
 
 %-------------------------------------------------------------------------%

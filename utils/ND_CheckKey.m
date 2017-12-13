@@ -45,9 +45,11 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
             case p.trial.key.reward
             %% reward
             % check for manual reward delivery via keyboard
-                pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
-                ND_CtrlMsg(p, 'Click... Reward delivered.');
-
+                if(p.trial.datapixx.useForReward)
+                    pds.reward.give(p, p.trial.reward.ManDur);  % per default, output will be channel three.
+                    ND_CtrlMsg(p, 'Click... Reward delivered.');
+                end
+                
             % ----------------------------------------------------------------%
             case p.trial.key.FixInc
             %% Fixspot window increase
