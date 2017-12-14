@@ -1,10 +1,9 @@
 function p = FixCalib(p, state)
-% Main trial function for initial fixation training.
+% Main trial function for fixation calibration.
 %
 %
 %
-% wolf zinke, Apr. 2017
-% Nate Faber, May 2017
+% wolf zinke, Dec. 2017
 
 % ####################################################################### %
 %% define the task name that will be used to create a sub-structure in the trial struct
@@ -134,10 +133,7 @@ function TaskSetUp(p)
     p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI, ...
                                          p.trial.task.Timing.MaxITI, [], [], 1, 0.10);
                                      
-    p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial, ...
-                                         p.trial.reward.MaxWaitInitial, [], [], 1, 0.001);
-        
-    p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;

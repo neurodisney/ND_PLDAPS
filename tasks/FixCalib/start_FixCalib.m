@@ -5,8 +5,7 @@ function p = start_FixCalib(subjname, rig)
 % This function prepares a task by defining setting task related matlab functions,
 % setting parameters for the session, creating a pldaps class and running the experiment.
 %
-% wolf zinke, Apr. 2017
-% Nate Faber, May 2017
+% wolf zinke, Dec. 2017
 
 % ------------------------------------------------------------------------%
 %% Set default variables
@@ -51,7 +50,7 @@ SS.sound.useDatapixx          = 1;
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
 SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
-SS.pldaps.nosave              = 0; % disable saving data to pds files
+SS.pldaps.nosave              = 1; % disable saving data to pds files
 SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
 SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
@@ -69,16 +68,11 @@ SS.behavior.fixation.enableCalib    = 1;
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
-
-%SS.eyeCalib.defaultOffset = [-19.9321 -23.2293];
-%SS.eyeCalib.defaultGain   = [-5, -10];
-
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
 % If there are modification from the default settings needed, copy the
 % needed lines from ND_RigDefaults and alter the values here.
 
-%SS.display.bgColor    = [0.25, 0.25, 0.25];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
 %% ################## Edit within the preceding block ################### %%
