@@ -66,9 +66,9 @@ p.trial.Block.maxBlockTrials = 10;
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos    = [0,0];
-p.trial.stim.FIXSPOT.type   = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.color  = 'FixPurple';   % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size   = 0.125;    % size of the fixation spot
+p.trial.stim.FIXSPOT.type   = 'disc';          % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.FIXSPOT.color  = 'FixDetection';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size   = 0.125;           % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
