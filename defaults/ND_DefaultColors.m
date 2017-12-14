@@ -18,7 +18,6 @@ function p = ND_DefaultColors(p)
 % wolf zinke, Jan. 2017
 
 
-
 disp('****************************************************************')
 disp('>>>>  ND:  Setting Default Colors <<<<')
 disp('****************************************************************')
@@ -98,6 +97,7 @@ ND_DefineCol(p, 'cyanBreak',  49, [0.00, 0.25, 0.25], [0.00, 1.00, 1.00]);
 ND_DefineCol(p, 'orangeBreak',50, [0.25, 0.10, 0.00], [1.00, 0.40, 0.00]);
 ND_DefineCol(p, 'whiteBreak', 51, [0.25, 0.25, 0.25], [1.00, 1.00, 1.00]);
 
+ND_DefineCol(p, 'FixPurple', 51, [190 115 215]./ 255, [190 115 215]./ 255);
 
 %ND_DefineCol(p, 'targetgood', 50, [0.00, 1.00, 0.00]);
 %ND_DefineCol(p, 'targetnull', 51, [1.00, 0.00, 0.00]);

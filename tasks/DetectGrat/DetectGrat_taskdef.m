@@ -13,7 +13,7 @@ function p = DetectGrat_taskdef(p)
 
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.05;  % reward duration [s] for reward given by keyboard presses
-p.trial.reward.IncrementTrial = [ 100, 250,  350, 425,  500, 550, 700]; % increase number of pulses with this trial number
+p.trial.reward.IncrementTrial = [ 150, 300,  400, 500,  600, 650, 700]; % increase number of pulses with this trial number
 p.trial.reward.IncrementDur   = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
@@ -47,11 +47,8 @@ p.trial.stim.EccLst = [ 2, 3,   4];
 p.trial.stim.AngLst = [45, 0, -45];
 
 % grating contrast
-% p.trial.stim.trgtconts = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8];
-
-p.trial.stim.trgtconts = [0, 0.035 * (logspace(0, 1, 9))];
-
-p.trial.stim.RespThr = 0.15; % contrast where it can be assumed the grating is seen
+p.trial.stim.trgtconts = round(logspace(log10(0.01),log10(0.31), 10), 4)-0.01;
+p.trial.stim.RespThr = 0.05; % contrast where it can be assumed the grating is seen
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
@@ -70,7 +67,7 @@ p.trial.Block.maxBlockTrials = 10;
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.color  = 'cyan';   % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.color  = 'FixPurple';   % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.FIXSPOT.size   = 0.125;    % size of the fixation spot
 
 % ------------------------------------------------------------------------%

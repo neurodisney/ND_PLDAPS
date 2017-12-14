@@ -137,17 +137,17 @@ function TaskSetUp(p)
     p.trial.stim.GRATING.ori      = p.trial.stim.Trgt.ori;
     p.trial.stim.GRATING.pos      = [p.trial.stim.PosX, p.trial.stim.PosY];
     p.trial.stim.GRATING.contrast = p.trial.stim.Trgt.Contrast;
-    
+
     if(p.trial.stim.Hemi == 'r')
         p.trial.stim.GRATING.pos(1)  = -1*p.trial.stim.GRATING.pos(1);
     end
-   
+
     p.trial.stim.target           = pds.stim.Grating(p);
 
     % Is a saccade expected
     % increase likelihood of saccade expectation the closer we get to the threshold
     p.trial.task.ExpectSacc = rand() < p.trial.stim.Trgt.Contrast / p.trial.stim.RespThr;
-    
+
     % Assume manual control of the activation of the grating fix windows
     p.trial.stim.grating_target.autoFixWin    = 0;
     p.trial.stim.grating_reference.autoFixWin = 0;
@@ -219,7 +219,7 @@ function TaskDesign(p)
                 if(p.trial.task.ExpectSacc)
                 % visible stimulus, saccade expected, thus miss    
                     Task_Error(p, 'Miss');
-                    
+
                  else
                 % stimulus potentially not visible, give reward for keeeping fixation
                     p.trial.task.TargetSel = 0;
@@ -356,7 +356,7 @@ if(~isempty(p.trial.LastKeyPress))
             else
                 ND_CtrlMsg(p, 'Grating eccemtricity is kept constant.');
             end
-            
+
         % random position of target on each trial
         case KbName('a')
              p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
@@ -366,7 +366,7 @@ if(~isempty(p.trial.LastKeyPress))
             else
                 ND_CtrlMsg(p, 'Grating  angular position is kept constant.');
             end
-            
+
         % randomly select a new spatial frequency
         case KbName('f')
             p.trial.stim.GRATING.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
