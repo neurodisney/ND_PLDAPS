@@ -25,8 +25,11 @@ p.data.Good(    Tnr, 1) = p.trial.task.Good;
 p.data.TrialStart(Tnr, 1) = p.trial.EV.TrialStart;
 p.data.TaskStart( Tnr, 1) = p.trial.EV.TaskStart;
 p.data.TaskEnd(   Tnr, 1) = p.trial.EV.TaskEnd;
-p.data.FixStart(  Tnr, 1) = p.trial.EV.FixStart;
-p.data.FixBreak(  Tnr, 1) = p.trial.EV.FixBreak;
+
+if(p.defaultParameters.behavior.fixation.use)
+    p.data.FixStart(  Tnr, 1) = p.trial.EV.FixStart;
+    p.data.FixBreak(  Tnr, 1) = p.trial.EV.FixBreak;
+end
 
 % --------------------------------------------------------------------%
 %% execute user after trial function

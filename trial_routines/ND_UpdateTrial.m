@@ -91,7 +91,7 @@ p.defaultParameters.pldaps.keyboardFree = p.trial.pldaps.keyboardFree;
 %% editable variables
 if(isfield(p.trial, 'editable') && ~ isempty(p.trial.editable))
     for(i=1:length(p.trial.editable))
-        eval(['p.defaultParameters.',p.trial.editable{i},' = p.trial.',p.trial.editable{i},';']);
+        eval(['p.defaultParameters.',p.trial.editable{i},' = p.trial.',p.trial.editable{i},';'])
     end
 end
 

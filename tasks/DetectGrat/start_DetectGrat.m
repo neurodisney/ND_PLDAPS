@@ -1,4 +1,4 @@
-function p = start_PercEqui(subjname, rig)
+function p = start_DetectGrat(subjname, rig)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,
@@ -29,20 +29,20 @@ SS = ND_RigDefaults(rig);    % load default settings according to the current ri
 %% Define task related functions
 
 % function to set up experiment (and maybe also including the trial function)
-exp_fun = 'PercEqui';
+exp_fun = 'DetectGrat';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;          % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'PercEqui_taskdef';     % function that provides task specific parameter definitions
-SS.task.AfterTrial = 'PercEqui_aftertrial';  % function that provides runs task specific actions after a trial
-SS.plot.routine    = 'PercEqui_plots';       % function for online plotting of session progress
+SS.task.TaskDef    = 'DetectGrat_taskdef';     % function that provides task specific parameter definitions
+SS.task.AfterTrial = 'DetectGrat_aftertrial';  % function that provides runs task specific actions after a trial
+SS.plot.routine    = 'DetectGrat_plots';       % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos', 'behavior.fixation.FixWin', 'stim.GRATING.sFreq', ...
-               'task.EqualStim', 'stim.GRATING.ori', 'task.RandomPar', 'stim.PosY', ...
-               'task.RandomHemi', 'stim.Hemi'};
-                  
+SS.editable = {'stim.GRATING.sFreq', 'stim.Ecc', 'stim.Ang',  ...
+               'stim.GRATING.ori', 'task.RandomPar', 'task.RandomHemi', 'stim.Hemi', ...
+               'stim.PosX', 'stim.PosY', 'task.RandomEcc', 'task.RandomAng'};
+
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.

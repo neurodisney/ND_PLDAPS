@@ -30,7 +30,7 @@ end
 
 % ------------------------------------------------------------------------%
 %% draw current eye calibration
-if p.trial.behavior.fixation.enableCalib
+if(p.trial.behavior.fixation.enableCalib)
     pds.eyecalib.draw(p);
 end
 % ------------------------------------------------------------------------%
@@ -47,10 +47,13 @@ end
 
 % ------------------------------------------------------------------------%
 %% Draw all the stimuli to the screen with their fixation windows
-for i=1:length(p.trial.stim.allStims)
+for(i=1:length(p.trial.stim.allStims))
     stim = p.trial.stim.allStims{i};
     draw(stim,p);
-    drawFixWin(stim,p);
+    
+    if(p.defaultParameters.behavior.fixation.use)
+        drawFixWin(stim,p);
+    end
 end
 
 % ------------------------------------------------------------------------%

@@ -127,10 +127,10 @@ FixSRT  = dt$SRT_FixStart
 # Only display figure directly if called from the r environment (not the command line)
 # If we didn't do this, when called from the command line, it would just open briefly and then close when the script ends
 if(interactive()) {
-  x11(width=20.5, height=10.5, pointsize=20, title='PercEqui_Behav')
+  x11(width=20.5, height=10.5, pointsize=20, title='DetectGrat_Behav')
 } else {
   # Otherwise only save the figure as a pdf.
-  pdf( paste('PercEqui_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='PercEqui_Behav')
+  pdf( paste('DetectGrat_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='DetectGrat_Behav')
 
 }
 
@@ -582,7 +582,7 @@ abline(h=0, col="black", lty=2, lwd=1.5)
 # save plot as pdf
 if(interactive()) {
   # Save the figure to pdf
-  dev.copy(pdf, paste('PercEqui_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='PercEqui')
+  dev.copy(pdf, paste('DetectGrat_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='DetectGrat')
 }
 
 dev.off()

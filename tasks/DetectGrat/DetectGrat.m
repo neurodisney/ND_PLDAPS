@@ -1,5 +1,5 @@
-function p = PercEqui(p, state)
-% Main trial function for a perceptual equilibrium task.
+function p = DetectGrat(p, state)
+% Main trial function for a contrast detection task.
 %
 %
 %
@@ -24,7 +24,7 @@ end
 if(isempty(state))
 
     % call initialisation routine
-    p = PercEqui_init(p);
+    p = DetectGrat_init(p);
 
 else
     % ####################################################################### %
@@ -100,7 +100,6 @@ function TaskSetUp(p)
 
     p.trial.task.SRT_FixStart = NaN;
     p.trial.task.SRT_StimOn   = NaN;
-
     
     %% Generate all the visual stimuli
     % Fixation spot
@@ -108,71 +107,46 @@ function TaskSetUp(p)
 
     % determine grating parameters
     if(p.trial.task.RandomPar == 1)
-        p.trial.stim.Ref.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
-        p.trial.stim.Ref.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
+        p.trial.stim.Trgt.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
+        p.trial.stim.Trgt.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
     end
 
     % get grating location
     % if random position is required pick one and move fix spot
-    if(p.trial.task.RandomPos == 1)
-        p.trial.stim.PosY = datasample(p.trial.stim.PosYlst, 1);
-        p.trial.stim.PosX = datasample(p.trial.stim.PosXlst, 1);
+    if(p.trial.task.RandomEcc == 1)
+        p.trial.stim.Ecc = datasample(p.trial.stim.EccLst, 1);
     end
 
+    if(p.trial.task.RandomAng == 1)
+        p.trial.stim.Ang = datasample(p.trial.stim.AngLst, 1);
+    end
+    
+    if(p.trial.task.RandomEcc == 1 || p.trial.task.RandomAng == 1)
+        [p.trial.stim.PosX, p.trial.stim.PosY] = pol2cart(p.trial.stim.Ang, p.trial.stim.Ecc);
+    end
+        
     if(p.trial.task.RandomHemi == 1)
         p.trial.stim.Hemi = datasample(['l', 'r'], 1);
     end
 
-    % define both gratings
-    p.trial.stim.Trgt.Contrast = p.trial.stim.trgtconts(p.trial.Nr); % contrast determined by condition number
+    % define grating
+    p.trial.stim.Trgt.Contrast    = p.trial.stim.trgtconts(p.trial.Nr); % contrast determined by condition number
 
-    % pick the higher contrast item as saccade target and make sure it is on the specified hemifield
-    if(p.trial.stim.Trgt.Contrast >= p.trial.stim.Ref.Contrast)
-        p.trial.stim.SaccadeTarget     = 'target';
-        p.trial.stim.SaccadeDistractor = 'reference';
+    p.trial.stim.GRATING.contrastMethod = 'bgshift';
+    p.trial.stim.GRATING.sFreq    = p.trial.stim.Trgt.sFreq;
+    p.trial.stim.GRATING.ori      = p.trial.stim.Trgt.ori;
+    p.trial.stim.GRATING.pos      = [p.trial.stim.PosX, p.trial.stim.PosY];
+    p.trial.stim.GRATING.contrast = p.trial.stim.Trgt.Contrast;
 
-        if(p.trial.stim.Hemi == 'r')
-            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
-        else
-            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
-        end
-
-    else
-        p.trial.stim.SaccadeTarget     = 'reference';
-        p.trial.stim.SaccadeDistractor = 'target';
-
-        if(p.trial.stim.Hemi == 'l')
-            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
-        else
-            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
-        end
+    if(p.trial.stim.Hemi == 'r')
+        p.trial.stim.GRATING.pos(1)  = -1*p.trial.stim.GRATING.pos(1);
     end
 
-    % Create Reference grating (parameter in question is kept constant)
-    p.trial.stim.GRATING.sFreq     = p.trial.stim.Ref.sFreq;
-    p.trial.stim.GRATING.ori       = p.trial.stim.Ref.ori;
-    p.trial.stim.GRATING.pos       = p.trial.stim.Ref.Pos;
-    p.trial.stim.GRATING.contrast  = p.trial.stim.Ref.Contrast;
-    p.trial.stim.reference         = pds.stim.Grating(p);
+    p.trial.stim.target           = pds.stim.Grating(p);
 
-    % create distractor
-    if(p.trial.task.RandomPar == 1 && p.trial.task.EqualStim == 0)
-        p.trial.stim.Trgt.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
-        p.trial.stim.Trgt.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
-    else
-        p.trial.stim.Trgt.sFreq = p.trial.stim.Ref.sFreq;
-        p.trial.stim.Trgt.ori   = p.trial.stim.Ref.ori;
-    end
-
-    p.trial.stim.GRATING.sFreq     = p.trial.stim.Trgt.sFreq;
-    p.trial.stim.GRATING.ori       = p.trial.stim.Trgt.ori;
-    p.trial.stim.GRATING.pos       = p.trial.stim.Trgt.Pos;
-    p.trial.stim.GRATING.contrast  = p.trial.stim.Trgt.Contrast;
-    p.trial.stim.target            = pds.stim.Grating(p);
+    % Is a saccade expected
+    % increase likelihood of saccade expectation the closer we get to the threshold
+    p.trial.task.ExpectSacc = rand() < p.trial.stim.Trgt.Contrast / p.trial.stim.RespThr;
 
     % Assume manual control of the activation of the grating fix windows
     p.trial.stim.grating_target.autoFixWin    = 0;
@@ -223,8 +197,6 @@ function TaskDesign(p)
 
             % Fixation Break, end the trial
             elseif(~p.trial.stim.fix.fixating)
-                pds.audio.playDP(p, 'breakfix', 'left');
-
                 p.trial.task.SRT_FixStart = p.trial.EV.FixLeave -  p.trial.stim.fix.EV.FixStart;
                 p.trial.task.SRT_StimOn   = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
 
@@ -244,12 +216,15 @@ function TaskDesign(p)
             elseif(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeTimeout)
             % If no saccade has been made before the time runs out, end the trial
 
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
+                if(p.trial.task.ExpectSacc)
+                % visible stimulus, saccade expected, thus miss    
+                    Task_Error(p, 'Miss');
 
-                % Play an incorrect sound
-                pds.audio.playDP(p, 'incorrect', 'left');
-
-                ND_SwitchEpoch(p, 'TaskEnd');
+                 else
+                % stimulus potentially not visible, give reward for keeeping fixation
+                    p.trial.task.TargetSel = 0;
+                    Task_CorrectReward(p);
+                end
             end
 
         % ----------------------------------------------------------------%
@@ -258,51 +233,18 @@ function TaskDesign(p)
             if(~p.trial.task.stimFix)
             % Animal has not yet saccaded to target
 
-                if(p.trial.stim.(p.trial.stim.SaccadeTarget).fixating)
+                if(p.trial.stim.target.fixating && p.trial.stim.Trgt.Contrast > 0)
                 % Animal has saccaded to correct stim
-                    p.trial.task.stimFix = 1;
-
-                    switch p.trial.stim.SaccadeTarget
-                        case 'target'
-                             p.trial.task.TargetSel = 1;
-                        case 'reference'
-                             p.trial.task.TargetSel = 0;
-                    end
-                    
+                    p.trial.task.stimFix   = 1;
+                    p.trial.task.TargetSel = 1;
+                                       
                     p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                     p.trial.task.SRT_StimOn   = p.trial.EV.FixLeave - p.trial.EV.StimOn;
-                    
-                elseif(p.trial.stim.(p.trial.stim.SaccadeDistractor).looking)
-                % wrong item chosen
-                    % Play breakfix sound
-                    pds.audio.playDP(p, 'incorrect','left');
-
-                    switch p.trial.stim.SaccadeDistractor
-                        case 'target'
-                             p.trial.task.TargetSel = 1;
-                        case 'reference'
-                             p.trial.task.TargetSel = 0;
-                    end
-
-                    % Mark trial (early) false and end task
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.False;
-
-                    % time to early to detect proper fixation break, thus set the time here explicitly
-
-                    ND_SwitchEpoch(p, 'TaskEnd');
-
-                    p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
-                    p.trial.task.SRT_StimOn   = p.trial.EV.FixLeave - p.trial.EV.StimOn;
-                    
+                                        
                 elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
-                % gaze away from fixation spot but not item selected: fix break
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
+                % gaze away from fixation spot but not item selected: fix break                
 
-                    % Play an incorrect sound
-                    pds.audio.playDP(p, 'incorrect', 'left');
-
-                    % End the trial
-                    ND_SwitchEpoch(p, 'TaskEnd');
+                    Task_Error(p, 'NoTargetFix');
 
                     p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                     p.trial.task.SRT_StimOn   = p.trial.EV.FixLeave - p.trial.EV.StimOn;
@@ -314,28 +256,14 @@ function TaskDesign(p)
             else  % stimFix == 1
             % Animal is currently fixating on target
                 % Wait for animal to hold fixation for the required length of time then give reward and mark trial good
-                if(p.trial.CurTime > p.trial.stim.(p.trial.stim.SaccadeTarget).EV.FixStart + p.trial.task.minTargetFixTime)
+                if(p.trial.CurTime > p.trial.stim.target.EV.FixStart + p.trial.task.minTargetFixTime)
 
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
-                    p.trial.task.Good = 1;
+                    Task_CorrectReward(p);
 
-                    pds.reward.give(p, p.trial.reward.Dur);
-                    pds.audio.playDP(p, 'reward', 'left');
-
-                    % Record main reward time
-                    p.trial.EV.Reward = p.trial.CurTime;
-
-                    ND_SwitchEpoch(p, 'WaitEnd');
-
-                elseif(~p.trial.stim.(p.trial.stim.SaccadeTarget).fixating)
+                elseif(~p.trial.stim.target.fixating)
                 % If animal's gaze leaves window, end the task and do not give reward
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
-
-                    % Play an incorrect sound
-                    pds.audio.playDP(p, 'incorrect', 'left');
-
-                    ND_SwitchEpoch(p, 'TaskEnd');
-                end
+                    Task_Error(p, 'TargetBreak');
+                 end
             end
 
         % ----------------------------------------------------------------%
@@ -344,9 +272,7 @@ function TaskDesign(p)
             % Wait for enough time to elapse after the stimBreak
             delay = p.trial.task.breakFixCheck;
             if(p.trial.task.stimState == 0)
-                p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-
-                ND_SwitchEpoch(p, 'TaskEnd');
+                Task_Error(p, 'FixBreak');
 
             elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + delay)
                 % Get the median eye position in the delay
@@ -354,17 +280,11 @@ function TaskDesign(p)
                 medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
 
                 % Determine if the medPos is in the fixation window for the stim
-                if(inFixWin(p.trial.stim.(p.trial.stim.SaccadeTarget), medPos))
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
-
-                elseif(inFixWin(p.trial.stim.(p.trial.stim.SaccadeDistractor), medPos))
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
-
+                if(inFixWin(p.trial.stim.target, medPos))
+                    Task_Error(p, 'Early');
                 else
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
+                    Task_Error(p, 'StimBreak');
                 end
-
-                ND_SwitchEpoch(p, 'TaskEnd');
             end
 
         % ----------------------------------------------------------------%
@@ -385,10 +305,6 @@ function TaskDesign(p)
             if(~isnan(p.trial.stim.target.EV.FixStart))
                 p.trial.EV.FixStimStart = p.trial.stim.target.EV.FixStart;
                 p.trial.EV.FixStimStop  = p.trial.stim.target.EV.FixBreak;
-
-            elseif(~isnan(p.trial.stim.reference.EV.FixStart))
-                p.trial.EV.FixStimStart = p.trial.stim.reference.EV.FixStart;
-                p.trial.EV.FixStimStop  = p.trial.stim.reference.EV.FixBreak;
             end
 
             % Flag next trial ITI is done at begining
@@ -408,9 +324,6 @@ function TaskCleanAndSave(p)
     % Get the text name of the outcome
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
 
-    % Calculate the Saccadic Response Time for easy plotting
-    Calculate_SRT(p);
-
     % Save useful info to an ascii table for plotting
     ND_Trial2Ascii(p, 'save');
 
@@ -423,15 +336,35 @@ function KeyAction(p)
 if(~isempty(p.trial.LastKeyPress))
 
     switch p.trial.LastKeyPress(1)
-
         % random position of target on each trial
         case KbName('r')
-             p.trial.task.RandomPos = abs(p.trial.task.RandomPos - 1);
-
-           if(p.trial.task.RandomPos)
+             p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
+             p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
+             
+            if(p.trial.task.RandomAng)
                 ND_CtrlMsg(p, 'Random Grating location on each trial.');
             else
                 ND_CtrlMsg(p, 'Grating location is kept constant.');
+            end
+
+        % random position of target on each trial
+        case KbName('e')
+             p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
+             
+            if(p.trial.task.RandomEcc)
+                ND_CtrlMsg(p, 'Random Grating eccemtricity on each trial.');
+            else
+                ND_CtrlMsg(p, 'Grating eccemtricity is kept constant.');
+            end
+
+        % random position of target on each trial
+        case KbName('a')
+             p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
+             
+            if(p.trial.task.RandomAng)
+                ND_CtrlMsg(p, 'Random Grating angular position on each trial.');
+            else
+                ND_CtrlMsg(p, 'Grating  angular position is kept constant.');
             end
 
         % randomly select a new spatial frequency
@@ -464,16 +397,6 @@ if(~isempty(p.trial.LastKeyPress))
                 ND_CtrlMsg(p, 'Target will be shown in the same hemifield for subsequent trials.');
             end
 
-        % determine wether both gratings have same orientation and spatial frequency
-        case KbName('DownArrow')
-            p.trial.task.EqualStim = abs(p.trial.task.EqualStim - 1);
-
-            if(p.trial.task.EqualStim)
-                ND_CtrlMsg(p, 'Both, target and distractor, have same grating parameters.');
-            else
-                ND_CtrlMsg(p, 'Target and distractor grating parameters are different.');
-            end
-
         % move target to left or right hemifield
         case KbName('RightArrow')
             p.trial.stim.Hemi  = 'r';
@@ -486,8 +409,10 @@ if(~isempty(p.trial.LastKeyPress))
         % move target to grid positions
         case p.trial.key.GridKeyCell
             gpos = p.trial.key.GridKey == p.trial.LastKeyPress(1);
-            p.trial.stim.PosY = p.trial.stim.GridPos(gpos);
-            ND_CtrlMsg(p, ['Moved Grating to Y ', num2str(p.trial.stim.PosY, '%.2f'), '.']);
+            
+            p.trial.stim.PosX = p.trial.stim.GridX(gpos);
+            p.trial.stim.PosY = p.trial.stim.GridY(gpos);
+            ND_CtrlMsg(p, sprintf('Moved Grating to XY [%.2f, %.2f].', p.trial.stim.PosY, p.trial.stim.PosX));
     end
 end
 
@@ -509,9 +434,6 @@ function stim(p, val)
                 p.trial.stim.target.on           = 1;
                 p.trial.stim.target.fixActive    = 1;
 
-                p.trial.stim.reference.on        = 1;
-                p.trial.stim.reference.fixActive = 1;
-
             otherwise
                 error('bad stim value');
         end
@@ -528,30 +450,26 @@ function stim(p, val)
     end
 
 % ####################################################################### %
-function Calculate_SRT(p)
-    % Grab the fixation stopping and starting values from the stim properties
-    p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
-    p.trial.EV.FixSpotStop  = p.trial.EV.FixLeave;
+function p = Task_CorrectReward(p)
+    p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
+    p.trial.task.Good = 1;
 
-%     switch p.trial.outcome.CurrOutcomeStr
-%         case {'NoStart', 'Break', 'Miss', 'NoFix'}
-%             p.trial.task.SRT_FixStart = NaN;
-%             p.trial.task.SRT_StimOn   = NaN;
-% 
-%         case {'FixBreak'}
-%             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop -  p.trial.EV.FixSpotStart;
-%             p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency);
-% 
-%         case {'StimBreak', 'Early', 'EarlyFalse', 'NoTargetFix', 'False', 'Correct', 'TargetBreak'}
-%             p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop -  p.trial.EV.FixSpotStart;
-%             p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop -  p.trial.EV.StimOn;
-%             
-%         otherwise
-%             warning(['Calculate_SRT: unrecognized outcome: ', p.trial.outcome.CurrOutcomeStr]);
-%             p.trial.task.SRT_FixStart = NaN;
-%             p.trial.task.SRT_StimOn   = NaN;
-%     end
+    pds.reward.give(p, p.trial.reward.Dur);
+    pds.audio.playDP(p, 'reward', 'left');
 
+    % Record main reward time
+    p.trial.EV.Reward = p.trial.CurTime;
 
+    ND_SwitchEpoch(p, 'WaitEnd');
 
+% ####################################################################### %
+function p = Task_Error(p, outcome)
+    p.trial.outcome.CurrOutcome = p.trial.outcome.(outcome);
 
+    % Play an incorrect sound
+    pds.audio.playDP(p, 'incorrect', 'left');
+
+    % End the trial
+    ND_SwitchEpoch(p, 'TaskEnd');
+
+    
