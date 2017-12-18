@@ -94,6 +94,11 @@ function TaskSetUp(p)
     p.trial.task.Good    = 0;
     p.trial.task.fixFix  = 0;
     p.trial.task.stimFix = 0;
+    
+    
+    p.trial.task.CueState  = 0;   % 0 is off, 1 is all equal, 2 is target cue on
+    p.trial.task.StimState = 0;   % 0 is off, 1 is all on, 2 is target change
+    
 
     %% Generate all the visual stimuli
     % Fixation spot
@@ -191,23 +196,25 @@ function TaskDesign(p)
         %% Fixation target shown, waiting for a sufficiently held gaze
             Task_WaitFixStart(p);
 
-            if(p.trial.CurrEpoch == p.trial.epoch.Fixating)
-            % fixation just started, initialize fixation epoch
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;
-
-                % initial rewardfor fixation start
-                if(p.trial.reward.GiveInitial == 1)
-                    p.trial.EV.InitReward = p.trial.CurTime;
-                    pds.reward.give(p, p.trial.reward.InitialRew);
-                end
-            end
-
         % ----------------------------------------------------------------%
         case p.trial.epoch.Fixating
         %% Initial reward has been given (if it is not 0), now stim target will appear
             % Still fixating
             if(p.trial.stim.fix.fixating)
                 % Wait stim latency before showing reward
+                
+                
+                % control display and luminance/color change of cue 
+                manage_cue(p);
+                
+                % control appearance and change of stimuli
+                manage_stim(p);
+                
+                
+                
+                
+                
+                
                 if(~p.trial.task.stimState)
                     if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
                         stim(p, 1); % Turn on stim
@@ -400,18 +407,6 @@ function TaskDesign(p)
     end  % switch p.trial.CurrEpoch
 
 % ####################################################################### %
-function TaskDraw(p)
-%% Custom draw function for this experiment
-
-    % show helping cue by moving fixation spot to target location
-    if(p.trial.task.ShowHelp == 1 && p.trial.task.stimState == 2)
-        HelpRect = ND_GetRect(p.trial.stim.GRATING.pos, 2*p.trial.stim.FIXSPOT.size);
-
-        Screen('FillOval',  p.trial.display.overlayptr, ...
-            p.trial.display.clut.(p.trial.stim.FIXSPOT.color), HelpRect);
-    end
-
-% ####################################################################### %
 function TaskCleanAndSave(p)
 %% Clean up textures, variables, and save useful info to ascii table
     Task_Finish(p);
@@ -419,15 +414,21 @@ function TaskCleanAndSave(p)
     % Get the text name of the outcome
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
 
-    % Calculate the Saccadic Response Time for easy plotting
-    Calculate_SRT(p);
-
     % Save useful info to an ascii table for plotting
     ND_Trial2Ascii(p, 'save');
 
 % ####################################################################### %
 %% additional inline functions
 % ####################################################################### %
+
+function manage_cue(p)
+%% control display and luminance/color change of cue 
+   
+
+
+function manage_stim(p)
+%% control appearance and change of stimuli
+
 
 function KeyAction(p)
 %% task specific action upon key press
@@ -564,44 +565,6 @@ function stim(p, val)
             % Stim is changing
             ND_AddScreenEvent(p, p.trial.event.STIM_CHNG, 'StimChange');
         end
-    end
-
-% ####################################################################### %
-function Calculate_SRT(p)
-
-    % Grab the fixation stopping and starting values from the stim properties
-    p.trial.EV.FixSpotStart = p.trial.stim.fix.EV.FixStart;
-    
-    if(~strcmp(p.trial.outcome.CurrOutcomeStr,'False'))
-        p.trial.EV.FixSpotStop  = p.trial.stim.fix.EV.FixBreak;
-    end
-
-    switch p.trial.outcome.CurrOutcomeStr
-        case {'NoStart', 'Break', 'Miss', 'NoFix'}
-            p.trial.task.SRT_FixStart = NaN;
-            p.trial.task.SRT_StimOn   = NaN;
-            p.trial.task.SRT_Go       = NaN;
-
-        case {'FixBreak'}
-            p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop -  p.trial.EV.FixSpotStart;
-            p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency);
-            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.FixSpotStart + p.trial.task.stimLatency + p.trial.task.ChangeTime);
-
-        case {'StimBreak', 'Early', 'EarlyFalse', 'NoTargetFix'}
-            p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop -  p.trial.EV.FixSpotStart;
-            p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop -  p.trial.EV.StimOn;
-            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - (p.trial.EV.StimOn + p.trial.task.ChangeTime);
-
-        case {'False', 'Correct', 'TargetBreak'}
-            p.trial.task.SRT_FixStart = p.trial.EV.FixSpotStop - p.trial.EV.FixSpotStart;
-            p.trial.task.SRT_StimOn   = p.trial.EV.FixSpotStop - p.trial.EV.StimOn;
-            p.trial.task.SRT_Go       = p.trial.EV.FixSpotStop - p.trial.EV.StimChange;
-
-        otherwise
-            warning(['Calculate_SRT: unrecognized outcome: ', p.trial.outcome.CurrOutcomeStr]);
-            p.trial.task.SRT_FixStart = NaN;
-            p.trial.task.SRT_StimOn   = NaN;
-            p.trial.task.SRT_Go       = NaN;
     end
 
 

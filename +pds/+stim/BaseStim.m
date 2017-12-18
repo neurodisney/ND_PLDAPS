@@ -21,9 +21,8 @@ properties (SetAccess = protected)
     fixating = 0            % Boolean for fixation
     looking  = 0            % Less stringent than fixation. Eye is in the fix window
     
-    
     % Integer to define object (for sending event code)
-    classCode = 7701;
+    classCode = p.trial.event.STIM.BaseStim;
     
     % Signals to send upon turning on or off
     onSignal  = struct('event', 'STIM_ON', ...

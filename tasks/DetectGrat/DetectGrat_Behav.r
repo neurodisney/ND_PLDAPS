@@ -9,7 +9,7 @@ require(beanplot, quietly=TRUE)
 PercEqui_Behav = function(datadir=NA, fname=NA) {
 
 ## specify analysis/graph parameters
-avrgwin  =   180  # moving average window for performance plot in seconds
+avrgwin  =   90  # moving average window for performance plot in seconds
 avrgstep =     1  # step between two subsequent moving average windows (should be smaller than avrgwin to ensure overlap)
 RTbw     =  0.02  # kernel width for density estimate of response times
 

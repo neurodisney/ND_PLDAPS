@@ -30,7 +30,7 @@ p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to th
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 1.0;   % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
-p.trial.task.Timing.TimeOut   =  2.5;  % Time-out[s]  for incorrect responses
+p.trial.task.Timing.TimeOut   =  1.5;  % Time-out[s]  for incorrect responses
 p.trial.task.Timing.ITI       = ND_GetITI(1.5,  2,  [], [], 1, 0.10);
 
 % ----------------------------------- -------------------------------------%
