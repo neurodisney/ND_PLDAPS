@@ -75,9 +75,9 @@ function PlotSpacing(From, To, Nele)
 figure;
 hold on
 
-L1 = plot(ND_LinSpace( From, To, Nele));
-L2 = plot(ND_LogSpace( From, To, Nele));
-L3 = plot(ND_HalfSpace(From, To, Nele));
+L1 = plot(ND_LinSpace( From, To, Nele), '.-');
+L2 = plot(ND_LogSpace( From, To, Nele), '.-');
+L3 = plot(ND_HalfSpace(From, To, Nele), '.-');
 
 lgd = legend([L1, L2, L3], 'Linear','Log','Half', 'Location','northwest');
 title(lgd,'Spacing Function')

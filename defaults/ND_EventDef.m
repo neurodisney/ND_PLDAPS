@@ -204,6 +204,7 @@ p.defaultParameters.event.TRIAL_HDR_OFF = 9900;
 
 p.defaultParameters.event.TRIAL_FTR_ON  = 9911;
 p.defaultParameters.event.TRIAL_FTR_OFF = 9910;
+
 % TODO: encode trial states (and task epochs)?
 
 %% task/stimulus parameters (NIY!)
