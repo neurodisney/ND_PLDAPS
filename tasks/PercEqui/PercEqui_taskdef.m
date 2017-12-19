@@ -46,14 +46,12 @@ p.trial.stim.PosX    = datasample([ 2, 2.5, 3, 3.5], 1);
 p.trial.stim.PosY    = 0;
 
 % grating contrast
-p.trial.stim.Ref.Contrast = 0.5;
+p.trial.stim.Ref.Contrast = datasample(0.2, 0.5);
 
-ctrng = ((logspace(0,1,9)-1)*0.04);
+ctrng = ND_HalfSpace(p.trial.stim.Ref.Contrast, p.trial.stim.Ref.Contrast/20, 10);
+
 p.trial.stim.trgtconts = [fliplr(0.5 - ctrng(2:end)), 0.5 + ctrng(2:end)];
 
-% p.trial.stim.trgtconts = [fliplr(0.5 - ctrng(4:end)), 0.5 + ctrng(4:end)];
-
-% p.trial.stim.GRATING.TargetContrast = datasample(p.trial.stim.trgtconts, 1);
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design

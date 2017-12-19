@@ -79,7 +79,13 @@ L1 = plot(ND_LinSpace( From, To, Nele), '.-');
 L2 = plot(ND_LogSpace( From, To, Nele), '.-');
 L3 = plot(ND_HalfSpace(From, To, Nele), '.-');
 
-lgd = legend([L1, L2, L3], 'Linear','Log','Half', 'Location','northwest');
+if(From < To)
+    Lpos = 'northwest';
+else
+    Lpos = 'southwest';
+end
+
+lgd = legend([L1, L2, L3], 'Linear', 'Log', 'Half', 'Location', Lpos);
 title(lgd,'Spacing Function')
 
 xlabel('Vector Position')

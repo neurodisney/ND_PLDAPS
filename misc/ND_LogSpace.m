@@ -44,5 +44,8 @@ end
 %% call matlab function
 Ovec = logspace(log10(From), log10(To), Nele);
 
+if(From > To)
+    Ovec = flip(From -(Ovec - To));
+end
 
 
