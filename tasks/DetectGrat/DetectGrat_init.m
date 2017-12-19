@@ -61,10 +61,10 @@ ND_Trial2Ascii(p, 'init');
 %% initialize target parameters
 p.defaultParameters.stim.FIXSPOT.fixWin = 2;
 
-p.defaultParameters.task.RandomHemi = 0; % if 1, randomly pick left or right hemifield
-p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
-p.defaultParameters.task.RandomEcc  = 0; % if 1, randomly change the grating eccentricity each trial
-p.defaultParameters.task.RandomAng  = 0; % if 1, randomly change the grating angular position each trial
+p.defaultParameters.task.RandomHemi = 1; % if 1, randomly pick left or right hemifield
+p.defaultParameters.task.RandomPar  = 1; % if 1, randomly change orientation and spatial frequency of the grating each trial
+p.defaultParameters.task.RandomEcc  = 1; % if 1, randomly change the grating eccentricity each trial
+p.defaultParameters.task.RandomAng  = 1; % if 1, randomly change the grating angular position each trial
 
 % define random grating parameters for each session
 p.defaultParameters.stim.PosYlst    = -2;  % range of possible positions on Y axis
@@ -79,13 +79,13 @@ p.defaultParameters.stim.AngLst = [45, 45, 45, 0, 0, 0, -45, -45, -45];
 
 % get a random location to start with
 cPos = randi(length(p.defaultParameters.stim.GridX));
-p.defaultParameters.stim.Ecc = p.defaultParameters.stim.EccLst(cPos);
-p.defaultParameters.stim.Ang = p.defaultParameters.stim.AngLst(cPos);
-p.defaultParameters.stim.PosY       = p.defaultParameters.stim.GridX(cPos);
-p.defaultParameters.stim.PosX       = p.defaultParameters.stim.GridY(cPos);
+p.defaultParameters.stim.Ecc  = p.defaultParameters.stim.EccLst(cPos);
+p.defaultParameters.stim.Ang  = p.defaultParameters.stim.AngLst(cPos);
+p.defaultParameters.stim.PosY = p.defaultParameters.stim.GridX(cPos);
+p.defaultParameters.stim.PosX = p.defaultParameters.stim.GridY(cPos);
 
 p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
-p.defaultParameters.stim.OriLst     = 0:15:179;  % orientation of grating
+p.defaultParameters.stim.OriLst     = [-45 0 45 90];  % orientation of grating
 
 p.defaultParameters.stim.Hemi       = datasample(['l', 'r'], 1);
 p.defaultParameters.stim.Trgt.sFreq = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree

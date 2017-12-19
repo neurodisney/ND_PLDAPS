@@ -12,7 +12,7 @@ function p = ND_TrialCleanUpandSave(p)
 if(~p.trial.pldaps.quit) % skip if trial was interrupted (WZ: this will loose last trial info! Just a quick fix to avoid errors.)
     % Send info about any stims shown
     ND_SendStimRecord(p);
-    
+
     ND_TrialHDR(p);
 end
 
@@ -87,6 +87,7 @@ end
 if p.trial.tdt.use
     pds.tdt.close(p);
 end
+
 %-------------------------------------------------------------------------%
 %% Trial information
 
