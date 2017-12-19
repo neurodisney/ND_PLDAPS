@@ -30,7 +30,7 @@ if nStims > 0
             elseif property == 0
                 % If the property is 0, transmit a special signal (since signals are interspersed with 0 strobes, it is lost
                 % otherwise)
-                pds.datapixx.strobe(10987);
+                pds.datapixx.strobe(p.trial.event.ZERO_CODE);
                 
             else
                 

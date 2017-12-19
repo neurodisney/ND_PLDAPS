@@ -211,6 +211,10 @@ p.defaultParameters.event.TRIAL_HDR_OFF = 9900;
 p.defaultParameters.event.TRIAL_FTR_ON  = 9911;
 p.defaultParameters.event.TRIAL_FTR_OFF = 9910;
 
+% in case a value of zero has to be send as event code use this number instead
+p.defaultParameters.event.ZERO_CODE = 10987;
+
+
 % TODO: encode trial states (and task epochs)?
 
 %% task/stimulus parameters (NIY!)
