@@ -27,7 +27,7 @@ p.trial.reward.IncrementDur    = [0.075, 0.15, 0.175, 0.2, 0.25, 0.5]; % increas
 
 % ----------------------------------- -------------------------------------%
 %% Grating stimuli parameters
-p.trial.stim.PosX    = 3;
+p.trial.stim.Eccentricity    = 3;
 
 p.trial.stim.GRATING.fixWin  = 2.5;
 

@@ -103,7 +103,7 @@ ND_DefineCol(p, 'FixChange',       53, [0.25, 0.00, 0.25]);  % A change of a sti
 ND_DefineCol(p, 'FixDiscriminate', 54, [0.00, 1.00, 1.00]);  % A difference in two or more stimuli has to be identified (e.g. Perceptual Equilibrium Task)
 ND_DefineCol(p, 'FixHold',         55, [1.00, 1.00, 1.00]);  % Maintain fixation irrespective of any stimuli (e.g. Receptive Field Mapping Task)
 
-% Grey levels
+% Grey levels (CLUT index 61-69)
 for(i=1:9)
     ND_DefineCol(p, sprintf('grey%d',i), 60+i, [i, i, i] ./ 10);
 end

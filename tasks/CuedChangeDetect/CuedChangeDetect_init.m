@@ -52,13 +52,14 @@ p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.R
 ND_Trial2Ascii(p, 'init');
 
 %% initialize target parameters
-p.defaultParameters.behavior.fixation.FixWin = 2.5;
+p.defaultParameters.stim.FIXSPOT.fixWin = 2;
 
-p.defaultParameters.task.RandomHemi = 0; % if 1, randomly pick left or right hemifield
-p.defaultParameters.task.RandomPos  = 0; % if 1, randomly change the grating location each trial
-p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
+p.defaultParameters.task.RandomHemi = 1; % if 1, randomly pick left or right hemifield
+p.defaultParameters.task.RandomPar  = 1; % if 1, randomly change orientation and spatial frequency of the grating each trial
+p.defaultParameters.task.RandomEcc  = 1; % if 1, randomly change the grating eccentricity each trial
+p.defaultParameters.task.RandomAng  = 1; % if 1, randomly change the grating angular position each trial
 
-p.defaultParameters.task.EqualStim  = 1; % both gratings have the same spatial frequency and orientation
+p.defaultParameters.task.EqualStim  = 1; % all gratings have the same spatial frequency and orientation
 p.defaultParameters.task.ShowDist   = 1; % Display both, target and distractor grating
 
 % define random grating parameters for each session

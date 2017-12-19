@@ -13,48 +13,31 @@ p.trial.task.ShowHelp = 0; % Moves the fixation spot towards target location
 
 % ------------------------------------------------------------------------%
 %% Reward
-
 % manual reward from experimenter
-p.trial.reward.GiveInitial = 0;     % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew  = 0.01;  % duration of the initial reward
-p.trial.reward.ManDur      = 0.05;  % reward duration [s] for reward given by keyboard presses
-
-p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
-p.trial.reward.nPulse          = 1; % number of reward pulses
-p.trial.reward.PulseStep       = [2, 4, 6, 8]; % increase number of pulses with this trial number
-p.trial.reward.IncrementTrial  = [  50, 200,  250,  300,  400,  500]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur    = [0.075, 0.15, 0.175, 0.2, 0.25, 0.5]; % increase number of pulses with this trial number
+p.trial.reward.ManDur         = 0.05;  % reward duration [s] for reward given by keyboard presses
+p.trial.reward.IncrementTrial = [ 150, 300,  400, 500,  600, 650, 700]; % number of correct trials after which reward increases
+p.trial.reward.IncrementDur   = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4]; % reward opening time
 
 % ----------------------------------- -------------------------------------%
 %% Grating stimuli parameters
 p.trial.stim.PosX    = 3;
 
-p.trial.stim.GRATING.fixWin  = 2.5;
+p.trial.stim.GRATING.fixWin = 2.5;
 
-p.trial.stim.GRATING.radius  = 0.75;  % radius of grating patch
+p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 
 p.trial.stim.GridPos = linspace(-3,3,9); % position on y axis
 
+p.trial.stim.GRATING.res          = 600;
 p.trial.stim.GRATING.tFreq   = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 % grating contrast
 p.trial.stim.GRATING.lowContrast  = 0.4;  % grating contrast value when stim.on = 1
 % p.trial.stim.GRATING.highContrast = 0.5;  % grating contrast value when stim.on = 2
 p.trial.stim.GRATING.highContrast = datasample(0.425:0.05:0.65, 1);
 
-p.trial.stim.GRATING.res          = 300;
-
 % cue definition
-p.trial.stim.cue.offcolor = 
-p.trial.stim.cue.oncolor  = 
-
-
-p.trial.stim.RING.pos       = [0,0];
-p.trial.stim.RING.size      = 2 * p.trial.stim.GRATING.radius + 0.5;
-p.trial.stim.RING.linewidth = 0.1;
-p.trial.stim.RING.color     = 'fixspot'; 
-p.trial.stim.RING.fixWin    = 2;
-p.trial.stim.RING.alpha     = 1; % Fully opaque
-
+p.trial.stim.cue.offcolor = 'grey3';
+p.trial.stim.cue.oncolor  = 'grey5'; 
 
 % ------------------------------------------------------------------------%
 %% Timing

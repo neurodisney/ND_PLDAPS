@@ -59,7 +59,6 @@ p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.R
 ND_Trial2Ascii(p, 'init');
 
 %% initialize target parameters
-p.defaultParameters.stim.FIXSPOT.fixWin = 2;
 
 p.defaultParameters.task.RandomHemi = 1; % if 1, randomly pick left or right hemifield
 p.defaultParameters.task.RandomPar  = 1; % if 1, randomly change orientation and spatial frequency of the grating each trial
