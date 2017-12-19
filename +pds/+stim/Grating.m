@@ -93,7 +93,7 @@ methods
         obj@pds.stim.BaseStim(p, pos, fixWin);
         
         % Integer to define object (for sending event code)
-        obj.classCode = 7702;
+        obj.classCode = p.trial.event.STIM.Grating;
         
         % This cell array determines the order of properties when the propertyArray attribute is calculated
         obj.recordProps = {'xpos','ypos','radius','orientation','contrast','sFreq','tFreq'};

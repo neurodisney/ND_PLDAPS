@@ -162,9 +162,15 @@ p.defaultParameters.event.STIMPROP_BLOCK_OFF = 7500;  % End of stim prop block
 
 % Note: 77xx block reserved for stim types
 % These are encoded in the actual stim class files, but are put here for easy reference
+
+p.defaultParameters.event.STIM.BaseStim = 7700;
+p.defaultParameters.event.STIM.FixSpot  = 7701;
+p.defaultParameters.event.STIM.Grating  = 7702;
+p.defaultParameters.event.STIM.Ring     = 7703;
 % BaseStim = 7700
-% FixSpot = 7701
-% Grating = 7702
+% FixSpot  = 7701
+% Grating  = 7702
+% Ring     = 7703
 
 
 % ------------------------------------------------------------------------%
@@ -204,6 +210,7 @@ p.defaultParameters.event.TRIAL_HDR_OFF = 9900;
 
 p.defaultParameters.event.TRIAL_FTR_ON  = 9911;
 p.defaultParameters.event.TRIAL_FTR_OFF = 9910;
+
 % TODO: encode trial states (and task epochs)?
 
 %% task/stimulus parameters (NIY!)

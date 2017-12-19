@@ -1,4 +1,4 @@
-classdef FixSpot < pds.stim.BaseStim
+classdef Ring < pds.stim.BaseStim
 % Fix spot stimulus
 % Nate Faber, July 2017
 
@@ -35,21 +35,15 @@ methods
         obj@pds.stim.BaseStim(p, pos, fixWin)
         
         % Integer to define object (for sending event code)
-        obj.classCode = p.trial.event.STIM.FixSpot;
+        obj.classCode = p.trial.event.STIM.Ring;
         
         % Fixspot is not counted as a stimulus, so it should not record its properties
         obj.recordProps = {};
-        
-        % Events are different for the fixspot class
-        obj.onSignal  = struct('event', 'FIXSPOT_ON', ...
-            'name', 'FixOn');
-        obj.offSignal = struct('event', 'FIXSPOT_OFF', ...
-            'name', 'FixOff');
-        
+       
         obj.color = color;
-        obj.type  = type;
-        obj.size  = size;
-        obj.pos   = pos;
+        obj.type = type;
+        obj.size = size;
+        obj.pos = pos;
         
         % Save a reference to this object in a dependable place in the p struct
         p.trial.behavior.fixation.fix = obj;

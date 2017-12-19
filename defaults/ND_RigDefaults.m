@@ -74,17 +74,18 @@ switch rig
         SS.display.viewdist                     = 98.5; % screen distance to the observer
         SS.display.heightcm                     = 40.5; % height of the visible screen in cm
         SS.display.widthcm                      = 73.5; % width  of the visible screen in cm
+        SS.display.bgColor                      = [0.37, 0.37, 0.37];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
     case 2
         SS.display.viewdist                     = 83;   
         SS.display.heightcm                     = 39;     
         SS.display.widthcm                      = 70;  
+        SS.display.bgColor                      = [0.18, 0.18, 0.18]; % datapixx background color: target 20 cd/m^2
     otherwise
         SS.display.viewdist                     = 97;   
         SS.display.heightcm                     = 40;    
         SS.display.widthcm                      = 71;   
 end
 
-SS.display.bgColor                              = [0.25, 0.25, 0.25];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
 SS.display.breakColor                           = 'black';  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 97;    % screen distance to the observer
