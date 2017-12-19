@@ -98,12 +98,15 @@ ND_DefineCol(p, 'orangeBreak',50, [0.25, 0.10, 0.00], [1.00, 0.40, 0.00]);
 ND_DefineCol(p, 'whiteBreak', 51, [0.25, 0.25, 0.25], [1.00, 1.00, 1.00]);
 
 % define fixation spots for tasks
-ND_DefineCol(p, 'FixDetection',    60, [190 115 215]./ 255); % Detection tasks where a stimulus has to be found (e.g. Contrast Detection Tasks)
-ND_DefineCol(p, 'FixChange',       61, [0.25, 0.00, 0.25]);  % A change of a stimulus has to be identified (e.g. ontrast Change Detection)
-ND_DefineCol(p, 'FixDiscriminate', 62, [0.00, 1.00, 1.00]);  % A difference in two or more stimuli has to be identified (e.g. Perceptual Equilibrium Task)
-ND_DefineCol(p, 'FixHold',         63, [1.00, 1.00, 1.00]);  % Maintain fixation irrespective of any stimuli (e.g. Receptive Field Mapping Task)
+ND_DefineCol(p, 'FixDetection',    52, [190 115 215]./ 255); % Detection tasks where a stimulus has to be found (e.g. Contrast Detection Tasks)
+ND_DefineCol(p, 'FixChange',       53, [0.25, 0.00, 0.25]);  % A change of a stimulus has to be identified (e.g. ontrast Change Detection)
+ND_DefineCol(p, 'FixDiscriminate', 54, [0.00, 1.00, 1.00]);  % A difference in two or more stimuli has to be identified (e.g. Perceptual Equilibrium Task)
+ND_DefineCol(p, 'FixHold',         55, [1.00, 1.00, 1.00]);  % Maintain fixation irrespective of any stimuli (e.g. Receptive Field Mapping Task)
 
-%ND_DefineCol(p, 'targetgood', 50, [0.00, 1.00, 0.00]);
-%ND_DefineCol(p, 'targetnull', 51, [1.00, 0.00, 0.00]);
-%ND_DefineCol(p, 'fixation',   52, [1.00, 0.00, 0.00]);
+% Grey levels
+for(i=1:9)
+    ND_DefineCol(p, sprintf('grey%d',i), 60+i, [i, i, i] ./ 10);
+end
+
+
 

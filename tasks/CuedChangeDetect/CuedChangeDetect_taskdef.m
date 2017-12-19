@@ -43,6 +43,19 @@ p.trial.stim.GRATING.highContrast = datasample(0.425:0.05:0.65, 1);
 
 p.trial.stim.GRATING.res          = 300;
 
+% cue definition
+p.trial.stim.cue.offcolor = 
+p.trial.stim.cue.oncolor  = 
+
+
+p.trial.stim.RING.pos       = [0,0];
+p.trial.stim.RING.size      = 2 * p.trial.stim.GRATING.radius + 0.5;
+p.trial.stim.RING.linewidth = 0.1;
+p.trial.stim.RING.color     = 'fixspot'; 
+p.trial.stim.RING.fixWin    = 2;
+p.trial.stim.RING.alpha     = 1; % Fully opaque
+
+
 % ------------------------------------------------------------------------%
 %% Timing
 p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given

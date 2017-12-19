@@ -95,11 +95,9 @@ function TaskSetUp(p)
     p.trial.task.fixFix  = 0;
     p.trial.task.stimFix = 0;
     
-    
     p.trial.task.CueState  = 0;   % 0 is off, 1 is all equal, 2 is target cue on
-    p.trial.task.StimState = 0;   % 0 is off, 1 is all on, 2 is target change
+    p.trial.task.StimState = 0;   % 0 is off, 1 is all on,    2 is target change
     
-
     %% Generate all the visual stimuli
     % Fixation spot
     p.trial.stim.fix = pds.stim.FixSpot(p);
@@ -278,10 +276,10 @@ function TaskDesign(p)
                     ND_FixSpot(p,0);
 
                     % Mark trial (early) false and end task
-                    p.trial.outcome.CurrOutcome  = p.trial.outcome.False;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.False;
                     
                     % time to early to detect proper fixation break, thus set the time here explicitly
-                    p.trial.EV.Response          = p.trial.EV.FixLeave;
+                    p.trial.EV.Response         = p.trial.EV.FixLeave;
 
                     ND_SwitchEpoch(p, 'TaskEnd');
 
