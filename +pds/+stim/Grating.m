@@ -52,41 +52,41 @@ methods
     % The constructor method
     function obj = Grating(p, radius, contrast, pos, ori, sFreq, tFreq, res, alpha, fixWin)
         
-        %% Load variables
-        if nargin < 10 || isempty(fixWin)
-            fixWin = p.trial.stim.GRATING.fixWin;
+        %% Load variables        
+        if nargin < 2 || isempty(radius)
+            radius = p.trial.stim.GRATING.radius;
+        end
+         
+        if nargin < 3 || isempty(contrast)
+            contrast = p.trial.stim.GRATING.contrast;
+        end
+       
+        if nargin < 4 || isempty(pos)
+            pos = p.trial.stim.GRATING.pos;
         end
         
-        if nargin < 9 || isempty(alpha)
-            alpha = p.trial.stim.GRATING.alpha;
-        end
-        
-        if nargin < 8 || isempty(res)
-            res = p.trial.stim.GRATING.res;
-        end
-        
-        if nargin < 7 || isempty(tFreq)
-            tFreq = p.trial.stim.GRATING.tFreq;
+        if nargin < 5 || isempty(ori)
+            ori = p.trial.stim.GRATING.ori;
         end
                 
         if nargin < 6 || isempty(sFreq)
             sFreq = p.trial.stim.GRATING.sFreq;
         end
         
-        if nargin < 5 || isempty(ori)
-            ori = p.trial.stim.GRATING.ori;
+        if nargin < 7 || isempty(tFreq)
+            tFreq = p.trial.stim.GRATING.tFreq;
         end
         
-        if nargin < 4 || isempty(pos)
-            pos = p.trial.stim.GRATING.pos;
+        if nargin < 8 || isempty(res)
+            res = p.trial.stim.GRATING.res;
         end
         
-        if nargin < 3 || isempty(contrast)
-            contrast = p.trial.stim.GRATING.contrast;
+        if nargin < 9 || isempty(alpha)
+            alpha = p.trial.stim.GRATING.alpha;
         end
         
-        if nargin < 2 || isempty(radius)
-            radius = p.trial.stim.GRATING.radius;
+        if nargin < 10 || isempty(fixWin)
+            fixWin = p.trial.stim.GRATING.fixWin;
         end
         
         % Load the superclass
@@ -96,20 +96,20 @@ methods
         obj.classCode = p.trial.event.STIM.Grating;
         
         % This cell array determines the order of properties when the propertyArray attribute is calculated
-        obj.recordProps = {'xpos','ypos','radius','orientation','contrast','sFreq','tFreq'};
+        obj.recordProps = {'xpos', 'ypos', 'radius', 'orientation', 'contrast', 'sFreq', 'tFreq'};
 
         obj.alpha  = alpha;
         obj.tFreq  = tFreq;
         obj.angle  = ori;
         
         % Unchangeable after loading
-        obj.res    = res;
-        obj.sFreq  = sFreq;
-        obj.radius = radius;
-        obj.contrast = contrast;
+        obj.res            = res;
+        obj.sFreq          = sFreq;
+        obj.radius         = radius;
+        obj.contrast       = contrast;
         obj.contrastMethod = p.trial.stim.GRATING.contrastMethod;
-        obj.genTime = p.trial.CurTime;
-        obj.srcRect = [0, 0, 2*obj.res + 1, 2*obj.res + 1];
+        obj.genTime        = p.trial.CurTime;
+        obj.srcRect        = [0, 0, 2*obj.res + 1, 2*obj.res + 1];
         
         switch obj.contrastMethod
             case 'raw'
@@ -136,9 +136,7 @@ methods
             otherwise
                 error('Bad Contrast Method');
         end
-        
-        window = p.trial.display.ptr;
-        
+                
         % Create a special texture drawing shader for masked texture drawing:
         glsl = p.trial.display.glsl;
         
@@ -149,39 +147,40 @@ methods
         q = ceil(1/sFreqTex);
         
         % Create the texture matrix
-        x = meshgrid(-obj.res:obj.res + q, -obj.res:obj.res);
-        grating = obj.bgOffset + obj.pcmult * cos(sFreqTex*2*pi*x); 
+        CoorVec = linspace(-obj.res, obj.res, 2*obj.res);
+        [x, y]  = meshgrid(CoorVec, CoorVec);
+        
+        grating = obj.bgOffset + obj.pcmult * cos(sFreqTex*2*pi*(x+q)); 
         
         % Create a circular aperture using the separate alpha-channel:
-        [x,y] = meshgrid(-obj.res:obj.res, -obj.res:obj.res);
         circle = (x.^2 + y.^2 <= obj.res^2);
+        
         grating(:,:,2) = 0;
-        grating(1:2*obj.res+1, 1:2*obj.res+1, 2) = circle;
+        grating(1:2*obj.res, 1:2*obj.res, 2) = circle;
                
         % Make the texture that gets drawn
-        obj.texture = Screen('MakeTexture', window, grating, [], [], 2, [], glsl);
+        obj.texture = Screen('MakeTexture', p.trial.display.ptr, grating, [], [], 2, [], glsl);
 
     end
     
-    function draw(obj,p)
-        if obj.on
-            window = p.trial.display.ptr;
-            
+    function draw(obj, p)
+        if obj.on            
             % Use the current time to calculate the phase for accurate temporal frequency
             elapsedTime = p.trial.CurTime - obj.genTime;
-            sFreqTex = obj.sFreq * obj.radius / obj.res;
-            phaseOffset =  mod(elapsedTime * obj.tFreq,1) / sFreqTex;
+            sFreqTex    = obj.sFreq * obj.radius / obj.res;
+            phaseOffset = mod(elapsedTime * obj.tFreq,1) / sFreqTex;
             
             % Calculate the rect using the position
             destRect = [obj.pos - obj.radius, obj.pos + obj.radius];
             
             % Filter mode (not sure what the best value is yet)
             % For more information see the PTB documentation for Screen('DrawTexture')
-            filterMode = [];
+            % filterMode = [];
+            filterMode = 3;
             
             % Draw the texture
-            Screen('DrawTexture', window, obj.texture, obj.srcRect, destRect, obj.angle, filterMode, ...
-                obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
+            Screen('DrawTexture', p.trial.display.ptr, obj.texture, obj.srcRect, destRect, obj.angle, ...
+                                  filterMode, obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
         end
     end
     

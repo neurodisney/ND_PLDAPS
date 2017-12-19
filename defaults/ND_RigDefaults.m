@@ -328,12 +328,12 @@ SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indi
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
 % Fixation spot stimuli
-SS.stim.FIXSPOT.pos     = [0,0];
-SS.stim.FIXSPOT.fixWin  =  4;         % diameter of fixation window in dva
-SS.stim.FIXSPOT.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-SS.stim.FIXSPOT.color   = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
-SS.stim.FIXSPOT.size    = 0.2;        % size of the fixation spot
-SS.behavior.fixation.fix.pos = [0,0]; % Somethings may rely on this, will be overwritten upon creation of first FixSpot
+SS.stim.FIXSPOT.pos          = [0,0];
+SS.stim.FIXSPOT.fixWin       =  4;        % diameter of fixation window in dva
+SS.stim.FIXSPOT.type         = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+SS.stim.FIXSPOT.color        = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
+SS.stim.FIXSPOT.size         = 0.2;       % size of the fixation spot
+SS.behavior.fixation.fix.pos = [0,0];     % Somethings may rely on this, will be overwritten upon creation of first FixSpot
 
 % Sine Wave Grating stimlui
 SS.stim.GRATING.sFreq    = 3; % Spatial frequency, cycles/deg
@@ -347,6 +347,14 @@ SS.stim.GRATING.pos      = [0, 0];
 SS.stim.GRATING.fixWin   =  4;  
 SS.stim.GRATING.alpha    = 1; % Fully opaque
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
+
+% Ring (i.e. location cue)
+SS.stim.RING.pos       = [0,0];
+SS.stim.RING.size      = 2;
+SS.stim.RING.linewidth = 0.1;
+SS.stim.RING.color     = 'fixspot'; 
+SS.stim.RING.fixWin    = 2;
+SS.stim.RING.alpha     = 1; % Fully opaque
 
 % ------------------------------------------------------------------------%
 %% Joystick
