@@ -79,7 +79,7 @@ SS.mouse.use
 % If there are modification from the default settings needed, copy the
 % needed lines from ND_RigDefaults and alter the values here.
 
-SS.display.bgColor    = [0.5, 0.5, 0.5];  % change background color
+SS.display.bgColor    = [0.35, 0.35, 0.35];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
 SS.behavior.fixation.FixWin     = 2.5;

@@ -15,15 +15,15 @@ function p = RevCorr_taskdef(p)
 % ------------------------------------------------------------------------%
 %% TDT setup
 
-p.trial.tdt.use = 0;
+p.trial.tdt.use = 1;
 
 % UDP parameters
-p.trial.tdt.channels          = 24; % Number of ephys channels to analyze in incoming data
+p.trial.tdt.channels          = 32; % Number of ephys channels to analyze in incoming data
 p.trial.tdt.sortCodes         = 4;  % Number of units classified per channel. [1, 2, or 4]
 p.trial.tdt.bitsPerSort       = 2;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
 % Channels and sort codes to use for spiking activity
-p.trial.RF.channels = 22;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.channels = 13;  % Which channels of the incoming spike data to use for spikes
 p.trial.RF.sortCodes = 2;  % Which sort codes to use
 
 %% Reward
@@ -33,7 +33,7 @@ p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by 
 p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
 p.trial.reward.Period = 0.40;
 
-p.trial.reward.jackpotDur = 0.14;     % Reward for holding fixation until jackpotTime
+p.trial.reward.jackpotDur = 0.12;     % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1;  % number of reward pulses
 p.trial.reward.PulseStep       = [2,5]; % increase number of pulses with this trial number
@@ -139,6 +139,10 @@ p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 % steps. It specifies a duration in seconds.
 
 p.trial.pldaps.maxTrialLength = 15;
+
+% ------------------------------------------------------------------------%
+%% Eye Signal Sampling
+p.trial.behavior.fixation.Sample    = 75;
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
