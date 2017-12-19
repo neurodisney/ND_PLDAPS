@@ -27,7 +27,13 @@ if nStims > 0
             if iProp == 1
                 pds.datapixx.strobe(property);
             
+            elseif property == 0
+                % If the property is 0, transmit a special signal (since signals are interspersed with 0 strobes, it is lost
+                % otherwise)
+                pds.datapixx.strobe(10987);
+                
             else
+                
                 % Otherwise, save 2 decimal points of precision (must divide by 100 later)
                 signal = typecast(cast(round(property * 100), 'int16'), 'uint16'); 
                 pds.datapixx.strobe(signal);
