@@ -4,6 +4,8 @@
 require(useful,   quietly=TRUE)
 require(catspec,  quietly=TRUE)
 require(beanplot, quietly=TRUE)
+require(ggplot2,  quietly=TRUE)
+require(quickpsy, quietly=TRUE)
 
 # Function for plotting data from the delayed saccade task
 PercEqui_Behav = function(datadir=NA, fname=NA) {
@@ -87,6 +89,26 @@ if(length(Break_trial) == 0){
 #dt$Outcome[dt$Outcome == 'NoFix']        = 'NoStart'
 dt$Outcome = as.factor(dt$Outcome)
 
+
+dt$VertPos = rep(NA, length(dt$Hemi))
+dt$VertPos[dt$PosY == 0] = 'middle'
+dt$VertPos[dt$PosY  > 0] = 'upper'
+dt$VertPos[dt$PosY  < 0] = 'lower'
+
+# correct item chosen, ignore target breaks
+CorrItm = dt$Good
+CorrItm[dt$Outcome == 'TargetBreak'] = 1
+
+# chosen item was target or reference
+TrgtHigh = dt$TargetContr > dt$RefContr
+TrgtSel = rep(NA, length(dt$Good))
+TrgtSel[TrgtHigh == 1 & CorrItm == 1] = 1
+TrgtSel[TrgtHigh == 0 & CorrItm == 1] = 0
+TrgtSel[TrgtHigh == 1 & CorrItm == 0] = 0
+TrgtSel[TrgtHigh == 0 & CorrItm == 0] = 1
+
+dt$TrgtSel = TrgtSel
+
 ###########################################################################################
 # identify outcomes
 pCorr       = dt$Outcome == 'Correct'
@@ -130,16 +152,16 @@ if(interactive()) {
   x11(width=20.5, height=10.5, pointsize=20, title='PercEqui_Behav')
 } else {
   # Otherwise only save the figure as a pdf.
-  pdf( paste('PercEqui_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='PercEqui_Behav')
+  pdf( paste('PercEqui_',dt$Date[1],'.pdf',sep=""), 19.5, 8.5, pointsize=10, title='PercEqui_Behav')
 
 }
 
 # create plot layout
-pllyt = matrix(c(1,1,1,1,1,1,1,1,
-                 2,2,2,2,2,2,2,2,
-                 3,3,3,3,3,3,3,3,
-                 4,4,5,5,6,6,8,7,
-                 4,4,5,5,6,6,9,10), 5, 8, byrow=TRUE)
+pllyt = matrix(c(1,1,1,1,1,
+                 2,2,2,2,2,
+                 3,3,3,3,3,
+                 4,5,6,7,8,
+                 4,5,6,7,8), 5, 5, byrow=TRUE)
 layout(pllyt,  heights=c(2.5,2.5,2,2.75,2.75))
 par(mar=c(5,5,2,0.5))
 
@@ -467,116 +489,49 @@ text(cex=1.2, x=x, y=0, All_perf, xpd=TRUE, srt=0, pos=3, offset=0.1)
 box()
 
 ###########################################################################################
-# plot 8: Delay dependent performance
-NumCond = 5  # -1 because it defines start and end of interval
+# plot 8: psychometric function
+valPos = dt$Outcome == 'Correct' | dt$Outcome == 'False' | dt$Outcome == 'TargetBreak'
 
-DelBrks = seq(floor(min(GoSig*10))/10, ceiling(max(GoSig*10))/10, length=NumCond)
-DelCat  = as.factor(cut(GoSig, breaks=DelBrks, labels= as.character(1:(NumCond-1))))
 
-All_Cnt        = hist(GoSig,              breaks=DelBrks, plot=FALSE)$counts
-Hit_Cnt        = hist(GoSig[pCorr],       breaks=DelBrks, plot=FALSE)$counts
-HoldErr_Cnt    = hist(GoSig[pHoldErr],    breaks=DelBrks, plot=FALSE)$counts
-FixBreak_Cnt   = hist(GoSig[pFixBreak],   breaks=DelBrks, plot=FALSE)$counts
-StimBreak_Cnt  = hist(GoSig[pStimBreak],  breaks=DelBrks, plot=FALSE)$counts
-Early_Cnt      = hist(GoSig[pEarly],      breaks=DelBrks, plot=FALSE)$counts
-False_Cnt      = hist(GoSig[pFalse],      breaks=DelBrks, plot=FALSE)$counts
-EarlyFalse_Cnt = hist(GoSig[pEarlyFalse], breaks=DelBrks, plot=FALSE)$counts
 
-PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, False_Cnt/All_Cnt, False_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt)
+#valPos = valPos == 1 & dt$SRT > 0.05
 
-x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, False_Col, EarlyFalse_Col, TargetBreak_Col), border=NA,
-            main='Delay Performance', xlab='Delay [s]', ylab='Proportion [%]', xaxt="n")
 
-xl = colMeans(x)
-stp = unique(diff(colMeans(x)))
-lblpos = seq(from=1, to=NumCond*stp, by=stp)-0.5
+dtv = droplevels(subset(dt, valPos))
 
-text(cex=1,   x=lblpos, y=-1.5, DelBrks, xpd=TRUE, srt=0, pos=1, offset=0.5)
-text(cex=1.2, x=xl,     y=0,    All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
+# discard conditions with too few trials
+allContr = sort(unique(dtv$TargetContr))
+ContrCnt = as.numeric(table(dtv$TargetContr))
+vCtr     = ContrCnt >= 2 # at least 10 trials
+vPos     = dtv$TargetContr %in% allContr[vCtr]
+dtv     = droplevels(subset(dtv, vPos))
 
-box()
+fitA = quickpsy(d=dtv, x=TargetContr, k=TargetSel, grouping=.(RefContr),
+                fun=cum_normal_fun, prob=0.5, bootstrap='none',
+                xmin=0, xmax=1, lapses=T, guess=0, optimization='DE',
+               parini=list(c(0.0001, 0.8), c(0.0001, 0.8), c(0.0001, 0.5)) )
+ #               parini=list(c(0.0001, 0.8), c(0.0001, 0.8), c(0.0001, 0.5), c(0.0001, 0.5)) )
 
-# ###########################################################################################
-# plot 9: Delay dependent SRT
-RespP      = pCorr | pEarly | pHoldErr
-SRTresp    = SRT[RespP]
-DelCatresp = DelCat[RespP]
+plot(fitA$averages$TargetContr, fitA$averages$prob, type='n', xlim=c(0,1),
+     ylim=c(0,1), xlab='Contrast', ylab='Proportion', main='Point of Subjective Equality')
 
-Result = as.character(dt$Outcome[RespP])
-Result[Result != 'Early'] = 'Correct'
+Rclst = sort(unique(fitA$averages$RefContr))
 
-plrng = range(SRTresp)
+cnt=0
+for(cRef in Rclst){
+    cnt = cnt + 1
+    pp = fitA$averages$RefContr == cRef
+    points(fitA$averages$TargetContr[pp], fitA$averages$prob[pp], pch=19, col=cnt+1)
 
-beanplot(SRTresp ~ Result*DelCatresp, ll = 0.1,
-         main = "Delay dependent SRT", side = "both", xlab="Delay [s]", ylab='Response Time [s]', bw=RTbw,
-         col = list(Corr_Col, c(Early_Col, "black")), overallline='median', beanlinese='median', what=c(0,1,1,1))
+    pp2 = fitA$curves$RefContr == cRef
 
-abline(h=median(SRTresp[Result== 'Correct']), col=Corr_Col,  lty=2, lwd=2.5)
-abline(h=median(SRTresp[Result== 'Early']),   col=Early_Col, lty=2, lwd=2.5)
-abline(h=0, col="black", lty=2, lwd=1.5)
+    lines(fitA$curves$x[pp2], fitA$curves$y[pp2], col=cnt+1, lwd=2)
+}
+abline(h=0.5, lty=3)
 
-###########################################################################################
-# plot 10: hemifield dependent performance
-#
-# Lpos = dt$Hemi == 'l'
-# Rpos = dt$Hemi == 'r'
-#
-# All_perf =  c(sum(pCorr==1 & Lpos==1), sum(pEarly==1 & Lpos==1), sum(pFalse==1 & Lpos==1), sum(pEarlyFalse==1 & Lpos==1))
-#
-# All_typ = c('Correct', 'Early', 'FixBreak', 'StimBreak', 'TargetBreak', 'False', 'EarlyFalse', 'Miss')
-# All_col = c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, False_Col, EarlyFalse_Col, Miss_Col)
-#
-# x = barplot(100*All_perf/Ntrials, beside=TRUE, col=All_col, xaxt="n", main='Session Performance', ylab='Proportion [%]', border=NA)
-#
-# text(cex=0.9, x=x-.25, y=-1.5, All_typ, xpd=TRUE, srt=45, pos=1, offset=1)
-# text(cex=1.2, x=x,     y=0,   All_perf, xpd=TRUE, srt=0,  pos=3, offset=0.1)
-#
-# box()
-#
-# # ###########################################################################################
-# # # plot 10: Position dependent performance
-# RespTrial = pCorr==1 | pEarly==1 | pFalse==1 | pEarlyFalse==1
-#
-# Rpos = dt$Hemi == 'r'
-#
-# All_Cnt       = as.numeric(table(Rpos[RespTrial]))
-# Hit_Cnt       = as.numeric(table(Rpos[pCorr]))
-# Early_Cnt   = as.numeric(table(Rpos[pHoldErr]))
-# False_Cnt  = as.numeric(table(Rpos[pFixBreak]))
-# StimBreak_Cnt = as.numeric(table(Rpos[pStimBreak]))
-# Early_Cnt     = as.numeric(table(Rpos[pEarly]))
-#
-# if(length(Hit_Cnt)       == 0 ) {Hit_Cnt       = All_Cnt * 0}
-# if(length(HoldErr_Cnt)   == 0 ) {HoldErr_Cnt   = All_Cnt * 0}
-# if(length(FixBreak_Cnt)  == 0 ) {FixBreak_Cnt  = All_Cnt * 0}
-# if(length(StimBreak_Cnt) == 0 ) {StimBreak_Cnt = All_Cnt * 0}
-# if(length(Early_Cnt)     == 0 ) {Early_Cnt     = All_Cnt * 0}
-#
-# PerfTbl = 100 * rbind(Hit_Cnt/All_Cnt, Early_Cnt/All_Cnt, FixBreak_Cnt/All_Cnt, StimBreak_Cnt/All_Cnt, HoldErr_Cnt/All_Cnt)
-#
-# x = barplot(PerfTbl, beside=TRUE, col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col), border=NA,
-#             main='Location Performance', xlab='Target Location [degree]', ylab='Proportion [%]', xaxt="n")
-# xl = colMeans(x)
-#
-# text(cex=1, x=colMeans(x), y=0, levels(TPos), xpd=TRUE, srt=0, pos=1, offset=0.5)
-# text(cex=1.5, x=xl, y=0, All_Cnt, xpd=TRUE, srt=0, pos=3, offset=0.1)
-#
-# box()
+legend("bottomright", legend=Rclst, ncol=2, cex=1.5,
+       pch=c(15), col=seq(1,length(Rclst))+1, title='Reference Contrast')
 
-# ###########################################################################################
-# # plot 11: Location dependent SRT
-# PosCatresp = TPos[RespP]
-#
-# # plrng = c(min(SRTresp[Result== 'Early']), max(SRTresp[Result== 'Correct']))
-# plrng = range(SRTresp)
-#
-# beanplot(SRTresp ~ Result*PosCatresp, ll = 0.1,
-#          main = "Location dependent SRT", side = "both", xlab="Delay [s]", ylab='Response Time [s]', bw=RTbw,
-#          col = list(Corr_Col, c(Early_Col, "black")), overallline='median', beanlinese='median', what=c(0,1,1,1))
-#
-# abline(h=median(SRTresp[Result== 'Correct']), col=Corr_Col,  lty=2, lwd=2.5)
-# abline(h=median(SRTresp[Result== 'Early']),   col=Early_Col, lty=2, lwd=2.5)
-# abline(h=0, col="black", lty=2, lwd=1.5)
 
 ###########################################################################################
 # save plot as pdf

@@ -13,8 +13,9 @@ function p = PercEqui_taskdef(p)
 
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.05;  % reward duration [s] for reward given by keyboard presses
-p.trial.reward.IncrementTrial = [ 100, 250,  350, 425,  500, 550, 700]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur   = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4]; % increase number of pulses with this trial number
+p.trial.reward.IncrementTrial = [50, 150, 300,  400, 500,  600, 650]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur   = [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4]; % increase number of pulses with this trial number
+p.trial.reward.DiscourageProp = 0.65;  % proportion of reward given if previous trial was an error
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -29,42 +30,62 @@ p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to th
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 1;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
-p.trial.task.Timing.TimeOut   =  2.5;  % Time-out[s]  for incorrect responses
+p.trial.task.Timing.TimeOut   =  6;  % Time-out[s]  for incorrect responses
 p.trial.task.Timing.ITI       = ND_GetITI(1.25,  1.75,  [], [], 1, 0.10);
 
 % ----------------------------------- -------------------------------------%
 %% Grating stimuli parameters
 %p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 p.trial.stim.GRATING.tFreq  = 0;  % temporal frequency of grating; drift speed, 0 is stationary
-p.trial.stim.GRATING.res    = 300;
+p.trial.stim.GRATING.res    = 600;
 p.trial.stim.GRATING.fixWin = 2;  %*p.trial.stim.GRATING.radius;
 
-p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % radius of grating patch
 p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
-p.trial.stim.PosX    = 3;
-p.trial.stim.PosX    = datasample([ 2, 2.5, 3, 3.5], 1);
-p.trial.stim.PosY    = 0;
+
+% p.trial.stim.EccLst = [ 2, 3,   4];
+% p.trial.stim.AngLst = [45, 0, -45];
+% 
+% p.trial.stim.EccLst =  3;
+% p.trial.stim.AngLst = [45, 0, -45];
+% 
+
+p.trial.stim.PosX = 2.5;
+p.trial.stim.PosY = datasample([-2, 0, 2], 1);
+p.trial.stim.PosY = 2;
 
 % grating contrast
-p.trial.stim.Ref.Contrast = datasample(0.2, 0.5);
+cCtr = datasample([0.2, 0.3, 0.4, 0.5, 0.75], 1);
 
-ctrng = ND_HalfSpace(p.trial.stim.Ref.Contrast, p.trial.stim.Ref.Contrast/20, 10);
+% if(0.2 == 0.2)
+%     ctrng = ND_HalfSpace(0, cCtr, 5);
+%     ctrng = [fliplr(cCtr - ctrng(2:end)), cCtr + ctrng, 0.5, 0.6, 0.75];
+% else
+%     ctrng = ND_HalfSpace(0, cCtr, 6);
+%     ctrng = [fliplr(cCtr - ctrng(2:end)), cCtr + ctrng];
+% end
+    
 
-p.trial.stim.trgtconts = [fliplr(0.5 - ctrng(2:end)), 0.5 + ctrng(2:end)];
+ctrng = ND_HalfSpace(0, 5, 8);
+ctrng = unique(cCtr * [0, fliplr(1 - ctrng(2:end)), 1 + ctrng]);
+
+% ctrngP = ctrng * 0.5;
+% plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
+% hold on
+% xlim([0,1]);
+% ctrngP = ctrng * 0.2;
+% plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
+% ctrngP = ctrng * 0.75;
+% plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
+% ctrngP = ctrng * 0.1;
+% plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
+% ctrngP = ctrng * 0.3;
+% plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
 
 
-% ------------------------------------------------------------------------%
-%% Condition/Block design
-p.trial.Block.maxBlocks    = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
+ctrng(ctrng<0 | ctrng>1)  = [];
+p.trial.stim.Ref.Contrast = cCtr;
+p.trial.stim.trgtconts    = ctrng;
 
-% target contrast defines a condition
-p.trial.Block.Conditions = {};
-for(i=1:length(p.trial.stim.trgtconts))
-    c.Nr = i;
-    p.trial.Block.Conditions = [p.trial.Block.Conditions, c];
-end
-
-p.trial.Block.maxBlockTrials = 10;
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters

@@ -39,10 +39,14 @@ SS.plot.routine    = 'PercEqui_plots';       % function for online plotting of s
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos', 'behavior.fixation.FixWin', 'stim.GRATING.sFreq', ...
+SS.editable = {'stim.GRATING.sFreq', ...
                'task.EqualStim', 'stim.GRATING.ori', 'task.RandomPar', 'stim.PosY', ...
                'task.RandomHemi', 'stim.Hemi'};
-                  
+           
+%      SS.editable = {'stim.GRATING.sFreq', 'stim.Ecc', 'stim.Ang',  ...
+%                'stim.GRATING.ori', 'task.RandomPar', 'task.RandomHemi', 'stim.Hemi', ...
+%                'stim.PosX', 'stim.PosY', 'task.RandomEcc', 'task.RandomAng'};
+             
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.

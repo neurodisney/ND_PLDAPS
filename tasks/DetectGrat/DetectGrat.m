@@ -338,8 +338,8 @@ if(~isempty(p.trial.LastKeyPress))
     switch p.trial.LastKeyPress(1)
         % random position of target on each trial
         case KbName('r')
-             p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
-             p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
+            p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
+            p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
              
             if(p.trial.task.RandomAng)
                 ND_CtrlMsg(p, 'Random Grating location on each trial.');
@@ -349,7 +349,7 @@ if(~isempty(p.trial.LastKeyPress))
 
         % random position of target on each trial
         case KbName('e')
-             p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
+            p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
              
             if(p.trial.task.RandomEcc)
                 ND_CtrlMsg(p, 'Random Grating eccemtricity on each trial.');
@@ -359,7 +359,7 @@ if(~isempty(p.trial.LastKeyPress))
 
         % random position of target on each trial
         case KbName('a')
-             p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
+            p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
              
             if(p.trial.task.RandomAng)
                 ND_CtrlMsg(p, 'Random Grating angular position on each trial.');

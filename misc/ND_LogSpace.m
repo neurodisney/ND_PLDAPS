@@ -22,16 +22,19 @@ function Ovec = ND_LogSpace(From, To, Nele)
 
 % ____________________________________________________________________________ %
 %% define default parameters
+
 if(~exist('From','var') || isempty(From))
    From = 1;
-elseif(From == 0)
-    error('Can not use 0, log of 0 is undefined!');
 end
 
 if(~exist('To','var') || isempty(To))
    To = 10;
-elseif(To == 0)
-    error('Can not use 0, log of 0 is undefined!');
+end
+
+if(To == 0 || From == 0)
+    CorrZero = 0.0000001;
+else
+    CorrZero = 0;
 end
 
 if(~exist('Nele','var') || isempty(Nele))
@@ -42,7 +45,7 @@ end
 
 % ____________________________________________________________________________ %
 %% call matlab function
-Ovec = logspace(log10(From), log10(To), Nele);
+Ovec = logspace(log10(From+CorrZero), log10(To+CorrZero), Nele) - CorrZero;
 
 if(From > To)
     Ovec = flip(From -(Ovec - To));
