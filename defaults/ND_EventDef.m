@@ -151,6 +151,10 @@ p.defaultParameters.event.SOUND_ON      = 180;     % stimulus onset
 p.defaultParameters.event.MICROSTIM     = 666;     % microstimulation pulse onset
 p.defaultParameters.event.INJECT        = 667;     % start of pressure injection
 p.defaultParameters.event.IONTO         = 668;     % start of iontophoretic drug delivery
+
+% Movie related
+p.defaultParameters.event.MOVIE_START   = 4401;
+
 % ------------------------------------------------------------------------%
 %% Stim Property Blocks
 % Sent at the end of the trial to give information about each shown stimulus
@@ -171,6 +175,11 @@ p.defaultParameters.event.STIM.Ring     = 7703;
 % FixSpot  = 7701
 % Grating  = 7702
 % Ring     = 7703
+
+%% Integer encoding blocks
+% Reserve the 15xxx block for sending integers 0-999
+% For encoding whatever use
+p.defaultParameters.event.ZERO_INT = 15000;
 
 
 % ------------------------------------------------------------------------%
