@@ -15,23 +15,23 @@ function p = RevCorr_taskdef(p)
 % ------------------------------------------------------------------------%
 %% TDT setup
 
-p.trial.tdt.use = 1;
+p.trial.tdt.use = 0;
 
 % UDP parameters
-p.trial.tdt.channels          = 32; % Number of ephys channels to analyze in incoming data
+p.trial.tdt.channels          = 16; % Number of ephys channels to analyze in incoming data
 p.trial.tdt.sortCodes         = 4;  % Number of units classified per channel. [1, 2, or 4]
 p.trial.tdt.bitsPerSort       = 2;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
 % Channels and sort codes to use for spiking activity
-p.trial.RF.channels = 13;  % Which channels of the incoming spike data to use for spikes
-p.trial.RF.sortCodes = 2;  % Which sort codes to use
+p.trial.RF.channels = 7;  % Which channels of the incoming spike data to use for spikes
+p.trial.RF.sortCodes = 1:2;  % Which sort codes to use
 
 %% Reward
 % manual reward from experimenter
 p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
-p.trial.reward.Period = 0.40;
+p.trial.reward.Period = 0.25;
 
 p.trial.reward.jackpotDur = 0.12;     % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
