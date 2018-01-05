@@ -110,6 +110,8 @@ else
             end
             
             TaskDesign(p);
+            DrugCheck(p);
+            EyeCheck(p);
             
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
@@ -117,7 +119,6 @@ else
         % Just call graphic routines, avoid any computations
         TaskDraw(p)
             
-                        
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
 
@@ -133,10 +134,14 @@ function TaskSetUp(p)
 
     ND_SwitchEpoch(p, 'ITI');  % define first task epoch
     
-    p.trial.task.TrialCount = 0;
-    p.trial.task.FlashCount = 0;
-    p.trial.stim.fix.on     = 0;
-    p.trial.stim.LumeDir    = 0;
+    p.trial.task.TrialCount    = 0;
+    p.trial.task.FlashCount    = 0;
+    p.trial.task.DrugCount     = 0;
+    p.trial.task.DrugGiven     = 0;
+    p.trial.task.LastDrugFlash = 0;
+    p.trial.stim.fix.on        = 0;
+    p.trial.stim.LumeDir       = 0;
+    p.trial.task.EyeOnScreen   = 0;
     
     p.trial.task.NextModulation = p.trial.CurTime + p.trial.task.WaitModulation;
     
@@ -273,6 +278,48 @@ function TaskDesign(p)
             ND_SwitchEpoch(p,'ITI');
                 
     end  % switch p.trial.CurrEpoch
+    
+% ####################################################################### %
+function EyeCheck(p)
+%% check if gaze is at screen
+
+        dist = sqrt( p.trial.eyeX^2 + p.trial.eyeY^2 );
+        
+        if(dist < p.trial.task.ScreenFixWin && p.trial.task.EyeOnScreen == 0)
+        % Eyes start being on screen    
+            p.trial.task.EyeOnScreen = 1;
+            pds.datapixx.strobe(p.trial.event.FIX_IN); 
+
+        elseif(dist > p.trial.task.ScreenFixWin && p.trial.task.EyeOnScreen == 1)
+        % Eyes left screen area    
+            p.trial.task.EyeOnScreen = 0;
+            pds.datapixx.strobe(p.trial.event.FIX_OUT); 
+        end
+
+% ####################################################################### %
+function DrugCheck(p)
+%% check if it is time to trigger adrug stimulation
+    if(p.trial.Drug.Give == 1)
+        if(p.trial.task.LastDrugFlash > p.trial.Drug.FlashSeriesLength)
+            if(p.trial.task.DrugGiven == 0)
+                if(p.trial.CurTime > p.trial.task.NextModulation + p.trial.Drug.PeriFlashTime)
+                    ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,      ...
+                                   p.trial.datapixx.TTL_spritzerDur,       ...
+                                   p.trial.datapixx.TTL_spritzerNpulse,    ...
+                                   p.trial.datapixx.TTL_spritzerPulseGap,  ...
+                                   p.trial.datapixx.TTL_spritzerNseries,   ...
+                                   p.trial.datapixx.TTL_spritzerSeriesGap, ...
+                                   p.trial.event.INJECT);
+
+                    p.trial.task.LastDrugFlash = 0;
+                    p.trial.task.DrugCount     = p.trial.task.DrugCount + 1;
+                    p.trial.task.DrugGiven = 1;
+                end
+            end
+        else
+            p.trial.task.DrugGiven = 0;
+        end
+    end
 
 % ####################################################################### %
 function TaskDraw(p)
@@ -289,11 +336,12 @@ function TaskDraw(p)
                 p.trial.task.NextModulation = p.trial.task.NextModulation + p.trial.task.LOperiod;
                 p.trial.stim.LumeDir = 0;
                 
+                
             else % stimulus is off
                 
                 % get current contrast and strobe value
                 ccont = datasample(p.trial.task.ContrastList, 1);
-                cBck = p.trial.task.MeanBck;
+                cBck  = p.trial.task.MeanBck;
                 
                 ccol = ccont/100 * cBck;
                 
@@ -305,17 +353,23 @@ function TaskDraw(p)
                 if(randi([0 1],1) == 1) % brighter screen
                     pds.datapixx.strobe(15000+ccont); % encode vurrent contrast
                     ccol = cBck + ccol;
+                    p.trial.stim.LumeDir = 1;
                 else
-                    pds.datapixx.strobe(15000+ccont); % encode vurrent contrast
+                    pds.datapixx.strobe(15000-ccont); % encode vurrent contrast
                     ccol = cBck - ccol;
+                    p.trial.stim.LumeDir = -1;
                 end
                 
                 ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
                 p.trial.task.NextModulation = p.trial.task.NextModulation + p.trial.task.HIperiod;
             end
-            p.trial.display.bgColor    = [ccol, ccol, ccol];
-            p.trial.pldaps.lastBgColor = [ccol, ccol, ccol]; % Trick the ND_FrameFLip fromn resetting
-
+            
+            % keep track of flash numbers
+            p.trial.task.FlashCount    = p.trial.task.FlashCount    + 1;
+            p.trial.task.LastDrugFlash = p.trial.task.LastDrugFlash + 1;
+            
+            p.trial.display.bgColor    = ccol;  %[ccol, ccol, ccol];
+            p.trial.pldaps.lastBgColor = ccol;  %[ccol, ccol, ccol]; % Trick the ND_FrameFLip fromn resetting
         end
     end
     

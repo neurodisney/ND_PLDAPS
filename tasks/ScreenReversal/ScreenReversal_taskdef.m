@@ -46,17 +46,23 @@ p.trial.task.RandomPosRange = [4, 4];  % range of x and y dva for random positio
 
 % ------------------------------------------------------------------------%
 %% Screen Modulation
-% p.trial.task.HIperiod = 0.5 * 1/8;    % time period where luminance is above mean screen luminance
-% p.trial.task.LOperiod = 0.5 * 1/8;    % time period where luminance is below mean screen luminance
+% p.trial.task.HIperiod = 0.5 * 1/8; % time period where luminance is above mean screen luminance
+% p.trial.task.LOperiod = 0.5 * 1/8; % time period where luminance is below mean screen luminance
 p.trial.task.HIperiod = 0.2;      % time period where luminance is above mean screen luminance
-p.trial.task.LOperiod = 1;    % time period where luminance is below mean screen luminance
+p.trial.task.LOperiod = 2;        % time period where luminance is below mean screen luminance
 
-p.trial.task.DoFlash = 1; % if 1, a screen flash paradigm is used, otherwise the contrast folows a sinosoidal modulation
+p.trial.task.DoFlash = 1;  % if 1, a screen flash paradigm is used, otherwise the contrast folows a sinosoidal modulation
 
 % p.trial.task.ContrastList = ND_LogSpace(0, 80, 8); 
 p.trial.task.ContrastList   = [0, 2, 4, 8, 16, 32, 64, 100]; % ND_ValueSpacing(2, 100, 7, 'double');
 p.trial.task.ScreenFixWin   = 8;  % Send trigger when fixation enters or leaves this Window
 p.trial.task.WaitModulation = 1;  % how many seconds to wait before starting screen modulation
+
+% ------------------------------------------------------------------------%
+%% Drug delivery
+p.trial.Drug.Give = 1;
+p.trial.Drug.FlashSeriesLength = 5;
+p.trial.Drug.PeriFlashTime     = -150;
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
