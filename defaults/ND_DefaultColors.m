@@ -88,14 +88,14 @@ ND_DefineCol(p, 'dBlue',      42, [0.00, 0.00, 0.69]);
 ND_DefineCol(p, 'dBluebg',    43, [0.00, 0.00, 0.69], bgColor);
 
 % Break colors are bright colors, but muted for the experimenter
-ND_DefineCol(p, 'redBreak',   44, [0.25, 0.00, 0.00], [1.00, 0.00, 0.00]);
-ND_DefineCol(p, 'greenBreak', 45, [0.00, 0.25, 0.00], [0.00, 1.00, 0.00]);
-ND_DefineCol(p, 'blueBreak',  46, [0.00, 0.00, 0.25], [0.00, 0.00, 1.00]);
-ND_DefineCol(p, 'yellowBreak',47, [0.25, 0.25, 0.00], [1.00, 1.00, 0.00]);
-ND_DefineCol(p,'magentaBreak',48, [0.25, 0.00, 0.25], [1.00, 0.00, 1.00]);
-ND_DefineCol(p, 'cyanBreak',  49, [0.00, 0.25, 0.25], [0.00, 1.00, 1.00]);
-ND_DefineCol(p, 'orangeBreak',50, [0.25, 0.10, 0.00], [1.00, 0.40, 0.00]);
-ND_DefineCol(p, 'whiteBreak', 51, [0.25, 0.25, 0.25], [1.00, 1.00, 1.00]);
+ND_DefineCol(p, 'redBreak',    44, [0.25, 0.00, 0.00], [1.00, 0.00, 0.00]);
+ND_DefineCol(p, 'greenBreak',  45, [0.00, 0.25, 0.00], [0.00, 1.00, 0.00]);
+ND_DefineCol(p, 'blueBreak',   46, [0.00, 0.00, 0.25], [0.00, 0.00, 1.00]);
+ND_DefineCol(p, 'yellowBreak', 47, [0.25, 0.25, 0.00], [1.00, 1.00, 0.00]);
+ND_DefineCol(p, 'magentaBreak',48, [0.25, 0.00, 0.25], [1.00, 0.00, 1.00]);
+ND_DefineCol(p, 'cyanBreak',   49, [0.00, 0.25, 0.25], [0.00, 1.00, 1.00]);
+ND_DefineCol(p, 'orangeBreak', 50, [0.25, 0.10, 0.00], [1.00, 0.40, 0.00]);
+ND_DefineCol(p, 'whiteBreak',  51, [0.25, 0.25, 0.25], [1.00, 1.00, 1.00]);
 
 % define fixation spots for tasks
 ND_DefineCol(p, 'FixDetection',    52, [190 115 215]./ 255); % Detection tasks where a stimulus has to be found (e.g. Contrast Detection Tasks)
@@ -103,10 +103,8 @@ ND_DefineCol(p, 'FixChange',       53, [0.25, 0.00, 0.25]);  % A change of a sti
 ND_DefineCol(p, 'FixDiscriminate', 54, [0.00, 1.00, 1.00]);  % A difference in two or more stimuli has to be identified (e.g. Perceptual Equilibrium Task)
 ND_DefineCol(p, 'FixHold',         55, [1.00, 1.00, 1.00]);  % Maintain fixation irrespective of any stimuli (e.g. Receptive Field Mapping Task)
 
-% Grey levels (CLUT index 61-69)
+% Grey levels Deciles (CLUT index 61-69)
 for(i=1:9)
     ND_DefineCol(p, sprintf('grey%d',i), 60+i, [i, i, i] ./ 10);
 end
-
-
 

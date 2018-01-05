@@ -1,4 +1,4 @@
-function p = FixCalib(p, state)
+function p = ScreenReversal(p, state)
 % Main trial function for fixation calibration.
 %
 %
@@ -24,7 +24,6 @@ if(isempty(state))
     % --------------------------------------------------------------------%
     %% define ascii output file
     % call this after ND_InitSession to be sure that output directory exists!
-    
     p = ND_AddAsciiEntry(p, 'Date',        'p.trial.DateStr',                     '%s');
     p = ND_AddAsciiEntry(p, 'Time',        'p.trial.EV.TaskStartTime',            '%s');
     p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%s');
@@ -33,7 +32,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
     p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
     p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart',   '%d');
-    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.FixOn',                     '%d');
+    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.TaskStart',                     '%d');
     p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
     p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
 
@@ -42,12 +41,13 @@ if(isempty(state))
     
     p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
     p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
-    p = ND_AddAsciiEntry(p, 'intITI',      'p.trial.task.Timing.ITI',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
 
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
-       
+    
+    
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
     
@@ -60,6 +60,9 @@ if(isempty(state))
     % just initialize here, will be overwritten by conditions
     p.defaultParameters.reward.MinWaitInitial  = 0.05;
     p.defaultParameters.reward.MaxWaitInitial  = 0.1; 
+    
+    % p.defaultParameters.task.ContrastList = [0, 2, 4, 8, 16, 32, 64, 100]; 
+    p.defaultParameters.task.MeanBck = p.defaultParameters.display.bgColor(1);
     
 %-------------------------------------------------------------------------%
 %% eye calibration
@@ -105,20 +108,15 @@ else
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
             end
+            
             TaskDesign(p);
             
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
-        %   TaskDraw(p)
+        TaskDraw(p)
             
-% ------------------------------------------------------------------------%
-% DONE AFTER THE MAIN TRIAL LOOP:
-        % ----------------------------------------------------------------%
-        case p.trial.pldaps.trialStates.trialCleanUpandSave
-        %% trial end
-            TaskCleanAndSave(p);
                         
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
@@ -130,33 +128,17 @@ end  %/  if(nargin == 1) [...] else [...]
 function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
-    p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI, ...
-                                         p.trial.task.Timing.MaxITI, [], [], 1, 0.10);
                                      
-     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+     % p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
-    % Reset the reward counter (separate from iReward to allow for manual rewards)
-    p.trial.reward.count = 0;
-    
-    % Outcome if no fixation occurs at all during the trial
-    p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
-    p.trial.task.Good   = 0;
-    
-    % State for achieving fixation
-    p.trial.task.fixFix = 0;
-    
-    % if random position is required pick one and move fix spot
-    if(p.trial.task.RandomPos == 1)
-         Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
-         Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
-         p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
-    end
-       
-    %% Make the visual stimuli
-    % Fixation spot
-    p.trial.stim.fix = pds.stim.FixSpot(p);
-    
     ND_SwitchEpoch(p, 'ITI');  % define first task epoch
+    
+    p.trial.task.TrialCount = 0;
+    p.trial.task.FlashCount = 0;
+    p.trial.stim.fix.on     = 0;
+    p.trial.stim.LumeDir    = 0;
+    
+    p.trial.task.NextModulation = p.trial.CurTime + p.trial.task.WaitModulation;
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -166,12 +148,42 @@ function TaskDesign(p)
         
         case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
-            Task_WaitITI(p);
-        
+            if(p.trial.stim.fix.on == 1)
+                Task_WaitITI(p);
+            end
+            
         % ----------------------------------------------------------------%  
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
+
+            % set up current trial
+            p.trial.task.TrialCount = p.trial.task.TrialCount + 1;
         
+            p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI, ...
+                                                 p.trial.task.Timing.MaxITI, [], [], 1, 0.10);
+                                             
+            % Reset the reward counter (separate from iReward to allow for manual rewards)
+            p.trial.reward.count = 0;
+
+            % Outcome if no fixation occurs at all during the trial
+            p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
+            p.trial.task.Good = 0;
+
+            % State for achieving fixation
+            p.trial.task.fixFix = 0;
+
+            % if random position is required pick one and move fix spot
+            if(p.trial.task.RandomPos == 1)
+                 Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
+                 Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
+                 p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
+            end
+
+            %% Make the visual stimuli
+            % Fixation spot
+            p.trial.stim.fix = pds.stim.FixSpot(p);
+
+            % now actually start the trial
             Task_ON(p);
             ND_FixSpot(p,1);
 
@@ -228,9 +240,6 @@ function TaskDesign(p)
 
                 % Best outcome
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
-
-                % Turn off fixation spot
-                ND_FixSpot(p,0);
                 
                 % End the task
                 ND_SwitchEpoch(p,'TaskEnd');
@@ -243,38 +252,77 @@ function TaskDesign(p)
         elseif(~p.trial.stim.fix.fixating)
             pds.audio.playDP(p,'breakfix','left');
             ND_SwitchEpoch(p,'TaskEnd');
-            ND_FixSpot(p,0);
         end  %  if(p.trial.stim.fix.fixating)
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
         
-        % Run standard TaskEnd routine
-        Task_OFF(p);
-        
-        % Flag next trial ITI is done at begining
-        p.trial.flagNextTrial = 1;
-        
+            % Turn off fixation spot
+            ND_FixSpot(p,0);
+            Task_OFF(p);
+            
+            % Get the text name of the outcome
+            p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+
+            % Save useful info to an ascii table for plotting
+            ND_Trial2Ascii(p, 'save');
+            
+            p.trial.EV.PlanStart = p.trial.CurTime + p.trial.task.Timing.ITI;
+            
+            ND_SwitchEpoch(p,'ITI');
+                
     end  % switch p.trial.CurrEpoch
 
 % ####################################################################### %
-%function TaskDraw(p)
+function TaskDraw(p)
 %% show epoch dependent stimuli
-% go through the task epochs as defined in TaskDesign and draw the stimulus
-% content that needs to be shown during this epoch.
-    
-% ####################################################################### %
-function TaskCleanAndSave(p)
-%% Clean up textures, variables, and save useful info to ascii table
-Task_Finish(p);
 
-% Get the text name of the outcome
-p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+    % Fill complete screen with current luminance value
+    if(p.trial.task.DoFlash == 1)
+        if(p.trial.CurTime >= p.trial.task.NextModulation - 0.75*p.trial.display.ifi)
 
-% Save useful info to an ascii table for plotting
-ND_Trial2Ascii(p, 'save');
+            if(p.trial.stim.LumeDir ~= 0) % stimulus is on
+                ccol = [p.trial.task.MeanBck, p.trial.task.MeanBck, p.trial.task.MeanBck];
+                
+                ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
+                p.trial.task.NextModulation = p.trial.task.NextModulation + p.trial.task.LOperiod;
+                p.trial.stim.LumeDir = 0;
+                
+            else % stimulus is off
+                
+                % get current contrast and strobe value
+                ccont = datasample(p.trial.task.ContrastList, 1);
+                cBck = p.trial.task.MeanBck;
+                
+                ccol = ccont/100 * cBck;
+                
+                if(ccol > p.trial.task.MeanBck)
+                   warning('Current contrast exceeds 0 to 1 range!');
+                   ccol = 1;
+                end
+                
+                if(randi([0 1],1) == 1) % brighter screen
+                    pds.datapixx.strobe(15000+ccont); % encode vurrent contrast
+                    ccol = cBck + ccol;
+                else
+                    pds.datapixx.strobe(15000+ccont); % encode vurrent contrast
+                    ccol = cBck - ccol;
+                end
+                
+                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+                p.trial.task.NextModulation = p.trial.task.NextModulation + p.trial.task.HIperiod;
+            end
+            p.trial.display.bgColor    = [ccol, ccol, ccol];
+            p.trial.pldaps.lastBgColor = [ccol, ccol, ccol]; % Trick the ND_FrameFLip fromn resetting
+
+        end
+    end
     
+    % Fill screen
+    Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor, p.trial.display.winRect);
+       
+ 
 % ####################################################################### %
 function KeyAction(p)
 %% task specific action upon key press
@@ -291,32 +339,18 @@ if(~isempty(p.trial.LastKeyPress))
             
         case KbName('f') % Turn fixation position on and off
             p.trial.stim.fix.on = ~p.trial.stim.fix.on;
+                        
+        % reload task definition
+        case KbName('BackSpace')
             
-        % move target to grid positions
-        case p.trial.key.GridKeyCell
-            gpos = find(p.trial.key.GridKey == p.trial.LastKeyPress(1));
-            p.trial.behavior.fixation.GridPos = gpos;
-            
-            p.trial.stim.FIXSPOT.pos = p.trial.eyeCalib.Grid_XY(gpos, :);
-            p.trial.stim.fix.pos = p.trial.stim.FIXSPOT.pos;
-            
-        % move target by steps
-        case KbName('RightArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixSpotStp, 0];
-            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
-            
-        case KbName('LeftArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixSpotStp, 0];
-            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
-            
-        case KbName('UpArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixSpotStp];
-            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
-            
-        case KbName('DownArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixSpotStp];
-            p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
-    end
+            if(isfield(p.trial.task, 'TaskDef'))
+                if(~isempty(p.trial.task.TaskDef))
+                    clear(p.trial.task.TaskDef); % make sure content gets updated
+                    p = feval(p.trial.task.TaskDef,  p);
+                end
+                ND_CtrlMsg(p, 'Reloaded task definition file.');
+            end            
+     end
 end
     
 % ####################################################################### %

@@ -125,8 +125,8 @@ p.defaultParameters.event.FIX_BRK_SPEED = 3003;
 % joystick related
 p.defaultParameters.event.JOY_PRESS     = 2100;    % joystick press detected
 p.defaultParameters.event.JOY_RELEASE   = 2101;    % joystick release detected
-p.defaultParameters.event.JOY_ON        = 2110;      % joystick elevation above pressing threshold
-p.defaultParameters.event.JOY_OFF       = 2111;      % joystick elevation below releasing threshold
+p.defaultParameters.event.JOY_ON        = 2110;    % joystick elevation above pressing threshold
+p.defaultParameters.event.JOY_OFF       = 2111;    % joystick elevation below releasing threshold
 
 % visual stimulus
 p.defaultParameters.event.STIM_ON       = 130;     % stimulus onset

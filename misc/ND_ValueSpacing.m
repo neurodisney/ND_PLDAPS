@@ -1,4 +1,4 @@
-function OOvec = ND_ValueSpacing(From, To, Nele, Spacing)
+function Ovec = ND_ValueSpacing(From, To, Nele, Spacing)
 % ND_HalfSpace - create a vector with a defined spacing between elements
 %
 % DESCRIPTION 
@@ -30,8 +30,8 @@ if(~exist('From','var') || isempty(From))
    From = 1;
 end
 
-if(~exist('To','var') || isempty(To))
-   To = 10;
+if(~exist('To','var'))
+   To = [];
 end
 
 if(~exist('Nele','var') || isempty(Nele))
@@ -55,16 +55,12 @@ switch Spacing
         Ovec = ND_LogSpace(From, To, Nele);
     case 'half'
         Ovec = ND_HalfSpace(From, To, Nele);
+    case 'double'
+         Ovec = ND_DoubleSpace(From, To, Nele);
     case 'plot'
         PlotSpacing(From, To, Nele);
     otherwise
         error('Spacing Function <%s> is unknown or NIY!', Spacing);
-end
-
-% ____________________________________________________________________________ %
-%% define output vector
-if(nargout > 0)
-    OOvec = Ovec;
 end
 
 % ____________________________________________________________________________ %
@@ -75,9 +71,10 @@ function PlotSpacing(From, To, Nele)
 figure;
 hold on
 
-L1 = plot(ND_LinSpace( From, To, Nele), '.-');
-L2 = plot(ND_LogSpace( From, To, Nele), '.-');
-L3 = plot(ND_HalfSpace(From, To, Nele), '.-');
+L1 = plot(ND_LinSpace(   From, To, Nele), '.-');
+L2 = plot(ND_LogSpace(   From, To, Nele), '.-');
+L3 = plot(ND_HalfSpace(  From, To, Nele), '.-');
+L4 = plot(ND_DoubleSpace(From, To, Nele), '.-');
 
 if(From < To)
     Lpos = 'northwest';
@@ -85,7 +82,7 @@ else
     Lpos = 'southwest';
 end
 
-lgd = legend([L1, L2, L3], 'Linear', 'Log', 'Half', 'Location', Lpos);
+lgd = legend([L1, L2, L3, L4], 'Linear', 'Log', 'Half', 'Double', 'Location', Lpos);
 title(lgd,'Spacing Function')
 
 xlabel('Vector Position')
