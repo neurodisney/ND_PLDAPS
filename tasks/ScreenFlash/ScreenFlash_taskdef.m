@@ -20,7 +20,7 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.ManDur         = 0.1;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur         = 0.1;  % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.Dur            = [0.15 0.15 0.12];
 p.trial.reward.jackpotTime    = 3;
@@ -46,19 +46,18 @@ minInterFlash = 1;
 maxInterFlash = 1;
 
 % inter-trial interval
-p.trial.task.Timing.MinITI  = max(0.25, minInterFlash - drugFlashDelay);  % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = max(0.25, maxInterFlash - drugFlashDelay);    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI = max(0.25, minInterFlash - drugFlashDelay);  % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI = max(0.25, maxInterFlash - drugFlashDelay);  % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
-p.trial.stim.FIXSPOT.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size    = 50;        % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin  = 0;         %
-%p.trial.stim.FIXSPOT.color = {'black','grey1','grey2','grey3','grey4','grey5','grey6','grey7','grey8','grey9','white'};
-p.trial.stim.FIXSPOT.color = 'white';
+p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.FIXSPOT.size   = 50;        % size of the fixation spot
+p.trial.stim.FIXSPOT.fixWin = 0;         %
+p.trial.stim.FIXSPOT.color  = 'white';
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

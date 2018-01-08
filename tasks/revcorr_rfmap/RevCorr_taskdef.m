@@ -10,7 +10,7 @@ function p = RevCorr_taskdef(p)
 %         keyboard without overwriting it every time by calling this routine
 %
 %
-% wolf zinke, Dec. 2016
+% Nate Faber & wolf zinke, 2017
 
 % ------------------------------------------------------------------------%
 %% TDT setup
@@ -33,7 +33,7 @@ p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by 
 p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
 p.trial.reward.Period = 0.25;
 
-p.trial.reward.jackpotDur = 0.12;     % Reward for holding fixation until jackpotTime
+p.trial.reward.jackpotDur      = 0.12; % Reward for holding fixation until jackpotTime
 p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1;  % number of reward pulses
 p.trial.reward.PulseStep       = [2,5]; % increase number of pulses with this trial number
@@ -43,13 +43,12 @@ p.trial.reward.PulseStep       = [2,5]; % increase number of pulses with this tr
 p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 
 % Main trial timings
-p.trial.task.fixLatency       = 0.15; % Time to hold fixation before mapping begins
+p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
 
+p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
+p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
 
-p.trial.task.stimOnTime       = 0.1;   % How long each stimulus is presented
-p.trial.task.stimOffTime      = 0.1;     % Gaps between succesive stimuli
-
-p.trial.task.jackpotTime      = 4.9;     % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.jackpotTime    = 6;   % How long stimuli are presented before trial ends and jackpot is given
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
@@ -68,8 +67,6 @@ p.trial.RF.temporalProfileRefineProportion = 0.2;  % During the coarse mapping, 
 
 p.trial.RF.maxSpikesPerTrial = 1000;   % Max spikes per trial, for preallocation purposes.
 
-
-
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos    = [0,0];
@@ -79,8 +76,8 @@ p.trial.stim.FIXSPOT.size   = 0.15;        % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
-p.trial.stim.GRATING.res          = 300;
-p.trial.stim.GRATING.fixWin       = 0;
+p.trial.stim.GRATING.res    = 300;
+p.trial.stim.GRATING.fixWin = 0;
 
 % Will use a grid based layout to display the stimuli
 p.trial.stim.coarse.xRange = [-9, -1];
@@ -89,7 +86,6 @@ p.trial.stim.coarse.grdStp = 0.25;
 
 p.trial.stim.fine.extent = 2; % From the max value in the coarse mapping, extend out +- this far
 p.trial.stim.fine.grdStp = 0.1;
-
 
 % For the following parameters, an array can be specified and all possible combinations
 % will be tested.

@@ -395,7 +395,7 @@ SS.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
 SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
 
 SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
-SS.datapixx.TTL_spritzerSeriesGap = 30;   % gap between subsequent series
+SS.datapixx.TTL_spritzerSeriesGap    = 30;   % gap between subsequent series
 
 % ------------------------------------------------------------------------%
 %% Stimulation/Drug Injection

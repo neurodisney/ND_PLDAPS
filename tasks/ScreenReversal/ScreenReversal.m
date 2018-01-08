@@ -47,7 +47,6 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
     
-    
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
     
@@ -58,11 +57,11 @@ if(isempty(state))
     p.defaultParameters.stim.FIXSPOT.fixWin          = 4;         
     
     % just initialize here, will be overwritten by conditions
-    p.defaultParameters.reward.MinWaitInitial  = 0.05;
-    p.defaultParameters.reward.MaxWaitInitial  = 0.1; 
+    p.defaultParameters.reward.MinWaitInitial = 0.05;
+    p.defaultParameters.reward.MaxWaitInitial = 0.1; 
     
     % p.defaultParameters.task.ContrastList = [0, 2, 4, 8, 16, 32, 64, 100]; 
-    p.defaultParameters.task.MeanBck = p.defaultParameters.display.bgColor(1);
+    p.defaultParameters.task.MeanBck = p.defaultParameters.display.bgColor(1);  % set background color to mean luminance
     
 %-------------------------------------------------------------------------%
 %% eye calibration
@@ -105,6 +104,7 @@ else
         case p.trial.pldaps.trialStates.framePrepareDrawing
         %% Get ready to display
         % prepare the stimuli that should be shown, do some required calculations
+        
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
             end
@@ -144,6 +144,9 @@ function TaskSetUp(p)
     p.trial.task.EyeOnScreen   = 0;
     
     p.trial.task.NextModulation = p.trial.CurTime + p.trial.task.WaitModulation;
+    p.trial.task.T0mod = p.trial.task.NextModulation;
+    p.trial.task.CurrCont   = 0;
+    p.trial.task.PassedPeak = 0;
     
 % ####################################################################### %
 function TaskDesign(p)
@@ -160,12 +163,11 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%  
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
-
             % set up current trial
             p.trial.task.TrialCount = p.trial.task.TrialCount + 1;
         
-            p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI, ...
-                                                 p.trial.task.Timing.MaxITI, [], [], 1, 0.10);
+            p.trial.task.Timing.ITI = ND_GetITI(p.trial.task.Timing.MinITI, ...
+                                                p.trial.task.Timing.MaxITI, [], [], 1, 0.10);
                                              
             % Reset the reward counter (separate from iReward to allow for manual rewards)
             p.trial.reward.count = 0;
@@ -177,20 +179,13 @@ function TaskDesign(p)
             % State for achieving fixation
             p.trial.task.fixFix = 0;
 
-            % if random position is required pick one and move fix spot
-            if(p.trial.task.RandomPos == 1)
-                 Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
-                 Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
-                 p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
-            end
-
             %% Make the visual stimuli
             % Fixation spot
             p.trial.stim.fix = pds.stim.FixSpot(p);
 
             % now actually start the trial
             Task_ON(p);
-            ND_FixSpot(p,1);
+            ND_FixSpot(p, 1);
 
             p.trial.EV.TaskStart     = p.trial.CurTime;
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
@@ -247,10 +242,10 @@ function TaskDesign(p)
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
                 
                 % End the task
-                ND_SwitchEpoch(p,'TaskEnd');
+                ND_SwitchEpoch(p, 'TaskEnd');
 
                 % Play jackpot sound
-                pds.audio.playDP(p,'jackpot','left');
+                pds.audio.playDP(p, 'jackpot','left');
             end
         
         % Fixation Break, end the trial        
@@ -264,7 +259,7 @@ function TaskDesign(p)
         %% finish trial and error handling
         
             % Turn off fixation spot
-            ND_FixSpot(p,0);
+            ND_FixSpot(p, 0);
             Task_OFF(p);
             
             % Get the text name of the outcome
@@ -281,8 +276,7 @@ function TaskDesign(p)
     
 % ####################################################################### %
 function EyeCheck(p)
-%% check if gaze is at screen
-
+%% check if gaze is on screen
         dist = sqrt( p.trial.eyeX^2 + p.trial.eyeY^2 );
         
         if(dist < p.trial.task.ScreenFixWin && p.trial.task.EyeOnScreen == 0)
@@ -324,7 +318,6 @@ function DrugCheck(p)
 % ####################################################################### %
 function TaskDraw(p)
 %% show epoch dependent stimuli
-
     % Fill complete screen with current luminance value
     if(p.trial.task.DoFlash == 1)
         if(p.trial.CurTime >= p.trial.task.NextModulation - 0.75*p.trial.display.ifi)
@@ -336,29 +329,28 @@ function TaskDraw(p)
                 p.trial.task.NextModulation = p.trial.task.NextModulation + p.trial.task.LOperiod;
                 p.trial.stim.LumeDir = 0;
                 
-                
             else % stimulus is off
                 
-                % get current contrast and strobe value
-                ccont = datasample(p.trial.task.ContrastList, 1);
-                cBck  = p.trial.task.MeanBck;
+                % Randomly define if positive or negative contrast
+                if(randi([0 1],1) == 1) % brighter screen
+                    p.trial.stim.LumeDir =  1;
+                else
+                    p.trial.stim.LumeDir = -1;
+                end
                 
-                ccol = ccont/100 * cBck;
+                % get current contrast and strobe value
+                p.trial.task.CurrCont = datasample(p.trial.task.ContrastList, 1);
+                
+                ccol = ccont/100 * p.trial.task.MeanBck;
                 
                 if(ccol > p.trial.task.MeanBck)
                    warning('Current contrast exceeds 0 to 1 range!');
                    ccol = 1;
                 end
-                
-                if(randi([0 1],1) == 1) % brighter screen
-                    pds.datapixx.strobe(15000+ccont); % encode vurrent contrast
-                    ccol = cBck + ccol;
-                    p.trial.stim.LumeDir = 1;
-                else
-                    pds.datapixx.strobe(15000-ccont); % encode vurrent contrast
-                    ccol = cBck - ccol;
-                    p.trial.stim.LumeDir = -1;
-                end
+               
+                ccol = ccol * p.trial.stim.LumeDir;
+                pds.datapixx.strobe(15000+ccont); % encode current contrast
+                ccol = cBck + ccol;
                 
                 ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
                 p.trial.task.NextModulation = p.trial.task.NextModulation + p.trial.task.HIperiod;
@@ -368,10 +360,49 @@ function TaskDraw(p)
             p.trial.task.FlashCount    = p.trial.task.FlashCount    + 1;
             p.trial.task.LastDrugFlash = p.trial.task.LastDrugFlash + 1;
             
-            p.trial.display.bgColor    = ccol;  %[ccol, ccol, ccol];
-            p.trial.pldaps.lastBgColor = ccol;  %[ccol, ccol, ccol]; % Trick the ND_FrameFLip fromn resetting
+            p.trial.display.bgColor    = ccol; 
+            p.trial.pldaps.lastBgColor = ccol;  
         end
-    end
+    else
+        % get the current time point in the modulation period
+        Cprd = square(2*pi * (p.trial.CurTime - p.trial.task.T0mod) / p.trial.task.ModPeriod);
+        
+        switch p.trial.task.ModType
+            case 'sin'
+                ccol = sin(Cprd);
+                
+            case 'square'
+                ccol = square(Cprd);
+                
+            otherwise
+                error('Wrong method %s for screen luminance modulation', p.trial.task.ModType);
+        end
+        
+        % detect transition between Hi/Lo
+        if(ccol >= 0 && p.trial.stim.LumeDir ~=  1) % going to Hi
+            p.trial.stim.LumeDir =  1;
+            ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+            p.trial.task.CurrCont = datasample(p.trial.task.ContrastList, 1);
+            
+            % keep track of flash numbers
+            p.trial.task.FlashCount    = p.trial.task.FlashCount    + 1;
+            p.trial.task.LastDrugFlash = p.trial.task.LastDrugFlash + 1;
+            
+            pds.datapixx.strobe(15000 + p.trial.task.CurrCont); % encode current contrast
+
+        elseif(ccol <= 0 && p.trial.stim.LumeDir ~= -1) % going to Lo
+            p.trial.stim.LumeDir = -1;
+            ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOff');
+            p.trial.task.CurrCont = datasample(p.trial.task.ContrastList, 1);
+            
+            pds.datapixx.strobe(15000 - p.trial.task.CurrCont); % encode current contrast
+            
+       end
+        
+        p.trial.display.bgColor    = p.trial.task.CurrCont * ccol; 
+        p.trial.pldaps.lastBgColor = p.trial.display.bgColor;  
+        
+    end  %\ if(p.trial.task.DoFlash == 1)
     
     % Fill screen
     Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor, p.trial.display.winRect);
@@ -383,14 +414,6 @@ function KeyAction(p)
 if(~isempty(p.trial.LastKeyPress))
     
     switch p.trial.LastKeyPress(1)
-        
-        case KbName('r')  % random position on each trial
-            if(p.trial.task.RandomPos == 0)
-                p.trial.task.RandomPos = 1;
-            else
-                p.trial.task.RandomPos = 0;
-            end
-            
         case KbName('f') % Turn fixation position on and off
             p.trial.stim.fix.on = ~p.trial.stim.fix.on;
                         
