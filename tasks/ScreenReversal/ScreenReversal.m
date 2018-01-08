@@ -63,6 +63,8 @@ if(isempty(state))
     % p.defaultParameters.task.ContrastList = [0, 2, 4, 8, 16, 32, 64, 100]; 
     p.defaultParameters.task.MeanBck = p.defaultParameters.display.bgColor(1);  % set background color to mean luminance
     
+    p.defaultParameters.FixTask = 0;
+
 %-------------------------------------------------------------------------%
 %% eye calibration
     if(~p.defaultParameters.behavior.fixation.useCalibration)    
@@ -139,7 +141,6 @@ function TaskSetUp(p)
     p.trial.task.DrugCount     = 0;
     p.trial.task.DrugGiven     = 0;
     p.trial.task.LastDrugFlash = 0;
-    p.trial.stim.fix.on        = 0;
     p.trial.stim.LumeDir       = 0;
     p.trial.task.EyeOnScreen   = 0;
     
@@ -156,7 +157,7 @@ function TaskDesign(p)
         
         case p.trial.epoch.ITI
         %% inter-trial interval: wait until sufficient time has passed from the last trial
-            if(p.trial.stim.fix.on == 1)
+            if(p.trial.FixTask == 1)
                 Task_WaitITI(p);
             end
             
@@ -251,6 +252,7 @@ function TaskDesign(p)
         % Fixation Break, end the trial        
         elseif(~p.trial.stim.fix.fixating)
             pds.audio.playDP(p,'breakfix','left');
+            
             ND_SwitchEpoch(p,'TaskEnd');
         end  %  if(p.trial.stim.fix.fixating)
             
@@ -365,7 +367,7 @@ function TaskDraw(p)
         end
     else
         % get the current time point in the modulation period
-        Cprd = square(2*pi * (p.trial.CurTime - p.trial.task.T0mod) / p.trial.task.ModPeriod);
+        Cprd = 2*pi * (p.trial.CurTime - p.trial.task.T0mod) / p.trial.task.ModPeriod;
         
         switch p.trial.task.ModType
             case 'sin'
@@ -380,13 +382,19 @@ function TaskDraw(p)
         
         % detect transition between Hi/Lo
         if(ccol >= 0 && p.trial.stim.LumeDir ~=  1) % going to Hi
-            p.trial.stim.LumeDir =  1;
-            ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
-            p.trial.task.CurrCont = datasample(p.trial.task.ContrastList, 1);
-            
             % keep track of flash numbers
             p.trial.task.FlashCount    = p.trial.task.FlashCount    + 1;
             p.trial.task.LastDrugFlash = p.trial.task.LastDrugFlash + 1;
+            
+            p.trial.stim.LumeDir =  1;
+            ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+            
+            if(p.trial.task.RandContSeries == 1)
+                p.trial.task.CurrCont = datasample(p.trial.task.ContrastList, 1);
+            else
+                CtrP = mod(p.trial.task.FlashCount, length(p.trial.task.ContrastList));
+                p.trial.task.CurrCont = p.trial.task.CurrCont(CtrP + 1);
+            end
             
             pds.datapixx.strobe(15000 + p.trial.task.CurrCont); % encode current contrast
 
@@ -399,7 +407,7 @@ function TaskDraw(p)
             
        end
         
-        p.trial.display.bgColor    = p.trial.task.CurrCont * ccol; 
+        p.trial.display.bgColor    = p.trial.task.MeanBck + p.trial.task.CurrCont/100 * ccol * p.trial.task.MeanBck; 
         p.trial.pldaps.lastBgColor = p.trial.display.bgColor;  
         
     end  %\ if(p.trial.task.DoFlash == 1)
@@ -415,7 +423,7 @@ if(~isempty(p.trial.LastKeyPress))
     
     switch p.trial.LastKeyPress(1)
         case KbName('f') % Turn fixation position on and off
-            p.trial.stim.fix.on = ~p.trial.stim.fix.on;
+            p.trial.FixTask = ~p.trial.FixTask;
                         
         % reload task definition
         case KbName('BackSpace')

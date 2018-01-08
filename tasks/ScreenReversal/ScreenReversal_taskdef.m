@@ -18,6 +18,7 @@ p.trial.reward.Dur          = 0.05; % reward duration for pulse in reward series
 p.trial.reward.Step         = [0, 5, 10, 15];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 p.trial.task.CurRewDelay    = 0.5;  % time to first reward
+p.trial.task.Timing.TimeOut = 2.5;  % Time-out[s]  for incorrect responses
 
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
 
@@ -47,12 +48,12 @@ p.trial.task.RandomPosRange = [4, 4];  % range of x and y dva for random positio
 % ------------------------------------------------------------------------%
 %% Screen Modulation
 
-p.trial.task.DoFlash = 1;  % if 1, a screen flash paradigm is used, otherwise the contrast folows a sinosoidal/square-wave modulation
-p.trial.task.ModType = 'square'; % temporal profile of luminance modulation
+p.trial.task.DoFlash = 0;  % if 1, a screen flash paradigm is used, otherwise the contrast folows a sinosoidal/square-wave modulation
+p.trial.task.ModType = 'sin'; % temporal profile of luminance modulation: 'square' or 'sin'
 
 % If DoFlash is 1 then HIperiod and LOperiod will be used to allow for assymmetric On/Off luminances.
 % For sine or square modulations (DoFlash == 0) only symmetric periods are used as defined with ModPeriod.
-p.trial.task.ModPeriod = 1/2;       % period in seconds of a sine/square-wave cycle
+p.trial.task.ModPeriod = 1/1;       % period in seconds of a sine/square-wave cycle
 p.trial.task.HIperiod = 0.5 * 1/2;  % time period in seconds where luminance is above mean screen luminance
 p.trial.task.LOperiod = 0.5 * 1/2;  % time period in seconds where luminance is below mean screen luminance
 % p.trial.task.HIperiod = 0.2;      % time period in seconds where luminance is above mean screen luminance
@@ -60,7 +61,10 @@ p.trial.task.LOperiod = 0.5 * 1/2;  % time period in seconds where luminance is 
 
 % p.trial.task.ContrastList = ND_LogSpace(0, 80, 8); 
 p.trial.task.ContrastList   = [0, 2, 4, 8, 16, 32, 64, 100]; % ND_ValueSpacing(2, 100, 7, 'double');
-p.trial.task.ContrastList   =  64; % ND_ValueSpacing(2, 100, 7, 'double');
+% p.trial.task.ContrastList   =  64; % ND_ValueSpacing(2, 100, 7, 'double');
+
+p.trial.task.RandContSeries  = 1; % Switch between random contrasts or subsequently going through the list
+
 p.trial.task.ScreenFixWin   = 8;  % Send trigger when fixation enters or leaves this Window
 p.trial.task.WaitModulation = 1;  % how many seconds to wait before starting screen modulation
 

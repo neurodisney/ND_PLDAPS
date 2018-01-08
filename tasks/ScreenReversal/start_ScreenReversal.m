@@ -37,7 +37,7 @@ SS.plot.routine    = '';        % function for online plotting of session progre
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'task.RandomPos', 'stim.FIXSPOT.pos', 'task.TrialCount', 'task.FlashCount'};
+SS.editable = {'task.RandomPos', 'stim.FIXSPOT.pos', 'task.TrialCount', 'task.FlashCount', 'FixTask'};
 
 % ------------------------------------------------------------------------%
 %% Enable required components if needed

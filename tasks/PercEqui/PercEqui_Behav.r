@@ -492,10 +492,7 @@ box()
 # plot 8: psychometric function
 valPos = dt$Outcome == 'Correct' | dt$Outcome == 'False' | dt$Outcome == 'TargetBreak'
 
-
-
 #valPos = valPos == 1 & dt$SRT > 0.05
-
 
 dtv = droplevels(subset(dt, valPos))
 
@@ -508,9 +505,10 @@ dtv     = droplevels(subset(dtv, vPos))
 
 fitA = quickpsy(d=dtv, x=TargetContr, k=TargetSel, grouping=.(RefContr),
                 fun=cum_normal_fun, prob=0.5, bootstrap='none',
-                xmin=0, xmax=1, lapses=T, guess=0, optimization='DE',
-               parini=list(c(0.0001, 0.8), c(0.0001, 0.8), c(0.0001, 0.5)) )
- #               parini=list(c(0.0001, 0.8), c(0.0001, 0.8), c(0.0001, 0.5), c(0.0001, 0.5)) )
+                xmin=0, xmax=1, lapses=TRUE, guess=0, optimization='DE',
+                parini=list(c(0.0, 0.8), c(0.15, 0.9), c(0.0, 0.6), c(0.0, 0.6)) )
+#                parini=list(c(0.0, 0.8), c(0.15, 0.9), c(0.0, 0.6)) )
+# #               parini=list(c(0.0001, 0.8), c(0.0001, 0.8), c(0.0001, 0.5), c(0.0001, 0.5)) )
 
 plot(fitA$averages$TargetContr, fitA$averages$prob, type='n', xlim=c(0,1),
      ylim=c(0,1), xlab='Contrast', ylab='Proportion', main='Point of Subjective Equality')
