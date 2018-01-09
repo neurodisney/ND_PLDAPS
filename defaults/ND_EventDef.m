@@ -26,7 +26,7 @@ p.defaultParameters.EV.TaskStartTime = NaN; % Holds a DateStr of the time the ta
 p.defaultParameters.EV.TaskEnd       = NaN; % actual task end
 p.defaultParameters.EV.NextTrialStart= NaN; % When the next task should start (based on ITI and passed to next trial)
 p.defaultParameters.EV.Initiated     = NaN; % animal intiated the task
-p.defaultParameters.EV.StimOn        = NaN; % Stimulus Onset 
+p.defaultParameters.EV.StimOn        = NaN; % Stimulus Onset
 p.defaultParameters.EV.StimOff       = NaN; % Stimulus Offset
 p.defaultParameters.EV.StimChange    = NaN; % Stimulus Change
 p.defaultParameters.EV.FixOn         = NaN; % Onset of fixation spot
@@ -67,11 +67,11 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
     p.defaultParameters.EV.FixLeave   = NaN; % time when eyes leave fixation window
     p.defaultParameters.EV.Saccade    = NaN; % response saccade detected
-    
+
     % Fixspot
     p.defaultParameters.EV.FixSpotStart = NaN; % Start of fixation on central fix spot
     p.defaultParameters.EV.FixSpotStop  = NaN; % Stop of fixation on central fix spot
-    
+
     % Target
     p.defaultParameters.EV.FixTargetStart = NaN; % Start of fixation on target
     p.defaultParameters.EV.FixTargetStop  = NaN; % Stop of fixation on target
