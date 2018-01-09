@@ -293,8 +293,8 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 % rig specific eye calibration parameter
 switch rig
     case 1
-        SS.eyeCalib.defaultGain      = [-8.438,-8.293];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [0.748,4.534];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [-7.6575 -8.3943];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [5.0466 1.3292];    % default offset, used if no calibration points are entered
      
     case 2
         SS.eyeCalib.defaultGain      = [-15.34 -17.65];  % default gain, used if no calibration points are entered

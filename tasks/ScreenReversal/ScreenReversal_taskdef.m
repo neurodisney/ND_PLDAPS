@@ -47,13 +47,13 @@ p.trial.task.RandomPosRange = [4, 4];  % range of x and y dva for random positio
 
 % ------------------------------------------------------------------------%
 %% Screen Modulation
-
 p.trial.task.DoFlash = 0;  % if 1, a screen flash paradigm is used, otherwise the contrast folows a sinosoidal/square-wave modulation
+
 p.trial.task.ModType = 'sin'; % temporal profile of luminance modulation: 'square' or 'sin'
 
 % If DoFlash is 1 then HIperiod and LOperiod will be used to allow for assymmetric On/Off luminances.
 % For sine or square modulations (DoFlash == 0) only symmetric periods are used as defined with ModPeriod.
-p.trial.task.ModPeriod = 1/1;       % period in seconds of a sine/square-wave cycle
+p.trial.task.ModPeriod = 1/2;       % period in seconds of a sine/square-wave cycle
 p.trial.task.HIperiod = 0.5 * 1/2;  % time period in seconds where luminance is above mean screen luminance
 p.trial.task.LOperiod = 0.5 * 1/2;  % time period in seconds where luminance is below mean screen luminance
 % p.trial.task.HIperiod = 0.2;      % time period in seconds where luminance is above mean screen luminance
@@ -66,11 +66,13 @@ p.trial.task.ContrastList   = [0, 2, 4, 8, 16, 32, 64, 100]; % ND_ValueSpacing(2
 p.trial.task.RandContSeries  = 1; % Switch between random contrasts or subsequently going through the list
 
 p.trial.task.ScreenFixWin   = 8;  % Send trigger when fixation enters or leaves this Window
-p.trial.task.WaitModulation = 1;  % how many seconds to wait before starting screen modulation
+
+p.trial.task.WaitModulation = 2.5;  % how many seconds to wait before starting screen modulation
 
 % ------------------------------------------------------------------------%
 %% Drug delivery
 p.trial.Drug.Give = 1;
+
 p.trial.Drug.FlashSeriesLength = 5;
 p.trial.Drug.PeriFlashTime     = -150;
 
