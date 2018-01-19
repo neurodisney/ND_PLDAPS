@@ -382,7 +382,7 @@ function TaskDraw(p)
         end
 
         % detect transition between Hi/Lo
-        if(ccol >= 0 && p.trial.stim.LumeDir ~=  1) % going to Hi
+        if(ccol >= 0 && p.trial.stim.LumeDir ~= 1) % going to Hi
             % keep track of flash numbers
             p.trial.task.FlashCount    = p.trial.task.FlashCount    + 1;
             p.trial.task.LastDrugFlash = p.trial.task.LastDrugFlash + 1;
@@ -394,7 +394,7 @@ function TaskDraw(p)
                 p.trial.task.CurrCont = datasample(p.trial.task.ContrastList, 1);
             else
                 CtrP = mod(p.trial.task.FlashCount, length(p.trial.task.ContrastList));
-                p.trial.task.CurrCont = p.trial.task.CurrCont(CtrP + 1);
+                p.trial.task.CurrCont = p.trial.task.ContrastList(CtrP + 1);
             end
 
             pds.datapixx.strobe(15000 + p.trial.task.CurrCont); % encode current positive contrast
@@ -402,9 +402,9 @@ function TaskDraw(p)
         elseif(ccol <= 0 && p.trial.stim.LumeDir ~= -1) % going to Lo
             p.trial.stim.LumeDir = -1;
             ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
-            p.trial.task.CurrCont = datasample(p.trial.task.ContrastList, 1);
+            % p.trial.task.CurrCont = datasample(p.trial.task.ContrastList, 1);
 
-            pds.datapixx.strobe(15000 - p.trial.task.CurrCont); % encode current negative contrast
+            % pds.datapixx.strobe(15000 - p.trial.task.CurrCont); % encode current negative contrast
 
        end
 
