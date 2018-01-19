@@ -309,7 +309,7 @@ function DrugCheck(p)
 
                     p.trial.task.LastDrugFlash = 0;
                     p.trial.task.DrugCount     = p.trial.task.DrugCount + 1;
-                    p.trial.task.DrugGiven = 1;
+                    p.trial.task.DrugGiven     = 1;
                 end
             end
         else
@@ -351,7 +351,8 @@ function TaskDraw(p)
                 end
 
                 ccol = ccol * p.trial.stim.LumeDir;
-                pds.datapixx.strobe(15000+ccont); % encode current contrast
+
+                pds.datapixx.strobe(15000+(ccont* p.trial.stim.LumeDir)); % encode current contrast
                 ccol = cBck + ccol;
 
                 ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
