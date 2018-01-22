@@ -70,7 +70,6 @@ methods
         
         % Make the texture that gets drawn
         obj.texture = Screen('MakeTexture', window, ringmat, [], [], 2, [], glsl);
-        
     end
     
     function draw(obj, p)
