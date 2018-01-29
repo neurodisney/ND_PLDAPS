@@ -425,7 +425,7 @@ function TaskCleanAndSave(p)
 %% additional inline functions
 % ####################################################################### %
 
-function manage_cue(p, state)
+function manage_cue(p, val)
 %% control display and luminance/color change of cue 
 
     % Don't do anything if stim doesn't change
@@ -462,7 +462,7 @@ function manage_cue(p, state)
    
 
 
-function manage_stim(p, state)
+function manage_stim(p, val)
 %% control appearance and change of stimuli
     % Don't do anything if stim doesn't change
     if(val ~= p.trial.task.stimState)
