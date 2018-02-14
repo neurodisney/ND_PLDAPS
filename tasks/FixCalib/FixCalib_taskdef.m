@@ -16,8 +16,8 @@ p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
 p.trial.reward.Dur          = 0.05; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 5, 10, 15];     % define the number of subsequent rewards after that the next delay period should be used.
-p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-p.trial.task.CurRewDelay    = 0.5;  % time to first reward
+p.trial.reward.Period       = [0.5 0.4 0.3 0.25]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
+p.trial.task.CurRewDelay    = 0.25;  % time to first reward
 
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
 
@@ -40,8 +40,9 @@ p.trial.task.Timing.TimeOut =  2;     % Time [s] out for incorrect responses
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size = 0.15;     % size of the fixation spot
-p.trial.stim.FIXSPOT.color  = 'FixHold';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size = 0.2;     % size of the fixation spot
+%p.trial.stim.FIXSPOT.color  = 'FixHold';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.color   = 'red';  % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixWinStp = 0.05;  % refine resizing of fixation step for this task only(modify default rig settings)
 
 % color options (make sure colors are defined!)
