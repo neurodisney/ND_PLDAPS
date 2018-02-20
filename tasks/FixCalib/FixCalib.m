@@ -32,15 +32,19 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Experiment',  'p.trial.session.experimentSetupFile', '%s');
     p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
     p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
-    p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart',   '%d');
-    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.FixOn',                     '%d');
+    p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart', '%d');
+    p = ND_AddAsciiEntry(p, 'TaskDur',     'p.trial.EV.TaskEnd   - p.trial.EV.TaskStart',                '%d');
+    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart  - p.trial.EV.FixOn',                    '%d');
     p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
     p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
+
+    p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%d');
+    p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%d');
 
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     
-    p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.task.FixPeriod', '%.5f');
     p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
     p = ND_AddAsciiEntry(p, 'intITI',      'p.trial.task.Timing.ITI',             '%.5f');
 
@@ -55,7 +59,7 @@ if(isempty(state))
     p.defaultParameters.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
     p.defaultParameters.behavior.fixation.FixWinStp  = 1;      % change of the size of the fixation window upon key press
     p.defaultParameters.behavior.fixation.FixSPotStp = 0.25;
-    p.defaultParameters.stim.FIXSPOT.fixWin          = 4;         
+    p.defaultParameters.stim.FIXSPOT.fixWin          = 6;         
     
     % just initialize here, will be overwritten by conditions
     p.defaultParameters.reward.MinWaitInitial  = 0.05;
@@ -145,6 +149,10 @@ function TaskSetUp(p)
     % State for achieving fixation
     p.trial.task.fixFix = 0;
     
+    p.trial.task.FixPeriod = NaN;
+
+
+
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
          Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
@@ -199,6 +207,8 @@ function TaskDesign(p)
                 else
                     p.trial.Timer.lastReward = p.trial.stim.fix.EV.FixStart;
                 end
+            elseif(p.trial.CurrEpoch == p.trial.epoch.TaskEnd)
+                p.trial.task.FixPeriod = p.trial.CurTime - p.trial.EV.FixStart;
             end
             
         % ----------------------------------------------------------------%
@@ -228,6 +238,8 @@ function TaskDesign(p)
 
                 % Best outcome
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
+                
+                p.trial.task.FixPeriod = p.trial.CurTime - p.trial.EV.FixStart;
 
                 % Turn off fixation spot
                 ND_FixSpot(p,0);
@@ -241,6 +253,7 @@ function TaskDesign(p)
         
         % Fixation Break, end the trial        
         elseif(~p.trial.stim.fix.fixating)
+            p.trial.task.FixPeriod = p.trial.CurTime - p.trial.EV.FixStart;
             pds.audio.playDP(p,'breakfix','left');
             ND_SwitchEpoch(p,'TaskEnd');
             ND_FixSpot(p,0);
@@ -271,6 +284,9 @@ Task_Finish(p);
 
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+
+
+p.trial.FixPeriod    p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
 
 % Save useful info to an ascii table for plotting
 ND_Trial2Ascii(p, 'save');

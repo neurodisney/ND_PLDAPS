@@ -158,6 +158,7 @@ lines(loess.smooth(Ttime[pAllFix], dt$FixPeriod[pAllFix], span=NTbw/sum(pAllFix)
 
 abline(h=median(dt$FixPeriod[pAllFix], na.rm=TRUE),lty=2)
 abline(h=mean(  dt$FixPeriod[pAllFix], na.rm=TRUE),lty=3)
+abline(h=1,lty=2, col='red')
 
 ###########################################################################################
 # plot 4: Fixation RT

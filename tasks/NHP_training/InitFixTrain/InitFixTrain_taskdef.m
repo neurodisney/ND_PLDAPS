@@ -3,7 +3,7 @@ function p = InitFixTrain_taskdef(p)
 %
 %   This task should be used to train an animal to keep its gaze continously on a target item
 %   and basically  prepare for eye calibration. Fixation targets could be shown at random location
-%   or location is manually controlled. ANd depending on the settings, the animal could receive an
+%   or location is manually controlled. And depending on the settings, the animal could receive an
 %   ititial reward when starting to fixate, then receive a series of reward pulses until a specified
 %   fixation time when a large reward will be given.
 %
