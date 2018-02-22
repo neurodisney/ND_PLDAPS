@@ -36,29 +36,53 @@ if(is.na(fname)) {
   fname = Sys.glob('*.dat')
 }
 
-dt=read.table(fname[1], header=TRUE)
+dt = read.table(fname[1], header=TRUE)
 
 if(length(fname)>1) {
   for(i in 2:length(fname)) { dt = rbind(dt, read.table(fname[i], header=TRUE))}
 }
 
-# dt = droplevels(subset(dt, is.finite(dt$Tstart) & is.finite(FixPeriod)))
+# convert clock time to seconds
+dt$Tsecs = rep(NA, length(dt$Time))
 
-SessTimeRng    = range(dt$Tstart, na.rm=TRUE)
+for (i in 1:length(dt$Time)) {
+    cprts = as.numeric(unlist(strsplit(as.character(dt$Time[i]), ':')))
+    
+    dt$Tsecs[i] = cprts[1] * 60*60 + cprts[2] * 60 + cprts[3] + cprts[4] / 100
+}
+dt$Tsecs = dt$Tsecs - dt$Tsecs[1]
+
+# determine times
+SessTimeRng    = range(dt$Tsecs , na.rm=TRUE)
 SessTrialStart = SessTimeRng[1]
 SessTrialEnd   = diff(SessTimeRng)
 Break_trial    = which(dt$Outcome == 'Break')
+
+Ttime = dt$Tsecs / 60  # in minutes, define trial start times as fixation spot onset
+
+# if(!any(names(dt) == "TaskEnd")){
+#   if(any(names(dt) == "TaskDur")){
+#     dt$TaskEnd = dt$Tsecs  + dt$TaskDur
+#   }else{
+#     dt$TaskEnd = dt$Tsecs 
+#   }
+# }
+dt$TaskEnd = dt$Tsecs 
+
+if(!any(names(dt) == "FixSpotOn")){
+  dt$FixSpotOn = dt$Tstart 
+}
 
 if(length(Break_trial) == 0){
   Break_start = NA
   Break_end   = NA
 }else{
-  Break_start = (dt$TaskEnd[Break_trial]     - SessTrialStart) / 60
+  Break_start = (dt$TaskEnd[Break_trial]  - SessTrialStart) / 60
   
   if(max(Break_trial) <= length(dt$FixSpotOn)){
-    Break_end = (dt$FixSpotOn[Break_trial+1] - SessTrialStart) / 60
+    Break_end = (dt$FixSpotOn[Break_trial+1]) / 60
   }else{
-    Break_end = (dt$FixSpotOn[Break_trial[-length(Break_trial)]+1] - SessTrialStart) / 60
+    Break_end = (dt$FixSpotOn[Break_trial[-length(Break_trial)]+1]) / 60
   }
   
   # if last trial started a break, set break end to 
@@ -88,7 +112,7 @@ dt$Outcome = as.factor(dt$Outcome)
 # identify outcomes
 pFix       = dt$Outcome == 'FullFixation' | dt$Outcome == 'Fixation' 
 pFix       = pFix & is.finite(dt$FixPeriod)
-pNoStart   = dt$Outcome == 'NoStart' | is.finite(dt$FixPeriod)==0
+pNoStart   = dt$Outcome == 'NoStart'  | is.finite(dt$FixPeriod)==0
 pNoFix     = dt$Outcome == 'NoFix'    & is.finite(dt$FixPeriod)
 pFixBreak  = dt$Outcome == 'FixBreak' & is.finite(dt$FixPeriod)
 pJackpot   = dt$Outcome == 'Jackpot'  & is.finite(dt$FixPeriod)
@@ -96,10 +120,6 @@ pBreak     = dt$Outcome == 'Break'    & is.finite(dt$FixPeriod)
 
 pAllFix = pFix | pFixBreak | pJackpot
 pAllFix = pAllFix==1 & is.finite(dt$FixPeriod)==1
-
-###########################################################################################
-# get relevant variables
-Ttime    = (dt$Tstart   - SessTrialStart) / 60  # in minutes, define trial start times as fixation spot onset
 
 ###########################################################################################
 # create plots
@@ -111,11 +131,11 @@ if(interactive()) {
   x11(width=19.5, height=10.5, pointsize=10, title='InitFixTrain_Behav')
 } else {
   # Otherwise only save the figure as a pdf.
-  pdf('InitFixTrain.pdf', 19.5, 10.5, pointsize=10, title='InitFixTrain_Behav')
+  pdf(paste('FixTrain_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='InitFixTrain_Behav')
 }
 
 # create plot layout
-pllyt = matrix(c(1,1,1, 2,2,2, 3,4,5), 3, 3, byrow=TRUE)
+pllyt = matrix(c(1,1,1,1, 2,2,2,2, 3,4,5,6), 3, 4, byrow=TRUE)
 layout(pllyt,  heights=c(2,2,3))
 par(mar=c(5,5,1,1)) 
 
@@ -124,7 +144,7 @@ Trng = c(0, SessTrialEnd / 60)
 ###########################################################################################
 # plot 1: time to fixation
 Ylim = range(dt$FixRT, na.rm=TRUE)
-plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
+plot(Trng, Ylim, type='n', xaxs='i', main='Response after Target Onset',
      xlab='', ylab='Time after Target Onset [s]', xaxt="n", cex=1.25)
 
 if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
@@ -145,14 +165,14 @@ legend("bottom", legend=c("JackPot","Fixation", "FixBreak"),
 ###########################################################################################
 # plot 2: Fxation Duration
 Ylim = range(dt$FixPeriod[pAllFix], na.rm = TRUE)
-plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Duration of Fixation',
+plot(Trng, Ylim, type='n', xaxs='i', main='Duration of Fixation',
      xlab='Trial Time [s]', ylab='Fix Duration [s]', cex=1.25)
 
 if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
 points(Ttime[pFix],      dt$FixPeriod[pFix],       pch=19, col=Fix_Col)
 points(Ttime[pFixBreak], dt$FixPeriod[pFixBreak],  pch=19, col=FixBreak_Col)
-points(Ttime[pJackpot],  dt$FixPeriod[pJackpot], pch=19, col=JP_Col)
+points(Ttime[pJackpot],  dt$FixPeriod[pJackpot],   pch=19, col=JP_Col)
 
 lines(loess.smooth(Ttime[pAllFix], dt$FixPeriod[pAllFix], span=NTbw/sum(pAllFix), degree=2, family="gaussian"), col='darkgreen', lw=2)
 
@@ -177,15 +197,29 @@ abline(v=median(dt$FixRT[pAllFix], na.rm=TRUE),lty=2, col='blue', lwd=2.5)
 abline(v=mean(  dt$FixRT[pAllFix], na.rm=TRUE),lty=3, col='blue', lwd=2.5)
 
 ###########################################################################################
+# plot 4: Fixation RT
+p = dt$FixRT > 0.05 & is.finite(dt$FixRT) # ignore times to short to be fixation
+
+RTv  = dt$FixRT[p]
+RTv  = RTv[-sum(p)]
+ITIv = dt$intITI[p]
+ITIv = ITIv[-1]
+  
+plot(ITIv, RTv, type='p', xaxs='i', main='RT dependent on ITI',
+     xlab='ITI [s]', ylab='RT [s]', cex=1.25, pch=19)
+
+abline(lm(RTv~ITIv), col='red', lty=3)
+
+###########################################################################################
 # plot 5: Fixation durations
 p = is.finite(dt$FixPeriod)
 
-brP = seq(from=0, to=max(dt$FixPeriod[p],na.rm=TRUE)+RTbw, by=RTbw)
+brP = seq(from=0, to=max(dt$FixPeriod[p])+RTbw, length.out=50)
 
 hist(dt$FixPeriod[p], breaks=brP, col='black', xlab='Fixation Duration [s]', 
      ylab='count', main='Fixation Duration', cex=1.25)
 
-Fdurdense = density(dt$FixPeriod[p],na.rm=TRUE,bw=RTbw, kernel='g')
+Fdurdense = density(dt$FixPeriod[p],na.rm=TRUE,bw=min(diff(brP)), kernel='g')
 Fdurdense$y = Fdurdense$y * Fdurdense$bw * sum(p)
 lines(Fdurdense,col='red', lwd=2)
 
@@ -198,6 +232,8 @@ Nfix  = sum(is.finite(dt$FixPeriod), na.rm=TRUE)
 Nlong = sum(dt$FixPeriod > 1, na.rm=TRUE) 
 Plong = round(100 * Nlong/Nfix,2)
 
+FixTime = sum(dt$FixPeriod, na.rm=TRUE) / 60
+
 plot(sort(dt$FixPeriod[p]), sum(p):1, type="l" , lwd=2.5, col='blue', xaxs='i', yaxs='i', 
      main='Duration of Fixation', xlab='Fixation Duration [s]', ylab='count [s]', cex=1.25)
 
@@ -208,6 +244,7 @@ abline(h=Nlong, lty=2, col='red')
 abline(v=1,     lty=2, col='red')
 
 text(1, Nlong+0.025*Nfix, labels=paste(Nlong, ' (',Plong ,'%)',sep=''), pos=4, offset = 0.01, cex=1.5, col='red')
+text(1, 0.025*Nfix, labels=paste(round(FixTime,4), ' min total fixation time',sep=''), pos=4, offset = 0.01, cex=1.5, col='blue')
 
 ###########################################################################################
 # save plot as pdf
@@ -227,6 +264,8 @@ print('')
 print(paste('Session duration: ', round(Trng[2],2), ' minutes' ,sep=''))
 print('')
 print(paste(Nlong, ' fixations longer than 1 second (', Plong ,'%)',sep=''))
+print('')
+print(paste(round(FixTime,4),'s total fixation time (', Plong ,'%)',sep=''))
 print('')
 print('##############################################')
 }

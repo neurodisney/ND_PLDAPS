@@ -285,9 +285,6 @@ Task_Finish(p);
 % Get the text name of the outcome
 p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
 
-
-p.trial.FixPeriod    p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
-
 % Save useful info to an ascii table for plotting
 ND_Trial2Ascii(p, 'save');
     
