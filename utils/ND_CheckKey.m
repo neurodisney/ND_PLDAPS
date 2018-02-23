@@ -151,8 +151,9 @@ if(any(p.trial.keyboard.firstPressQ))  % this only checks the first pressed key 
                     p.trial.EV.DPX_TaskOff = tms(1);
                     p.trial.EV.TDT_TaskOff = tms(2);
 
-                    p.trial.EV.TaskEnd = p.trial.CurTime;
-
+                    p.trial.EV.TaskEnd  = p.trial.CurTime;
+                    p.trial.EV.TrialEnd = p.trial.CurTime;
+                    
                     if(p.trial.datapixx.TTL_trialOn)
                         pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 0);
                     end

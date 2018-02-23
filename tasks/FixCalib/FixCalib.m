@@ -32,7 +32,12 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Experiment',  'p.trial.session.experimentSetupFile', '%s');
     p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
     p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
-    p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart', '%d');
+    
+    p = ND_AddAsciiEntry(p, 'TrialStart',  'p.trial.EV.TrialStart',               '%d');
+    p = ND_AddAsciiEntry(p, 'TrialEnd',    'p.trial.EV.TrialEnd',                 '%d');
+    
+    
+    p = ND_AddAsciiEntry(p, 'Taskstart',   'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart', '%d');
     p = ND_AddAsciiEntry(p, 'TaskDur',     'p.trial.EV.TaskEnd   - p.trial.EV.TaskStart',                '%d');
     p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart  - p.trial.EV.FixOn',                    '%d');
     p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');

@@ -60,14 +60,20 @@ Break_trial    = which(dt$Outcome == 'Break')
 
 Ttime = dt$Tsecs / 60  # in minutes, define trial start times as fixation spot onset
 
-# if(!any(names(dt) == "TaskEnd")){
-#   if(any(names(dt) == "TaskDur")){
-#     dt$TaskEnd = dt$Tsecs  + dt$TaskDur
-#   }else{
-#     dt$TaskEnd = dt$Tsecs 
-#   }
-# }
-dt$TaskEnd = dt$Tsecs 
+if(!any(names(dt) == "TrialStart")){
+  dt$TrialStart = dt$Tsecs 
+}
+
+if(!any(names(dt) == "TrialEnd")){
+ if(any(names(dt) == "TaskDur")){
+   dt$TrialEnd = dt$Tsecs + dt$TaskDur
+ }else{
+   dt$TrialEnd = dt$Tsecs 
+ }
+}
+
+dt$TrialEnd = dt$TrialEnd - dt$TrialStart[1]
+dt$TrialStart = dt$TrialStart - dt$TrialStart[1]
 
 if(!any(names(dt) == "FixSpotOn")){
   dt$FixSpotOn = dt$Tstart 

@@ -20,6 +20,7 @@ disp('');
 % file or if needed for later use in the task program)
 
 p.defaultParameters.EV.TrialStart    = NaN; % Trial start time
+p.defaultParameters.EV.TrialEnd      = NaN; % Trial start time
 p.defaultParameters.EV.PlanStart     = NaN; % The planned task start time based on ITI
 p.defaultParameters.EV.TaskStart     = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
 p.defaultParameters.EV.TaskStartTime = NaN; % Holds a DateStr of the time the task starts
