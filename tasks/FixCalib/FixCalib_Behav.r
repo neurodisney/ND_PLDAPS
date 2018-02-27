@@ -64,6 +64,8 @@ if(!any(names(dt) == "TrialStart")){
   dt$TrialStart = dt$Tsecs 
 }
 
+Ttime = dt$TrialStart / 60  # in minutes, define trial start times as fixation spot onset
+
 if(!any(names(dt) == "TrialEnd")){
  if(any(names(dt) == "TaskDur")){
    dt$TrialEnd = dt$Tsecs + dt$TaskDur
@@ -72,7 +74,7 @@ if(!any(names(dt) == "TrialEnd")){
  }
 }
 
-dt$TrialEnd = dt$TrialEnd - dt$TrialStart[1]
+dt$TrialEnd   = dt$TrialEnd - dt$TrialStart[1]
 dt$TrialStart = dt$TrialStart - dt$TrialStart[1]
 
 if(!any(names(dt) == "FixSpotOn")){
@@ -83,12 +85,12 @@ if(length(Break_trial) == 0){
   Break_start = NA
   Break_end   = NA
 }else{
-  Break_start = (dt$TaskEnd[Break_trial]  - SessTrialStart) / 60
+  Break_start = (dt$TrialEnd[Break_trial]  - SessTrialStart) / 60
   
-  if(max(Break_trial) <= length(dt$FixSpotOn)){
-    Break_end = (dt$FixSpotOn[Break_trial+1]) / 60
+  if(max(Break_trial) <= length(dt$TrialStart)){
+    Break_end = (dt$TrialStart[Break_trial+1]) / 60
   }else{
-    Break_end = (dt$FixSpotOn[Break_trial[-length(Break_trial)]+1]) / 60
+    Break_end = (dt$TrialStart[Break_trial[-length(Break_trial)]+1]) / 60
   }
   
   # if last trial started a break, set break end to 
@@ -96,7 +98,7 @@ if(length(Break_trial) == 0){
   if(lastTrial$Outcome == 'Break') {
     # If the last trial ended with a break, extend the plot to the current time, if it occurred less than an hour ago
     currentTime = as.numeric(Sys.time())
-    if(currentTime - lastTrial$TaskEnd < 3600) {
+    if(currentTime - lastTrial$TrialEnd < 3600) {
         # Extend the plot to now
         SessTrialEnd = currentTime - SessTrialStart
         
@@ -125,7 +127,7 @@ pJackpot   = dt$Outcome == 'Jackpot'  & is.finite(dt$FixPeriod)
 pBreak     = dt$Outcome == 'Break'    & is.finite(dt$FixPeriod)
 
 pAllFix = pFix | pFixBreak | pJackpot
-pAllFix = pAllFix==1 & is.finite(dt$FixPeriod)==1
+pAllFix = pAllFix == 1 & is.finite(dt$FixPeriod) == 1
 
 ###########################################################################################
 # create plots
@@ -153,7 +155,9 @@ Ylim = range(dt$FixRT, na.rm=TRUE)
 plot(Trng, Ylim, type='n', xaxs='i', main='Response after Target Onset',
      xlab='', ylab='Time after Target Onset [s]', xaxt="n", cex=1.25)
 
-if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
+if(length(Break_end) > 1){ 
+  for(i in 1:length(Break_end)){  
+    rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
 points(Ttime[pFix],      dt$FixRT[pFix],       pch=19, col=Fix_Col)
 points(Ttime[pFixBreak], dt$FixRT[pFixBreak],  pch=19, col=FixBreak_Col)
@@ -174,7 +178,9 @@ Ylim = range(dt$FixPeriod[pAllFix], na.rm = TRUE)
 plot(Trng, Ylim, type='n', xaxs='i', main='Duration of Fixation',
      xlab='Trial Time [s]', ylab='Fix Duration [s]', cex=1.25)
 
-if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
+if(length(Break_end) > 1){ 
+  for(i in 1:length(Break_end)){  
+    rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
 points(Ttime[pFix],      dt$FixPeriod[pFix],       pch=19, col=Fix_Col)
 points(Ttime[pFixBreak], dt$FixPeriod[pFixBreak],  pch=19, col=FixBreak_Col)
@@ -188,7 +194,7 @@ abline(h=1,lty=2, col='red')
 
 ###########################################################################################
 # plot 4: Fixation RT
-p = dt$FixRT > 0.05 & is.finite(dt$FixRT) # ignore times to short to be fixation
+p = is.finite(dt$FixRT) # ignore times to short to be fixation     dt$FixRT > 0.05 & 
 
 brP = seq(from=0, to=max(dt$FixRT[p],na.rm=TRUE)+RTbw, by=RTbw)
 

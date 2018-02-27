@@ -28,7 +28,7 @@ p.trial.reward.jackpotDur   = 0.25;  % final reward after keeping fixation for t
 %% Timing
 p.trial.behavior.fixation.MinFixStart = 0.15; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
-p.trial.task.Timing.WaitFix = 0.75;  % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 0.5;  % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.25;  % minimum time period [s] between subsequent trials

@@ -33,18 +33,18 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
     p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
     
-    p = ND_AddAsciiEntry(p, 'TrialStart',  'p.trial.EV.TrialStart',               '%d');
-    p = ND_AddAsciiEntry(p, 'TrialEnd',    'p.trial.EV.TrialEnd',                 '%d');
+    p = ND_AddAsciiEntry(p, 'TrialStart',  'p.trial.EV.TrialStart',               '.5f');
+    p = ND_AddAsciiEntry(p, 'TrialEnd',    'p.trial.EV.TrialEnd',                 '.5f');
     
     
-    p = ND_AddAsciiEntry(p, 'Taskstart',   'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart', '%d');
-    p = ND_AddAsciiEntry(p, 'TaskDur',     'p.trial.EV.TaskEnd   - p.trial.EV.TaskStart',                '%d');
-    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart  - p.trial.EV.FixOn',                    '%d');
-    p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
+    p = ND_AddAsciiEntry(p, 'Taskstart',   'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart', '.5f');
+    p = ND_AddAsciiEntry(p, 'TaskDur',     'p.trial.EV.TaskEnd   - p.trial.EV.TaskStart',                '.5f');
+    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart  - p.trial.EV.FixOn',                    '.5f');
+    p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '.5f');
     p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
 
-    p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%d');
-    p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%d');
+    p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '.5f');
+    p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '.5f');
 
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
