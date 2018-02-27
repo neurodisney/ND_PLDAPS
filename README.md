@@ -17,3 +17,4 @@ Instead of trying to get each single screen refresh we use two options depending
 __**Be aware that this is work in progress and we update the code frequently at the moment. Use this code at your own risk, we can not promise that it will function without problems!**__
 
 
+To cite this repository use: [![DOI](https://zenodo.org/badge/80133270.svg)](https://zenodo.org/badge/latestdoi/80133270)
