@@ -185,6 +185,21 @@ function TaskDesign(p)
         %% Fixation target shown, waiting for a sufficiently held gaze
             Task_WaitFixStart(p);
 
+            if(p.trial.CurrEpoch == p.trial.epoch.Fixating)
+            % fixation just started, initialize fixation epoch
+                % initial rewardfor fixation start
+                if(p.trial.reward.GiveInitial == 1)
+                    pds.reward.give(p, p.trial.reward.InitialRew);
+                    p.trial.EV.FirstReward   = p.trial.CurTime;
+                    p.trial.Timer.lastReward = p.trial.CurTime;
+                else
+                    p.trial.Timer.lastReward = p.trial.stim.fix.EV.FixStart;
+                end
+                
+            elseif(p.trial.CurrEpoch == p.trial.epoch.TaskEnd)
+                p.trial.task.FixPeriod = p.trial.CurTime - p.trial.EV.FixStart;
+            end
+            
         case p.trial.epoch.Fixating
         %% check fixation until target stimulus will appear
             if(p.trial.stim.fix.fixating)

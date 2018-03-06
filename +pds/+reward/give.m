@@ -38,7 +38,7 @@ function p = give(p, amount, nPulse)
     %% store data
     for(i=1:nPulse)
         p.trial.reward.iReward = p.trial.reward.iReward + 1;
-        p.trial.reward.timeReward(p.trial.reward.iReward,:) = [(GetSecs + (i-1)*(pulse_gap+amount)), amount]; % WZ: currently not pre-allocated    
+        % p.trial.reward.timeReward(p.trial.reward.iReward,:) = [(GetSecs + (i-1)*(pulse_gap+amount)), amount]; % WZ: currently not pre-allocated    
     end
     
     

@@ -64,7 +64,7 @@ if(!any(names(dt) == "TrialStart")){
   dt$TrialStart = dt$Tsecs 
 }
 
-Ttime = dt$TrialStart / 60  # in minutes, define trial start times as fixation spot onset
+# Ttime = dt$TrialStart / 60  # in minutes, define trial start times as fixation spot onset
 
 if(!any(names(dt) == "TrialEnd")){
  if(any(names(dt) == "TaskDur")){
