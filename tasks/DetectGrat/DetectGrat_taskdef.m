@@ -13,8 +13,8 @@ function p = DetectGrat_taskdef(p)
 
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.05;  % reward duration [s] for reward given by keyboard presses
-p.trial.reward.IncrementTrial = [50,  100, 150,  200, 250, 300]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur   = [0.1, 0.15, 0.2, 0.25, 0.3, 0.4]; % increase number of pulses with this trial number
+p.trial.reward.IncrementTrial = [10,  150, 250,  300, 350, 400]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur   = [0.15, 0.2, 0.25, 0.3, 0.35, 0.4]; % increase number of pulses with this trial number
 
 p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
@@ -26,8 +26,8 @@ p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust f
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.5, 2.5,  [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
-p.trial.task.stimLatency      = ND_GetITI(0.5, 1.5,  [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.5, 2.5, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.5, 1.5, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
 
 p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to the stim before error
 
@@ -35,7 +35,7 @@ p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this
 p.trial.task.minTargetFixTime = 1.0;   % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
 p.trial.task.Timing.TimeOut   =  1.5;  % Time-out[s]  for incorrect responses
-p.trial.task.Timing.ITI       = ND_GetITI(1.5,  2,  [], [], 1, 0.10);
+p.trial.task.Timing.ITI       = ND_GetITI(1.5, 2.25, [], [], 1, 0.10);
 
 % ----------------------------------- -------------------------------------%
 %% Grating stimuli parameters

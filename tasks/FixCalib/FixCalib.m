@@ -156,8 +156,6 @@ function TaskSetUp(p)
     
     p.trial.task.FixPeriod = NaN;
 
-
-
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
          Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
