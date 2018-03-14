@@ -63,6 +63,10 @@ end
 p.trial.stim.GRATING.res    = 300;
 p.trial.stim.GRATING.fixWin = 0;
 
+p.trial.stim.OnTime  = 0.1;   % How long each stimulus is presented
+p.trial.stim.OffTime = 0.1;   % Gaps between succesive stimuli
+p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
+
 % ------------------------------------------------------------------------%
 %% Drug delivery parameters
 % TTL pulse series for pico spritzer
@@ -94,9 +98,6 @@ p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 % Main trial timings
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
 
-p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
-p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
-
 p.trial.task.jackpotTime    = 6;   % How long stimuli are presented before trial ends and jackpot is given
 
 % inter-trial interval
@@ -121,13 +122,6 @@ p.trial.behavior.fixation.entryTime = 0.150;  % minimum time to stay within fixa
 % ------------------------------------------------------------------------%
 %% Task parameters
 p.trial.task.breakFixCheck = 0.2; % Time after a stimbreak where if task is marked early or stim break is calculated
-
-% ------------------------------------------------------------------------%
-%% Trial duration
-% maxTrialLength is used to pre-allocate memory at several initialization
-% steps. It specifies a duration in seconds.
-
-p.trial.pldaps.maxTrialLength = 15;
 
 % ------------------------------------------------------------------------%
 %% Eye Signal Sampling

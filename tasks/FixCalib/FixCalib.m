@@ -142,7 +142,9 @@ function TaskSetUp(p)
     p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI, ...
                                          p.trial.task.Timing.MaxITI, [], [], 1, 0.10);
                                      
-     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  ...
+                                        p.trial.task.CurRewDelay    + ...
+                                        p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
