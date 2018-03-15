@@ -230,13 +230,16 @@ function TaskDesign(p)
                     cstep = find(p.trial.reward.Step <= p.trial.reward.count, 1, 'last');
 
                     if(p.trial.CurTime > p.trial.Timer.lastReward + p.trial.reward.Period(cstep))                        
-                        % Give the reward and update the lastReward time
+                    % Give the reward and update the lastReward time
                         pds.reward.give(p, p.trial.reward.Dur);
                         p.trial.Timer.lastReward = p.trial.CurTime;
                         p.trial.reward.count     = p.trial.reward.count + 1;
                     end
                 end
             else
+                % Play jackpot sound
+                pds.audio.playDP(p,'jackpot','left');
+                
                 % Give JACKPOT!
                 pds.reward.give(p, p.trial.reward.jackpotDur);
                 p.trial.Timer.lastReward = p.trial.CurTime;
@@ -251,9 +254,6 @@ function TaskDesign(p)
                 
                 % End the task
                 ND_SwitchEpoch(p,'TaskEnd');
-
-                % Play jackpot sound
-                pds.audio.playDP(p,'jackpot','left');
             end
         
         % Fixation Break, end the trial        

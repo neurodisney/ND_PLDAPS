@@ -15,6 +15,7 @@ function p = RFmap_taskdef(p)
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
 
+p.trial.task.Timing.jackpotTime = 6;   % How long stimuli are presented before trial ends and jackpot is given
 
 % stimuli could be used in two ways, first using a 'coarse' mapping approach where a wider area 
 % will be covered quickly, and second a 'fine' mapping approach that characterizes a smaller
@@ -25,7 +26,7 @@ function p = RFmap_taskdef(p)
 p.trial.stim.LocCtr = [-2, -3];
 
 p.trial.stim.RFmeth = 'coarse';
-%p.trial.stim.RFmeth = 'fine';
+% p.trial.stim.RFmeth = 'fine';
 
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
@@ -80,16 +81,22 @@ p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 
 % ------------------------------------------------------------------------%
 %% Reward
+
 % manual reward from experimenter
-p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
+p.trial.reward.InitialRew   = 0.025; % duration of the initial reward
 
-p.trial.reward.Dur    = 0.05;         % Reward given after each complete stim presentation
-p.trial.reward.Period = 0.25;
+p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
+p.trial.reward.Dur          = 0.04; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.reward.Period       = [1 0.8 0.60 0.4 0.25]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
+p.trial.task.CurRewDelay    = 0.65;  % time to first reward
 
-p.trial.reward.jackpotDur      = 0.12; % Reward for holding fixation until jackpotTime
-p.trial.reward.IncrConsecutive = 1;  % use rewarding scheme that gives more rewards with subsequent correct trials
-p.trial.reward.nPulse          = 1;  % number of reward pulses
-p.trial.reward.PulseStep       = [2,5]; % increase number of pulses with this trial number
+p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
+
+p.trial.reward.jackpotDur     = 0.1;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotnPulse = 3;
+
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -97,8 +104,6 @@ p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 
 % Main trial timings
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
-
-p.trial.task.jackpotTime    = 6;   % How long stimuli are presented before trial ends and jackpot is given
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials

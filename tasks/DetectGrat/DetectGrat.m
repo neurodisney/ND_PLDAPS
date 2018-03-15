@@ -442,12 +442,12 @@ function stim(p, val)
         % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
         switch val
             case 0
-                p.trial.stim.reference.on        = 0;
-                p.trial.stim.target.on           = 0;
+                p.trial.stim.reference.on     = 0;
+                p.trial.stim.target.on        = 0;
 
             case 1
-                p.trial.stim.target.on           = 1;
-                p.trial.stim.target.fixActive    = 1;
+                p.trial.stim.target.on        = 1;
+                p.trial.stim.target.fixActive = 1;
 
             otherwise
                 error('bad stim value');

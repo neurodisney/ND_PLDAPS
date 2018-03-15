@@ -21,7 +21,7 @@ p.trial.task.CurRewDelay    = 0.65;  % time to first reward
 
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime  = 12;     % total time required to fixate to get full reward
+p.trial.reward.jackpotTime  = 12;    % total time required to fixate to get full reward
 p.trial.reward.jackpotDur   = 0.25;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%

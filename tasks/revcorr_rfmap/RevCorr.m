@@ -322,7 +322,7 @@ switch p.trial.CurrEpoch
             elseif (p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.fixLatency)
                 
                 % Turn the first stim on
-                stim(p,1)
+                stim(p,1);
                 
                 % Set the timer for the first reward
                 p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
@@ -414,10 +414,8 @@ switch p.trial.CurrEpoch
                 
                 p.trial.task.Good = 1;
                 ND_SwitchEpoch(p,'TaskEnd');
-                
             end
                 
-           
         elseif ~p.trial.stim.fix.fixating
             % Fixation Break, end the trial
             pds.audio.playDP(p,'breakfix','left');
@@ -428,7 +426,6 @@ switch p.trial.CurrEpoch
             % Turn off fixspot and stim
             fixspot(p,0);
             stim(p,0);
-          
         end
         
         % ----------------------------------------------------------------%
@@ -444,9 +441,9 @@ switch p.trial.CurrEpoch
         
         % Calculate the total fixation duration
         currOutcome = p.trial.outcome.CurrOutcome;
-        if currOutcome == p.trial.outcome.Correct
+        if(currOutcome == p.trial.outcome.Correct)
             fixDur = p.trial.EV.TaskEnd - p.trial.EV.FixStart;
-        elseif currOutcome == p.trial.outcome.FixBreak
+        elseif(currOutcome == p.trial.outcome.FixBreak)
             fixDur = p.trial.EV.FixBreak - p.trial.EV.FixStart;
         else
             fixDur = NaN;
