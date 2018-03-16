@@ -38,10 +38,10 @@ end
 % show history of recent eye position
 if(p.trial.pldaps.draw.eyepos.use)
 % TODO: use alpha blending to fade out old locations
-    Screen('Drawdots',  p.trial.display.overlayptr, [p.trial.eyeX_hist; p.trial.eyeY_hist], ...
+    Screen('Drawdots',  p.trial.display.overlayptr,     [p.trial.eyeX_hist; p.trial.eyeY_hist], ...
                         p.trial.pldaps.draw.eyepos.sz/2, p.trial.display.clut.eyeold, [0 0], 0);
 
-    Screen('Drawdots',  p.trial.display.overlayptr, p.trial.eyeXY_draw, ...
+    Screen('Drawdots',  p.trial.display.overlayptr,    p.trial.eyeXY_draw, ...
                         p.trial.pldaps.draw.eyepos.sz, p.trial.display.clut.eyepos, [0 0], 0);
 end
 
@@ -70,8 +70,6 @@ if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joypos , ...
                        p.trial.pldaps.draw.joystick.levelrect);
 end
-
-
 
 % % ------------------------------------------------------------------------%
 % %% draw mouse state

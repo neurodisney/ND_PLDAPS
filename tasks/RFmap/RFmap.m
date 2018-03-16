@@ -47,13 +47,11 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
     p = ND_AddAsciiEntry(p, 'InitRwd',     'p.trial.EV.FirstReward',              '%.5f');
     p = ND_AddAsciiEntry(p, 'Reward',      'p.trial.EV.Reward',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'RewPulses',   'p.trial.reward.nPulse',               '%.5f');
     p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
     p = ND_AddAsciiEntry(p, 'TotalRwd',    'sum(p.trial.reward.timeReward(:,2))', '%.5f');
     
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
-    
     
     % --------------------------------------------------------------------%
     %% Create stimulus log file
@@ -62,6 +60,9 @@ if(isempty(state))
     p.trial.stimtbl.file = fullfile(p.defaultParameters.session.dir, ...
                                    [p.defaultParameters.session.filestem,'_Stimuli.csv']);
     
+    StimLstPtr = fopen(p.trial.stimtbl.file, 'w');
+    fprintf(StimLstPtr, 'Trial,  GratingNr,  Onset,  TrialTime,  PosIDX,  Xpos,  Ypos,  Radius,  Ori,  SpatFreq,  TempFreq,  Contrast\n');
+    fclose(StimLstPtr);
     
     % --------------------------------------------------------------------%
     %% Color definitions of stuff shown during the trial
@@ -118,7 +119,7 @@ else
         case p.trial.pldaps.trialStates.frameDraw
             %% Display stuff on the screen
             % Just call graphic routines, avoid any computations
-            TaskDraw(p);
+            % TaskDraw(p);
             
             % ------------------------------------------------------------------------%
             % DONE AFTER THE MAIN TRIAL LOOP:
@@ -145,7 +146,7 @@ function TaskSetUp(p)
 
      p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  ...
                                         p.trial.task.CurRewDelay    + ...
-                                        p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+                                        p.trial.task.Timing.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
@@ -156,6 +157,9 @@ function TaskSetUp(p)
 
     p.trial.task.FixPeriod = NaN;
 
+    % Reset the reward counter (separate from iReward to allow for manual rewards)
+    p.trial.reward.count = 0;
+    
     %% Generate visual stimuli
 
     % Fixation spot
@@ -166,7 +170,7 @@ function TaskSetUp(p)
     p.trial.stim.count    =  0;
     
     % how many gratings to allocate
-    p.trial.stim.Nstim = ceil((1.5 * p.trial.task.jackpotTime) / (p.trial.stim.Period));      
+    p.trial.stim.Nstim = ceil((1.5 * p.trial.task.Timing.jackpotTime) / (p.trial.stim.Period));      
     
     % create lists with parameters for each grating
     Ori_lst  = ND_RandSample(p.trial.stim.ori,      p.trial.stim.Nstim);
@@ -190,13 +194,13 @@ function TaskSetUp(p)
     allYPos = p.trial.stim.yRange(1) : p.trial.stim.grdStp : p.trial.stim.yRange(2);
     
     [Xloc, Yloc] = meshgrid(allXPos, allYPos);
+    Xloc = Xloc(:); Yloc = Yloc(:);
     
     PosIDX = ND_RandSample(1:length(Xloc), p.trial.stim.Nstim);
     
     p.trial.stim.PosIDX = PosIDX;
     p.trial.stim.locations = [Xloc(PosIDX(:)), Yloc(PosIDX(:))];
 
-    
 % ####################################################################### %
 function TaskDesign(p)
 %% main task outline
@@ -215,7 +219,7 @@ function TaskDesign(p)
             ND_FixSpot(p, 1);
 
             p.trial.EV.TaskStart = p.trial.CurTime;
-            p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
+            p.trial.EV.TaskStartTime = datestr(now, 'HH:MM:SS:FFF');
             
             ND_FixSpot(p, 1);
             
@@ -257,7 +261,7 @@ function TaskDesign(p)
 
                     % ----------------------------------------------------------------%
                     % Wait for rewardPeriod to elapse since last reward, then give the next reward
-                    if(p.trial.reward.GiveSeries==1)
+                    if(p.trial.reward.GiveSeries == 1)
                         cstep = find(p.trial.reward.Step <= p.trial.reward.count, 1, 'last');
 
                         if(p.trial.CurTime > p.trial.Timer.lastReward + p.trial.reward.Period(cstep))                        
@@ -271,16 +275,16 @@ function TaskDesign(p)
                     % ----------------------------------------------------------------%
                     if(p.trial.task.stimState)
                         % Keep stim on for stimOn Time
-                        if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.stimOnTime)
+                        if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.stim.OnTime - 0.75*p.trial.display.ifi/2)
                             stim(p, 0); % Turn stim off
                         end
 
                     elseif(~p.trial.task.stimState)
                         % Wait the stim off period before displaying the next stimuli
-                        if(p.trial.CurTime > p.trial.EV.StimOff + p.trial.task.stimOffTime)
+                        if(p.trial.CurTime > p.trial.EV.StimOff + p.trial.stim.OffTime - 0.75*p.trial.display.ifi)
                             if(p.trial.CurTime < p.trial.stim.fix.EV.FixStart    + ...
                                                  p.trial.task.Timing.jackpotTime - ...
-                                                 p.trial.task.stimOnTime)
+                                                 p.trial.stim.OnTime)
                                 stim(p, 1); % Turn stim on
                             end
                         end
@@ -290,7 +294,7 @@ function TaskDesign(p)
                 else
                     % Give JACKPOT!
                     pds.audio.playDP(p,'jackpot','left');
-                    pds.reward.give(p, p.trial.reward.jackpotDur, p.trial.reward.jackpotnPuls);
+                    pds.reward.give(p, p.trial.reward.jackpotDur, p.trial.reward.jackpotnPulse);
                     p.trial.Timer.lastReward = p.trial.CurTime;
 
                     % Best outcome
@@ -367,7 +371,6 @@ function stim(p, val)
 
         p.trial.task.stimState = val;
 
-        StimCnt = p.trial.stim.count;
         
         % Turn on/off the appropriate generated stimuli
         % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
@@ -378,41 +381,36 @@ function stim(p, val)
                 %     p.trial.stim.gratings{g}.on = 0;
                 % end
                 
+                StimCnt = p.trial.stim.count;
+                
                 if(StimCnt > 0)
-                    
                     % turn off last shown grating
                     p.trial.stim.gratings{StimCnt}.on = 0;
                     ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
                     
                     % log grating info, do it here when turning off to keep track of onset times
-                    if(p.trial.stim.count == 1) % initialize header here
-                        StimLstPtr = fopen(p.trial.stimtbl.file, 'w');
-                        fprintf(StimLstPtr, 'Trial,  GratingNr,  Onset,  PosIDX,  Xpos,  Ypos,  Radius,  Ori,  SpatFreq,  TempFreq,  Contrast\n');
+                    StimLstPtr = fopen(p.trial.stimtbl.file, 'a');
 
-                    else
-                        StimLstPtr = fopen(p.trial.stimtbl.file, 'a');
-                    end
-                    
-                    %                  Trial GratingNr  Onset  PosIDX  Xpos   Ypos  Radius  Ori  SpatFreq  TempFreq  Contrast
-                    fprintf(StimLstPtr, '%d,  %d,       %.5f,   %d,    %.4f,  %.4f,  %.4f,  %.4f,  %.4f,   %.4f,     %.6f\n', ...
-                           p.trial.pldaps.iTrial, StimCnt, p.trial.EV.StimOn, p.trial.stim.PosIDX(StimCnt), ...
-                           p.trial.stim.locations(StimCnt, 1), p.trial.stim.locations(StimCnt, 2), ...
-                           p.trial.stim.gratings{StimCnt}.radius, p.trial.stim.gratings{StimCnt}.angle, ...
-                           p.trial.stim.gratings{StimCnt}.sFreq, p.trial.stim.gratings{StimCnt}.tFreq, ...
-                           p.trial.stim.gratings{StimCnt}.contrast);
+                    %                  Trial GratingNr  Onset  TrialTime  PosIDX  Xpos   Ypos  Radius  Ori  SpatFreq  TempFreq  Contrast
+                    fprintf(StimLstPtr, '%d,  %d,       %.5f,  %.4f,      %d,    %.4f,  %.4f,  %.4f,  %.4f,  %.4f,   %.4f,     %.6f\n', ...
+                           p.trial.pldaps.iTrial, StimCnt, p.trial.EV.StimOn, ...
+                           p.trial.EV.StimOn - p.trial.stim.fix.EV.FixStart,  ...
+                           p.trial.stim.PosIDX(StimCnt),         p.trial.stim.locations(StimCnt, 1),        ...
+                           p.trial.stim.locations(StimCnt, 2),   p.trial.stim.gratings{ StimCnt}.radius,    ...
+                           p.trial.stim.gratings{StimCnt}.angle, p.trial.stim.gratings{ StimCnt}.sFreq,     ...
+                           p.trial.stim.gratings{StimCnt}.tFreq, p.trial.stim.gratings{ StimCnt}.contrast);
                     
                     fclose(StimLstPtr);
-  
                 end
             case 1
                 % Select the current stimulus
                 p.trial.stim.count = p.trial.stim.count + 1;
                 
                 % Move the stim to the desired location
-                p.trial.stim.gratings{StimCnt}.pos = p.trial.stim.locations(StimCnt,:);
+                p.trial.stim.gratings{p.trial.stim.count}.pos = p.trial.stim.locations(p.trial.stim.count,:);
 
                 % Make the stimulus visible
-                p.trial.stim.gratings{StimCnt}.on = 1;
+                p.trial.stim.gratings{p.trial.stim.count}.on = 1;
                 ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
 
             otherwise

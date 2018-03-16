@@ -30,18 +30,17 @@ SS = ND_RigDefaults(rig);    % load default settings according to the current ri
 %% Define task related functions
 
 % function to set up experiment (and maybe also including the trial function)
-exp_fun = 'RevCorr';
+exp_fun = 'RFmap';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'RevCorr_taskdef';  % function that provides task specific parameter definitions
-SS.task.AfterTrial = 'RevCorr_aftertrial';  % function that provides runs task specific actions after a trial
+SS.task.TaskDef    = 'RFmap_taskdef';  % function that provides task specific parameter definitions
+SS.task.AfterTrial = 'RFmap_aftertrial';  % function that provides runs task specific actions after a trial
 SS.plot.routine    = '';    % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {'stim.count', 'stim.iStim', 'stim.iPos', 'stim.stage', 'stim.fine.xRange', 'stim.fine.yRange',...
-    'RF.coarse','RF.fine','RF.flag_new', 'RF.flag_fine'};
+SS.editable = {};
                   
 % ------------------------------------------------------------------------%
 %% Enable required components if needed

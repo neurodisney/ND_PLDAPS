@@ -124,45 +124,46 @@ else
 	PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'LookupTable');
 end
 
-
 %% Open double-buffered onscreen window with the requested stereo mode
 disp('****************************************************************')
 disp('****************************************************************')
 fprintf('Opening screen %d with background %02.2f in stereo mode %d\r', p.defaultParameters.display.scrnNum, p.defaultParameters.display.bgColor(1), p.defaultParameters.display.stereoMode)
 disp('****************************************************************')
 [ptr, winRect]=PsychImaging('OpenWindow', p.defaultParameters.display.scrnNum, p.defaultParameters.display.bgColor, p.defaultParameters.display.screenSize, [], [], p.defaultParameters.display.stereoMode, 0);
-p.defaultParameters.display.ptr=ptr;
-p.defaultParameters.display.winRect=winRect;
+p.defaultParameters.display.ptr     = ptr;
+p.defaultParameters.display.winRect = winRect;
+
 if p.defaultParameters.display.useOverlay==2
     p.defaultParameters.display.winRect(3)=p.defaultParameters.display.winRect(3)/2;
 end
 
 %% Set some basic variables about the display
-p.defaultParameters.display.ppd   = p.defaultParameters.display.winRect(3)/p.defaultParameters.display.width; % calculate pixels per degree
-p.defaultParameters.display.frate = round(1/Screen('GetFlipInterval',p.defaultParameters.display.ptr));   % frame rate (in Hz)
+p.defaultParameters.display.ppd   = p.defaultParameters.display.winRect(3) / p.defaultParameters.display.width; % calculate pixels per degree
+p.defaultParameters.display.frate = round(1/Screen('GetFlipInterval', p.defaultParameters.display.ptr));   % frame rate (in Hz)
 p.defaultParameters.display.ifi   = Screen('GetFlipInterval', p.defaultParameters.display.ptr);               % Inter-frame interval (frame rate in seconds)
 p.defaultParameters.display.ctr   = [p.defaultParameters.display.winRect(3:4),p.defaultParameters.display.winRect(3:4)]./2 - 0.5;          % Rect defining screen center
 p.defaultParameters.display.info  = Screen('GetWindowInfo', p.defaultParameters.display.ptr);              % Record a bunch of general display settings
 
 %% some more
-p.defaultParameters.display.pWidth=p.defaultParameters.display.winRect(3)-p.defaultParameters.display.winRect(1);
-p.defaultParameters.display.pHeight=p.defaultParameters.display.winRect(4)-p.defaultParameters.display.winRect(2);
-p.defaultParameters.display.wWidth=p.defaultParameters.display.widthcm;
-p.defaultParameters.display.wHeight=p.defaultParameters.display.heightcm;
-p.defaultParameters.display.dWidth = atand(p.defaultParameters.display.wWidth/2 / p.defaultParameters.display.viewdist)*2;
+p.defaultParameters.display.pWidth  = p.defaultParameters.display.winRect(3) - p.defaultParameters.display.winRect(1);
+p.defaultParameters.display.pHeight = p.defaultParameters.display.winRect(4) - p.defaultParameters.display.winRect(2);
+p.defaultParameters.display.wWidth  = p.defaultParameters.display.widthcm;
+p.defaultParameters.display.wHeight = p.defaultParameters.display.heightcm;
+p.defaultParameters.display.dWidth  = atand(p.defaultParameters.display.wWidth/2  / p.defaultParameters.display.viewdist)*2;
 p.defaultParameters.display.dHeight = atand(p.defaultParameters.display.wHeight/2 / p.defaultParameters.display.viewdist)*2;
-p.defaultParameters.display.w2px=[p.defaultParameters.display.pWidth/p.defaultParameters.display.wWidth; p.defaultParameters.display.pHeight/p.defaultParameters.display.wHeight];
-p.defaultParameters.display.px2w=[p.defaultParameters.display.wWidth/p.defaultParameters.display.pWidth; p.defaultParameters.display.wHeight/p.defaultParameters.display.pHeight];
-
+p.defaultParameters.display.w2px    = [p.defaultParameters.display.pWidth  / p.defaultParameters.display.wWidth; ...
+                                       p.defaultParameters.display.pHeight / p.defaultParameters.display.wHeight];
+p.defaultParameters.display.px2w    = [p.defaultParameters.display.wWidth  / p.defaultParameters.display.pWidth; ...
+                                       p.defaultParameters.display.wHeight / p.defaultParameters.display.pHeight];
 % Set screen rotation
-p.defaultParameters.display.ltheta = 0.00*pi;                                    % Screen rotation to adjust for mirrors
-p.defaultParameters.display.rtheta = -p.defaultParameters.display.ltheta;
+p.defaultParameters.display.ltheta  = 0.00*pi;                                    % Screen rotation to adjust for mirrors
+p.defaultParameters.display.rtheta  = -p.defaultParameters.display.ltheta;
 p.defaultParameters.display.scr_rot = 0;                                         % Screen Rotation for opponency conditions
 
 % Make text clean
-Screen('TextFont',p.defaultParameters.display.ptr,'Helvetica');
-Screen('TextSize',p.defaultParameters.display.ptr,16);
-Screen('TextStyle',p.defaultParameters.display.ptr,1);
+Screen('TextFont',  p.defaultParameters.display.ptr,'Helvetica');
+Screen('TextSize',  p.defaultParameters.display.ptr,16);
+Screen('TextStyle', p.defaultParameters.display.ptr,1);
 
 %% Push transformation matrices onto the graphics stack to change the origin and scale coordinates to degrees
 
@@ -194,7 +195,6 @@ if isfield(p.defaultParameters.display, 'useCustomOrigin') && p.defaultParameter
     p.defaultParameters.display.coordMatrix = p.defaultParameters.display.coordMatrix * (eye(3) + [0 0 xTrans; ...
                                                                                                    0 0 yTrans; ...
                                                                                                    0 0  0    ]); 
-    
     % Update the winRect to the new coordinates
     p.defaultParameters.display.winRect = p.defaultParameters.display.winRect - [xTrans, yTrans, xTrans, yTrans];
 end
@@ -211,10 +211,9 @@ if isfield(p.defaultParameters.display, 'useDegreeUnits') && p.defaultParameters
         Screen('glScale', p.defaultParameters.display.ptr, xScaleFactor, yScaleFactor)
         
         % Update the coordinate matrix
-        p.defaultParameters.display.coordMatrix =  p.defaultParameters.display.coordMatrix * [xScaleFactor  0              0; ...
+        p.defaultParameters.display.coordMatrix = p.defaultParameters.display.coordMatrix * [xScaleFactor  0              0; ...
                                                                                               0             yScaleFactor   0; ...
                                                                                               0             0              1];
-        
         % Update the winRect
         p.defaultParameters.display.winRect = p.defaultParameters.display.winRect ./ [xScaleFactor, yScaleFactor, xScaleFactor, yScaleFactor];
         
@@ -225,7 +224,6 @@ if isfield(p.defaultParameters.display, 'useDegreeUnits') && p.defaultParameters
     else
         error('pldaps:openScreen', 'Bad value for p.defaultParameters.display.useDegreeUnits')
     end
-
 end
 
 %% Assign overlay pointer
@@ -252,10 +250,10 @@ elseif p.defaultParameters.display.useOverlay==2
     % Disable bilinear filtering on this texture - always use
     % nearest neighbour sampling to avoid interpolation artifacts
     % in color index image for clut indexing:
-    glBindTexture(GL.TEXTURE_RECTANGLE_EXT, p.defaultParameters.display.overlaytex);
+    glBindTexture(  GL.TEXTURE_RECTANGLE_EXT, p.defaultParameters.display.overlaytex);
     glTexParameteri(GL.TEXTURE_RECTANGLE_EXT, GL.TEXTURE_MAG_FILTER, GL.NEAREST);
     glTexParameteri(GL.TEXTURE_RECTANGLE_EXT, GL.TEXTURE_MIN_FILTER, GL.NEAREST);
-    glBindTexture(GL.TEXTURE_RECTANGLE_EXT, 0);
+    glBindTexture(  GL.TEXTURE_RECTANGLE_EXT, 0);
 
     %% get information of current processing chain
     debuglevel = 1;
