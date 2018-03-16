@@ -49,7 +49,7 @@ switch act
                 HDstr = sprintf('%s  %s', HDstr, table.fmt{i,1});
             end
             
-            tblptr = fopen(table.file , 'w');
+            tblptr = fopen(table.file, 'w');
             fprintf(tblptr, '%s \n', HDstr);
             fclose(tblptr);
         end

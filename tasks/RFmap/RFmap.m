@@ -34,12 +34,7 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
-    
-    p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
-    p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
-    p = ND_AddAsciiEntry(p, 'contrast',    'p.trial.stim.GRATING.contrast',       '%.1f');
-    p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.GRATING.radius',       '%.1f');
-    
+        
     p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
@@ -58,6 +53,15 @@ if(isempty(state))
     
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
+    
+    
+    % --------------------------------------------------------------------%
+    %% Create stimulus log file
+    % initialize a simple ascii file that logs the information of the gratings shown for the RF mapping
+    
+    p.trial.stimtbl.file = fullfile(p.defaultParameters.session.dir, ...
+                                   [p.defaultParameters.session.filestem,'_Stimuli.csv']);
+    
     
     % --------------------------------------------------------------------%
     %% Color definitions of stuff shown during the trial
@@ -189,6 +193,7 @@ function TaskSetUp(p)
     
     PosIDX = ND_RandSample(1:length(Xloc), p.trial.stim.Nstim);
     
+    p.trial.stim.PosIDX = PosIDX;
     p.trial.stim.locations = [Xloc(PosIDX(:)), Yloc(PosIDX(:))];
 
     
@@ -362,25 +367,53 @@ function stim(p, val)
 
         p.trial.task.stimState = val;
 
+        StimCnt = p.trial.stim.count;
+        
         % Turn on/off the appropriate generated stimuli
         % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
         switch val
             case 0
                 % Turn off all stimuli (as a precaution)
-                for(g = 1:length(p.trial.stim.gratings))
-                    p.trial.stim.gratings{g}.on = 0;
-                end
+                % for(g = 1:length(p.trial.stim.gratings))
+                %     p.trial.stim.gratings{g}.on = 0;
+                % end
+                
+                if(StimCnt > 0)
+                    
+                    % turn off last shown grating
+                    p.trial.stim.gratings{StimCnt}.on = 0;
+                    ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
+                    
+                    % log grating info, do it here when turning off to keep track of onset times
+                    if(p.trial.stim.count == 1) % initialize header here
+                        StimLstPtr = fopen(p.trial.stimtbl.file, 'w');
+                        fprintf(StimLstPtr, 'Trial,  GratingNr,  Onset,  PosIDX,  Xpos,  Ypos,  Radius,  Ori,  SpatFreq,  TempFreq,  Contrast\n');
 
+                    else
+                        StimLstPtr = fopen(p.trial.stimtbl.file, 'a');
+                    end
+                    
+                    %                  Trial GratingNr  Onset  PosIDX  Xpos   Ypos  Radius  Ori  SpatFreq  TempFreq  Contrast
+                    fprintf(StimLstPtr, '%d,  %d,       %.5f,   %d,    %.4f,  %.4f,  %.4f,  %.4f,  %.4f,   %.4f,     %.6f\n', ...
+                           p.trial.pldaps.iTrial, StimCnt, p.trial.EV.StimOn, p.trial.stim.PosIDX(StimCnt), ...
+                           p.trial.stim.locations(StimCnt, 1), p.trial.stim.locations(StimCnt, 2), ...
+                           p.trial.stim.gratings{StimCnt}.radius, p.trial.stim.gratings{StimCnt}.angle, ...
+                           p.trial.stim.gratings{StimCnt}.sFreq, p.trial.stim.gratings{StimCnt}.tFreq, ...
+                           p.trial.stim.gratings{StimCnt}.contrast);
+                    
+                    fclose(StimLstPtr);
+  
+                end
             case 1
                 % Select the current stimulus
                 p.trial.stim.count = p.trial.stim.count + 1;
-                stimNum = p.trial.stim.count;
                 
                 % Move the stim to the desired location
-                p.trial.stim.gratings{stimNum}.pos = p.trial.stim.locations(stimNum,:);
+                p.trial.stim.gratings{StimCnt}.pos = p.trial.stim.locations(StimCnt,:);
 
                 % Make the stimulus visible
-                p.trial.stim.gratings{stimNum}.on = 1;
+                p.trial.stim.gratings{StimCnt}.on = 1;
+                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
 
             otherwise
                 error('bad stim value')
