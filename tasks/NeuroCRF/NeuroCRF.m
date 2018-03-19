@@ -3,8 +3,7 @@ function p = NeuroCRF(p, state)
 % 
 %
 %
-% Nate Faber, July/August 2017
-% modified by wolf zinke, Mar 2018
+% wolf zinke, Mar 2018
 
 % ####################################################################### %
 %% define the task name that will be used to create a sub-structure in the trial struct
@@ -25,30 +24,30 @@ if(isempty(state))
     
     % --------------------------------------------------------------------%
     %% define ascii output file
-    p = ND_AddAsciiEntry(p, 'Date',        'p.trial.DateStr',                     '%s');
-    p = ND_AddAsciiEntry(p, 'Time',        'p.trial.EV.TaskStartTime',            '%s');
-    p = ND_AddAsciiEntry(p, 'Subject',     'p.trial.session.subject',             '%s');
-    p = ND_AddAsciiEntry(p, 'Experiment',  'p.trial.session.experimentSetupFile', '%s');
-    p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
-    p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
-    p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
-    p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
-    p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
+    p = ND_AddAsciiEntry(p, 'Date',       'p.trial.DateStr',                     '%s');
+    p = ND_AddAsciiEntry(p, 'Time',       'p.trial.EV.TaskStartTime',            '%s');
+    p = ND_AddAsciiEntry(p, 'Subject',    'p.trial.session.subject',             '%s');
+    p = ND_AddAsciiEntry(p, 'Experiment', 'p.trial.session.experimentSetupFile', '%s');
+    p = ND_AddAsciiEntry(p, 'Tcnt',       'p.trial.pldaps.iTrial',               '%d');
+    p = ND_AddAsciiEntry(p, 'Cond',       'p.trial.Nr',                          '%d');
+    p = ND_AddAsciiEntry(p, 'Result',     'p.trial.outcome.CurrOutcome',         '%d');
+    p = ND_AddAsciiEntry(p, 'Outcome',    'p.trial.outcome.CurrOutcomeStr',      '%s');
+    p = ND_AddAsciiEntry(p, 'Good',       'p.trial.task.Good',                   '%d');
         
-    p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixStart',    'p.trial.EV.FixSpotStart',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixBreak',    'p.trial.EV.FixSpotStop',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.task.FixPeriod',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'TaskEnd',     'p.trial.EV.TaskEnd',                  '%.5f');
-    p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'Secs',       'p.trial.EV.DPX_TaskOn',               '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixSpotOn',  'p.trial.EV.FixOn',                    '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixSpotOff', 'p.trial.EV.FixOff',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixStart',   'p.trial.EV.FixSpotStart',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixBreak',   'p.trial.EV.FixSpotStop',              '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixPeriod',  'p.trial.task.FixPeriod',              '%.5f');
+    p = ND_AddAsciiEntry(p, 'TaskEnd',    'p.trial.EV.TaskEnd',                  '%.5f');
+    p = ND_AddAsciiEntry(p, 'ITI',        'p.trial.task.Timing.ITI',             '%.5f');
 
-    p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.behavior.fixation.FixWin',    '%.5f');
-    p = ND_AddAsciiEntry(p, 'InitRwd',     'p.trial.EV.FirstReward',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'Reward',      'p.trial.EV.Reward',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
-    p = ND_AddAsciiEntry(p, 'TotalRwd',    'sum(p.trial.reward.timeReward(:,2))', '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixWin',     'p.trial.behavior.fixation.FixWin',    '%.5f');
+    p = ND_AddAsciiEntry(p, 'InitRwd',    'p.trial.EV.FirstReward',              '%.5f');
+    p = ND_AddAsciiEntry(p, 'Reward',     'p.trial.EV.Reward',                   '%.5f');
+    p = ND_AddAsciiEntry(p, 'RewardDur',  'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
+    p = ND_AddAsciiEntry(p, 'TotalRwd',   'sum(p.trial.reward.timeReward(:,2))', '%.5f');
     
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
@@ -383,8 +382,8 @@ function stim(p, val)
                     % log grating info, do it here when turning off to keep track of onset times
                     StimLstPtr = fopen(p.trial.stimtbl.file, 'a');
 
-                    %                  Trial GratingNr  Onset  TrialTime  Xpos   Ypos  Radius  Ori  SpatFreq  TempFreq  Contrast
-                    fprintf(StimLstPtr, '%d,  %d,       %.5f,  %.4f,      %.4f,  %.4f,  %.4f,  %.4f,  %.4f,   %.4f,     %.6f\n', ...
+                    %                  Trial  GratingNr  Onset  TrialTime  Xpos  Ypos  Radius  Ori   SpatFreq  TempFreq  Contrast
+                    fprintf(StimLstPtr, '%d,   %d,       %.5f,  %.4f,      %.4f, %.4f,  %.4f,  %.4f, %.4f,     %.4f,     %.6f\n', ...
                            p.trial.pldaps.iTrial, StimCnt, p.trial.EV.StimOn, ...
                            p.trial.EV.StimOn - p.trial.stim.fix.EV.FixStart,  ...
                            p.trial.stim.locations(StimCnt, 1), p.trial.stim.locations(StimCnt, 2),       ...
