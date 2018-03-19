@@ -175,7 +175,6 @@ methods
             
             % Filter mode (not sure what the best value is yet)
             % For more information see the PTB documentation for Screen('DrawTexture')
-            % filterMode = [];
             filterMode = [];
             
             % Draw the texture

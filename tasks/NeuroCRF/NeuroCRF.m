@@ -1,4 +1,4 @@
-function p = RFmap(p, state)
+function p = NeuroCRF(p, state)
 % Calculating receptive fields using reverse correlation of stimuli with spike data
 % 
 %
@@ -61,7 +61,7 @@ if(isempty(state))
                                    [p.defaultParameters.session.filestem,'_Stimuli.csv']);
     
     StimLstPtr = fopen(p.trial.stimtbl.file, 'w');
-    fprintf(StimLstPtr, 'Trial,  GratingNr,  Onset,  TrialTime,  PosIDX,  Xpos,  Ypos,  Radius,  Ori,  SpatFreq,  TempFreq,  Contrast\n');
+    fprintf(StimLstPtr, 'Trial,  GratingNr,  Onset,  TrialTime,  Xpos,  Ypos,  Radius,  Ori,  SpatFreq,  TempFreq,  Contrast\n');
     fclose(StimLstPtr);
     
     % --------------------------------------------------------------------%
@@ -178,11 +178,11 @@ function TaskSetUp(p)
     p.trial.stim.Nstim = ceil((1.5 * p.trial.task.Timing.jackpotTime) / (p.trial.stim.Period));      
     
     % create lists with parameters for each grating
-    Ori_lst  = ND_RandSample(p.trial.stim.ori,      p.trial.stim.Nstim);
-    Rad_lst  = ND_RandSample(p.trial.stim.radius,   p.trial.stim.Nstim);
-    SFr_lst  = ND_RandSample(p.trial.stim.sFreq,    p.trial.stim.Nstim);
-    tFr_lst  = ND_RandSample(p.trial.stim.tFreq,    p.trial.stim.Nstim);
-    Ctr_lst  = ND_RandSample(p.trial.stim.contrast, p.trial.stim.Nstim);
+    Ori_lst = ND_RandSample(p.trial.stim.ori,      p.trial.stim.Nstim);
+    Rad_lst = ND_RandSample(p.trial.stim.radius,   p.trial.stim.Nstim);
+    SFr_lst = ND_RandSample(p.trial.stim.sFreq,    p.trial.stim.Nstim);
+    tFr_lst = ND_RandSample(p.trial.stim.tFreq,    p.trial.stim.Nstim);
+    Ctr_lst = ND_RandSample(p.trial.stim.contrast, p.trial.stim.Nstim);
     
     for(s = 1:p.trial.stim.Nstim)
         p.trial.stim.GRATING.ori      = Ori_lst(s);
@@ -194,18 +194,6 @@ function TaskSetUp(p)
         p.trial.stim.gratings{s} = pds.stim.Grating(p);
     end
  
-    % Generate all the possible positions for the stimulus to be
-    allXPos = p.trial.stim.xRange(1) : p.trial.stim.grdStp : p.trial.stim.xRange(2);
-    allYPos = p.trial.stim.yRange(1) : p.trial.stim.grdStp : p.trial.stim.yRange(2);
-    
-    [Xloc, Yloc] = meshgrid(allXPos, allYPos);
-    Xloc = Xloc(:); Yloc = Yloc(:);
-    
-    PosIDX = ND_RandSample(1:length(Xloc), p.trial.stim.Nstim);
-    
-    p.trial.stim.PosIDX = PosIDX;
-    p.trial.stim.locations = [Xloc(PosIDX(:)), Yloc(PosIDX(:))];
-
 % ####################################################################### %
 function TaskDesign(p)
 %% main task outline
@@ -376,7 +364,6 @@ function stim(p, val)
 
         p.trial.task.stimState = val;
 
-        
         % Turn on/off the appropriate generated stimuli
         % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
         switch val
@@ -396,14 +383,14 @@ function stim(p, val)
                     % log grating info, do it here when turning off to keep track of onset times
                     StimLstPtr = fopen(p.trial.stimtbl.file, 'a');
 
-                    %                  Trial GratingNr  Onset  TrialTime  PosIDX  Xpos   Ypos  Radius  Ori  SpatFreq  TempFreq  Contrast
-                    fprintf(StimLstPtr, '%d,  %d,       %.5f,  %.4f,      %d,    %.4f,  %.4f,  %.4f,  %.4f,  %.4f,   %.4f,     %.6f\n', ...
+                    %                  Trial GratingNr  Onset  TrialTime  Xpos   Ypos  Radius  Ori  SpatFreq  TempFreq  Contrast
+                    fprintf(StimLstPtr, '%d,  %d,       %.5f,  %.4f,      %.4f,  %.4f,  %.4f,  %.4f,  %.4f,   %.4f,     %.6f\n', ...
                            p.trial.pldaps.iTrial, StimCnt, p.trial.EV.StimOn, ...
                            p.trial.EV.StimOn - p.trial.stim.fix.EV.FixStart,  ...
-                           p.trial.stim.PosIDX(StimCnt),         p.trial.stim.locations(StimCnt, 1),        ...
-                           p.trial.stim.locations(StimCnt, 2),   p.trial.stim.gratings{ StimCnt}.radius,    ...
-                           p.trial.stim.gratings{StimCnt}.angle, p.trial.stim.gratings{ StimCnt}.sFreq,     ...
-                           p.trial.stim.gratings{StimCnt}.tFreq, p.trial.stim.gratings{ StimCnt}.contrast);
+                           p.trial.stim.locations(StimCnt, 1), p.trial.stim.locations(StimCnt, 2),       ...
+                           p.trial.stim.gratings{ StimCnt}.radius, p.trial.stim.gratings{StimCnt}.angle, ...
+                           p.trial.stim.gratings{ StimCnt}.sFreq, p.trial.stim.gratings{StimCnt}.tFreq,  ...
+                           p.trial.stim.gratings{ StimCnt}.contrast);
                     
                     fclose(StimLstPtr);
                 end
@@ -411,9 +398,6 @@ function stim(p, val)
                 % Select the current stimulus
                 p.trial.stim.count = p.trial.stim.count + 1;
                 
-                % Move the stim to the desired location
-                p.trial.stim.gratings{p.trial.stim.count}.pos = p.trial.stim.locations(p.trial.stim.count,:);
-
                 % Make the stimulus visible
                 p.trial.stim.gratings{p.trial.stim.count}.on = 1;
                 ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');

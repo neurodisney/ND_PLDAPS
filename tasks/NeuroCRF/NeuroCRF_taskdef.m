@@ -1,4 +1,4 @@
-function p = RFmap_taskdef(p)
+function p = NeuroCRF_taskdef(p)
 % define task parameters for the joystick training task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
@@ -20,52 +20,22 @@ p.trial.task.Timing.jackpotTime = 8;   % How long stimuli are presented before t
 % stimuli could be used in two ways, first using a 'coarse' mapping approach where a wider area 
 % will be covered quickly, and second a 'fine' mapping approach that characterizes a smaller
 % region with much more detail. Define here what mode to use. 
-%
 
-% !!! MAKE SURE TO ADJUST LOCATION FOR 'FINE' MAPPING !!!
-p.trial.stim.LocCtr = [-2, -3];
+% !!! MAKE SURE TO ADJUST LOCATION TO MATCH RF CENTER !!!
+p.trial.stim.GRATING.pos = [-2, -3];
 
-p.trial.stim.RFmeth = 'coarse';
-p.trial.stim.RFmeth = 'fine';
 
-% define grating parameters depending on mapping approach.
-switch p.trial.stim.RFmeth
-    case 'coarse'
-        p.trial.stim.ori      = [0, 90];   % orient of grating
-        p.trial.stim.radius   = 0.75;      % size of grating 
-        p.trial.stim.contrast = 1;         % intensity contrast
-        p.trial.stim.sFreq    = 1.5;       % spatial frequency 
-        p.trial.stim.tFreq    = 0;         % temporal frequency (0 means static grating) 
-        p.trial.stim.grdStp   = 0.25;      % spacing of grating centers 
-        
-        p.trial.stim.xRange   = [-9, -1];
-        p.trial.stim.yRange   = [-9, -1];
-
-        % do not change below
-        p.trial.stim.LocCtr   = [mean(p.trial.stim.xRange),    ...
-                                 mean(p.trial.stim.yRange)];  
-        p.trial.stim.extent   = [range(p.trial.stim.xRange),   ...
-                                 range(p.trial.stim.yRange)];  
-
-    case 'fine'
-        p.trial.stim.ori      = [0:7] * 22.5;
-        p.trial.stim.radius   = 0.75;
-        p.trial.stim.contrast = 1;
-        p.trial.stim.sFreq    = 1.5;
-        p.trial.stim.tFreq    = 0;    
-        p.trial.stim.grdStp   = 0.1;
-        
-        p.trial.stim.extent   = [2, 2];
-        
-        % do not change below
-        p.trial.stim.xRange   =  [-1, 1] * p.trial.stim.extent(1) + p.trial.stim.LocCtr(1);
-        p.trial.stim.yRange   =  [-1, 1] * p.trial.stim.extent(2) + p.trial.stim.LocCtr(2);
-end
+p.trial.stim.ori      = [0, 90];   % orient of grating
+p.trial.stim.radius   = 0.75;      % size of grating 
+p.trial.stim.contrast = 1;         % intensity contrast
+p.trial.stim.sFreq    = 1.5;       % spatial frequency 
+p.trial.stim.tFreq    = 0;         % temporal frequency (0 means static grating) 
 
 p.trial.stim.OnTime  = 0.1;   % How long each stimulus is presented
 p.trial.stim.OffTime = 0.1;   % Gaps between succesive stimuli
 p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 
+        
 % ------------------------------------------------------------------------%
 %% Drug delivery parameters
 % TTL pulse series for pico spritzer
@@ -81,19 +51,19 @@ p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.025; % duration of the initial reward
+p.trial.reward.GiveInitial   = 0; % If set to 1 reward animal when starting to fixate
+p.trial.reward.InitialRew    = 0.025; % duration of the initial reward
 
-p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur          = 0.04; % reward duration for pulse in reward series while keeping fixation
-p.trial.reward.Step         = [0, 4, 8, 10, 12];     % define the number of subsequent rewards after that the next delay period should be used.
-p.trial.reward.Period       = [1 0.75 0.50 0.25]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-p.trial.task.CurRewDelay    = 0.65;  % time to first reward
+p.trial.reward.GiveSeries    = 1; % If set to 1 give a continous series of rewards until end of fixation period
+p.trial.reward.Dur           = 0.04; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Step          = [0, 4, 8, 10, 12];     % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.reward.Period        = [1 0.75 0.50 0.25]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
+p.trial.task.CurRewDelay     = 0.65;  % time to first reward
 
-p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur        = 0.05; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotDur     = 0.1;  % final reward after keeping fixation for the complete time
-p.trial.reward.jackpotnPulse  = 3;
+p.trial.reward.jackpotDur    = 0.1;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotnPulse = 3;
 
 % ------------------------------------------------------------------------%
 %% Timing
