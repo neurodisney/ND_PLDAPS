@@ -26,7 +26,7 @@ p.trial.task.Timing.jackpotTime = 8;   % How long stimuli are presented before t
 p.trial.stim.LocCtr = [-2, -3];
 
 p.trial.stim.RFmeth = 'coarse';
-p.trial.stim.RFmeth = 'fine';
+%p.trial.stim.RFmeth = 'fine';
 
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
@@ -67,17 +67,6 @@ p.trial.stim.OffTime = 0.1;   % Gaps between succesive stimuli
 p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 
 % ------------------------------------------------------------------------%
-%% Drug delivery parameters
-% TTL pulse series for pico spritzer
-p.trial.datapixx.TTL_spritzerChan      = 5;    % DIO channel
-p.trial.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
-p.trial.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
-p.trial.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
-
-p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
-p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
-
-% ------------------------------------------------------------------------%
 %% Reward
 
 % manual reward from experimenter
@@ -114,7 +103,7 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 p.trial.stim.FIXSPOT.pos   = [0,0];
 p.trial.stim.FIXSPOT.type  = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color = 'white';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size  = 0.15;     % size of the fixation spot
+p.trial.stim.FIXSPOT.size  = 0.2;     % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

@@ -40,17 +40,19 @@ nV = length(V);
 
 if(nV == 1)
     rV = repmat(V, N,1);
+    
 elseif(rnd == 1)
     rV = V(randi(nV,1, N));
     
 elseif(N <= nV)
     rV = V(randperm(nV, N)); 
+    
 else
     Nrep = floor(N/nV);
     
     rV = [];
     
-    for(i=1:Nrep+1)
+    for(i=1:Nrep)
         if(i>Nrep)
             Nsmpl = N-length(rV);
         else
