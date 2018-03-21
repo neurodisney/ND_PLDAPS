@@ -129,6 +129,8 @@ pBreak     = dt$Outcome == 'Break'    & is.finite(dt$FixPeriod)
 pAllFix = pFix | pFixBreak | pJackpot
 pAllFix = pAllFix == 1 & is.finite(dt$FixPeriod) == 1
 
+dt$FixRT = dt$FixStart -dt$FixSpotOn
+
 ###########################################################################################
 # create plots
 
@@ -212,15 +214,15 @@ abline(v=mean(  dt$FixRT[pAllFix], na.rm=TRUE),lty=3, col='blue', lwd=2.5)
 # plot 4: Fixation RT
 p = dt$FixRT > 0.05 & is.finite(dt$FixRT) # ignore times to short to be fixation
 
-RTv  = dt$FixRT[p]
-RTv  = RTv[-sum(p)]
-ITIv = dt$intITI[p]
-ITIv = ITIv[-1]
-  
-plot(ITIv, RTv, type='p', xaxs='i', main='RT dependent on ITI',
-     xlab='ITI [s]', ylab='RT [s]', cex=1.25, pch=19)
-
-abline(lm(RTv~ITIv), col='red', lty=3)
+# RTv  = dt$FixRT[p]
+# RTv  = RTv[-sum(p)]
+# ITIv = dt$intITI[p]
+# ITIv = ITIv[-1]
+#   
+# plot(ITIv, RTv, type='p', xaxs='i', main='RT dependent on ITI',
+#      xlab='ITI [s]', ylab='RT [s]', cex=1.25, pch=19)
+# 
+# abline(lm(RTv~ITIv), col='red', lty=3)
 
 ###########################################################################################
 # plot 5: Fixation durations
