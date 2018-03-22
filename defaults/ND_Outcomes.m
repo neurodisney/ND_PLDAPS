@@ -24,7 +24,7 @@ p.defaultParameters.outcome.Miss              =   3007;  % no response at a reas
 p.defaultParameters.outcome.NoStart           =   3004;  % trial not started
 p.defaultParameters.outcome.PrematStart       =   3008;  % trial start not too early as response to cue
 p.defaultParameters.outcome.TaskStart         =   3009;  % trial not started
-p.defaultParameters.outcome.Break             =   9901;  % A break was triggered by the experimenter
+p.defaultParameters.outcome.Break             =   9999;  % A break was triggered by the experimenter
 
 % joystick related
 if(p.defaultParameters.behavior.joystick.use)
