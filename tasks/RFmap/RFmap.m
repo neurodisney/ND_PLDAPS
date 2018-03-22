@@ -278,23 +278,26 @@ function TaskDesign(p)
                     end
 
                     % ----------------------------------------------------------------%
-                    if(p.trial.task.stimState)
-                        % Keep stim on for stimOn Time
-                        if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.stim.OnTime - 0.75*p.trial.display.ifi/2)
-                            stim(p, 0); % Turn stim off
-                        end
+                    % make sure that SOA expired before showing first grating
+                    if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.Timing.SOA)
+                        if(p.trial.task.stimState)
+                            % Keep stim on for stimOn Time
+                            if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.stim.OnTime - 0.75*p.trial.display.ifi/2)
+                                stim(p, 0); % Turn stim off
+                            end
 
-                    elseif(~p.trial.task.stimState)
-                        % Wait the stim off period before displaying the next stimuli
-                        if(p.trial.CurTime > p.trial.EV.StimOff + p.trial.stim.OffTime - 0.75*p.trial.display.ifi)
-                            if(p.trial.CurTime < p.trial.stim.fix.EV.FixStart    + ...
-                                                 p.trial.task.Timing.jackpotTime - ...
-                                                 p.trial.stim.OnTime)
-                                stim(p, 1); % Turn stim on
+                        elseif(~p.trial.task.stimState)
+                            % Wait the stim off period before displaying the next stimuli
+                            if(p.trial.CurTime > p.trial.EV.StimOff + p.trial.stim.OffTime - 0.75*p.trial.display.ifi)
+                                if(p.trial.CurTime < p.trial.stim.fix.EV.FixStart    + ...
+                                                     p.trial.task.Timing.jackpotTime - ...
+                                                     p.trial.stim.OnTime)
+                                    stim(p, 1); % Turn stim on
+                                end
                             end
                         end
                     end
-
+                    
                 % ----------------------------------------------------------------%
                 else
                     % Give JACKPOT!
@@ -375,7 +378,6 @@ function stim(p, val)
     if(val ~= p.trial.task.stimState)
 
         p.trial.task.stimState = val;
-
         
         % Turn on/off the appropriate generated stimuli
         % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows

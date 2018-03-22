@@ -15,7 +15,7 @@ function p = RFmap_taskdef(p)
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
 
-p.trial.task.Timing.jackpotTime = 8;   % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.Timing.jackpotTime = 10;   % How long stimuli are presented before trial ends and jackpot is given
 
 % stimuli could be used in two ways, first using a 'coarse' mapping approach where a wider area 
 % will be covered quickly, and second a 'fine' mapping approach that characterizes a smaller
@@ -74,10 +74,12 @@ p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fi
 p.trial.reward.InitialRew   = 0.025; % duration of the initial reward
 
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
+
+% p.trial.NHits
 p.trial.reward.Dur          = 0.04; % reward duration for pulse in reward series while keeping fixation
-p.trial.reward.Step         = [0, 4, 8, 10, 12];     % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.reward.Step         = [0, 4, 8, 10];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [1 0.75 0.50 0.25]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-p.trial.task.CurRewDelay    = 0.65;  % time to first reward
+p.trial.task.CurRewDelay    = 0.75;  % time to first reward
 
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
 
@@ -86,7 +88,9 @@ p.trial.reward.jackpotnPulse  = 3;
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
+p.trial.task.Timing.WaitFix = 2;    % Time to wait for fixation before NoStart
+
+p.trial.task.Timing.SOA     = 0.4;    % delay to grating onset after starting fixation
 
 % Main trial timings
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
@@ -109,6 +113,7 @@ p.trial.stim.FIXSPOT.size  = 0.2;     % size of the fixation spot
 %% Fixation parameters
 p.trial.behavior.fixation.BreakTime = 0.050;  % minimum time [ms] to identify a fixation break
 p.trial.behavior.fixation.entryTime = 0.150;  % minimum time to stay within fixation window to detect initial fixation start
+p.trial.behavior.fixation.FixWinStp = 0.05;   % refine resizing of fixation step for this task only(modify default rig settings)
 
 % ------------------------------------------------------------------------%
 %% Task parameters

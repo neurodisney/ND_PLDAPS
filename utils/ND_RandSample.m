@@ -52,26 +52,27 @@ else
     
     rV = [];
     
-    for(i=1:Nrep)
+    for(i=1:Nrep+1)
         if(i>Nrep)
-            Nsmpl = N-length(rV);
+            Nsmpl = N - length(rV);
         else
             Nsmpl = nV;
         end
 
-        for(j=1:1000)
-           csmpl = V(randperm(nV, Nsmpl));
-            
-            % quick and dirty hack to avoid duplicates at transitions
-            if(i==1)
-                break
-            elseif(rV(end) ~= csmpl(1))
-                break;
-            end
-        end
-        
-        rV = [rV, csmpl];
+        if(Nsmpl > 0)
+            for(j=1:1000)
+               csmpl = V(randperm(nV, Nsmpl));
 
+                % quick and dirty hack to avoid duplicates at transitions
+                if(i==1)
+                    break
+                elseif(rV(end) ~= csmpl(1))
+                    break;
+                end
+            end
+
+            rV = [rV, csmpl];
+        end
     end
 end
 
