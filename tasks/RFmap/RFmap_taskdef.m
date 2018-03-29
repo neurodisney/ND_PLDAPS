@@ -15,7 +15,7 @@ function p = RFmap_taskdef(p)
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
 
-p.trial.task.Timing.jackpotTime = 10;   % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.Timing.jackpotTime = 8;   % How long stimuli are presented before trial ends and jackpot is given
 
 % stimuli could be used in two ways, first using a 'coarse' mapping approach where a wider area 
 % will be covered quickly, and second a 'fine' mapping approach that characterizes a smaller
@@ -76,14 +76,14 @@ p.trial.reward.InitialRew   = 0.025; % duration of the initial reward
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
 
 % p.trial.NHits
-p.trial.reward.Dur          = 0.04; % reward duration for pulse in reward series while keeping fixation
-p.trial.reward.Step         = [0, 4, 8, 10];     % define the number of subsequent rewards after that the next delay period should be used.
+p.trial.reward.Dur          = 0.05; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Step         = [0, 3, 6, 8];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [1 0.75 0.50 0.25]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-p.trial.task.CurRewDelay    = 0.75;  % time to first reward
+p.trial.task.CurRewDelay    = 1.00;  % time to first reward
 
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotDur     = 0.1;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur     = 0.05;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse  = 3;
 
 % ------------------------------------------------------------------------%
@@ -96,8 +96,8 @@ p.trial.task.Timing.SOA     = 0.4;    % delay to grating onset after starting fi
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
 
 % inter-trial interval
-p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = 2.5;  % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI  = 1.50;  % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI  = 3;  % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
