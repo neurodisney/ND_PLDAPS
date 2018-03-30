@@ -1,12 +1,30 @@
 Task Protocols
 
-==========
+__________
 Quick summary of available task code.
-==========
+__________
 
 ## main tasks
 
 ### FixCalib
+
+Calibrate eye position by adjusting gain and offset of the analog input to match the locations where the fixation spot is presented.
+
+
+#### Task specific keys
+
+Key          | Action
+------------ | -------------
+f            | toggle fixation spot
+r            | random fixation spot location for each trial
+b            | black-out break
+NumPad Keys  | location for fixation spot on 9 point grid
+Arrow Keys   | Move fixation spot in small steps
+Enter        | Accept current location
+Backspace    | remove last position
+z            | remove all positions
+w            | remove all positions from current location
++/-          | increase/decrease size of fixation window
 
 ### RFmap
 
