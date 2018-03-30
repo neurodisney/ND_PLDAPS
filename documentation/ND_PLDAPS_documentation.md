@@ -1,5 +1,16 @@
-ND_PLDAPS documentation
+# ND_PLDAPS documentation
 
 ==========
-Overview how to use the ND_PLDAPS environment to a) run tasks, b) develop tasks, and c) go into ND_PLDAPS development itself.
+
+Overview how to use the ND_PLDAPS environment to
+  a) run tasks,
+  b) develop tasks,
+  c) go into ND_PLDAPS development itself.
+
 ==========
+
+## Running experimental tasks
+
+
+* [Available task code](TaskParadigms.md)
+* [Organization of a *Task*](TaskStructure.md)
