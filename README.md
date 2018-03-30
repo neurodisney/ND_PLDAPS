@@ -18,3 +18,5 @@ __**Be aware that this is work in progress and we update the code frequently at 
 
 
 To cite this repository use: [![DOI](https://zenodo.org/badge/80133270.svg)](https://zenodo.org/badge/latestdoi/80133270)
+
+Some more documentation about the use of ND_PLDAPS can be found here: [ND_PLDAPS Documentation](documentation/ND_PLDAPS_documentation.md) 
