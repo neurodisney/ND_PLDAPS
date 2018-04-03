@@ -23,7 +23,7 @@ end
 
 if(isempty(state))
 
-    % call initialisation routine
+    % call initialization routine
     p = PercEqui_init(p);
 
 else

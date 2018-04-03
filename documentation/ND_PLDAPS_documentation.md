@@ -9,8 +9,18 @@ Overview how to use the ND_PLDAPS environment to
 
 __________
 
+## PLDAPS overview
+
+* [Naming Conventions](NamingConvention.md)
+
 ## Running experimental tasks
 
-
+* [How to run a task](TaskExecute.md)
 * [Available task code](TaskParadigms.md)
 * [Organization of a *Task*](TaskStructure.md)
+
+
+## Task development
+
+
+## PLDAPS development

@@ -6,7 +6,9 @@ __________
 
 ## General key assignments
 
-While running ND_PLDAPS the keyboard is usually disabled. However, it is possible to assign keyboard keys to certain functions. There are general key assignments for all tasks that are checked by the [ND_CheckKey function](../utils/ND_CheckKey.m). The keys itself are assigned in [ND_RigDefaults](../defaults/ND_RigDefaults.m) in the "*key assignment*" section. Besides this it is possible to assign keys in keys for each task as well, usually done in the main task function. **Be careful to make unique key assignments!**
+While running ND_PLDAPS the keyboard is usually disabled. However, it is possible to assign keyboard keys to certain functions. There are general key assignments for all tasks that are checked by the [ND_CheckKey function](../utils/ND_CheckKey.m). The keys itself are assigned in [ND_RigDefaults](../defaults/ND_RigDefaults.m) in the "*key assignment*" section. Besides this it is possible to assign keys in keys for each task as well, usually done in the main task file in the `KeyAction` inline function.
+
+:warning: **Be careful to make only unique key assignments!**
 
 Below is a list of default task assignments as it should be specified in  [ND_RigDefaults](../defaults/ND_RigDefaults.m).
 
@@ -28,7 +30,7 @@ k            | enable keyboard input, therefore no key assignments functional
 End          | (If the keyboard is enabled) disable keyboard
 
 
-## main tasks
+## Main tasks
 
 ________________________________________________________________________________
 ### FixCalib
