@@ -6,9 +6,9 @@ __________
 
 ## General key assignments
 
-While running ND_PLDAPS the keyboard is usually disabled. However, it is possible to assign keyboard keys to certain functions. There are general key assignments for all tasks that are checked by the [ND_CheckKey function](utils/ND_CheckKey.m). The keys itself are assigned in [ND_RigDefaults](defaults/ND_RigDefaults.m) in the "*key assignment*" section. Besides this it is possible to assign keys in keys for each task as well, usually done in the main task function. **Be careful to to make unique key assignments!**
+While running ND_PLDAPS the keyboard is usually disabled. However, it is possible to assign keyboard keys to certain functions. There are general key assignments for all tasks that are checked by the [ND_CheckKey function](../utils/ND_CheckKey.m). The keys itself are assigned in [ND_RigDefaults](../defaults/ND_RigDefaults.m) in the "*key assignment*" section. Besides this it is possible to assign keys in keys for each task as well, usually done in the main task function. **Be careful to make unique key assignments!**
 
-Below is a list of default task assignments as it should be specified in  [ND_RigDefaults](defaults/ND_RigDefaults.m).
+Below is a list of default task assignments as it should be specified in  [ND_RigDefaults](../defaults/ND_RigDefaults.m).
 
 
 Key          | Action
@@ -30,6 +30,7 @@ End          | (If the keyboard is enabled) disable keyboard
 
 ## main tasks
 
+________________________________________________________________________________
 ### FixCalib
 
 Calibrate eye position by adjusting gain and offset of the analog input to match the locations where the fixation spot is presented.
@@ -49,29 +50,40 @@ z            | remove all positions
 w            | remove all positions from current location
 +/-          | increase/decrease size of fixation window
 
+________________________________________________________________________________
 ### RFmap
 
+________________________________________________________________________________
 ### manual_rf_map
 
+________________________________________________________________________________
 ### ScreenReversal
 
+________________________________________________________________________________
 ### DetectGrat
 
+________________________________________________________________________________
 ### PercEqui
 
+________________________________________________________________________________
 ### CuedChangeDetect
 In development.
 
 ## training tasks
 
+________________________________________________________________________________
 ### NHP_training/InitFixTrain
 
+________________________________________________________________________________
 ### NHP_training/FixTrain
 
+________________________________________________________________________________
 ### NHP_training/DelayedSaccade
 
+________________________________________________________________________________
 ### NHP_training/ContrastChange
 
+________________________________________________________________________________
 ### NHP_training/DistractFix
 
 ## archived
