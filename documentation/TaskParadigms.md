@@ -4,6 +4,30 @@ __________
 Quick summary of available task code.
 __________
 
+## General key assignments
+
+While running ND_PLDAPS the keyboard is usually disabled. However, it is possible to assign keyboard keys to certain functions. There are general key assignments for all tasks that are checked by the [ND_CheckKey function](utils/ND_CheckKey.m). The keys itself are assigned in [ND_RigDefaults](defaults/ND_RigDefaults.m) in the "*key assignment*" section. Besides this it is possible to assign keys in keys for each task as well, usually done in the main task function. **Be careful to to make unique key assignments!**
+
+Below is a list of default task assignments as it should be specified in  [ND_RigDefaults](defaults/ND_RigDefaults.m).
+
+
+Key          | Action
+-------------|--------------
+esc          | end experiment
+space        | trigger reward
+p            | toggle pause experiments (no background change)
+b            | toggle black-out break (background color changes)
+tab          | trigger manual drug delivery
+a            | advance to next block
+s            | toggle to accept only correct versus all trials
+insert       | View the calibration points to adjust current parameters
+Home         | (Needs view of calibration points) toggle change of offset (x/y/off)
+End          | (Needs view of calibration points) toggle change of gain (x/y/off)
+PgUp/Down    | (Needs view of calibration points) increase/decrease calibration parameter
+k            | enable keyboard input, therefore no key assignments functional
+End          | (If the keyboard is enabled) disable keyboard
+
+
 ## main tasks
 
 ### FixCalib
@@ -14,10 +38,9 @@ Calibrate eye position by adjusting gain and offset of the analog input to match
 #### Task specific keys
 
 Key          | Action
------------- | -------------
+-------------|--------------
 f            | toggle fixation spot
 r            | random fixation spot location for each trial
-b            | black-out break
 NumPad Keys  | location for fixation spot on 9 point grid
 Arrow Keys   | Move fixation spot in small steps
 Enter        | Accept current location

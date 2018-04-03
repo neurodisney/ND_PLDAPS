@@ -431,14 +431,14 @@ SS.key.pause     = KbName('p');      % pause the experiment
 SS.key.break     = KbName('b');      % give a break
 SS.key.CtrJoy    = KbName('j');      % set current joystick position as zero
 
-% controll fix win
+% control fix win
 SS.key.FixInc    = KbName('=+');     % increase size of fixation window
 SS.key.FixDec    = KbName('-_');     % decrease size of fixation window
 
 % trigger pico spritzer injection
 SS.key.spritz    = KbName('tab');    % Send a TTL pulse over the analog channel connected to the pico spritzer
 
-% block controll
+% block control
 SS.key.BlockAdvance      = KbName('a'); % advance to next block
 SS.key.BlockEqualCorrect = KbName('s'); % switch between accepting only correct trials or all trials
 
