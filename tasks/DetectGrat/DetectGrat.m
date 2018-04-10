@@ -92,7 +92,6 @@ function TaskSetUp(p)
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 
-    p.trial.task.Good      = 0;
     p.trial.task.TargetSel = NaN; % indicate if the target item was saccade target
     p.trial.task.fixFix    = 0;
     p.trial.task.stimFix   = 0;
@@ -139,10 +138,10 @@ function TaskSetUp(p)
     p.trial.stim.GRATING.contrast = p.trial.stim.Trgt.Contrast;
 
     if(p.trial.stim.Hemi == 'r')
-        p.trial.stim.GRATING.pos(1)  = -1*p.trial.stim.GRATING.pos(1);
+        p.trial.stim.GRATING.pos(1) = -1*p.trial.stim.GRATING.pos(1);
     end
 
-    p.trial.stim.target           = pds.stim.Grating(p);
+    p.trial.stim.target = pds.stim.Grating(p);
 
     % Is a saccade expected
     % increase likelihood of saccade expectation the closer we get to the threshold
@@ -367,9 +366,9 @@ if(~isempty(p.trial.LastKeyPress))
             p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
              
             if(p.trial.task.RandomEcc)
-                ND_CtrlMsg(p, 'Random Grating eccemtricity on each trial.');
+                ND_CtrlMsg(p, 'Random Grating eccentricity on each trial.');
             else
-                ND_CtrlMsg(p, 'Grating eccemtricity is kept constant.');
+                ND_CtrlMsg(p, 'Grating eccenricity is kept constant.');
             end
 
         % random position of target on each trial
@@ -393,7 +392,7 @@ if(~isempty(p.trial.LastKeyPress))
             ND_CtrlMsg(p, 'Grating orientation changed.');
 
         % select grating parameters at random for every trial
-        case KbName('g')  % randomly select a new grating orientation
+        case KbName('g') 
             p.trial.task.RandomPar = abs(p.trial.task.RandomPar - 1);
 
             if(p.trial.task.RandomPar)

@@ -47,24 +47,19 @@ SS.editable = {};
 % Most of the components are disabled as default. If needed for the task enable them here.
 SS.sound.use                  = 1;
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
-SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
 SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
-SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
 SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
 SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
 
-SS.pldaps.draw.grid.use       = 1;
+SS.pldaps.draw.grid.use       = 1; % show reference grid on control screen
 
 SS.datapixx.useAsEyepos       = 1;
-SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
-SS.tdt.use                    = 0; % Get incoming UDP spike data from TDT
-
 SS.behavior.fixation.useCalibration = 1;
-SS.behavior.fixation.enableCalib = 0;
+SS.behavior.fixation.enableCalib    = 0;
 
 SS.behavior.fixation.on = 1; % fixation.on for this task
 

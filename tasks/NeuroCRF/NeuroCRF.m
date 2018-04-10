@@ -21,66 +21,7 @@ end
 % At this stage, p.trial is not yet defined. All assignments need
 % to go to p.defaultparameters
 if(isempty(state))
-    
-    % --------------------------------------------------------------------%
-    %% define ascii output file
-    p = ND_AddAsciiEntry(p, 'Date',       'p.trial.DateStr',                     '%s');
-    p = ND_AddAsciiEntry(p, 'Time',       'p.trial.EV.TaskStartTime',            '%s');
-    p = ND_AddAsciiEntry(p, 'Subject',    'p.trial.session.subject',             '%s');
-    p = ND_AddAsciiEntry(p, 'Experiment', 'p.trial.session.experimentSetupFile', '%s');
-    p = ND_AddAsciiEntry(p, 'Tcnt',       'p.trial.pldaps.iTrial',               '%d');
-    p = ND_AddAsciiEntry(p, 'Cond',       'p.trial.Nr',                          '%d');
-    p = ND_AddAsciiEntry(p, 'Result',     'p.trial.outcome.CurrOutcome',         '%d');
-    p = ND_AddAsciiEntry(p, 'Outcome',    'p.trial.outcome.CurrOutcomeStr',      '%s');
-    p = ND_AddAsciiEntry(p, 'Good',       'p.trial.task.Good',                   '%d');
-        
-    p = ND_AddAsciiEntry(p, 'Secs',       'p.trial.EV.DPX_TaskOn',               '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixSpotOn',  'p.trial.EV.FixOn',                    '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixSpotOff', 'p.trial.EV.FixOff',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixStart',   'p.trial.EV.FixSpotStart',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixBreak',   'p.trial.EV.FixSpotStop',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixPeriod',  'p.trial.task.FixPeriod',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'TaskEnd',    'p.trial.EV.TaskEnd',                  '%.5f');
-    p = ND_AddAsciiEntry(p, 'ITI',        'p.trial.task.Timing.ITI',             '%.5f');
-
-    p = ND_AddAsciiEntry(p, 'FixWin',     'p.trial.behavior.fixation.FixWin',    '%.5f');
-    p = ND_AddAsciiEntry(p, 'InitRwd',    'p.trial.EV.FirstReward',              '%.5f');
-    p = ND_AddAsciiEntry(p, 'Reward',     'p.trial.EV.Reward',                   '%.5f');
-    p = ND_AddAsciiEntry(p, 'RewardDur',  'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
-    p = ND_AddAsciiEntry(p, 'TotalRwd',   'sum(p.trial.reward.timeReward(:,2))', '%.5f');
-    
-    % call this after ND_InitSession to be sure that output directory exists!
-    ND_Trial2Ascii(p, 'init');
-    
-    % --------------------------------------------------------------------%
-    %% Create stimulus log file
-    % initialize a simple ascii file that logs the information of the gratings shown for the RF mapping
-    
-    p.trial.stimtbl.file = fullfile(p.defaultParameters.session.dir, ...
-                                   [p.defaultParameters.session.filestem,'_Stimuli.csv']);
-    
-    StimLstPtr = fopen(p.trial.stimtbl.file, 'w');
-    fprintf(StimLstPtr, 'Trial,  GratingNr,  Onset,  TrialTime,  Xpos,  Ypos,  Radius,  Ori,  SpatFreq,  TempFreq,  Contrast\n');
-    fclose(StimLstPtr);
-    
-    % --------------------------------------------------------------------%
-    %% Set fixed grating parameters
-    p.trial.stim.GRATING.res    = 300;
-    p.trial.stim.GRATING.fixWin = 0;
-
-    % --------------------------------------------------------------------%
-    %% Color definitions of stuff shown during the trial
-    % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
-    % this is a good place to do so. To avoid conflicts with future changes in the set of default
-    % colors, use entries later in the lookup table for the definition of task related colors.
-    
-    % --------------------------------------------------------------------%
-    %% Determine conditions and their sequence
-    % define conditions (conditions could be passed to the pldaps call as
-    % cell array, or defined here within the main trial function. The
-    % control of trials, especially the use of blocks, i.e. the repetition
-    % of a defined number of trials per condition, needs to be clarified.
-       
+    p = NeuroCRF_init(p);       
 else
     % ####################################################################### %
     %% Call standard routines before executing task related code
@@ -146,11 +87,11 @@ function TaskSetUp(p)
                                         p.trial.task.Timing.MaxITI,  ...
                                         [], [], 1, 0.10);
 
-    p.trial.CurrEpoch       = p.trial.epoch.ITI;
+    p.trial.CurrEpoch = p.trial.epoch.ITI;
 
-     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  ...
-                                        p.trial.task.CurRewDelay    + ...
-                                        p.trial.task.Timing.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+    p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  ...
+                                       p.trial.task.CurRewDelay    + ...
+                                       p.trial.task.Timing.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
@@ -344,6 +285,31 @@ function TaskCleanAndSave(p)
     % Save useful info to an ascii table for plotting
     ND_Trial2Ascii(p, 'save');
 
+% ####################################################################### %
+function DrugCheck(p)
+%% check if it is time to trigger a drug stimulation
+    if(p.trial.Drug.Give == 1 && p.trial.Drug.DrugTrial == 1)
+        if(p.trial.task.LastDrugFlash > p.trial.Drug.FlashSeriesLength)
+            if(p.trial.task.DrugGiven == 0)
+                if(p.trial.CurTime > p.trial.task.NextModulation + p.trial.Drug.PeriFlashTime)
+                    ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,      ...
+                                   p.trial.datapixx.TTL_spritzerDur,       ...
+                                   p.trial.datapixx.TTL_spritzerNpulse,    ...
+                                   p.trial.datapixx.TTL_spritzerPulseGap,  ...
+                                   p.trial.datapixx.TTL_spritzerNseries,   ...
+                                   p.trial.datapixx.TTL_spritzerSeriesGap, ...
+                                   p.trial.event.INJECT);
+
+                    p.trial.task.LastDrugFlash = 0;
+                    p.trial.task.DrugCount     = p.trial.task.DrugCount + 1;
+                    p.trial.task.DrugGiven     = 1;
+                end
+            end
+        else
+            p.trial.task.DrugGiven = 0;
+        end
+    end
+    
 % ####################################################################### %
 function KeyAction(p)
 %% task specific action upon key press

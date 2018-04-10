@@ -55,18 +55,61 @@ w            | remove all positions from current location
 ________________________________________________________________________________
 ### RFmap
 
+#### Task specific keys
+
+This task does not have any specific key assignments right now.
+
+Key          | Action
+-------------|--------------
+             |
+
 ________________________________________________________________________________
 ### manual_rf_map
 
 ________________________________________________________________________________
 ### ScreenReversal
 
+#### Task specific keys
+
+Key          | Action
+-------------|--------------
+f            | toggle fixation spot
+BackSpace    | reload task definition file
+
 ________________________________________________________________________________
 ### DetectGrat
+
+#### Task specific keys
+
+Key          | Action
+-------------|--------------
+f            | toggle fixation spot
+r            | random fixation spot location for each trial
+e            | random fixation spot eccentricity for each trial
+a            | random fixation spot angular location for each trial
+o            | randomly set a new orientation of the grating
+g            | randomly select grating parameters for each trial
+h            | randomly select hemifield to present grating
+Right/Left Arrow | present grating in right/left hemifield
+NumPad Keys  | location of the grating corresponding to key location
+
 
 ________________________________________________________________________________
 ### PercEqui
 
+#### Task specific keys
+
+Key          | Action
+-------------|--------------
+f            | toggle fixation spot
+r            | random fixation spot location for each trial
+e            | random fixation spot eccentricity for each trial
+a            | random fixation spot angular location for each trial
+o            | randomly set a new orientation of the grating
+g            | randomly select grating parameters for each trial
+h            | randomly select hemifield to present grating
+Right/Left Arrow | present grating in right/left hemifield
+Down Arrow   | toggle if both gratings share the same parameters
 ________________________________________________________________________________
 ### CuedChangeDetect
 In development.

@@ -279,33 +279,33 @@ function TaskDesign(p)
 % ####################################################################### %
 function EyeCheck(p)
 %% check if gaze is on screen
-        dist = sqrt( p.trial.eyeX^2 + p.trial.eyeY^2 );
+    dist = sqrt( p.trial.eyeX^2 + p.trial.eyeY^2 );
 
-        if(dist < p.trial.task.ScreenFixWin && p.trial.task.EyeOnScreen == 0)
-        % Eyes start being on screen
-            p.trial.task.EyeOnScreen = 1;
-            pds.datapixx.strobe(p.trial.event.FIX_IN);
+    if(dist < p.trial.task.ScreenFixWin && p.trial.task.EyeOnScreen == 0)
+    % Eyes start being on screen
+        p.trial.task.EyeOnScreen = 1;
+        pds.datapixx.strobe(p.trial.event.FIX_IN);
 
-        elseif(dist > p.trial.task.ScreenFixWin && p.trial.task.EyeOnScreen == 1)
-        % Eyes left screen area
-            p.trial.task.EyeOnScreen = 0;
-            pds.datapixx.strobe(p.trial.event.FIX_OUT);
-        end
+    elseif(dist > p.trial.task.ScreenFixWin && p.trial.task.EyeOnScreen == 1)
+    % Eyes left screen area
+        p.trial.task.EyeOnScreen = 0;
+        pds.datapixx.strobe(p.trial.event.FIX_OUT);
+    end
 
 % ####################################################################### %
 function DrugCheck(p)
-%% check if it is time to trigger adrug stimulation
+%% check if it is time to trigger a drug stimulation
     if(p.trial.Drug.Give == 1)
         if(p.trial.task.LastDrugFlash > p.trial.Drug.FlashSeriesLength)
             if(p.trial.task.DrugGiven == 0)
                 if(p.trial.CurTime > p.trial.task.NextModulation + p.trial.Drug.PeriFlashTime)
-                    ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,      ...
-                                   p.trial.datapixx.TTL_spritzerDur,       ...
-                                   p.trial.datapixx.TTL_spritzerNpulse,    ...
-                                   p.trial.datapixx.TTL_spritzerPulseGap,  ...
-                                   p.trial.datapixx.TTL_spritzerNseries,   ...
-                                   p.trial.datapixx.TTL_spritzerSeriesGap, ...
-                                   p.trial.event.INJECT);
+                    ND_PulseSeries(  p.trial.datapixx.TTL_spritzerChan,      ...
+                                     p.trial.datapixx.TTL_spritzerDur,       ...
+                                     p.trial.datapixx.TTL_spritzerNpulse,    ...
+                                     p.trial.datapixx.TTL_spritzerPulseGap,  ...
+                                     p.trial.datapixx.TTL_spritzerNseries,   ...
+                                     p.trial.datapixx.TTL_spritzerSeriesGap, ...
+                                     p.trial.event.INJECT);
 
                     p.trial.task.LastDrugFlash = 0;
                     p.trial.task.DrugCount     = p.trial.task.DrugCount + 1;

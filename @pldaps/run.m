@@ -71,9 +71,9 @@ try
     ListenChar(2)
     HideCursor
 
-    p.trial.flagNextTrial  = 0; % flag for ending the trial
-    p.trial.pldaps.quit = 0;
-    p.trial.pldaps.pause = 0;
+    p.trial.flagNextTrial = 0; % flag for ending the trial
+    p.trial.pldaps.quit   = 0;
+    p.trial.pldaps.pause  = 0;
 
     trialNr = 0;
     p.trial.pldaps.iTrial = 0;

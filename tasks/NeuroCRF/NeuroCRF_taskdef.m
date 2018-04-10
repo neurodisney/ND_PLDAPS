@@ -1,41 +1,47 @@
 function p = NeuroCRF_taskdef(p)
-% define task parameters for the joystick training task.
+% define task parameters for a passive viewing task to obtain tuning functions (e.g. CRF).
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
 % modifications of the task.
 %
-% TODO: - Make sure that changed parameters are kept in the data file, i.e.
-%         that there is some log when changes happened
-%       - read in only changes in order to allow quicker manipulations via the
-%         keyboard without overwriting it every time by calling this routine
 %
-%
-% Nate Faber & wolf zinke, 2017
+% wolf zinke, 2018
 
 % ------------------------------------------------------------------------%
+%% visual stimulus timing
+% define number of stimuli and stimulus timings to determine total trial.fixation duration.
+
+p.trial.stim.Nstim     = 12;   % Number of stimuli presented within a trial IGiven that fixation is kept
+p.trial.stim.OnTime    = 0.1;  % How long each stimulus is presented
+p.trial.stim.OffTime   = 0.1;  % Gaps between succesive stimuli
+p.trial.stim.PreStim   = ND_GetITI(0.35, 0.65, [], [], 1, 0.05);  % Time before first stimulus is shown
+p.trial.stim.ProstStim = 0.25;  % Time to continue maintaining fixation after last stimulus is shown
+
+% total fixation time is now defined based on number of presentation and times
+p.trial.task.Timing.jackpotTime = p.trial.stim.Nstim    * p.trial.stim.OnTime    +  ...
+                                 (p.trial.stim.Nstim-1) * p.trial.stim.OffTime   +  ...
+                                  p.trial.stim.PreStim  + p.trial.stim.ProstStim;  
+
 %% Grating stimuli parameters
 
-p.trial.task.Timing.jackpotTime = 8;   % How long stimuli are presented before trial ends and jackpot is given
-
-% stimuli could be used in two ways, first using a 'coarse' mapping approach where a wider area 
-% will be covered quickly, and second a 'fine' mapping approach that characterizes a smaller
-% region with much more detail. Define here what mode to use. 
-
 % !!! MAKE SURE TO ADJUST LOCATION TO MATCH RF CENTER !!!
-p.trial.stim.GRATING.pos = [-2, -3];
-
+p.trial.stim.GRATING.pos = [-2, -3];  % ToDo: define as input argument for start_NeuroCRF and pop-up menu if not specified!
 
 p.trial.stim.ori      = [0, 90];   % orient of grating
 p.trial.stim.radius   = 0.75;      % size of grating 
-p.trial.stim.contrast = 1;         % intensity contrast
+p.trial.stim.contrast = [0, 2, 4, 8, 16, 32, 64, 100];  % intensity contrast
 p.trial.stim.sFreq    = 1.5;       % spatial frequency 
 p.trial.stim.tFreq    = 0;         % temporal frequency (0 means static grating) 
 
-p.trial.stim.OnTime  = 0.1;   % How long each stimulus is presented
-p.trial.stim.OffTime = 0.1;   % Gaps between succesive stimuli
-p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
+% ------------------------------------------------------------------------%
+%% 
 
-        
+% ------------------------------------------------------------------------%
+%% Drug Condition/Block design
+p.trial.task.EqualCorrect = 1; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
+
+
+
 % ------------------------------------------------------------------------%
 %% Drug delivery parameters
 % TTL pulse series for pico spritzer
@@ -98,10 +104,6 @@ p.trial.task.breakFixCheck = 0.2; % Time after a stimbreak where if task is mark
 % ------------------------------------------------------------------------%
 %% Eye Signal Sampling
 p.trial.behavior.fixation.Sample    = 75;
-
-% ------------------------------------------------------------------------%
-%% Condition/Block design
-p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
 % ------------------------------------------------------------------------%
 %% Break color

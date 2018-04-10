@@ -52,8 +52,8 @@ end
 % --------------------------------------------------------------------%
 %% keep offset correction for eye position
 if(p.trial.datapixx.useAsEyepos)
-    p.defaultParameters.eyeCalib.offset     = p.trial.eyeCalib.offset;
-    p.defaultParameters.eyeCalib.gain       = p.trial.eyeCalib.gain;
+    p.defaultParameters.eyeCalib.offset = p.trial.eyeCalib.offset;
+    p.defaultParameters.eyeCalib.gain   = p.trial.eyeCalib.gain;
 end
 
 % --------------------------------------------------------------------%
@@ -81,7 +81,7 @@ p.defaultParameters.Block.BlockList      = p.trial.Block.BlockList;
 
 % --------------------------------------------------------------------%
 %% format string for ascii table
-p.defaultParameters.asciitbl  =  p.trial.asciitbl;
+p.defaultParameters.asciitbl = p.trial.asciitbl;
 
 % --------------------------------------------------------------------%
 %% Keep keyboard freedom state

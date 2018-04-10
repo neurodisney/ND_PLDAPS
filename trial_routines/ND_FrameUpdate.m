@@ -50,8 +50,8 @@ end
 
 % ------------------------------------------------------------------------%
 %% check drug application
-if(p.trial.Drug.DoStim)
-    ND_GiveDrug(p);
-end
+% if(p.trial.Drug.Give)
+%     ND_DrugCheck(p);
+% end
  
 

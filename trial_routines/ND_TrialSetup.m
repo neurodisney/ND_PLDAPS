@@ -57,7 +57,7 @@ p.trial.timing.datapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
 %% Reward
 %%% prepare reward system and pre-allocate variables for reward timings
     p.trial.reward.timeReward = nan(100,2);
-    p.trial.reward.iReward     = 0; % counter for reward times
+    p.trial.reward.iReward    = 0; % counter for reward times
     
 % ------------------------------------------------------------------------%
 %% eye position
@@ -95,7 +95,7 @@ end
 % ------------------------------------------------------------------------%
 %% Spike Server
 % open a TDT connection
-if p.trial.tdt.use
+if(p.trial.tdt.use)
     pds.tdt.init(p);
 end
 
@@ -125,7 +125,7 @@ if(p.trial.pldaps.draw.framerate.use)
     sf.startPos  = round(p.trial.display.w2px' .* p.trial.pldaps.draw.framerate.location + [p.trial.display.pWidth/2, p.trial.display.pHeight/2]);
     sf.size      =       p.trial.display.w2px' .* p.trial.pldaps.draw.framerate.size;
     sf.window    =       p.trial.display.overlayptr;
-    sf.xlims     =   [1, p.trial.pldaps.draw.framerate.nFrames];
+    sf.xlims     = [1,   p.trial.pldaps.draw.framerate.nFrames];
     sf.ylims     = [0, 2*p.trial.display.ifi];
     sf.linetype='-';
     p.trial.pldaps.draw.framerate.sf = sf;
@@ -137,9 +137,10 @@ p.trial.task.Good                = 0;    % flag to indicate if an error occurred
 p.trial.CurrEpoch                = NaN;  % keep track of task epochs
 p.trial.CurTime                  = NaN;  % keep track of current time
 p.trial.AllCurTimes              = nan(ceil(p.trial.pldaps.maxFrames),1);
-p.trial.behavior.fixation.GotFix =   0;  % assume no fixation at task start
+p.trial.behavior.fixation.GotFix = 0;    % assume no fixation at task start
 p.trial.reward.Curr         = p.trial.reward.defaultAmount;  % expected reward amount (set to default amount)
 p.trial.outcome.CurrOutcome = p.trial.outcome.TaskStart;
+
 % ------------------------------------------------------------------------%
 %% Initialize default Timer
 p.trial.Timer.Wait     = 0; % general timer that waits for an amount of time to expire
