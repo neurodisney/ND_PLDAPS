@@ -31,5 +31,12 @@ p.defaultParameters.pldaps.trialStates.framePrepareDrawing   =  2;  % determine 
 p.defaultParameters.pldaps.trialStates.frameDraw             =  3;  % update graphic buffer as preparation to be shown on screen
 p.defaultParameters.pldaps.trialStates.frameFlip             =  4;  % screen refresh, put stuff on screen
 
-  
+
+% put the trial states in an array to simplify going through them later on
+p.defaultParameters.pldaps.trialStates.InTrialList = [p.defaultParameters.pldaps.trialStates.frameUpdate, ...
+                                                      p.defaultParameters.pldaps.trialStates.framePrepareDrawing, ...
+                                                      p.defaultParameters.pldaps.trialStates.frameDraw, ...
+                                                      p.defaultParameters.pldaps.trialStates.frameFlip];
+
+p.defaultParameters.pldaps.trialStates.Current = NaN;  %  keep track of the current active trial state
     

@@ -1,6 +1,6 @@
 function p = ND_runTrial(p)
-%runTrial    runs a single Trial by calling the function defined in 
-%            p.trial.pldaps.trialFunction through different states
+% ND_runTrial   runs a single Trial by calling the function defined in 
+%               p.trial.pldaps.trialFunction through different states
 %
 % 03/2013 jly   Wrote hyperflow
 % 03/2014 jk    Used jly's code to get the PLDAPS structure and frame it into a class
@@ -12,6 +12,8 @@ function p = ND_runTrial(p)
     tfh = str2func(p.trial.pldaps.trialFunction);
     
     % initial trial setup
+    p = ND_TrialSetup(p);
+    p = GetCurrentTime(p);
     tfh(p, p.trial.pldaps.trialStates.trialSetup);
     
     % switch to high priority mode
@@ -24,10 +26,11 @@ function p = ND_runTrial(p)
     end
 
     % will be called just before the trial starts for time critical calls to start data acquisition
+    p = ND_TrialPrepare(p);
+    p = GetCurrentTime(p);
     tfh(p, p.trial.pldaps.trialStates.trialPrepare);
 
     %%% MAIN WHILE LOOP %%%
-    %-------------------------------------------------------------------------%
     while(~p.trial.flagNextTrial && ~p.trial.pldaps.quit)
         %g o through one frame by calling tfh with the different states.
         % Save the times each state is finished.
@@ -35,29 +38,38 @@ function p = ND_runTrial(p)
         %time of the estimated next flip
 %        p.trial.nextFrameTime = p.trial.display.timeLastFrame + p.trial.display.ifi;
 
-        % Frame Update
-        if(p.trial.pldaps.GetTrialStateTimes)
-            setTimeAndFrameState(p,p.trial.pldaps.trialStates.frameUpdate);  
-        end
-        tfh(p, p.trial.pldaps.trialStates.frameUpdate);
-        
-        % Frame Prepare Drawing
-        if(p.trial.pldaps.GetTrialStateTimes)
-            setTimeAndFrameState(p,p.trial.pldaps.trialStates.framePrepareDrawing)
-        end
-        tfh(p, p.trial.pldaps.trialStates.framePrepareDrawing);
-        
-        % Frame Draw
-        if(p.trial.pldaps.GetTrialStateTimes)
-            setTimeAndFrameState(p,p.trial.pldaps.trialStates.frameDraw);
-        end
-        tfh(p, p.trial.pldaps.trialStates.frameDraw);
+        for(ts = 1:length(p.trial.pldaps.trialStates.InTrialList))
+            
+            cTS = p.defaultParameters.pldaps.trialStates.InTrialList(ts);
+            
+            if(p.trial.pldaps.GetTrialStateTimes)
+               setTimeAndFrameState(p, cTS);  
+            end
+             
+            %% check default trial states
+            switch cTS
+                case p.trial.pldaps.trialStates.frameUpdate
+                % collect data (i.e. a hardware module) and store it
+                    ND_FrameUpdate(p);
 
-        % Frame Flip
-        if(p.trial.pldaps.GetTrialStateTimes)
-            setTimeAndFrameState(p,p.trial.pldaps.trialStates.frameFlip)
+                case p.trial.pldaps.trialStates.frameDraw
+                % Display stuff on the screen
+                % Just call graphic routines, avoid any computations
+                    ND_FrameDraw(p);
+                    
+                case p.trial.pldaps.trialStates.frameFlip;
+                % Flip the graphic buffer and show next frame
+                    ND_FrameFlip(p);
+            end  %/ switch state
+
+            %% get the current time
+            % Define it here at a clear time point and use it later on whenever the 
+            % current time is needed instead of calling GetSecs every time.
+            p = GetCurrentTime(p);
+             
+            tfh(p, cTS);  % call the main trial function and pass the current trial state on to it
+           
         end
-        tfh(p, p.trial.pldaps.trialStates.frameFlip);
         
         %advance to next frame        
         p.trial.iFrame = p.trial.iFrame + 1;  % update frame index
@@ -73,14 +85,24 @@ function p = ND_runTrial(p)
             warning('pldaps:runTrial','Thread priority was degraded by operating system during the trial.')
         end
     end
-    
+       
+    p = ND_TrialCleanUpandSave(p); % end all trial related processes
+    p = GetCurrentTime(p);
     tfh(p, p.trial.pldaps.trialStates.trialCleanUpandSave);
 
-end %runTrial
+    % p = ND_AfterTrial(p); %Currently not used
     
-function setTimeAndFrameState(p, state)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% helper functions
+
+function p = GetCurrentTime(p)
+    p.trial.CurTime = GetSecs;
+    p.trial.AllCurTimes(p.trial.iFrame) = p.trial.CurTime;
+
+
+%%
+function p = setTimeAndFrameState(p, state)
         p.trial.ttime = GetSecs - p.trial.trstart;
 %        p.trial.remainingFrameTime = p.trial.nextFrameTime - p.trial.ttime;
         p.trial.timing.frameStateChangeTimes(state, p.trial.iFrame) = ...
                            p.trial.ttime - p.trial.nextFrameTime + p.trial.display.ifi;
-end
