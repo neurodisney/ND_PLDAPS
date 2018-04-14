@@ -28,12 +28,6 @@ if(isempty(state))
 
 else
     % ####################################################################### %
-    %% Call standard routines before executing task related code
-    % This carries out standard routines, mainly in respect to hardware interfacing.
-    % Be aware that this is done first for each trial state!
-    p = ND_GeneralTrialRoutines(p, state);
-
-    % ####################################################################### %
     %% Subsequent calls during actual trials
     % execute trial specific commands here.
 

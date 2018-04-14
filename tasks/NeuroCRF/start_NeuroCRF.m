@@ -1,25 +1,37 @@
-function p = start_NeuroCRF(subjname, rig)
+function p = start_NeuroCRF(subjname, RFpos)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,
 % setting parameters for the session, creating a pldaps class and running the experiment.
 %
-% wolf zinke, Apr. 2017
-% Nate Faber, May 2017
+% wolf zinke, Apr. 2018
 
 % ------------------------------------------------------------------------%
 %% Set default variables
 
 % name of subject. This will be used to create a subdirectory with this name.
 if(~exist('subjname','var') || isempty(subjname))
-    subjname = 'tst';
+    prompt = {'subject name:'};
+    dlg_title = 'Enter Subject Name';
+    num_lines = 1;
+    def = {'tst'};
+    subjname = cell2mat(inputdlg(prompt,dlg_title,num_lines,def));
+
+    % subjname = 'tst';
 end
 
-% name of subject. This will be used to create a subdirectory with this name.
-if(~exist('rig','var') || isempty(rig))
-    [~, rigname] = system('hostname');
-    rig = str2num(regexp(rigname,'\d+','match','once'));
+if(~exist('RFpos','var') || isempty(RFpos))
+    prompt = {'X:','Y:'};
+    dlg_title = 'Enter Stimulus Location';
+    num_lines = 1;
+    def = {'-4', '-3'};
+    RFpos = inputdlg(prompt,dlg_title,num_lines,def);
+    RFpos = str2num(cell2mat(RFpos));
 end
+
+% determine current rig
+[~, rigname] = system('hostname');
+rig = str2num(regexp(rigname,'\d+','match','once'));
 
 %-------------------------------------------------------------------------%
 %% load default settings into a struct
@@ -41,7 +53,7 @@ SS.plot.routine    = '';    % function for online plotting of session progress
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
 SS.editable = {};
-                  
+
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
@@ -72,7 +84,6 @@ SS.mouse.use
 %% make modifications of default settings
 % If there are modification from the default settings needed, copy the
 % needed lines from ND_RigDefaults and alter the values here.
-
 SS.display.bgColor    = [0.35, 0.35, 0.35];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
@@ -81,6 +92,14 @@ SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
 
 SS.Block.maxBlockTrials = 10000;
+
+% ------------------------------------------------------------------------%
+%% set inout argument specific definitions
+if(length(RFpos) ~= 2)
+    error('RF location has to be a vector with two elements (X, Y)!');
+end
+
+SS.stim.GRATING.pos = RFpos;  
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%

@@ -1,26 +1,32 @@
 # Trial Routines
 
+Standard routines are kind of hidden from the normal user and taken care of by the [ND_runTrial function](../@pldaps/ND_runTrial.m).
 
-## ND_PrepSession
 
-## ND_InitSession
+## Session Initialization
 
-## ND_BeginExperiment
+### ND_PrepSession
 
-## ND_GeneralTrialRoutines
+### ND_InitSession
 
-## ND_TrialPrepare
+### ND_BeginExperiment
 
-## ND_TrialSetup
+## Trial Initialization
 
-## ND_FrameUpdate
+### ND_TrialPrepare
 
-## ND_FrameDraw
+### ND_TrialSetup
 
-## ND_FrameFlip
+## Within Trial
 
-## ND_TrialCleanUpandSave
+### ND_FrameUpdate
 
-## ND_AfterTrial
+### ND_FrameDraw
 
-## ND_UpdateTrial
+### ND_FrameFlip
+
+## After trial
+
+### ND_TrialCleanUpandSave
+
+### ND_UpdateTrial

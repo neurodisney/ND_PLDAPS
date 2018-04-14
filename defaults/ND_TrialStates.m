@@ -1,8 +1,7 @@
 function p = ND_TrialStates(p)
 % Default trial states used in the ND_runTrial function. 
-% This is a minimal set of states based on original PLDAPS code that
-% determines the flow within a trial
-%
+% This is a minimal set of states based on the original PLDAPS code
+% that determines the flow within a trial
 %
 %
 % wolf zinke, Feb 2017

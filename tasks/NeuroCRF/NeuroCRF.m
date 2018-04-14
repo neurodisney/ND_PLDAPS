@@ -23,11 +23,6 @@ end
 if(isempty(state))
     p = NeuroCRF_init(p);       
 else
-    % ####################################################################### %
-    %% Call standard routines before executing task related code
-    % This carries out standard routines, mainly in respect to hardware interfacing.
-    % Be aware that this is done first for each trial state!
-    p = ND_GeneralTrialRoutines(p, state);
     
     % ####################################################################### %
     %% Subsequent calls during actual trials
@@ -43,15 +38,15 @@ else
             % and all other more time demanding stuff.
             TaskSetUp(p);
             
-            % ----------------------------------------------------------------%
+         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
             %% trial preparation
             % just prior to actual trial start, use it for time sensitive preparations;
             p.trial.EV.TrialStart = p.trial.CurTime;
             
-            % ------------------------------------------------------------------------%
-            % DONE DURING THE MAIN TRIAL LOOP:
-            % ----------------------------------------------------------------%
+        % ------------------------------------------------------------------------%
+        % DONE DURING THE MAIN TRIAL LOOP:
+        % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.framePrepareDrawing
             %% Get ready to display
             % prepare the stimuli that should be shown, do some required calculations
@@ -60,15 +55,16 @@ else
             end
             
             TaskDesign(p);
-            % ----------------------------------------------------------------%
+            
+        % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
             %% Display stuff on the screen
             % Just call graphic routines, avoid any computations
             % TaskDraw(p);
             
-            % ------------------------------------------------------------------------%
-            % DONE AFTER THE MAIN TRIAL LOOP:
-            % ----------------------------------------------------------------%
+        % ------------------------------------------------------------------------%
+        % DONE AFTER THE MAIN TRIAL LOOP:
+        % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
             %% trial end
             TaskCleanAndSave(p);

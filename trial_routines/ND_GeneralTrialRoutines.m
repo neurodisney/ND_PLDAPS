@@ -14,6 +14,10 @@ function p = ND_GeneralTrialRoutines(p, state)
 
 
 %% !! Made obsolete April 13th 2018 by WZ
+if(p.trial.pldaps.iTrial == 1)
+    warning('ND_GeneralTrialRoutines does not need to be called anymore in the task routine. It is save to delete this call!');
+end
+
 return;
 
 %  

@@ -25,13 +25,14 @@ p.trial.task.Timing.jackpotTime = p.trial.stim.Nstim    * p.trial.stim.OnTime   
 %% Grating stimuli parameters
 
 % !!! MAKE SURE TO ADJUST LOCATION TO MATCH RF CENTER !!!
-p.trial.stim.GRATING.pos = [-2, -3];  % ToDo: define as input argument for start_NeuroCRF and pop-up menu if not specified!
+% if this line gets uncommented it will over-ride what was specified when calling start_NeuroCRF!!!
+% p.trial.stim.GRATING.pos = [-2, -3];  % ToDo: define as input argument for start_NeuroCRF and pop-up menu if not specified!
 
-p.trial.stim.ori      = [0, 90];   % orient of grating
-p.trial.stim.radius   = 0.75;      % size of grating 
-p.trial.stim.contrast = [0, 2, 4, 8, 16, 32, 64, 100];  % intensity contrast
-p.trial.stim.sFreq    = 1.5;       % spatial frequency 
-p.trial.stim.tFreq    = 0;         % temporal frequency (0 means static grating) 
+p.trial.stim.ori         = [0, 90];   % orient of grating
+p.trial.stim.radius      = 0.75;      % size of grating 
+p.trial.stim.contrast    = [0, 2, 4, 8, 16, 32, 64, 100];  % intensity contrast
+p.trial.stim.sFreq       = 1.5;       % spatial frequency 
+p.trial.stim.tFreq       = 0;         % temporal frequency (0 means static grating) 
 
 % ------------------------------------------------------------------------%
 %% 
