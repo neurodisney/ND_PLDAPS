@@ -38,6 +38,14 @@ p.trial.task.Timing.MaxITI  = 2.5;  % maximum time period [s] between subsequent
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
+
+% ------------------------------------------------------------------------%
+%% Drug Timings
+p.trial.Drug.Give       = 1;     % SHould drug be given during the experiment?
+p.trial.Drug.Start      = -150;  % relative to first stimulus onset. Make sure thatthis time does not exced the minimum p.trial.stim.PreStim defined below.
+p.trial.Drug.Intervall  =  200;  % time period before next drung injection is triggered. Set to NaN if only one pulse is needed.
+p.trial.Drug.Count      = 0;
+p.trial.Drug.NextInject = NaN;
 % ------------------------------------------------------------------------%
 %% Paradigm
 % Defined at the beginning of a session, changes within the if-block will be ignored while running the experiment
@@ -92,6 +100,9 @@ if(p.trial.pldaps.iTrial <= 1)
         
         p.trial.task.BlockCond = [p.trial.task.BlockCond; reshape(StimSeq, [p.trial.stim.Nstim, Ntrials])'];
     end
+    
+    p.trial.pldaps.finish = length(p.trial.task.BlockNum); % Stop condition
+    
 end  % if(p.trial.pldaps.iTrial <= 1)
 
 % ------------------------------------------------------------------------%

@@ -53,7 +53,6 @@ else
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
             end
-            
             TaskDesign(p);
             
         % ----------------------------------------------------------------%
@@ -111,11 +110,6 @@ function TaskSetUp(p)
     p.trial.stim.gratings = {};
     p.trial.stim.count    =  0;
     
-    % generate blocks
-    p.trial.task.BlockNum  = [];
-    p.trial.task.BlockCond = [];
-       
-    
     for(s = 1:p.trial.stim.Nstim)
         cstim = p.trial.task.BlockCond(p.trial.pldaps.iTrial, s);
         
@@ -127,7 +121,16 @@ function TaskSetUp(p)
         
         p.trial.stim.gratings{s} = pds.stim.Grating(p);
     end
- 
+    
+    % determine if drug trial
+    p.trial.Drug.DrugTrial = mod(p.trial.task.BlockNum(p.trial.pldaps.iTrial), 2) == p.trial.task.DrugBlock;
+    
+    if(p.trial.Drug.DrugTrial)
+        p.trial.Drug.DrugTime  = NaN;
+    else
+        p.trial.Drug.DrugTime  = NaN;
+    end
+
 % ####################################################################### %
 function TaskDesign(p)
 %% main task outline
@@ -158,7 +161,10 @@ function TaskDesign(p)
             Task_WaitFixStart(p);
             
             if(p.trial.CurrEpoch == p.trial.epoch.Fixating)
-                stim(p,1)                
+                
+                if(p.trial.Drug.Give == 1 && p.trial.Drug.DrugTrial == 1)
+                    p.trial.Drug.NextInject = p.trial.CurTime + p.trial.stim.PreStim + p.trial.Drug.Start;
+                end
                 
                 p.trial.task.Good = 1;
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;           
@@ -181,7 +187,7 @@ function TaskDesign(p)
         %% Animal has reached fixation criteria and now starts receiving rewards for continued fixation
 
             % Still fixating
-            if p.trial.stim.fix.fixating
+            if(p.trial.stim.fix.fixating)
 
                 % While jackpot time has not yet been reached
                 if(p.trial.CurTime < p.trial.stim.fix.EV.FixStart + p.trial.task.Timing.jackpotTime)
@@ -198,25 +204,47 @@ function TaskDesign(p)
                             p.trial.reward.count     = p.trial.reward.count + 1;
                         end
                     end
-
+                    
                     % ----------------------------------------------------------------%
-                    if(p.trial.task.stimState)
-                        % Keep stim on for stimOn Time
-                        if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.stim.OnTime - 0.75*p.trial.display.ifi/2)
-                            stim(p, 0); % Turn stim off
-                        end
+                    % Inject drug
+                    if(p.trial.Drug.Give == 1 && p.trial.Drug.DrugTrial == 1)
+                        if(p.trial.CurTime >= p.trial.Drug.NextInject)
+                            p.trial.Drug.NextInject = p.trial.CurTime + p.trial.Drug.Intervall;
+                            
+                            ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,      ...
+                                           p.trial.datapixx.TTL_spritzerDur,       ...
+                                           p.trial.datapixx.TTL_spritzerNpulse,    ...
+                                           p.trial.datapixx.TTL_spritzerPulseGap,  ...
+                                           p.trial.datapixx.TTL_spritzerNseries,   ...
+                                           p.trial.datapixx.TTL_spritzerSeriesGap, ...
+                                           p.trial.event.INJECT);
 
-                    elseif(~p.trial.task.stimState)
-                        % Wait the stim off period before displaying the next stimuli
-                        if(p.trial.CurTime > p.trial.EV.StimOff + p.trial.stim.OffTime - 0.75*p.trial.display.ifi)
-                            if(p.trial.CurTime < p.trial.stim.fix.EV.FixStart    + ...
-                                                 p.trial.task.Timing.jackpotTime - ...
-                                                 p.trial.stim.OnTime)
-                                stim(p, 1); % Turn stim on
+                            p.trial.Drug.Count = p.trial.Drug.Count + 1;
+                        end
+                    end
+                    
+                    % ----------------------------------------------------------------%
+                    % make sure that SOA expired before showing first grating
+                    if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.stim.PreStim)
+                        if(p.trial.stim.count == 0)
+                            stim(p, 1); % Turn stim on
+                            
+                        elseif(p.trial.task.stimState)
+                            % Keep stim on for stimOn Time
+                            if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.stim.OnTime - 0.75*p.trial.display.ifi/2)
+                                stim(p, 0); % Turn stim off
+                            end
+
+                        elseif(~p.trial.task.stimState)
+                            % Wait the stim off period before displaying the next stimuli
+                            if(p.trial.CurTime > p.trial.EV.StimOff + p.trial.stim.OffTime - 0.75*p.trial.display.ifi)
+                                if(p.trial.stim.count <= p.trial.stim.Nstim)
+                                    stim(p, 1); % Turn stim on
+                                end
                             end
                         end
                     end
-
+                    
                 % ----------------------------------------------------------------%
                 else
                     % Give JACKPOT!
@@ -275,35 +303,36 @@ function TaskCleanAndSave(p)
 
     % Get the text name of the outcome
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-
-    % Save useful info to an ascii table for plotting
-    ND_Trial2Ascii(p, 'save');
-
-% ####################################################################### %
-function DrugCheck(p)
-%% check if it is time to trigger a drug stimulation
-    if(p.trial.Drug.Give == 1 && p.trial.Drug.DrugTrial == 1)
-        if(p.trial.task.LastDrugFlash > p.trial.Drug.FlashSeriesLength)
-            if(p.trial.task.DrugGiven == 0)
-                if(p.trial.CurTime > p.trial.task.NextModulation + p.trial.Drug.PeriFlashTime)
-                    ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,      ...
-                                   p.trial.datapixx.TTL_spritzerDur,       ...
-                                   p.trial.datapixx.TTL_spritzerNpulse,    ...
-                                   p.trial.datapixx.TTL_spritzerPulseGap,  ...
-                                   p.trial.datapixx.TTL_spritzerNseries,   ...
-                                   p.trial.datapixx.TTL_spritzerSeriesGap, ...
-                                   p.trial.event.INJECT);
-
-                    p.trial.task.LastDrugFlash = 0;
-                    p.trial.task.DrugCount     = p.trial.task.DrugCount + 1;
-                    p.trial.task.DrugGiven     = 1;
-                end
-            end
+    
+    % If trial was incorrect, repeat it
+    if(p.trial.task.OnlyCorrect == 1 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.Correct)
+        cBlock = p.trial.task.BlockNum(p.trial.pldaps.iTrial);
+        cConds = p.trial.task.BlockCond(p.trial.pldaps.iTrial, :);
+        
+        lastBlk = find(p.trial.task.BlockNum == cBlock, 1, 'last');
+        
+        if(lastBlk < p.trial.pldaps.finish)
+            p.trial.task.BlockNum = [p.trial.task.BlockNum(1:lastBlk);    cBlock; p.trial.task.BlockNum(lastBlk+1:end)];
+            p.trial.task.BlockNum = [p.trial.task.BlockCond(1:lastBlk,:); cConds; p.trial.task.BlockCond(lastBlk+1:end,:)];
         else
-            p.trial.task.DrugGiven = 0;
+            p.trial.task.BlockNum = [p.trial.task.BlockNum(1:lastBlk);    cBlock];
+            p.trial.task.BlockNum = [p.trial.task.BlockCond(1:lastBlk,:); cConds];
         end
+        p.trial.pldaps.finish = p.trial.pldaps.finish + 1; % Stop condition
     end
     
+    % trigger end if all done
+    if(p.trial.pldaps.iTrial == length(p.trial.task.BlockNum))
+        p.trial.pldaps.quit = 1;
+    end
+    
+    % Save useful info to an ascii table for plotting
+    ND_Trial2Ascii(p, 'save');
+    
+    % reset drug condition
+    p.trial.Drug.DrugTrial = 0;
+    p.trial.Drug.DrugTime  = NaN;
+
 % ####################################################################### %
 function KeyAction(p)
 %% task specific action upon key press
