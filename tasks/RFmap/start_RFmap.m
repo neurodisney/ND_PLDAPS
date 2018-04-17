@@ -65,9 +65,6 @@ SS.behavior.fixation.on = 1; % fixation.on for this task
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
-% Use mouse to click on figures
-SS.mouse.use
-
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
 % If there are modification from the default settings needed, copy the

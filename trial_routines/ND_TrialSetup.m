@@ -61,7 +61,6 @@ p.trial.timing.datapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
     
 % ------------------------------------------------------------------------%
 %% eye position
-
 if(p.trial.pldaps.draw.eyepos.use)
     p.trial.eyeXY_draw = nan(1, 2);
 

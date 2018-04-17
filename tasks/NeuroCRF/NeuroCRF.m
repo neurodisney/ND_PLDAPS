@@ -79,6 +79,7 @@ end  %/  if(nargin == 1) [...] else [...]
 function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
+% ToDo: COnsider putting most of the stuff her einto the taskdef file
     p.trial.task.Timing.ITI = ND_GetITI(p.trial.task.Timing.MinITI,  ...
                                         p.trial.task.Timing.MaxITI,  ...
                                         [], [], 1, 0.10);
@@ -110,22 +111,19 @@ function TaskSetUp(p)
     p.trial.stim.gratings = {};
     p.trial.stim.count    =  0;
     
-    % how many gratings to allocate
-    p.trial.stim.Nstim = ceil((1.5 * p.trial.task.Timing.jackpotTime) / (p.trial.stim.Period));      
-    
-    % create lists with parameters for each grating
-    Ori_lst = ND_RandSample(p.trial.stim.ori,      p.trial.stim.Nstim);
-    Rad_lst = ND_RandSample(p.trial.stim.radius,   p.trial.stim.Nstim);
-    SFr_lst = ND_RandSample(p.trial.stim.sFreq,    p.trial.stim.Nstim);
-    tFr_lst = ND_RandSample(p.trial.stim.tFreq,    p.trial.stim.Nstim);
-    Ctr_lst = ND_RandSample(p.trial.stim.contrast, p.trial.stim.Nstim);
+    % generate blocks
+    p.trial.task.BlockNum  = [];
+    p.trial.task.BlockCond = [];
+       
     
     for(s = 1:p.trial.stim.Nstim)
-        p.trial.stim.GRATING.ori      = Ori_lst(s);
-        p.trial.stim.GRATING.radius   = Rad_lst(s);
-        p.trial.stim.GRATING.sFreq    = SFr_lst(s);
-        p.trial.stim.GRATING.tFreq    = tFr_lst(s);
-        p.trial.stim.GRATING.contrast = Ctr_lst(s);
+        cstim = p.trial.task.BlockCond(p.trial.pldaps.iTrial, s);
+        
+        p.trial.stim.GRATING.ori      = p.trial.task.StimCondPars(cstim, 1);
+        p.trial.stim.GRATING.radius   = p.trial.task.StimCondPars(cstim, 2);
+        p.trial.stim.GRATING.contrast = p.trial.task.StimCondPars(cstim, 3);
+        p.trial.stim.GRATING.sFreq    = p.trial.task.StimCondPars(cstim, 4);
+        p.trial.stim.GRATING.tFreq    = p.trial.task.StimCondPars(cstim, 5);
         
         p.trial.stim.gratings{s} = pds.stim.Grating(p);
     end

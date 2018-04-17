@@ -32,7 +32,7 @@ p = ND_AddAsciiEntry(p, 'ITI',        'p.trial.task.Timing.ITI',             '%.
 p = ND_AddAsciiEntry(p, 'FixWin',     'p.trial.behavior.fixation.FixWin',    '%.5f');
 p = ND_AddAsciiEntry(p, 'InitRwd',    'p.trial.EV.FirstReward',              '%.5f');
 p = ND_AddAsciiEntry(p, 'Reward',     'p.trial.EV.Reward',                   '%.5f');
-p = ND_AddAsciiEntry(p, 'RewardDur',  'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)',           '%.5f');
+p = ND_AddAsciiEntry(p, 'RewardDur',  'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)', '%.5f');
 p = ND_AddAsciiEntry(p, 'TotalRwd',   'sum(p.trial.reward.timeReward(:,2))', '%.5f');
 
 % call this after ND_InitSession to be sure that output directory exists!

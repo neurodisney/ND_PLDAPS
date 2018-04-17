@@ -137,7 +137,7 @@ function TaskSetUp(p)
 
     p.trial.stim.target = pds.stim.Grating(p);
 
-    % Is a saccade expected
+    % Is a saccade expected?
     % increase likelihood of saccade expectation the closer we get to the threshold
     p.trial.task.ExpectSacc = rand() < p.trial.stim.Trgt.Contrast / p.trial.stim.RespThr;
 

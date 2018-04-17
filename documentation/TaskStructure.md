@@ -1,5 +1,4 @@
 # Task Structure
-
 __________
 Organization of a Task.
 __________
@@ -15,7 +14,7 @@ ________________________________________________________________________________
 
   :construction: **ToDo:** This function could be modified to use the subject name to select animal specific TaskDef files.
 
-  :warning: **This function only needs to be edited when creating a task.**
+  :information_source: **This function only needs to be edited when creating a task.**
 ________________________________________________________________________________
 * `<TaskName>.m`
 
@@ -25,22 +24,24 @@ ________________________________________________________________________________
 
   After this initial block, the main task functions defines the task structure and core functions specific for the current task. Basically, this function defines how a trial looks like.
 
-  :warning: **This function only needs to be edited when creating a task.**
+  :information_source: **This function only needs to be edited when creating a task.**
 ________________________________________________________________________________
 * `<TaskName>_taskdef.m`
 
   This function defines the task parameters that could be changed online. Since this function will be execute prior to running a trial it allows to edit and modify task parameters online.
 
-  :construction: **ToDo:** Right now there is only a single task definition file. Either, as mentioned above, the `start_<TaskName>.m` could be modified to call different files depending on the animal used, or the task defintion file itself could be modified to define animal specific parameters.
+  :construction: **ToDo:** Right now there is only a single task definition file. Either, as mentioned above, the `start_<TaskName>.m` could be modified to call different files depending on the animal used, or the task definition file itself could be modified to define animal specific parameters.
 
-  :warning: **This function likely will be edited continuously between experimental sessions or even while running an experiment.**
+  :information_source: **This function likely will be edited continuously between experimental sessions or even while running an experiment.**
 
 ________________________________________________________________________________
 * `<TaskName>_init.m`
 
+  :exclamation: *This function is called in the initialization period, therefore it sets entries in `p.defaultParameters` and not `p.trial` as all the other functions do!* :exclamation:
+
   Sometimes this function is used to outsource a code chunk from the main task function that sets all initialization parameters for the task that should not be changed while running the task, or the code definition for generation a trial summary text file.
 
-  :warning: **This function only needs to be edited when creating a task.**
+  :information_source: **This function only needs to be edited when creating a task.**
 ________________________________________________________________________________
 * `<TaskName>_aftertrial.m`
 
@@ -53,7 +54,7 @@ ________________________________________________________________________________
 
 ________________________________________________________________________________
 * `<TaskName>_Behav.r`
-  This R code can be used to visualize the results online. It is executable code that can be run from a linux terminal. The code example below shows example code that can be saved as executable bash script (:wrench:*change text within '<>' accordingly*) and executed in order to create every 10 seconds an updated pdf file in the current session/task directory with behavioral results.
+  This R code can be used to visualize the results online. It is executable code that can be run from a linux terminal. The code example below shows example code that can be saved as executable bash script (:wrench:*change text within `<>` accordingly*) and executed in order to create every 10 seconds an updated pdf file in the current session/task directory with behavioral results.
 
 ```bash
 #!/bin/bash

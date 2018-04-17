@@ -176,7 +176,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.24748737"
      inkscape:cx="21.198773"
-     inkscape:cy="87.033295"
+     inkscape:cy="-74.591115"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -206,25 +206,25 @@
        id="rect3338-3-5-6-5-2-5"
        width="573.22089"
        height="856.07806"
-       x="-605.3429"
+       x="-601.6554"
        y="1273.0558" />
     <rect
        style="fill:#b4b4d7;fill-opacity:1;stroke:#000000;stroke-width:7.37032604;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3338-3-5-6-5-5"
        width="576.6297"
        height="736.6297"
-       x="-601.10089"
+       x="-603.3598"
        y="474.98578" />
     <rect
        style="fill:#e1e1e1;fill-opacity:1;stroke:#000000;stroke-width:4.27929735;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4196-7"
        width="539.7207"
        height="945.435"
-       x="-1249.8604"
+       x="-1250.5746"
        y="899.64471" />
     <g
        id="g6855"
-       transform="translate(-197.9899,-315.16759)">
+       transform="translate(-137.38075,-32.324874)">
       <rect
          y="800.74524"
          x="-1924.1509"
@@ -257,18 +257,18 @@
        id="rect3338-3"
        width="509.82672"
        height="115.54102"
-       x="-1252.0562"
+       x="-1235.6276"
        y="337.44882" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-1185.1702"
+       x="-1156.5541"
        y="405.69788"
        id="text4140-6"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7"
-         x="-1185.1702"
+         x="-1156.5541"
          y="405.69788"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_RigDefaults</tspan></text>
     <rect
@@ -276,18 +276,18 @@
        id="rect3338-3-5"
        width="509.82672"
        height="115.54102"
-       x="-1246.3419"
+       x="-1235.6276"
        y="663.16309" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-1179.4559"
+       x="-1056.7494"
        y="731.41211"
        id="text4140-6-3"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5"
-         x="-1179.4559"
+         x="-1056.7494"
          y="731.41211"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">pldaps</tspan></text>
     <rect
@@ -295,37 +295,37 @@
        id="rect3338-3-5-6"
        width="509.82672"
        height="115.54102"
-       x="-1234.9133"
+       x="-1235.6276"
        y="917.44879" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-1168.0273"
+       x="-1041.1635"
        y="985.69781"
        id="text4140-6-3-2"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9"
-         x="-1168.0273"
+         x="-1041.1635"
          y="985.69781"
-         style="-inkscape-font-specification:'sans-serif Bold';font-family:sans-serif;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal">p.run</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">p.run</tspan></text>
     <rect
        style="fill:#b4b4b4;fill-opacity:1;stroke:#000000;stroke-width:2.74468827;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3338-3-5-6-1"
        width="509.82672"
        height="115.54102"
-       x="-567.6994"
+       x="-569.95831"
        y="496.95874" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-495.50092"
+       x="-497.7598"
        y="565.2077"
        id="text4140-6-3-2-2"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-7"
-         x="-495.50092"
+         x="-497.7598"
          y="565.2077"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_PrepSession</tspan></text>
     <rect
@@ -333,18 +333,18 @@
        id="rect3338-3-5-6-0"
        width="509.82672"
        height="115.54102"
-       x="-567.6994"
+       x="-569.95831"
        y="636.95868" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-445.50092"
+       x="-447.7598"
        y="705.2077"
        id="text4140-6-3-2-9"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3"
-         x="-445.50092"
+         x="-447.7598"
          y="705.2077"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">openScreen</tspan></text>
     <rect
@@ -352,42 +352,42 @@
        id="rect3338-3-5-6-0-6"
        width="507.99567"
        height="322.2814"
-       x="135.06383"
+       x="211.14307"
        y="375.01709" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="195.31999"
+       x="266.95731"
        y="445.2077"
        id="text4140-6-3-2-9-0"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-6"
-         x="195.31999"
+         x="266.95731"
          y="445.2077"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_TrialStates</tspan><tspan
          sodipodi:role="line"
-         x="195.31999"
+         x="266.95731"
          y="495.2077"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan4616">ND_DefaultColors</tspan><tspan
          sodipodi:role="line"
-         x="195.31999"
+         x="266.95731"
          y="545.2077"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan4632">ND_EventDef</tspan><tspan
          sodipodi:role="line"
-         x="195.31999"
+         x="266.95731"
          y="595.2077"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan4638">ND_Outcomes</tspan><tspan
          sodipodi:role="line"
-         x="195.31999"
+         x="266.95731"
          y="645.2077"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan4690">ND_TaskEpochs</tspan><tspan
          sodipodi:role="line"
-         x="195.31999"
+         x="266.95731"
          y="695.2077"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan4640" /></text>
@@ -396,18 +396,18 @@
        id="rect3338-3-5-6-0-2"
        width="509.82672"
        height="115.54102"
-       x="-567.6994"
+       x="-569.95831"
        y="782.67291" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-481.2431"
+       x="-483.50198"
        y="850.92194"
        id="text4140-6-3-2-9-6"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-1"
-         x="-481.2431"
+         x="-483.50198"
          y="850.92194"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_InitSession</tspan></text>
     <rect
@@ -415,18 +415,18 @@
        id="rect3338-3-5-6-0-8"
        width="509.82672"
        height="115.54102"
-       x="-567.6994"
+       x="-569.95831"
        y="925.52997" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-551.22357"
+       x="-553.48242"
        y="999.49316"
        id="text4140-6-3-2-9-7"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-9"
-         x="-551.22357"
+         x="-553.48242"
          y="999.49316"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_BeginExperiment</tspan></text>
     <rect
@@ -434,18 +434,18 @@
        id="rect3338-3-5-6-0-20"
        width="509.82672"
        height="115.54102"
-       x="-567.6994"
+       x="-569.95831"
        y="1065.53" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-525.44232"
+       x="-527.70117"
        y="1133.7791"
        id="text4140-6-3-2-9-2"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-3"
-         x="-525.44232"
+         x="-527.70117"
          y="1133.7791"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_AlterSubStruct</tspan></text>
     <rect
@@ -453,72 +453,72 @@
        id="rect3338-3-5-6-5"
        width="429.13757"
        height="214.85187"
-       x="-1188.8544"
+       x="-1195.2831"
        y="1083.5077" />
     <rect
        style="fill:#b4ceb4;fill-opacity:1;stroke:#000000;stroke-width:3.54485631;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3338-3-5-6-5-2"
        width="429.02655"
        height="229.02657"
-       x="-1194.5132"
+       x="-1195.2275"
        y="1337.8489" />
     <rect
        style="fill:#cfb4b4;fill-opacity:1;stroke:#000000;stroke-width:3.20026398;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3338-3-5-6-5-28"
        width="429.37115"
        height="186.51402"
-       x="-1194.6855"
+       x="-1195.3998"
        y="1620.5337" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-1142.8572"
+       x="-1147.3646"
        y="1198.0765"
        id="text4358"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4360"
-         x="-1142.8572"
+         x="-1147.3646"
          y="1198.0765">Initialize Session</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-1132.3646"
+       x="-1126.3197"
        y="1464.4172"
        id="text4358-9"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4360-7"
-         x="-1132.3646"
+         x="-1126.3197"
          y="1464.4172">main trial loop</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-1120.9362"
+       x="-1101.7006"
        y="1724.4172"
        id="text4358-3"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4360-6"
-         x="-1120.9362"
+         x="-1101.7006"
          y="1724.4172">End Session</tspan></text>
     <rect
        style="fill:#b4b4b4;fill-opacity:1;stroke:#000000;stroke-width:2.74468827;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3338-3-5-6-0-20-1"
        width="509.82672"
        height="115.54102"
-       x="-570.78864"
+       x="-569.95831"
        y="1290.467" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-503.90265"
+       x="-481.49026"
        y="1358.7161"
        id="text4140-6-3-2-9-2-2"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-3-9"
-         x="-503.90265"
+         x="-481.49026"
          y="1358.7161"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_GenCndLst</tspan></text>
     <rect
@@ -526,18 +526,18 @@
        id="rect3338-3-5-6-0-20-1-0"
        width="509.82672"
        height="115.54102"
-       x="-573.64581"
+       x="-569.95831"
        y="1427.6099" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-506.7598"
+       x="-521.35352"
        y="1495.8589"
        id="text4140-6-3-2-9-2-2-3"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-3-9-6"
-         x="-506.7598"
+         x="-521.35352"
          y="1495.8589"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_LoadCondition</tspan></text>
     <rect
@@ -545,18 +545,18 @@
        id="rect3338-3-5-6-0-20-1-1"
        width="509.82672"
        height="115.54102"
-       x="142.72568"
+       x="210.22754"
        y="1970.4875" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="209.61166"
+       x="321.11746"
        y="2038.7366"
        id="text4140-6-3-2-9-2-2-0"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-3-9-63"
-         x="209.61166"
+         x="321.11746"
          y="2038.7366"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">&lt;taskname&gt;</tspan></text>
     <rect
@@ -564,18 +564,18 @@
        id="rect3338-3-5-6-0-20-1-2"
        width="509.82672"
        height="115.54102"
-       x="-576.50299"
+       x="-569.95831"
        y="1707.6099" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-509.61694"
+       x="-464.3223"
        y="1775.8589"
        id="text4140-6-3-2-9-2-2-06"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-3-9-1"
-         x="-509.61694"
+         x="-464.3223"
          y="1775.8589"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_AfterTrial</tspan></text>
     <rect
@@ -583,18 +583,18 @@
        id="rect3338-3-5-6-0-20-1-5"
        width="509.82672"
        height="115.54102"
-       x="-565.0744"
+       x="-569.95831"
        y="1976.1814" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-498.18835"
+       x="-488.6973"
        y="2044.4304"
        id="text4140-6-3-2-9-2-2-5"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-3-9-4"
-         x="-498.18835"
+         x="-488.6973"
          y="2044.4304"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_UpdateTrial</tspan></text>
     <rect
@@ -602,18 +602,18 @@
        id="rect3338-3-5-6-0-6-3"
        width="509.82672"
        height="115.54102"
-       x="96.193207"
+       x="210.22754"
        y="1372.274" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="163.07919"
+       x="252.48465"
        y="1440.5231"
        id="text4140-6-3-2-9-0-7"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-6-4"
-         x="163.07919"
+         x="252.48465"
          y="1440.5231"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_AlterSubStruct</tspan></text>
     <rect
@@ -621,18 +621,18 @@
        id="rect3338-3-5-6-0-20-1-5-2"
        width="509.82672"
        height="115.54102"
-       x="-567.93152"
+       x="-569.95831"
        y="1839.0385" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-535.33118"
+       x="-530.66016"
        y="1913.0017"
        id="text4140-6-3-2-9-2-2-5-5"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-5-9-3-3-9-4-4"
-         x="-535.33118"
+         x="-530.66016"
          y="1913.0017"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">&lt;TaskName&gt;_plots</tspan></text>
     <path
@@ -689,53 +689,53 @@
        id="rect3338-3-5-6-0-6-9"
        width="616.15283"
        height="385.99188"
-       x="118.20785"
+       x="157.06448"
        y="1515.7014" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="133.54781"
+       x="182.19168"
        y="1577.3413"
        id="text4140-6-3-2-9-0-2"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="133.54781"
+         x="182.19168"
          y="1577.3413"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan6247">ND_TrialSetup</tspan><tspan
          sodipodi:role="line"
-         x="133.54781"
+         x="182.19168"
          y="1627.3413"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan6261">ND_TrialPrepare</tspan><tspan
          sodipodi:role="line"
-         x="133.54781"
+         x="182.19168"
          y="1677.3413"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan6273">ND_FrameUpdate</tspan><tspan
          sodipodi:role="line"
-         x="133.54781"
+         x="182.19168"
          y="1727.3413"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan6283">ND_FrameDraw</tspan><tspan
          sodipodi:role="line"
-         x="133.54781"
+         x="182.19168"
          y="1777.3413"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan6297">ND_FrameFlip</tspan><tspan
          sodipodi:role="line"
-         x="133.54781"
+         x="182.19168"
          y="1827.3413"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan6313">ND_TrialCleanUpandSave</tspan><tspan
          sodipodi:role="line"
-         x="133.54781"
+         x="182.19168"
          y="1877.3413"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
          id="tspan6513">ND_AfterTrial</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.24596906;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend-4)"
-       d="m 667.68005,2022.9006 162.8751,-3.3994"
+       d="m 381.26739,2022.9006 162.8751,-3.3994"
        id="path4702-1"
        inkscape:connector-curvature="0" />
     <rect
@@ -762,18 +762,18 @@
        id="rect3338-3-3"
        width="509.82672"
        height="115.54102"
-       x="-559.61816"
+       x="-569.95831"
        y="1564.3177" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-435.19312"
+       x="-445.53323"
        y="1632.5668"
        id="text4140-6-6"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7-7"
-         x="-435.19312"
+         x="-445.53323"
          y="1632.5668"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_runTrial</tspan></text>
     <path
