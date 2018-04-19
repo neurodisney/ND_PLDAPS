@@ -107,10 +107,8 @@ p.trial.pldaps.trialStates.Current = NaN;
 function p = GetCurrentTime(p)
     p.trial.CurTime = GetSecs;
     p.trial.AllCurTimes(p.trial.iFrame) = p.trial.CurTime; % WZ: make this optional for debugging/profiling purpose only?
-    p.trial.remainingFrameTime = p.trial.nextFrameTime - p.trial.CurTime;
 
 %%
 function p = setTimeAndFrameState(p, state)
         p.trial.ttime = GetSecs - p.trial.trstart;
-        p.trial.timing.frameStateChangeTimes(state, p.trial.iFrame) = ...
-                           p.trial.ttime - p.trial.nextFrameTime + p.trial.display.ifi;
+        p.trial.timing.frameStateChangeTimes(state, p.trial.iFrame) = p.trial.ttime;

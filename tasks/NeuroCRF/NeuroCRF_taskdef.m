@@ -49,8 +49,8 @@ p.trial.Drug.NextInject = NaN;
 % ------------------------------------------------------------------------%
 %% Paradigm
 % Defined at the beginning of a session, changes within the if-block will be ignored while running the experiment
-if(p.trial.pldaps.iTrial <= 1)
-
+if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
+   
     % ------------------------------------------------------------------------%
     %% Grating stimuli parameters
 
@@ -67,6 +67,12 @@ if(p.trial.pldaps.iTrial <= 1)
     % ------------------------------------------------------------------------%
     %% Drug Condition/Block design
 
+    % get unique stimulus parameter combinations
+    p.trial.task.StimCondPars = combvec(p.trial.stim.ori,   p.trial.stim.radius, p.trial.stim.contrast, ...
+                                        p.trial.stim.sFreq, p.trial.stim.tFreq)';
+
+    p.trial.task.NumStimCond  = size(p.trial.task.StimCondPars,1); % Number of unique unique combination of stimulus parameters
+
     p.trial.task.OnlyCorrect = 1; % If set to one a trial is only considered completed when done correctly
     
     % a stimulus condition will be defined as unique combination of all grating parameters
@@ -82,19 +88,13 @@ if(p.trial.pldaps.iTrial <= 1)
         AllStim = AllStim + p.trial.stim.Nstim-mod(Nstim, p.trial.stim.Nstim);
     end
     Ntrials = AllStim/p.trial.stim.Nstim;
-
-    % get unique stimulus parameter combinations
-    p.trial.task.StimCondPars = combvec(p.trial.stim.ori,   p.trial.stim.radius, p.trial.stim.contrast, ...
-                                        p.trial.stim.sFreq, p.trial.stim.tFreq)';
-
-    p.trial.task.NumStimCond  = size(p.trial.task.StimCondPars,1); % Number of unique unique combination of stimulus parameters
-
+    
     % generate blocks
     p.trial.task.BlockNum  = [];
     p.trial.task.BlockCond = [];
        
     for(b=1:2*p.trial.task.NumBlockPeriods)
-        StimSeq = ND_RandSample(1:p.trial.task.NumStimCond, Nstim, 0); % create a randomized sequence of stimulus conditions (no repeats)
+        StimSeq = ND_RandSample(1:p.trial.task.NumStimCond, AllStim, 0); % create a randomized sequence of stimulus conditions (no repeats)
 
         p.trial.task.BlockNum = [p.trial.task.BlockNum ; repmat(b, p.trial.task.NumStimCond, 1)];
         

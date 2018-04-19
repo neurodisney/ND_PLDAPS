@@ -51,7 +51,7 @@ for(i=1:length(p.trial.stim.allStims))
     stim = p.trial.stim.allStims{i};
     draw(stim,p);
     
-    if(p.defaultParameters.behavior.fixation.use)
+    if(p.trial.behavior.fixation.use)
         drawFixWin(stim,p);
     end
 end

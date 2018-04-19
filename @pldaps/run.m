@@ -71,13 +71,6 @@ try
     ListenChar(2)
     HideCursor
 
-    p.trial.flagNextTrial = 0; % flag for ending the trial
-    p.trial.pldaps.quit   = 0;
-    p.trial.pldaps.pause  = 0;
-
-    trialNr = 0;
-    p.trial.pldaps.iTrial = 0;
-
     % --------------------------------------------------------------------%
     %% Load any p.trial alterations in p.defaultParameters
     % Assume any thing loaded into p.trial by this point should be kept and load it into defaultParameters
@@ -99,8 +92,7 @@ try
 
         if(~p.trial.pldaps.quit && ~p.trial.pldaps.pause)
             %% Start setting up trial
-            trialNr = trialNr+1;
-            p.defaultParameters.pldaps.iTrial = trialNr;
+            p.defaultParameters.pldaps.iTrial = p.defaultParameters.pldaps.iTrial + 1;
             % --------------------------------------------------------------------%
             
             %% update condition/block list
@@ -121,7 +113,7 @@ try
 
             % Make sure defaultParameters do not change during a trial (should be exclusively done in ND_UpdateTrial
             dpPostTrial = p.defaultParameters;
-            if ~isequaln(dpPreTrial, dpPostTrial)
+            if(~isequaln(dpPreTrial.defaultParameters, dpPostTrial.defaultParameters))
                 warning('defaultParameters changed within a trial, should only be chaged between trials')
                 % Iterate through the two structs to find the differences (for debugging purposes)
                 % [~, preDifferent, postDifferent] = ND_CompareStructs(dpPreTrial, dpPostTrial);

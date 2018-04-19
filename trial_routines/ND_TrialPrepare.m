@@ -33,13 +33,6 @@ p.trial.timing.datapixxStartTime  = Datapixx('Gettime');
 p.trial.timing.datapixxTRIALSTART = pds.datapixx.strobe(p.trial.event.TRIALSTART);  % start of trial
 
 %-------------------------------------------------------------------------%
-%% Start of trial timing
-% Initialize Drug control
-if(p.trial.Drug.DoStim)
-    p.trial.Drug.StimTime   = 0;
-end
-
-%-------------------------------------------------------------------------%
 %% Get last Screen Flip prior to trial
 % This should be the last step before the main trial loop starts
 % because it catches the screen flip that defines trial start

@@ -6,10 +6,14 @@ function [rect] = ND_GetRect(pos, sz)
 %
 % wolf zinke, Jan. 2017
 
+% Ensure row vectors
+pos = pos(:)';
+sz  =  sz(:)';
+
 if(length(sz) == 1)
     sz = [sz sz];
 end
 
 r = sz./2;
-rect = kron([1,1], pos) + kron([-1,1],r);
+rect = kron([1,1], pos) + kron([-1,1], r);
 % rect = floor(rect); % pixels

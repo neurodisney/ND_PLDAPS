@@ -35,6 +35,7 @@ cd(pathStr)
 
 cd(cwd);
 
+
 %% get session time
 % multiple sessions not supported for now
 p.defaultParameters.session.experimentStart = GetSecs;
@@ -43,4 +44,10 @@ if(Datapixx('IsReady'))
     p.defaultParameters.datapixx.experimentStartDatapixx = Datapixx('GetTime');
 end
 
+%% initialize trial flow control
+p.trial.flagNextTrial = 0; % flag for ending the trial
+p.trial.pldaps.pause  = 0;
+
+p.trial.pldaps.iTrial = 0;
+p.trial.pldaps.quit   = 0;
 
