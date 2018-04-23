@@ -38,10 +38,9 @@ p.trial.task.Timing.MaxITI  = 2.5;  % maximum time period [s] between subsequent
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
-
 % ------------------------------------------------------------------------%
 %% Drug Timings
-p.trial.Drug.Give       = 1;     % SHould drug be given during the experiment?
+p.trial.Drug.Give       = 1;     % Should drug be given during the experiment?
 p.trial.Drug.Start      = -150;  % relative to first stimulus onset. Make sure thatthis time does not exced the minimum p.trial.stim.PreStim defined below.
 p.trial.Drug.Intervall  =  200;  % time period before next drung injection is triggered. Set to NaN if only one pulse is needed.
 p.trial.Drug.Count      = 0;
@@ -60,7 +59,7 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
 
     p.trial.stim.ori      = [0, 90];   % orient of grating
     p.trial.stim.radius   = 0.75;      % size of grating 
-    p.trial.stim.contrast = [0, 2, 4, 8, 16, 32, 64, 100];  % intensity contrast
+    p.trial.stim.contrast = [0, 2, 4, 8, 16, 32, 64, 100] ./ 100;  % intensity contrast (range 0 to 1)
     p.trial.stim.sFreq    = 1.5;       % spatial frequency 
     p.trial.stim.tFreq    = 0;         % temporal frequency (0 means static grating) 
     
@@ -77,8 +76,8 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
     
     % a stimulus condition will be defined as unique combination of all grating parameters
     p.trial.stim.Nstim           = 8;  % Number of stimuli presented within a trial given that fixation is kept. Might be worth to define this number based on p.trial.task.NumStimCond below.
-    p.trial.task.NumStimRepeats  = 10; % how often to show a stimulus condition in a block.
-    p.trial.task.NumBlockPeriods = 4;  % a block period consists of two blocks, one with drug and the other one without drug
+    p.trial.task.NumStimRepeats  = 2; % how often to show a stimulus condition in a block.
+    p.trial.task.NumBlockPeriods = 1;  % a block period consists of two blocks, one with drug and the other one without drug
     p.trial.task.DrugBlock       = 0;  % if 1, the session starts with a drug block (odd numbered blocks are with drug), if zero even numbered blocks are with drug.
 
     AllStim = p.trial.task.NumStimCond * p.trial.task.NumStimRepeats; % complete number of stimuli to be shown within a block

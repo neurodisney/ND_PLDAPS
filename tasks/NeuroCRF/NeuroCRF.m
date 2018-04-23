@@ -311,7 +311,10 @@ function TaskCleanAndSave(p)
         
         lastBlk = find(p.trial.task.BlockNum == cBlock, 1, 'last');
         
-        if(lastBlk < p.trial.pldaps.finish)
+        if(p.trial.pldaps.iTrial == 1)
+            p.trial.task.BlockNum = [p.trial.task.BlockNum(2:lastBlk);    cBlock];
+            p.trial.task.BlockNum = [p.trial.task.BlockCond(2:lastBlk,:); cConds];
+        elseif(lastBlk < p.trial.pldaps.finish)
             p.trial.task.BlockNum = [p.trial.task.BlockNum(1:lastBlk);    cBlock; p.trial.task.BlockNum(lastBlk+1:end)];
             p.trial.task.BlockNum = [p.trial.task.BlockCond(1:lastBlk,:); cConds; p.trial.task.BlockCond(lastBlk+1:end,:)];
         else
@@ -375,21 +378,22 @@ function stim(p, val)
                     fprintf(StimLstPtr, '%d,   %d,       %.5f,  %.4f,      %.4f, %.4f,  %.4f,  %.4f, %.4f,     %.4f,     %.6f\n', ...
                            p.trial.pldaps.iTrial, StimCnt, p.trial.EV.StimOn, ...
                            p.trial.EV.StimOn - p.trial.stim.fix.EV.FixStart,  ...
-                           p.trial.stim.locations(StimCnt, 1), p.trial.stim.locations(StimCnt, 2),       ...
-                           p.trial.stim.gratings{ StimCnt}.radius, p.trial.stim.gratings{StimCnt}.angle, ...
-                           p.trial.stim.gratings{ StimCnt}.sFreq, p.trial.stim.gratings{StimCnt}.tFreq,  ...
-                           p.trial.stim.gratings{ StimCnt}.contrast);
+                           p.trial.stim.gratings{StimCnt}.pos(1), p.trial.stim.gratings{StimCnt}.pos(2),       ...
+                           p.trial.stim.gratings{StimCnt}.radius, p.trial.stim.gratings{StimCnt}.angle, ...
+                           p.trial.stim.gratings{StimCnt}.sFreq,  p.trial.stim.gratings{StimCnt}.tFreq,  ...
+                           p.trial.stim.gratings{StimCnt}.contrast);
                     
                     fclose(StimLstPtr);
                 end
             case 1
-                % Select the current stimulus
-                p.trial.stim.count = p.trial.stim.count + 1;
-                
-                % Make the stimulus visible
-                p.trial.stim.gratings{p.trial.stim.count}.on = 1;
-                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+                if(p.trial.stim.count < p.trial.stim.Nstim)
+                    % Select the current stimulus
+                    p.trial.stim.count = p.trial.stim.count + 1;
 
+                    % Make the stimulus visible
+                    p.trial.stim.gratings{p.trial.stim.count}.on = 1;
+                    ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+                end
             otherwise
                 error('bad stim value')
         end

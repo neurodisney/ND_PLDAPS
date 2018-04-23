@@ -59,6 +59,8 @@ methods
         end
         
         obj.fixWin = fixWin;
+        
+        pos   = pos(:)';
         obj.pos = pos;
         
         % Store the handle for the PLDAPS object
@@ -113,6 +115,8 @@ methods
     
     %---------------------------------------------%
     function dist = dist(obj, point)
+        point = point(:)';
+
         dist = sqrt( sum( (obj.pos - point).^2 ) );
     end
     

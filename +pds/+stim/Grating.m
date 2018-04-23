@@ -90,6 +90,7 @@ methods
         end
         
         % Load the superclass
+        pos   = pos(:)';
         obj@pds.stim.BaseStim(p, pos, fixWin);
         
         % Integer to define object (for sending event code)
