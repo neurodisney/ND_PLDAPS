@@ -312,14 +312,16 @@ function TaskCleanAndSave(p)
         lastBlk = find(p.trial.task.BlockNum == cBlock, 1, 'last');
         
         if(p.trial.pldaps.iTrial == 1)
-            p.trial.task.BlockNum = [p.trial.task.BlockNum(2:lastBlk);    cBlock];
-            p.trial.task.BlockNum = [p.trial.task.BlockCond(2:lastBlk,:); cConds];
+            p.trial.task.BlockNum  = [p.trial.task.BlockNum( 2:lastBlk);   cBlock; p.trial.task.BlockNum( lastBlk+1:end)];
+            p.trial.task.BlockCond = [p.trial.task.BlockCond(2:lastBlk,:); cConds; p.trial.task.BlockCond(lastBlk+1:end,:)];
+            
         elseif(lastBlk < p.trial.pldaps.finish)
-            p.trial.task.BlockNum = [p.trial.task.BlockNum(1:lastBlk);    cBlock; p.trial.task.BlockNum(lastBlk+1:end)];
-            p.trial.task.BlockNum = [p.trial.task.BlockCond(1:lastBlk,:); cConds; p.trial.task.BlockCond(lastBlk+1:end,:)];
+            p.trial.task.BlockNum  = [p.trial.task.BlockNum( 1:lastBlk);   cBlock; p.trial.task.BlockNum( lastBlk+1:end)];
+            p.trial.task.BlockCond = [p.trial.task.BlockCond(1:lastBlk,:); cConds; p.trial.task.BlockCond(lastBlk+1:end,:)];
+            
         else
-            p.trial.task.BlockNum = [p.trial.task.BlockNum(1:lastBlk);    cBlock];
-            p.trial.task.BlockNum = [p.trial.task.BlockCond(1:lastBlk,:); cConds];
+            p.trial.task.BlockNum  = [p.trial.task.BlockNum;  cBlock];
+            p.trial.task.BlockCond = [p.trial.task.BlockCond; cConds];
         end
         p.trial.pldaps.finish = p.trial.pldaps.finish + 1; % Stop condition
     end

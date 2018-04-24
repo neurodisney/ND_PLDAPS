@@ -95,7 +95,7 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
     for(b=1:2*p.trial.task.NumBlockPeriods)
         StimSeq = ND_RandSample(1:p.trial.task.NumStimCond, AllStim, 0); % create a randomized sequence of stimulus conditions (no repeats)
 
-        p.trial.task.BlockNum = [p.trial.task.BlockNum ; repmat(b, p.trial.task.NumStimCond, 1)];
+        p.trial.task.BlockNum = [p.trial.task.BlockNum ; repmat(b, Ntrials, 1)];
         
         p.trial.task.BlockCond = [p.trial.task.BlockCond; reshape(StimSeq, [p.trial.stim.Nstim, Ntrials])'];
     end
