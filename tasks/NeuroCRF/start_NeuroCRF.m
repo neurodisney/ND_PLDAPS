@@ -1,4 +1,4 @@
-function p = start_NeuroCRF(subjname, RFpos)
+function p = start_NeuroCRF(subjname)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,
@@ -16,23 +16,12 @@ ND_reset;
 
 % name of subject. This will be used to create a subdirectory with this name.
 if(~exist('subjname','var') || isempty(subjname))
-    prompt = {'subject name:'};
-    dlg_title = 'Enter Subject Name';
-    num_lines = 1;
-    def = {'tst'};
-    subjname = cell2mat(inputdlg(prompt,dlg_title,num_lines,def));
-
-    % subjname = 'tst';
+    subjname = cell2mat(inputdlg({'subject name:'},'Enter Subject Name', 1, {'tst'}));
 end
 
-if(~exist('RFpos','var') || isempty(RFpos))
-    prompt = {'X:','Y:'};
-    dlg_title = 'Enter Stimulus Location';
-    num_lines = 1;
-    def = {'-4', '-3'};
-    RFpos = inputdlg(prompt,dlg_title,num_lines,def);
-    RFpos = str2num(cell2mat(RFpos));
-end
+% check for input
+RFpos = inputdlg( {'X:','Y:'}, 'Enter Stimulus Location', 1, {'-4', '-3'});
+RFpos = str2num(cell2mat(RFpos));
 
 % determine current rig
 [~, rigname] = system('hostname');
@@ -97,9 +86,6 @@ SS.Block.maxBlockTrials = 10000;
 
 % ------------------------------------------------------------------------%
 %% set inout argument specific definitions
-if(length(RFpos) ~= 2)
-    error('RF location has to be a vector with two elements (X, Y)!');
-end
 
 SS.stim.GRATING.pos = RFpos;  
 

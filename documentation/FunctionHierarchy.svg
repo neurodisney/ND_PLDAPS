@@ -176,7 +176,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.24748737"
      inkscape:cx="21.198773"
-     inkscape:cy="-74.591115"
+     inkscape:cy="87.033295"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -262,15 +262,15 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-1156.5541"
+       x="-1083.9174"
        y="405.69788"
        id="text4140-6"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4142-7"
-         x="-1156.5541"
+         x="-1083.9174"
          y="405.69788"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_RigDefaults</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_reset</tspan></text>
     <rect
        style="fill:#b4b4b4;fill-opacity:1;stroke:#000000;stroke-width:2.74468827;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3338-3-5"
@@ -453,7 +453,7 @@
        id="rect3338-3-5-6-5"
        width="429.13757"
        height="214.85187"
-       x="-1195.2831"
+       x="-1195.283"
        y="1083.5077" />
     <rect
        style="fill:#b4ceb4;fill-opacity:1;stroke:#000000;stroke-width:3.54485631;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -797,5 +797,24 @@
          d="m 20.203051,1993.8244 129.299529,32.3248"
          style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
     </g>
+    <rect
+       style="fill:#b4b4b4;fill-opacity:1;stroke:#000000;stroke-width:2.74468827;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect3338-3-6"
+       width="509.82672"
+       height="115.54102"
+       x="-1235.6276"
+       y="497.59662" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-1156.5541"
+       y="565.8457"
+       id="text4140-6-2"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4142-7-9"
+         x="-1156.5541"
+         y="565.8457"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'">ND_RigDefaults</tspan></text>
   </g>
 </svg>

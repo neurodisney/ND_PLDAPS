@@ -45,6 +45,7 @@ p.trial.Drug.Start      = -150;  % relative to first stimulus onset. Make sure t
 p.trial.Drug.Intervall  =  200;  % time period before next drung injection is triggered. Set to NaN if only one pulse is needed.
 p.trial.Drug.Count      = 0;
 p.trial.Drug.NextInject = NaN;
+
 % ------------------------------------------------------------------------%
 %% Paradigm
 % Defined at the beginning of a session, changes within the if-block will be ignored while running the experiment
@@ -72,7 +73,7 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
 
     p.trial.task.NumStimCond  = size(p.trial.task.StimCondPars,1); % Number of unique unique combination of stimulus parameters
 
-    p.trial.task.OnlyCorrect = 1; % If set to one a trial is only considered completed when done correctly
+    p.trial.task.OnlyCorrect  = 1; % If set to one a trial is only considered completed when done correctly
     
     % a stimulus condition will be defined as unique combination of all grating parameters
     p.trial.stim.Nstim           = 8;  % Number of stimuli presented within a trial given that fixation is kept. Might be worth to define this number based on p.trial.task.NumStimCond below.

@@ -2,7 +2,6 @@ function p = RFmap(p, state)
 % Calculating receptive fields using reverse correlation of stimuli with spike data
 % 
 %
-%
 % wolf zinke, Mar 2018
 
 % ####################################################################### %
@@ -21,9 +20,9 @@ end
 % At this stage, p.trial is not yet defined. All assignments need
 % to go to p.defaultparameters
 if(isempty(state))
-    p = NeuroCRF_init(p);       
-else
+    p = RFmap_init(p);   
     
+else
     % ####################################################################### %
     %% Subsequent calls during actual trials
     % execute trial specific commands here.
@@ -38,32 +37,32 @@ else
             % and all other more time demanding stuff.
             TaskSetUp(p);
             
-         % ----------------------------------------------------------------%
+            % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialPrepare
             %% trial preparation
             % just prior to actual trial start, use it for time sensitive preparations;
             p.trial.EV.TrialStart = p.trial.CurTime;
             
-        % ------------------------------------------------------------------------%
-        % DONE DURING THE MAIN TRIAL LOOP:
-        % ----------------------------------------------------------------%
+            % ------------------------------------------------------------------------%
+            % DONE DURING THE MAIN TRIAL LOOP:
+            % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.framePrepareDrawing
             %% Get ready to display
             % prepare the stimuli that should be shown, do some required calculations
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
             end
-            TaskDesign(p);
             
-        % ----------------------------------------------------------------%
+            TaskDesign(p);
+            % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
             %% Display stuff on the screen
             % Just call graphic routines, avoid any computations
             % TaskDraw(p);
             
-        % ------------------------------------------------------------------------%
-        % DONE AFTER THE MAIN TRIAL LOOP:
-        % ----------------------------------------------------------------%
+            % ------------------------------------------------------------------------%
+            % DONE AFTER THE MAIN TRIAL LOOP:
+            % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.trialCleanUpandSave
             %% trial end
             TaskCleanAndSave(p);
@@ -78,16 +77,15 @@ end  %/  if(nargin == 1) [...] else [...]
 function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
-% ToDo: COnsider putting most of the stuff her einto the taskdef file
     p.trial.task.Timing.ITI = ND_GetITI(p.trial.task.Timing.MinITI,  ...
                                         p.trial.task.Timing.MaxITI,  ...
                                         [], [], 1, 0.10);
 
-    p.trial.CurrEpoch = p.trial.epoch.ITI;
+    p.trial.CurrEpoch       = p.trial.epoch.ITI;
 
-    p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  ...
-                                       p.trial.task.CurRewDelay    + ...
-                                       p.trial.task.Timing.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  ...
+                                        p.trial.task.CurRewDelay    + ...
+                                        p.trial.task.Timing.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
@@ -110,26 +108,37 @@ function TaskSetUp(p)
     p.trial.stim.gratings = {};
     p.trial.stim.count    =  0;
     
+    % how many gratings to allocate
+    p.trial.stim.Nstim = ceil((1.5 * p.trial.task.Timing.jackpotTime) / (p.trial.stim.Period));      
+    
+    % create lists with parameters for each grating
+    Ori_lst  = ND_RandSample(p.trial.stim.ori,      p.trial.stim.Nstim);
+    Rad_lst  = ND_RandSample(p.trial.stim.radius,   p.trial.stim.Nstim);
+    SFr_lst  = ND_RandSample(p.trial.stim.sFreq,    p.trial.stim.Nstim);
+    tFr_lst  = ND_RandSample(p.trial.stim.tFreq,    p.trial.stim.Nstim);
+    Ctr_lst  = ND_RandSample(p.trial.stim.contrast, p.trial.stim.Nstim);
+    
     for(s = 1:p.trial.stim.Nstim)
-        cstim = p.trial.task.BlockCond(p.trial.pldaps.iTrial, s);
-        
-        p.trial.stim.GRATING.ori      = p.trial.task.StimCondPars(cstim, 1);
-        p.trial.stim.GRATING.radius   = p.trial.task.StimCondPars(cstim, 2);
-        p.trial.stim.GRATING.contrast = p.trial.task.StimCondPars(cstim, 3);
-        p.trial.stim.GRATING.sFreq    = p.trial.task.StimCondPars(cstim, 4);
-        p.trial.stim.GRATING.tFreq    = p.trial.task.StimCondPars(cstim, 5);
+        p.trial.stim.GRATING.ori      = Ori_lst(s);
+        p.trial.stim.GRATING.radius   = Rad_lst(s);
+        p.trial.stim.GRATING.sFreq    = SFr_lst(s);
+        p.trial.stim.GRATING.tFreq    = tFr_lst(s);
+        p.trial.stim.GRATING.contrast = Ctr_lst(s);
         
         p.trial.stim.gratings{s} = pds.stim.Grating(p);
     end
+ 
+    % Generate all the possible positions for the stimulus to be
+    allXPos = p.trial.stim.xRange(1) : p.trial.stim.grdStp : p.trial.stim.xRange(2);
+    allYPos = p.trial.stim.yRange(1) : p.trial.stim.grdStp : p.trial.stim.yRange(2);
     
-    % determine if drug trial
-    p.trial.Drug.DrugTrial = mod(p.trial.task.BlockNum(p.trial.pldaps.iTrial), 2) == p.trial.task.DrugBlock;
+    [Xloc, Yloc] = meshgrid(allXPos, allYPos);
+    Xloc = Xloc(:); Yloc = Yloc(:);
     
-    if(p.trial.Drug.DrugTrial)
-        p.trial.Drug.DrugTime  = NaN;
-    else
-        p.trial.Drug.DrugTime  = NaN;
-    end
+    PosIDX = ND_RandSample(1:length(Xloc), p.trial.stim.Nstim);
+    
+    p.trial.stim.PosIDX = PosIDX;
+    p.trial.stim.locations = [Xloc(PosIDX(:)), Yloc(PosIDX(:))];
 
 % ####################################################################### %
 function TaskDesign(p)
@@ -161,10 +170,7 @@ function TaskDesign(p)
             Task_WaitFixStart(p);
             
             if(p.trial.CurrEpoch == p.trial.epoch.Fixating)
-                
-                if(p.trial.Drug.Give == 1 && p.trial.Drug.DrugTrial == 1)
-                    p.trial.Drug.NextInject = p.trial.CurTime + p.trial.stim.PreStim + p.trial.Drug.Start;
-                end
+                stim(p,1)                
                 
                 p.trial.task.Good = 1;
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;           
@@ -187,7 +193,7 @@ function TaskDesign(p)
         %% Animal has reached fixation criteria and now starts receiving rewards for continued fixation
 
             % Still fixating
-            if(p.trial.stim.fix.fixating)
+            if p.trial.stim.fix.fixating
 
                 % While jackpot time has not yet been reached
                 if(p.trial.CurTime < p.trial.stim.fix.EV.FixStart + p.trial.task.Timing.jackpotTime)
@@ -204,32 +210,11 @@ function TaskDesign(p)
                             p.trial.reward.count     = p.trial.reward.count + 1;
                         end
                     end
-                    
-                    % ----------------------------------------------------------------%
-                    % Inject drug
-                    if(p.trial.Drug.Give == 1 && p.trial.Drug.DrugTrial == 1)
-                        if(p.trial.CurTime >= p.trial.Drug.NextInject)
-                            p.trial.Drug.NextInject = p.trial.CurTime + p.trial.Drug.Intervall;
-                            
-                            ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,      ...
-                                           p.trial.datapixx.TTL_spritzerDur,       ...
-                                           p.trial.datapixx.TTL_spritzerNpulse,    ...
-                                           p.trial.datapixx.TTL_spritzerPulseGap,  ...
-                                           p.trial.datapixx.TTL_spritzerNseries,   ...
-                                           p.trial.datapixx.TTL_spritzerSeriesGap, ...
-                                           p.trial.event.INJECT);
 
-                            p.trial.Drug.Count = p.trial.Drug.Count + 1;
-                        end
-                    end
-                    
                     % ----------------------------------------------------------------%
                     % make sure that SOA expired before showing first grating
-                    if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.stim.PreStim)
-                        if(p.trial.stim.count == 0)
-                            stim(p, 1); % Turn stim on
-                            
-                        elseif(p.trial.task.stimState)
+                    if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.Timing.SOA)
+                        if(p.trial.task.stimState)
                             % Keep stim on for stimOn Time
                             if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.stim.OnTime - 0.75*p.trial.display.ifi/2)
                                 stim(p, 0); % Turn stim off
@@ -238,7 +223,9 @@ function TaskDesign(p)
                         elseif(~p.trial.task.stimState)
                             % Wait the stim off period before displaying the next stimuli
                             if(p.trial.CurTime > p.trial.EV.StimOff + p.trial.stim.OffTime - 0.75*p.trial.display.ifi)
-                                if(p.trial.stim.count <= p.trial.stim.Nstim)
+                                if(p.trial.CurTime < p.trial.stim.fix.EV.FixStart    + ...
+                                                     p.trial.task.Timing.jackpotTime - ...
+                                                     p.trial.stim.OnTime)
                                     stim(p, 1); % Turn stim on
                                 end
                             end
@@ -303,40 +290,9 @@ function TaskCleanAndSave(p)
 
     % Get the text name of the outcome
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-    
-    % If trial was incorrect, repeat it
-    if(p.trial.task.OnlyCorrect == 1 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.Correct)
-        cBlock = p.trial.task.BlockNum(p.trial.pldaps.iTrial);
-        cConds = p.trial.task.BlockCond(p.trial.pldaps.iTrial, :);
-        
-        lastBlk = find(p.trial.task.BlockNum == cBlock, 1, 'last');
-        
-        if(p.trial.pldaps.iTrial == 1)
-            p.trial.task.BlockNum  = [p.trial.task.BlockNum( 2:lastBlk);   cBlock; p.trial.task.BlockNum( lastBlk+1:end)];
-            p.trial.task.BlockCond = [p.trial.task.BlockCond(2:lastBlk,:); cConds; p.trial.task.BlockCond(lastBlk+1:end,:)];
-            
-        elseif(lastBlk < p.trial.pldaps.finish)
-            p.trial.task.BlockNum  = [p.trial.task.BlockNum( 1:lastBlk);   cBlock; p.trial.task.BlockNum( lastBlk+1:end)];
-            p.trial.task.BlockCond = [p.trial.task.BlockCond(1:lastBlk,:); cConds; p.trial.task.BlockCond(lastBlk+1:end,:)];
-            
-        else
-            p.trial.task.BlockNum  = [p.trial.task.BlockNum;  cBlock];
-            p.trial.task.BlockCond = [p.trial.task.BlockCond; cConds];
-        end
-        p.trial.pldaps.finish = p.trial.pldaps.finish + 1; % Stop condition
-    end
-    
-    % trigger end if all done
-    if(p.trial.pldaps.iTrial == length(p.trial.task.BlockNum))
-        p.trial.pldaps.quit = 1;
-    end
-    
+
     % Save useful info to an ascii table for plotting
     ND_Trial2Ascii(p, 'save');
-    
-    % reset drug condition
-    p.trial.Drug.DrugTrial = 0;
-    p.trial.Drug.DrugTime  = NaN;
 
 % ####################################################################### %
 function KeyAction(p)
@@ -356,7 +312,7 @@ function stim(p, val)
     if(val ~= p.trial.task.stimState)
 
         p.trial.task.stimState = val;
-
+        
         % Turn on/off the appropriate generated stimuli
         % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
         switch val
@@ -376,26 +332,28 @@ function stim(p, val)
                     % log grating info, do it here when turning off to keep track of onset times
                     StimLstPtr = fopen(p.trial.stimtbl.file, 'a');
 
-                    %                  Trial  GratingNr  Onset  TrialTime  Xpos  Ypos  Radius  Ori   SpatFreq  TempFreq  Contrast
-                    fprintf(StimLstPtr, '%d,   %d,       %.5f,  %.4f,      %.4f, %.4f,  %.4f,  %.4f, %.4f,     %.4f,     %.6f\n', ...
+                    %                  Trial GratingNr  Onset  TrialTime  PosIDX  Xpos   Ypos  Radius  Ori  SpatFreq  TempFreq  Contrast
+                    fprintf(StimLstPtr, '%d,  %d,       %.5f,  %.4f,      %d,    %.4f,  %.4f,  %.4f,  %.4f,  %.4f,   %.4f,     %.6f\n', ...
                            p.trial.pldaps.iTrial, StimCnt, p.trial.EV.StimOn, ...
                            p.trial.EV.StimOn - p.trial.stim.fix.EV.FixStart,  ...
-                           p.trial.stim.gratings{StimCnt}.pos(1), p.trial.stim.gratings{StimCnt}.pos(2),       ...
-                           p.trial.stim.gratings{StimCnt}.radius, p.trial.stim.gratings{StimCnt}.angle, ...
-                           p.trial.stim.gratings{StimCnt}.sFreq,  p.trial.stim.gratings{StimCnt}.tFreq,  ...
-                           p.trial.stim.gratings{StimCnt}.contrast);
+                           p.trial.stim.PosIDX(StimCnt),         p.trial.stim.locations(StimCnt, 1),        ...
+                           p.trial.stim.locations(StimCnt, 2),   p.trial.stim.gratings{ StimCnt}.radius,    ...
+                           p.trial.stim.gratings{StimCnt}.angle, p.trial.stim.gratings{ StimCnt}.sFreq,     ...
+                           p.trial.stim.gratings{StimCnt}.tFreq, p.trial.stim.gratings{ StimCnt}.contrast);
                     
                     fclose(StimLstPtr);
                 end
             case 1
-                if(p.trial.stim.count < p.trial.stim.Nstim)
-                    % Select the current stimulus
-                    p.trial.stim.count = p.trial.stim.count + 1;
+                % Select the current stimulus
+                p.trial.stim.count = p.trial.stim.count + 1;
+                
+                % Move the stim to the desired location
+                p.trial.stim.gratings{p.trial.stim.count}.pos = p.trial.stim.locations(p.trial.stim.count,:);
 
-                    % Make the stimulus visible
-                    p.trial.stim.gratings{p.trial.stim.count}.on = 1;
-                    ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
-                end
+                % Make the stimulus visible
+                p.trial.stim.gratings{p.trial.stim.count}.on = 1;
+                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+
             otherwise
                 error('bad stim value')
         end

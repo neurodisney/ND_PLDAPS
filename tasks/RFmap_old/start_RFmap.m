@@ -1,36 +1,29 @@
-function p = start_RFmap(subjname)
+function p = start_RFmap(subjname, rig)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,
 % setting parameters for the session, creating a pldaps class and running the experiment.
 %
-% wolf zinke, Apr. 2018
-
+% wolf zinke, Apr. 2017
+% Nate Faber, May 2017
 
 % ------------------------------------------------------------------------%
 %% Initialize Datapixx
 ND_reset;
 
-%-------------------------------------------------------------------------%
-%%  Get user Input
+% ------------------------------------------------------------------------%
+%% Set default variables
 
 % name of subject. This will be used to create a subdirectory with this name.
 if(~exist('subjname','var') || isempty(subjname))
-    subjname = cell2mat(inputdlg({'subject name:'},'Enter Subject Name', 1, {'tst'}));
+    subjname = 'tst';
 end
 
-% check for input
-RFpos = inputdlg( {'X:','Y:'}, 'Enter Stimulus Location', 1, {'-5', '-5'});
-RFpos = str2num(cell2mat(RFpos));
-
-% Coarse/Fine mapping
-RFmeth = questdlg('Run coarse or fine sampling for RF mapping?', ...
-	'Mapping Method', ...
-	'coarse','fine','Coarse');
-
-% determine current rig
-[~, rigname] = system('hostname');
-rig = str2num(regexp(rigname,'\d+','match','once'));
+% name of subject. This will be used to create a subdirectory with this name.
+if(~exist('rig','var') || isempty(rig))
+    [~, rigname] = system('hostname');
+    rig = str2num(regexp(rigname,'\d+','match','once'));
+end
 
 %-------------------------------------------------------------------------%
 %% load default settings into a struct
@@ -45,14 +38,14 @@ exp_fun = 'RFmap';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'NeuroCRF_taskdef';  % function that provides task specific parameter definitions
-SS.task.AfterTrial = '';  % function that provides runs task specific actions after a trial
+SS.task.TaskDef    = 'RFmap_taskdef';  % function that provides task specific parameter definitions
+SS.task.AfterTrial = 'RFmap_aftertrial';  % function that provides runs task specific actions after a trial
 SS.plot.routine    = '';    % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
 SS.editable = {};
-
+                  
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
@@ -74,12 +67,13 @@ SS.behavior.fixation.enableCalib    = 0;
 
 SS.behavior.fixation.on = 1; % fixation.on for this task
 
-SS.pldaps.GetTrialStateTimes = 0; % for debugging, save times when trial states are called
+SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
 % ------------------------------------------------------------------------%
 %% make modifications of default settings
 % If there are modification from the default settings needed, copy the
 % needed lines from ND_RigDefaults and alter the values here.
+
 SS.display.bgColor    = [0.35, 0.35, 0.35];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
@@ -88,11 +82,6 @@ SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
 SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
 
 SS.Block.maxBlockTrials = 10000;
-
-% ------------------------------------------------------------------------%
-%% set inout argument specific definitions
-SS.stim.LocCtr = RFpos;
-SS.stim.RFmeth = RFmeth;
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
