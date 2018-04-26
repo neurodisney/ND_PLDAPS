@@ -4,6 +4,11 @@ function p = start_ScreenReversal(subjname, rig)
 %
 % wolf zinke, Dec. 2017
 
+
+% ------------------------------------------------------------------------%
+%% Initialize Datapixx
+ND_reset;
+
 % ------------------------------------------------------------------------%
 %% Set default variables
 

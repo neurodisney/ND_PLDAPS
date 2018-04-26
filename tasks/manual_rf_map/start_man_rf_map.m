@@ -7,6 +7,10 @@ function start_man_rf_map(subjname)
 
 
 % ------------------------------------------------------------------------%
+%% Initialize Datapixx
+ND_reset;
+
+% ------------------------------------------------------------------------%
 %% Set default variables
 
 % name of subject. This will be used to create a subdirectory with this name.

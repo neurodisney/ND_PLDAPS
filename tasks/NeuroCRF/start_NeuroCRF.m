@@ -6,6 +6,11 @@ function p = start_NeuroCRF(subjname, RFpos)
 %
 % wolf zinke, Apr. 2018
 
+
+% ------------------------------------------------------------------------%
+%% Initialize Datapixx
+ND_reset;
+
 % ------------------------------------------------------------------------%
 %% Set default variables
 

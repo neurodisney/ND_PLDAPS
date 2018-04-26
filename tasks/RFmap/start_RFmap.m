@@ -8,6 +8,10 @@ function p = start_RFmap(subjname, rig)
 % Nate Faber, May 2017
 
 % ------------------------------------------------------------------------%
+%% Initialize Datapixx
+ND_reset;
+
+% ------------------------------------------------------------------------%
 %% Set default variables
 
 % name of subject. This will be used to create a subdirectory with this name.

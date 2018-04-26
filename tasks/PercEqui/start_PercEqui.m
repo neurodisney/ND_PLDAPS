@@ -7,6 +7,11 @@ function p = start_PercEqui(subjname, rig)
 % wolf zinke, Apr. 2017
 % Nate Faber, May 2017
 
+
+% ------------------------------------------------------------------------%
+%% Initialize Datapixx
+ND_reset;
+
 % ------------------------------------------------------------------------%
 %% Set default variables
 % name of subject. This will be used to create a subdirectory with this name.

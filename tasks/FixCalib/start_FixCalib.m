@@ -38,6 +38,11 @@ SS.task.TaskDef    = 'FixCalib_taskdef';      % function that provides task spec
 SS.task.AfterTrial = 'FixCalib_aftertrial';   % function that provides runs task specific actions after a trial
 SS.plot.routine    = '';        % function for online plotting of session progress
 
+
+% ------------------------------------------------------------------------%
+%% Initialize Datapixx
+ND_reset;
+
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
 SS.editable = {'task.RandomPos', 'stim.FIXSPOT.pos'};
