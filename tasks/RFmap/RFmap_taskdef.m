@@ -61,7 +61,7 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
     switch p.trial.stim.RFmeth
         case 'coarse'
             p.trial.stim.ori      = [0, 90];   % orient of grating
-            p.trial.stim.radius   = 0.75;      % size of grating 
+            p.trial.stim.radius   = 0.5;       % size of grating 
             p.trial.stim.contrast = 1;         % intensity contrast
             p.trial.stim.sFreq    = 1.5;       % spatial frequency 
             p.trial.stim.tFreq    = 0;         % temporal frequency (0 means static grating) 
@@ -71,7 +71,7 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
             
         case 'fine'
             p.trial.stim.ori      = [0:7] * 22.5; % orient of grating
-            p.trial.stim.radius   = 0.75;         % size of grating 
+            p.trial.stim.radius   = 0.5;          % size of grating 
             p.trial.stim.contrast = 1;            % intensity contrast
             p.trial.stim.sFreq    = 1.5;          % spatial frequency 
             p.trial.stim.tFreq    = 0;            % temporal frequency (0 means static grating) 
@@ -86,17 +86,19 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
     
     % ------------------------------------------------------------------------%
     %% Drug Condition/Block design
-    Xpos = p.trial.stim.xRange(1) : p.trial.stim.grdStp : p.trial.stim.xRange(2); 
-    Ypos = p.trial.stim.yRange(1) : p.trial.stim.grdStp : p.trial.stim.yRange(2); 
+    p.trial.stim.Xpos = p.trial.stim.xRange(1) : p.trial.stim.grdStp : p.trial.stim.xRange(2); 
+    p.trial.stim.Ypos = p.trial.stim.yRange(1) : p.trial.stim.grdStp : p.trial.stim.yRange(2); 
     
-    AllStimLoc = combvec(Xpos, Ypos, p.trial.stim.ori,   p.trial.stim.radius, p.trial.stim.contrast, ...
-                                        p.trial.stim.sFreq, p.trial.stim.tFreq)';
+    Nbin = ceil(p.trial.stim.extent / p.trial.stim.radius);
+    
+    p.trial.stim.Xbin = discretize(Xpos,linspace(p.trial.stim.xRange(1),p.trial.stim.xRange(2), Nbin(1) + 1));
+    p.trial.stim.Ybin = discretize(Xpos,linspace(p.trial.stim.yRange(1),p.trial.stim.yRange(2), Nbin(2) + 1));
     
     % get unique stimulus parameter combinations
-    p.trial.task.StimCondPars = combvec(p.trial.stim.ori,   p.trial.stim.radius, p.trial.stim.contrast, ...
-                                        p.trial.stim.sFreq, p.trial.stim.tFreq)';
-
-    p.trial.task.NumStimCond  = size(p.trial.task.StimCondPars,1); % Number of unique unique combination of stimulus parameters
+    p.trial.task.StimCondPars = combvec(unique(Xp.trial.stim.bin), unique(p.trial.stim.Ybin), p.trial.stim.ori,    ...
+                                        p.trial.stim.radius,  p.trial.stim.contrast, p.trial.stim.sFreq, p.trial.stim.tFreq)';
+    
+    p.trial.task.NumStimCond  = size(p.trial.task.StimCondPars, 1); % Number of unique unique combination of stimulus parameters
 
     p.trial.task.OnlyCorrect  = 1; % If set to one a trial is only considered completed when done correctly
     
@@ -121,6 +123,8 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
     for(b=1:2*p.trial.task.NumBlockPeriods)
         StimSeq = ND_RandSample(1:p.trial.task.NumStimCond, AllStim, 0); % create a randomized sequence of stimulus conditions (no repeats)
 
+        % translate the spatial binning into finer samples coordinates
+        
         p.trial.task.BlockNum = [p.trial.task.BlockNum ; repmat(b, Ntrials, 1)];
         
         p.trial.task.BlockCond = [p.trial.task.BlockCond; reshape(StimSeq, [p.trial.stim.Nstim, Ntrials])'];
