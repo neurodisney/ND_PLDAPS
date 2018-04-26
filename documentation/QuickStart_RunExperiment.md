@@ -27,6 +27,6 @@ Once this is done, you can start an experiment with a command like this:
 
 * If `'mouse'` is used as `SubjectName`, it will start a test configuration where the eye tracker is disabled and instead the mouse position is used as eye position.
 
-* In this command variant, an output is assigned to `p`. This is not necessary but makes it possible to inspect the pldaps object once the experiment ended.
+* In this command variant, an output is assigned to `p`. This is not necessary but makes it possible to inspect the `pldaps` object once the experiment ended.
 
 * In previous variants, a task was started with this line: `ND_reset; p = start_TaskName('SubjectName');`. The initial part (`p = start_TaskName('SubjectName');`) makes sure that DataPixx is ready and nothing from previous experiments interferes with the current task. This part is now implemented in the `start_TaskName` script and therefore does not need to be called any longer.

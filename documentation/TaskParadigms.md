@@ -110,8 +110,10 @@ g            | randomly select grating parameters for each trial
 h            | randomly select hemifield to present grating
 Right/Left Arrow | present grating in right/left hemifield
 Down Arrow   | toggle if both gratings share the same parameters
+NumPad Keys  | location of the target grating corresponding to key location
 ________________________________________________________________________________
 ### CuedChangeDetect
+
 In development.
 
 ## training tasks
