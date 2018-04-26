@@ -1,7 +1,37 @@
 # Task Protocols
-
 __________
 Quick summary of available task code.
+__________
+
+  * [General key assignments](#general-key-assignments)
+  * [Main tasks](#main-tasks)
+    + [FixCalib](#fixcalib)
+      - [Task specific keys](#task-specific-keys)
+    + [RFmap](#rfmap)
+      - [Task specific keys](#task-specific-keys-1)
+    + [manual_rf_map](#manual-rf-map)
+    + [ScreenReversal](#screenreversal)
+      - [Task specific keys](#task-specific-keys-2)
+    + [DetectGrat](#detectgrat)
+      - [Task specific keys](#task-specific-keys-3)
+    + [PercEqui](#percequi)
+      - [Task specific keys](#task-specific-keys-4)
+    + [CuedChangeDetect](#cuedchangedetect)
+  * [training tasks](#training-tasks)
+    + [NHP_training/InitFixTrain](#nhp-training-initfixtrain)
+    + [NHP_training/FixTrain](#nhp-training-fixtrain)
+    + [NHP_training/DelayedSaccade](#nhp-training-delayedsaccade)
+    + [NHP_training/ContrastChange](#nhp-training-contrastchange)
+    + [NHP_training/DistractFix](#nhp-training-distractfix)
+  * [archived](#archived)
+    + [archived/revcorr_rfmap](#archived-revcorr-rfmap)
+    + [archived/ScreenFlash](#archived-screenflash)
+    + [archived/EyeCalib](#archived-eyecalib)
+    + [archived/get_fix](#archived-get-fix)
+    + [archived/get_joy](#archived-get-joy)
+    + [archived/joy_train](#archived-joy-train)
+    + [archived/JustFix](#archived-justfix)
+    + [archived/rndrew](#archived-rndrew)
 __________
 
 ## General key assignments
