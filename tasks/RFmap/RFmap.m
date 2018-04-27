@@ -113,11 +113,27 @@ function TaskSetUp(p)
     for(s = 1:p.trial.stim.Nstim)
         cstim = p.trial.task.BlockCond(p.trial.pldaps.iTrial, s);
         
-        p.trial.stim.GRATING.ori      = p.trial.task.StimCondPars(cstim, 1);
-        p.trial.stim.GRATING.radius   = p.trial.task.StimCondPars(cstim, 2);
-        p.trial.stim.GRATING.contrast = p.trial.task.StimCondPars(cstim, 3);
-        p.trial.stim.GRATING.sFreq    = p.trial.task.StimCondPars(cstim, 4);
-        p.trial.stim.GRATING.tFreq    = p.trial.task.StimCondPars(cstim, 5);
+        % get random stimulus location within the spatial bin
+        BinPos = p.trial.task.StimCondPars(cstim, 1);
+        
+        xID = find(p.trial.stim.Xbin == p.trial.stim.PosBins(BinPos, 1));
+        yID = find(p.trial.stim.Ybin == p.trial.stim.PosBins(BinPos, 2));
+        
+        if(p.trial.stim.PosBinCnt(BinPos) >= sum(p.trial.stim.PosBinID == BinPos))
+            p.trial.stim.PosBinCnt(BinPos) = 1;
+        else
+            p.trial.stim.PosBinCnt(BinPos) = p.trial.stim.PosBinCnt(BinPos) + 1;
+        end
+        
+        p.trial.stim.GRATING.pos(1) = datasample(p.trial.stim.Xpos(xID(p.trial.stim.PosBinCnt(BinPos):end)), 1);
+        p.trial.stim.GRATING.pos(2) = datasample(p.trial.stim.Ypos(yID(p.trial.stim.PosBinCnt(BinPos):end)), 1);
+        
+        % extract the other grating parameters
+        p.trial.stim.GRATING.ori      = p.trial.task.StimCondPars(cstim, 2);
+        p.trial.stim.GRATING.radius   = p.trial.task.StimCondPars(cstim, 3);
+        p.trial.stim.GRATING.contrast = p.trial.task.StimCondPars(cstim, 4);
+        p.trial.stim.GRATING.sFreq    = p.trial.task.StimCondPars(cstim, 5);
+        p.trial.stim.GRATING.tFreq    = p.trial.task.StimCondPars(cstim, 6);
         
         p.trial.stim.gratings{s} = pds.stim.Grating(p);
     end

@@ -58,7 +58,7 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
     % if this line gets uncommented it will over-ride what was specified when calling start_NeuroCRF!!!
     % p.trial.stim.GRATING.pos = [-2, -3];  % ToDo: define as input argument for start_NeuroCRF and pop-up menu if not specified!
 
-    switch p.trial.stim.RFmeth
+    switch p.defaultParameters.stim.RFmeth  % this needs to be defaultParameters because trial is not yet fully initialized
         case 'coarse'
             p.trial.stim.ori      = [0, 90];   % orient of grating
             p.trial.stim.radius   = 0.5;       % size of grating 
@@ -81,30 +81,37 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
     end
     
     % calculate the range of possible x/y locations
-    p.trial.stim.xRange   =  [-1, 1] * p.trial.stim.extent(1) + p.trial.stim.LocCtr(1);
-    p.trial.stim.yRange   =  [-1, 1] * p.trial.stim.extent(2) + p.trial.stim.LocCtr(2);
+    p.trial.stim.xRange = [-1, 1] * (p.trial.stim.extent(1)/2) + p.defaultParameters.stim.LocCtr(1);  % this needs to be defaultParameters because trial is not yet fully initialized
+    p.trial.stim.yRange = [-1, 1] * (p.trial.stim.extent(2)/2) + p.defaultParameters.stim.LocCtr(2);  % this needs to be defaultParameters because trial is not yet fully initialized
     
     % ------------------------------------------------------------------------%
     %% Drug Condition/Block design
+    p.trial.task.OnlyCorrect  = 1; % If set to one a trial is only considered completed when done correctly
+    
+    % define grid coordinates
     p.trial.stim.Xpos = p.trial.stim.xRange(1) : p.trial.stim.grdStp : p.trial.stim.xRange(2); 
     p.trial.stim.Ypos = p.trial.stim.yRange(1) : p.trial.stim.grdStp : p.trial.stim.yRange(2); 
     
+    % bin the coordinates on a more coarse scale for stimulus balancing purposes
     Nbin = ceil(p.trial.stim.extent / p.trial.stim.radius);
+    p.trial.stim.Xbin = discretize(p.trial.stim.Xpos, linspace(p.trial.stim.xRange(1), p.trial.stim.xRange(2), Nbin(1) + 1));
+    p.trial.stim.Ybin = discretize(p.trial.stim.Ypos, linspace(p.trial.stim.yRange(1), p.trial.stim.yRange(2), Nbin(2) + 1));
     
-    p.trial.stim.Xbin = discretize(Xpos,linspace(p.trial.stim.xRange(1),p.trial.stim.xRange(2), Nbin(1) + 1));
-    p.trial.stim.Ybin = discretize(Xpos,linspace(p.trial.stim.yRange(1),p.trial.stim.yRange(2), Nbin(2) + 1));
+    % get binned locations
+    p.trial.stim.PosBins   = combvec(unique(p.trial.stim.Xbin), unique(p.trial.stim.Ybin))';
+    p.trial.stim.PosBinID  = 1:size(p.trial.stim.PosBins,1); % define unique identifier for each position in the grid
     
-    % get unique stimulus parameter combinations
-    p.trial.task.StimCondPars = combvec(unique(Xp.trial.stim.bin), unique(p.trial.stim.Ybin), p.trial.stim.ori,    ...
-                                        p.trial.stim.radius,  p.trial.stim.contrast, p.trial.stim.sFreq, p.trial.stim.tFreq)';
+    p.trial.stim.PosBinCnt = zeros(size(p.trial.stim.PosBinID));  % keep control of shown locations
+    
+    % get unique stimulus parameter combinations   
+    p.trial.task.StimCondPars = combvec(p.trial.stim.PosBinID, p.trial.stim.ori,   p.trial.stim.radius, ...
+                                        p.trial.stim.contrast, p.trial.stim.sFreq, p.trial.stim.tFreq)';
     
     p.trial.task.NumStimCond  = size(p.trial.task.StimCondPars, 1); % Number of unique unique combination of stimulus parameters
 
-    p.trial.task.OnlyCorrect  = 1; % If set to one a trial is only considered completed when done correctly
-    
     % a stimulus condition will be defined as unique combination of all grating parameters
-    p.trial.stim.Nstim           = 8;  % Number of stimuli presented within a trial given that fixation is kept. Might be worth to define this number based on p.trial.task.NumStimCond below.
-    p.trial.task.NumStimRepeats  = 2; % how often to show a stimulus condition in a block.
+    p.trial.stim.Nstim           = 32;  % Number of stimuli presented within a trial given that fixation is kept. Might be worth to define this number based on p.trial.task.NumStimCond below.
+    p.trial.task.NumStimRepeats  = 4;  % how often to show a stimulus condition in a block.
     p.trial.task.NumBlockPeriods = 1;  % a block period consists of two blocks, one with drug and the other one without drug
     p.trial.task.DrugBlock       = 0;  % if 1, the session starts with a drug block (odd numbered blocks are with drug), if zero even numbered blocks are with drug.
 
@@ -125,7 +132,7 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
 
         % translate the spatial binning into finer samples coordinates
         
-        p.trial.task.BlockNum = [p.trial.task.BlockNum ; repmat(b, Ntrials, 1)];
+        p.trial.task.BlockNum  = [p.trial.task.BlockNum ; repmat(b, Ntrials, 1)];
         
         p.trial.task.BlockCond = [p.trial.task.BlockCond; reshape(StimSeq, [p.trial.stim.Nstim, Ntrials])'];
     end

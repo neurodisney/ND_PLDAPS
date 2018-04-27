@@ -66,6 +66,7 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
     
     % ------------------------------------------------------------------------%
     %% Drug Condition/Block design
+    p.trial.task.OnlyCorrect  = 1; % If set to one a trial is only considered completed when done correctly
 
     % get unique stimulus parameter combinations
     p.trial.task.StimCondPars = combvec(p.trial.stim.ori,   p.trial.stim.radius, p.trial.stim.contrast, ...
@@ -73,8 +74,6 @@ if(~isfield(p.trial, 'pldaps') || p.trial.pldaps.iTrial <= 1)
 
     p.trial.task.NumStimCond  = size(p.trial.task.StimCondPars,1); % Number of unique unique combination of stimulus parameters
 
-    p.trial.task.OnlyCorrect  = 1; % If set to one a trial is only considered completed when done correctly
-    
     % a stimulus condition will be defined as unique combination of all grating parameters
     p.trial.stim.Nstim           = 8;  % Number of stimuli presented within a trial given that fixation is kept. Might be worth to define this number based on p.trial.task.NumStimCond below.
     p.trial.task.NumStimRepeats  = 2; % how often to show a stimulus condition in a block.

@@ -45,13 +45,13 @@ exp_fun = 'RFmap';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'NeuroCRF_taskdef';  % function that provides task specific parameter definitions
+SS.task.TaskDef    = 'RFmap_taskdef';  % function that provides task specific parameter definitions
 SS.task.AfterTrial = '';  % function that provides runs task specific actions after a trial
 SS.plot.routine    = '';    % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
-SS.editable = {};
+SS.editable = {'stim.PosBinCnt'};
 
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
