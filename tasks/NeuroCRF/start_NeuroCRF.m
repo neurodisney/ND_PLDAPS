@@ -9,7 +9,7 @@ function p = start_NeuroCRF(subjname)
 
 % ------------------------------------------------------------------------%
 %% Initialize Datapixx
-ND_reset;
+% ND_reset;
 
 % ------------------------------------------------------------------------%
 %% Set default variables

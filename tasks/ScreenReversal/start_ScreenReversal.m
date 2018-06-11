@@ -7,7 +7,7 @@ function p = start_ScreenReversal(subjname, rig)
 
 % ------------------------------------------------------------------------%
 %% Initialize Datapixx
-ND_reset;
+% ND_reset;
 
 % ------------------------------------------------------------------------%
 %% Set default variables

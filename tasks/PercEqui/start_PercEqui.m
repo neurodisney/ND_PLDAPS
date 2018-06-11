@@ -10,7 +10,7 @@ function p = start_PercEqui(subjname, rig)
 
 % ------------------------------------------------------------------------%
 %% Initialize Datapixx
-ND_reset;
+% ND_reset;
 
 % ------------------------------------------------------------------------%
 %% Set default variables

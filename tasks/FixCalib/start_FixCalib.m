@@ -41,7 +41,7 @@ SS.plot.routine    = '';        % function for online plotting of session progre
 
 % ------------------------------------------------------------------------%
 %% Initialize Datapixx
-ND_reset;
+% ND_reset;
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial
