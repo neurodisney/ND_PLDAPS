@@ -10,6 +10,10 @@ function p = start_FixCalib(subjname, rig)
 % ------------------------------------------------------------------------%
 %% Set default variables
 
+% ------------------------------------------------------------------------%
+%% Initialize Datapixx
+ND_reset;
+
 % name of subject. This will be used to create a subdirectory with this name.
 if(~exist('subjname','var') || isempty(subjname))
     subjname = 'tst';
@@ -38,10 +42,6 @@ SS.task.TaskDef    = 'FixCalib_taskdef';      % function that provides task spec
 SS.task.AfterTrial = 'FixCalib_aftertrial';   % function that provides runs task specific actions after a trial
 SS.plot.routine    = '';        % function for online plotting of session progress
 
-
-% ------------------------------------------------------------------------%
-%% Initialize Datapixx
-% ND_reset;
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial

@@ -10,7 +10,7 @@ function p = start_FixTrain(subjname, rig, experimenter)
 
 % ------------------------------------------------------------------------%
 %% Initialize Datapixx
-% ND_reset;
+ND_reset;
 
 %-------------------------------------------------------------------------%
 %% load default settings into a struct

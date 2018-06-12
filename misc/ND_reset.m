@@ -8,6 +8,6 @@ ListenChar(0);
 if Datapixx('IsReady')
     Datapixx('Close');
 end
-clear all; 
+%clear all; 
 close all;
 sca;

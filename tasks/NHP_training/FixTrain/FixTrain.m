@@ -62,6 +62,7 @@ if(isempty(state))
 
     p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});  
     p.trial.task.Color_list = {'white'};
+   
     % --------------------------------------------------------------------%
     %% Enable random positions
     p.trial.task.RandomPos = 0;
@@ -153,8 +154,8 @@ if(isempty(state))
     
     
     % Fill a conditions list with n of each kind of condition sequentially
-    conditions = cell(1,5000);
-    blocks = nan(1,5000);
+    conditions  = cell(1,5000);
+    blocks      = nan(1,5000);
     totalTrials = 0;
     
     % Iterate through each condition to fill conditions
@@ -164,7 +165,7 @@ if(isempty(state))
         cond = conditionsIterator(iCond);
         nTrials = cond{1}.nTrials;
         conditions(1, totalTrials+1:totalTrials+nTrials) = repmat(cond,1,nTrials);
-        blocks(1, totalTrials+1:totalTrials+nTrials) = repmat(iCond,1,nTrials);
+        blocks(1, totalTrials+1:totalTrials+nTrials)     = repmat(iCond,1,nTrials);
         totalTrials = totalTrials + nTrials;
     end
     
