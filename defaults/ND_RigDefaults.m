@@ -185,7 +185,15 @@ if(exist('/DATA/ExpData', 'dir'))
 else
     SS.pldaps.dirs.data = '~/Data/ExpData';  % data directory.
 end
-SS.pldaps.dirs.wavfiles = './beepsounds';    % directory for sound files
+
+% SS.pldaps.dirs.wavfiles = './beepsounds';    % directory for sound files
+switch rig
+    case 1
+        SS.pldaps.dirs.wavfiles = '/home/rig1-user/Experiments/ND_PLDAPS/beepsounds';    % directory for sound files
+        
+    case 2
+        SS.pldaps.dirs.wavfiles = '/home/rig2-user/Experiments/ND_PLDAPS/beepsounds';    % directory for sound files
+end
 
 % cursor: control drawing of the mouse cursor
 SS.pldaps.draw.cursor.use              = 0;  % enable drawing of the mouse cursor. (WZ TODO: Will we ever use it? Maybe get rid of it.)

@@ -1,4 +1,4 @@
-function p=playDP(p, soundName, audioChannel)
+function p = playDP(p, soundName, audioChannel)
 % play a sound that has been buffered in the datapixx audiobuffer
 % input: p pldaps structure
 % soundName: string specifying wavfile to be played
@@ -12,10 +12,10 @@ if(p.trial.sound.use)
     end
     
     % Get the sound attributes
-    buf=p.trial.sound.(soundName).buf;
-    freq=p.trial.sound.(soundName).sampleRate;
-    nSamples=p.trial.sound.(soundName).nSamples;
-    nChannels=p.trial.sound.(soundName).nChannels;
+    buf       = p.trial.sound.(soundName).buf;
+    freq      = p.trial.sound.(soundName).sampleRate;
+    nSamples  = p.trial.sound.(soundName).nSamples;
+    nChannels = p.trial.sound.(soundName).nChannels;
     
     switch audioChannel        
         case 'left'
