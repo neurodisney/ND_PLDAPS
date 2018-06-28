@@ -10,7 +10,7 @@ require(plotrix, quietly=TRUE)
 #fname=NA
 
 # Function for plotting data from the delayed saccade task
-InitFixTrain_Behav = function(datadir=NA, fname=NA) {
+FixCalib_Behav = function(datadir=NA, fname=NA) {
 
 ## specify analysis/graph parameters
 avrgwin  =  180  # moving average window for performance plot in seconds
@@ -136,10 +136,10 @@ pAllFix = pAllFix == 1 & is.finite(dt$FixPeriod) == 1
 # Only display figure directly if called from the r environment (not the command line)
 # If we didn't do this, when called from the command line, it would just open briefly and then close when the script ends
 if(interactive()) {
-  x11(width=19.5, height=10.5, pointsize=10, title='InitFixTrain_Behav')
+  x11(width=19.5, height=10.5, pointsize=10, title='FixCalib_Behav')
 } else {
   # Otherwise only save the figure as a pdf.
-  pdf(paste('FixTrain_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='InitFixTrain_Behav')
+  pdf(paste('FixTrain_',dt$Date[1],'.pdf',sep=""), 19.5, 10.5, pointsize=10, title='FixCalib_Behav')
 }
 
 # create plot layout
@@ -262,7 +262,7 @@ text(1, 0.025*Nfix, labels=paste(round(FixTime,4), ' min total fixation time',se
 # save plot as pdf
 if(interactive()) {
   # Save the figure to pdf
-  dev.copy(pdf, 'InitFixTrain.pdf', 19.5, 10.5, pointsize=10, title='InitFixTrain_Behav')
+  dev.copy(pdf, 'FixCalib_Behav.pdf', 19.5, 10.5, pointsize=10, title='FixCalib_Behav')
 }
 
 dev.off()
@@ -298,7 +298,7 @@ if(!interactive()) {
   }
   
   # Run the function
-  InitFixTrain_Behav(datadir, fname)
+  FixCalib_Behav(datadir, fname)
 }
 
 

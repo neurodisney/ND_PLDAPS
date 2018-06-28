@@ -312,8 +312,8 @@ switch rig
         % B defaults
 %         SS.eyeCalib.defaultGain      = [-19.93433333, -19.68044167];  % default gain, used if no calibration points are entered
 %         SS.eyeCalib.defaultOffset    = [0.7884416667, -1.618075];  % default offset, used if no calibration points are entered
-        SS.eyeCalib.defaultGain      = [-20.6198,     -21.3417];
-        SS.eyeCalib.defaultOffset    = [0.741,        -1.5369];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [-17.2921, -22.8202];
+        SS.eyeCalib.defaultOffset    = [0.6903, -1.7374];  % default offset, used if no calibration points are entered
 
     otherwise
         SS.eyeCalib.defaultGain      = [-3.5622, -3.4474];  % default gain, used if no calibration points are entered
