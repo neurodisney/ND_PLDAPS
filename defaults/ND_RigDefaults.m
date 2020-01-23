@@ -1,4 +1,4 @@
-function SS = ND_RigDefaults(rig)
+ function SS = ND_RigDefaults(rig)
 % set default parameters for a rig in the Disney lab.
 %
 % This file summarizes gives an overview of parameters that could be set for
@@ -171,7 +171,8 @@ SS.pldaps.finish                                = inf;   % Number of trials to r
 SS.pldaps.maxPriority                           = 1;     % Switch to PTB to maxpriority during the trial? See MaxPriority('?')
 SS.pldaps.maxTrialLength                        = 25;    % Maximum duration of a trial in seconds. Used to allocate memory.
 SS.pldaps.nosave                                = 0;     % disables saving of data when true. see .pldaps.save for more control
-SS.pldaps.save_nostart                          = 0;     % do not save pds files if the trial was not started
+%SS.pldapt default parameters for a rig in the Disney lab.
+%s.save_nostart                          = 0;     % do not save pds files if the trial was not started
 SS.pldaps.pass                                  = 0;     % indicator of behavior (i.e. fixations) should always be assumed to be good.
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
 SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
@@ -402,7 +403,8 @@ SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
 SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
 SS.datapixx.TTL_spritzerSeriesGap    = 30;   % gap between subsequent series
 
-% ------------------------------------------------------------------------%
+% ------------------------------------------------------------------%
+
 %% Stimulation/Drug Injection
 SS.Drug.DoStim     = 0;       % activate module to control drug application
 SS.Drug.StimTrial  = 0;       % Is the current trial a drug trial
