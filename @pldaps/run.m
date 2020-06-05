@@ -48,6 +48,7 @@ try
     %-------------------------------------------------------------------------%
     %% Open PLDAPS windows
     % Open PsychToolbox Screen
+    % Screen('Preference','SkipSyncTests', 1) % allows testing stimulus delivery without a rig attached
     p = openScreen(p);
 
     %-------------------------------------------------------------------------%
