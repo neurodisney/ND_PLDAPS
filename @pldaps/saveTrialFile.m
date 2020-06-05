@@ -3,7 +3,7 @@ function result = saveTrialFile(p)
 % result = saveTrialFile(p)
 result= [];
 
-if(p.trial.pldaps.save_nostart == 1 || p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart)
+if(~p.trial.pldaps.nosave)
     try
         
         ctrial = p.trial; %#ok<*NASGU>

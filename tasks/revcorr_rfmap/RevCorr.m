@@ -635,7 +635,7 @@ if nSpikes > 0
     temporalProfile = squeeze(rfdef.revCorrCube(selectInd(1), selectInd(2), :));
     
     
-    % Change processing depending on the stage
+    % Change processing dTaskDrawepending on the stage
     if strcmp(p.trial.stim.stage, 'coarse')
         
         % Define the xRange and yRange for the fine stage

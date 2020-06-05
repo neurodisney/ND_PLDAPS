@@ -76,9 +76,9 @@ if(isempty(state))
     %% initialize target parameters
     p.defaultParameters.behavior.fixation.FixWin = 2.5;
 
-    p.defaultParameters.task.RandomHemi = 0; % if 1, randomly pick left or right hemifield
-    p.defaultParameters.task.RandomPos  = 0; % if 1, randomly change the grating location each trial
-    p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
+    p.defaultParameters.task.RandomHemi = 1; % if 1, randomly pick left or right hemifield
+    p.defaultParameters.task.RandomPos  = 1; % if 1, randomly change the grating location each trial
+    p.defaultParameters.task.RandomPar  = 1; % if 1, randomly change orientation and spatial frequency of the grating each trial
 
     p.defaultParameters.task.EqualStim  = 1; % both gratings have the same spatial frequency and orientation
     p.defaultParameters.task.ShowDist   = 1; % Display both, target and distractor grating

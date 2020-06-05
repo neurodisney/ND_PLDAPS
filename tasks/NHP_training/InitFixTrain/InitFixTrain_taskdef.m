@@ -15,7 +15,7 @@ function p = InitFixTrain_taskdef(p)
 % ------------------------------------------------------------------------%
 %% Reward
 % manual reward from experimenter
-p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
+p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
 
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
@@ -26,11 +26,11 @@ p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.jackpotTime  = 4;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.5;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur   = 0.02;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = 0.15; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
+p.trial.behavior.fixation.MinFixStart = .1; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
 p.trial.task.Timing.WaitFix = 1.5;  % Time to get a solid fixation before trial ends unsuccessfully
 

@@ -6,6 +6,8 @@ function p = start_RFmap(subjname, rig)
 %
 % wolf zinke, Apr. 2017
 % Nate Faber, May 2017
+% wolf zinke, Apr 2018
+% anita disney May 2020
 
 % ------------------------------------------------------------------------%
 %% Set default variables
@@ -15,7 +17,7 @@ if(~exist('subjname','var') || isempty(subjname))
     subjname = 'tst';
 end
 
-% name of subject. This will be used to create a subdirectory with this name.
+% rig number, used for rig defaults call. obtained from Linux hostname if not specified
 if(~exist('rig','var') || isempty(rig))
     [~, rigname] = system('hostname');
     rig = str2num(regexp(rigname,'\d+','match','once'));
@@ -29,36 +31,36 @@ SS = ND_RigDefaults(rig);    % load default settings according to the current ri
 
 %% Define task related functions
 
-% function to set up experiment (and maybe also including the trial function)
-exp_fun = 'RevCorr';
+% function to set up experiment (may also be trial function)
+% exp_fun = 'RevCorr';
+exp_fun = 'RFmap';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
-SS.pldaps.trialFunction = exp_fun;     % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'RevCorr_taskdef';  % function that provides task specific parameter definitions
-SS.task.AfterTrial = 'RevCorr_aftertrial';  % function that provides runs task specific actions after a trial
+SS.pldaps.trialFunction = exp_fun;     % This function is both set-up for the experiment session as well as the trial function
+SS.task.TaskDef    = 'RFmap_taskdef';  % function that provides task specific parameter definitions
+SS.task.AfterTrial = 'RFmap_aftertrial';  % function that provides runs task specific actions after a trial
 SS.plot.routine    = '';    % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
-%% define variables that need to passed to next trial
-SS.editable = {'stim.count', 'stim.iStim', 'stim.iPos', 'stim.stage', 'stim.fine.xRange', 'stim.fine.yRange',...
-    'RF.coarse','RF.fine','RF.flag_new', 'RF.flag_fine'};
+%% define variables that need to be passed to next trial
+SS.editable = {'stim.count', 'stim.iStim', 'stim.iPos', 'stim.RFmeth', 'stim.coarse.xRange', 'stim.coarse.yRange'};
                   
 % ------------------------------------------------------------------------%
-%% Enable required components if needed
+%% Enable required components
 % Most of the components are disabled as default. If needed for the task enable them here.
 SS.sound.use                  = 1;
-SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
-SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
-SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
+SS.behavior.fixation.use      = 1; % eye position is behaviorally relevant
+SS.behavior.joystick.use      = 0; % joystick is behaviorally relevant
+SS.plot.do_online             = 0; % run online data analysis between trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
 SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
-SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
+SS.pldaps.draw.photodiode.use = 0; % enable photo diode square
 SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
 
 SS.pldaps.draw.grid.use       = 1;
 
-SS.datapixx.useAsEyepos       = 1;
+SS.datapixx.useAsEyepos       = 1; 
 SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
@@ -80,7 +82,7 @@ SS.mouse.use
 % needed lines from ND_RigDefaults and alter the values here.
 
 SS.display.bgColor    = [0.35, 0.35, 0.35];  % change background color
-SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
+SS.datapixx.adc.srate = 1000; % for a 1k tracker
 
 SS.behavior.fixation.FixWin     = 2.5;
 SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid

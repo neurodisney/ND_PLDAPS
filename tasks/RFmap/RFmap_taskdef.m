@@ -31,34 +31,34 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.ori      = [0, 90];   % orient of grating
-        p.trial.stim.radius   = 0.75;      % size of grating 
-        p.trial.stim.contrast = 1;         % intensity contrast
-        p.trial.stim.sFreq    = 1.5;       % spatial frequency 
-        p.trial.stim.tFreq    = 0;         % temporal frequency (0 means static grating) 
-        p.trial.stim.grdStp   = 0.25;      % spacing of grating centers 
+        p.trial.stim.coarse.ori      = [0, 22.5, 45, 67.5 90];   % orient of grating
+        p.trial.stim.coarse.radius   = 0.75;      % size of grating 
+        p.trial.stim.coarse.contrast = 1;         % intensity contrast
+        p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
+        p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
+        p.trial.stim.coarse.grdStp   = 0.1;      % spacing of grating centers 
         
-        p.trial.stim.xRange   = [-9, -1];
-        p.trial.stim.yRange   = [-9, -1];
+        p.trial.stim.coarse.xRange   = [-5, 1];
+        p.trial.stim.coarse.yRange   = [-5, 1];
 
         % do not change below
-        p.trial.stim.LocCtr   = [mean(p.trial.stim.xRange),    ...
-                                 mean(p.trial.stim.yRange)];  
-        p.trial.stim.extent   = [range(p.trial.stim.xRange),   ...
-                                 range(p.trial.stim.yRange)];  
+        p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
+                                 mean(p.trial.stim.coarse.yRange)];  
+        p.trial.stim.extent   = [range(p.trial.stim.coarse.xRange),   ...
+                                 range(p.trial.stim.coarse.yRange)];  
 
     case 'fine'
-        p.trial.stim.ori      = [0:7] * 22.5;
-        p.trial.stim.radius   = 0.75;
-        p.trial.stim.contrast = 1;
-        p.trial.stim.sFreq    = 1.5;
-        p.trial.stim.grdStp   = 0.1;
+        p.trial.stim.fine.ori      = [0:7] * 22.5;
+        p.trial.stim.fine.radius   = 0.75;
+        p.trial.stim.fine.contrast = 1;
+        p.trial.stim.fine.sFreq    = 1.5;
+        p.trial.stim.fine.grdStp   = 0.1;
         
-        p.trial.stim.extent   = [2, 2];
+        p.trial.stim.fine.extent   = [2, 2];
         
         % do not change below
-        p.trial.stim.xRange   =  [-1, 1] * p.trial.stim.extent(1) + p.trial.stim.LocCtr(1);
-        p.trial.stim.yRange   =  [-1, 1] * p.trial.stim.extent(2) + p.trial.stim.LocCtr(2);
+        p.trial.stim.fine.xRange   =  [-1, 1] * p.trial.stim.extent(1) + p.trial.stim.LocCtr(1);
+        p.trial.stim.fine.yRange   =  [-1, 1] * p.trial.stim.extent(2) + p.trial.stim.LocCtr(2);
 end
 
 p.trial.stim.GRATING.res    = 300;
@@ -93,7 +93,7 @@ p.trial.reward.Period       = [1 0.8 0.60 0.4 0.25]; % the period between one re
 p.trial.task.CurRewDelay    = 0.65;  % time to first reward
 
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
-
+p.trial.reward.jackpotTime  = 3;
 p.trial.reward.jackpotDur     = 0.1;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 3;
 
@@ -104,6 +104,9 @@ p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 
 % Main trial timings
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
+p.trial.task.jackpotTime    = 6;   % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
+p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials

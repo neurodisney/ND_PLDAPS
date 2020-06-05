@@ -21,20 +21,20 @@ p.trial.task.ShowHelp = 0; % Moves the fixation spot towards target location
 
 % manual reward from experimenter
 p.trial.reward.GiveInitial = 0;     % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew  = 0.01;  % duration of the initial reward
-p.trial.reward.ManDur      = 0.1;   % reward duration [s] for reward given by keyboard presses
-p.trial.reward.Dur         = 0.4;  % Reward for completing the task successfully
+p.trial.reward.InitialRew  = 0.05;  % duration of the initial reward
+p.trial.reward.ManDur      = 0.05;   % reward duration [s] for reward given by keyboard presses
+p.trial.reward.Dur         = 0.0;  % EXTRA amount of reward applied to each pulse for completing the task successfully
 
 p.trial.reward.IncrConsecutive = 1; % use rewarding scheme that gives more rewards with subsequent correct trials
 p.trial.reward.nPulse          = 1; % number of reward pulses
 p.trial.reward.PulseStep       = [2, 4, 6, 8]; % increase number of pulses with this trial number
 p.trial.reward.IncrementTrial  = [150, 300, 500, 600]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur    = [0.05 0.2, 0.45, 0.6]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur    = [0.125, 0.125, 0.125, 0.125]; % increase number of pulses with this trial number
 
 
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
-p.trial.stim.GRATING.fixWin  = 2.5;
+p.trial.stim.GRATING.fixWin  = 3.0;
 
 % spatial & temporal frequency
 % p.trial.stim.GRATING.sFreq  = datasample([1,2,3,4,5],1); % spatial frequency as cycles per degree, suggested range (WZ): 1-10 cycles/degree
@@ -70,7 +70,7 @@ p.trial.stim.GRATING.res          = 300;
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
+p.trial.behavior.fixation.MinFixStart = 0.3; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
@@ -79,9 +79,9 @@ p.trial.task.stimLatency      = ND_GetITI(0.75, 1.25); % Time from fixation onse
 
 p.trial.task.saccadeTimeout   = 0.75;  % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
-p.trial.task.minTargetFixTime = 0.65;  % Must fixate on target for at least this time before it counts
+p.trial.task.minTargetFixTime = 0.1;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
-p.trial.task.Timing.TimeOut   =  4;  % Time-out[s]  for incorrect responses
+p.trial.task.Timing.TimeOut   =  1;  % Time-out[s]  for incorrect responses
 p.trial.task.Timing.ITI       = ND_GetITI(1,  1.5,  [], [], 1, 0.10);
 
 % ------------------------------------------------------------------------%

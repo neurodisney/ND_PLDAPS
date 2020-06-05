@@ -29,7 +29,7 @@ function p = give(p, amount, nPulse)
         %% datapixx analog output is used
         bufferData = repmat(p.trial.datapixx.adc.TTLamp * ...
                      [ones(1,round(amount*sampleRate)), zeros(1,round(pulse_gap*sampleRate))], 1, nPulse);
-        pds.datapixx.analogOut(bufferData, p.trial.datapixx.adc.RewardChannel);
+                pds.datapixx.analogOut(bufferData, p.trial.datapixx.adc.RewardChannel);
     end
 
     % send event code for reward
