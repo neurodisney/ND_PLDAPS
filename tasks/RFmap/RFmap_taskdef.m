@@ -31,15 +31,15 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.coarse.ori      = [0, 22.5, 45, 67.5 90];   % orient of grating
+        p.trial.stim.coarse.ori      = [0, 90];   % orient of grating
         p.trial.stim.coarse.radius   = 0.75;      % size of grating 
         p.trial.stim.coarse.contrast = 1;         % intensity contrast
         p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.1;      % spacing of grating centers 
         
-        p.trial.stim.coarse.xRange   = [-5, 1];
-        p.trial.stim.coarse.yRange   = [-5, 1];
+        p.trial.stim.coarse.xRange   = [-5, -.5];
+        p.trial.stim.coarse.yRange   = [-5, -.5];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -87,15 +87,15 @@ p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fi
 p.trial.reward.InitialRew   = 0.025; % duration of the initial reward
 
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur          = 0.04; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Dur          = 0.25; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [1 0.8 0.60 0.4 0.25]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 p.trial.task.CurRewDelay    = 0.65;  % time to first reward
 
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
-p.trial.reward.jackpotTime  = 3;
-p.trial.reward.jackpotDur     = 0.1;  % final reward after keeping fixation for the complete time
-p.trial.reward.jackpotnPulse = 3;
+p.trial.reward.jackpotTime  = 6;
+p.trial.reward.jackpotDur     = 1.0;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotnPulse = 1;
 
 
 % ------------------------------------------------------------------------%
@@ -120,7 +120,7 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 p.trial.stim.FIXSPOT.pos   = [0,0];
 p.trial.stim.FIXSPOT.type  = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color = 'white';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size  = 0.15;     % size of the fixation spot
+p.trial.stim.FIXSPOT.size  = 0.25;     % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
