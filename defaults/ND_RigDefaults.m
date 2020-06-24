@@ -71,26 +71,26 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 switch rig
     case 1
-        SS.display.viewdist                     = 76.5; % screen distance to the observer
-        SS.display.heightcm                     = 45.0; % height of the visible screen in cm
-        SS.display.widthcm                      = 80.5; % width  of the visible screen in cm
+        SS.display.viewdist                     = 61; % screen distance to the observer
+        SS.display.heightcm                     = 47; % height of the visible screen in cm
+        SS.display.widthcm                      = 82; % width  of the visible screen in cm
         SS.display.bgColor                      = [0.37, 0.37, 0.37];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
     case 2
-        SS.display.viewdist                     = 83;   
-        SS.display.heightcm                     = 39;     
-        SS.display.widthcm                      = 70;  
+        SS.display.viewdist                     = 61;   
+        SS.display.heightcm                     = 47;     
+        SS.display.widthcm                      = 82;  
         SS.display.bgColor                      = [0.37, 0.37, 0.37]; % datapixx background color: target 20 cd/m^2
     otherwise
-        SS.display.viewdist                     = 97;   
-        SS.display.heightcm                     = 40;    
-        SS.display.widthcm                      = 71;   
+        SS.display.viewdist                     = 61;   
+        SS.display.heightcm                     = 47;    
+        SS.display.widthcm                      = 82;   
 end
 
 SS.display.breakColor                           = 'black';  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
-SS.display.viewdist                             = 76.5;    % screen distance to the observer
-SS.display.heightcm                             = 45;     % height of the visible screen in cm
-SS.display.widthcm                              = 80.5;     % width  of the visible screen in cm
+SS.display.viewdist                             = 61;    % screen distance to the observer
+SS.display.heightcm                             = 47;     % height of the visible screen in cm
+SS.display.widthcm                              = 82;     % width  of the visible screen in cm
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -251,12 +251,12 @@ SS.Block.BlockList      = [];
 SS.datapixx.useAsEyepos        = 0;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XEyeposChannel = 0;
-SS.datapixx.adc.YEyeposChannel = 1;
-SS.datapixx.adc.PupilChannel   = 2;
+SS.datapixx.adc.XEyeposChannel = 3;
+SS.datapixx.adc.YEyeposChannel = 4;
+SS.datapixx.adc.PupilChannel   = 5;
 
 % Saccade parameters
-SS.behavior.fixation.use       =  0;       % does this task require control of eye position
+SS.behavior.fixation.use       = 0;       % does this task require control of eye position
 
 SS.behavior.fixation.on        =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
@@ -294,23 +294,20 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 % rig specific eye calibration parameter
 switch rig
     case 1
-        % usable defaults from Julie's face
-        SS.eyeCalib.defaultGain      = [9.5527 -8.3183];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-4.81 -4.81];    % default offset, used if no calibration points are entered
+        % Dingo hardstate screen Setting 1 6/22/20
+        SS.eyeCalib.defaultGain      = [19.4126 -19.9820];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.8063 -1.8277];    % default offset, used if no calibration points are entered
      
     case 2
-        % trial defaults from Croc's face 
-        SS.eyeCalib.defaultGain      = [17.3761 -19.3308];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.9265 -1.9186];  % default offset, used if no calibration points are entered
+        % Dingo hardstate screen Setting 1 6/22/20 
+        SS.eyeCalib.defaultGain      = [19.4126 -19.9820];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.8063 -1.8277];  % default offset, used if no calibration points are entered
         
-        % B defaults
-       % SS.eyeCalib.defaultGain      = [-19.93433333, -19.68044167];  % default gain, used if no calibration points are entered
-        %SS.eyeCalib.defaultOffset    = [0.7884416667, -1.618075];  % default offset, used if no calibration points are entered
-        
+  
     otherwise
-        % usable defaults 2/25/2020
-        SS.eyeCalib.defaultGain      = [-3.5622, -3.4474];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [0 0];    % default offset, used if no calibration points are entered
+        % Dingo hardstate screen Setting 1 6/22/20
+        SS.eyeCalib.defaultGain      = [19.4126 -19.9820];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.8063 -1.8277];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
