@@ -21,7 +21,7 @@ p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust fixation
+p.trial.behavior.fixation.MinFixStart = 0.5; % minimum time to wait for robust fixation
 
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
