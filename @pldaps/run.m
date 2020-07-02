@@ -64,7 +64,7 @@ try
     end
 
     % --------------------------------------------------------------------%
-    %% start recoding on all controlled components this in not currently done here
+    %% start recoding on all controlled components t0.31his in not currently done here
     % save timing info from all controlled components (datapixx, eyelink, this pc)
     p = ND_BeginExperiment(p);
 
@@ -114,7 +114,7 @@ try
             p.trial = p.defaultParameters;
 
             % ----------------------------------------------------------------%
-            %% Run current trial
+            %% Run current trial0.31
             dpPreTrial = p.defaultParameters;
 
             % run trial
