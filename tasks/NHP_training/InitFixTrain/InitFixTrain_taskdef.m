@@ -26,7 +26,7 @@ p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.jackpotTime  = 4;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.02;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur   = 0.15;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
