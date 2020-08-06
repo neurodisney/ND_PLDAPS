@@ -295,19 +295,19 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [16.4612 -17.2814];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.4656 -1.6812];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [16.4341 -17.5454];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.4267 -1.6646];    % default offset, used if no calibration points are entered
      
     case 2
         % Dingo hardstate screen Setting 1 6/22/20 
-        SS.eyeCalib.defaultGain      = [16.4612 -17.2814];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.4656 -1.6812];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [16.4341 -17.5454];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.4267 -1.6646];  % default offset, used if no calibration points are entered
         
   
     otherwise
         % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [16.4612 -17.2814];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.4656 -1.6812];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [16.4341 -17.5454];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.4267 -1.6646];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
@@ -327,14 +327,14 @@ SS.stim.record.structs = {}; % Cell array to store the properties of stims as th
 SS.stim.pos = [0,0];
 
 % fixation window
-SS.stim.fixWin                       =  2.5;  % diameter of fixation window in dva
+SS.stim.fixWin                       = 2.5;  % diameter of fixation window in dva
 SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
 % Fixation spot stimuli
 SS.stim.FIXSPOT.pos          = [0,0];
-SS.stim.FIXSPOT.fixWin       =  2.0;        % diameter of fixation window in dva
+SS.stim.FIXSPOT.fixWin       =  1.5;        % diameter of fixation window in dva
 SS.stim.FIXSPOT.type         = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 SS.stim.FIXSPOT.color        = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
 SS.stim.FIXSPOT.size         = 0.2;       % size of the fixation spot

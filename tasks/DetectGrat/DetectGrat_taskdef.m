@@ -51,7 +51,7 @@ p.trial.stim.EccLst = [ 2, 3,   4];
 p.trial.stim.AngLst = [45, 0, -45];
 
 % grating contrast
-p.trial.stim.trgtconts = round(logspace(log10(0.005),log10(0.25), 10), 4)-0.01;
+p.trial.stim.trgtconts = round(logspace(log10(0.005),log10(0.05), 10), 4)-0.01;
 p.trial.stim.RespThr = 0.001; % contrast where it can be assumed the grating is seen
 
 % ------------------------------------------------------------------------%
