@@ -81,13 +81,13 @@ p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.07; % duration of the initial reward
+p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
+p.trial.reward.InitialRew   = 0.08; % duration of the initial reward
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur          = 0.07; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Dur          = 0.15; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [1 0.8 0.60 0.4 0.25]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-p.trial.reward.ManDur       = 0.07; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur       = 0.08; % reward duration [s] for reward given by keyboard presses
 p.trial.reward.jackpotDur     = 0.25;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
 
@@ -115,7 +115,7 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 p.trial.stim.FIXSPOT.pos   = [0,0];
 p.trial.stim.FIXSPOT.type  = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color = 'red';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size  = 0.25;     % size of the fixation spot
+p.trial.stim.FIXSPOT.size  = 0.15;     % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

@@ -431,6 +431,7 @@ if(~isempty(p.trial.LastKeyPress))
     end
 end
 
+
 % ####################################################################### %
 function stim(p, val)
     % Don't do anything if stim doesn't change

@@ -16,23 +16,23 @@ function p = InitFixTrain_taskdef(p)
 %% Reward
 % manual reward from experimenter
 p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
+p.trial.reward.InitialRew   = 0.08; % duration of the initial reward
 
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur          = 0.05; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Dur          = 0.02; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 4, 8, 12];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
-p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur       = 0.08; % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.jackpotTime  = 4;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.15;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur   = 0.1;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = .1; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
+p.trial.behavior.fixation.MinFixStart = .15; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
-p.trial.task.Timing.WaitFix = 1.5;  % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 2.0;  % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 0.5;   % minimum time period [s] between subsequent trials
