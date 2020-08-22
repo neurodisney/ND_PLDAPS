@@ -113,11 +113,12 @@ function TaskSetUp(p)
     end
 
     if(p.trial.task.RandomHemi == 1)
-        p.trial.stim.Hemi = datasample(['l', 'r'], 1);
+        p.trial.stim.Hemi = datasample(['r', 'l', 'r', 'l'], 1);
     end
 
     % define both gratings
-    p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1); 
+    %p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1); 
+    p.trial.stim.Trgt.Contrast = datasample([.35, .40, .45, .50],1); 
 
     % pick the higher contrast item as saccade target and make sure it is on the specified hemifield
     if(p.trial.stim.Trgt.Contrast >= p.trial.stim.Ref.Contrast)

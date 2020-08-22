@@ -56,12 +56,14 @@ Break_trial    = which(dt$Outcome == 'Break')
 if(length(Break_trial) == 0){
   Break_start = NA
   Break_end   = NA
-}else{
+}
+else{
   Break_start = (dt$TaskEnd[Break_trial] - SessTrialStart) / 60
 
   if(max(Break_trial) <= length(dt$FixSpotOn)){
     Break_end = (dt$FixSpotOn[Break_trial+1] - SessTrialStart) / 60
-  }else{
+  }
+  else{
     Break_end = (dt$FixSpotOn[Break_trial[-length(Break_trial)]+1] - SessTrialStart) / 60
   }
 
@@ -150,7 +152,8 @@ FixSRT  = dt$SRT_FixStart
 # If we didn't do this, when called from the command line, it would just open briefly and then close when the script ends
 if(interactive()) {
   x11(width=20.5, height=10.5, pointsize=20, title='PercEqui_Behav')
-} else {
+} 
+else {
   # Otherwise only save the figure as a pdf.
   pdf( paste('PercEqui_',dt$Date[1],'.pdf',sep=""), 19.5, 8.5, pointsize=10, title='PercEqui_Behav')
 
@@ -170,10 +173,9 @@ Trng = c(0, SessTrialEnd / 60)
 ###########################################################################################
 # plot 1: saccade time
 Ylim = range(FixSRT, na.rm = TRUE)
-plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Target Onset',
-     xlab='', ylab='Time after Target Onset [s]', xaxt="n")
+plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Target Onset', xlab='', ylab='Time after Target Onset [s]', xaxt="n")
 
-if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
+if(length(Break_end) > 1){ for(i in 1:length(Break_end)){ rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
 points(Ttime[pCorr],       FixSRT[pCorr],       pch=19, col=Corr_Col)
 points(Ttime[pFixBreak],   FixSRT[pFixBreak],   pch=19, col=FixBreak_Col)
@@ -186,17 +188,14 @@ points(Ttime[pEarlyFalse], FixSRT[pEarlyFalse], pch=19, col=EarlyFalse_Col)
 
 abline(h=0,lty=2)
 
-legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBreak", "Miss", "False", "EarlyFalse"),
-       pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, Miss_Col, False_Col, EarlyFalse_Col),
-       inset=c(0,-0.4), title=NULL, xpd=NA, cex=2, bty='n', horiz=TRUE, pt.cex=4)
+legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBreak", "Miss", "False", "EarlyFalse"), pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, Miss_Col, False_Col, EarlyFalse_Col), inset=c(0,-0.4), title=NULL, xpd=NA, cex=2, bty='n', horiz=TRUE, pt.cex=4)
 
 ###########################################################################################
 # plot 2: reaction times
 Ylim = range(SRT, na.rm = TRUE)
-plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Go Cue',
-     xlab='', ylab='SRTs [s]', xaxt="n")
+plot(Trng, Ylim, type='n', xaxs='i', yaxs='i', main='Response after Go Cue', xlab='', ylab='SRTs [s]', xaxt="n")
 
-if(length(Break_end) > 1){ for(i in 1:length(Break_end)){  rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
+if(length(Break_end) > 1){ for(i in 1:length(Break_end)){ rect(Break_start[i], Ylim[1], Break_end[i], Ylim[2], angle = 0, col='gray', border=FALSE) } }
 
 points(Ttime[pCorr],       SRT[pCorr],       pch=19, col=Corr_Col)
 points(Ttime[pFixBreak],   SRT[pFixBreak],   pch=19, col=FixBreak_Col)
@@ -240,10 +239,9 @@ for(i in 1:length(Tavrg)) {
   }
 }
 
-plot(Trng, c(0, 100), type='n', xaxs='i', yaxs='i', main = 'Performance',
-     xlab='Trial Time [s]', ylab='performance [s]')
+plot(Trng, c(0, 100), type='n', xaxs='i', yaxs='i', main = 'Performance', xlab='Trial Time [s]', ylab='performance [s]')
 
-if(length(Break_end) > 1){  for(i in 1:length(Break_end)){  rect(Break_start[i], 0, Break_end[i], 100, angle = 0, col='gray', border=FALSE) } }
+if(length(Break_end) > 1){  for(i in 1:length(Break_end)){ rect(Break_start[i], 0, Break_end[i], 100, angle = 0, col='gray', border=FALSE) } }
 
 abline(h=50, lty=2)
 abline(h=c(25,75), lty=3)
@@ -262,8 +260,7 @@ lines(Tavrg, Rearlyfalse, col=EarlyFalse_Col,  lwd=1)
 # plot 4: RT over Go
 GoSig = dt$StimLatency
 
-plot(GoSig, FixSRT, type='n', xaxs='i', yaxs='i', main = 'RT over GoCue',
-     ylab='Time after Target Onset[s]', xlab='Contrast change [s]')
+plot(GoSig, FixSRT, type='n', xaxs='i', yaxs='i', main = 'RT over GoCue', ylab='Time after Target Onset[s]', xlab='Contrast change [s]')
 
 points(GoSig[pCorr],       FixSRT[pCorr],       pch=19, col=Corr_Col)
 points(GoSig[pFixBreak],   FixSRT[pFixBreak],   pch=19, col=FixBreak_Col)
@@ -304,7 +301,7 @@ if(sum(pEarly) > 4) {
 }
 
  if(sum(pFalse) > 4) {
-   TDurfalse   = density(FixSRT[pFalse], bw=RTbw, na.rm=TRUE)
+  TDurfalse   = density(FixSRT[pFalse], bw=RTbw, na.rm=TRUE)
   TDurfalse$y = TDurfalse$y * sum(pFalse) * RTbw
    all_vals_X = c(all_vals_X, TDurfalse$x)
    all_vals_Y = c(all_vals_Y, TDurfalse$y)
@@ -341,8 +338,7 @@ All_Cnt = hist(dt$StimLatency, breaks=GoBrks, plot=FALSE)
 
 All_Cnt$counts = 0.2 * max(all_vals_Y) * All_Cnt$counts / max(All_Cnt$counts)
 
-plot(All_Cnt, xaxs='i', yaxs='i', main='Response after Target Onset', xlim=range(all_vals_X), ylim=range(all_vals_Y),
-     ylab='count', xlab='Trial Duration [s]', col='gray50', border=NA)
+plot(All_Cnt, xaxs='i', yaxs='i', main='Response after Target Onset', xlim=range(all_vals_X), ylim=range(all_vals_Y), ylab='count', xlab='Trial Duration [s]', col='gray50', border=NA)
 
 lines(TDurall, lwd=2, col='darkgrey')
 
@@ -438,8 +434,7 @@ RTall$y = RTall$y  * sum(pAll)  * RTbw
 all_vals_X = c(all_vals_X, RTall$x)
 all_vals_Y = c(all_vals_Y, RTall$y)
 
-plot(range(all_vals_X), range(all_vals_Y), type='n', xaxs='i', yaxs='i', main='Response after Go Cue',
-     ylab='count', xlab='SRTs [s]')
+plot(range(all_vals_X), range(all_vals_Y), type='n', xaxs='i', yaxs='i', main='Response after Go Cue', ylab='count', xlab='SRTs [s]')
 
 lines(RTall, lwd=2, col='darkgrey')
 
@@ -510,8 +505,7 @@ fitA = quickpsy(d=dtv, x=TargetContr, k=TargetSel, grouping=.(RefContr),
 #                parini=list(c(0.0, 0.8), c(0.15, 0.9), c(0.0, 0.6)) )
 # #               parini=list(c(0.0001, 0.8), c(0.0001, 0.8), c(0.0001, 0.5), c(0.0001, 0.5)) )
 
-plot(fitA$averages$TargetContr, fitA$averages$prob, type='n', xlim=c(0,1),
-     ylim=c(0,1), xlab='Contrast', ylab='Proportion', main='Point of Subjective Equality')
+plot(fitA$averages$TargetContr, fitA$averages$prob, type='n', xlim=c(0,1), ylim=c(0,1), xlab='Contrast', ylab='Proportion', main='Point of Subjective Equality')
 
 Rclst = sort(unique(fitA$averages$RefContr))
 
@@ -527,8 +521,7 @@ for(cRef in Rclst){
 }
 abline(h=0.5, lty=3)
 
-legend("bottomright", legend=Rclst, ncol=2, cex=1.5,
-       pch=c(15), col=seq(1,length(Rclst))+1, title='Reference Contrast')
+legend("bottomright", legend=Rclst, ncol=2, cex=1.5, pch=c(15), col=seq(1,length(Rclst))+1, title='Reference Contrast')
 
 
 ###########################################################################################
@@ -559,10 +552,12 @@ if(!interactive()) {
   if (length(args) == 1) {
     datadir = args[1]
     fname = NA
-  } else if(length(args) > 1) {
+  } 
+  else if(length(args) > 1) {
     datadir = args[1]
     fname = args[-1]
-  } else {
+  } 
+  else {
     datadir = NA
     fname = NA
   }

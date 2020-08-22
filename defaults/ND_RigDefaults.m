@@ -42,7 +42,7 @@ SS.datapixx.use                                 = 1;      % enable control of VP
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
 
-SS.datapixx.propixxIntensity                    = 3;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
+SS.datapixx.propixxIntensity                    = 0;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
 
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
@@ -295,19 +295,19 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [16.4341 -17.5454];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.4267 -1.6646];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [15.8095 -17.3117];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.3712 -1.7566];    % default offset, used if no calibration points are entered
      
     case 2
         % Dingo hardstate screen Setting 1 6/22/20 
-        SS.eyeCalib.defaultGain      = [16.4341 -17.5454];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.4267 -1.6646];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [15.8095 -17.3117];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.3712 -1.7566];  % default offset, used if no calibration points are entered
         
   
     otherwise
         % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [16.4341 -17.5454];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.4267 -1.6646];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [15.8095 -17.3117];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.3712 -1.7566];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
@@ -334,7 +334,7 @@ SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window
 
 % Fixation spot stimuli
 SS.stim.FIXSPOT.pos          = [0,0];
-SS.stim.FIXSPOT.fixWin       =  1.5;        % diameter of fixation window in dva
+SS.stim.FIXSPOT.fixWin       =  2.0;        % diameter of fixation window in dva
 SS.stim.FIXSPOT.type         = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 SS.stim.FIXSPOT.color        = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
 SS.stim.FIXSPOT.size         = 0.2;       % size of the fixation spot
