@@ -61,7 +61,7 @@ if(length(Break_trial) == 0){
 
   if(max(Break_trial) <= length(dt$FixSpotOn)){
     Break_end = (dt$FixSpotOn[Break_trial+1] - SessTrialStart) / 60
- }else{
+  }else{
     Break_end = (dt$FixSpotOn[Break_trial[-length(Break_trial)]+1] - SessTrialStart) / 60
   }
 
@@ -189,6 +189,7 @@ abline(h=0,lty=2)
 legend("bottom", legend=c("Correct","Early", "FixBreak", "StimBreak", "TargetBreak", "Miss", "False", "EarlyFalse"),
        pch=c(15), col=c(Corr_Col, Early_Col, FixBreak_Col, StimBreak_Col, TargetBreak_Col, Miss_Col, False_Col, EarlyFalse_Col),
        inset=c(0,-0.4), title=NULL, xpd=NA, cex=2, bty='n', horiz=TRUE, pt.cex=4)
+
 ###########################################################################################
 # plot 2: reaction times
 Ylim = range(SRT, na.rm = TRUE)
@@ -558,10 +559,10 @@ if(!interactive()) {
   if (length(args) == 1) {
     datadir = args[1]
     fname = NA
- } else if(length(args) > 1) {
+  } else if(length(args) > 1) {
     datadir = args[1]
     fname = args[-1]
-   } else {
+  } else {
     datadir = NA
     fname = NA
   }
@@ -569,5 +570,4 @@ if(!interactive()) {
   # Run the function
   PercEqui_Behav(datadir, fname)
 }
-
 
