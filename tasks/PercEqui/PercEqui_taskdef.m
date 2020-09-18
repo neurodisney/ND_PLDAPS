@@ -57,17 +57,21 @@ p.trial.stim.PosY = datasample([-2, 0, 2], 1);
 p.trial.stim.PosY = 0;
 
 % grating contrast
-cCtr = datasample([0.2, 0.3, 0.5, 0.75], 1);
-   
-% ctrng = ND_HalfSpace(0, 5, 8);
-ctrng = ND_HalfSpace(0, 8, 9);
 
-ctrng = unique(cCtr * [0, fliplr(1 - ctrng(2:end)), 1 + ctrng]);
+%cCtr = datasample([0.2, 0.3, 0.5, 0.75], 1);
+cCtr =  0.3;
+ScaleCtr = round(cCtr*100);
+
+% ctrng = ND_HalfSpace(0, 5, 8);
+ctrng = ND_HalfSpace(0, ScaleCtr, 5);
+
+%ctrng = unique(cCtr * [0, fliplr(1 - ctrng(2:end)), 1 + ctrng]);
+ctrng = unique(cat(2,(cCtr+ctrng./100),(cCtr-ctrng./100)));
 
 % ctrngP = ctrng * 0.5;
 % plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
 % hold on
-% xlim([0,1]);
+% xlim([0,]);
 % ctrngP = ctrng * 0.2;
 % plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
 % ctrngP = ctrng * 0.75;
