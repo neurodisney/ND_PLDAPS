@@ -54,15 +54,14 @@ p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 p.trial.stim.PosX = 2.5;
 %p.trial.stim.PosY = datasample([-2, 0, 2], 1);
 p.trial.stim.PosY = 0;
-
 % grating contrast
 %cCtr = datasample([0.03, 0.06, 0.09, 0.12], 1);
-cCtr = 0.05;
-   
-% ctrng = ND_HalfSpace(0, 5, 8);
+cCtr = 0.3;
+
+%ctrng = ND_HalfSpace(0, 5, 8);
 %ctrng = ND_HalfSpace(0, 8, 9);
-ScaleCtr = round ((cCtr*25),2);
-ctrng = ND_HalfSpace(0,ScaleCtr,9);
+ScaleCtr = round (cCtr*100);
+ctrng = ND_HalfSpace(0,ScaleCtr,5);
 
 %ctrng = unique(cCtr * [0, fliplr(1 - ctrng(2:end)), 1 + ctrng]);
 ctrng = unique(cat(2,(cCtr+ctrng./100),(cCtr-ctrng./100)));

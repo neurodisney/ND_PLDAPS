@@ -1,4 +1,4 @@
-function p = PercEqui(p, state)
+ function p = PercEqui(p, state)
 % Main trial function for a perceptual equilibrium task.
 %
 %
@@ -117,8 +117,8 @@ function TaskSetUp(p)
     end
 
     % define both gratings
-    %p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1); 
-    p.trial.stim.Trgt.Contrast = datasample([.35, .40, .45, .50],1); 
+   p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1); 
+    %p.trial.stim.Trgt.Contrast = datasample([.35, .40, .45, .50],1); 
 
     % pick the higher contrast item as saccade target and make sure it is on the specified hemifield
     if(p.trial.stim.Trgt.Contrast >= p.trial.stim.Ref.Contrast)
