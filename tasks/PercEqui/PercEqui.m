@@ -127,10 +127,12 @@ function TaskSetUp(p)
 
         if(p.trial.stim.Hemi == 'r')
             p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
+           p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
+          
         else
             p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
+            
         end
 
     else
@@ -140,9 +142,11 @@ function TaskSetUp(p)
         if(p.trial.stim.Hemi == 'l')
             p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
+            
         else
             p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
+            
         end
     end
 
@@ -487,6 +491,7 @@ if(~isempty(p.trial.LastKeyPress))
         case p.trial.key.GridKeyCell
             gpos = p.trial.key.GridKey == p.trial.LastKeyPress(1);
             p.trial.stim.PosY = p.trial.stim.GridPos(gpos);
+           
             ND_CtrlMsg(p, ['Moved Grating to Y ', num2str(p.trial.stim.PosY, '%.2f'), '.']);
     end
 end

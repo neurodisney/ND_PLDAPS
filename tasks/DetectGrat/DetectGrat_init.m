@@ -72,7 +72,7 @@ p.defaultParameters.stim.PosXlst    = -4.3;  % range of possible positions on X 
 % define grid locations used by key selection
 p.defaultParameters.stim.EccLst = [5, 5, 5, 5, 5, 5, 5, 5, 5]; % (This is original line)if line=65 p.default Parameters.task.RandomEcc  = 0; this line=73 is active, if p.defaultParameters.task.RandomEcc  = 1; Ecc value will be readed by DetectGrat_taskdef.m
 %p.defaultParameters.stim.EccLst = [2, 3, 4, 2, 3, 4, 2, 3, 4]; % (This is original line)if line=65 p.default Parameters.task.RandomEcc  = 0; this line=73 is active, if p.defaultParameters.task.RandomEcc  = 1; Ecc value will be readed by DetectGrat_taskdef.m
-p.defaultParameters.stim.AngLst = [225, 225, 225, 225, 225, 225, 225, 225, 225];
+p.defaultParameters.stim.AngLst = [-45, -45, -45, -45, -45, -45, -45, -45, -45];
 
 [p.defaultParameters.stim.GridX, p.defaultParameters.stim.GridY] = ...
     pol2cart(p.defaultParameters.stim.AngLst, p.defaultParameters.stim.EccLst);
