@@ -51,7 +51,7 @@ p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 % p.trial.stim.EccLst =  3;
 %p.trial.stim.AngLst = [45, 0, -45]; 
 
-p.trial.stim.PosX = 0;
+p.trial.stim.PosX = datasample([-2.5, 2.5], 1);
 %p.trial.stim.PosY = datasample([-4, 4], 1);
 p.trial.stim.PosY = 2.5;
 
