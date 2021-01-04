@@ -12,9 +12,9 @@ function p = DetectGrat_taskdef(p)
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.ManDur         = 0.05;  % reward duration [s] for reward given by keyboard presses
-p.trial.reward.IncrementTrial = [10,  150, 250,  300, 350, 400]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur   = [0.05, 0.08, 0.1, 0.2, 0.25, 0.3]; % increase number of pulses with this trial number
+p.trial.reward.ManDur         = 0.15;  % reward duration [s] for reward given by keyboard presses
+p.trial.reward.IncrementTrial = [10,  150, 250,  400, 450, 500]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur   = [0.125, 0.15, 0.175, 0.185, 0.2, 0.25]; % increase number of pulses with this trial number
 
 p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
@@ -77,4 +77,16 @@ p.trial.behavior.fixation.entryTime = 0.10;  % minimum time to stay within fixat
 % ------------------------------------------------------------------------%
 %% Task parameters
 p.trial.task.breakFixCheck = 0.2; % Time after a stimbreak where if task is marked early or stim break is calculated
+
+%% Drug delivery parameters
+% TTL pulse series for pico spritzer
+p.trial.datapixx.TTL_spritzerChan      = 5;    % DIO channel
+p.trial.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
+p.trial.datapixx.TTL_spritzerNpulse    = 10;    % number of pulses in a series
+p.trial.datapixx.TTL_spritzerPulseGap  = 1.0; % gap between subsequent pulses
+
+p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
+p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
+
+
 

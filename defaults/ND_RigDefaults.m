@@ -71,26 +71,26 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 switch rig
     case 1
-        SS.display.viewdist                     = 76.5; % screen distance to the observer
-        SS.display.heightcm                     = 44.5; % height of the visible screen in cm
-        SS.display.widthcm                      = 79.5; % width  of the visible screen in cm
+        SS.display.viewdist                     = 63.0; % screen distance to the observer
+        SS.display.heightcm                     = 49.0; % height of the visible screen in cm
+        SS.display.widthcm                      = 87.0; % width  of the visible screen in cm
         SS.display.bgColor                      = [0.37, 0.37, 0.37];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
     case 2
-        SS.display.viewdist                     = 76.5;   
-        SS.display.heightcm                     = 44.5;     
-        SS.display.widthcm                      = 79.5;  
+        SS.display.viewdist                     = 63.0;   
+        SS.display.heightcm                     = 49.0;     
+        SS.display.widthcm                      = 87.0;  
         SS.display.bgColor                      = [0.37, 0.37, 0.37]; % datapixx background color: target 20 cd/m^2
     otherwise
-        SS.display.viewdist                     = 76.5;   
-        SS.display.heightcm                     = 44.5;    
-        SS.display.widthcm                      = 79.5;   
+        SS.display.viewdist                     = 63.0;   
+        SS.display.heightcm                     = 49.0;    
+        SS.display.widthcm                      = 87.0;   
 end
 
 SS.display.breakColor                           = 'black';  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
-SS.display.viewdist                             = 76.5;    % screen distance to the observer
-SS.display.heightcm                             = 44.5;     % height of the visible screen in cm
-SS.display.widthcm                              = 79.5;     % width  of the visible screen in cm
+SS.display.viewdist                             = 63.0;    % screen distance to the observer
+SS.display.heightcm                             = 49.0;     % height of the visible screen in cm
+SS.display.widthcm                              = 87.0;     % width  of the visible screen in cm
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -178,7 +178,7 @@ SS.pldaps.quit                                  = 0;     % control experiment du
 SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file. (WZ TODO: I think could be removed. File names generated automatically.)
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
-SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
+SS.pldaps.MovAv                                 = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
 
 % dirs: configure pldaps' built-in drawing options
 if(exist('/DATA/ExpData', 'dir'))
@@ -295,18 +295,18 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % defaults before Screen Resize 6/22/20
-        SS.eyeCalib.defaultGain      = [250.95 -261.20];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0650 -1.1422];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [19 -19];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.0626 -1.1526];    % default offset, used if no calibration points are entered
      
     case 2
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [250.95 -261.20];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0650 -1.1422];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [19 -19];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.0626 -1.1526];  % default offset, used if no calibration points are entered
         
     otherwise
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [250.95 -261.20];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0650 -1.1422];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [19 -19];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.0626 -1.1526];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states

@@ -31,7 +31,7 @@ switch p.trial.stim.RFmeth
     case 'coarse'
         p.trial.stim.coarse.ori      = [0, 90];   % orient of grating
         p.trial.stim.coarse.radius   = .75;      % size of grating 
-        p.trial.stim.coarse.contrast = .15;         % intensity contrast
+        p.trial.stim.coarse.contrast = .05;         % intensity contrast
         p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.1;      % spacing of grating centers 
@@ -71,8 +71,8 @@ p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 % TTL pulse series for pico spritzer
 p.trial.datapixx.TTL_spritzerChan      = 5;    % DIO channel
 p.trial.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
-p.trial.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
-p.trial.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
+p.trial.datapixx.TTL_spritzerNpulse    = 10;    % number of pulses in a series
+p.trial.datapixx.TTL_spritzerPulseGap  = 1.0; % gap between subsequent pulses
 
 p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
 p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series

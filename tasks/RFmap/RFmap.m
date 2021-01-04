@@ -1,4 +1,4 @@
-function p = RevCorr(p, state)
+function p = RFmap(p, state)
 % Presenting sequence of stimuli that allow offline calculation of visual receptive fields using reverse correlation
 % 
 %
