@@ -570,4 +570,3 @@ if(!interactive()) {
   # Run the function
   PercEqui_Behav(datadir, fname)
 }
-

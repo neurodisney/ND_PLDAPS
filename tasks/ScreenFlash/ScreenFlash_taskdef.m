@@ -39,7 +39,7 @@ p.trial.task.useDrug = 0;
 %% Timing
 p.trial.task.Timing.WaitFix = 0.100;    % Time to get a solid fixation before trial ends unsuccessfully
 
-drugFlashDelay = 0.2;
+drugFlashDelay = 10;
 p.trial.task.Timing.drugFlashDelay = drugFlashDelay;
 
 minInterFlash = 1;
