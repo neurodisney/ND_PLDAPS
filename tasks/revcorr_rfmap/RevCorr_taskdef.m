@@ -45,8 +45,8 @@ p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 % Main trial timings
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
 
-p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
-p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
+%p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented; Corey edit trying to figure out where variable in RFmap is defined 
+%p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli; Corey edit trying to figure out where variable in RFmap is defined 
 
 p.trial.task.jackpotTime    = 6;   % How long stimuli are presented before trial ends and jackpot is given
 

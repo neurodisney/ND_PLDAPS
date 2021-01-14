@@ -60,17 +60,17 @@ ND_Trial2Ascii(p, 'init');
 
 %% initialize target parameters
 
-p.defaultParameters.task.RandomHemi = 1; % if 1, randomly pick left or right hemifield
-p.defaultParameters.task.RandomPar  = 1; % if 1, randomly change orientation and spatial frequency of the grating each trial
-p.defaultParameters.task.RandomEcc  = 1; % if 1, randomly change the grating eccentricity each trial
-p.defaultParameters.task.RandomAng  = 1; % if 1, randomly change the grating angular position each trial
+p.defaultParameters.task.RandomHemi = 0; % if 1, randomly pick left or right hemifield
+p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
+p.defaultParameters.task.RandomEcc  = 0; % if 1, randomly change the grating eccentricity each trial
+p.defaultParameters.task.RandomAng  = 0; % if 1, randomly change the grating angular position each trial
 
 % define random grating parameters for each session
-p.defaultParameters.stim.PosYlst    = -4.3;  % range of possible positions on Y axis 
-p.defaultParameters.stim.PosXlst    = -4.3;  % range of possible positions on X axis 
+p.defaultParameters.stim.PosYlst    = -1.5;  % range of possible positions on Y axis 
+p.defaultParameters.stim.PosXlst    = -1.5;  % range of possible positions on X axis 
 
 % define grid locations used by key selection
-p.defaultParameters.stim.EccLst = [5, 5, 5, 5, 5, 5, 5, 5, 5]; % (This is original line)if line=65 p.default Parameters.task.RandomEcc  = 0; this line=73 is active, if p.defaultParameters.task.RandomEcc  = 1; Ecc value will be readed by DetectGrat_taskdef.m
+p.defaultParameters.stim.EccLst = [2, 2, 2, 2, 2, 2, 2, 2, 2]; % (This is original line)if line=65 p.default Parameters.task.RandomEcc  = 0; this line=73 is active, if p.defaultParameters.task.RandomEcc  = 1; Ecc value will be readed by DetectGrat_taskdef.m
 %p.defaultParameters.stim.EccLst = [2, 3, 4, 2, 3, 4, 2, 3, 4]; % (This is original line)if line=65 p.default Parameters.task.RandomEcc  = 0; this line=73 is active, if p.defaultParameters.task.RandomEcc  = 1; Ecc value will be readed by DetectGrat_taskdef.m
 p.defaultParameters.stim.AngLst = [0, 45, 90, 135, 180, 225, 270, 315, 360];
 
@@ -84,12 +84,12 @@ p.defaultParameters.stim.Ang  = p.defaultParameters.stim.AngLst(cPos);
 
 %p.defaultParameters.stim.PosY = p.defaultParameters.stim.GridX(cPos); %p.defaultParameters.stim.PosY = -3;
 %p.defaultParameters.stim.PosX = p.defaultParameters.stim.GridY(cPos); %p.defaultParameters.stim.PosX = -3;
-p.defaultParameters.stim.PosX = -4.3;
-p.defaultParameters.stim.PosY = -4.3;
+p.defaultParameters.stim.PosX = -1.5;
+p.defaultParameters.stim.PosY = -1.5;
 
 
 p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
-p.defaultParameters.stim.OriLst     = [-45 0 45 90];  % orientation of grating
+p.defaultParameters.stim.OriLst     = [0, 22.5, 45, 67.5 90];  % orientation of grating
 
 p.defaultParameters.stim.Hemi       = datasample(['r', 'l'], 0);
 p.defaultParameters.stim.Trgt.sFreq = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree

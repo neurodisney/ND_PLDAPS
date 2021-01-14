@@ -43,14 +43,14 @@ p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 p.trial.task.fixLatency       = 0.15; % Time to hold fixation before mapping begins
 
 
-p.trial.task.stimOnTime       = 0.1;   % How long each stimulus is presented
-p.trial.task.stimOffTime      = 0.1;     % Gaps between succesive stimuli
+%p.trial.task.stimOnTime       = 0.1;   % How long each stimulus is presented
+%p.trial.task.stimOffTime      = 0.1;     % Gaps between succesive stimuli
 
 p.trial.task.jackpotTime      = 5;     % How long stimuli are presented before trial ends and jackpot is given
 
 % inter-trial interval
-p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = 2.5;  % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials; Corey edit to figure out where same variable in RF map is being defined 
+p.trial.task.Timing.MaxITI  = 2.5;  % maximum time period [s] between subsequent trials; Corey edit to figure out where same variable in RF map is being defined 
 
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
