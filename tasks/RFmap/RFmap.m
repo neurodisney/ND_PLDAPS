@@ -199,9 +199,9 @@ for ori = stimdef.ori
     end
 end
 
-%if p.trial.stim.coarse.ori = 180;
-            %p.trialstim.course.contrast = 100;
-       %end 
+%if (p.trial.stim.coarse.ori = 180);
+    %p.trialstim.course.blankcontrast;
+%end 
         
 % Generate all the possible positions for the stimulus to be
 allXPos = stimdef.xRange(1) : stimdef.grdStp : stimdef.xRange(2);
