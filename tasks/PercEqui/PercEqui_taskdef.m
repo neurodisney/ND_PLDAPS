@@ -14,22 +14,22 @@ function p = PercEqui_taskdef(p)
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.05;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [50, 150, 300,  400, 500,  600, 650]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur   = [0.15, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur   = [0.15, 0.15, 0.18, 0.2, 0.25, 0.28, 0.3]; % increase number of pulses with this trial number
 p.trial.reward.DiscourageProp = 1.0;  % proportion of reward given if previous trial was an error
 
-p.trial.reward.IncrementTrial = [150,  250,   350, 450,   550,  650, 750]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur   = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.3]; % increase number of pulses with this trial number
+%p.trial.reward.IncrementTrial = [150,  250,   350, 450,   550,  650, 750]; % increase number of pulses with this trial number
+%p.trial.reward.IncrementDur   = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.3]; % increase number of pulses with this trial number
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust fixation
+p.trial.behavior.fixation.MinFixStart = 0.15; % minimum time to wait for robust fixation
 
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
 p.trial.task.stimLatency      = ND_GetITI(0.75, 1.5); % Time from fixation onset to stim appearing
 
-p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to the stim before error
+p.trial.task.saccadeTimeout   = 1.5;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = .1;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off

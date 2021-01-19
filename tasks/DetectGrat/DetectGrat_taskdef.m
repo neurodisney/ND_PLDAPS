@@ -70,6 +70,15 @@ p.trial.stim.FIXSPOT.color  = 'FixDetection';  % color of fixation spot (as defi
 p.trial.stim.FIXSPOT.size   = 0.125;           % size of the fixation spot
 
 % ------------------------------------------------------------------------%
+%% Drug delivery parameters (added by Corey)
+% TTL pulse series for pico spritzer
+%p.trial.datapixx.TTL_spritzerChan      = 10;    % DIO channel
+%%p.trial.datapixx.TTL_spritzerNpulse    = 3;    % number of pulses in a series
+%p.trial.datapixx.TTL_spritzerPulseGap  = 1.0; % gap between subsequent pulses
+
+%%p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
+%p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
+
 %% Fixation parameters
 p.trial.behavior.fixation.BreakTime = 0.05;  % minimum time [ms] to identify a fixation break
 p.trial.behavior.fixation.entryTime = 0.10;  % minimum time to stay within fixation window to detect initial fixation start
