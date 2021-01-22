@@ -47,11 +47,12 @@ p.trial.stim.GRATING.fixWin = 2;  %*p.trial.stim.GRATING.radius;
 %p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % radius of grating patch
 p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 
-p.trial.stim.EccLst = [2];
+p.trial.stim.EccLst = [2, 3, 4, 5];
 p.trial.stim.Lst = [90, 0, -90];
 
 % grating contrast
-p.trial.stim.trgtconts = round(logspace(log10(0.2),log10(1), 7), 4)-0.01;
+p.trial.stim.trgtconts = [0.0100, 0.0248, 0, 0.0504, 0.0951, 0.1727, 0, 0.3076, 0.5422, 0.9500];
+%p.trial.stim.trgtconts = round(logspace(log10(0.02),log10(0.96), 8), 4)-0.01;
 p.trial.stim.RespThr = 0.001; % contrast where it can be assumed the grating is seen
 
 % ------------------------------------------------------------------------%

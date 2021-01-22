@@ -34,13 +34,14 @@ switch p.trial.stim.RFmeth
         p.trial.stim.coarse.ori      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];   % orientation of grating 
         p.trial.stim.coarse.radius   = 0.75;      % size of grating 
         p.trial.stim.coarse.contrast = [0.75];    % intensity contrast
+        p.trial.stim
         p.trial.stim.coarse.blankcontrast = 0;    % intensity of blank
         p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.1;       % spacing of grating centers 
         
-        p.trial.stim.coarse.xRange   = [-6, 2];
-        p.trial.stim.coarse.yRange   = [-8, 1];
+        p.trial.stim.coarse.xRange   = [-6, -1];
+        p.trial.stim.coarse.yRange   = [-8, -1];
         
     % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -73,9 +74,9 @@ p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 %% Drug delivery parameters
 % TTL pulse series for pico spritzer
 p.trial.datapixx.TTL_spritzerChan      = 5;    % DIO channel
-p.trial.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
+p.trial.datapixx.TTL_spritzerDur       = .05; % duration of TTL pulse
 p.trial.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
-p.trial.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
+p.trial.datapixx.TTL_spritzerPulseGap  = 1.0; % gap between subsequent pulses
 
 p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
 p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
@@ -105,7 +106,7 @@ p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 
 % Main trial timings
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
-p.trial.task.jackpotTime    = 4;   % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.jackpotTime    = 2;   % How long stimuli are presented before trial ends and jackpot is given
 p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
 p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
 

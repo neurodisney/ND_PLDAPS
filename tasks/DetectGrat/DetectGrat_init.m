@@ -60,10 +60,10 @@ ND_Trial2Ascii(p, 'init');
 
 %% initialize target parameters
 
-p.defaultParameters.task.RandomHemi = 0; % if 1, randomly pick left or right hemifield
-p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
-p.defaultParameters.task.RandomEcc  = 0; % if 1, randomly change the grating eccentricity each trial
-p.defaultParameters.task.RandomAng  = 0; % if 1, randomly change the grating angular position each trial
+p.defaultParameters.task.RandomHemi = 1; % if 1, randomly pick left or right hemifield
+p.defaultParameters.task.RandomPar  = 1; % if 1, randomly change orientation and spatial frequency of the grating each trial
+p.defaultParameters.task.RandomEcc  = 1; % if 1, randomly change the grating eccentricity each trial
+p.defaultParameters.task.RandomAng  = 1; % if 1, randomly change the grating angular position each trial
 
 % define random grating parameters for each session
 p.defaultParameters.stim.PosYlst    = -1.5;  % range of possible positions on Y axis 
