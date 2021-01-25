@@ -295,18 +295,18 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % defaults before Screen Resize 6/22/20
-        SS.eyeCalib.defaultGain      = [19 -19];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0626 -1.1526];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [17.01 -18.5];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.91 -2.05];    % default offset, used if no calibration points are entered
      
     case 2
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [19 -19];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0626 -1.1526];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [17.01 -18.5];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.91 -2.05];  % default offset, used if no calibration points are entered
         
     otherwise
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [19 -19];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0626 -1.1526];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [17.01 -18.5];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.91 -2.05];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
@@ -393,13 +393,13 @@ SS.datapixx.TTL_trialOnChan  = 1;   % DIO channel used for trial state TTL
 
 % ------------------------------------------------------------------------%
 %% TTL pulse series for pico spritzer
-SS.datapixx.TTL_spritzerChan      = 5;    % DIO channel
-SS.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
-SS.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
-SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
+%SS.datapixx.TTL_spritzerChan      = 5;    % DIO channel, commenting this out does not do anything CR 1/24/2021
+%SS.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse, commenting this out does not do anything CR 1/24/2021
+%SS.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series, commenting this out does not do anything CR 1/24/2021
+%SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses, commenting this out does not do anything CR 1/24/2021
 
-SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
-SS.datapixx.TTL_spritzerSeriesGap    = 30;   % gap between subsequent series
+%SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series, commenting this out does not do anything CR 1/24/2021
+%SS.datapixx.TTL_spritzerSeriesGap    = 30;   % gap between subsequent series, commenting this out does not do anything CR 1/24/2021
 
 % ------------------------------------------------------------------%
 

@@ -339,7 +339,7 @@ switch p.trial.CurrEpoch
                 
                 % If stim count goes above the total number of generated stimuli/positions, reshuffle the stims and start again
                 if p.trial.stim.count > length(p.trial.stim.iStim)
-                    reshuffle_stims(p);
+                    reshuffle_stims(p); 
                 end
                 
 %                 % When stage is switched to fine, count is reset at 0, display no stims and wait for jackpot

@@ -29,7 +29,7 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.coarse.ori      = [0, 90];   % orient of grating
+        p.trial.stim.coarse.ori      = [0, 45, 90];   % orient of grating
         p.trial.stim.coarse.radius   = .75;      % size of grating 
         p.trial.stim.coarse.contrast = .05;         % intensity contrast
         p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
@@ -70,9 +70,9 @@ p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 %% Drug delivery parameters
 % TTL pulse series for pico spritzer
 p.trial.datapixx.TTL_spritzerChan      = 5;    % DIO channel
-p.trial.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
-p.trial.datapixx.TTL_spritzerNpulse    = 5;    % number of pulses in a series
-p.trial.datapixx.TTL_spritzerPulseGap  = 1.0; % gap between subsequent pulses
+p.trial.datapixx.TTL_spritzerDur       = 0.5; % duration of TTL pulse
+p.trial.datapixx.TTL_spritzerNpulse    = 2;    % number of pulses in a series
+p.trial.datapixx.TTL_spritzerPulseGap  = .05; % gap between subsequent pulses
 
 p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
 p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
@@ -82,13 +82,13 @@ p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 
 % manual reward from experimenter
 p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
+p.trial.reward.InitialRew   = 0.01; % duration of the initial reward
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
 p.trial.reward.Dur          = 0.01; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 1 1.5 2 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
-p.trial.reward.jackpotDur     = .1;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur     = 0.1;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
 
 
