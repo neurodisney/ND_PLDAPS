@@ -8,19 +8,19 @@ if(~exist('chan','var') || isempty(chan))
 end
 
 if(~exist('PulseDur','var') || isempty(PulseDur))
-    PulseDur = 0.01;  % duration of TTL pulse
+    PulseDur = 0.05;  % duration of TTL pulse
 end
 
 if(~exist('Npulse','var') || isempty(Npulse))
-    Npulse  = 1; % number of pulses in a series
+    Npulse  = 3; % number of pulses in a series
 end
 
 if(~exist('Nseries','var') || isempty(Nseries))
-    Nseries = 0;  % number of pulse packages
+    Nseries = 1;  % number of pulse packages
 end
 
 if(~exist('GapDur','var') || isempty(GapDur))
-    GapDur   = 0.01;  % gap between subsequent pulses
+    GapDur   = 0.1;  % gap between subsequent pulses
 end
 
 if(~exist('SeriesPause','var') || isempty(SeriesPause))

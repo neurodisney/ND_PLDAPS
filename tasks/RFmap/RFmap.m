@@ -288,9 +288,10 @@ switch p.trial.CurrEpoch
             if p.trial.stim.fix.fixating
                 p.trial.task.fixFix = 1;
                 
+                
                 % Time to fixate has expired
             elseif p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix
-                
+                           
                 % Long enough fixation did not occur, failed trial
                 p.trial.task.Good = 0;
                 p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;

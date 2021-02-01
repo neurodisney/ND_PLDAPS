@@ -31,13 +31,13 @@ switch p.trial.stim.RFmeth
     case 'coarse'
         p.trial.stim.coarse.ori      = [0, 45, 90];   % orient of grating
         p.trial.stim.coarse.radius   = .75;      % size of grating 
-        p.trial.stim.coarse.contrast = .05;         % intensity contrast
+        p.trial.stim.coarse.contrast = .50;         % intensity contrast
         p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
-        p.trial.stim.coarse.grdStp   = 0.1;      % spacing of grating centers 
+        p.trial.stim.coarse.grdStp   = 0.5;      % spacing of grating centers 
         
-        p.trial.stim.coarse.xRange   = [-5, 1];
-        p.trial.stim.coarse.yRange   = [-3, 2];
+        p.trial.stim.coarse.xRange   = [-5, 2];
+        p.trial.stim.coarse.yRange   = [-5, 2];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -70,9 +70,9 @@ p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 %% Drug delivery parameters
 % TTL pulse series for pico spritzer
 p.trial.datapixx.TTL_spritzerChan      = 5;    % DIO channel
-p.trial.datapixx.TTL_spritzerDur       = 0.5; % duration of TTL pulse
-p.trial.datapixx.TTL_spritzerNpulse    = 2;    % number of pulses in a series
-p.trial.datapixx.TTL_spritzerPulseGap  = .05; % gap between subsequent pulses
+p.trial.datapixx.TTL_spritzerDur       = 0.05; % duration of TTL pulse
+p.trial.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
+p.trial.datapixx.TTL_spritzerPulseGap  = .1; % gap between subsequent pulses
 
 p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
 p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
@@ -81,14 +81,14 @@ p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.01; % duration of the initial reward
+p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
+p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur          = 0.01; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Dur          = 0.15; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 1 1.5 2 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
-p.trial.reward.jackpotDur     = 0.1;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur   = 0.15;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
 
 
@@ -99,7 +99,7 @@ p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 % Main trial timings
 p.trial.task.CurRewDelay    = 0.01;  % Time to first reward
 p.trial.task.fixLatency     = 0.01;  % Time to hold fixation before mapping begins
-p.trial.task.jackpotTime    = 3.0;   % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.jackpotTime    = 1.5;   % How long stimuli are presented before trial ends and jackpot is given
 p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
 p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
 
