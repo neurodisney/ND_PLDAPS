@@ -15,7 +15,7 @@ function p = RFmap_taskdef(p)
 % ------------------------------------------------------------------------%
 %% Grating stimuli parameters
 
-p.trial.task.Timing.jackpotTime = 8;   % How long stimuli are presented before trial ends and jackpot is given
+%p.trial.task.Timing.jackpotTime = 8;   % How long stimuli are presented before trial ends and jackpot is given
 
 % stimuli could be used in two ways, first using a 'coarse' mapping approach where a wider area 
 % will be covered quickly, and second a 'fine' mapping approach that characterizes a smaller
@@ -23,7 +23,7 @@ p.trial.task.Timing.jackpotTime = 8;   % How long stimuli are presented before t
 %
 
 % !!! MAKE SURE TO ADJUST LOCATION FOR 'FINE' MAPPING !!!
-p.trial.stim.LocCtr = [-2, -3];
+p.trial.stim.LocCtr = [-.5, 1];
 
 p.trial.stim.RFmeth = 'coarse';
 % p.trial.stim.RFmeth = 'fine';
@@ -32,16 +32,17 @@ p.trial.stim.RFmeth = 'coarse';
 switch p.trial.stim.RFmeth
     case 'coarse'
         p.trial.stim.coarse.ori      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];   % orientation of grating 
-        p.trial.stim.coarse.radius   = 0.75;      % size of grating 
+        p.trial.stim.coarse.radius   = 1;      % size of grating 
         p.trial.stim.coarse.contrast = [0.75];    % intensity contrast
         p.trial.stim
         p.trial.stim.coarse.blankcontrast = 0;    % intensity of blank
-        p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
+        %p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency
+        p.trial.stim.coarse.sFreq    = [0.1, 0.2, 0.4, 0.8, 1.6, 3.2, 6.4, 12.8];       % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
-        p.trial.stim.coarse.grdStp   = 0.1;       % spacing of grating centers 
+        p.trial.stim.coarse.grdStp   = 0.5;       % spacing of grating centers 
         
-        p.trial.stim.coarse.xRange   = [-6, -1];
-        p.trial.stim.coarse.yRange   = [-8, -1];
+        p.trial.stim.coarse.xRange   = [-3.5, -3.5];
+        p.trial.stim.coarse.yRange   = [-2.5, -2.5];
         
     % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -54,7 +55,7 @@ switch p.trial.stim.RFmeth
         p.trial.stim.fine.radius   = 0.75;
         p.trial.stim.fine.contrast = 0.9;
         p.trial.stim.fine.sFreq    = 1.5;
-        p.trial.stim.fine.grdStp   = 0.1;
+        p.trial.stim.fine.grdStp   = 0.5;
         
         p.trial.stim.fine.extent   = [2, 2];
         
@@ -85,20 +86,17 @@ p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
+p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.1; % duration of the initial reward, solenoid opening time, 0.1=0.4ml
-
-p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
+p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of rewards until end of fixation period
 p.trial.reward.Dur          = 0.1; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 1 1.5 2 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 p.trial.task.CurRewDelay    = 0.5;  % time to first reward
-
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
 p.trial.reward.jackpotTime  = 4;
 p.trial.reward.jackpotDur     = 0.1;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
-
 
 % ------------------------------------------------------------------------%
 %% Timing

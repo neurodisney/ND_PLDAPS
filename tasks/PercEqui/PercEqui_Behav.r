@@ -71,7 +71,7 @@ if(length(Break_trial) == 0){
   if(lastTrial$Outcome == 'Break') {
     # If the last trial ended with a break, extend the plot to the current time, if it occurred less than an hour ago
     currentTime = as.numeric(Sys.time())
-    if(currentTime - lastTrial$TaskEnd < 3600) {
+    if(currentTime - lastTrial$TaskEnd < 7200) {
         # Extend the plot to now
         SessTrialEnd = currentTime - SessTrialStart
 
