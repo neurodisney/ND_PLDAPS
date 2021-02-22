@@ -1,4 +1,4 @@
-function p = RFmap_taskdef(p)
+function p = RFmapCR_taskdef(p)
 % define task parameters for the joystick training task.
 % This function will be executed at every trial start, hence it is possible
 % to edit it while the experiment is in progress in order to apply online
@@ -29,15 +29,15 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.coarse.ori      = [0, 22.5, 45, 90];   % orient of grating
+        p.trial.stim.coarse.ori      = [0, 45, 90];   % orient of grating
         p.trial.stim.coarse.radius   = .75;      % size of grating 
-        p.trial.stim.coarse.contrast = .75;         % intensity contrast
-        p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
+        p.trial.stim.coarse.contrast = .50;         % intensity contrast
+        p.trial.stim.coarse.sFreq    = [.5, 1.5, 10];       % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.5;      % spacing of grating centers 
         
-        p.trial.stim.coarse.xRange   = [-5, 1];
-        p.trial.stim.coarse.yRange   = [-5, 1];
+        p.trial.stim.coarse.xRange   = [-3, -3];
+        p.trial.stim.coarse.yRange   = [-3, -3];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -71,11 +71,20 @@ p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 % TTL pulse series for pico spritzer
 p.trial.datapixx.TTL_spritzerChan      = 5;    % DIO channel
 p.trial.datapixx.TTL_spritzerDur       = 0.05; % duration of TTL pulse
-p.trial.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
+p.trial.datapixx.TTL_spritzerNpulse    = 5;    % number of pulses in a series
 p.trial.datapixx.TTL_spritzerPulseGap  = .1; % gap between subsequent pulses
 
 p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
 p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
+
+% Behaviorally integrated drug parameters -CR
+p.trial.datapixx.TTL_chan = 5;
+p.trial.datapixx.TTL_PulseDur = .05; 
+p.trial.datapixx.TTL_Npulse = 1;
+p.trial.datapixx.TTL_GapDur = .10; 
+p.trial.datapixx.TTL_Nseries = 1;
+p.trial.datapixx.TTL_SeriesPause = 0;
+p.trial.datapixx.TTL_InjStrobe = 667; 
 
 % ------------------------------------------------------------------------%
 %% Reward
@@ -91,7 +100,6 @@ p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by ke
 p.trial.reward.jackpotDur   = 0.15;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
 
-
 % ------------------------------------------------------------------------%
 %% Timing
 p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
@@ -99,7 +107,7 @@ p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 % Main trial timings
 p.trial.task.CurRewDelay    = 0.01;  % Time to first reward
 p.trial.task.fixLatency     = 0.01;  % Time to hold fixation before mapping begins
-p.trial.task.jackpotTime    = 2.0;   % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.jackpotTime    = 4;   % How long stimuli are presented before trial ends and jackpot is given
 p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
 p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
 

@@ -256,10 +256,7 @@ function TaskDesign(p)
         case p.trial.epoch.WaitStart
             %% Send the TTL pulse to the arduino to dispense drug
             if p.trial.task.useDrug && ~p.trial.task.drugSent
-                ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,    p.trial.datapixx.TTL_spritzerDur,       ...
-                               p.trial.datapixx.TTL_spritzerNpulse,  p.trial.datapixx.TTL_spritzerPulseGap,  ...
-                               p.trial.datapixx.TTL_spritzerNseries, p.trial.datapixx.TTL_spritzerSeriesGap, ...
-                               p.trial.event.INJECT);
+                ND_PulseSeries(5,.05, 10, 2, 1, 30, 667);
                            
                 p.trial.task.drugSent = 1;
             end

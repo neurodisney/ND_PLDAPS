@@ -12,7 +12,7 @@ if(~exist('PulseDur','var') || isempty(PulseDur))
 end
 
 if(~exist('Npulse','var') || isempty(Npulse))
-    Npulse  = 3; % number of pulses in a series
+    Npulse  = 1; % number of pulses in a series
 end
 
 if(~exist('Nseries','var') || isempty(Nseries))
