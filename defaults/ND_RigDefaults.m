@@ -295,18 +295,18 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % defaults before Screen Resize 6/22/20
-        SS.eyeCalib.defaultGain      = [16.5800 -17.5051];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.8938 -2.0810];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [16.8881 -18.1369];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.8786 -2.0517];    % default offset, used if no calibration points are entered
      
     case 2
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [16.5800 -17.5051];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [0.8938 -2.0810];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [16.8881 -18.1369];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.8786 -2.0517];  % default offset, used if no calibration points are entered
         
     otherwise
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [16.5800 -17.5051];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [0.8938 -2.0810];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [16.8881 -18.1369];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.8786 -2.0517];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
@@ -342,7 +342,7 @@ SS.behavior.fixation.fix.pos = [0,0];     % Somethings may rely on this, will be
 % Sine Wave Grating stimlui
 SS.stim.GRATING.sFreq    = 3; % Spatial frequency, cycles/deg
 SS.stim.GRATING.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
-SS.stim.GRATING.angle    = 0; % Rotation
+SS.stim.GRATING.angle    = 90; % Rotation
 SS.stim.GRATING.contrast = 1;
 SS.stim.GRATING.res      = 1000; % Half the size of the texture matrix
 SS.stim.GRATING.radius   = 1;

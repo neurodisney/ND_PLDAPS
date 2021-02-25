@@ -87,7 +87,7 @@ p.defaultParameters.stim.PosX = -3.4; %Corey Hack: to get hardcoded single posit
 
 
 p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
-p.defaultParameters.stim.OriLst     = [0 22.5 45 67.5 90];  % orientation of grating
+p.defaultParameters.stim.OriLst     = 45;  % orientation of grating
 
 p.defaultParameters.stim.Hemi       = datasample(['l', '1'], 0);
 p.defaultParameters.stim.Trgt.sFreq = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
