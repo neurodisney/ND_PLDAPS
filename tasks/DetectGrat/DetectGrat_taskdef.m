@@ -51,7 +51,8 @@ p.trial.stim.EccLst = [2, 3, 4, 5];
 p.trial.stim.Lst = [90, 0, -90];
 
 % grating contrast
-p.trial.stim.trgtconts = [0, 0, 0.0100, 0.0152, 0.0217, 0.0248, 0.0504, 0.0951, 0.1727, 0.9500]; %added two contrast (0.0152, 0.0217)
+p.trial.stim.trgtconts = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223
+%p.trial.stim.trgtconts = [0, 0, 0.0100, 0.0152, 0.0217, 0.0248, 0.0504, 0.0951, 0.1727, 0.9500]; %added two contrast (0.0152, 0.0217)
 %p.trial.stim.trgtconts = [0, 0, 0.0100, 0.0152, 0.0217, 0.0248, 0.0299, 0.0504,  0.0951, 0.9500]; %%added three contrast (0.0152, 0.0217,  0.0299)
 %p.trial.stim.trgtconts = [0, 0, 0.0100, 0.0248, 0.0504, 0.0951, 0.1727, 0.3076, 0.5422, 0.9500];tried at first 2-96%
 %p.trial.stim.trgtconts = round(logspace(log10(0.02),log10(0.96), 8), 4)-0.01; %%(0.0100    0.0248    0.0504    0.0951    0.1727    0.3076    0.5422    0.9500)
