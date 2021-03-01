@@ -179,7 +179,7 @@ function TaskDesign(p)
         case p.trial.epoch.TrialStart
          %% trial starts with onset of fixation spot
             Task_ON(p);
-            ND_FixSpot(p, 1);
+            fixspot(p, 1);
 
             p.trial.EV.TaskStart     = p.trial.CurTime;
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
@@ -336,7 +336,7 @@ function TaskDesign(p)
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
             stim(p,0);   % Turn off stim
-            ND_FixSpot(p, 0);
+            fixspot(p, 0);
 
             Task_OFF(p); % Run standard TaskEnd routine
 
@@ -476,16 +476,6 @@ function stim(p, val)
             otherwise
                 error('bad stim value');
         end
-
-        % Record the change timing
-        if(val == 0)
-            % Stim is turning off
-            ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
-
-        elseif(val == 1)
-            % Stim is turning on
-            ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
-        end
     end
 
 % ####################################################################### %
@@ -510,5 +500,13 @@ function p = Task_Error(p, outcome)
 
     % End the trial
     ND_SwitchEpoch(p, 'TaskEnd');
+    
+% ###################################################################### %
 
+function fixspot(p,bool)
+if bool && ~p.trial.stim.fix.on
+    p.trial.stim.fix.on = 1;
+elseif ~bool && p.trial.stim.fix.on
+    p.trial.stim.fix.on = 0;
+end
     

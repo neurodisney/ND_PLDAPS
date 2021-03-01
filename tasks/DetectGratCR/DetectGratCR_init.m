@@ -82,8 +82,8 @@ p.defaultParameters.stim.Ecc  = p.defaultParameters.stim.EccLst(cPos);
 p.defaultParameters.stim.Ang  = p.defaultParameters.stim.AngLst(cPos);
 %p.defaultParameters.stim.PosY = p.defaultParameters.stim.GridX(cPos); %use this line when you want random X positions
 %p.defaultParameters.stim.PosX = p.defaultParameters.stim.GridY(cPos); %use this line when you want random Y positions 
-p.defaultParameters.stim.PosY = -2.5; % Corey Hack: to get hardcoded single position
-p.defaultParameters.stim.PosX = -3.5; %Corey Hack: to get hardcoded single position
+p.defaultParameters.stim.PosY = -3.5; % Corey Hack: to get hardcoded single position
+p.defaultParameters.stim.PosX = -2.5; %Corey Hack: to get hardcoded single position
 
 
 p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
