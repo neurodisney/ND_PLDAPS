@@ -377,15 +377,18 @@ switch p.trial.CurrEpoch
                         p.trial.stim.count = p.trial.stim.count + 1;
                         p.trial.pulse.count = p.trial.pulse.count + 1;
                         
+                        if p.trial.datapixx.TTL_ON == 1  
+                         
                          %run the pulses_CR
-                          % if p.trial.pulse.count <= 9 
+                            if p.trial.pulse.count <= 3 
                                 
-                                %Send the event code_CR
-                               % pds.datapixx.strobe(p.trial.datapixx.TTL_InjStrobe);
+                               %Send the event code_CR
+                               pds.datapixx.strobe(p.trial.datapixx.TTL_InjStrobe);
                                 
-                                %Run the Pulses_CR
-                               % pds.datapixx.TTL(p.trial.datapixx.TTL_chan, 1, p.trial.datapixx.TTL_PulseDur);
-                           % end
+                               %Run the Pulses_CR
+                                pds.datapixx.TTL(p.trial.datapixx.TTL_chan, 1, p.trial.datapixx.TTL_PulseDur);
+                            end
+                        end    
                     end
                     
                 elseif ~p.trial.task.stimState

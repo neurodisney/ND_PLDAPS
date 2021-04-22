@@ -30,16 +30,16 @@ p.trial.stim.RFmeth = 'coarse';
 switch p.trial.stim.RFmeth
     case 'coarse'
         p.trial.stim.coarse.ori      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];   % orient of grating
-        %p.trial.stim.coarse.ori      = [45, 45, 45, 45, 45, 45, 45, 45, 45];   % orient of grating
-        p.trial.stim.coarse.radius   = 1.0;      % size of grating 
-        p.trial.stim.coarse.contrast = [0.75];         % intensity contrast
-        p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
-        %p.trial.stim.coarse.sFreq    = [0.1, 0.2, 0.4, 0.8, 1.6, 3.2, 6.4, 12.8];       % spatial frequency 
+        %p.trial.stim.coarse.ori      = 90;   % orient of grating
+        p.trial.stim.coarse.radius   = 0.50;      % size of grating 
+        %p.trial.stim.coarse.contrast = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600];         % intensity contrast
+        p.trial.stim.coarse.contrast = 0.75;         % intensity contrast
+        p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency  
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
-        p.trial.stim.coarse.grdStp   = 0.5;      % spacing of grating centers       
+        p.trial.stim.coarse.grdStp   = 0.1;      % spacing of grating centers       
         
-        p.trial.stim.coarse.xRange   = [-2.5, -2.5];
-        p.trial.stim.coarse.yRange   = [-3.5, -3.5];
+        p.trial.stim.coarse.xRange   = [-4, 0];
+        p.trial.stim.coarse.yRange   = [-4, 0];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -71,17 +71,18 @@ p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 % ------------------------------------------------------------------------%
 %% Drug delivery parameters
 % TTL pulse series for pico spritzer
-p.trial.datapixx.TTL_spritzerChan      = 5;    % DIO channel
-p.trial.datapixx.TTL_spritzerDur       = 0.05; % duration of TTL pulse
-p.trial.datapixx.TTL_spritzerNpulse    = 5;    % number of pulses in a series
-p.trial.datapixx.TTL_spritzerPulseGap  = .1; % gap between subsequent pulses
+%p.trial.datapixx.TTL_spritzerChan      = 5;    % DIO channel
+%p.trial.datapixx.TTL_spritzerDur       = 0.025; % duration of TTL pulse
+%p.trial.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
+%p.trial.datapixx.TTL_spritzerPulseGap  = .1; % gap between subsequent pulses
 
-p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
-p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
+%p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
+%p.trial.datapixx.TTL_spritzerSeriesGap = 30 ;  % gap between subsequent series
 
 % Behaviorally integrated drug parameters -CR
+p.trial.datapixx.TTL_ON = 0;
 p.trial.datapixx.TTL_chan = 5;
-p.trial.datapixx.TTL_PulseDur = .05; 
+p.trial.datapixx.TTL_PulseDur = .025; 
 p.trial.datapixx.TTL_Npulse = 1;
 p.trial.datapixx.TTL_GapDur = .10; 
 p.trial.datapixx.TTL_Nseries = 1;
@@ -123,8 +124,8 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos   = [0,0];
-p.trial.stim.FIXSPOT.type  = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.color = 'red';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.type  = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.FIXSPOT.color = 'white';  % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.FIXSPOT.size  = 0.15;     % size of the fixation spot
 
 % ------------------------------------------------------------------------%

@@ -40,7 +40,7 @@ p.trial.stim.GRATING.tFreq  = 0;  % temporal frequency of grating; drift speed, 
 p.trial.stim.GRATING.res    = 300;
 p.trial.stim.GRATING.fixWin = 2;  
 %p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % alternative radius of grating patch
-p.trial.stim.GRATING.radius = 1.0;  % radius of grating patch
+p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 
 p.trial.stim.EccLst = [ 2, 3, 4]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
 p.trial.stim.AngLst = [45, 0, 45]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)

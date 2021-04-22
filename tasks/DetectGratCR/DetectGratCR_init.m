@@ -60,10 +60,10 @@ ND_Trial2Ascii(p, 'init');
 
 %% initialize target parameters
 
-p.defaultParameters.task.RandomHemi = 1; % if 1, randomly pick left or right hemifield
+p.defaultParameters.task.RandomHemi = 0; % if 1, randomly pick left or right hemifield
 p.defaultParameters.task.RandomPar  = 1; % if 1, randomly change orientation and spatial frequency of the grating each trial
-p.defaultParameters.task.RandomEcc  = 1; % if 1, randomly change the grating eccentricity each trial
-p.defaultParameters.task.RandomAng  = 1; % if 1, randomly change the grating angular position each trial
+p.defaultParameters.task.RandomEcc  = 0; % if 1, randomly change the grating eccentricity each trial
+p.defaultParameters.task.RandomAng  = 0; % if 1, randomly change the grating angular position each trial
 
 % define random grating parameters for each session
 %p.defaultParameters.stim.PosYlst    = -2.8;  % range of possible positions on Y axis 
@@ -82,8 +82,8 @@ p.defaultParameters.stim.Ecc  = p.defaultParameters.stim.EccLst(cPos);
 p.defaultParameters.stim.Ang  = p.defaultParameters.stim.AngLst(cPos);
 %p.defaultParameters.stim.PosY = p.defaultParameters.stim.GridX(cPos); %use this line when you want random X positions
 %p.defaultParameters.stim.PosX = p.defaultParameters.stim.GridY(cPos); %use this line when you want random Y positions 
-p.defaultParameters.stim.PosY = -3.5; % Corey Hack: to get hardcoded single position
-p.defaultParameters.stim.PosX = -2.5; %Corey Hack: to get hardcoded single position
+p.defaultParameters.stim.PosY = -1; % Corey Hack: to get hardcoded single position
+p.defaultParameters.stim.PosX = -1; %Corey Hack: to get hardcoded single position
 
 
 p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
