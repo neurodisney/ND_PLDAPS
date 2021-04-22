@@ -71,26 +71,26 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 switch rig
     case 1
-        SS.display.viewdist                     = 63.0; % screen distance to the observer
-        SS.display.heightcm                     = 49.0; % height of the visible screen in cm
-        SS.display.widthcm                      = 87.0; % width  of the visible screen in cm
+        SS.display.viewdist                     = 57.0; % screen distance to the observer
+        SS.display.heightcm                     = 30.0; % height of the visible screen in cm
+        SS.display.widthcm                      = 53.5; % width  of the visible screen in cm
         SS.display.bgColor                      = [0.37, 0.37, 0.37];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
     case 2
-        SS.display.viewdist                     = 63.0;   
-        SS.display.heightcm                     = 49.0;     
-        SS.display.widthcm                      = 87.0;  
+        SS.display.viewdist                     = 57.0;   
+        SS.display.heightcm                     = 30.0;     
+        SS.display.widthcm                      = 53.5;  
         SS.display.bgColor                      = [0.37, 0.37, 0.37]; % datapixx background color: target 20 cd/m^2
     otherwise
-        SS.display.viewdist                     = 63.0;   
-        SS.display.heightcm                     = 49.0;    
-        SS.display.widthcm                      = 87.0;   
+        SS.display.viewdist                     = 57.0;   
+        SS.display.heightcm                     = 30.0;    
+        SS.display.widthcm                      = 53.5;   
 end
 
 SS.display.breakColor                           = 'black';  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
-SS.display.viewdist                             = 63.0;    % screen distance to the observer
-SS.display.heightcm                             = 49.0;     % height of the visible screen in cm
-SS.display.widthcm                              = 87.0;     % width  of the visible screen in cm
+SS.display.viewdist                             = 57.0;    % screen distance to the observer
+SS.display.heightcm                             = 30.0;     % height of the visible screen in cm
+SS.display.widthcm                              = 53.5;     % width  of the visible screen in cm
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -138,7 +138,7 @@ switch rig
         SS.tdt.ip                               = '129.59.230.10';
 end
 
-SS.tdt.channels                                 = 16; % Number of ephys channels to analyze in incoming data
+SS.tdt.channels                                 = 32; % Number of ephys channels to analyze in incoming data
 SS.tdt.sortCodes                                = 4;  % Number of units classified per channel. [1, 2, or 4]
 SS.tdt.bitsPerSort                              = 4;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
@@ -232,7 +232,7 @@ SS.pldaps.ptbVerbosity       = 3;  % See here https://github.com/Psychtoolbox-3/
 % ------------------------------------------------------------------------%
 %% Reward settings
 SS.datapixx.useForReward      = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
-SS.reward.defaultAmount       = 0.05;  % Default amount of reward.=0; [in seconds]
+SS.reward.defaultAmount       = 0.125;  % Default amount of reward.=0; [in seconds]
 SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
 SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
@@ -295,18 +295,18 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % defaults before Screen Resize 6/22/20
-        SS.eyeCalib.defaultGain      = [19 -19];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0626 -1.1526];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [10 -10];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.6940 -0.6897];    % default offset, used if no calibration points are entered
      
     case 2
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [19 -19];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0626 -1.1526];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [10 -10];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.6940 -0.6897];  % default offset, used if no calibration points are entered
         
     otherwise
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [19 -19];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0626 -1.1526];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [10 -10];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.6940 -0.6897];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
@@ -440,8 +440,12 @@ SS.key.spritz    = KbName('tab');    % Send a TTL pulse over the analog channel 
 SS.key.BlockAdvance      = KbName('a'); % advance to next block
 SS.key.BlockEqualCorrect = KbName('s'); % switch between accepting only correct trials or all trials
 
-% view eye calibration on screen
-SS.key.viewEyeCalib      = KbName('insert'); % View the calibration points
+% eye calibration
+SS.key.viewEyeCalib      = KbName('insert'); % View the current calibration points on screen
+SS.key.CalibrateEyeOffset= KbName('Home'); % toggle between off, xTweak and yTweak for offset
+SS.key.CalibrateEyeGain  = KbName('End'); % toggle between off, xTweak and yTweak for gain
+SS.key.CalibrateEyeUp    = KbName('PageUp'); %increase or move offset/gain up
+SS.key.CalibrateEyeDown  = KbName('PageDown'); %decrease oe move offset/gain down
 
 % Keys for freeing the keyboard, allowing for use in other programs while the task is going
 SS.pldaps.keyboardFree   = 0; % Start with PLDAPS interpretting key strokes.
