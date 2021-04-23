@@ -84,6 +84,7 @@ if(isempty(state))
     
     %% Allocate memory and reset counters
     p.trial.stim.count = 0;
+    p.trial.pulse.count= 0;
     
     %---------------------------------------------------------------------%
 else
@@ -334,15 +335,19 @@ switch p.trial.CurrEpoch
         
         % Still fixating
         if p.trial.stim.fix.fixating
-            
-            if p.trial.CurTime < p.trial.stim.fix.EV.FixStart + p.trial.task.jackpotTime
-                % Jackpot time has not yet been reached
+               
+             % Jackpot time has not yet been reached
+            if p.trial.CurTime < p.trial.stim.fix.EV.FixStart + p.trial.task.jackpotTime 
                 
+                %send the event code_CR
+                %pds.datapixx.strobe(p.trial.datapixx.TTL_InjStrobe);
+               
+    
                 % If stim count goes above the total number of generated stimuli/positions, reshuffle the stims and start again
                 if p.trial.stim.count > length(p.trial.stim.iStim)
                     reshuffle_stims(p); 
                 end
-                
+
 %                 % When stage is switched to fine, count is reset at 0, display no stims and wait for jackpot
 %                 if p.trial.stim.count == 0
 %                     stim(p,0);
@@ -358,19 +363,32 @@ switch p.trial.CurrEpoch
                     
                     % Reset the reward timer
                     p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
-                end
+                    end
                 
                 if p.trial.task.stimState
                     % Keep stim on for stimOn Time
                     if p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.stimOnTime
                         % Full stimulus presentation has occurred
-                        % TODO: Record data here
                      
                         % Turn stim off
                         stim(p,0);
                         
                         % Increment stim counter
                         p.trial.stim.count = p.trial.stim.count + 1;
+                        p.trial.pulse.count = p.trial.pulse.count + 1;
+                        
+                        if p.trial.datapixx.TTL_ON == 1  
+                         
+                         %run the pulses_CR
+                            if p.trial.pulse.count <= 3 
+                                
+                               %Send the event code_CR
+                               pds.datapixx.strobe(p.trial.datapixx.TTL_InjStrobe);
+                                
+                               %Run the Pulses_CR
+                                pds.datapixx.TTL(p.trial.datapixx.TTL_chan, 1, p.trial.datapixx.TTL_PulseDur);
+                            end
+                        end    
                     end
                     
                 elseif ~p.trial.task.stimState
