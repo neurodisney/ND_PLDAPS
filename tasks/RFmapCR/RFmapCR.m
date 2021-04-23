@@ -201,9 +201,41 @@ for ori = stimdef.ori
 end
 
 % Generate all the possible positions for the stimulus to be
-allXPos = stimdef.xRange(1) : stimdef.grdStp : stimdef.xRange(2);
-allYPos = stimdef.yRange(1) : stimdef.grdStp : stimdef.yRange(2);
-p.trial.stim.locations = combvec(allXPos,allYPos)';
+if rem(p.trial.stim.count, 2) == 0 
+
+    allXPosa = stimdef.xRangea(1) : stimdef.grdStp : stimdef.xRangea(2);
+
+else if 
+
+        allXPosb = stimdef.xRangeb(1) : stimdef.grdStp : stimdef.xRangeb(2);
+    end
+end
+
+
+%allXPos = randi([-3, -2], 1);
+if rem(p.trial.stim.count, 2) == 0 
+
+    allYPosa = stimdef.yRangea(1) : stimdef.grdStp : stimdef.yRangea(2);
+
+else if 
+    
+        allYPosb = stimdef.yRangeb(1) : stimdef.grdStp : stimdef.yRangeb(2);
+    
+    end
+end
+
+%allYPos = randi([-5, -3.5], 1);
+if rem(p.trial.stim.count, 2) == 0 
+    
+p.trial.stim.locations = combvec(allXPosa,allYPosa)';
+
+else if 
+
+p.trial.stim.locations = combvec(allXPosb,allYPosb)';
+    end
+end
+
+%p.trial.stim.locations = (allXPos,allYPos)';
 
 
 %% Generate a shuffled list of all possible stimuli and location indices for reference during the experiment
@@ -548,4 +580,5 @@ indexReference = Shuffle(combvec(1:nStims,1:nLocs)');
 p.trial.stim.iStim = indexReference(:,1);
 p.trial.stim.iPos = indexReference(:,2);
 
-p.trial.stim.count = 1;      
+p.trial.stim.count = 1;    
+

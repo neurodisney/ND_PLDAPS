@@ -29,15 +29,15 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.coarse.ori      = 360;   % orient of grating
+        p.trial.stim.coarse.ori      = [0, 45, 90, 135, 180];   % orient of grating
         p.trial.stim.coarse.radius   = .75;      % size of grating 
-        p.trial.stim.coarse.contrast = .75;         % intensity contrast
+        p.trial.stim.coarse.contrast = .30;         % intensity contrast
         p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.5;      % spacing of grating centers 
         
-        p.trial.stim.coarse.xRange   = [-3, -3];
-        p.trial.stim.coarse.yRange   = [-3, -3];
+        p.trial.stim.coarse.xRange   = [-6, -1];
+        p.trial.stim.coarse.yRange   = [-6, -1];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...

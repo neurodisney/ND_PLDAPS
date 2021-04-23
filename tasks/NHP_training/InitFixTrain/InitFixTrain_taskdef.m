@@ -102,7 +102,7 @@ p.trial.Block.maxBlockTrials =  [1];
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size = 0.15;     % size of the fixation spot
+p.trial.stim.FIXSPOT.size = 0.25;     % size of the fixation spot
 p.trial.stim.FIXSPOT.color  = 'FixHold';  % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixWinStp = 0.05;  % refine resizing of fixation step for this task only(modify default rig settings)
 

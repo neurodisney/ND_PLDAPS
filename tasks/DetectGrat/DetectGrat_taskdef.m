@@ -14,7 +14,7 @@ function p = DetectGrat_taskdef(p)
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.15;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [10,  150, 250,  400, 450, 500]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur   = [0.175, 0.175, 0.175, 0.2, 0.2, 0.25]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur   = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]; % increase number of pulses with this trial number
 
 p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
@@ -67,7 +67,7 @@ p.trial.Block.maxBlockTrials = 10;
 p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';          % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color  = 'FixDetection';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size   = 0.125;           % size of the fixation spot
+p.trial.stim.FIXSPOT.size   = 0.125;           % size of the fixation spot 0.125
 
 % ------------------------------------------------------------------------%
 %% Drug delivery parameters (added by Corey)
