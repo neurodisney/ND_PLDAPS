@@ -54,7 +54,6 @@ strobeOff = hex2dec([currDout(1:3), '0000']);
 waveform = [strobeOn, strobeOff, strobeOff];
 Datapixx('WriteDoutBuffer', waveform);
 
-
 %% Schedule waveform
 % Now, schedule it. The 3 in [dur 3] means that it plays at dur seconds per
 % sample
@@ -67,7 +66,7 @@ Datapixx('SetMarker');
 Datapixx('StartDoutSchedule');
 
 % If timings are requested, get them. Otherwise just send the signal
-if nargout ~= 0   
+if(nargout > 0)   
     t = nan(2,1);
     t(1) = GetSecs;
      
@@ -80,7 +79,6 @@ if nargout ~= 0
     dpTime = Datapixx('GetMarker');
     
     timings = [mean(t) dpTime diff(t)];
-    
 else
     % GO
     Datapixx('RegWrRd');

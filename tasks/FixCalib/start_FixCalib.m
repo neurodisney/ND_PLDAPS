@@ -1,4 +1,15 @@
 function p = start_FixCalib(subjname, rig)
+% Example call to function:
+% ND_reset;start_FixCalib('croc', 2)
+% the above line is to calibrate subject 'croc' in rig number 2
+
+% To accept fixation (i.e. you believe the animal is looking at target), press ENTER
+% You can calibrate up tp nine positions in a grid using the number pad
+% for example, the 4 button on the number pad will present a target in the center (x=0, y=0)
+% the 7 button will present top leftl, e.g. (x=-4, y=4)
+% 'f' will turn fixation off and on (toggle)
+% 'r' is also a toggle and will randomly choose targets in a range set in FixCalib_taskdef.m 
+% 
 % main function to run a task - this variant will have settings that uses the Fixtrain 
 % task to calibrate eye position and therefore should be used for initial fixation training.
 %
@@ -45,7 +56,7 @@ SS.editable = {'task.RandomPos', 'stim.FIXSPOT.pos'};
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
-SS.sound.use                  = 0;
+SS.sound.use                  = 1;
 SS.sound.useDatapixx          = 1;
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant

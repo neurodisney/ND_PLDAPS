@@ -1,10 +1,10 @@
-function Ovec = ND_LogSpace(From, To, Nele)
-% ND_HalfSpace - create a vector with a log spacing between elements
+function Ovec = ND_DoubleSpace(From, To, Nele)
+% ND_HalfSpace - create a vector by doubling initial value
 %
 % DESCRIPTION 
-%   Creates a vector with <Nele> elements of with values ranging 
-%   between <From> and <To> by calling Matlab's logspace function. This is
-%   a convenience wrapper to ensure consistency in function arguments.
+%   Creates a vector of with values ranging between <From> and <To>
+%   By taking the half distance between the first two elements until it 
+%   has a length of <Nele> elements. 
 % 
 % SYNTAX 
 % Ovec = ND_HalfSpace(From, To, Nele)
@@ -22,19 +22,12 @@ function Ovec = ND_LogSpace(From, To, Nele)
 
 % ____________________________________________________________________________ %
 %% define default parameters
-
 if(~exist('From','var') || isempty(From))
-   From = 1;
+   From = 2;
 end
 
-if(~exist('To','var') || isempty(To))
-   To = 10;
-end
-
-if(To == 0 || From == 0)
-    CorrZero = 0.1 * abs(To-From);
-else
-    CorrZero = 0;
+if(~exist('To','var'))
+   To = [];
 end
 
 if(~exist('Nele','var') || isempty(Nele))
@@ -44,11 +37,19 @@ elseif(Nele < 2)
 end
 
 % ____________________________________________________________________________ %
-%% call matlab function
-Ovec = logspace(log10(From+CorrZero), log10(To+CorrZero), Nele) - CorrZero;
+%% Init output vector
+Ovec = nan(Nele,1);
+Ovec(1) = From;
 
-if(From > To)
-    Ovec = flip(From -(Ovec - To));
+for(i=2:Nele)
+    Ovec(i) = 2*Ovec(i-1);
 end
 
+if(~isempty(To))
+    Ovec(Ovec>To) = [];
+end
+
+if(Ovec(end) < To)
+    Ovec(end+1) = To;
+end
 

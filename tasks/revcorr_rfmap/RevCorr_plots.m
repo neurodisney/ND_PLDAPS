@@ -57,7 +57,9 @@ try
     
 catch me
     disp('Online plots failed')
-    warning(me.message)
+    stackTop = me.stack(end);
+    errorMsg = ['line ', stackTop.line, ', ', stackTop.name, ': ', me.message];
+    warning(errorMsg)
 end
 
 %% Draw plots
@@ -120,11 +122,16 @@ drawnow
         % Shows the histogram of fixation time
         subplot(plotRows, plotCols, plotCols)
         
+        % Don't even try to plot the histogram if no fixations have been done
+        if ~any(fixDurs)
+            return;
+        end
+        
         binWidth = 1;
         ibw = 1 / binWidth;
         
         % Get the edges of the histogram bins
-        maxEdge = ceil(max(fixDurs)*ibw)/ibw;
+        maxEdge = ceil(nanmax(1,max(fixDurs))*ibw)/ibw;
         edges = 0:ibw:maxEdge;
         
         % Plot the histogram

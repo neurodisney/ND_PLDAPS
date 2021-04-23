@@ -1,4 +1,4 @@
-function p = DetectGrat_aftertrial(p)
+function p = RFmap_aftertrial(p)
 % this function is executed after a trial for example to save task specific 
 % information across trials or to make decicicions about future trials
 % based of the previous trials (i.e. utilizing the Palamedes Toolbox)

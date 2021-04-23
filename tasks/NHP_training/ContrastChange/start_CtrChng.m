@@ -46,7 +46,7 @@ SS.editable = {'task.RandomPos', 'behavior.fixation.FixWin', 'stim.GRATING.sFreq
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
-SS.sound.use                  = 0; % auditory feedback?
+SS.sound.use                  = 1; % auditory feedback?
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
 SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
@@ -74,7 +74,6 @@ SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states
 % If there are modification from the default settings needed, copy the
 % needed lines from ND_RigDefaults and alter the values here.
 
-SS.display.bgColor    = [0.25, 0.25, 0.25];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker, less if you don’t plan to use it for offline use
 
 %% ################## Edit within the preceding block ################### %%

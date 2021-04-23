@@ -45,6 +45,8 @@ end
 %% initialize plot
 if(offln == 1)
     figure('Position', fig_sz, 'Units', 'normalized');
+elseif(isempty(p.plotdata) || offln == 1)
+    p.plotdata.fig = figure('Position', fig_sz, 'Units', 'normalized');
 elseif(isempty(p.plotdata.fig) || offln == 1)
     p.plotdata.fig = figure('Position', fig_sz, 'Units', 'normalized');
 else

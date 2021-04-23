@@ -95,11 +95,9 @@ function TaskSetUp(p)
     p.trial.task.fixFix  = 0;
     p.trial.task.stimFix = 0;
     
-    
     p.trial.task.CueState  = 0;   % 0 is off, 1 is all equal, 2 is target cue on
-    p.trial.task.StimState = 0;   % 0 is off, 1 is all on, 2 is target change
+    p.trial.task.StimState = 0;   % 0 is off, 1 is all on,    2 is target change
     
-
     %% Generate all the visual stimuli
     % Fixation spot
     p.trial.stim.fix = pds.stim.FixSpot(p);
@@ -142,10 +140,16 @@ function TaskSetUp(p)
     end
 
     % Generate the low contrast distractor stimulus
+    % WZ ToDo: Add more than one distractor (use array)
     p.trial.stim.GRATING.pos        = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
     p.trial.stim.GRATING.contrast   = p.trial.stim.GRATING.lowContrast;
     p.trial.stim.grating_distractor = pds.stim.Grating(p);
 
+    
+    % generate cue stimuli    
+    % WZ ToDo: Get positions from the gratings, define target cue (going to change) and distractor cues
+    
+    
     % Assume manual control of the activation of the grating fix windows
     p.trial.stim.grating_target.autoFixWin      = 0;
     p.trial.stim.grating_target_chng.autoFixWin = 0;
@@ -278,10 +282,10 @@ function TaskDesign(p)
                     ND_FixSpot(p,0);
 
                     % Mark trial (early) false and end task
-                    p.trial.outcome.CurrOutcome  = p.trial.outcome.False;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.False;
                     
                     % time to early to detect proper fixation break, thus set the time here explicitly
-                    p.trial.EV.Response          = p.trial.EV.FixLeave;
+                    p.trial.EV.Response         = p.trial.EV.FixLeave;
 
                     ND_SwitchEpoch(p, 'TaskEnd');
 
@@ -421,13 +425,76 @@ function TaskCleanAndSave(p)
 %% additional inline functions
 % ####################################################################### %
 
-function manage_cue(p)
+function manage_cue(p, val)
 %% control display and luminance/color change of cue 
+
+    % Don't do anything if stim doesn't change
+    if(val ~= p.trial.task.stimState)
+
+        p.trial.task.stimState = val;
+
+        % Turn on/off the appropriate generated stimuli
+        % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
+        switch val
+            case 0
+                p.trial.stim.reference.on        = 0;
+                p.trial.stim.target.on           = 0;
+
+            case 1
+                p.trial.stim.target.on           = 1;
+                p.trial.stim.target.fixActive    = 1;
+
+            otherwise
+                error('bad stim value');
+        end
+
+        % Record the change timing
+        if(val == 0)
+            % Stim is turning off
+            ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
+
+        elseif(val == 1)
+            % Stim is turning on
+            ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+        end
+    end
+
    
 
 
-function manage_stim(p)
+function manage_stim(p, val)
 %% control appearance and change of stimuli
+    % Don't do anything if stim doesn't change
+    if(val ~= p.trial.task.stimState)
+
+        p.trial.task.stimState = val;
+
+        % Turn on/off the appropriate generated stimuli
+        % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
+        switch val
+            case 0
+                p.trial.stim.reference.on        = 0;
+                p.trial.stim.target.on           = 0;
+
+            case 1
+                p.trial.stim.target.on           = 1;
+                p.trial.stim.target.fixActive    = 1;
+
+            otherwise
+                error('bad stim value');
+        end
+
+        % Record the change timing
+        if(val == 0)
+            % Stim is turning off
+            ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
+
+        elseif(val == 1)
+            % Stim is turning on
+            ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+        end
+    end
+
 
 
 function KeyAction(p)

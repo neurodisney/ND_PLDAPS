@@ -173,7 +173,53 @@ function TaskSetUp(p)
          p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
     end
     
-    p.trial.stim.FIXSPOT.color = 'white';
+    % If the fixspot color is a cell, choose one of the strings from the cell to be the color
+    if iscell(p.trial.stim.FIXSPOT.color)
+        nColors = length(p.trial.stim.FIXSPOT.color);
+        iColor = randi(nColors);
+        p.trial.stim.FIXSPOT.color = p.trial.stim.FIXSPOT.color{iColor};
+    end
+    
+    % Send a signal based on the stimulus color
+    switch p.trial.stim.FIXSPOT.color
+        case 'black'
+            pds.datapixx.strobe(15000);
+            
+        case 'grey1'
+            pds.datapixx.strobe(15010);
+        
+        case 'grey2'
+            pds.datapixx.strobe(15020);
+        
+        case 'grey3'
+            pds.datapixx.strobe(15030);
+        
+        case 'grey4'
+            pds.datapixx.strobe(15040);
+        
+        case 'grey5'
+            pds.datapixx.strobe(15050);
+        
+        case 'grey6'
+            pds.datapixx.strobe(15060);
+        
+        case 'grey7'
+            pds.datapixx.strobe(15070);
+        
+        case 'grey8'
+            pds.datapixx.strobe(15080);
+        
+        case 'grey9'
+            pds.datapixx.strobe(15090);
+        
+        case 'white'
+            pds.datapixx.strobe(15100);
+        
+        otherwise
+            pds.datapixx.strobe(15999);
+            
+    end
+        
     
     %% Make the visual stimuli
     % Fixation spot

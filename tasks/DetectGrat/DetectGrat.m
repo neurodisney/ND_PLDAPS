@@ -13,6 +13,12 @@ if(~exist('state', 'var'))
 end
 
 % ####################################################################### %
+ %% Allocate memory and reset counters
+
+ p.trial.pulse.count= 0;
+    
+%---------------------------------------------------------------------%
+
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed.
 % This part corresponds to the experimental setup file and could be a separate
@@ -173,7 +179,7 @@ function TaskDesign(p)
         case p.trial.epoch.TrialStart
          %% trial starts with onset of fixation spot
             Task_ON(p);
-            ND_FixSpot(p, 1);
+            fixspot(p, 1);
 
             p.trial.EV.TaskStart     = p.trial.CurTime;
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
@@ -185,13 +191,45 @@ function TaskDesign(p)
         %% Fixation target shown, waiting for a sufficiently held gaze
             Task_WaitFixStart(p);
 
+            if(p.trial.CurrEpoch == p.trial.epoch.Fixating)
+            % fixation just started, initialize fixation epoch
+                % initial rewardfor fixation start
+                if(p.trial.reward.GiveInitial == 1)
+                    pds.reward.give(p, p.trial.reward.InitialRew);
+                    p.trial.EV.FirstReward   = p.trial.CurTime;
+                    p.trial.Timer.lastReward = p.trial.CurTime;
+                else
+                    p.trial.Timer.lastReward = p.trial.stim.fix.EV.FixStart;
+                end
+                
+            elseif(p.trial.CurrEpoch == p.trial.epoch.TaskEnd)
+                p.trial.task.FixPeriod = p.trial.CurTime - p.trial.EV.FixStart;
+            end
+            
         case p.trial.epoch.Fixating
         %% check fixation until target stimulus will appear
             if(p.trial.stim.fix.fixating)
                 if(p.trial.task.stimState == 0)
                     if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
+                        
                         stim(p, 1); % Turn on stim
-                        ND_SwitchEpoch(p, 'WaitSaccade');
+                        
+                        ND_SwitchEpoch(p, 'WaitSaccade') 
+                        
+                          if p.trial.datapixx.TTL_ON == 1  
+                                
+                                % Send the event code_CR
+                                pds.datapixx.strobe(p.trial.datapixx.TTL_InjStrobe);
+                                
+                                % Run the Pulses_CR
+                                for(i=1:p.trial.datapixx.TTL_Npulse)
+                                    pds.datapixx.TTL(p.trial.datapixx.TTL_chan, 1, p.trial.datapixx.TTL_PulseDur);
+                                    
+                                    if(i < p.trial.datapixx.TTL_Npulse)
+                                        WaitSecs(p.trial.datapixx.TTL_GapDur);
+                                    end
+                                end         
+                        end
                     end
                 end
 
@@ -298,7 +336,7 @@ function TaskDesign(p)
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
             stim(p,0);   % Turn off stim
-            ND_FixSpot(p, 0);
+            fixspot(p, 0);
 
             Task_OFF(p); % Run standard TaskEnd routine
 
@@ -338,8 +376,8 @@ if(~isempty(p.trial.LastKeyPress))
     switch p.trial.LastKeyPress(1)
         % random position of target on each trial
         case KbName('r')
-             p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
-             p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
+            p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
+            p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
              
             if(p.trial.task.RandomAng)
                 ND_CtrlMsg(p, 'Random Grating location on each trial.');
@@ -349,7 +387,7 @@ if(~isempty(p.trial.LastKeyPress))
 
         % random position of target on each trial
         case KbName('e')
-             p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
+            p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
              
             if(p.trial.task.RandomEcc)
                 ND_CtrlMsg(p, 'Random Grating eccemtricity on each trial.');
@@ -359,7 +397,7 @@ if(~isempty(p.trial.LastKeyPress))
 
         % random position of target on each trial
         case KbName('a')
-             p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
+            p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
              
             if(p.trial.task.RandomAng)
                 ND_CtrlMsg(p, 'Random Grating angular position on each trial.');
@@ -416,6 +454,7 @@ if(~isempty(p.trial.LastKeyPress))
     end
 end
 
+
 % ####################################################################### %
 function stim(p, val)
     % Don't do anything if stim doesn't change
@@ -427,25 +466,15 @@ function stim(p, val)
         % Only use the fixation window of the high contrast stimulus to avoid problems with overlapping fix windows
         switch val
             case 0
-                p.trial.stim.reference.on        = 0;
-                p.trial.stim.target.on           = 0;
+                p.trial.stim.reference.on     = 0;
+                p.trial.stim.target.on        = 0;
 
             case 1
-                p.trial.stim.target.on           = 1;
-                p.trial.stim.target.fixActive    = 1;
+                p.trial.stim.target.on        = 1;
+                p.trial.stim.target.fixActive = 1;
 
             otherwise
                 error('bad stim value');
-        end
-
-        % Record the change timing
-        if(val == 0)
-            % Stim is turning off
-            ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
-
-        elseif(val == 1)
-            % Stim is turning on
-            ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
         end
     end
 
@@ -471,5 +500,13 @@ function p = Task_Error(p, outcome)
 
     % End the trial
     ND_SwitchEpoch(p, 'TaskEnd');
+    
+% ###################################################################### %
 
+function fixspot(p,bool)
+if bool && ~p.trial.stim.fix.on
+    p.trial.stim.fix.on = 1;
+elseif ~bool && p.trial.stim.fix.on
+    p.trial.stim.fix.on = 0;
+end
     

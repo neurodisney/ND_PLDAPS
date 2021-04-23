@@ -1,4 +1,4 @@
-function SS = ND_RigDefaults(rig)
+ function SS = ND_RigDefaults(rig)
 % set default parameters for a rig in the Disney lab.
 %
 % This file summarizes gives an overview of parameters that could be set for
@@ -42,7 +42,7 @@ SS.datapixx.use                                 = 1;      % enable control of VP
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
 
-SS.datapixx.propixxIntensity                    = 2;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
+SS.datapixx.propixxIntensity                    = 0;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
 
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
@@ -71,26 +71,26 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 switch rig
     case 1
-        SS.display.viewdist                     = 98.5; % screen distance to the observer
-        SS.display.heightcm                     = 40.5; % height of the visible screen in cm
-        SS.display.widthcm                      = 73.5; % width  of the visible screen in cm
+        SS.display.viewdist                     = 61; % screen distance to the observer
+        SS.display.heightcm                     = 47; % height of the visible screen in cm
+        SS.display.widthcm                      = 82; % width  of the visible screen in cm
         SS.display.bgColor                      = [0.37, 0.37, 0.37];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
     case 2
-        SS.display.viewdist                     = 83;   
-        SS.display.heightcm                     = 39;     
-        SS.display.widthcm                      = 70;  
-        SS.display.bgColor                      = [0.18, 0.18, 0.18]; % datapixx background color: target 20 cd/m^2
+        SS.display.viewdist                     = 61;   
+        SS.display.heightcm                     = 47;     
+        SS.display.widthcm                      = 82;  
+        SS.display.bgColor                      = [0.37, 0.37, 0.37]; % datapixx background color: target 20 cd/m^2
     otherwise
-        SS.display.viewdist                     = 97;   
-        SS.display.heightcm                     = 40;    
-        SS.display.widthcm                      = 71;   
+        SS.display.viewdist                     = 61;   
+        SS.display.heightcm                     = 47;    
+        SS.display.widthcm                      = 82;   
 end
 
 SS.display.breakColor                           = 'black';  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
-SS.display.viewdist                             = 97;    % screen distance to the observer
-SS.display.heightcm                             = 40;     % height of the visible screen in cm
-SS.display.widthcm                              = 71;     % width  of the visible screen in cm
+SS.display.viewdist                             = 61;    % screen distance to the observer
+SS.display.heightcm                             = 47;     % height of the visible screen in cm
+SS.display.widthcm                              = 82;     % width  of the visible screen in cm
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -138,7 +138,7 @@ switch rig
         SS.tdt.ip                               = '129.59.230.10';
 end
 
-SS.tdt.channels                                 = 16; % Number of ephys channels to analyze in incoming data
+SS.tdt.channels                                 = 32; % Number of ephys channels to analyze in incoming data
 SS.tdt.sortCodes                                = 4;  % Number of units classified per channel. [1, 2, or 4]
 SS.tdt.bitsPerSort                              = 4;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
@@ -171,7 +171,8 @@ SS.pldaps.finish                                = inf;   % Number of trials to r
 SS.pldaps.maxPriority                           = 1;     % Switch to PTB to maxpriority during the trial? See MaxPriority('?')
 SS.pldaps.maxTrialLength                        = 25;    % Maximum duration of a trial in seconds. Used to allocate memory.
 SS.pldaps.nosave                                = 0;     % disables saving of data when true. see .pldaps.save for more control
-SS.pldaps.save_nostart                          = 0;     % do not save pds files if the trial was not started
+%SS.pldapt default parameters for a rig in the Disney lab.
+%s.save_nostart                          = 0;     % do not save pds files if the trial was not started
 SS.pldaps.pass                                  = 0;     % indicator of behavior (i.e. fixations) should always be assumed to be good.
 SS.pldaps.quit                                  = 0;     % control experiment during a trial.
 SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
@@ -250,12 +251,12 @@ SS.Block.BlockList      = [];
 SS.datapixx.useAsEyepos        = 0;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XEyeposChannel = 0;
-SS.datapixx.adc.YEyeposChannel = 1;
-SS.datapixx.adc.PupilChannel   = 2;
+SS.datapixx.adc.XEyeposChannel = 3;
+SS.datapixx.adc.YEyeposChannel = 4;
+SS.datapixx.adc.PupilChannel   = 5;
 
 % Saccade parameters
-SS.behavior.fixation.use       =  0;       % does this task require control of eye position
+SS.behavior.fixation.use       = 0;       % does this task require control of eye position
 
 SS.behavior.fixation.on        =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
@@ -293,16 +294,20 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 % rig specific eye calibration parameter
 switch rig
     case 1
-        SS.eyeCalib.defaultGain      = [-8.438,-8.293];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [0.748,4.534];    % default offset, used if no calibration points are entered
+        % Dingo hardstate screen Setting 1 6/22/20
+        SS.eyeCalib.defaultGain      = [16.4697, -18.7675];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.5784, -1.7543];    % default offset, used if no calibration points are entered
      
     case 2
-        SS.eyeCalib.defaultGain      = [-15.34 -17.65];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.273 -1.052];  % default offset, used if no calibration points are entered
+        % Dingo hardstate screen Setting 1 6/22/20 
+        SS.eyeCalib.defaultGain      = [15.4337 -16.8761];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.3797 -1.7520];  % default offset, used if no calibration points are entered
         
+  
     otherwise
-        SS.eyeCalib.defaultGain      = [-3.5622, -3.4474];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [0 0];    % default offset, used if no calibration points are entered
+        % Dingo hardstate screen Setting 1 6/22/20
+        SS.eyeCalib.defaultGain      = [16.4697, -18.767];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.5784, -1.7543];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
@@ -322,18 +327,18 @@ SS.stim.record.structs = {}; % Cell array to store the properties of stims as th
 SS.stim.pos = [0,0];
 
 % fixation window
-SS.stim.fixWin                       =  4;  % diameter of fixation window in dva
+SS.stim.fixWin                       = 2.5;  % diameter of fixation window in dva
 SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
 % Fixation spot stimuli
-SS.stim.FIXSPOT.pos     = [0,0];
-SS.stim.FIXSPOT.fixWin  =  4;         % diameter of fixation window in dva
-SS.stim.FIXSPOT.type    = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-SS.stim.FIXSPOT.color   = 'fixspot';  % color of fixation spot (as defined in the lookup tables)
-SS.stim.FIXSPOT.size    = 0.2;        % size of the fixation spot
-SS.behavior.fixation.fix.pos = [0,0]; % Somethings may rely on this, will be overwritten upon creation of first FixSpot
+SS.stim.FIXSPOT.pos          = [0,0];
+SS.stim.FIXSPOT.fixWin       =  2.0;        % diameter of fixation window in dva
+SS.stim.FIXSPOT.type         = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+SS.stim.FIXSPOT.color        = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
+SS.stim.FIXSPOT.size         = 0.2;       % size of the fixation spot
+SS.behavior.fixation.fix.pos = [0,0];     % Somethings may rely on this, will be overwritten upon creation of first FixSpot
 
 % Sine Wave Grating stimlui
 SS.stim.GRATING.sFreq    = 3; % Spatial frequency, cycles/deg
@@ -347,6 +352,14 @@ SS.stim.GRATING.pos      = [0, 0];
 SS.stim.GRATING.fixWin   =  4;  
 SS.stim.GRATING.alpha    = 1; % Fully opaque
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
+
+% Ring (i.e. location cue)
+SS.stim.RING.pos       = [0,0];
+SS.stim.RING.size      = 2;
+SS.stim.RING.linewidth = 0.1;
+SS.stim.RING.color     = 'fixspot'; 
+SS.stim.RING.fixWin    = 2;
+SS.stim.RING.alpha     = 1; % Fully opaque
 
 % ------------------------------------------------------------------------%
 %% Joystick
@@ -387,9 +400,10 @@ SS.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
 SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
 
 SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
-SS.datapixx.TTL_spritzerSeriesGap = 30;   % gap between subsequent series
+SS.datapixx.TTL_spritzerSeriesGap    = 30;   % gap between subsequent series
 
-% ------------------------------------------------------------------------%
+% ------------------------------------------------------------------%
+
 %% Stimulation/Drug Injection
 SS.Drug.DoStim     = 0;       % activate module to control drug application
 SS.Drug.StimTrial  = 0;       % Is the current trial a drug trial

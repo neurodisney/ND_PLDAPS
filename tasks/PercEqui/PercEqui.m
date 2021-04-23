@@ -1,4 +1,4 @@
-function p = PercEqui(p, state)
+ function p = PercEqui(p, state)
 % Main trial function for a perceptual equilibrium task.
 %
 %
@@ -112,19 +112,17 @@ function TaskSetUp(p)
         p.trial.stim.Ref.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
     end
 
-    % get grating location
-    % if random position is required pick one and move fix spot
-    if(p.trial.task.RandomPos == 1)
-        p.trial.stim.PosY = datasample(p.trial.stim.PosYlst, 1);
-        p.trial.stim.PosX = datasample(p.trial.stim.PosXlst, 1);
-    end
-
     if(p.trial.task.RandomHemi == 1)
-        p.trial.stim.Hemi = datasample(['l', 'r'], 1);
+        p.trial.stim.Hemi = datasample(['r', 'l', 'r', 'l'], 1);
+    
+    else 
+        p.trial.stim.Hemi = 'r';
+
     end
 
     % define both gratings
-    p.trial.stim.Trgt.Contrast = p.trial.stim.trgtconts(p.trial.Nr); % contrast determined by condition number
+   p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1); 
+    %p.trial.stim.Trgt.Contrast = datasample([.35, .40, .45, .50],1); 
 
     % pick the higher contrast item as saccade target and make sure it is on the specified hemifield
     if(p.trial.stim.Trgt.Contrast >= p.trial.stim.Ref.Contrast)
@@ -132,11 +130,13 @@ function TaskSetUp(p)
         p.trial.stim.SaccadeDistractor = 'reference';
 
         if(p.trial.stim.Hemi == 'r')
-            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
+           p.trial.stim.Ref.Pos  = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
+           p.trial.stim.Trgt.Pos = [ p.trial.stim.PosX, p.trial.stim.PosY];
+          
         else
-            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Ref.Pos  = [ p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
+            
         end
 
     else
@@ -144,11 +144,13 @@ function TaskSetUp(p)
         p.trial.stim.SaccadeDistractor = 'target';
 
         if(p.trial.stim.Hemi == 'l')
-            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Ref.Pos  = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [ p.trial.stim.PosX, p.trial.stim.PosY];
+            
         else
-            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Ref.Pos  = [ p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
+            
         end
     end
 
@@ -160,7 +162,7 @@ function TaskSetUp(p)
     p.trial.stim.reference         = pds.stim.Grating(p);
 
     % create distractor
-    if(p.trial.task.RandomPar == 1 && p.trial.task.EqualStim == 0)
+    if(p.trial.task.RandomPar  == 1 && p.trial.task.EqualStim == 0)
         p.trial.stim.Trgt.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
         p.trial.stim.Trgt.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
     else
@@ -168,11 +170,11 @@ function TaskSetUp(p)
         p.trial.stim.Trgt.ori   = p.trial.stim.Ref.ori;
     end
 
-    p.trial.stim.GRATING.sFreq     = p.trial.stim.Trgt.sFreq;
-    p.trial.stim.GRATING.ori       = p.trial.stim.Trgt.ori;
-    p.trial.stim.GRATING.pos       = p.trial.stim.Trgt.Pos;
-    p.trial.stim.GRATING.contrast  = p.trial.stim.Trgt.Contrast;
-    p.trial.stim.target            = pds.stim.Grating(p);
+    p.trial.stim.GRATING.sFreq    = p.trial.stim.Trgt.sFreq;
+    p.trial.stim.GRATING.ori      = p.trial.stim.Trgt.ori;
+    p.trial.stim.GRATING.pos      = p.trial.stim.Trgt.Pos;
+    p.trial.stim.GRATING.contrast = p.trial.stim.Trgt.Contrast;
+    p.trial.stim.target           = pds.stim.Grating(p);
 
     % Assume manual control of the activation of the grating fix windows
     p.trial.stim.grating_target.autoFixWin    = 0;
@@ -181,6 +183,11 @@ function TaskSetUp(p)
     % increase reward after defined number of correct trials
     RewDur = find(p.trial.reward.IncrementTrial > p.trial.NHits+1, 1, 'first');
     p.trial.reward.Dur = p.trial.reward.IncrementDur(RewDur);
+    
+    if(p.trial.LastHits == 0)
+        % previous trial was error, discourage by reducing the current reward
+         p.trial.reward.Dur =  p.trial.reward.Dur * p.trial.reward.DiscourageProp;
+    end
 
     ND_SwitchEpoch(p, 'ITI');
 
@@ -423,16 +430,17 @@ function KeyAction(p)
 if(~isempty(p.trial.LastKeyPress))
 
     switch p.trial.LastKeyPress(1)
-
         % random position of target on each trial
         case KbName('r')
-             p.trial.task.RandomPos = abs(p.trial.task.RandomPos - 1);
+%             p.trial.task.RandomAng = abs(p.trial.task.RandomAng - 1);
+%             p.trial.task.RandomEcc = abs(p.trial.task.RandomEcc - 1);
+%              
+%             if(p.trial.task.RandomAng)
+%                 ND_CtrlMsg(p, 'Random Grating location on each trial.');
+%             else
+%                 ND_CtrlMsg(p, 'Grating location is kept constant.');
+%             end
 
-           if(p.trial.task.RandomPos)
-                ND_CtrlMsg(p, 'Random Grating location on each trial.');
-            else
-                ND_CtrlMsg(p, 'Grating location is kept constant.');
-            end
 
         % randomly select a new spatial frequency
         case KbName('f')
@@ -487,6 +495,7 @@ if(~isempty(p.trial.LastKeyPress))
         case p.trial.key.GridKeyCell
             gpos = p.trial.key.GridKey == p.trial.LastKeyPress(1);
             p.trial.stim.PosY = p.trial.stim.GridPos(gpos);
+           
             ND_CtrlMsg(p, ['Moved Grating to Y ', num2str(p.trial.stim.PosY, '%.2f'), '.']);
     end
 end

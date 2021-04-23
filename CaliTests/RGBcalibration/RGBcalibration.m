@@ -31,7 +31,7 @@ if(isempty(state))
          ND_DefineCol(p, p.defaultParameters.RGB.GreyNames{i}, i+100, p.defaultParameters.RGB.GreySteps(i));
      end
     
- %% displace fixation window and fixation target
+    %% displace fixation window and fixation target
     p.defaultParameters.task.fixrect = ND_GetRect([0,0], 6);  
     
     Screen('Preference', 'TextAntiAliasing', 1);
@@ -96,19 +96,16 @@ function TaskSetUp(p)
 % ####################################################################### %
 function TaskDraw(p)
 %% show epoch dependent stimuli
-% go through the task epochs as defined in TaskDesign and draw the stimulus
-% content that needs to be shown during this epoch.
+% Show a square with the desired RGB value
 
 %     scrtxt = sprintf('Greyscale value: %.2f', p.trial.RGB.GreySteps(p.trial.RGB.CurrPos));
 %     Screen('DrawText', p.trial.display.overlayptr, scrtxt , 0, -8, ...
 %                        p.trial.display.clut.orange, p.trial.display.clut.bg);
-% 
 
     Screen('FillRect', p.trial.display.overlayptr, ...
                        p.trial.display.clut.(p.trial.RGB.GreyNames{p.trial.RGB.CurrPos}), ...
                        p.trial.task.fixrect);
 
-% Save useful info to an ascii table for plotting
 % ####################################################################### %
 
 function KeyAction(p)

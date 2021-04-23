@@ -32,21 +32,30 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Experiment',  'p.trial.session.experimentSetupFile', '%s');
     p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
     p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
-    p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart',   '%d');
-    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.FixOn',                     '%d');
-    p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
+    
+    p = ND_AddAsciiEntry(p, 'TrialStart',  'p.trial.EV.TrialStart',               '%.5f');
+    p = ND_AddAsciiEntry(p, 'TrialEnd',    'p.trial.EV.TrialEnd',                 '%.5f');
+    
+    
+    p = ND_AddAsciiEntry(p, 'Taskstart',   'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart', '%.5f');
+    p = ND_AddAsciiEntry(p, 'TaskDur',     'p.trial.EV.TaskEnd   - p.trial.EV.TaskStart',                '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart  - p.trial.EV.FixOn',                    '%.5f');
+    p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%.5f');
     p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
+
+    p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixSpotOff',  'p.trial.EV.FixOff',                   '%.5f');
 
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     
-    p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.task.FixPeriod', '%.5f');
     p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
     p = ND_AddAsciiEntry(p, 'intITI',      'p.trial.task.Timing.ITI',             '%.5f');
 
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
+    p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '%.5f');
        
     % call this after ND_InitSession to be sure that output directory exists!
     ND_Trial2Ascii(p, 'init');
@@ -55,7 +64,7 @@ if(isempty(state))
     p.defaultParameters.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
     p.defaultParameters.behavior.fixation.FixWinStp  = 1;      % change of the size of the fixation window upon key press
     p.defaultParameters.behavior.fixation.FixSPotStp = 0.25;
-    p.defaultParameters.stim.FIXSPOT.fixWin          = 4;         
+    p.defaultParameters.stim.FIXSPOT.fixWin          = 6;         
     
     % just initialize here, will be overwritten by conditions
     p.defaultParameters.reward.MinWaitInitial  = 0.05;
@@ -133,7 +142,9 @@ function TaskSetUp(p)
     p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI, ...
                                          p.trial.task.Timing.MaxITI, [], [], 1, 0.10);
                                      
-     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  p.trial.task.CurRewDelay + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+     p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix +  ...
+                                        p.trial.task.CurRewDelay    + ...
+                                        p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
 
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
@@ -145,6 +156,8 @@ function TaskSetUp(p)
     % State for achieving fixation
     p.trial.task.fixFix = 0;
     
+    p.trial.task.FixPeriod = NaN;
+
     % if random position is required pick one and move fix spot
     if(p.trial.task.RandomPos == 1)
          Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
@@ -199,6 +212,8 @@ function TaskDesign(p)
                 else
                     p.trial.Timer.lastReward = p.trial.stim.fix.EV.FixStart;
                 end
+            elseif(p.trial.CurrEpoch == p.trial.epoch.TaskEnd)
+                p.trial.task.FixPeriod = p.trial.CurTime - p.trial.EV.FixStart;
             end
             
         % ----------------------------------------------------------------%
@@ -215,32 +230,35 @@ function TaskDesign(p)
                     cstep = find(p.trial.reward.Step <= p.trial.reward.count, 1, 'last');
 
                     if(p.trial.CurTime > p.trial.Timer.lastReward + p.trial.reward.Period(cstep))                        
-                        % Give the reward and update the lastReward time
+                    % Give the reward and update the lastReward time
                         pds.reward.give(p, p.trial.reward.Dur);
                         p.trial.Timer.lastReward = p.trial.CurTime;
                         p.trial.reward.count     = p.trial.reward.count + 1;
                     end
                 end
             else
+                % Play jackpot sound
+                pds.audio.playDP(p,'jackpot','left');
+                
                 % Give JACKPOT!
                 pds.reward.give(p, p.trial.reward.jackpotDur);
                 p.trial.Timer.lastReward = p.trial.CurTime;
 
                 % Best outcome
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
+                
+                p.trial.task.FixPeriod = p.trial.CurTime - p.trial.EV.FixStart;
 
                 % Turn off fixation spot
                 ND_FixSpot(p,0);
                 
                 % End the task
                 ND_SwitchEpoch(p,'TaskEnd');
-
-                % Play jackpot sound
-                pds.audio.playDP(p,'jackpot','left');
             end
         
         % Fixation Break, end the trial        
         elseif(~p.trial.stim.fix.fixating)
+            p.trial.task.FixPeriod = p.trial.CurTime - p.trial.EV.FixStart;
             pds.audio.playDP(p,'breakfix','left');
             ND_SwitchEpoch(p,'TaskEnd');
             ND_FixSpot(p,0);
@@ -302,19 +320,19 @@ if(~isempty(p.trial.LastKeyPress))
             
         % move target by steps
         case KbName('RightArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.ND_FixSpotStp, 0];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [p.trial.behavior.fixation.FixSpotStp, 0];
             p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
             
         case KbName('LeftArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.ND_FixSpotStp, 0];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [p.trial.behavior.fixation.FixSpotStp, 0];
             p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
             
         case KbName('UpArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.ND_FixSpotStp];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos + [0, p.trial.behavior.fixation.FixSpotStp];
             p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
             
         case KbName('DownArrow')
-            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.ND_FixSpotStp];
+            p.trial.stim.FIXSPOT.pos = p.trial.stim.FIXSPOT.pos - [0, p.trial.behavior.fixation.FixSpotStp];
             p.trial.stim.fix.pos     = p.trial.stim.FIXSPOT.pos;
     end
 end

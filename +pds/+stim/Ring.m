@@ -4,33 +4,38 @@ classdef Ring < pds.stim.BaseStim
 
 properties
     size
-    type
+    linewidth
     color
 end
 
 methods
-    
-    function obj = FixSpot(p,pos,size,type,color,fixWin)
-        if nargin < 6 || isempty(fixWin)
-            fixWin = p.trial.stim.FIXSPOT.fixWin;
+             
+   function obj = Ring(p, pos, size, linewidth, color, alpha, fixWin)
+       
+        if nargin < 2 || isempty(pos)
+            pos = p.trial.stim.RING.pos;
+        end
+       
+         if nargin < 3 || isempty(size)
+            size = p.trial.stim.RING.size;
+        end
+      
+        if nargin < 4 || isempty(linewidth)
+            linewidth = p.trial.stim.RING.linewidth;
         end
         
         if nargin < 5 || isempty(color)
-            color = p.trial.stim.FIXSPOT.color;
+            color = p.trial.stim.RING.color;
         end
         
-        if nargin < 4 || isempty(type)
-            type = p.trial.stim.FIXSPOT.type;
+        if nargin < 6 || isempty(alpha)
+            alpha = p.trial.stim.RING.alpha;
         end
         
-        if nargin < 3 || isempty(size)
-            size = p.trial.stim.FIXSPOT.size;
+        if nargin < 7 || isempty(fixWin)
+            fixWin = p.trial.stim.RING.fixWin;
         end
-        
-        if nargin < 2 || isempty(pos)
-            pos = p.trial.stim.FIXSPOT.pos;
-        end
-        
+                
         % Load the BaseStim superclass
         obj@pds.stim.BaseStim(p, pos, fixWin)
         
@@ -40,29 +45,47 @@ methods
         % Fixspot is not counted as a stimulus, so it should not record its properties
         obj.recordProps = {};
        
-        obj.color = color;
-        obj.type = type;
-        obj.size = size;
-        obj.pos = pos;
+        obj.color     = color;
+        obj.linewidth = linewidth;
+        obj.size      = size;
+        obj.alpha     = alpha;
+        obj.pos       = pos;
+        obj.res       = round(100 * obj.size);
+        obj.srcRect   = [0, 0, 2*obj.res + 1, 2*obj.res + 1];
         
         % Save a reference to this object in a dependable place in the p struct
-        p.trial.behavior.fixation.fix = obj;
+        p.trial.behavior.cue.ring = obj;
+               
+        % Create the texture matrix
+        CoorVec = linspace(-obj.size/2, obj.size/2, obj.res);
+
+        [x,y] = meshgrid(CoorVec, CoorVec);
         
+        % Create a circular aperture using the separate alpha-channel:
+        ringmat = ( (x.^2 + y.^2) <= (obj.size - obj.linewidth)^2 | ...
+                    (x.^2 + y.^2)  > obj.size^2  );
+                
+        ringmat(:,:,2) = ringmat; % duplicate as alpha map
+        ringmat(:,:,1) = ringmat(:,:,1) * p.trial.display.clut.(obj.color); % set as CLUT index
+        
+        % Make the texture that gets drawn
+        obj.texture = Screen('MakeTexture', window, ringmat, [], [], 2, [], glsl);
     end
     
-    function draw(obj,p)
+    function draw(obj, p)
         if obj.on
-            switch  obj.type
-                case 'disc'
-                    Screen('gluDisk', p.trial.display.overlayptr, p.trial.display.clut.(obj.color), ...
-                        obj.pos(1), obj.pos(2), obj.size);
-                case 'rect'
-                    Screen('FillRect',  p.trial.display.overlayptr, p.trial.display.clut.(obj.color), ...
-                        ND_GetRect(obj.pos, obj.size));
-                    
-                otherwise
-                    error('Unknown type of fixation spot: %s', p.trial.behavior.fixation.FixType);
-            end
+            Window = p.trial.display.ptr;
+            
+            % Calculate the rect using the position
+            destRect = [obj.pos - obj.radius, obj.pos + obj.radius];
+            
+            % Filter mode (not sure what the best value is yet)
+            % For more information see the PTB documentation for Screen('DrawTexture')
+            filterMode = 3;
+            
+            % Draw the texture
+            Screen('DrawTexture', Window, obj.texture, obj.srcRect, destRect, ...
+                                          obj.angle, filterMode, obj.alpha);
         end
     end
     

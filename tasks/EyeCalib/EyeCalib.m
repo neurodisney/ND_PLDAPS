@@ -201,7 +201,7 @@ function TaskDesign(p)
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
                 elseif (p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.CurRewDelay)                    
                     
-                    % Succesful
+                    % Successful
                     p.trial.task.Good = 1;
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;
                     

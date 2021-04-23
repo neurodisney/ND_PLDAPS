@@ -20,13 +20,14 @@ disp('');
 % file or if needed for later use in the task program)
 
 p.defaultParameters.EV.TrialStart    = NaN; % Trial start time
+p.defaultParameters.EV.TrialEnd      = NaN; % Trial start time
 p.defaultParameters.EV.PlanStart     = NaN; % The planned task start time based on ITI
 p.defaultParameters.EV.TaskStart     = NaN; % actual task start after animal got ready (i.e. joystick is in released state)
 p.defaultParameters.EV.TaskStartTime = NaN; % Holds a DateStr of the time the task starts
 p.defaultParameters.EV.TaskEnd       = NaN; % actual task end
 p.defaultParameters.EV.NextTrialStart= NaN; % When the next task should start (based on ITI and passed to next trial)
 p.defaultParameters.EV.Initiated     = NaN; % animal intiated the task
-p.defaultParameters.EV.StimOn        = NaN; % Stimulus Onset 
+p.defaultParameters.EV.StimOn        = NaN; % Stimulus Onset
 p.defaultParameters.EV.StimOff       = NaN; % Stimulus Offset
 p.defaultParameters.EV.StimChange    = NaN; % Stimulus Change
 p.defaultParameters.EV.FixOn         = NaN; % Onset of fixation spot
@@ -67,11 +68,11 @@ if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
     p.defaultParameters.EV.FixLeave   = NaN; % time when eyes leave fixation window
     p.defaultParameters.EV.Saccade    = NaN; % response saccade detected
-    
+
     % Fixspot
     p.defaultParameters.EV.FixSpotStart = NaN; % Start of fixation on central fix spot
     p.defaultParameters.EV.FixSpotStop  = NaN; % Stop of fixation on central fix spot
-    
+
     % Target
     p.defaultParameters.EV.FixTargetStart = NaN; % Start of fixation on target
     p.defaultParameters.EV.FixTargetStop  = NaN; % Stop of fixation on target
@@ -125,8 +126,8 @@ p.defaultParameters.event.FIX_BRK_SPEED = 3003;
 % joystick related
 p.defaultParameters.event.JOY_PRESS     = 2100;    % joystick press detected
 p.defaultParameters.event.JOY_RELEASE   = 2101;    % joystick release detected
-p.defaultParameters.event.JOY_ON        = 2110;      % joystick elevation above pressing threshold
-p.defaultParameters.event.JOY_OFF       = 2111;      % joystick elevation below releasing threshold
+p.defaultParameters.event.JOY_ON        = 2110;    % joystick elevation above pressing threshold
+p.defaultParameters.event.JOY_OFF       = 2111;    % joystick elevation below releasing threshold
 
 % visual stimulus
 p.defaultParameters.event.STIM_ON       = 130;     % stimulus onset
@@ -151,6 +152,10 @@ p.defaultParameters.event.SOUND_ON      = 180;     % stimulus onset
 p.defaultParameters.event.MICROSTIM     = 666;     % microstimulation pulse onset
 p.defaultParameters.event.INJECT        = 667;     % start of pressure injection
 p.defaultParameters.event.IONTO         = 668;     % start of iontophoretic drug delivery
+
+% Movie related
+p.defaultParameters.event.MOVIE_START   = 4401;
+
 % ------------------------------------------------------------------------%
 %% Stim Property Blocks
 % Sent at the end of the trial to give information about each shown stimulus
@@ -171,6 +176,11 @@ p.defaultParameters.event.STIM.Ring     = 7703;
 % FixSpot  = 7701
 % Grating  = 7702
 % Ring     = 7703
+
+%% Integer encoding blocks
+% Reserve the 15xxx block for sending integers 0-999
+% For encoding whatever use
+p.defaultParameters.event.ZERO_INT = 15000;
 
 
 % ------------------------------------------------------------------------%
@@ -210,6 +220,10 @@ p.defaultParameters.event.TRIAL_HDR_OFF = 9900;
 
 p.defaultParameters.event.TRIAL_FTR_ON  = 9911;
 p.defaultParameters.event.TRIAL_FTR_OFF = 9910;
+
+% in case a value of zero has to be send as event code use this number instead
+p.defaultParameters.event.ZERO_CODE = 10987;
+
 
 % TODO: encode trial states (and task epochs)?
 

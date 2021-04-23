@@ -22,7 +22,7 @@ properties (SetAccess = protected)
     looking  = 0            % Less stringent than fixation. Eye is in the fix window
     
     % Integer to define object (for sending event code)
-    classCode = p.trial.event.STIM.BaseStim;
+    classCode = [];
     
     % Signals to send upon turning on or off
     onSignal  = struct('event', 'STIM_ON', ...
@@ -63,6 +63,9 @@ methods
         
         % Store the handle for the PLDAPS object
         obj.p = p;
+        
+        % Integer to define object (for sending event code)
+        obj.classCode = p.trial.event.STIM.BaseStim;
         
         % Initialize EV struct to contain NaNs
         obj.EV.FixEntry = NaN;
