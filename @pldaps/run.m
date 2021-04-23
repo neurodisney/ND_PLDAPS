@@ -118,7 +118,7 @@ try
             dpPreTrial = p.defaultParameters;
 
             % run trial
-            p = feval(p.trial.pldaps.trialMasterFunction, p);
+            p = feval(p.trial.pldaps.trialMasterFunction,  p);
 
             % Make sure defaultParameters do not change during a trial (should be exclusively done in ND_UpdateTrial
             dpPostTrial = p.defaultParameters;
