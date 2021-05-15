@@ -14,7 +14,7 @@ function p = PercEqui_taskdef(p)
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.05;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [50, 150, 300,  400, 500,  600, 650]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur   = [0.15, 0.15, 0.18, 0.2, 0.25, 0.28, 0.3]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur   = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]; % increase number of pulses with this trial number
 p.trial.reward.DiscourageProp = 1.0;  % proportion of reward given if previous trial was an error
 
 %p.trial.reward.IncrementTrial = [150,  250,   350, 450,   550,  650, 750]; % increase number of pulses with this trial number
