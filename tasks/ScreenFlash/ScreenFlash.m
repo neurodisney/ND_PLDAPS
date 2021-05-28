@@ -4,6 +4,7 @@ function p = ScreenFlash(p, state)
 %
 %
 % Nate Faber & wolf zinke, Sep 2017
+% Corey Roach, May 2021
 
 
 % ####################################################################### %
@@ -21,6 +22,7 @@ end
 % defined here to refer to the file with the actual trial.
 % At this stage, p.trial is not yet defined. All assignments need
 % to go to p.defaultparameters
+
 if(isempty(state))
 
     % --------------------------------------------------------------------%
@@ -36,16 +38,12 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
     p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart',   '%d');
     p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.TaskStart',                     '%d');
-    p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
     p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
-
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
-    
     p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
     p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
     p = ND_AddAsciiEntry(p, 'ITI',         'p.trial.task.Timing.ITI',             '%.5f');
-
     p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
     p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
@@ -59,16 +57,11 @@ if(isempty(state))
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.
-
-    p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});  
+ 
     p.trial.task.Color_list = {'white'};
-    % --------------------------------------------------------------------%
-    %% Enable random positions
-    p.trial.task.RandomPos = 0;
-    
-    p.trial.task.RandomPosRange = [5, 5];  % range of x and y dva for random position
     
     % --------------------------------------------------------------------%
+    
     %% Determine conditions and their sequence
     % define conditions (conditions could be passed to the pldaps call as
     % cell array, or defined here within the main trial function. The
@@ -139,25 +132,21 @@ function TaskSetUp(p)
 % Determine everything here that can be specified/calculated before the actual trial start
     p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
                                          p.trial.task.Timing.MaxITI,  [], [], 1, 0.10);
-                                     
-    p.trial.task.CurRewDelay = ND_GetITI(p.trial.reward.MinWaitInitial,  ...
-                                         p.trial.reward.MaxWaitInitial,  [], [], 1, 0.001);
 
-    p.trial.CurrEpoch        = p.trial.epoch.ITI;
+    p.trial.CurrEpoch = p.trial.epoch.ITI;
 
     % Flag to indicate if ITI was too long (set to 0 if ITI epoch is reached before it expires)
     p.trial.task.longITI = 1;
       
     % Reward
     nRewards = p.trial.reward.nRewards;
+    
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
+    
     % Create arrays for direct reference during reward
     p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
     p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);       
-    
-    % Drug Signal Sent
-    p.trial.task.drugSent = 0;
     
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
@@ -166,18 +155,14 @@ function TaskSetUp(p)
     % State for acheiving fixation
     p.trial.task.fixFix = 0;
     
-    % if random position is required pick one and move fix spot
-    if(p.trial.task.RandomPos == 1)
-         Xpos = (rand * 2 * p.trial.task.RandomPosRange(1)) - p.trial.task.RandomPosRange(1);
-         Ypos = (rand * 2 * p.trial.task.RandomPosRange(2)) - p.trial.task.RandomPosRange(2);
-         p.trial.stim.FIXSPOT.pos = [Xpos, Ypos];
-    end
-    
+    % Drug Signal Sent
+    p.trial.task.drugSent = 1;
+   
     % If the fixspot color is a cell, choose one of the strings from the cell to be the color
     if iscell(p.trial.stim.FIXSPOT.color)
-        nColors = length(p.trial.stim.FIXSPOT.color);
-        iColor = randi(nColors);
-        p.trial.stim.FIXSPOT.color = p.trial.stim.FIXSPOT.color{iColor};
+       nColors = length(p.trial.stim.FIXSPOT.color);
+       iColor = randi(nColors);
+       p.trial.stim.FIXSPOT.color = p.trial.stim.FIXSPOT.color{iColor};
     end
     
     % Send a signal based on the stimulus color
@@ -271,10 +256,9 @@ function TaskDesign(p)
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
             ND_FixSpot(p,1);
-        
             tms = pds.datapixx.strobe(p.trial.event.TASK_ON); 
-            p.trial.EV.DPX_TaskOn = tms(1);
-            p.trial.EV.TDT_TaskOn = tms(2);
+            % p.trial.EV.DPX_TaskOn = tms(1);
+            % p.trial.EV.TDT_TaskOn = tms(2);
 
             p.trial.EV.TaskStart = p.trial.CurTime;
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
@@ -323,7 +307,7 @@ function TaskDesign(p)
                     switchEpoch(p,'TaskEnd');
                 
                 % Fixation has been held for long enough && not currently in the middle of breaking fixation
-                elseif p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.CurRewDelay
+                elseif p.trial.CurTime > p.trial.stim.fix.EV.FixStart 
                     
                     % Succesful
                     p.trial.task.Good = 1;
@@ -432,6 +416,8 @@ p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes
 ND_Trial2Ascii(p, 'save');
 % ####################################################################### %
 
+
+
 function KeyAction(p)
 %% task specific action upon key press
     if(~isempty(p.trial.LastKeyPress))
@@ -443,12 +429,6 @@ function KeyAction(p)
                  p.trial.task.FixCol     = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), ...
                                            length(p.trial.task.Color_list))+1};
                                        
-            case KbName('r')  % random position on each trial
-                 if(p.trial.task.RandomPos == 0)
-                    p.trial.task.RandomPos = 1;
-                 else
-                    p.trial.task.RandomPos = 0;
-                 end
         end
     end
 
