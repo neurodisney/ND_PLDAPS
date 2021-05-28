@@ -83,7 +83,7 @@ p.trial.datapixx.TTL_Npulse = 1;
 p.trial.datapixx.TTL_GapDur = .10; 
 p.trial.datapixx.TTL_Nseries = 1;
 p.trial.datapixx.TTL_SeriesPause = 0;
-p.trial.datapixx.TTL_InjStrobe = 667; 
+p.trial.datapixx.TTL_InjStrobe = p.defaultParameters.event.INJECT; 
 
 %% Fixation parameters
 p.trial.behavior.fixation.BreakTime = 0.05;  % minimum time [ms] to identify a fixation break

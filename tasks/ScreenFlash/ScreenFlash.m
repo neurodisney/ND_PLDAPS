@@ -1,6 +1,5 @@
 function p = ScreenFlash(p, state)
-% Main trial function for initial fixation training.
-%
+% A stripped down task loop that is designed to flash the screen at a random interval with options for drug delivery via pressure injection.
 %
 %
 % Nate Faber & wolf zinke, Sep 2017
@@ -105,6 +104,7 @@ else
             if(~isempty(p.trial.LastKeyPress))
                 KeyAction(p);
             end
+            
             TaskDesign(p);
             
         % ----------------------------------------------------------------%
@@ -121,12 +121,14 @@ else
             TaskCleanAndSave(p);
                         
     end  %/ switch state
+    
 end  %/  if(nargin == 1) [...] else [...]
 
 % ------------------------------------------------------------------------%
 %% Task related functions
 
 % ####################################################################### %
+
 function TaskSetUp(p)
 %% main task outline
 % Determine everything here that can be specified/calculated before the actual trial start
@@ -143,66 +145,19 @@ function TaskSetUp(p)
     
     % Reset the reward counter (separate from iReward to allow for manual rewards)
     p.trial.reward.count = 0;
-    
-    % Create arrays for direct reference during reward
-    p.trial.reward.allDurs = repelem(p.trial.reward.Dur,nRewards);
-    p.trial.reward.allPeriods = repelem(p.trial.reward.Period,nRewards);       
-    
+  
     % Outcome if no fixation occurs at all during the trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
     p.trial.task.Good   = 0;
     
     % State for acheiving fixation
     p.trial.task.fixFix = 0;
-    
-    % Drug Signal Sent
-    p.trial.task.drugSent = 1;
    
     % If the fixspot color is a cell, choose one of the strings from the cell to be the color
     if iscell(p.trial.stim.FIXSPOT.color)
        nColors = length(p.trial.stim.FIXSPOT.color);
        iColor = randi(nColors);
        p.trial.stim.FIXSPOT.color = p.trial.stim.FIXSPOT.color{iColor};
-    end
-    
-    % Send a signal based on the stimulus color
-    switch p.trial.stim.FIXSPOT.color
-        case 'black'
-            pds.datapixx.strobe(15000);
-            
-        case 'grey1'
-            pds.datapixx.strobe(15010);
-        
-        case 'grey2'
-            pds.datapixx.strobe(15020);
-        
-        case 'grey3'
-            pds.datapixx.strobe(15030);
-        
-        case 'grey4'
-            pds.datapixx.strobe(15040);
-        
-        case 'grey5'
-            pds.datapixx.strobe(15050);
-        
-        case 'grey6'
-            pds.datapixx.strobe(15060);
-        
-        case 'grey7'
-            pds.datapixx.strobe(15070);
-        
-        case 'grey8'
-            pds.datapixx.strobe(15080);
-        
-        case 'grey9'
-            pds.datapixx.strobe(15090);
-        
-        case 'white'
-            pds.datapixx.strobe(15100);
-        
-        otherwise
-            pds.datapixx.strobe(15999);
-            
     end
         
     
@@ -239,7 +194,11 @@ function TaskDesign(p)
         
         % ----------------------------------------------------------------%  
         case p.trial.epoch.WaitStart
-            %% Send the TTL pulse to the arduino to dispense drug
+            %% Press TAB to trigger the PicoSpitzer 
+             
+            % Manual Key Board Drug Pulse 
+             p.trial.task.drugSent = 1;
+    
             if p.trial.task.useDrug && ~p.trial.task.drugSent
                 ND_PulseSeries(p.trial.datapixx.TTL_spritzerChan,    p.trial.datapixx.TTL_spritzerDur,       ...
                                p.trial.datapixx.TTL_spritzerNpulse,  p.trial.datapixx.TTL_spritzerPulseGap,  ...
@@ -247,6 +206,7 @@ function TaskDesign(p)
                                p.trial.event.INJECT);
                            
                 p.trial.task.drugSent = 1;
+            
             end
             
             if p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.Timing.drugFlashDelay
@@ -255,10 +215,8 @@ function TaskDesign(p)
         % ----------------------------------------------------------------%  
         case p.trial.epoch.TrialStart
         %% trial starts with onset of fixation spot    
-            ND_FixSpot(p,1);
-            tms = pds.datapixx.strobe(p.trial.event.TASK_ON); 
-            % p.trial.EV.DPX_TaskOn = tms(1);
-            % p.trial.EV.TDT_TaskOn = tms(2);
+            ND_FixSpot(p,1); % generates flash            
+            tms = pds.datapixx.strobe(p.trial.event.TASK_ON);   
 
             p.trial.EV.TaskStart = p.trial.CurTime;
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
@@ -266,15 +224,30 @@ function TaskDesign(p)
             if(p.trial.datapixx.TTL_trialOn)
                 pds.datapixx.TTL(p.trial.datapixx.TTL_trialOnChan, 1);
             end
-           
+            
+             if p.trial.datapixx.TTL_ON == 1  
+                                
+                                % Send the event code for drug pulse
+                                pds.datapixx.strobe(p.trial.datapixx.TTL_InjStrobe);
+                                
+                                % Run the drug pulse
+                                for(i=1:p.trial.datapixx.TTL_Npulse)
+                                    pds.datapixx.TTL(p.trial.datapixx.TTL_chan, 1, p.trial.datapixx.TTL_PulseDur);
+                                    
+                                    if(i < p.trial.datapixx.TTL_Npulse)
+                                        WaitSecs(p.trial.datapixx.TTL_GapDur);
+                                    end
+                                end     
+             end
+             
             switchEpoch(p,'WaitFix');
             
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitFix
             %% Fixation target shown, waiting for a sufficiently held gaze
             
-            % Gaze is outside fixation window
-            if p.trial.task.fixFix == 0
+             %Gaze is outside fixation window
+                if p.trial.task.fixFix == 0
                
                 % Fixation has occured
                 if p.trial.stim.fix.fixating
@@ -282,106 +255,15 @@ function TaskDesign(p)
                 
                 % Time to fixate has expired
                 elseif p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix
-                    % Turn off fixation spot
+                    
+                    %Turn off fixation spot
                     ND_FixSpot(p,0);
                     
-                    % Mark trial NoFix, go directly to TaskEnd, do not start task, do not collect reward
+                    %Mark trial NoFix, go directly to TaskEnd, do not start task, do not collect reward
                     p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;
                     switchEpoch(p,'TaskEnd')                   
                 end
-                
-                
-            % If gaze is inside fixation window
-            elseif p.trial.task.fixFix == 1
-                
-                % Fixation ceases
-                if ~p.trial.stim.fix.fixating
-                    % Play breakfix sound
-                    pds.audio.playDP(p,'breakfix','left');
-                    
-                    % Turn the fixation spot off
-                    ND_FixSpot(p,0)
-                    
-                    % Mark trial as breakfix and end the task
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-                    switchEpoch(p,'TaskEnd');
-                
-                % Fixation has been held for long enough && not currently in the middle of breaking fixation
-                elseif p.trial.CurTime > p.trial.stim.fix.EV.FixStart 
-                    
-                    % Succesful
-                    p.trial.task.Good = 1;
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.Fixation;
-                    
-                    % Reward the monkey
-                    p.trial.reward.count = 1;
-                    pds.reward.give(p, p.trial.reward.allDurs(1));
-                    p.trial.EV.FirstReward   = p.trial.CurTime;
-                    p.trial.Timer.lastReward = p.trial.CurTime;
-                    
-                    % Transition to the succesful fixation epoch
-                    switchEpoch(p,'Fixating');
-
-                end
-                
-            end
-            
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.Fixating
-        %% Animal has reached fixation criteria and now starts receiving rewards for continued fixation
-            
-        % Still fixating    
-        if p.trial.stim.fix.fixating
-            
-            % If the supplied reward schema doesn't cover until jackpot
-            % time, just repeat the last reward
-            rewardCount = min(p.trial.reward.count , length(p.trial.reward.allDurs));
-                
-            rewardPeriod = p.trial.reward.allPeriods(rewardCount);
-                
-                
-            % While jackpot time has not yet been reached
-            if p.trial.CurTime < p.trial.EV.FirstReward + p.trial.reward.jackpotTime;
-
-                % Wait for rewardPeriod to elapse since last reward, then give the next reward
-                if p.trial.CurTime > p.trial.Timer.lastReward + rewardPeriod
-
-                    rewardCount = min(rewardCount + 1 , length(p.trial.reward.allDurs));
-                    p.trial.reward.count = p.trial.reward.count + 1;
-
-                    rewardDuration = p.trial.reward.allDurs(rewardCount);                  
-
-                    % Give the reward and update the lastReward time
-                    pds.reward.give(p, rewardDuration);
-                    p.trial.Timer.lastReward = p.trial.CurTime;
-
-                end
-
-            else
-                % Give JACKPOT!
-                rewardDuration = p.trial.reward.jackpotDur;
-                pds.reward.give(p, rewardDuration);
-                p.trial.Timer.lastReward = p.trial.CurTime;
-
-                % Best outcome
-                p.trial.outcome.CurrOutcome = p.trial.outcome.Jackpot;
-
-                % Turn off fixation spot
-                ND_FixSpot(p,0);
-                
-                % End the task
-                switchEpoch(p,'TaskEnd');
-
-                % Play jackpot sound
-                pds.audio.playDP(p,'jackpot','left');
-            end
-        
-        % Fixation Break, end the trial        
-        elseif ~p.trial.stim.fix.fixating
-            pds.audio.playDP(p,'breakfix','left');
-            switchEpoch(p,'TaskEnd');
-            ND_FixSpot(p,0);
-                                 
+                                  
         end
             
         % ----------------------------------------------------------------%
@@ -428,7 +310,7 @@ function KeyAction(p)
                  p.trial.task.Color_list = Shuffle(p.trial.task.Color_list);
                  p.trial.task.FixCol     = p.trial.task.Color_list{mod(p.trial.blocks(p.trial.pldaps.iTrial), ...
                                            length(p.trial.task.Color_list))+1};
-                                       
+                                
         end
     end
 
@@ -439,15 +321,15 @@ function switchEpoch(p,epochName)
 p.trial.CurrEpoch = p.trial.epoch.(epochName);
 p.trial.EV.epochEnd = p.trial.CurTime;
 
-function fixspot(p,bool)
-if bool && ~p.trial.stim.fix.on
-    p.trial.stim.fix.on = 1;
-    p.trial.EV.FixOn = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
-elseif ~bool && p.trial.stim.fix.on
-    p.trial.stim.fix.on = 0;
-    p.trial.EV.FixOff = p.trial.CurTime;
-    pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
-end
+%function fixspot(p,bool)
+%if bool && ~p.trial.stim.fix.on
+    %p.trial.stim.fix.on = 1;
+    %p.trial.EV.FixOn = p.trial.CurTime;
+    %pds.datapixx.strobe(p.trial.event.FIXSPOT_ON);
+%elseif ~bool && p.trial.stim.fix.on
+    %p.trial.stim.fix.on = 0;
+    %p.trial.EV.FixOff = p.trial.CurTime;
+    %pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
+%end
 
         

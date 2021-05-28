@@ -1,4 +1,4 @@
-function p = start_ScreenFlash(subjname, rig, experimenter)
+function p = start_ScreenFlash(subjname, rig, ~)
 % main function to run a task
 %
 % This function prepares a task by defining setting task related matlab functions,
@@ -18,7 +18,7 @@ end
 % name of subject. This will be used to create a subdirectory with this name.
 if(~exist('rig','var') || isempty(rig))
     [~, rigname] = system('hostname');
-    rig = str2num(rigname(4));
+    rig = str2num(rigname);
 end
 
 %-------------------------------------------------------------------------%
@@ -63,7 +63,6 @@ SS.datapixx.useJoystick                = 0;
 SS.datapixx.TTL_trialOn                = 1;
 SS.datapixx.useAsEyepos                = 1;
 SS.datapixx.useJoystick                = 0;
-SS.datapixx.TTL_trialOn                = 0;
 SS.behavior.fixation.useCalibration    = 1;
 SS.behavior.fixation.enableCalib       = 0;
 SS.pldaps.GetTrialStateTimes           = 0; % for debugging, save times when trial states are called
@@ -87,6 +86,7 @@ end
 % needed lines from ND_RigDefaults and alter the values here.
 
 SS.display.bgColor              = [0, 0, 0];   % change background color
+SS.datapixx.adc.srate = 1000;                  % for a 1k tracker, less if you don’t plan to use it for offline use
 
 %% ################## Edit within the preceding block ################### %%
 %% ### Do not change code below [unless you know what you are doing]! ### %%
