@@ -110,10 +110,6 @@ p = ND_DefaultColors(p);
 % define standard event codes for trial events (16 bit)
 p = ND_EventDef(p);
 
-% outcomes
-% define possible task outcomes
-p = ND_Outcomes(p);
-
 % task epochs
 p = ND_TaskEpochs(p);
 

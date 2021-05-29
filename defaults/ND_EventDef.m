@@ -1,4 +1,8 @@
 function p = ND_EventDef(p)
+%
+% DO NOT CHANGE THESE EVENT CODES WITHOUT EXPLICIT APPROVAL FROM ANITA
+% CHANGING THESE EVENT CODES ALTERS ALL ANALYSIS PIPELINES
+%
 % Defines numeric values for 16 bit codes of trial events
 %
 % The encodes defined in 'event' will be sent during the course of a trial
@@ -7,13 +11,32 @@ function p = ND_EventDef(p)
 % The fields in 'EV' should be used to save the times of these events
 % to the pldaps data file.
 %
+% Structure of Event Codes:
+% 1000's dictate initiation of trials and fixation
+% 2000's dictate stimulus information and properties
+% 3000's dictate live adjustments (pauses, breaks, etc)
+% 4000's dictate response behavior and outcomes of trials
+% 5000's dictate outcome related code 
+% 6100's dictate stimulation (iontophoresis, electrical, drug/pressure)
+% 6600's dictate joystick
+% 7000's dictate analog and digital outputs
+% 8000's dictate reward parameters
+% 9000's dictate other types of stimuli (video, auditory, etc)
+% 9900's dictate headers
+%
 % wolf zinke, Feb. 2017
+% veronica galvin, May. 2021
 
 disp('****************************************************************')
 disp('>>>>  ND:  Defining Event Codes <<<<')
 disp('****************************************************************')
 disp('');
 
+
+disp('****************************************************************')
+disp('>>>>  ND:  Defining Task Outcomes <<<<')
+disp('****************************************************************')
+disp('');
 % ------------------------------------------------------------------------%
 %% initialize event times as NaN
 % This should be used to store times when these events happened (to data
@@ -61,6 +84,10 @@ if(p.defaultParameters.behavior.joystick.use)
     p.defaultParameters.EV.JoyPress   = NaN; % Press time to start task
 end
 
+if(p.defaultParameters.behavior.joystick.use)
+    p.defaultParameters.outcome.NoPress       =   1;  % No joystick press occurred to initialize trial
+end
+
 % if fixation is used
 if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.EV.FixEntry   = NaN; % entering fixation window
@@ -87,95 +114,126 @@ end
 % in a responsible way to keep as much information about the task as possible.
 
 % task markers
-p.defaultParameters.event.TASK_ON       = 10;   % start of task (should happen after pldaps encodes a trial start)
-p.defaultParameters.event.TASK_OFF      = 11;   % end of task (should happen before pldaps encodes a trial end)
-p.defaultParameters.event.TC_CORR       = 1004; % trial complete, correct
-p.defaultParameters.event.TC_ERR        = 3010; % trial complete, incorrect
-p.defaultParameters.event.NO_TC         = 3011; % trial incomplete
-p.defaultParameters.event.PAUSE         = 3999; % Pause the experiment
-p.defaultParameters.event.UNPAUSE       = 3989; % Unpause the experiment
-p.defaultParameters.event.BREAK         = 3899; % Pause the experiment
-p.defaultParameters.event.UNBREAK       = 3889; % Unpause the experiment
+p.defaultParameters.event.TASK_ON       = 1000;   % start of task (should happen after pldaps encodes a trial start)
+p.defaultParameters.event.TASK_OFF      = 1001;   % end of task (should happen before pldaps encodes a trial end)
+p.defaultParameters.event.TC_CORR       = 4000; % trial complete, correct
+p.defaultParameters.event.TC_ERR        = 4010; % trial complete, incorrect
+p.defaultParameters.event.NO_TC         = 4011; % trial incomplete
+p.defaultParameters.event.PAUSE         = 3000; % Pause the experiment
+p.defaultParameters.event.UNPAUSE       = 3001; % Unpause the experiment
+p.defaultParameters.event.BREAK         = 3100; % Pause the experiment
+p.defaultParameters.event.UNBREAK       = 3101; % Unpause the experiment
 
 % response related
-p.defaultParameters.event.RESP_CORR        = 1110; % correct response occurred
-p.defaultParameters.event.RESP_EARLY       = 1111; % early response occurred
-p.defaultParameters.event.RESP_PREMAT      = 1112; % premature (early) response occurred, after go signal but too early to be true
-p.defaultParameters.event.RESP_FALSE       = 1113; % false response occurred
-p.defaultParameters.event.RESP_FALSE_EARLY = 1116; % early response towards wrong stimulus
-p.defaultParameters.event.RESP_LATE        = 1114; % late response occurred
+p.defaultParameters.event.RESP_CORR        = 4400; % correct response occurred
+p.defaultParameters.event.RESP_EARLY       = 4402; % early response occurred
+p.defaultParameters.event.RESP_PREMAT      = 4403; % premature (early) response occurred, after go signal but too early to be true
+p.defaultParameters.event.RESP_FALSE       = 4401; % false response occurred
+p.defaultParameters.event.RESP_FALSE_EARLY = 4404; % early response towards wrong stimulus
+p.defaultParameters.event.RESP_LATE        = 4405; % late response occurred
 
-% fixation related
-p.defaultParameters.event.FIXSPOT_ON    =  110; % onset of fixation spot
-p.defaultParameters.event.FIXSPOT_OFF   =  111; % offset of fixation spot
-p.defaultParameters.event.FIX_IN        = 2000; % gaze enters fixation window
-p.defaultParameters.event.FIX_OUT       = 2001; % gaze leaves fixation window
-p.defaultParameters.event.FIXATION      = 2002; % gaze has been in the fix window long enought ot be considered a fix
-p.defaultParameters.event.FIX_BREAK     = 2003; % gaze has left fix window for long enough to be considered a fix break
+% fixation related events
+p.defaultParameters.event.FIXSPOT_ON    =  1200; % onset of fixation spot
+p.defaultParameters.event.FIXSPOT_OFF   =  1201; % offset of fixation spot
+p.defaultParameters.event.FIX_IN        = 1210; % gaze enters fixation window
+p.defaultParameters.event.FIX_OUT       = 1211; % gaze leaves fixation window
+p.defaultParameters.event.FIXATION      = 1220; % gaze has been in the fix window long enought ot be considered a fix
+p.defaultParameters.event.FIX_BREAK     = 1221; % gaze has left fix window for long enough to be considered a fix break
+
+% fixation related outcomes
+if(p.defaultParameters.behavior.fixation.use)
+
+    p.defaultParameters.outcome.Fixation      =   5120;
+    p.defaultParameters.outcome.NoFix         =   5121;
+    p.defaultParameters.outcome.FixBreak      =   5123;
+    p.defaultParameters.outcome.Jackpot       =   5129;
+    p.defaultParameters.outcome.TargetBreak   =   5122;
+    p.defaultParameters.outcome.StimBreak     =   5124;
+    p.defaultParameters.outcome.PostStimBreak =   5125;
+    p.defaultParameters.outcome.NoTargetFix   =   5126;
+end
+
+% Other outcome related codes
+p.defaultParameters.outcome.Correct           =   5000;  % correct performance, no error occurred
+p.defaultParameters.outcome.Abort             =   5001;     % early joystick release prior stimulus onset
+p.defaultParameters.outcome.Early             =   5002;  % correct response selection prior to go signal
+p.defaultParameters.outcome.False             =   5003;  % wrong response within response window
+p.defaultParameters.outcome.EarlyFalse        =   5004;  % wrong response selection prior to go signal
+p.defaultParameters.outcome.Late              =   5005;     % response occurred after response window
+p.defaultParameters.outcome.Miss              =   5006;  % no response at a reasonable time
+p.defaultParameters.outcome.NoStart           =   5007;  % trial not started
+p.defaultParameters.outcome.PrematStart       =   5008;  % trial start not too early as response to cue
+p.defaultParameters.outcome.TaskStart         =   5009;  % trial not started
+p.defaultParameters.outcome.Break             =   5010;  % A break was triggered by the experimenter
+
 
 % refinement of fixation break times
 % ToDo: WZ - need to check what encodes should/need to be used as events and
 %            what should be used as outcome encoded in the trial header
-p.defaultParameters.event.FIX_BRK_BSL   = 3000; % fixation break during the pre-stimulus period
-p.defaultParameters.event.FIX_BRK_CUE   = 3001; % fixation break while the cue is on
-p.defaultParameters.event.FIX_BRK_STIM  = 3002; % fixation break during stimulus presentation
-p.defaultParameters.event.FIX_BRK_SPEED = 3003;
+p.defaultParameters.event.FIX_BRK_BSL   = 1231; % fixation break during the pre-stimulus period
+p.defaultParameters.event.FIX_BRK_CUE   = 1232; % fixation break while the cue is on
+p.defaultParameters.event.FIX_BRK_STIM  = 1233; % fixation break during stimulus presentation
+p.defaultParameters.event.FIX_BRK_SPEED = 1234;
 
-% separate encode of reward delivered?
+% Saccade outcomes
+p.defaultParameters.outcome.goodSaccade       = 5051;
+p.defaultParameters.outcome.noSaccade         = 5052;  % Saccade was supposed to happen but none did
+p.defaultParameters.outcome.earlySaccade      = 5053;
+p.defaultParameters.outcome.lateSaccade       = 5054;  % Saccade still occured, but after it was supposed to.
+p.defaultParameters.outcome.wrongSaccade      = 5055;  % saccade to wrong target or in wrong direction
+p.defaultParameters.outcome.glance            = 5056;  % saccade made to target, but not held for long enough
+
 
 % joystick related
-p.defaultParameters.event.JOY_PRESS     = 2100;    % joystick press detected
-p.defaultParameters.event.JOY_RELEASE   = 2101;    % joystick release detected
-p.defaultParameters.event.JOY_ON        = 2110;    % joystick elevation above pressing threshold
-p.defaultParameters.event.JOY_OFF       = 2111;    % joystick elevation below releasing threshold
+p.defaultParameters.event.JOY_PRESS     = 6600;    % joystick press detected
+p.defaultParameters.event.JOY_RELEASE   = 6601;    % joystick release detected
+p.defaultParameters.event.JOY_ON        = 6610;    % joystick elevation above pressing threshold
+p.defaultParameters.event.JOY_OFF       = 6611;    % joystick elevation below releasing threshold
 
 % visual stimulus
-p.defaultParameters.event.STIM_ON       = 130;     % stimulus onset
-p.defaultParameters.event.STIM_CHNG     = 132;     % stimulus change (e.g. dimming)
-p.defaultParameters.event.STIM_OFF      = 151;     % stimulus offset
+p.defaultParameters.event.STIM_ON       = 2500;     % stimulus onset
+p.defaultParameters.event.STIM_CHNG     = 2502;     % stimulus change (e.g. dimming)
+p.defaultParameters.event.STIM_OFF      = 2501;     % stimulus offset
 
 % stimulus movement
-p.defaultParameters.event.START_MOVE    = 131;     % movement onset
-p.defaultParameters.event.SPEED_UP      = 140;     % movement acceleration
-p.defaultParameters.event.SPEED_Down    = 141;     % movement deceleration
-p.defaultParameters.event.STOP_MOVE     = 150;     % movement offset
+p.defaultParameters.event.START_MOVE    = 2610;     % movement onset
+p.defaultParameters.event.SPEED_UP      = 2611;     % movement acceleration
+p.defaultParameters.event.SPEED_Down    = 2612;     % movement deceleration
+p.defaultParameters.event.STOP_MOVE     = 2613;     % movement offset
 
 % task cues
-p.defaultParameters.event.CUE_ON        = 120;     % onset of cue to select task relevant stimulus
-p.defaultParameters.event.CUE_OFF       = 121;     % onset of cue to select task relevant stimulus
-p.defaultParameters.event.GOCUE         = 170;     % cue to give a response
+p.defaultParameters.event.CUE_ON        = 1300;     % onset of cue to select task relevant stimulus
+p.defaultParameters.event.CUE_OFF       = 1301;     % onset of cue to select task relevant stimulus
+p.defaultParameters.event.GOCUE         = 1302;     % cue to give a response
 
 % auditory stimulus
-p.defaultParameters.event.SOUND_ON      = 180;     % stimulus onset
+p.defaultParameters.event.SOUND_ON      = 9100;     % stimulus onset
 
 % stimulations (etc. drug delivery)
-p.defaultParameters.event.MICROSTIM     = 666;     % microstimulation pulse onset
-p.defaultParameters.event.INJECT        = 667;     % start of pressure injection
-p.defaultParameters.event.IONTO         = 668;     % start of iontophoretic drug delivery
+p.defaultParameters.event.MICROSTIM     = 6100;     % microstimulation pulse onset
+p.defaultParameters.event.INJECT        = 6110;     % start of pressure injection
+p.defaultParameters.event.IONTO         = 6120;     % start of iontophoretic drug delivery
 
 % Movie related
-p.defaultParameters.event.MOVIE_START   = 4401;
+p.defaultParameters.event.MOVIE_START   = 9000;
 
 % ------------------------------------------------------------------------%
 %% Stim Property Blocks
 % Sent at the end of the trial to give information about each shown stimulus
 % One-to-one correspondence with StimOn signals
 
-p.defaultParameters.event.STIMPROP_BLOCK_ON  = 7501;  % Start of the stimProp Block
-p.defaultParameters.event.STIMPROP           = 7575;  % Start of a new stimulus
-p.defaultParameters.event.STIMPROP_BLOCK_OFF = 7500;  % End of stim prop block
+p.defaultParameters.event.STIMPROP_BLOCK_ON  = 2000;  % Start of the stimProp Block
+p.defaultParameters.event.STIMPROP           = 2010;  % Start of a new stimulus
+p.defaultParameters.event.STIMPROP_BLOCK_OFF = 2001;  % End of stim prop block
 
-% Note: 77xx block reserved for stim types
+% Note: 21xx block reserved for stim types
 % These are encoded in the actual stim class files, but are put here for easy reference
 
-p.defaultParameters.event.STIM.BaseStim = 7700;
-p.defaultParameters.event.STIM.FixSpot  = 7701;
-p.defaultParameters.event.STIM.Grating  = 7702;
-p.defaultParameters.event.STIM.Ring     = 7703;
-% BaseStim = 7700
-% FixSpot  = 7701
-% Grating  = 7702
-% Ring     = 7703
+p.defaultParameters.event.STIM.BaseStim = 2100;
+p.defaultParameters.event.STIM.FixSpot  = 2101;
+p.defaultParameters.event.STIM.Grating  = 2102;
+p.defaultParameters.event.STIM.Ring     = 2103;
+
 
 %% Integer encoding blocks
 % Reserve the 15xxx block for sending integers 0-999
@@ -187,36 +245,36 @@ p.defaultParameters.event.ZERO_INT = 15000;
 %% System encodes
 % encoded by running PLDAPS, can be ignored for task development. These
 % events have to be defined otherwise PLDAPS will produce errors!
-p.defaultParameters.event.TRIALSTART = 1;         % begin of a trial according to PLDAPS (could differ from task begin)
-p.defaultParameters.event.TRIALEND   = 2;         % end of a trial according to PLDAPS (could differ from task end)
+p.defaultParameters.event.TRIALSTART = 1111;         % begin of a trial according to PLDAPS (could differ from task begin)
+p.defaultParameters.event.TRIALEND   = 1112;         % end of a trial according to PLDAPS (could differ from task end)
 
-p.defaultParameters.event.PD_FLASH   = 2010;      % onset of photo diode flash
-p.defaultParameters.event.PD_ON      = 2011;      % onset of photo diode flash
-p.defaultParameters.event.PD_OFF     = 2012;      % onset of photo diode flash
+p.defaultParameters.event.PD_FLASH   = 2900;      % onset of photo diode flash
+p.defaultParameters.event.PD_ON      = 2990;      % onset of photo diode 
+p.defaultParameters.event.PD_OFF     = 2901;      % offset of photo diode 
 
 % feedback
-p.defaultParameters.event.REWARD     = 1005;      % reward delivery, irrespective if earned in task or manually given by experimenter
-p.defaultParameters.event.AUDIO_REW  = 1500;
+p.defaultParameters.event.REWARD     = 8000;      % reward delivery, irrespective if earned in task or manually given by experimenter
+p.defaultParameters.event.AUDIO_REW  = 8800;
 
 % analog output
-p.defaultParameters.event.AO_1       = 2311;
-p.defaultParameters.event.AO_2       = 2312;
-p.defaultParameters.event.AO_3       = 2313;
-p.defaultParameters.event.AO_4       = 2314;
+p.defaultParameters.event.AO_1       = 7011;
+p.defaultParameters.event.AO_2       = 7012;
+p.defaultParameters.event.AO_3       = 7013;
+p.defaultParameters.event.AO_4       = 7014;
 
 % digital output
-p.defaultParameters.event.DO_1       = 2321;
-p.defaultParameters.event.DO_2       = 2322;
-p.defaultParameters.event.DO_3       = 2323;
-p.defaultParameters.event.DO_4       = 2324;
-p.defaultParameters.event.DO_5       = 2325;
-p.defaultParameters.event.DO_6       = 2326;
-p.defaultParameters.event.DO_7       = 2327;
-p.defaultParameters.event.DO_8       = 2328;
+p.defaultParameters.event.DO_1       = 7021;
+p.defaultParameters.event.DO_2       = 7022;
+p.defaultParameters.event.DO_3       = 7023;
+p.defaultParameters.event.DO_4       = 7024;
+p.defaultParameters.event.DO_5       = 7025;
+p.defaultParameters.event.DO_6       = 7026;
+p.defaultParameters.event.DO_7       = 7027;
+p.defaultParameters.event.DO_8       = 7028;
 
 % marker to select start and end of trial header
-p.defaultParameters.event.TRIAL_HDR_ON  = 9901;
-p.defaultParameters.event.TRIAL_HDR_OFF = 9900;
+p.defaultParameters.event.TRIAL_HDR_ON  = 9900;
+p.defaultParameters.event.TRIAL_HDR_OFF = 9901;
 
 p.defaultParameters.event.TRIAL_FTR_ON  = 9911;
 p.defaultParameters.event.TRIAL_FTR_OFF = 9910;
@@ -225,12 +283,17 @@ p.defaultParameters.event.TRIAL_FTR_OFF = 9910;
 p.defaultParameters.event.ZERO_CODE = 10987;
 
 
-% TODO: encode trial states (and task epochs)?
+%% get a string representation of the outcome
+p.defaultParameters.outcome.codenames = fieldnames(p.defaultParameters.outcome);
+noc = length(p.defaultParameters.outcome.codenames);
+p.defaultParameters.outcome.codes = nan(1,noc);
 
-%% task/stimulus parameters (NIY!)
-% #define	X_RF			5000
-% # define Y_RF		     	5100
-% #define	DIR_TGT_BASE	6000
-% #define	COND_NUM_BASE	7000
-% #define	UNCUE_TRL		8000
-% #define	CUE_TRL			8100
+for(i=1:noc)
+    p.defaultParameters.outcome.codes(i) = p.defaultParameters.outcome.(p.defaultParameters.outcome.codenames{i});
+end
+
+% pre-define field for the current outcome
+p.defaultParameters.outcome.CurrOutcome = NaN;  % just initialize, no start no outcome
+
+% Create a map to store previous outcomes in to get summary information
+p.defaultParameters.outcome.allOutcomes = containers.Map;

@@ -21,27 +21,35 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.1;  % reward duration [s] for reward given by keyboard presses
-
 p.trial.reward.Dur            = [0.15 0.15 0.12];
 p.trial.reward.jackpotTime    = 3;
 p.trial.reward.jackpotDur     = 0.5;
 p.trial.reward.nRewards       = [1 3 4];
 p.trial.reward.Period         = [0.25 0.20 0.15];
-
 p.trial.reward.MinWaitInitial = 0.25;
 p.trial.reward.MaxWaitInitial = 0.50;
 
 % ------------------------------------------------------------------------%
 %% Drug
+
+% This variable enables the 
 p.trial.task.useDrug = 0;
 
-% ------------------------------------------------------------------------%
+% Parameters for flash triggered drug delivery -CR
+p.trial.datapixx.TTL_ON = 1;
+p.trial.datapixx.TTL_chan = 5;
+p.trial.datapixx.TTL_PulseDur = .05; 
+p.trial.datapixx.TTL_Npulse = 1;
+p.trial.datapixx.TTL_GapDur = .10; 
+p.trial.datapixx.TTL_Nseries = 1;
+p.trial.datapixx.TTL_SeriesPause = 0;
+p.trial.datapixx.TTL_InjStrobe = p.defaultParameters.event.INJECT; 
+
+%--------------------------------------------------------------%
 %% Timing
 p.trial.task.Timing.WaitFix = 0.100;    % Time to get a solid fixation before trial ends unsuccessfully
-
-drugFlashDelay = 0.2;
+drugFlashDelay = 5;
 p.trial.task.Timing.drugFlashDelay = drugFlashDelay;
-
 minInterFlash = 1;
 maxInterFlash = 1;
 
