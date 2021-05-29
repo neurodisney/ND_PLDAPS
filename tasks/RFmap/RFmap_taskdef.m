@@ -21,10 +21,10 @@ function p = RFmap_taskdef(p)
 %
 
 % !!! MAKE SURE TO ADJUST LOCATION FOR 'FINE' MAPPING !!!
-p.trial.stim.LocCtr = [-.5, 1];
+p.trial.stim.LocCtr = [2, 2; -2,2; -2,-2; 2,-2];
 
 p.trial.stim.RFmeth = 'coarse';
-% p.trial.stim.RFmeth = 'fine';
+%p.trial.stim.RFmeth = 'fine';
 
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
@@ -38,8 +38,8 @@ switch p.trial.stim.RFmeth
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.1;      % spacing of grating centers       
         
-        p.trial.stim.coarse.xRange   = [-4, 0];
-        p.trial.stim.coarse.yRange   = [-4, 0];
+        p.trial.stim.coarse.xRange   = [-2 2];
+        p.trial.stim.coarse.yRange   = [-2 2];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -54,7 +54,7 @@ switch p.trial.stim.RFmeth
         p.trial.stim.fine.sFreq    = 1.5;
         p.trial.stim.fine.grdStp   = 0.5;
         
-        p.trial.stim.fine.extent   = [2, 2];
+        p.trial.stim.fine.extent   = [-2, 2; -2, 2];
         
         % do not change below
         p.trial.stim.fine.xRange   =  [-1, 1] * p.trial.stim.extent(1) + p.trial.stim.LocCtr(1);

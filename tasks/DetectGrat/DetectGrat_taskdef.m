@@ -15,7 +15,6 @@ function p = DetectGrat_taskdef(p)
 p.trial.reward.ManDur         = 0.15;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [10,  150, 250,  400, 450, 500]; % increase number of pulses with this trial number
 p.trial.reward.IncrementDur   = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]; % increase number of pulses with this trial number
-
 p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
 
@@ -46,7 +45,7 @@ p.trial.stim.EccLst = [ 2, 3, 4]; % If p.defaultParameters.task.RandomEcc = 1, t
 p.trial.stim.AngLst = [45, 0, 45]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
 
 % grating contrast
-p.trial.stim.trgtconts = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223 
+p.trial.stim.trgtconts = [0, 0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223 
 %p.trial.stim.trgtconts = [0, 0.015, 0.023, 0.035, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%Anita suggested on 20210222 
 %p.trial.stim.trgtconts = [0, 0, 0.01, 0.0152, 0.0217, 0.0248, 0.0504, 0.0951, 0.1727, 0.9500]; %%% used for behavior to make stationary data, 
 %p.trial.stim.trgtconts = round(logspace(log10(0.035),log10(0.31), 10), 4)-0.01; %%croc
@@ -102,6 +101,4 @@ p.trial.datapixx.TTL_spritzerPulseGap  = .1; % gap between subsequent pulses
 
 p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
 p.trial.datapixx.TTL_spritzerSeriesGap = 1 ;  % gap between subsequent series
-
-
 

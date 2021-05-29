@@ -460,4 +460,3 @@ SS.plot.routine   = [];  % matlab function to be called for online analysis (TOD
 SS.plot.fig       = [];  % figure handle for online plot (leave empty)
 
 
-

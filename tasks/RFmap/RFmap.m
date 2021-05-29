@@ -1,11 +1,8 @@
 function p = RFmap(p, state)
 % Presenting sequence of stimuli that allow offline calculation of visual receptive fields using reverse correlation
-% 
-%
-%
+
 % Nate Faber, July/August 2017
 % Anita Disney, May/June 2020
-
 
 % ####################################################################### %
 %% define the task name that will be used to create a sub-structure in the trial struct
@@ -551,4 +548,4 @@ indexReference = Shuffle(combvec(1:nStims,1:nLocs)');
 p.trial.stim.iStim = indexReference(:,1);
 p.trial.stim.iPos = indexReference(:,2);
 
-p.trial.stim.count = 1;      
+p.trial.stim.count = 1;   

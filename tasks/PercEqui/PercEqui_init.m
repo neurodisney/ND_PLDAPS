@@ -86,4 +86,3 @@ p.defaultParameters.task.Response     = NaN;
 % steps. It specifies a duration in seconds.
 p.defaultParameters.pldaps.maxTrialLength = 15;
 
-

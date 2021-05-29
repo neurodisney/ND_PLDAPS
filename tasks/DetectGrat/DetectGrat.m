@@ -509,4 +509,3 @@ if bool && ~p.trial.stim.fix.on
 elseif ~bool && p.trial.stim.fix.on
     p.trial.stim.fix.on = 0;
 end
-    

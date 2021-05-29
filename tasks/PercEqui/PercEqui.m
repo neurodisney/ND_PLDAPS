@@ -551,6 +551,3 @@ function Calculate_SRT(p)
 %             p.trial.task.SRT_StimOn   = NaN;
 %     end
 
-
-
-
