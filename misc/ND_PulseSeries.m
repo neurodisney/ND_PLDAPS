@@ -28,7 +28,7 @@ if(~exist('SeriesPause','var') || isempty(SeriesPause))
 end
 
 if(~exist('InjStrobe','var') || isempty(InjStrobe))
-    InjStrobe = 667; % Corey Note: not gap, not sure how strobe is operating 
+    InjStrobe = 6110; % Corey Note: not gap, not sure how strobe is operating 
 end
 
 % check if DataPixx needs to be opened
