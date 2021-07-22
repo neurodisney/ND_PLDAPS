@@ -87,7 +87,7 @@ p.trial.datapixx.TTL_Npulse = 1;
 p.trial.datapixx.TTL_GapDur = .10; 
 p.trial.datapixx.TTL_Nseries = 1;
 p.trial.datapixx.TTL_SeriesPause = 0;
-p.trial.datapixx.TTL_InjStrobe = 667; 
+p.trial.datapixx.TTL_InjStrobe = 6110; 
 
 % ------------------------------------------------------------------------%
 %% Reward
