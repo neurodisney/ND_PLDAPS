@@ -16,27 +16,27 @@ function p = InitFixTrain_taskdef(p)
 %% Reward
 % manual reward from experimenter
 p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.125; % duration of the initial reward
+p.trial.reward.InitialRew   = 0.25; % duration of the initial reward
 
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur          = 0.125; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Dur          = 0.25; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 4, 8, 12];     % define the number of subsequent rewards after that the next delay period should be used.
-p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
+p.trial.reward.Period       = [0.4 0.4 0.4 0.4]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
-p.trial.reward.ManDur       = 0.125; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur       = 0.3; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime  = .8;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.25;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotTime  = 1.3;     % total time required to fixate to get full reward
+p.trial.reward.jackpotDur   = 0.5;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = .15; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
+p.trial.behavior.fixation.MinFixStart = .4; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
 p.trial.task.Timing.WaitFix = 2.0;  % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
-p.trial.task.Timing.MinITI  = 0.5;   % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = 1.5;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI  = 0.3;   % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI  = 1.0;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut =  2;     % Time [s] out for incorrect responses
@@ -48,12 +48,12 @@ p.trial.Block.EqualCorrect =  0;  % if set to one, trials within a block are rep
 
 % condition 1
 c1.Nr = 1;
-c1.reward.MinWaitInitial  = 0.3; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c1.reward.MaxWaitInitial  = 0.5;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+c1.reward.MinWaitInitial  = 0.5; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+c1.reward.MaxWaitInitial  = 0.65;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
 
 % condition 2
 c2.Nr = 2;
-c2.reward.MinWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+c2.reward.MinWaitInitial  = 0.65;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
 c2.reward.MaxWaitInitial  = 0.75; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
 
 % condition 3
@@ -102,13 +102,13 @@ p.trial.Block.maxBlockTrials =  [1];
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size = 0.10;     % size of the fixation spot
+p.trial.stim.FIXSPOT.size = 0.25;     % size of the fixation spot
 p.trial.stim.FIXSPOT.color  = 'FixHold';  % color of fixation spot (as defined in the lookup tables)
-p.trial.behavior.fixation.FixWinStp = 0.5;  % refine resizing of fixation step for this task only(modify default rig settings)
+p.trial.behavior.fixation.FixWinStp = 0.25;  % refine resizing of fixation step for this task only(modify default rig settings)
 
 % color options (make sure colors are defined!)
 %p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
-p.trial.task.Color_list = {'white'};
+p.trial.task.Color_list = {'cyan'};
 
 % Enable random positions
 % p.trial.task.RandomPos = 0;
@@ -135,4 +135,6 @@ p.defaultParameters.key.tweakDown   = KbName('PageDown');   % Decrease the curre
 % steps. It specifies a duration in seconds.
 
 %p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix + p.trial.reward.MaxWaitInitial + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
+
+
 
