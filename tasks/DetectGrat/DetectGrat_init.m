@@ -70,11 +70,11 @@ p.defaultParameters.task.RandomAng  = 1; % if 1, randomly change the grating ang
 %p.defaultParameters.stim.PosXlst    =  -3.4;  % range of possible positions on X axis 
 
 % define grid locations used by key selection
-p.defaultParameters.stim.EccLst = [4, 4, 4, 4, 4, 4, 4, 4, 4]; % if p.defaultParameters.task.RandomEcc = 0; these are the eccentricities
-p.defaultParameters.stim.AngLst = [0, 45, 90, 135, 180, 225, 275, 315, 360]; % if p.defaultParameters.task.RandomAng  = 0; these are the angles
+p.defaultParameters.stim.EccLst = [2, 3, 4, 2, 3, 4, 2, 3, 4]; % if p.defaultParameters.task.RandomEcc = 0; these are the eccentricities
+p.defaultParameters.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % if p.defaultParameters.task.RandomAng  = 0; these are the angles
 
 [p.defaultParameters.stim.GridX, p.defaultParameters.stim.GridY] = ...
-    pol2cart(p.defaultParameters.stim.AngLst, p.defaultParameters.stim.EccLst); % Corey Note: determines the target position based off EccLst and AngLst
+    pol2cart(p.defaultParameters.stim.AngLst, p.defaultParameters.stim.EccLst); % determines the target position based off EccLst and AngLst
 
 % get a random location to start with
 cPos = randi(length(p.defaultParameters.stim.GridX));
@@ -82,17 +82,17 @@ p.defaultParameters.stim.Ecc  = p.defaultParameters.stim.EccLst(cPos);
 p.defaultParameters.stim.Ang  = p.defaultParameters.stim.AngLst(cPos);
 %p.defaultParameters.stim.PosY = p.defaultParameters.stim.GridX(cPos); %use this line when you want random X positions
 %p.defaultParameters.stim.PosX = p.defaultParameters.stim.GridY(cPos); %use this line when you want random Y positions 
-p.defaultParameters.stim.PosY = -1; % Corey Hack: to get hardcoded single position
-p.defaultParameters.stim.PosX = -1; %Corey Hack: to get hardcoded single position
+p.defaultParameters.stim.PosY = -3; %  to get hardcoded single position
+p.defaultParameters.stim.PosX = -3; % to get hardcoded single position
 
 
 p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
 %p.defaultParameters.stim.OriLst     = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];  % orientation of grating
 %p.defaultParameters.stim.OriLst     = [45, 45, 45, 45, 45, 45, 45, 45, 45];  % orientation of grating
-p.defaultParameters.stim.OriLst     = 45;  % orientation of grating
+p.defaultParameters.stim.OriLst     = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];  % orientation of grating
 
 
-p.defaultParameters.stim.Hemi       = datasample(['l', '1'], 0);
+p.defaultParameters.stim.Hemi       = datasample(['l', 'l'], 0);
 p.defaultParameters.stim.Trgt.sFreq = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
 p.defaultParameters.stim.Trgt.ori   = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
 

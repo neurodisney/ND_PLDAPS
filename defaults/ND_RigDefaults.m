@@ -295,18 +295,18 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % defaults before Screen Resize 6/22/20, %2021/05/14 changed the eye tracking from RIGHT side eye to LEFT side eye, because Croc's chmaber is on the RIGHT hemisphere
-        SS.eyeCalib.defaultGain      = [17.2418 -18.5171];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.3345 -1.6818];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [18.7748 -20.6381];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.9147 -1.4490];    % default offset, used if no calibration points are entered
      
     case 2
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [17.2418 -18.5171];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.3345 -1.6818];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [18.7748 -20.6381];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.9147 -1.4490];  % default offset, used if no calibration points are entered
         
     otherwise
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [17.2418 -18.5171];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.3345 -1.6818];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [18.7748 -20.6381];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.9147 -1.4490];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states

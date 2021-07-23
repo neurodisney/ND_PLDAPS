@@ -41,8 +41,8 @@ p.trial.stim.GRATING.fixWin = 2;
 %p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % alternative radius of grating patch
 p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 
-p.trial.stim.EccLst = [ 2, 3, 4]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
-p.trial.stim.AngLst = [0, 45, 90, 135, 180, 225, 275, 315, 360]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
+p.trial.stim.EccLst = [2, 3, 4]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
+p.trial.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
 
 % grating contrast
 p.trial.stim.trgtconts = [0, 0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223 

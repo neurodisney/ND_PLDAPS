@@ -17,7 +17,7 @@ function p = run(p)
 % TODO: reset class at end of experiment or mark as recorded, so I don't
 % run the same again by mistake
 
-try
+try;
 
     %% Setup and File management
     % Ensure we have an experimentSetupFile set and verify output file
@@ -74,7 +74,7 @@ try
 
     p.trial.flagNextTrial  = 0; % flag for ending the trial
     p.trial.pldaps.quit = 0;
-    p.trial.pldaps.pause = 0;
+    p.trial.pldaps.pause = 0;exp_fun = 'Attention';
 
     trialNr = 0;
     p.trial.pldaps.iTrial = 0;
@@ -176,7 +176,7 @@ try
                 pds.datapixx.strobe(p.trial.event.BREAK);
             end
         
-            KbQueueStart;
+            KbQueueStart;ND_reset; p=start_Attention('mouse')
 
             % check for keyboard actions while pausing
             while(p.trial.pldaps.pause > 0 && p.trial.pldaps.quit < 1)
