@@ -36,8 +36,8 @@ switch p.trial.stim.RFmeth
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.1;      % spacing of grating centers 
         
-        p.trial.stim.coarse.xRange   = [-12, -4];
-        p.trial.stim.coarse.yRange   = [-12, -4];
+        p.trial.stim.coarse.xRange   = [-6, 0];
+        p.trial.stim.coarse.yRange   = [-6, 0];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
