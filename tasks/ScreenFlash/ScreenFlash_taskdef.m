@@ -78,4 +78,3 @@ p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixa
 % steps. It specifies a duration in seconds.
 
 p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix + p.trial.reward.MaxWaitInitial + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
-

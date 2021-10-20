@@ -1,8 +1,6 @@
 function p = DetectGrat(p, state)
 % Main trial function for a contrast detection task.
-%
-%
-%
+
 % wolf zinke, Nov. 2017
 
 % ####################################################################### %

@@ -17,7 +17,7 @@ function p = run(p)
 % TODO: reset class at end of experiment or mark as recorded, so I don't
 % run the same again by mistake
 
-try;
+try
 
     %% Setup and File management
     % Ensure we have an experimentSetupFile set and verify output file

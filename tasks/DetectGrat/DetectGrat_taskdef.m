@@ -45,7 +45,8 @@ p.trial.stim.EccLst = [2, 3, 4]; % If p.defaultParameters.task.RandomEcc = 1, th
 p.trial.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
 
 % grating contrast
-p.trial.stim.trgtconts = [0, 0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223 
+p.trial.stim.trgtconts = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+%p.trial.stim.trgtconts = [0, 0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223 
 %p.trial.stim.trgtconts = [0, 0.015, 0.023, 0.035, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%Anita suggested on 20210222 
 %p.trial.stim.trgtconts = [0, 0, 0.01, 0.0152, 0.0217, 0.0248, 0.0504, 0.0951, 0.1727, 0.9500]; %%% used for behavior to make stationary data, 
 %p.trial.stim.trgtconts = round(logspace(log10(0.035),log10(0.31), 10), 4)-0.01; %%croc

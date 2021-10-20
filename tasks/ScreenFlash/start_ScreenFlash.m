@@ -104,4 +104,3 @@ p.run;
 if(Datapixx('IsReady'))
     Datapixx('Close');
 end
-
