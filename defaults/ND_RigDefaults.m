@@ -71,26 +71,26 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 switch rig
     case 1
-        SS.display.viewdist                     = 63.0; % screen distance to the observer
-        SS.display.heightcm                     = 49.0; % height of the visible screen in cm
-        SS.display.widthcm                      = 87.0; % width  of the visible screen in cm
+        SS.display.viewdist                     = 61; % screen distance to the observer
+        SS.display.heightcm                     = 47; % height of the visible screen in cm
+        SS.display.widthcm                      = 82; % width  of the visible screen in cm
         SS.display.bgColor                      = [0.37, 0.37, 0.37];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
     case 2
-        SS.display.viewdist                     = 63.0;   
-        SS.display.heightcm                     = 49.0;     
-        SS.display.widthcm                      = 87.0;  
+        SS.display.viewdist                     = 61;   
+        SS.display.heightcm                     = 47;     
+        SS.display.widthcm                      = 82;  
         SS.display.bgColor                      = [0.37, 0.37, 0.37]; % datapixx background color: target 20 cd/m^2
     otherwise
-        SS.display.viewdist                     = 63.0;   
-        SS.display.heightcm                     = 49.0;    
-        SS.display.widthcm                      = 87.0;   
+        SS.display.viewdist                     = 61;   
+        SS.display.heightcm                     = 47;    
+        SS.display.widthcm                      = 82;   
 end
 
 SS.display.breakColor                           = 'black';  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
-SS.display.viewdist                             = 63.0;    % screen distance to the observer
-SS.display.heightcm                             = 49.0;     % height of the visible screen in cm
-SS.display.widthcm                              = 87.0;     % width  of the visible screen in cm
+SS.display.viewdist                             = 61;    % screen distance to the observer
+SS.display.heightcm                             = 47;     % height of the visible screen in cm
+SS.display.widthcm                              = 82;     % width  of the visible screen in cm
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -138,7 +138,7 @@ switch rig
         SS.tdt.ip                               = '129.59.230.10';
 end
 
-SS.tdt.channels                                 = 16; % Number of ephys channels to analyze in incoming data
+SS.tdt.channels                                 = 32; % Number of ephys channels to analyze in incoming data
 SS.tdt.sortCodes                                = 4;  % Number of units classified per channel. [1, 2, or 4]
 SS.tdt.bitsPerSort                              = 4;  % Bits used to encode number of spikes for each unit. [1, 2, 4, or 8]
 
@@ -159,7 +159,7 @@ SS.sound.useForReward                           = 1;     % toggle playing a soun
 % Datapixx sound and PsychPortAudio can both be used simultaneously to
 % maximize audio channels (Need to get datapixx working first)
 SS.sound.useDatapixx                            = 1;
-SS.sound.datapixxVolume                         = 1.0;
+SS.sound.datapixxVolume                         = 0.9;
 SS.sound.datapixxInternalSpeakerVolume          = 0;
 
 SS.sound.usePsychPortAudio                      = 0;
@@ -178,7 +178,7 @@ SS.pldaps.quit                                  = 0;     % control experiment du
 SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file. (WZ TODO: I think could be removed. File names generated automatically.)
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
-SS.pldaps.MovAv                                 = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
+SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
 
 % dirs: configure pldaps' built-in drawing options
 if(exist('/DATA/ExpData', 'dir'))
@@ -251,12 +251,12 @@ SS.Block.BlockList      = [];
 SS.datapixx.useAsEyepos        = 0;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XEyeposChannel = 0;
-SS.datapixx.adc.YEyeposChannel = 1;
-SS.datapixx.adc.PupilChannel   = 2;
+SS.datapixx.adc.XEyeposChannel = 3;
+SS.datapixx.adc.YEyeposChannel = 4;
+SS.datapixx.adc.PupilChannel   = 5;
 
 % Saccade parameters
-SS.behavior.fixation.use       =  0;       % does this task require control of eye position
+SS.behavior.fixation.use       = 0;       % does this task require control of eye position
 
 SS.behavior.fixation.on        =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
@@ -294,19 +294,20 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 % rig specific eye calibration parameter
 switch rig
     case 1
-        % defaults before Screen Resize 6/22/20, %2021/05/14 changed the eye tracking from RIGHT side eye to LEFT side eye, because Croc's chmaber is on the RIGHT hemisphere
-        SS.eyeCalib.defaultGain      = [15.1791 -29.1664];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.4502 -1.5079];    % default offset, used if no calibration points are entered
+        % Dingo hardstate screen Setting 1 6/22/20
+        SS.eyeCalib.defaultGain      = [15.1791, -29.1664];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.4502, -1.5079];    % default offset, used if no calibration points are entered
      
     case 2
-        % defaults before Screen Resize 
+        % Dingo hardstate screen Setting 1 6/22/20 
         SS.eyeCalib.defaultGain      = [15.1791 -29.1664];  % default gain, used if no calibration points are entered
         SS.eyeCalib.defaultOffset    = [-1.4502 -1.5079];  % default offset, used if no calibration points are entered
         
+  
     otherwise
-        % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [15.1791 -29.1664];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.4502 -1.5079];    % default offset, used if no calibration points are entered
+        % Dingo hardstate screen Setting 1 6/22/20
+        SS.eyeCalib.defaultGain      = [15.1791, -29.1664];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.4502, -1.5079];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
@@ -326,7 +327,7 @@ SS.stim.record.structs = {}; % Cell array to store the properties of stims as th
 SS.stim.pos = [0,0];
 
 % fixation window
-SS.stim.fixWin                       =  2.5;  % diameter of fixation window in dva
+SS.stim.fixWin                       = 2.5;  % diameter of fixation window in dva
 SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
@@ -342,7 +343,7 @@ SS.behavior.fixation.fix.pos = [0,0];     % Somethings may rely on this, will be
 % Sine Wave Grating stimlui
 SS.stim.GRATING.sFreq    = 3; % Spatial frequency, cycles/deg
 SS.stim.GRATING.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
-SS.stim.GRATING.angle    = 90; % Rotation
+SS.stim.GRATING.angle    = 0; % Rotation
 SS.stim.GRATING.contrast = 1;
 SS.stim.GRATING.res      = 1000; % Half the size of the texture matrix
 SS.stim.GRATING.radius   = 1;
@@ -393,13 +394,13 @@ SS.datapixx.TTL_trialOnChan  = 1;   % DIO channel used for trial state TTL
 
 % ------------------------------------------------------------------------%
 %% TTL pulse series for pico spritzer
-%SS.datapixx.TTL_spritzerChan      = 5;    % DIO channel, commenting this out does not do anything CR 1/24/2021
-%SS.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse, commenting this out does not do anything CR 1/24/2021
-%SS.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series, commenting this out does not do anything CR 1/24/2021
-%SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses, commenting this out does not do anything CR 1/24/2021
+SS.datapixx.TTL_spritzerChan      = 5;    % DIO channel
+SS.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
+SS.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
+SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
 
-%SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series, commenting this out does not do anything CR 1/24/2021
-%SS.datapixx.TTL_spritzerSeriesGap    = 30;   % gap between subsequent series, commenting this out does not do anything CR 1/24/2021
+SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
+SS.datapixx.TTL_spritzerSeriesGap    = 30;   % gap between subsequent series
 
 % ------------------------------------------------------------------%
 
@@ -458,5 +459,6 @@ SS.editable   = {};
 SS.plot.do_online =  0;  % run online data analysis between two subsequent trials
 SS.plot.routine   = [];  % matlab function to be called for online analysis (TODO: make a default routine for the most rudimentary analysis)
 SS.plot.fig       = [];  % figure handle for online plot (leave empty)
+
 
 
