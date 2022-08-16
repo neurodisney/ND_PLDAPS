@@ -16,7 +16,7 @@ p.trial.reward.ManDur         = 0.25;  % reward duration [s] for reward given by
 p.trial.reward.IncrementTrial = [10,  150, 250,  400, 450, 500]; % increase number of pulses with this trial number
 p.trial.reward.IncrementDur   = [0.125, 0.15, 0.175, 0.185, 0.2, 0.25]; % increase number of pulses with this trial number
 
-p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
+p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.25; % duration of the initial reward
 
 % ------------------------------------------------------------------------%
