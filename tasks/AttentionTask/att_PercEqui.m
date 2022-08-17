@@ -123,25 +123,27 @@ function TaskSetUp(p)
     if(p.trial.stim.Trgt.Contrast >= p.trial.stim.Ref.Contrast)
         p.trial.stim.SaccadeTarget     = 'target';
         p.trial.stim.SaccadeDistractor = 'reference';
+        n = 2;
 
         if(p.trial.stim.Hemi == 'r')
-            p.trial.stim.Ref.Pos  = [-2* p.trial.stim.PosX, -2* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ 2* p.trial.stim.PosX, -2* p.trial.stim.PosY];
+            p.trial.stim.Ref.Pos  = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
         else
-            p.trial.stim.Ref.Pos  = [ 2* p.trial.stim.PosX, -2* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [-2* p.trial.stim.PosX, -2* p.trial.stim.PosY];
+            p.trial.stim.Ref.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
         end
 
     else
         p.trial.stim.SaccadeTarget     = 'reference';
         p.trial.stim.SaccadeDistractor = 'target';
+        n = 2;
 
         if(p.trial.stim.Hemi == 'l')
-            p.trial.stim.Ref.Pos  = [-2* p.trial.stim.PosX, -2* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ 2* p.trial.stim.PosX, -2* p.trial.stim.PosY];
+            p.trial.stim.Ref.Pos  = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
         else
-            p.trial.stim.Ref.Pos  = [ 2* p.trial.stim.PosX, -2* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [-2* p.trial.stim.PosX, -2* p.trial.stim.PosY];
+            p.trial.stim.Ref.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
         end
     end
 

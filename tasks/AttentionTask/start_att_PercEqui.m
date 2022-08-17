@@ -28,13 +28,13 @@ SS = ND_RigDefaults(rig);    % load default settings according to the current ri
 %% Define task related functions
 
 % function to set up experiment (and maybe also including the trial function)
-exp_fun = 'PercEqui';
+exp_fun = 'att_PercEqui';
 
 % define trial function (could be identical with the experimentSetupFile that is passed as argument to the pldaps call
 SS.pldaps.trialFunction = exp_fun;          % This function is both, set-up for the experiment session as well as the trial function
-SS.task.TaskDef    = 'PercEqui_taskdef';     % function that provides task specific parameter definitions
-SS.task.AfterTrial = 'PercEqui_aftertrial';  % function that provides runs task specific actions after a trial
-SS.plot.routine    = 'PercEqui_plots';       % function for online plotting of session progress
+SS.task.TaskDef    = 'att_PercEqui_taskdef';     % function that provides task specific parameter definitions
+SS.task.AfterTrial = 'att_PercEqui_aftertrial';  % function that provides runs task specific actions after a trial
+SS.plot.routine    = 'att_PercEqui_plots';       % function for online plotting of session progress
 
 % ------------------------------------------------------------------------%
 %% define variables that need to passed to next trial

@@ -43,18 +43,21 @@ p.trial.stim.GRATING.tFreq  = 0;  % temporal frequency of grating; drift speed, 
 p.trial.stim.GRATING.res    = 600;
 p.trial.stim.GRATING.fixWin = 2;  %*p.trial.stim.GRATING.radius;
 
-p.trial.stim.GRATING.radius = 2;  % radius of grating patch
+p.trial.stim.GRATING.radius = 1;  % radius of grating patch
 
 % p.trial.stim.EccLst = [ 2, 3,   4];
 % p.trial.stim.AngLst = [45, 0, -45];
 % 
 % p.trial.stim.EccLst =  3;
 % p.trial.stim.AngLst = [45, 0, -45];
-% 
 
-p.trial.stim.PosX = 2.5;
-%p.trial.stim.PosY = datasample([-2, 0, 2], 1);
-p.trial.stim.PosY = 0;
+coordinate_array = zeros(6,2);
+coordinate_array(:,1) = [1 , 2, 3, 3, 2, 1]; % x coordinates
+coordinate_array(:,2) = [3, 2, 1, -1, -2, -3]; % y coordinates
+n = randsample([1 2 3 4 5 6], 1);
+
+p.trial.stim.PosX = coordinate_array(n,1);
+p.trial.stim.PosY = coordinate_array(n,2);
 
 % grating contrast
 
