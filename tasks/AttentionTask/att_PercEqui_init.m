@@ -5,6 +5,7 @@ function p = att_PercEqui_init(p)
 % throughout the experiment.
 %
 % wolf zinke, Nov. 2017
+% John Amodeo, Aug. 2022
 
 %% define ascii output file
 p = ND_AddAsciiEntry(p, 'Date',        'p.trial.DateStr',                     '%s');
@@ -17,17 +18,30 @@ p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%
 p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
 p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
 
-p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.Hemi',                     '%s');
-p = ND_AddAsciiEntry(p, 'RefSpFreq',   'p.trial.stim.Ref.sFreq',              '%.4f');
-p = ND_AddAsciiEntry(p, 'RefOri',      'p.trial.stim.Ref.sFreq',              '%.4f');
-p = ND_AddAsciiEntry(p, 'RefContr',    'p.trial.stim.Ref.Contrast',           '%.4f');
-p = ND_AddAsciiEntry(p, 'TargetSpFreq','p.trial.stim.Trgt.sFreq',             '%.4f');
-p = ND_AddAsciiEntry(p, 'TargetOri',   'p.trial.stim.Trgt.sFreq',             '%.4f');
-p = ND_AddAsciiEntry(p, 'TargetContr', 'p.trial.stim.Trgt.Contrast',          '%.4f');
-p = ND_AddAsciiEntry(p, 'RefX',        'p.trial.stim.Ref.Pos(1)',             '%.2f');
-p = ND_AddAsciiEntry(p, 'RefY',        'p.trial.stim.Ref.Pos(2)',             '%.2f');
-p = ND_AddAsciiEntry(p, 'TargetX',     'p.trial.stim.Trgt.Pos(1)',            '%.2f');
-p = ND_AddAsciiEntry(p, 'TargetY',     'p.trial.stim.Trgt.Pos(2)',            '%.2f');
+p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.Hemi',                     '%s'); % target
+p = ND_AddAsciiEntry(p, 'TargetSpFreq','p.trial.stim.Trgt.sFreq',             '%.4f'); % target
+p = ND_AddAsciiEntry(p, 'TargetOri',   'p.trial.stim.Trgt.sFreq',             '%.4f'); % target
+p = ND_AddAsciiEntry(p, 'TargetContr', 'p.trial.stim.Trgt.Contrast',          '%.4f'); % target
+p = ND_AddAsciiEntry(p, 'TargetX',     'p.trial.stim.Trgt.Pos(1)',            '%.2f'); % target 
+p = ND_AddAsciiEntry(p, 'TargetY',     'p.trial.stim.Trgt.Pos(2)',            '%.2f'); % target
+
+p = ND_AddAsciiEntry(p, 'Ref1SpFreq',   'p.trial.stim.Ref1.sFreq',              '%.4f'); % reference 1
+p = ND_AddAsciiEntry(p, 'Ref1Ori',      'p.trial.stim.Ref1.sFreq',              '%.4f'); % reference 1
+p = ND_AddAsciiEntry(p, 'Ref1Contr',    'p.trial.stim.Ref1.Contrast',           '%.4f'); % reference 1
+p = ND_AddAsciiEntry(p, 'Ref1X',        'p.trial.stim.Ref1.Pos(1)',             '%.2f'); % reference 1
+p = ND_AddAsciiEntry(p, 'Ref1Y',        'p.trial.stim.Ref1.Pos(2)',             '%.2f'); % reference 1
+
+p = ND_AddAsciiEntry(p, 'Ref2SpFreq',   'p.trial.stim.Ref2.sFreq',              '%.4f'); % reference 2
+p = ND_AddAsciiEntry(p, 'Ref2Ori',      'p.trial.stim.Ref2.sFreq',              '%.4f'); % reference 2
+p = ND_AddAsciiEntry(p, 'Ref2Contr',    'p.trial.stim.Ref2.Contrast',           '%.4f'); % reference 2
+p = ND_AddAsciiEntry(p, 'Ref2X',        'p.trial.stim.Ref2.Pos(1)',             '%.2f'); % reference 2
+p = ND_AddAsciiEntry(p, 'Ref2Y',        'p.trial.stim.Ref2.Pos(2)',             '%.2f'); % reference 2
+
+p = ND_AddAsciiEntry(p, 'Ref3SpFreq',   'p.trial.stim.Ref3.sFreq',              '%.4f'); % reference 3
+p = ND_AddAsciiEntry(p, 'Ref3Ori',      'p.trial.stim.Ref3.sFreq',              '%.4f'); % reference 3
+p = ND_AddAsciiEntry(p, 'Ref3Contr',    'p.trial.stim.Ref3.Contrast',           '%.4f'); % reference 3
+p = ND_AddAsciiEntry(p, 'Ref3X',        'p.trial.stim.Ref3.Pos(1)',             '%.2f'); % reference 3
+p = ND_AddAsciiEntry(p, 'Ref3Y',        'p.trial.stim.Ref3.Pos(2)',             '%.2f'); % reference 3
 
 p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.GRATING.radius',       '%.1f');
 
@@ -72,8 +86,14 @@ p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per
 p.defaultParameters.stim.OriLst     = 0:15:179;  % orientation of grating
 
 p.defaultParameters.stim.Hemi       = datasample(['l', 'r'], 1);
-p.defaultParameters.stim.Ref.sFreq  = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
-p.defaultParameters.stim.Ref.ori    = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
+p.defaultParameters.stim.Ref1.sFreq  = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
+p.defaultParameters.stim.Ref1.ori    = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
+
+p.defaultParameters.stim.Ref2.sFreq  = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
+p.defaultParameters.stim.Ref2.ori    = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
+
+p.defaultParameters.stim.Ref3.sFreq  = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
+p.defaultParameters.stim.Ref3.ori    = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
 
 p.defaultParameters.task.SRT          = NaN;
 p.defaultParameters.task.SRT_FixStart = NaN;

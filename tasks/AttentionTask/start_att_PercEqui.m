@@ -4,6 +4,7 @@ function p = start_att_PercEqui(subjname, rig)
 % This function prepares a task by defining setting task related matlab functions,
 % setting parameters for the session, creating a pldaps class and running the experiment.
 %
+% wolf zinke, Dec. 2017
 % John Amodeo, Aug. 2022
 
 % ------------------------------------------------------------------------%

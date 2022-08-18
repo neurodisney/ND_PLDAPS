@@ -5,8 +5,8 @@ function p = att_PercEqui_taskdef(p)
 % modifications of the task.
 %
 %
-%
 % wolf zinke, Dec. 2017
+% John Amodeo, Aug. 2022
 
 % ------------------------------------------------------------------------%
 %% Reward
@@ -56,8 +56,8 @@ coordinate_array(:,1) = [1 , 2, 3, 3, 2, 1]; % x coordinates
 coordinate_array(:,2) = [3, 2, 1, -1, -2, -3]; % y coordinates
 n = randsample([1 2 3 4 5 6], 1);
 
-p.trial.stim.PosX = coordinate_array(n,1);
-p.trial.stim.PosY = coordinate_array(n,2);
+p.trial.stim.PosX = coordinate_array(3,1);
+p.trial.stim.PosY = 0;
 
 % grating contrast
 
@@ -85,7 +85,7 @@ ctrng = unique(cat(2,(cCtr+ctrng./100),(cCtr-ctrng./100)));
 % plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
 
 ctrng(ctrng<0 | ctrng>1)  = [];
-p.trial.stim.Ref.Contrast = cCtr;
+p.trial.stim.Ref1.Contrast = cCtr;
 p.trial.stim.trgtconts    = ctrng;
 
 % ------------------------------------------------------------------------%

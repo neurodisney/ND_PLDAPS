@@ -2,8 +2,8 @@ function p = att_PercEqui(p, state)
 % Main trial function for a perceptual equilibrium task.
 %
 %
-%
-% wolf zinke, Nov. 2017
+% wolf zinke, Dec. 2017
+% John Amodeo, Aug. 2022
 
 % ####################################################################### %
 %% define the task name that will be used to create a sub-structure in the trial struct
@@ -24,7 +24,7 @@ end
 if(isempty(state))
 
     % call initialisation routine
-    p = PercEqui_init(p);
+    p = att_PercEqui_init(p);
 
 else
     % ####################################################################### %
@@ -108,8 +108,8 @@ function TaskSetUp(p)
 
     % determine grating parameters
     if(p.trial.task.RandomPar == 1)
-        p.trial.stim.Ref.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
-        p.trial.stim.Ref.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
+        p.trial.stim.Ref1.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
+        p.trial.stim.Ref1.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
     end
 
     if(p.trial.task.RandomHemi == 1)
@@ -120,16 +120,16 @@ function TaskSetUp(p)
     p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1); 
 
     % pick the higher contrast item as saccade target and make sure it is on the specified hemifield
-    if(p.trial.stim.Trgt.Contrast >= p.trial.stim.Ref.Contrast)
+    if(p.trial.stim.Trgt.Contrast >= p.trial.stim.Ref1.Contrast)
         p.trial.stim.SaccadeTarget     = 'target';
         p.trial.stim.SaccadeDistractor = 'reference';
         n = 2;
 
         if(p.trial.stim.Hemi == 'r')
-            p.trial.stim.Ref.Pos  = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Ref1.Pos  = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
         else
-            p.trial.stim.Ref.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Ref1.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
         end
 
@@ -139,19 +139,19 @@ function TaskSetUp(p)
         n = 2;
 
         if(p.trial.stim.Hemi == 'l')
-            p.trial.stim.Ref.Pos  = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Ref1.Pos  = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
         else
-            p.trial.stim.Ref.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Ref1.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
         end
     end
 
     % Create Reference grating (parameter in question is kept constant)
-    p.trial.stim.GRATING.sFreq     = p.trial.stim.Ref.sFreq;
-    p.trial.stim.GRATING.ori       = p.trial.stim.Ref.ori;
-    p.trial.stim.GRATING.pos       = p.trial.stim.Ref.Pos;
-    p.trial.stim.GRATING.contrast  = p.trial.stim.Ref.Contrast;
+    p.trial.stim.GRATING.sFreq     = p.trial.stim.Ref1.sFreq;
+    p.trial.stim.GRATING.ori       = p.trial.stim.Ref1.ori;
+    p.trial.stim.GRATING.pos       = p.trial.stim.Ref1.Pos;
+    p.trial.stim.GRATING.contrast  = p.trial.stim.Ref1.Contrast;
     p.trial.stim.reference         = pds.stim.Grating(p);
 
     % create distractor
@@ -159,8 +159,8 @@ function TaskSetUp(p)
         p.trial.stim.Trgt.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
         p.trial.stim.Trgt.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
     else
-        p.trial.stim.Trgt.sFreq = p.trial.stim.Ref.sFreq;
-        p.trial.stim.Trgt.ori   = p.trial.stim.Ref.ori;
+        p.trial.stim.Trgt.sFreq = p.trial.stim.Ref1.sFreq;
+        p.trial.stim.Trgt.ori   = p.trial.stim.Ref1.ori;
     end
 
     p.trial.stim.GRATING.sFreq    = p.trial.stim.Trgt.sFreq;
@@ -412,7 +412,7 @@ function TaskCleanAndSave(p)
     Calculate_SRT(p);
 
     % Save useful info to an ascii table for plotting
-    ND_Trial2Ascii(p, 'save');
+    %ND_Trial2Ascii(p, 'save');
 
 % ####################################################################### %
 %% additional inline functions
