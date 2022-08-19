@@ -110,6 +110,12 @@ function TaskSetUp(p)
     if(p.trial.task.RandomPar == 1)
         p.trial.stim.Ref1.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
         p.trial.stim.Ref1.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
+        
+        p.trial.stim.Ref2.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
+        p.trial.stim.Ref2.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
+        
+        p.trial.stim.Ref3.sFreq = datasample(p.trial.stim.sFreqLst, 1); % spatial frequency as cycles per degree
+        p.trial.stim.Ref3.ori   = datasample(p.trial.stim.OriLst,   1); % orientation of grating
     end
 
     if(p.trial.task.RandomHemi == 1)
@@ -122,28 +128,40 @@ function TaskSetUp(p)
     % pick the higher contrast item as saccade target and make sure it is on the specified hemifield
     if(p.trial.stim.Trgt.Contrast >= p.trial.stim.Ref1.Contrast)
         p.trial.stim.SaccadeTarget     = 'target';
-        p.trial.stim.SaccadeDistractor = 'reference';
+        p.trial.stim.SaccadeDistractor1 = 'reference';
+        p.trial.stim.SaccadeDistractor2 = 'reference';
+        p.trial.stim.SaccadeDistractor3 = 'reference';
         n = 2;
 
         if(p.trial.stim.Hemi == 'r')
             p.trial.stim.Ref1.Pos  = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Ref2.Pos  = [-1 * p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Ref3.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [p.trial.stim.PosX, p.trial.stim.PosY];
         else
-            p.trial.stim.Ref1.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Ref1.Pos  = [p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Ref2.Pos  = [-1 * p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Ref3.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
         end
 
     else
         p.trial.stim.SaccadeTarget     = 'reference';
-        p.trial.stim.SaccadeDistractor = 'target';
+        p.trial.stim.SaccadeDistractor1 = 'target';
+        p.trial.stim.SaccadeDistractor2 = 'reference';
+        p.trial.stim.SaccadeDistractor3 = 'reference';
         n = 2;
 
         if(p.trial.stim.Hemi == 'l')
-            p.trial.stim.Ref1.Pos  = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
-        else
-            p.trial.stim.Ref1.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Ref1.Pos  = [p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Ref2.Pos  = [-1 * p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Ref3.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
+        else
+            p.trial.stim.Ref1.Pos  = [-1 * p.trial.stim.PosX, p.trial.stim.PosY];
+            p.trial.stim.Ref2.Pos  = [-1 * p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Ref3.Pos  = [p.trial.stim.PosX, -1 * p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [p.trial.stim.PosX, p.trial.stim.PosY];
         end
     end
 
@@ -272,12 +290,12 @@ function TaskDesign(p)
                     p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                     p.trial.task.SRT_StimOn   = p.trial.EV.FixLeave - p.trial.EV.StimOn;
                     
-                elseif(p.trial.stim.(p.trial.stim.SaccadeDistractor).looking)
+                elseif(p.trial.stim.(p.trial.stim.SaccadeDistractor1).looking)
                 % wrong item chosen
                     % Play breakfix sound
                     pds.audio.playDP(p, 'incorrect','left');
 
-                    switch p.trial.stim.SaccadeDistractor
+                    switch p.trial.stim.SaccadeDistractor1
                         case 'target'
                              p.trial.task.TargetSel = 1;
                         case 'reference'

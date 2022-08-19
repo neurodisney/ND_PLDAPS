@@ -86,6 +86,9 @@ ctrng = unique(cat(2,(cCtr+ctrng./100),(cCtr-ctrng./100)));
 
 ctrng(ctrng<0 | ctrng>1)  = [];
 p.trial.stim.Ref1.Contrast = cCtr;
+p.trial.stim.Ref2.Contrast = cCtr;
+p.trial.stim.Ref3.Contrast = cCtr;
+
 p.trial.stim.trgtconts    = ctrng;
 
 % ------------------------------------------------------------------------%
