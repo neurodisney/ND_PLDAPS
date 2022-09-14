@@ -47,6 +47,7 @@ end
 
 % ------------------------------------------------------------------------%
 %% Draw all the stimuli to the screen with their fixation windows
+
 for(i=1:length(p.trial.stim.allStims))
     stim = p.trial.stim.allStims{i};
     draw(stim,p);
