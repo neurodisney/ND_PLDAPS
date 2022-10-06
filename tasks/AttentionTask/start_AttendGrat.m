@@ -1,4 +1,4 @@
-% Main function to run task
+% Function to run experiment
 function p = start_AttendGrat(subjectname, rig)
 
 % Checking for subject name and filling if empty
@@ -12,17 +12,40 @@ if(~exist('rig', 'var') || isempty(rig))
     rig = str2num(rigname);
 end
 
-% Initializing big matrix in which to store task information, then loading it with default settings for rig
+% Creating pldaps matrix to store task information, and loading it with 
+% default rig settings
 SS = ND_RigDefaults(rig); 
 
-% Specifying task
-exp_task = 'AttendGrat'; 
+    % Specifying task: calling AttendGrat.m file
+exp_fun = 'PercEqui'; 
 
-% Loading task information into big matrix
-SS.pladaps.trialFunction = exp_task; 
+    % Loading task information into pldaps matrix
+SS.pladaps.trialFunction = exp_fun; 
 
-% SS.task.TaskDef = 'AttendGrat_taskdef'; % Loading additional, more specific task parameters into big matrix 
-% SS.task.AfterTrial = 'AttendGrat_aftertrial'; % Loading actions that will be run post-trial into big matrix 
-% SS.editable = {}; % Specifying which variables can be edited from trial to trial
+    % Loading task-specific parameters: calling AttendGrat_taskdef.m file 
+SS.task.TaskDef = 'PercEqui_taskdef';
+ 
+    % Loading actions for post-trial: calling AttendGrat_aftertrial.m file
+SS.task.AfterTrial = 'PercEqui_aftertrial'; 
+
+    % Specifying which matrix variables can be edited for future trials
+SS.editable = {};
+    
+    % Loading non-default rig settings into pldaps matrix
+SS.pldaps.draw.eyepos.use = 1;
+SS.pldaps.draw.grid.use = 1;
+SS.datapixx.useAsEyepos = 1;
+SS.datapixx.adc.srate = 1000;
+
+% Creating pldaps object
+p = pldaps(subjectname, SS, exp_fun);
+
+% Command to run experimemt
+p.run;
+
+% Closing DataPixx when experiment complete
+if(Datapixx('IsReady'))
+    Datapixx('Close');
+end
 
 
