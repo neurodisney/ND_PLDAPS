@@ -17,7 +17,7 @@ end
 SS = ND_RigDefaults(rig); 
 
     % Specifying task: calling AttendGrat.m file
-exp_fun = 'PercEqui'; 
+exp_fun = 'AttendGrat'; 
 
     % Loading task information into pldaps matrix
 SS.pladaps.trialFunction = exp_fun; 
