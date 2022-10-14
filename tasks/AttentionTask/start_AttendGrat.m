@@ -23,7 +23,7 @@ exp_fun = 'AttendGrat';
 SS.pladaps.trialFunction = exp_fun; 
 
     % Loading task-specific parameters: calling AttendGrat_taskdef.m file 
-SS.task.TaskDef = 'PercEqui_taskdef';
+SS.task.TaskDef = 'AttendGrat_taskdef';
  
     % Loading actions for post-trial: calling AttendGrat_aftertrial.m file
 SS.task.AfterTrial = 'PercEqui_aftertrial'; 

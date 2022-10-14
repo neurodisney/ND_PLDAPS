@@ -20,7 +20,16 @@ else
     % If pldaps object is populated, standard trial routines run
     p = ND_GeneralTrialRoutines(p, state);
     
-    
-    
-    
+    % Executing events/epochs that make up trial
+    switch state
+        
+        % Gathing materials to start trial
+        case p.trial.pldaps.trialStates.trialSetup
+            TaskSetUp(p);  
+    end
 end
+
+function TaskSetUp(p)
+
+
+    
