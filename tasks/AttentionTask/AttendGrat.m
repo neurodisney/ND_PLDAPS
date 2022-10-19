@@ -1,7 +1,3 @@
-% Look for: tfh(p, p.trial.pldaps.trialStates.trialSetup);
-% Look for: p = feval(p.trial.pldaps.trialMasterFunction,  p);
-% TaskSetUp(p); and in TaskSetUp function: p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1)
-
 % Function to run task for experiment
 function p = AttendGrat(p, state)
 
@@ -54,17 +50,17 @@ p.trial.task.SRT_StimOn = NaN;
 % Generating fixation spot stimulus
 p.trial.stim.fix = pds.stim.FixSpot(p);
 
+% Selecting target position
+p.trial.stim.targetPos = datasample(p.trial.task.posList, 1);
+
+% Creating list of positions for distractors
+ 
+
+%distractor_positions = p.trial.task.posList{p.trial.stim.targetPos};
 
 
 
 
 
 % Gathing random orientations for gratings
-p.trial.stim.GRATING.TrialOriLst = datasample(p.trial.stim.TaskOriLst, 5);
-
-
-
-
-
-
-    
+p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.gratingOriList, 5);
