@@ -53,8 +53,26 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 % Selecting target position
 p.trial.stim.targetPos = datasample(p.trial.task.posList, 1);
 
-% Creating list of positions for distractors
- 
+% Getting index of target position in position list
+counter = 1;
+p.trial.stim.distractPosList = {};
+target = cell2mat(p.trial.stim.targetPos);
+trgX = target(1);
+trgY = target(2);
+for i = 1:length(p.trial.task.posList)
+    pos = cell2mat(p.trial.task.posList(i));
+    posX = pos(1);
+    posY = pos(2);
+    disp(pos)
+    if trgX ~= posX & trgY ~= posY
+        %distractor_positions = cat(2, distractor_positions, [posX, posY]);
+        disp(pos)
+    end
+end
+
+% Using index of target position to make list of distractor positions
+
+
 
 %distractor_positions = p.trial.task.posList{p.trial.stim.targetPos};
 
