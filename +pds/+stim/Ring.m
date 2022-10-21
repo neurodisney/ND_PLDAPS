@@ -6,6 +6,9 @@ properties
     size
     linewidth
     color
+    alpha
+    res
+    srcRect
 end
 
 methods
@@ -55,6 +58,9 @@ methods
         
         % Save a reference to this object in a dependable place in the p struct
         p.trial.behavior.cue.ring = obj;
+        
+        % Create a special texture drawing shader for masked texture drawing:
+        glsl = p.trial.display.glsl;
                
         % Create the texture matrix
         CoorVec = linspace(-obj.size/2, obj.size/2, obj.res);
