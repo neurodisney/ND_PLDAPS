@@ -33,8 +33,28 @@ function p = AttendGrat_taskdef(p)
     % Creating list of orientations to use during task
     % This list includes flanks of recorded cell's orientation tuning curve
     p.trial.task.gratingOriList = [p.defaultParameters.stim.oriList [flank1 flank2]];
+    
+    
+    
+    % Creating flat-hazard function from which to pull out time of wait before stim change
+    num_range = [1, 1000];
+    mean = 2;
+    bound1 = 1.25;
+    bound2 = 2.75;
+    
+    r = exprnBounded(mean, num_range, bound1, bound2);
+    
+    function r = exprnBounded(mean, num_range, bound1, bound2);
+    
+    minE = exp(-bound1 / mean);
+    maxE = exp(-bound2 / mean);
+    
+    randBounded = minE + (maxE-minE).*rand(num_range);
+    r = -mean .* log(randBounded);
+    
+    end
 
-
+    p.trial.task.flatHazard = r;
 
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
@@ -46,4 +66,6 @@ function p = AttendGrat_taskdef(p)
 
     % Degree to which current reward decreased for bad performance 
     p.trial.reward.DiscourageProp = 1.0;
+    
+end
 

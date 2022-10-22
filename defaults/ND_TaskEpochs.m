@@ -27,6 +27,8 @@ p.defaultParameters.epoch.TrialStart      =   3;  % trial starts for animal
 p.defaultParameters.epoch.WaitEnd         =  14;  % trial completed (successful or not)
 p.defaultParameters.epoch.TaskEnd         =  11;  % trial completed (successful or not)
 
+p.defaultParameters.epoch.WaitChange      =   5;
+
 p.defaultParameters.epoch.WaitTarget      =   8;  % wait for target onset
 p.defaultParameters.epoch.WaitGo          =   9;  % delay period before response is required
 
