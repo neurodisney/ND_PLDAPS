@@ -1,0 +1,49 @@
+% Function to define task parameters
+function p = AttendGrat_taskdef(p)
+
+    % Setting time window for fixation before trial marked as 'NoStart'
+    p.trial.task.Timing.WaitFix = 2;
+
+    % Storing expected latency of stim presentation to use for trial timing calculations
+    p.trial.task.stimLatency = ND_GetITI(0.75, 1.5);
+
+
+
+    % Storing position of mapped receptive field collected from experimenter
+    p.trial.task.RFpos = [-6, 6]; % This should be changed to user input value
+    target_posX = p.trial.task.RFpos(1);
+    target_posY = p.trial.task.RFpos(2);
+
+    p.trial.task.posList = {[target_posX, target_posY], [-1*target_posX, -1*target_posY], [-1*target_posX, target_posY], [target_posX, -1*target_posY]}; 
+
+    % Storing contrast below threshold response collected from experimenter
+    contrast = 0.3; % This should be changed to user input value
+
+    % Assigning contrast to cue ring
+    p.trial.stim.ringParameters.cueContrast = -1 * contrast;
+    % Assigning contrast to non-cue rings
+    p.trial.stim.ringParameters.distractContrast = contrast;
+
+
+
+    % Storing orientation tuning flanks of recorded cell collected from experimenter
+    flank1 = 30; % This should be changed to user input value
+    flank2 = 130; % This should be changed to user input value
+
+    % Creating list of orientations to use during task
+    % This list includes flanks of recorded cell's orientation tuning curve
+    p.trial.task.gratingOriList = [p.defaultParameters.stim.oriList [flank1 flank2]];
+
+
+
+    % Creating trial increments to scale size of reward based on good performance
+    p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
+
+    % List of increasing durations of juice flow for reward
+    % This list is linked to trial increments for scaling size of reward
+    % p.trial.reward.IncrementDur = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
+    p.trial.reward.IncrementDur = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.3];
+
+    % Degree to which current reward decreased for bad performance 
+    p.trial.reward.DiscourageProp = 1.0;
+
