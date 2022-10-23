@@ -70,7 +70,7 @@ function p = AttendGrat(p, state)
         % Compiling properties into pldaps struct to present ring on screen
         p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(1));
         p.trial.stim.RING.contrast = p.trial.stim.ringParameters.cueContrast;
-        %p.trial.stim.rings.cue = pds.stim.Ring(p);
+        p.trial.stim.rings.cue = pds.stim.Ring(p);
 
         % Creating distractor ring 1 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
@@ -93,11 +93,8 @@ function p = AttendGrat(p, state)
         % Gathing random orientations for gratings
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.gratingOriList, 5);
 
-        % Create target grating pre-orientation change by assigning values to grating properties in p object
-        % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.GRATING.pos = cell2mat(p.trial.stim.posList(1));
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
-        p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
+
+        
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
@@ -124,7 +121,9 @@ function p = AttendGrat(p, state)
         p.trial.stim.gratings.distractor3 = pds.stim.Grating(p);
         
         % Selecting time of wait before stim change from flat hazard function
-        p.trial.task.stimChangeWait = datasample(p.trial.task.flatHazard, 1); 
+        wait_period = datasample(p.trial.task.flatHazard, 1);
+        p.trial.task.stimChangeWait.duration = round(wait_period * 300);
+        p.trial.task.stimChangeWait.counter = 0;
 
         % Taking control of activation of grating fix windows
         p.trial.stim.gratingParameters.targetAutoFixWin = 0;
@@ -202,57 +201,32 @@ function p = AttendGrat(p, state)
             
             % Checking that fixation held before presenting stimuli pre-orientation change
             case p.trial.epoch.WaitChange
-                % Is monkey still fixating at this point in task?
                 if(p.trial.stim.fix.fixating)
-                    % Are rings and gratings not on screen?
-                    if(p.trial.task.stimState == 1)
-                        % Is current time after presentation of fixation point?
-                        if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
-                            % Presenting stimuli
-                            counter = 0;
-                            while counter < 30000
-                                
-                                Task_WaitFixStart(p);
-                                disp(counter)
-                                % Is monkey no longer fixating?
-                                if(~p.trial.stim.fix.fixating)         
-                                    break
-                                elseif(p.trial.stim.fix.fixating)
-                                    counter = counter + 1;  
-                                end
-                            end
-                            
-                            Task_WaitFixStart(p);
-            
-                            if(p.trial.stim.fix.fixating)
-                                postChangeStim(p, 1);
-                                ND_SwitchEpoch(p, 'WaitSaccade');
-                                disp(1)
-                            end
-                        end 
-                    end 
+                    p.trial.task.stimChangeWait.counter = p.trial.task.stimChangeWait.counter + 1;
+                    if p.trial.task.stimChangeWait.counter == p.trial.task.stimChangeWait.duration
+                        postChangeStim(p, 1);
+                        ND_SwitchEpoch(p, 'WaitSaccade')
+                    else
+                        ND_SwitchEpoch(p, 'WaitChange')
+                        
+                    end
+                    
+                elseif(~p.trial.stim.fix.fixating)        
+                        % Play noise signaling fix break
+                        pds.audio.playDP(p, 'breakfix', 'left'); 
+                        % Calculating and storing time from fix start to fix leave if fix broken
+                        p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                        % Calculating and storing time from presenting fix point to fix leave if fix broken
+                        p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
+                        % Checking to confirm there was fix break before ending trial
+                        ND_SwitchEpoch(p, 'BreakFixCheck');
                 end
-                
-                % Checking if monkey is still fixating
-                %Task_WaitFixStart(p);
-
-                % Is monkey no longer fixating?
-                if(~p.trial.stim.fix.fixating)         
-                    % Play noise signaling fix break
-                    pds.audio.playDP(p, 'breakfix', 'left'); 
-                    % Calculating and storing time from fix start to fix leave if fix broken
-                    p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
-                    % Calculating and storing time from presenting fix point to fix leave if fix broken
-                    p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
-                    % Checking to confirm there was fix break before ending trial
-                    ND_SwitchEpoch(p, 'BreakFixCheck');
-                end
-            
+               
             % Beginning time period in which saccade to target must be performed
             case p.trial.epoch.WaitSaccade
                
                 
-                
+         
         end
 
 
@@ -289,7 +263,7 @@ function p = AttendGrat(p, state)
                     
                 otherwise
                     error('unusable stim value')
-                    
+      
             end
             
             % Recording strat time of no stimulus presentation
@@ -297,8 +271,7 @@ function p = AttendGrat(p, state)
                 ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
                 
             elseif(val == 1)
-                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
-                
+                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');   
             end 
         end
         
@@ -313,7 +286,6 @@ function p = AttendGrat(p, state)
             p.trial.task.stimState = val;
             % Turning stimulus presentation on/off based on stimulus presentation status
             switch val
-                
                 % Implementing no stimulus presentation
                 case 0
                     p.trial.stim.gratings.postTarget.on = 0;
@@ -321,12 +293,10 @@ function p = AttendGrat(p, state)
                 % Implementing stimulus presentation
                 case 1
                     p.trial.stim.gratings.postTarget.on = 1;
-                    p.trial.stim.gratings.distractor1.on = 0;
                     p.trial.stim.gratings.postTarget.fixActive = 1;
 
                 otherwise
-                    error('unusable stim value')
-                    
+                    error('unusable stim value')     
             end
             
             % Recording strat time of no stimulus presentation
