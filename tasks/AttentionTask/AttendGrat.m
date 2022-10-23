@@ -70,7 +70,7 @@ function p = AttendGrat(p, state)
         % Compiling properties into pldaps struct to present ring on screen
         p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(1));
         p.trial.stim.RING.contrast = p.trial.stim.ringParameters.cueContrast;
-        p.trial.stim.rings.cue = pds.stim.Ring(p);
+        %p.trial.stim.rings.cue = pds.stim.Ring(p);
 
         % Creating distractor ring 1 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
@@ -92,9 +92,12 @@ function p = AttendGrat(p, state)
 
         % Gathing random orientations for gratings
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.gratingOriList, 5);
-
-
         
+        % Creating target grating pre-orientation change by assigning values to grating properties in p object
+        % Compiling properties into pldaps struct to present grating on screen
+        p.trial.stim.GRATING.pos = cell2mat(p.trial.stim.posList(1));
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
+        p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
