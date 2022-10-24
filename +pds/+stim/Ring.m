@@ -9,6 +9,13 @@ properties
     alpha
     res
     srcRect
+    
+    %%
+    texture
+    radius
+    angle
+    %%
+    
 end
 
 methods
@@ -53,7 +60,7 @@ methods
         obj.size      = size;
         obj.alpha     = alpha;
         obj.pos       = pos;
-        obj.res       = round(100 * obj.size);
+        obj.res       = 1000;
         obj.srcRect   = [0, 0, 2*obj.res + 1, 2*obj.res + 1];
         
         % Save a reference to this object in a dependable place in the p struct
@@ -64,34 +71,36 @@ methods
                
         % Create the texture matrix
         CoorVec = linspace(-obj.size/2, obj.size/2, obj.res);
-
+        
         [x,y] = meshgrid(CoorVec, CoorVec);
         
         % Create a circular aperture using the separate alpha-channel:
+        
         ringmat = ( (x.^2 + y.^2) <= (obj.size - obj.linewidth)^2 | ...
                     (x.^2 + y.^2)  > obj.size^2  );
+        
                 
         ringmat(:,:,2) = ringmat; % duplicate as alpha map
         ringmat(:,:,1) = ringmat(:,:,1) * p.trial.display.clut.(obj.color); % set as CLUT index
+        ringmat = double(ringmat);
         
         % Make the texture that gets drawn
-        obj.texture = Screen('MakeTexture', window, ringmat, [], [], 2, [], glsl);
+        obj.texture = Screen('MakeTexture', p.trial.display.ptr, ringmat, [], [], 2, [], glsl);
     end
     
     function draw(obj, p)
         if obj.on
-            Window = p.trial.display.ptr;
-            
             % Calculate the rect using the position
-            destRect = [obj.pos - obj.radius, obj.pos + obj.radius];
+            % destRect = [obj.pos - obj.radius, obj.pos + obj.radius];
+            destRect = [obj.pos, obj.pos];
             
             % Filter mode (not sure what the best value is yet)
             % For more information see the PTB documentation for Screen('DrawTexture')
-            filterMode = 3;
+            filterMode = [];
             
             % Draw the texture
-            Screen('DrawTexture', Window, obj.texture, obj.srcRect, destRect, ...
-                                          obj.angle, filterMode, obj.alpha);
+            Screen('DrawTexture', p.trial.display.ptr, obj.texture, obj.srcRect,destRect, ...
+                                          obj.angle, filterMode, obj.alpha, [], [], []);
         end
     end
     

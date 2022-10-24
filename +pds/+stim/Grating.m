@@ -150,7 +150,7 @@ methods
         CoorVec = linspace(-obj.res, obj.res, 2*obj.res);
         [x, y]  = meshgrid(CoorVec, CoorVec);
         
-        grating = obj.bgOffset + obj.pcmult * cos(sFreqTex*2*pi*(x+q)); 
+        grating = obj.bgOffset + obj.pcmult * cos(sFreqTex*2*pi*(x+q));
         
         % Create a circular aperture using the separate alpha-channel:
         circle = (x.^2 + y.^2 <= obj.res^2);
@@ -175,7 +175,6 @@ methods
             
             % Filter mode (not sure what the best value is yet)
             % For more information see the PTB documentation for Screen('DrawTexture')
-            % filterMode = [];
             filterMode = [];
             
             % Draw the texture

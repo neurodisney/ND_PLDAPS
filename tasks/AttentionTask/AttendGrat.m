@@ -70,7 +70,7 @@ function p = AttendGrat(p, state)
         % Compiling properties into pldaps struct to present ring on screen
         p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(1));
         p.trial.stim.RING.contrast = p.trial.stim.ringParameters.cueContrast;
-        %p.trial.stim.rings.cue = pds.stim.Ring(p);
+        p.trial.stim.rings.cue = pds.stim.Ring(p);
 
         % Creating distractor ring 1 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
@@ -123,10 +123,14 @@ function p = AttendGrat(p, state)
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(5);
         p.trial.stim.gratings.distractor3 = pds.stim.Grating(p);
         
-        % Selecting time of wait before stim change from flat hazard function
+        % Creating counter to track wait time before grating presentation 
+        p.trial.task.CueWait.duration = 150;
+        p.trial.task.CueWait.counter = 0;
+        
+        % Selecting time of wait before target grating change from flat hazard function
         wait_period = datasample(p.trial.task.flatHazard, 1);
-        p.trial.task.stimChangeWait.duration = round(wait_period * 300);
-        p.trial.task.stimChangeWait.counter = 0;
+        p.trial.task.GratWait.duration = round(wait_period * 100);
+        p.trial.task.GratWait.counter = 0;
 
         % Taking control of activation of grating fix windows
         p.trial.stim.gratingParameters.targetAutoFixWin = 0;
@@ -155,37 +159,36 @@ function p = AttendGrat(p, state)
             case p.trial.epoch.ITI
                 Task_WaitITI(p);
 
-            % Starting trial
+            % Starting trial by presenting fix point
             case p.trial.epoch.TrialStart
 
                 % Turning task on
                 Task_ON(p);
 
-                % Presenting fixation point
+                % Presenting fix point
                 ND_FixSpot(p, 1);
 
                 % Recording start time of task
                 p.trial.EV.TaskStart = p.trial.CurTime;
                 p.trial.EV.TaskStartTime = datestr(now, 'HH:MM:SS:FFF');
 
-                % Switching task to wait-for-fixation epoch
                 ND_SwitchEpoch(p,'WaitFix');
 
-            % Checking if fixation has been achieved within specific time window 
+            % Checking if fixation has been achieved within pre-set abount time 
             case p.trial.epoch.WaitFix
                 Task_WaitFixStart(p);
 
-            % Checking that fixation held before presenting stimuli pre-orientation change    
+            % Presenting rings if fixation held
             case p.trial.epoch.Fixating
                 % Is monkey fixating at this point in task?
                 if(p.trial.stim.fix.fixating)
-                    % Are rings and gratings not on screen?
+                    % Are stimuli on screen?
                     if(p.trial.task.stimState == 0)
-                        % Is current time after presentation of fixation point?
+                        % Is current time after presentation of fix point?
                         if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
-                            % Presenting stimuli 
-                            preChangeStim(p, 1)
-                            ND_SwitchEpoch(p, 'WaitChange');  
+                            % Presenting rings 
+                            stimRings(p, 1)
+                            ND_SwitchEpoch(p, 'WaitCue');  
                         end
                     end
                 end
@@ -202,14 +205,37 @@ function p = AttendGrat(p, state)
                     ND_SwitchEpoch(p, 'BreakFixCheck');
                 end
             
-            % Checking that fixation held before presenting stimuli pre-orientation change
+            % Checking if fixation held for pre-set amount of time before presenting gratings pre-orientation change
+            case p.trial.epoch.WaitCue
+                if(p.trial.stim.fix.fixating)
+                    if p.trial.task.CueWait.counter == p.trial.task.CueWait.duration
+                        stimPreGratOriChange(p, 1);
+                        ND_SwitchEpoch(p, 'WaitChange')
+                    else
+                        p.trial.task.CueWait.counter = p.trial.task.CueWait.counter + 1;
+                        ND_SwitchEpoch(p, 'WaitCue')   
+                    end
+                    
+                elseif(~p.trial.stim.fix.fixating)        
+                        % Play noise signaling fix break
+                        pds.audio.playDP(p, 'breakfix', 'left'); 
+                        % Calculating and storing time from fix start to fix leave if fix broken
+                        p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                        % Calculating and storing time from presenting fix point to fix leave if fix broken
+                        p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
+                        % Checking to confirm there was fix break before ending trial
+                        ND_SwitchEpoch(p, 'BreakFixCheck');
+                end
+                
+            
+            % Checking if fixation held for time pulled from hazard function before presenting gratings post-orientation change
             case p.trial.epoch.WaitChange
                 if(p.trial.stim.fix.fixating)
-                    if p.trial.task.stimChangeWait.counter == p.trial.task.stimChangeWait.duration
-                        postChangeStim(p, 1);
+                    if p.trial.task.GratWait.counter == p.trial.task.GratWait.duration
+                        stimPostGratOriChange(p, 1);
                         ND_SwitchEpoch(p, 'WaitSaccade')
                     else
-                        p.trial.task.stimChangeWait.counter = p.trial.task.stimChangeWait.counter + 1;
+                        p.trial.task.GratWait.counter = p.trial.task.GratWait.counter + 1;
                         ND_SwitchEpoch(p, 'WaitChange')   
                     end
                     
@@ -232,12 +258,58 @@ function p = AttendGrat(p, state)
         end
 
 
-        
+    
     % Function to present stimuli on screen before orientation change
-    function preChangeStim(p, val)
+    function stimRings(p, val)
         
         % Checking if status of stimulus presentation is different from previous trial
         if(val ~= p.trial.task.stimState)
+            % Updating status of stimulus presentation if different from previous trial 
+            p.trial.task.stimState = val;
+            
+            % Turning stimulus presentation on/off based on stimulus presentation status
+            switch val
+                
+                % Implementing no stimulus presentation
+                case 0
+                    p.trial.stim.rings.cue.on = 0;
+                    p.trial.stim.rings.distractor1.on = 0;
+                    p.trial.stim.rings.distractor2.on = 0;
+                    p.trial.stim.rings.distractor3.on = 0;
+                
+                % Implementing stimulus presentation
+                case 1
+                    p.trial.stim.rings.cue.on = 1;
+                    p.trial.stim.rings.distractor1.on = 1;
+                    p.trial.stim.rings.distractor2.on = 1;
+                    p.trial.stim.rings.distractor3.on = 1;
+                    
+                    p.trial.stim.rings.cue.fixActive = 1;
+                    p.trial.stim.rings.distractor1.fixActive = 1;
+                    p.trial.stim.rings.distractor2.fixActive = 1;
+                    p.trial.stim.rings.distractor3.fixActive = 1;
+                    
+                otherwise
+                    error('unusable stim value')
+      
+            end
+            
+            % Recording strat time of no stimulus presentation
+            if(val == 0)
+                ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
+                
+            elseif(val == 1)
+                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');   
+            end 
+        end
+        
+        
+        
+    % Function to present stimuli on screen before orientation change
+    function stimPreGratOriChange(p, val)
+        
+        % Checking if status of stimulus presentation is different from previous trial
+        if(val == p.trial.task.stimState)
             % Updating status of stimulus presentation if different from previous trial 
             p.trial.task.stimState = val;
             
@@ -280,7 +352,7 @@ function p = AttendGrat(p, state)
         
         
     % Function to present stimuli on screen after orientation change
-    function postChangeStim(p, val)
+    function stimPostGratOriChange(p, val)
         
         % Checking if status of stimulus presentation is different from previous trial
         if(val == p.trial.task.stimState)
