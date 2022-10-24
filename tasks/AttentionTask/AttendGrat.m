@@ -205,13 +205,12 @@ function p = AttendGrat(p, state)
             % Checking that fixation held before presenting stimuli pre-orientation change
             case p.trial.epoch.WaitChange
                 if(p.trial.stim.fix.fixating)
-                    p.trial.task.stimChangeWait.counter = p.trial.task.stimChangeWait.counter + 1;
                     if p.trial.task.stimChangeWait.counter == p.trial.task.stimChangeWait.duration
                         postChangeStim(p, 1);
                         ND_SwitchEpoch(p, 'WaitSaccade')
                     else
-                        ND_SwitchEpoch(p, 'WaitChange')
-                        
+                        p.trial.task.stimChangeWait.counter = p.trial.task.stimChangeWait.counter + 1;
+                        ND_SwitchEpoch(p, 'WaitChange')   
                     end
                     
                 elseif(~p.trial.stim.fix.fixating)        
