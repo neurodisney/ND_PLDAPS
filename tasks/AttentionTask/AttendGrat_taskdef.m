@@ -19,10 +19,25 @@ function p = AttendGrat_taskdef(p)
     % Storing contrast below threshold response collected from experimenter
     contrast = 0.3; % This should be changed to user input value
 
+    
+    
     % Assigning contrast to cue ring
-    p.trial.stim.ringParameters.cueContrast = -1 * contrast;
-    % Assigning contrast to non-cue rings
-    p.trial.stim.ringParameters.distractContrast = contrast;
+    p.trial.stim.ringParameters.cue.contrast = -1 * contrast;
+    
+    % Assigning contrast to distractor rings
+    p.trial.stim.ringParameters.distractor.contrast = contrast;
+    
+    % Assigning color (black) to cue ring
+    p.trial.stim.ringParameters.cue.color = [0, 1, 1];
+    
+    % Assigning color (white) to distractor rings
+    p.trial.stim.ringParameters.distractor.color = [1, 0, 0];
+    
+    % Assigning lineweight (thickness) to rings
+    p.trial.stim.RING.lineWeight = [0.3, 0.3];
+    
+    % Assigning radius to rings
+    p.trial.stim.RING.radius = 1.5;
 
 
 

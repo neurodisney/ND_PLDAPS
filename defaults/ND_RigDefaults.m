@@ -354,6 +354,7 @@ SS.stim.GRATING.alpha    = 1; % Fully opaque
 
 % Ring (i.e. location cue)
 SS.stim.RING.pos       = [0,0];
+SS.stim.RING.radius    = 2;
 SS.stim.RING.size      = 2;
 SS.stim.RING.linewidth = 0.1;
 SS.stim.RING.color     = 'fixspot'; 

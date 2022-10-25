@@ -69,26 +69,34 @@ function p = AttendGrat(p, state)
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(1));
-        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.cueContrast;
+        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.cue.contrast;
+        p.trial.stim.RING.color = p.trial.stim.ringParameters.cue.color;
+        p.trial.stim.RING.isCue = 1;
         p.trial.stim.rings.cue = pds.stim.Ring(p);
 
         % Creating distractor ring 1 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(2));
-        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractContrast;
-        %p.trial.stim.rings.distractor1 = pds.stim.Ring(p);
+        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
+        p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
+        p.trial.stim.RING.isCue = 0;
+        p.trial.stim.rings.distractor1 = pds.stim.Ring(p);
 
         % Creating distractor ring 2 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(3));
-        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractContrast;
-        %p.trial.stim.rings.distractor2 = pds.stim.Ring(p);
+        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
+        p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
+        p.trial.stim.RING.isCue = 0;
+        p.trial.stim.rings.distractor2 = pds.stim.Ring(p);
 
         % Creating distractor ring 3 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(4));
-        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractContrast;
-        %p.trial.stim.rings.distractor3 = pds.stim.Ring(p);
+        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
+        p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
+        p.trial.stim.RING.isCue = 0;
+        p.trial.stim.rings.distractor3 = pds.stim.Ring(p);
 
         % Gathing random orientations for gratings
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.gratingOriList, 5);
@@ -124,12 +132,12 @@ function p = AttendGrat(p, state)
         p.trial.stim.gratings.distractor3 = pds.stim.Grating(p);
         
         % Creating counter to track wait time before grating presentation 
-        p.trial.task.CueWait.duration = 150;
+        p.trial.task.CueWait.duration = 300;
         p.trial.task.CueWait.counter = 0;
         
         % Selecting time of wait before target grating change from flat hazard function
         wait_period = datasample(p.trial.task.flatHazard, 1);
-        p.trial.task.GratWait.duration = round(wait_period * 100);
+        p.trial.task.GratWait.duration = round(wait_period * 200);
         p.trial.task.GratWait.counter = 0;
 
         % Taking control of activation of grating fix windows
@@ -283,11 +291,6 @@ function p = AttendGrat(p, state)
                     p.trial.stim.rings.distractor1.on = 1;
                     p.trial.stim.rings.distractor2.on = 1;
                     p.trial.stim.rings.distractor3.on = 1;
-                    
-                    p.trial.stim.rings.cue.fixActive = 1;
-                    p.trial.stim.rings.distractor1.fixActive = 1;
-                    p.trial.stim.rings.distractor2.fixActive = 1;
-                    p.trial.stim.rings.distractor3.fixActive = 1;
                     
                 otherwise
                     error('unusable stim value')
