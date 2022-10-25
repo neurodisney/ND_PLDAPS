@@ -1,4 +1,4 @@
- function SS = ND_RigDefaults(rig)
+function SS = ND_RigDefaults(rig)
 % set default parameters for a rig in the Disney lab.
 %
 % This file summarizes gives an overview of parameters that could be set for
@@ -42,7 +42,7 @@ SS.datapixx.use                                 = 1;      % enable control of VP
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
 
-SS.datapixx.propixxIntensity                    = 0;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
+SS.datapixx.propixxIntensity                    = 3;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
 
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
@@ -72,9 +72,9 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 switch rig
     case 1
         SS.display.viewdist                     = 61; % screen distance to the observer
-        SS.display.heightcm                     = 47; % height of the visible screen in cm
-        SS.display.widthcm                      = 82; % width  of the visible screen in cm
-        SS.display.bgColor                      = [0.37, 0.37, 0.37];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
+        SS.display.heightcm                     = 45; % height of the visible screen in cm
+        SS.display.widthcm                      = 80; % width  of the visible screen in cm
+        SS.display.bgColor                      = [0.31, 0.31, 0.31];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
     case 2
         SS.display.viewdist                     = 61;   
         SS.display.heightcm                     = 47;     
@@ -82,15 +82,15 @@ switch rig
         SS.display.bgColor                      = [0.37, 0.37, 0.37]; % datapixx background color: target 20 cd/m^2
     otherwise
         SS.display.viewdist                     = 61;   
-        SS.display.heightcm                     = 47;    
-        SS.display.widthcm                      = 82;   
+        SS.display.heightcm                     = 45;    
+        SS.display.widthcm                      = 80;   
 end
 
 SS.display.breakColor                           = 'black';  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
 SS.display.viewdist                             = 61;    % screen distance to the observer
-SS.display.heightcm                             = 47;     % height of the visible screen in cm
-SS.display.widthcm                              = 82;     % width  of the visible screen in cm
+SS.display.heightcm                             = 45;     % height of the visible screen in cm
+SS.display.widthcm                              = 80;     % width  of the visible screen in cm
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -181,10 +181,10 @@ SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be call
 SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
 
 % dirs: configure pldaps' built-in drawing options
-if(exist('/DATA/ExpData', 'dir'))
-    SS.pldaps.dirs.data = '/DATA/ExpData';   % data directory.
-else
+if(exist('~/Data/ExpData', 'dir'))
     SS.pldaps.dirs.data = '~/Data/ExpData';   % data directory.
+else
+    SS.pldaps.dirs.data = '/Data/ExpData';   % data directory.
 end
 SS.pldaps.dirs.wavfiles                         = './beepsounds';  % directory for sound files
 
@@ -193,7 +193,7 @@ SS.pldaps.draw.cursor.use                       = 0;     % enable drawing of the
 SS.pldaps.draw.cursor.sz                        = 8;     % cursor width in pixels
 
 % eyepos: control drawing of the eye position
-SS.pldaps.draw.eyepos.use                       = 0;     % enable drawing of the eye position.
+SS.pldaps.draw.eyepos.use                       = 1;     % enable drawing of the eye position.
 
 % frame rate: control drawing of a frame rate history to see frame drops.
 SS.pldaps.draw.framerate.location               = [-30, -10]; % location (XY) of the plot in degrees of visual angle.
@@ -232,7 +232,7 @@ SS.pldaps.ptbVerbosity       = 3;  % See here https://github.com/Psychtoolbox-3/
 % ------------------------------------------------------------------------%
 %% Reward settings
 SS.datapixx.useForReward      = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
-SS.reward.defaultAmount       = 0.05;  % Default amount of reward.=0; [in seconds]
+SS.reward.defaultAmount       = 0.167; % Default amount of reward.=0; [in seconds]
 SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
 SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
@@ -248,12 +248,12 @@ SS.Block.BlockList      = [];
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
-SS.datapixx.useAsEyepos        = 0;
+SS.datapixx.useAsEyepos        = 1;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XEyeposChannel = 3;
-SS.datapixx.adc.YEyeposChannel = 4;
-SS.datapixx.adc.PupilChannel   = 5;
+SS.datapixx.adc.XEyeposChannel = 0;
+SS.datapixx.adc.YEyeposChannel = 1;
+SS.datapixx.adc.PupilChannel   = 2;
 
 % Saccade parameters
 SS.behavior.fixation.use       = 0;       % does this task require control of eye position
@@ -295,19 +295,19 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [16.4697, -18.7675];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.5784, -1.7543];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [19.1915, -19.4401];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-2.0425, -1.4089];    % default offset, used if no calibration points are entered
      
     case 2
         % Dingo hardstate screen Setting 1 6/22/20 
-        SS.eyeCalib.defaultGain      = [15.4337 -16.8761];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.3797 -1.7520];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [19.1915, -19.4401];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-2.0425, -1.4089];  % default offset, used if no calibration points are entered
         
   
     otherwise
         % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [16.4697, -18.767];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.5784, -1.7543];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [19.1915, -19.4401];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-2.0425, -1.4089];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
@@ -397,7 +397,7 @@ SS.datapixx.TTL_trialOnChan  = 1;   % DIO channel used for trial state TTL
 SS.datapixx.TTL_spritzerChan      = 5;    % DIO channel
 SS.datapixx.TTL_spritzerDur       = 0.01; % duration of TTL pulse
 SS.datapixx.TTL_spritzerNpulse    = 1;    % number of pulses in a series
-SS.datapixx.TTL_spritzerPulseGap  = 0.01; % gap between subsequent pulses
+SS.datapixx.TTL_spritzerPulseGap  = 1.5; % gap between subsequent pulses
 
 SS.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
 SS.datapixx.TTL_spritzerSeriesGap    = 30;   % gap between subsequent series

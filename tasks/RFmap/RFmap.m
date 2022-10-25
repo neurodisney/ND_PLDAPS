@@ -36,10 +36,10 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
     
-    p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
-    p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
-    p = ND_AddAsciiEntry(p, 'contrast',    'p.trial.stim.GRATING.contrast',       '%.1f');
-    p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.GRATING.radius',       '%.1f');
+    p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.4f');
+    p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.4f');
+    p = ND_AddAsciiEntry(p, 'contrast',    'p.trial.stim.GRATING.contrast',       '%.4f');
+    p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.GRATING.radius',       '%.4f');
     
     p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
@@ -338,10 +338,6 @@ switch p.trial.CurrEpoch
                
              % Jackpot time has not yet been reached
             if p.trial.CurTime < p.trial.stim.fix.EV.FixStart + p.trial.task.jackpotTime 
-                
-                %send the event code_CR
-                %pds.datapixx.strobe(p.trial.datapixx.TTL_InjStrobe);
-               
     
                 % If stim count goes above the total number of generated stimuli/positions, reshuffle the stims and start again
                 if p.trial.stim.count > length(p.trial.stim.iStim)
@@ -380,7 +376,7 @@ switch p.trial.CurrEpoch
                         if p.trial.datapixx.TTL_ON == 1  
                          
                          %run the pulses_CR
-                            if p.trial.pulse.count <= 3 
+                            if p.trial.pulse.count <= 1 
                                 
                                %Send the event code_CR
                                pds.datapixx.strobe(p.trial.datapixx.TTL_InjStrobe);

@@ -36,7 +36,7 @@ p.trial.reward.MaxWaitInitial = 0.50;
 p.trial.task.useDrug = 0;
 
 % Parameters for flash triggered drug delivery -CR
-p.trial.datapixx.TTL_ON = 1;
+p.trial.datapixx.TTL_ON = 0;
 p.trial.datapixx.TTL_chan = 5;
 p.trial.datapixx.TTL_PulseDur = .05; 
 p.trial.datapixx.TTL_Npulse = 1;
@@ -48,7 +48,7 @@ p.trial.datapixx.TTL_InjStrobe = p.defaultParameters.event.INJECT;
 %--------------------------------------------------------------%
 %% Timing
 p.trial.task.Timing.WaitFix = 0.100;    % Time to get a solid fixation before trial ends unsuccessfully
-drugFlashDelay = 5;
+drugFlashDelay = 2.0;
 p.trial.task.Timing.drugFlashDelay = drugFlashDelay;
 minInterFlash = 1;
 maxInterFlash = 1;

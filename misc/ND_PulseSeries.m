@@ -4,7 +4,7 @@ function ND_PulseSeries(chan, PulseDur, Npulse, GapDur, Nseries, SeriesPause, In
 
 %% define defaults
 if(~exist('chan','var') || isempty(chan))
-    chan  = 5; % DIO channel
+    chan  = 6; % DIO channel
 end
 
 if(~exist('PulseDur','var') || isempty(PulseDur))
@@ -20,7 +20,7 @@ if(~exist('Nseries','var') || isempty(Nseries))
 end
 
 if(~exist('GapDur','var') || isempty(GapDur))
-    GapDur   = 0.1;  % gap between subsequent pulses
+    GapDur   = 1.5;  % gap between subsequent pulses
 end
 
 if(~exist('SeriesPause','var') || isempty(SeriesPause))

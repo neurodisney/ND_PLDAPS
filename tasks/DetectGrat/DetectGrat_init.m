@@ -66,12 +66,12 @@ p.defaultParameters.task.RandomEcc  = 1; % if 1, randomly change the grating ecc
 p.defaultParameters.task.RandomAng  = 1; % if 1, randomly change the grating angular position each trial
 
 % define random grating parameters for each session
-%p.defaultParameters.stim.PosYlst    = -2.8;  % range of possible positions on Y axis 
-%p.defaultParameters.stim.PosXlst    =  -3.4;  % range of possible positions on X axis 
+p.defaultParameters.stim.PosYlst    = [0, -3, -5, -7];  % range of possible positions on Y axis 
+p.defaultParameters.stim.PosXlst    =  [-5, -4, 4, 5];  % range of possible positions on X axis 
 
 % define grid locations used by key selection
-p.defaultParameters.stim.EccLst = [4, 4, 4, 4, 4, 4, 4, 4, 4]; % if p.defaultParameters.task.RandomEcc = 0; these are the eccentricities
-p.defaultParameters.stim.AngLst = [0, 45, 90, 135, 180, 225, 275, 315, 360]; % if p.defaultParameters.task.RandomAng  = 0; these are the angles
+p.defaultParameters.stim.EccLst = [3, 4, 5]; % if p.defaultParameters.task.RandomEcc = 0; these are the eccentricities
+p.defaultParameters.stim.AngLst = [0, 30, 45]; % if p.defaultParameters.task.RandomAng  = 0; these are the angles
 
 [p.defaultParameters.stim.GridX, p.defaultParameters.stim.GridY] = ...
     pol2cart(p.defaultParameters.stim.AngLst, p.defaultParameters.stim.EccLst); % Corey Note: determines the target position based off EccLst and AngLst
@@ -80,10 +80,10 @@ p.defaultParameters.stim.AngLst = [0, 45, 90, 135, 180, 225, 275, 315, 360]; % i
 cPos = randi(length(p.defaultParameters.stim.GridX));
 p.defaultParameters.stim.Ecc  = p.defaultParameters.stim.EccLst(cPos);
 p.defaultParameters.stim.Ang  = p.defaultParameters.stim.AngLst(cPos);
-%p.defaultParameters.stim.PosY = p.defaultParameters.stim.GridX(cPos); %use this line when you want random X positions
-%p.defaultParameters.stim.PosX = p.defaultParameters.stim.GridY(cPos); %use this line when you want random Y positions 
-p.defaultParameters.stim.PosY = -1; % Corey Hack: to get hardcoded single position
-p.defaultParameters.stim.PosX = -1; %Corey Hack: to get hardcoded single position
+p.defaultParameters.stim.PosY = p.defaultParameters.stim.GridX(cPos); %use this line when you want random X positions
+p.defaultParameters.stim.PosX = p.defaultParameters.stim.GridY(cPos); %use this line when you want random Y positions 
+%p.defaultParameters.stim.PosY = [0]; % Corey Hack: to get hardcoded single position
+%p.defaultParameters.stim.PosX = [4]; %Corey Hack: to get hardcoded single position
 
 
 p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree

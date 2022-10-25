@@ -257,5 +257,5 @@ catch me
         fprintf('errors in %s line %d\r', me.stack(iErr).name, me.stack(iErr).line)
     end
     fprintf('\r\r')
-    ,keyboard
+    keyboard
 end
