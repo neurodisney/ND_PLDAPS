@@ -260,7 +260,36 @@ function p = AttendGrat(p, state)
                
             % Beginning time period in which saccade to target must be performed
             case p.trial.epoch.WaitSaccade
+                % Checking if gaze has left fix point
+                if(~p.trial.stim.fix.looking)
+                    % If gaze has left fix point, checking if saccade was to target
+                    ND_SwitchEpoch(p, 'CheckResponse');
+                
+                % If fix held, checking time against pre-set response window before ending trial due to time-out    
+                elseif(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeTimeout)
+                    % Marking trial outcome as 'Miss' trial
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
+                    % Play noise signaling response period time-out
+                    pds.audio.playDP(p, 'incorrect', 'left');
+                    % Switching epoch to end task
+                    ND_SwitchEpoch(p, 'TaskEnd');
+                end
                
+            case p.trial.epoch.CheckResponse
+                disp(1)
+                
+                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            case p.trial.epoch.TaskEnd
+                disp(5)
                 
          
         end
