@@ -70,6 +70,19 @@ function p = AttendGrat_taskdef(p)
     end
 
     p.trial.task.flatHazard = r;
+    
+    
+    
+    % Setting time that must transpire before saccade can be made without being marked as early
+    p.trial.task.breakFixCheck = 5; % Changed from 0.2
+    
+    % Setting time window in which response saccade allowed
+    p.trial.task.saccadeTimeout = 1.5;
+    
+    % Setting time for which target must be fixed on before trial marked correct
+    p.trial.task.minTargetFixTime = 1; % Changed from 0.1
+    
+    
 
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];

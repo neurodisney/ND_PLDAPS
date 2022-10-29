@@ -146,11 +146,11 @@ function p = AttendGrat(p, state)
 
         % Increasing Reward after specific number of correct trials
         reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
-        p.trial.reward.duration = p.trial.reward.IncrementDur(reward_duration);
+        p.trial.reward.Dur = p.trial.reward.IncrementDur(reward_duration);
 
         % Reducing current reward if previous trial was incorrect
         if(p.trial.LastHits == 0)
-            p.trial.reward.duration = p.trial.reward.duration * p.trial.reward.DiscourageProp;
+            p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
         end
 
         % Moving task from step-up stage to wait period before launching
@@ -220,8 +220,7 @@ function p = AttendGrat(p, state)
                         stimPreGratOriChange(p, 1);
                         ND_SwitchEpoch(p, 'WaitChange')
                     else
-                        p.trial.task.CueWait.counter = p.trial.task.CueWait.counter + 1;
-                        ND_SwitchEpoch(p, 'WaitCue')   
+                        p.trial.task.CueWait.counter = p.trial.task.CueWait.counter + 1;   
                     end
                     
                 elseif(~p.trial.stim.fix.fixating)        
@@ -235,7 +234,6 @@ function p = AttendGrat(p, state)
                         ND_SwitchEpoch(p, 'BreakFixCheck');
                 end
                 
-            
             % Checking if fixation held for time pulled from hazard function before presenting gratings post-orientation change
             case p.trial.epoch.WaitChange
                 if(p.trial.stim.fix.fixating)
@@ -243,8 +241,7 @@ function p = AttendGrat(p, state)
                         stimPostGratOriChange(p, 1);
                         ND_SwitchEpoch(p, 'WaitSaccade')
                     else
-                        p.trial.task.GratWait.counter = p.trial.task.GratWait.counter + 1;
-                        ND_SwitchEpoch(p, 'WaitChange')   
+                        p.trial.task.GratWait.counter = p.trial.task.GratWait.counter + 1; 
                     end
                     
                 elseif(~p.trial.stim.fix.fixating)        
@@ -275,23 +272,117 @@ function p = AttendGrat(p, state)
                     ND_SwitchEpoch(p, 'TaskEnd');
                 end
                
+            % Checking if saacade response made was to target    
             case p.trial.epoch.CheckResponse
+                % Confirming current gaze shift is first response made
+                if(~p.trial.task.stimFix)
+                    % Checking if gaze specifically within target grating fix window
+                    if(p.trial.stim.gratings.postTarget.fixating)
+                        % Logging correct selection of grating (target)
+                        p.trial.task.stimFix = 1;
+                        p.trial.task.TargetSel = 1;
+                        % Logging fix duration
+                        p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                        % Logging response latency
+                        p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                        
+                        
+                    % Checking if gaze specifically within distractor 1 grating fix window
+                    elseif(p.trial.stim.gratings.distractor1.fixating)
+                        % Playing noise signaling incorrect selection
+                        pds.audio.playDP(p, 'incorrect', 'left');
+                        % Logging incorrect selection of grating (distractor)
+                        p.trial.task.TargetSel = 0;
+                        % Logging fix duration
+                        p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                        % Logging response latency
+                        p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                        % Marking trial as false and ending trial
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                        ND_SwitchEpoch(p, 'TaskEnd');
+                        
+                    % Checking if gaze specifically within distractor 1 grating fix window   
+                    elseif(p.trial.stim.gratings.distractor2.fixating)
+                        % Playing noise signaling incorrect selection
+                        pds.audio.playDP(p, 'incorrect', 'left');
+                        % Logging incorrect selection of grating (distractor)
+                        p.trial.task.TargetSel = 0;
+                        % Logging fix duration
+                        p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                        % Logging response latency
+                        p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                        % Marking trial as false and ending trial
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                        ND_SwitchEpoch(p, 'TaskEnd')
+                        
+                    % Checking if gaze specifically within distractor 1 grating fix window   
+                    elseif(p.trial.stim.gratings.distractor3.fixating)
+                        % Playing noise signaling incorrect selection
+                        pds.audio.playDP(p, 'incorrect', 'left');
+                        % Logging incorrect selection of grating (distractor)
+                        p.trial.task.TargetSel = 0;
+                        % Logging fix duration
+                        p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                        % Logging response latency
+                        p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                        % Marking trial as false and ending trial
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                        ND_SwitchEpoch(p, 'TaskEnd')
+                        
+                    % Verifying if gaze shifted from fix spot but no grating selected    
+                    elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
+                        % Marking trail as No Fix on Target
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
+                        % Playing noise signaling no selection made
+                        pds.audio.playDP(p, 'incorrect', 'left');
+                        % Logging fix duration
+                        p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                        % Logging response latency
+                        p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                        % Switching epoch to end task
+                        ND_SwitchEpoch(p, 'TaskEnd');
+                    
+                    % Checking if gaze returned to fix point in time to be considered 'no response yet'    
+                    elseif(p.trial.stim.fix.looking)
+                        ND_SwitchEpoch(p, 'WaitSaccade');
+                    end
+                    
+                else
+                    % Checking if fix on target held for pre-set minimum amount of time 
+                    if(p.trial.CurTime > p.trial.stim.gratings.postTarget.EV.FixStart + p.trial.task.minTargetFixTime)
+                        % Marking trial as correct
+                        p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
+                        p.trial.task.Good = 1;
+                        % Dispensing reward for correct trial
+                        pds.reward.give(p, p.trial.reward.Dur);
+                        % Playing noise signaling correct selection
+                        pds.audio.playDP(p, 'reward', 'left')
+                        % Record time of reward
+                        p.trial.EV.Reward = p.trial.CurTime;
+                        % Switching epoch to wait period before ending trial to allow for juice flow 
+                        ND_SwitchEpoch(p, 'WaitEnd');
+                    
+                    % Checking if gaze leaves target grating fix window
+                    elseif(~p.trial.stim.gratings.postTarget.fixating)
+                        % Marking trial as Target Break
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
+                        % Playing noise signaling break of fix from target
+                        pds.audio.playDP(p, 'incorrect', 'left');
+                        % Switching epoch to end task
+                        ND_SwitchEpoch(p, 'TaskEnd');
+                    end
+                end
+                     
+                
+            case p.trial.epoch.BreakFixCheck
                 disp(1)
-                
-                
-            
-            
-            
-            
-            
-            
-            
-            
-            
+          
+            case p.trial.epoch.WaitEnd
+                disp(2)
+
             case p.trial.epoch.TaskEnd
-                disp(5)
-                
-         
+                disp(3)
+               
         end
 
 
