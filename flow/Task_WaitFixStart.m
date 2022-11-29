@@ -15,7 +15,7 @@ if(p.trial.task.fixFix == 0)
     elseif(p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix)
         % Long enough fixation did not occur, failed trial
         p.trial.task.Good = 0;
-        %p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
+        p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
 
         % Go directly to TaskEnd, do not start task, do not collect reward
         %ND_FixSpot(p,0);

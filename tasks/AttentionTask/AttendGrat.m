@@ -33,6 +33,11 @@ function p = AttendGrat(p, state)
                     %KeyAction(p);
                 %end
                 TaskDesign(p);
+            
+            % Cleaning up items used for trial and saving data
+            case p.trial.pldaps.trialStates.trialCleanUpandSave
+                %TaskCleanAndSave(p);
+                
         end
     end
 
@@ -41,11 +46,7 @@ function p = AttendGrat(p, state)
     % Function to gather materials to start trial
     function TaskSetUp(p)
 
-        % Setting trial outcome to 'no start'
-        % This will be true if fixation is not achieved 
-        p.trial.outcome.CurrOutcome = p.trial.outcome.NoStart;
-
-        % Trial has not proven to be successful(1), till then it is incorrect(0)
+        % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
         % Creating spot to store selection of target stimulus
         p.trial.task.TargetSel = NaN;
@@ -286,7 +287,6 @@ function p = AttendGrat(p, state)
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
                         
-                        
                     % Checking if gaze specifically within distractor 1 grating fix window
                     elseif(p.trial.stim.gratings.distractor1.fixating)
                         % Playing noise signaling incorrect selection
@@ -301,7 +301,7 @@ function p = AttendGrat(p, state)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.False;
                         ND_SwitchEpoch(p, 'TaskEnd');
                         
-                    % Checking if gaze specifically within distractor 1 grating fix window   
+                    % Checking if gaze specifically within distractor 2 grating fix window   
                     elseif(p.trial.stim.gratings.distractor2.fixating)
                         % Playing noise signaling incorrect selection
                         pds.audio.playDP(p, 'incorrect', 'left');
@@ -315,7 +315,7 @@ function p = AttendGrat(p, state)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.False;
                         ND_SwitchEpoch(p, 'TaskEnd')
                         
-                    % Checking if gaze specifically within distractor 1 grating fix window   
+                    % Checking if gaze specifically within distractor 3 grating fix window   
                     elseif(p.trial.stim.gratings.distractor3.fixating)
                         % Playing noise signaling incorrect selection
                         pds.audio.playDP(p, 'incorrect', 'left');
@@ -387,14 +387,25 @@ function p = AttendGrat(p, state)
                     % Collecting screen frames for trial to check median eye position
                     frames = ceil(p.trial.display.frate * delay);
                     % Calculating median position of eyes across frames
-                    medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
+                    medPos = 1; % prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
                     
-                    % Checking if median eye position is in fixation window
-                    if(inFixWin(p.trial.stim.(p.trial.stim.SaccadeTarget), medPos))
+                    % Checking if median eye position is in fixation window of target 
+                    if(inFixWin(p.trial.stim.gratings.postTarget, medPos))
                         % Marking trial as "hit" but early if eye position is in target fix window
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                    
+                    % Checking if median eye position is in fixation window of distractor 1
+                    elseif(inFixWin(p.trial.stim.gratings.distractor1, medPos))
+                        % Marking trial as "miss" but early if eye position is in distractor fix window
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
                         
-                    elseif(inFixWin(p.trial.stim.(p.trial.stim.SaccadeDistractor), medPos))
+                    % Checking if median eye position is in fixation window of distractor 2
+                    elseif(inFixWin(p.trial.stim.gratings.distractor2, medPos))
+                        % Marking trial as "miss" but early if eye position is in distractor fix window
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
+                        
+                    % Checking if median eye position is in fixation window of distractor 3
+                    elseif(inFixWin(p.trial.stim.gratings.distractor3, medPos))
                         % Marking trial as "miss" but early if eye position is in distractor fix window
                         p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
                
