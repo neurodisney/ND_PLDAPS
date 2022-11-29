@@ -6,6 +6,15 @@ function p = AttendGrat_taskdef(p)
 
     % Storing expected latency of stim presentation to use for trial timing calculations
     p.trial.task.stimLatency = ND_GetITI(0.75, 1.5);
+    
+    % Setting time stimuli are left on screen after correct trial before task ends
+    p.trial.task.Timing.WaitEnd = 0.25;
+    
+    % Selecting inter-trial interval (ITI)
+    p.trial.task.Timing.ITI = ND_GetITI(1.25, 1.75, [], [], 1, 0.10);
+    
+    % Setting time-out(s) for incorrect responses
+    p.trial.task.Timing.TimeOut = 1;
 
 
 

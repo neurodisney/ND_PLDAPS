@@ -1,4 +1,4 @@
-% Function to run task for experiment
+ % Function to run task for experiment
 function p = AttendGrat(p, state)
 
     % Checking for task name and filling if empty
@@ -217,7 +217,7 @@ function p = AttendGrat(p, state)
             case p.trial.epoch.WaitCue
                 if(p.trial.stim.fix.fixating)
                     if p.trial.task.CueWait.counter == p.trial.task.CueWait.duration
-                        stimPreGratOriChange(p, 1);
+                        stimPreGratOriChange(p, 2);
                         ND_SwitchEpoch(p, 'WaitChange')
                     else
                         p.trial.task.CueWait.counter = p.trial.task.CueWait.counter + 1;   
@@ -238,7 +238,7 @@ function p = AttendGrat(p, state)
             case p.trial.epoch.WaitChange
                 if(p.trial.stim.fix.fixating)
                     if p.trial.task.GratWait.counter == p.trial.task.GratWait.duration
-                        stimPostGratOriChange(p, 1);
+                        stimPostGratOriChange(p, 3);
                         ND_SwitchEpoch(p, 'WaitSaccade')
                     else
                         p.trial.task.GratWait.counter = p.trial.task.GratWait.counter + 1; 
@@ -373,15 +373,87 @@ function p = AttendGrat(p, state)
                     end
                 end
                      
-                
+            % Checking if fixation was broken pre-maturely    
             case p.trial.epoch.BreakFixCheck
-                disp(1)
-          
+                delay = p.trial.task.breakFixCheck;
+                % Checking if fix break was committed before response window
+                if(p.trial.task.stimState < 1)
+                    % Marking trial as fix break if it occured before response window
+                    p.trial.outcpme.CurrOutcome = p.trial.outcome.FixBreak;
+                    % Switching epoch to end task
+                    ND_SwitchEpoch(p, 'TaskEnd');
+                    
+                elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + delay)
+                    % Collecting screen frames for trial to check median eye position
+                    frames = ceil(p.trial.display.frate * delay);
+                    % Calculating median position of eyes across frames
+                    medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
+                    
+                    % Checking if median eye position is in fixation window
+                    if(inFixWin(p.trial.stim.(p.trial.stim.SaccadeTarget), medPos))
+                        % Marking trial as "hit" but early if eye position is in target fix window
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                        
+                    elseif(inFixWin(p.trial.stim.(p.trial.stim.SaccadeDistractor), medPos))
+                        % Marking trial as "miss" but early if eye position is in distractor fix window
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
+               
+                    else
+                        % Marking trial as fix break without relevance to task
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
+                        
+                    end 
+                    
+                    % Switching epoch to end task
+                    ND_SwitchEpoch(p, 'TaskEnd');
+                
+                end
+                
+            % Wait period before turning off all stimuli 
             case p.trial.epoch.WaitEnd
-                disp(2)
+                if(p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.Timing.WaitEnd)
+                    % Switching epoch to end task
+                    ND_SwitchEpoch(p, 'TaskEnd');
+                end
 
+            % Ending task
             case p.trial.epoch.TaskEnd
-                disp(3)
+                % Turning rings off
+                stimRings(p, 0);
+                
+                % Turning gratings off
+                stimPreGratOriChange(p, 0);
+                stimPostGratOriChange(p, 0);
+                
+                % Turning fix point off
+                ND_FixSpot(p, 0);
+                
+                % Running clean-up and storage routine before concluding trial
+                Task_OFF(p);
+                
+                % Checking if there is "nan" value for start of fixation on target
+                if(~isnan(p.trial.stim.gratings.postTarget.EV.FixStart))
+                    p.trial.EV.FixStimStart = p.trial.stim.gratings.postTarget.EV.FixStart;
+                    p.trial.EV.FixStimStop = p.trial.stim.gratings.postTarget.EV.FixBreak;
+                    
+                % Checking if there is "nan" value for start of fixation on distractor 1    
+                elseif(~isnan(p.trial.stim.gratings.distractor1.EV.FixStart))
+                    p.trial.EV.FixStimStart = p.trial.stim.gratings.distractor1.EV.FixStart;
+                    p.trial.EV.FixStimStop = p.trial.stim.gratings.distractor1.EV.FixBreak;
+                    
+                % Checking if there is "nan" value for start of fixation on distractor 2    
+                elseif(~isnan(p.trial.stim.gratings.distractor2.EV.FixStart))
+                    p.trial.EV.FixStimStart = p.trial.stim.gratings.distractor2.EV.FixStart;
+                    p.trial.EV.FixStimStop = p.trial.stim.gratings.distractor2.EV.FixBreak;
+                
+                % Checking if there is "nan" value for start of fixation on distractor 3    
+                elseif(~isnan(p.trial.stim.gratings.distractor3.EV.FixStart))
+                    p.trial.EV.FixStimStart = p.trial.stim.gratings.distractor3.EV.FixStart;
+                    p.trial.EV.FixStimStop = p.trial.stim.gratings.distractor3.EV.FixBreak;
+                end 
+                
+                % Flagging completion of current trial so ITI is run before next trial
+                p.trial.flagNextTrial = 1;
                
         end
 
@@ -432,7 +504,7 @@ function p = AttendGrat(p, state)
     function stimPreGratOriChange(p, val)
         
         % Checking if status of stimulus presentation is different from previous trial
-        if(val == p.trial.task.stimState)
+        if(val ~= p.trial.task.stimState)
             % Updating status of stimulus presentation if different from previous trial 
             p.trial.task.stimState = val;
             
@@ -447,7 +519,7 @@ function p = AttendGrat(p, state)
                     p.trial.stim.gratings.distractor3.on = 0;
                 
                 % Implementing stimulus presentation
-                case 1
+                case 2
                     p.trial.stim.gratings.preTarget.on = 1;
                     p.trial.stim.gratings.distractor1.on = 1;
                     p.trial.stim.gratings.distractor2.on = 1;
@@ -467,7 +539,7 @@ function p = AttendGrat(p, state)
             if(val == 0)
                 ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
                 
-            elseif(val == 1)
+            elseif(val == 2)
                 ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');   
             end 
         end
@@ -478,7 +550,7 @@ function p = AttendGrat(p, state)
     function stimPostGratOriChange(p, val)
         
         % Checking if status of stimulus presentation is different from previous trial
-        if(val == p.trial.task.stimState)
+        if(val ~= p.trial.task.stimState)
             % Updating status of stimulus presentation if different from previous trial 
             p.trial.task.stimState = val;
             % Turning stimulus presentation on/off based on stimulus presentation status
@@ -488,7 +560,7 @@ function p = AttendGrat(p, state)
                     p.trial.stim.gratings.postTarget.on = 0;
                 
                 % Implementing stimulus presentation
-                case 1
+                case 3
                     p.trial.stim.gratings.postTarget.on = 1;
                     p.trial.stim.gratings.postTarget.fixActive = 1;
 
@@ -500,7 +572,7 @@ function p = AttendGrat(p, state)
             if(val == 0)
                 ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
                 
-            elseif(val == 1)
+            elseif(val == 3)
                 ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
                 
             end 
