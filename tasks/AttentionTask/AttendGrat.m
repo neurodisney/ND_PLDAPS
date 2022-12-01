@@ -36,7 +36,7 @@ function p = AttendGrat(p, state)
             
             % Cleaning up items used for trial and saving data
             case p.trial.pldaps.trialStates.trialCleanUpandSave
-                %TaskCleanAndSave(p);
+                TaskCleanAndSave(p);
                 
         end
     end
@@ -589,6 +589,22 @@ function p = AttendGrat(p, state)
             end 
         end
              
+        
+        
+        % Function to clean up screen textures and variables and to save data to ascii table (AttendGrat_init.m)
+        function TaskCleanAndSave(p)
+            
+            % Saving key variables
+            Task_Finish(p);
+            
+            % Trial outcome saved as code, and this is converting it to str name
+            p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+            
+            
+           
+            
+            
+       
                     
              
 

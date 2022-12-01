@@ -83,7 +83,7 @@ function p = AttendGrat_taskdef(p)
     
     
     % Setting time that must transpire before saccade can be made without being marked as early
-    p.trial.task.breakFixCheck = 5; % Changed from 0.2
+    p.trial.task.breakFixCheck = 0.2; % Changed from 0.2
     
     % Setting time window in which response saccade allowed
     p.trial.task.saccadeTimeout = 1.5;
