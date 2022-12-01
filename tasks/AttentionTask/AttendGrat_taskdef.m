@@ -18,23 +18,25 @@ function p = AttendGrat_taskdef(p)
 
 
 
-    % Storing position of mapped receptive field collected from experimenter
-    p.trial.task.RFpos = [-6, 6]; % This should be changed to user input value
+    % Storing position of mapped receptive field collected from user or assigning default values
+    if isempty(p.trial.task.RFpos)
+        p.trial.task.RFpos = [4,4];
+    end
+    
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
 
     p.trial.task.posList = {[target_posX, target_posY], [-1*target_posX, -1*target_posY], [-1*target_posX, target_posY], [target_posX, -1*target_posY]}; 
 
-    % Storing contrast below threshold response collected from experimenter
-    contrast = 0.3; % This should be changed to user input value
-
     
     
-    % Assigning contrast to cue ring
-    p.trial.stim.ringParameters.cue.contrast = -1 * contrast;
+    % Storing contrast for cue and distractor rings collected from user or assigning default values
+    if isempty(p.trial.task.contrast)
+        p.trial.task.contrast = 0.96;
+    end
     
-    % Assigning contrast to distractor rings
-    p.trial.stim.ringParameters.distractor.contrast = contrast;
+    p.trial.stim.ringParameters.cue.contrast = -1 * p.trial.task.contrast;
+    p.trial.stim.ringParameters.distractor.contrast = p.trial.task.contrast;
     
     % Assigning color (black) to cue ring
     p.trial.stim.ringParameters.cue.color = [0, 1, 1];

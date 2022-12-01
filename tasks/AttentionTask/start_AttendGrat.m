@@ -39,7 +39,19 @@ function p = start_AttendGrat(subjectname, rig)
 
     % Creating pldaps object
     p = pldaps(subjectname, SS, exp_fun);
-
+    
+    % Collecting receptive field coordinates from user for stimulus display and assigning defaults if none are entered
+    RFpos = input("What are the [x,y] coordinates, entered as an array, for the center of mass of the mapped receptive field? (press 'enter' for default values): ");
+    if ~ RFpos
+        disp(1);
+    end
+    
+    p.trial.task.RFpos = RFpos;
+    
+    % Collecting contrast value based on response threshold from user for rings
+    contrast = input("What is a contrast value at or below the response threshold of the recorded neurons? (press 'enter' for default values): ");
+    p.trial.task.contrast = contrast;
+    
     % Command to run experimemt
     p.run;
 

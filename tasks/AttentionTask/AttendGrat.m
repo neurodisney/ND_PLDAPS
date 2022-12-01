@@ -600,6 +600,9 @@ function p = AttendGrat(p, state)
             % Trial outcome saved as code, and this is converting it to str name
             p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
             
+            % Loading data into ascii table for plotting
+            ND_Trial2Ascii(p, 'save');
+            
             
            
             
