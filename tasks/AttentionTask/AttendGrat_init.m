@@ -16,8 +16,3 @@ function p = AttendGrat_init(p)
 
     % Ensuring output directory above exists
     ND_Trial2Ascii(p, 'init');
-
-    % Creating list of orientations to use during experiment
-    p.defaultParameters.stim.oriList = 0:15:179;
-
-

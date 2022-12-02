@@ -26,7 +26,7 @@ function p = AttendGrat_taskdef(p)
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
 
-    p.trial.task.posList = {[target_posX, target_posY], [-1*target_posX, -1*target_posY], [-1*target_posX, target_posY], [target_posX, -1*target_posY]}; 
+    p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
 
     
     
@@ -52,14 +52,12 @@ function p = AttendGrat_taskdef(p)
 
 
 
-    % Storing orientation tuning flanks of recorded cell collected from experimenter
-    flank1 = 30; % This should be changed to user input value
-    flank2 = 130; % This should be changed to user input value
+    % Creating list of orientations using values collected from user or using default values
+    if isempty(p.trial.task.oriRange)
+        p.trial.task.oriRange = [176,0];
+    end   
+    p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
 
-    % Creating list of orientations to use during task
-    % This list includes flanks of recorded cell's orientation tuning curve
-    p.trial.task.gratingOriList = [p.defaultParameters.stim.oriList [flank1 flank2]];
-    
     
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
@@ -85,7 +83,7 @@ function p = AttendGrat_taskdef(p)
     
     
     % Setting time that must transpire before saccade can be made without being marked as early
-    p.trial.task.breakFixCheck = 0.2; % Changed from 0.2
+    p.trial.task.breakFixCheck = 0.2;
     
     % Setting time window in which response saccade allowed
     p.trial.task.saccadeTimeout = 1.5;

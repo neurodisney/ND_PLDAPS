@@ -43,8 +43,8 @@ function p = AttendGrat(p, state)
 
 
 
-    % Function to gather materials to start trial
-    function TaskSetUp(p)
+% Function to gather materials to start trial
+function TaskSetUp(p)
 
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
@@ -69,7 +69,8 @@ function p = AttendGrat(p, state)
 
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(1));
+        pos = cell2mat(p.trial.stim.posList(1));
+        p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.RING.contrast = p.trial.stim.ringParameters.cue.contrast;
         p.trial.stim.RING.color = p.trial.stim.ringParameters.cue.color;
         p.trial.stim.RING.isCue = 1;
@@ -77,7 +78,8 @@ function p = AttendGrat(p, state)
 
         % Creating distractor ring 1 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(2));
+        pos = cell2mat(p.trial.stim.posList(2));
+        p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
         p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
         p.trial.stim.RING.isCue = 0;
@@ -85,7 +87,8 @@ function p = AttendGrat(p, state)
 
         % Creating distractor ring 2 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(3));
+        pos = cell2mat(p.trial.stim.posList(3));
+        p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
         p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
         p.trial.stim.RING.isCue = 0;
@@ -93,42 +96,51 @@ function p = AttendGrat(p, state)
 
         % Creating distractor ring 3 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        p.trial.stim.RING.pos = cell2mat(p.trial.stim.posList(4));
+        pos = cell2mat(p.trial.stim.posList(4));
+        p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
         p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
         p.trial.stim.RING.isCue = 0;
         p.trial.stim.rings.distractor3 = pds.stim.Ring(p);
 
         % Gathing random orientations for gratings
-        p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.gratingOriList, 5);
+        p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 5);
         
         % Creating target grating pre-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.GRATING.pos = cell2mat(p.trial.stim.posList(1));
+        pos = cell2mat(p.trial.stim.posList(1));
+        p.trial.stim.GRATING.pos = pos([1 2]);
+        p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.GRATING.pos = cell2mat(p.trial.stim.posList(1));
+        p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(2);
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Creating distractor grating 1 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.GRATING.pos = cell2mat(p.trial.stim.posList(2));
+        pos = cell2mat(p.trial.stim.posList(2));
+        p.trial.stim.GRATING.pos = pos([1 2]);
+        p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(3);
         p.trial.stim.gratings.distractor1 = pds.stim.Grating(p);
 
         % Creating distractor grating 2 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.GRATING.pos = cell2mat(p.trial.stim.posList(3));
+        pos = cell2mat(p.trial.stim.posList(3));
+        p.trial.stim.GRATING.pos = pos([1 2]);
+        p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(4);
         p.trial.stim.gratings.distractor2 = pds.stim.Grating(p);
 
         % Creating distractor grating 3 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.GRATING.pos = cell2mat(p.trial.stim.posList(4));
+        pos = cell2mat(p.trial.stim.posList(4));
+        p.trial.stim.GRATING.pos = pos([1 2]);
+        p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(5);
         p.trial.stim.gratings.distractor3 = pds.stim.Grating(p);
         
@@ -159,8 +171,8 @@ function p = AttendGrat(p, state)
 
 
 
-    % Function to execute trial
-    function TaskDesign(p)
+% Function to execute trial
+function TaskDesign(p)
 
         % Moving from epoch to epoch over course of trial
         switch p.trial.CurrEpoch
@@ -298,7 +310,11 @@ function p = AttendGrat(p, state)
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
                         % Marking trial as false and ending trial
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                        if p.trial.stim.gratings.distractor1.hemifield == p.trial.stim.gratings.preTarget.hemifield
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.FalseIpsi;
+                        else
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.FalseContra;
+                        end
                         ND_SwitchEpoch(p, 'TaskEnd');
                         
                     % Checking if gaze specifically within distractor 2 grating fix window   
@@ -312,7 +328,11 @@ function p = AttendGrat(p, state)
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
                         % Marking trial as false and ending trial
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                        if p.trial.stim.gratings.distractor2.hemifield == p.trial.stim.gratings.preTarget.hemifield
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.FalseIpsi;
+                        else
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.FalseContra;
+                        end
                         ND_SwitchEpoch(p, 'TaskEnd')
                         
                     % Checking if gaze specifically within distractor 3 grating fix window   
@@ -326,7 +346,11 @@ function p = AttendGrat(p, state)
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
                         % Marking trial as false and ending trial
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                        if p.trial.stim.gratings.distractor3.hemifield == p.trial.stim.gratings.preTarget.hemifield
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.FalseIpsi;
+                        else
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.FalseContra;
+                        end
                         ND_SwitchEpoch(p, 'TaskEnd')
                         
                     % Verifying if gaze shifted from fix spot but no grating selected    
@@ -387,7 +411,7 @@ function p = AttendGrat(p, state)
                     % Collecting screen frames for trial to check median eye position
                     frames = ceil(p.trial.display.frate * delay);
                     % Calculating median position of eyes across frames
-                    medPos = 1; % prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
+                    medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
                     
                     % Checking if median eye position is in fixation window of target 
                     if(inFixWin(p.trial.stim.gratings.postTarget, medPos))
@@ -397,17 +421,29 @@ function p = AttendGrat(p, state)
                     % Checking if median eye position is in fixation window of distractor 1
                     elseif(inFixWin(p.trial.stim.gratings.distractor1, medPos))
                         % Marking trial as "miss" but early if eye position is in distractor fix window
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
+                        if p.trial.stim.gratings.distractor1.hemifield == p.trial.stim.gratings.preTarget.hemifield
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseIpsi;
+                        else
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseContra;
+                        end
                         
                     % Checking if median eye position is in fixation window of distractor 2
                     elseif(inFixWin(p.trial.stim.gratings.distractor2, medPos))
                         % Marking trial as "miss" but early if eye position is in distractor fix window
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
+                        if p.trial.stim.gratings.distractor2.hemifield == p.trial.stim.gratings.preTarget.hemifield
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseIpsi;
+                        else
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseContra;
+                        end
                         
                     % Checking if median eye position is in fixation window of distractor 3
                     elseif(inFixWin(p.trial.stim.gratings.distractor3, medPos))
                         % Marking trial as "miss" but early if eye position is in distractor fix window
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
+                        if p.trial.stim.gratings.distractor3.hemifield == p.trial.stim.gratings.preTarget.hemifield
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseIpsi;
+                        else
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseContra;
+                        end
                
                     else
                         % Marking trial as fix break without relevance to task
@@ -467,11 +503,11 @@ function p = AttendGrat(p, state)
                 p.trial.flagNextTrial = 1;
                
         end
-
-
-    
-    % Function to present stimuli on screen before orientation change
-    function stimRings(p, val)
+        
+        
+        
+% Function to present stimuli on screen before orientation change
+function stimRings(p, val)
         
         % Checking if status of stimulus presentation is different from previous trial
         if(val ~= p.trial.task.stimState)
@@ -502,17 +538,17 @@ function p = AttendGrat(p, state)
             
             % Recording strat time of no stimulus presentation
             if(val == 0)
-                ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
+                ND_AddScreenEvent(p, p.trial.event.CUE_OFF, 'CueOff');
                 
             elseif(val == 1)
-                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');   
+                ND_AddScreenEvent(p, p.trial.event.CUE_ON, 'CueOn');   
             end 
         end
         
         
         
-    % Function to present stimuli on screen before orientation change
-    function stimPreGratOriChange(p, val)
+% Function to present stimuli on screen before orientation change
+function stimPreGratOriChange(p, val)
         
         % Checking if status of stimulus presentation is different from previous trial
         if(val ~= p.trial.task.stimState)
@@ -557,8 +593,8 @@ function p = AttendGrat(p, state)
         
         
         
-    % Function to present stimuli on screen after orientation change
-    function stimPostGratOriChange(p, val)
+% Function to present stimuli on screen after orientation change
+function stimPostGratOriChange(p, val)
         
         % Checking if status of stimulus presentation is different from previous trial
         if(val ~= p.trial.task.stimState)
@@ -584,15 +620,15 @@ function p = AttendGrat(p, state)
                 ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
                 
             elseif(val == 3)
-                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+                ND_AddScreenEvent(p, p.trial.event.STIM_CHNG, 'StimChange');
                 
             end 
         end
              
         
         
-        % Function to clean up screen textures and variables and to save data to ascii table (AttendGrat_init.m)
-        function TaskCleanAndSave(p)
+% Function to clean up screen textures and variables and to save data to ascii table (AttendGrat_init.m)
+function TaskCleanAndSave(p)
             
             % Saving key variables
             Task_Finish(p);
