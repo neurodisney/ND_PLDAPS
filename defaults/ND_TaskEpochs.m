@@ -20,7 +20,7 @@ disp('');
 % TODO: Get a set of required task epochs with a clear naming convention
 
 p.defaultParameters.epoch.GetReady        =  -1;  % Wait to initialize task
-p.defaultParameters.epoch.WaitStart       =   1;  % Wait for a joystick press to indicate readiness to work on a trial
+p.defaultParameters.epoch.WaitStart       =   1;  % Wait for a joystick press to indicate readiness to work on a trial        
 p.defaultParameters.epoch.WaitResponse    =   2;  % Wait for task response (saccade or joystick state change)
 p.defaultParameters.epoch.CheckResponse   =   4;  % A response occurred, check if it was a correct one
 p.defaultParameters.epoch.TrialStart      =   3;  % trial starts for animal
@@ -34,6 +34,9 @@ p.defaultParameters.epoch.WaitReward      =  10;  % delay before reward delivery
 
 p.defaultParameters.epoch.TimeOut         =  12;  % extra penalty (might just be merged with ITI)
 p.defaultParameters.epoch.ITI             =  13;  % inter-trial interval: wait before next trial to start
+
+p.defaultParameters.epoch.WaitCue         =  15;  % Wait for cue presentation
+p.defaultParameters.epoch.WaitChange      =  16;  % Wait for stimulus change
 
 p.defaultParameters.epoch.AbortError      = 666;  % Error occurred, finish trial (maybe add time out)
 

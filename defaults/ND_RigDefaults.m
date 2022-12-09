@@ -256,7 +256,7 @@ SS.datapixx.adc.YEyeposChannel = 4;
 SS.datapixx.adc.PupilChannel   = 5;
 
 % Saccade parameters
-SS.behavior.fixation.use       = 0;       % does this task require control of eye position
+SS.behavior.fixation.use       = 1;       % does this task require control of eye position
 
 SS.behavior.fixation.on        =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
@@ -350,7 +350,8 @@ SS.stim.GRATING.radius   = 1;
 SS.stim.GRATING.contrastMethod = 'balanced';
 SS.stim.GRATING.pos      = [0, 0];
 SS.stim.GRATING.fixWin   =  4;  
-SS.stim.GRATING.alpha    = 1; % Fully opaque
+SS.stim.GRATING.alpha    =  1; % Fully opaque
+SS.stim.GRATING.hemifield = NaN;
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 
 % Ring (i.e. location cue)
