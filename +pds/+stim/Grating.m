@@ -23,6 +23,7 @@ properties
     tFreq
     angle
     alpha
+    hemifield
 end
 
 properties (SetAccess = protected)
@@ -50,7 +51,7 @@ end
 
 methods
     % The constructor method
-    function obj = Grating(p, radius, contrast, pos, ori, sFreq, tFreq, res, alpha, fixWin)
+    function obj = Grating(p, radius, contrast, pos, ori, sFreq, tFreq, res, alpha, fixWin, hemifield)
         
         %% Load variables        
         if nargin < 2 || isempty(radius)
@@ -89,6 +90,10 @@ methods
             fixWin = p.trial.stim.GRATING.fixWin;
         end
         
+        if nargin < 11 || isempty(hemifield)
+            hemifield = p.trial.stim.GRATING.hemifield;
+        end
+        
         % Load the superclass
         obj@pds.stim.BaseStim(p, pos, fixWin);
         
@@ -101,6 +106,7 @@ methods
         obj.alpha  = alpha;
         obj.tFreq  = tFreq;
         obj.angle  = ori;
+        obj.hemifield = hemifield;
         
         % Unchangeable after loading
         obj.res            = res;
@@ -150,7 +156,7 @@ methods
         CoorVec = linspace(-obj.res, obj.res, 2*obj.res);
         [x, y]  = meshgrid(CoorVec, CoorVec);
         
-        grating = obj.bgOffset + obj.pcmult * cos(sFreqTex*2*pi*(x+q)); 
+        grating = obj.bgOffset + obj.pcmult * cos(sFreqTex*2*pi*(x+q));
         
         % Create a circular aperture using the separate alpha-channel:
         circle = (x.^2 + y.^2 <= obj.res^2);
@@ -175,7 +181,6 @@ methods
             
             % Filter mode (not sure what the best value is yet)
             % For more information see the PTB documentation for Screen('DrawTexture')
-            % filterMode = [];
             filterMode = [];
             
             % Draw the texture
@@ -202,4 +207,5 @@ methods
 end
 
 end
-      
+        
+
