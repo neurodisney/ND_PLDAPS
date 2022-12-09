@@ -84,9 +84,9 @@ SS.mouse.use
 SS.display.bgColor    = [0.35, 0.35, 0.35];  % change background color
 SS.datapixx.adc.srate = 1000; % for a 1k tracker
 
-SS.behavior.fixation.FixWin     = 2.5;
+SS.behavior.fixation.FixWin     = 2.0;
 SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixWinStp  = 0.5;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixWinStp  = 0.25;    % change of the size of the fixation window upon key press
 
 SS.Block.maxBlockTrials = 10000;
 

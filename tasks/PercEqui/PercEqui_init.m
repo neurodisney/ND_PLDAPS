@@ -63,7 +63,7 @@ ND_Trial2Ascii(p, 'init');
 p.defaultParameters.stim.FIXSPOT.fixWin = 2;
 
 p.defaultParameters.task.RandomHemi = 1; % if 1, randomly pick left or right hemifield
-p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
+p.defaultParameters.task.RandomPar  = 1; % if 1, randomly change orientation and spatial frequency of the grating each trial
 
 p.defaultParameters.task.EqualStim  = 1; % both gratings have the same spatial frequency and orientation
 
@@ -85,5 +85,4 @@ p.defaultParameters.task.Response     = NaN;
 % maxTrialLength is used to pre-allocate memory at several initialization
 % steps. It specifies a duration in seconds.
 p.defaultParameters.pldaps.maxTrialLength = 15;
-
 

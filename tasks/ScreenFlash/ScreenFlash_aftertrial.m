@@ -8,7 +8,7 @@ function p = ScreenFlash_aftertrial(p)
 
 % ------------------------------------------------------------------------%
 %% Add information to the data struct
-p.defaultParameters.data.RewDelay = p.trial.task.CurRewDelay;
+
 p.defaultParameters.data.RewCnt   = p.trial.reward.iReward;
 
 % ------------------------------------------------------------------------%

@@ -75,11 +75,6 @@ kb.KPninKey = KbName('9');
 kb.KPzerKey = KbName('0');
 kb.plusKey  = KbName('=+');
 kb.minusKey = KbName('-_');
-%TweakKeys
-kb.HomeKey     = KbName('Home');
-kb.EndKey      = KbName('End');
-kb.PageUpKey   = KbName('PageUp');
-kb.PageDownKey = KbName('PageDown');
 
 
 if scan && isMac

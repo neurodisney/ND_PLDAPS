@@ -1,4 +1,4 @@
- function p = stop(p)
+function p = stop(p)
 % stops datapixx data aquisition
 % [p] = PDS.DATAPIXX.ADC.STOP(p)
 % 

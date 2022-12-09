@@ -124,4 +124,3 @@ p.defaultParameters.datapixx.adc.startPldapsTime   = GetSecs;
 
 p.defaultParameters.datapixx.adc.startDatapixxPreciseTime(1:3) = [getsecs, boxsecs, confidence];
 
-

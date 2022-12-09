@@ -25,7 +25,7 @@ p = ND_AddAsciiEntry(p, 'RandomAng',   'p.trial.task.RandomAng',              '%
 p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.Hemi',                     '%s');
 p = ND_AddAsciiEntry(p, 'TargetSpFreq','p.trial.stim.Trgt.sFreq',             '%.4f');
 p = ND_AddAsciiEntry(p, 'TargetOri',   'p.trial.stim.Trgt.sFreq',             '%.4f');
-p = ND_AddAsciiEntry(p, 'TargetContr', 'p.trial.stim.Trgt.Contrast',          '%.4f');
+p = ND_AddAsciiEntry(p, 'TargetContr', 'p.trial.stim.Trgt.Contrast',          '%.6f');
 p = ND_AddAsciiEntry(p, 'PosX',        'p.trial.stim.GRATING.pos(1)',         '%.2f');
 p = ND_AddAsciiEntry(p, 'PosY',        'p.trial.stim.GRATING.pos(2)',         '%.2f');
 p = ND_AddAsciiEntry(p, 'Eccentricity','p.trial.stim.Ecc',                    '%.2f');
@@ -66,15 +66,15 @@ p.defaultParameters.task.RandomEcc  = 1; % if 1, randomly change the grating ecc
 p.defaultParameters.task.RandomAng  = 1; % if 1, randomly change the grating angular position each trial
 
 % define random grating parameters for each session
-% p.defaultParameters.stim.PosYlst    = 0;  % range of possible positions on Y axis Corey Note: I think this variable is not functional 
-% p.defaultParameters.stim.PosXlst    =  3;  % range of possible positions on X axis Corey Note: I think this variable is not functional
+%p.defaultParameters.stim.PosYlst    = -2.8;  % range of possible positions on Y axis 
+%p.defaultParameters.stim.PosXlst    =  -3.4;  % range of possible positions on X axis 
 
 % define grid locations used by key selection
-p.defaultParameters.stim.EccLst = [4]; % if p.defaultParameters.task.RandomEcc = 0; these are the eccentricities
-p.defaultParameters.stim.AngLst = [360]; % if p.defaultParameters.task.RandomAng  = 0; these are the angles
+p.defaultParameters.stim.EccLst = [2, 3, 4, 2, 3, 4, 2, 3, 4]; % if p.defaultParameters.task.RandomEcc = 0; these are the eccentricities
+p.defaultParameters.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % if p.defaultParameters.task.RandomAng  = 0; these are the angles
 
 [p.defaultParameters.stim.GridX, p.defaultParameters.stim.GridY] = ...
-    pol2cart(p.defaultParameters.stim.AngLst, p.defaultParameters.stim.EccLst); % Corey Note: determines the target position based off EccLst and AngLst
+    pol2cart(p.defaultParameters.stim.AngLst, p.defaultParameters.stim.EccLst); % determines the target position based off EccLst and AngLst
 
 % get a random location to start with
 cPos = randi(length(p.defaultParameters.stim.GridX));
@@ -82,14 +82,17 @@ p.defaultParameters.stim.Ecc  = p.defaultParameters.stim.EccLst(cPos);
 p.defaultParameters.stim.Ang  = p.defaultParameters.stim.AngLst(cPos);
 %p.defaultParameters.stim.PosY = p.defaultParameters.stim.GridX(cPos); %use this line when you want random X positions
 %p.defaultParameters.stim.PosX = p.defaultParameters.stim.GridY(cPos); %use this line when you want random Y positions 
-p.defaultParameters.stim.PosY = [-4]; % Corey Hack: to get hardcoded single position
-p.defaultParameters.stim.PosX = [0]; %Corey Hack: to get hardcoded single position
+p.defaultParameters.stim.PosY = -3; %  to get hardcoded single position
+p.defaultParameters.stim.PosX = -3; % to get hardcoded single position
 
 
 p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
-p.defaultParameters.stim.OriLst     = [-45 0 45 90];  % orientation of grating
+%p.defaultParameters.stim.OriLst     = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];  % orientation of grating
+%p.defaultParameters.stim.OriLst     = [45, 45, 45, 45, 45, 45, 45, 45, 45];  % orientation of grating
+p.defaultParameters.stim.OriLst     = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];  % orientation of grating
 
-p.defaultParameters.stim.Hemi       = datasample(['l', 'r'], 1);
+
+p.defaultParameters.stim.Hemi       = datasample(['l', 'l'], 0);
 p.defaultParameters.stim.Trgt.sFreq = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
 p.defaultParameters.stim.Trgt.ori   = datasample(p.defaultParameters.stim.OriLst,  1); % orientation of grating
 
@@ -103,4 +106,5 @@ p.defaultParameters.task.Response     = NaN;
 % maxTrialLength is used to pre-allocate memory at several initialization
 % steps. It specifies a duration in seconds.
 p.defaultParameters.pldaps.maxTrialLength = 15;
+
 
