@@ -41,22 +41,22 @@ function p = start_AttendGrat(subjectname, rig)
     p = pldaps(subjectname, SS, exp_fun);
     
     % Collecting receptive field (RF) coordinates from user for stimulus display
-    RFpos = input("What are the mapped RF [x,y] coordinates, as an array? (press 'enter' for default values): ");
+    RFpos = input('What are the mapped RF [x,y] coordinates, as an array? (press enter for default values): ');
     p.trial.task.RFpos = RFpos;
     
     % Collecting receptive field (RF) size from user, and scaling grating size with it 
-    RFsize = input("What is the radius of the mapped RF? (press 'enter' for default value): ");
+    RFsize = input('What is the radius of the mapped RF? (press enter for default value): ');
     if isempty(RFsize)
        RFsize = 1; 
     end
     p.trial.stim.GRATING.radius = RFsize;
     
     % Collecting contrast value based on response threshold from user for rings
-    contrast = input("What is a 0.XX contrast near response threshold? (press 'enter' for default value): ");
+    contrast = input('What is a 0.XX contrast near response threshold? (press enter for default value): ');
     p.trial.task.contrast = contrast;
     
     % Collecting orientations 0.5 standard deviation (SD) from peak on tuning curve for grating assignment
-    oriRange = input("What orienations are + and -0.5 SD from preferred, as an array? (press 'enter' for default values): ");
+    oriRange = input('What orienations are + and -0.5 SD from preferred, as an array? (press enter for default values): ');
     p.trial.task.oriRange = oriRange;
     
     % Command to run experimemt
