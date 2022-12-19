@@ -130,6 +130,7 @@ function TaskSetUp(p)
         p.trial.stim.SaccadeDistractor = 'reference';
 
         if(p.trial.stim.Hemi == 'r')
+<<<<<<< HEAD
            p.trial.stim.Ref.Pos  = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
            p.trial.stim.Trgt.Pos = [ p.trial.stim.PosX, p.trial.stim.PosY];
           
@@ -137,6 +138,13 @@ function TaskSetUp(p)
             p.trial.stim.Ref.Pos  = [ p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
             
+=======
+            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+        else
+            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
         end
 
     else
@@ -144,6 +152,7 @@ function TaskSetUp(p)
         p.trial.stim.SaccadeDistractor = 'target';
 
         if(p.trial.stim.Hemi == 'l')
+<<<<<<< HEAD
             p.trial.stim.Ref.Pos  = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ p.trial.stim.PosX, p.trial.stim.PosY];
             
@@ -151,6 +160,13 @@ function TaskSetUp(p)
             p.trial.stim.Ref.Pos  = [ p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
             
+=======
+            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+        else
+            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
         end
     end
 
@@ -560,7 +576,4 @@ function Calculate_SRT(p)
 %             p.trial.task.SRT_FixStart = NaN;
 %             p.trial.task.SRT_StimOn   = NaN;
 %     end
-
-
-
 

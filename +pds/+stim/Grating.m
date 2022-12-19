@@ -23,6 +23,7 @@ properties
     tFreq
     angle
     alpha
+    hemifield
 end
 
 properties (SetAccess = protected)
@@ -88,6 +89,7 @@ methods
         if nargin < 10 || isempty(fixWin)
             fixWin = p.trial.stim.GRATING.fixWin;
         end
+  
         
         % Load the superclass
         obj@pds.stim.BaseStim(p, pos, fixWin);
@@ -101,6 +103,7 @@ methods
         obj.alpha  = alpha;
         obj.tFreq  = tFreq;
         obj.angle  = ori;
+        obj.hemifield = p.trial.stim.GRATING.hemifield;
         
         % Unchangeable after loading
         obj.res            = res;
@@ -150,7 +153,7 @@ methods
         CoorVec = linspace(-obj.res, obj.res, 2*obj.res);
         [x, y]  = meshgrid(CoorVec, CoorVec);
         
-        grating = obj.bgOffset + obj.pcmult * cos(sFreqTex*2*pi*(x+q)); 
+        grating = obj.bgOffset + obj.pcmult * cos(sFreqTex*2*pi*(x+q));
         
         % Create a circular aperture using the separate alpha-channel:
         circle = (x.^2 + y.^2 <= obj.res^2);
@@ -175,12 +178,21 @@ methods
             
             % Filter mode (not sure what the best value is yet)
             % For more information see the PTB documentation for Screen('DrawTexture')
-            % filterMode = [];
             filterMode = [];
             
             % Draw the texture
             Screen('DrawTexture', p.trial.display.ptr, obj.texture, obj.srcRect, destRect, obj.angle, ...
                                   filterMode, obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
+            
+            % Checking if task is cued or uncued
+            if ~p.trial.task.type
+
+                % If uncued, flashing stimuli if flashing turned on
+                if p.trial.stim.gratings.flashing
+                    Screen('Flip', p.trial.display.ptr);
+                end
+            end
+
         end
     end
     

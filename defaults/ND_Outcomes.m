@@ -18,12 +18,16 @@ p.defaultParameters.outcome.Correct           =   1004;  % correct performance, 
 p.defaultParameters.outcome.Abort             =   2;     % early joystick release prior stimulus onset
 p.defaultParameters.outcome.Early             =   3005;  % correct response selection prior to go signal
 p.defaultParameters.outcome.False             =   3006;  % wrong response within response window
+p.defaultParameters.outcome.FalseIpsi         =   3007;  % wrong response within response window in same hemi-field as target
+p.defaultParameters.outcome.FalseContra       =   3008;  % wrong response within response window in opposite hemi-field as target
 p.defaultParameters.outcome.EarlyFalse        =   3018;  % wrong response selection prior to go signal
+p.defaultParameters.outcome.EarlyFalseIpsi    =   3019;  % wrong response selection prior to go signal in same hemi-field as target
+p.defaultParameters.outcome.EarlyFalseContra  =   3020;  % wrong response selection prior to go signal in opposite hemi-field as target
 p.defaultParameters.outcome.Late              =   5;     % response occurred after response window
-p.defaultParameters.outcome.Miss              =   3007;  % no response at a reasonable time
-p.defaultParameters.outcome.NoStart           =   3004;  % trial not started
-p.defaultParameters.outcome.PrematStart       =   3008;  % trial start not too early as response to cue
-p.defaultParameters.outcome.TaskStart         =   3009;  % trial not started
+p.defaultParameters.outcome.Miss              =   3009;  % no response at a reasonable time
+p.defaultParameters.outcome.NoStart           =   3003;  % trial not started
+p.defaultParameters.outcome.PrematStart       =   3004;  % trial start not too early as response to cue
+p.defaultParameters.outcome.TaskStart         =   3002;  % trial not started
 p.defaultParameters.outcome.Break             =   9901;  % A break was triggered by the experimenter
 
 % joystick related

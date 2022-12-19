@@ -256,7 +256,11 @@ SS.datapixx.adc.YEyeposChannel = 4;
 SS.datapixx.adc.PupilChannel   = 5;
 
 % Saccade parameters
+%<<<<<<< HEAD
 SS.behavior.fixation.use       = 0;       % does this task require control of eye position
+%=======
+SS.behavior.fixation.use       = 1;       % does this task require control of eye position
+%>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 
 SS.behavior.fixation.on        =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
@@ -295,6 +299,7 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % Dingo hardstate screen Setting 1 6/22/20
+%<<<<<<< HEAD
         SS.eyeCalib.defaultGain      = [16.4697, -18.7675];  % default gain, used if no calibration points are entered
         SS.eyeCalib.defaultOffset    = [-1.5784, -1.7543];    % default offset, used if no calibration points are entered
      
@@ -302,12 +307,26 @@ switch rig
         % Dingo hardstate screen Setting 1 6/22/20 
         SS.eyeCalib.defaultGain      = [15.4337 -16.8761];  % default gain, used if no calibration points are entered
         SS.eyeCalib.defaultOffset    = [-1.3797 -1.7520];  % default offset, used if no calibration points are entered
+%=======
+        SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];    % default offset, used if no calibration points are entered
+     
+    case 2
+        % Dingo hardstate screen Setting 1 6/22/20 
+        SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];  % default offset, used if no calibration points are entered
+%>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
         
   
     otherwise
         % Dingo hardstate screen Setting 1 6/22/20
+%<<<<<<< HEAD
         SS.eyeCalib.defaultGain      = [16.4697, -18.767];  % default gain, used if no calibration points are entered
         SS.eyeCalib.defaultOffset    = [-1.5784, -1.7543];    % default offset, used if no calibration points are entered
+%=======
+        SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];    % default offset, used if no calibration points are entered%
+%>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 end
 
 % Define fixation states
@@ -350,7 +369,8 @@ SS.stim.GRATING.radius   = 1;
 SS.stim.GRATING.contrastMethod = 'balanced';
 SS.stim.GRATING.pos      = [0, 0];
 SS.stim.GRATING.fixWin   =  4;  
-SS.stim.GRATING.alpha    = 1; % Fully opaque
+SS.stim.GRATING.alpha    =  1; % Fully opaque
+SS.stim.GRATING.hemifield = NaN;
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 
 % Ring (i.e. location cue)

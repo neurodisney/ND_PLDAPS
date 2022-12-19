@@ -74,7 +74,7 @@ try
 
     p.trial.flagNextTrial  = 0; % flag for ending the trial
     p.trial.pldaps.quit = 0;
-    p.trial.pldaps.pause = 0;
+    p.trial.pldaps.pause = 0;exp_fun = 'Attention';
 
     trialNr = 0;
     p.trial.pldaps.iTrial = 0;
@@ -176,7 +176,7 @@ try
                 pds.datapixx.strobe(p.trial.event.BREAK);
             end
         
-            KbQueueStart;
+            KbQueueStart;ND_reset; p=start_Attention('mouse')
 
             % check for keyboard actions while pausing
             while(p.trial.pldaps.pause > 0 && p.trial.pldaps.quit < 1)
@@ -257,5 +257,10 @@ catch me
         fprintf('errors in %s line %d\r', me.stack(iErr).name, me.stack(iErr).line)
     end
     fprintf('\r\r')
-    ,keyboard
+%<<<<<<< HEAD
+    %,keyboard
 end
+%=======
+    keyboard
+end
+%>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f

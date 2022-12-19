@@ -4,31 +4,31 @@ function ND_PulseSeries(chan, PulseDur, Npulse, GapDur, Nseries, SeriesPause, In
 
 %% define defaults
 if(~exist('chan','var') || isempty(chan))
-    chan  = 5; % DIO channel
+    chan  = 1; % DIO channel
 end
 
 if(~exist('PulseDur','var') || isempty(PulseDur))
-    PulseDur = 0.1;  % duration of TTL pulse
+    PulseDur = 2;  % duration of TTL pulse
 end
 
 if(~exist('Npulse','var') || isempty(Npulse))
-    Npulse  = 10; % number of pulses in a series
+    Npulse  = 3; % number of pulses in a series
 end
 
 if(~exist('Nseries','var') || isempty(Nseries))
-    Nseries = 3;  % number of pulse packages
+    Nseries = 1;  % number of pulse packages
 end
 
 if(~exist('GapDur','var') || isempty(GapDur))
-    GapDur   = 0.1;  % gap between subsequent pulses
+    GapDur   = 0.5;  % gap between subsequent pulses
 end
 
 if(~exist('SeriesPause','var') || isempty(SeriesPause))
-    SeriesPause = 120; % gap between subsequent sieries
+    SeriesPause = 0; % gap between subsequent sieries
 end
 
 if(~exist('InjStrobe','var') || isempty(InjStrobe))
-    InjStrobe = 667; % gap between subsequent series
+    InjStrobe = 6110; % Corey Note: not gap, not sure how strobe is operating 
 end
 
 % check if DataPixx needs to be opened

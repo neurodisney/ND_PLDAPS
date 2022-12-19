@@ -32,4 +32,3 @@ p.defaultParameters.pldaps.trialStates.frameDraw             =  3;  % update gra
 p.defaultParameters.pldaps.trialStates.frameFlip             =  4;  % screen refresh, put stuff on screen
 
   
-    

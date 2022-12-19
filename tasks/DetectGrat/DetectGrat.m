@@ -1,8 +1,6 @@
 function p = DetectGrat(p, state)
 % Main trial function for a contrast detection task.
-%
-%
-%
+
 % wolf zinke, Nov. 2017
 
 % ####################################################################### %
@@ -508,5 +506,9 @@ if bool && ~p.trial.stim.fix.on
     p.trial.stim.fix.on = 1;
 elseif ~bool && p.trial.stim.fix.on
     p.trial.stim.fix.on = 0;
+%<<<<<<< HEAD
 end
     
+%=======
+%end
+%>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
