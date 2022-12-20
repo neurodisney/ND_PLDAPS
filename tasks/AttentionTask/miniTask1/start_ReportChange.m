@@ -40,6 +40,21 @@ function p = start_ReportChange(subjectname, rig)
     % Creating pldaps object
     p = pldaps(subjectname, SS, exp_fun);
     
+    % Collecting receptive field (RF) coordinates from user for stimulus display
+    RFpos = input('What are the mapped RF [x,y] coordinates, as an array? (press enter for default values): ');
+    p.trial.task.RFpos = RFpos;
+    
+    % Collecting receptive field (RF) size from user, and scaling grating size with it 
+    RFsize = input('What is the radius of the mapped RF? (press enter for default value): ');
+    if isempty(RFsize)
+       RFsize = 1; 
+    end
+    p.trial.stim.GRATING.radius = RFsize;
+    
+     % Collecting orientations 0.5 standard deviation (SD) from peak on tuning curve for grating assignment
+    oriRange = input('What orienations are + and -0.5 SD from preferred, as an array? (press enter for default values): ');
+    p.trial.task.oriRange = oriRange;
+    
     % Command to run experimemt
     p.run;
 

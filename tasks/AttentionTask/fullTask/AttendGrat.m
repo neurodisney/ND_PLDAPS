@@ -62,7 +62,7 @@ function TaskSetUp(p)
         p.trial.task.SRT_StimOn = NaN;
 
         % Selecting trial type: cued (1) or uncued (0)
-        p.trial.task.type = datasample([0 1], 1); 
+        p.trial.stim.GRATING.cued = datasample([0 1], 1); 
 
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
@@ -211,7 +211,7 @@ function TaskDesign(p)
                         % Is current time after presentation of fix point?
                         if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
                             % Presenting rings
-                            if p.trial.task.type
+                            if p.trial.stim.GRATING.cued
                                 stimRings(p, 1)
                             else
                                 stimRings(p, 0)
@@ -615,6 +615,8 @@ function stimPostGratOriChange(p, val)
                 
                 % Implementing stimulus presentation
                 case 3
+                    p.trial.stim.gratings.preTarget.on = 0;
+    
                     p.trial.stim.gratings.postTarget.on = 1;
                     p.trial.stim.gratings.postTarget.fixActive = 1;
 

@@ -8,14 +8,14 @@ properties
     displayRect
     isCue
     lineWeight
+    flashing
     
     color
     % texture
     % angle
     % size
     % res
-    % alpha
-    
+    % alpha    
 end
 
 methods
@@ -101,7 +101,7 @@ methods
                 Screen('FrameOval', p.trial.display.ptr, obj.color, obj.displayRect, obj.lineWeight(1), obj.lineWeight(2));
             
             % Flashing stimuli if flashing turned on
-            if p.trial.stim.rings.flashing
+            if p.trial.stim.RING.flashing
                 Screen('Flip', p.trial.display.ptr);
             end
 

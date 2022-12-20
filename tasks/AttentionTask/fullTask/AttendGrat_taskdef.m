@@ -51,8 +51,8 @@ function p = AttendGrat_taskdef(p)
     p.trial.stim.RING.radius = 1.5;
 
     % Turning flashing on for stimuli
-    p.trial.stim.rings.flashing = 1;
-    p.trial.stim.gratings.flashing =1;
+    p.trial.stim.RING.flashing = 1;
+    p.trial.stim.GRATING.flashing = 1;
 
 
 
