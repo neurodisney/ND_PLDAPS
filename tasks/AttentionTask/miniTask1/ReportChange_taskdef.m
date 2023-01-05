@@ -18,6 +18,12 @@ function p = ReportChange_taskdef(p)
 
 
 
+    % Setting properties for fixation point
+    p.trial.stim.FIXSPOT.type = 'rect';    
+    p.trial.stim.FIXSPOT.color = 'red';
+    p.trial.stim.FIXSPOT.size = 0.4;
+    
+    
     % Storing position of mapped receptive field collected from user or assigning default values
     p.trial.task.RFpos = [4,4];
     
@@ -25,12 +31,9 @@ function p = ReportChange_taskdef(p)
     target_posY = p.trial.task.RFpos(2);
 
     p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
-
-    
-    p.trial.stim.GRATING.radius = 1;
     
     % Storing contrast for cue and distractor rings collected from user or assigning default values
-    p.trial.task.contrast = 0.96;
+    p.trial.task.contrast = 0.90; % Changed from 0.96
     
     % Assigning color (black) to cue ring
     p.trial.stim.ringParameters.cue.color = [0, 1, 1];
@@ -43,8 +46,6 @@ function p = ReportChange_taskdef(p)
     
     % Assigning radius to rings
     p.trial.stim.RING.radius = 1.5;
-
-
 
     % Creating list of orientations using values collected from user or using default values
     p.trial.task.oriRange = [176,0];   
@@ -72,8 +73,6 @@ function p = ReportChange_taskdef(p)
 
     p.trial.task.flatHazard = r;
     
-    
-    
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;
     
@@ -82,8 +81,6 @@ function p = ReportChange_taskdef(p)
     
     % Setting time for which target must be fixed on before trial marked correct
     p.trial.task.minTargetFixTime = 1; % Changed from 0.1
-    
-    
 
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
