@@ -63,6 +63,7 @@ function p = AttendGrat_taskdef(p)
     end   
     p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
 
+    %
     
     
     % Creating flat-hazard function from which to pull out time of wait before stim change

@@ -45,6 +45,17 @@ function p = ReportChange(p, state)
 % Function to gather materials to start trial   
 function TaskSetUp(p)
 
+        % Adding trial to running total for block
+        p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
+
+        % Flagging next block if max trial count reached
+        if p.trial.Block.trialCount == p.trial.Block.maxBlockTrials
+            p.trial.Block.flagNextBlock = 1;
+            p.trial.Block.trialCount = 0;
+            p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
+            disp(2)
+        end
+
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
         % Creating spot to store selection of target stimulus
@@ -66,22 +77,34 @@ function TaskSetUp(p)
         % Shuffling positions in positions list
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
 
-        % Gathing random orientations for gratings
-        p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 2);
+        % Assigning orientation change magnitude according to block
+        if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0 
+            p.trial.Block.changeMag = datasample(p.trial.Block.changeMagList, 1);
+            p.trial.Block.flagNextBlock = 0;
+            disp(3)
+        end
+
+        % Gathering random orientation for grating
+        p.trial.stim.gratingParameters.ori = datasample(p.trial.task.oriList, 1);
+        change_dir = datasample([1, -1], 1);
         
         % Creating target grating pre-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(p.trial.stim.posList(1));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori + (p.trial.Block.changeMag * change_dir);
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(2);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori;
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
+
+        % Setting wait before presenting fix point if trial presentation sequence is grat first and fix point second
+        p.trial.task.StartWait.duration = 200;
+        p.trial.task.StartWait.counter = 0;
         
         % Selecting time of wait before target grating change from flat hazard function
         wait_period = datasample(p.trial.task.flatHazard, 1);
@@ -119,16 +142,41 @@ function TaskDesign(p)
             case p.trial.epoch.TrialStart
 
                 % Turning task on
-                Task_ON(p);
+               % Task_ON(p);
 
                 % Presenting fix point
-                ND_FixSpot(p, 1);
+                if p.trial.task.sequence == 1
 
-                % Recording start time of task
-                p.trial.EV.TaskStart = p.trial.CurTime;
-                p.trial.EV.TaskStartTime = datestr(now, 'HH:MM:SS:FFF');
+                    % Presenting fix spot
+                    ND_FixSpot(p, 1);
 
-                ND_SwitchEpoch(p,'WaitFix');
+                    % Recording start time of task
+                    p.trial.EV.TaskStart = p.trial.CurTime;
+                    p.trial.EV.TaskStartTime = datestr(now, 'HH:MM:SS:FFF');
+
+                    ND_SwitchEpoch(p,'WaitFix');
+
+                elseif p.trial.task.sequence == 0
+                    % Presenting grating
+                    stimPreGratOriChange(p, 2);
+
+                    if p.trial.task.StartWait.counter == p.trial.task.StartWait.duration
+
+                        % Presenting fix spot
+                        ND_FixSpot(p, 1);
+                        p.trial.task.stimState = 0;
+
+                        % Recording start time of task
+                        p.trial.EV.TaskStart = p.trial.CurTime;
+                        p.trial.EV.TaskStartTime = datestr(now, 'HH:MM:SS:FFF');
+
+                        ND_SwitchEpoch(p,'WaitFix');
+
+                    else
+                        p.trial.task.StartWait.counter = p.trial.task.StartWait.counter + 1; 
+                    end
+
+                end
 
             % Checking if fixation has been achieved within pre-set abount time 
             case p.trial.epoch.WaitFix
@@ -143,7 +191,11 @@ function TaskDesign(p)
                         % Is current time after presentation of fix point?
                         if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
                             % Presenting grating
-                            stimPreGratOriChange(p, 2);
+                            if p.trial.task.sequence == 1
+                                stimPreGratOriChange(p, 2);
+                            elseif p.trial.task.sequence == 0
+                                p.trial.task.stimState = 2;
+                            end
                             ND_SwitchEpoch(p, 'WaitChange') 
                         end
                     end
@@ -393,7 +445,7 @@ function stimPostGratOriChange(p, val)
         
         
 % Function to clean up screen textures and variables and to save data to ascii table (AttendGrat_init.m)
- function TaskCleanAndSave(p)
+function TaskCleanAndSave(p)
             
             % Saving key variables
             Task_Finish(p);

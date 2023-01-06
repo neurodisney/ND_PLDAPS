@@ -1,7 +1,12 @@
 % Function to define task parameters
 function p = ReportChange_taskdef(p)
 
- % Setting time window for fixation before trial marked as 'NoStart'
+    % Setting sequence in which trial progresses
+    % 0 presents grating first and fix point second
+    % 1 presents fix point first and grating second
+    p.trial.task.sequence = 0;
+
+    % Setting time window for fixation before trial marked as 'NoStart'
     p.trial.task.Timing.WaitFix = 2;
 
     % Storing expected latency of stim presentation to use for trial timing calculations
@@ -16,13 +21,15 @@ function p = ReportChange_taskdef(p)
     % Setting time-out(s) for incorrect responses
     p.trial.task.Timing.TimeOut = 1;
 
+    % Setting number of trials per block
+    p.trial.Block.maxBlockTrials = 2;
+
 
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'red';
     p.trial.stim.FIXSPOT.size = 0.4;
-    
     
     % Storing position of mapped receptive field collected from user or assigning default values
     p.trial.task.RFpos = [4,4];
@@ -47,12 +54,15 @@ function p = ReportChange_taskdef(p)
     % Assigning radius to rings
     p.trial.stim.RING.radius = 1.5;
 
-    % Creating list of orientations using values collected from user or using default values
-    p.trial.task.oriRange = [176,0];   
+    % Creating list of orientations using values collected from user or using default values  
     p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
 
-    
-    
+    % Creating list of orientation change magnitudes to apply to blocks
+    th = p.trial.task.oriThreshold;
+    p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
+
+
+
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 1000];
     mean = 2;
@@ -71,7 +81,7 @@ function p = ReportChange_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = r;
+    p.trial.task.flatHazard = 0.2; % Changed from 'r' which is storing flat hazard function selection
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;

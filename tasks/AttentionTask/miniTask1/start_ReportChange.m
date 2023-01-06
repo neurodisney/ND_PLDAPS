@@ -53,8 +53,18 @@ function p = start_ReportChange(subjectname, rig)
     
      % Collecting orientations 0.5 standard deviation (SD) from peak on tuning curve for grating assignment
     oriRange = input('What orienations are + and -0.5 SD from preferred, as an array? (press enter for default values): ');
+    if isempty(oriRange)
+        oriRange = [176,0];
+    end
     p.trial.task.oriRange = oriRange;
-    
+
+    % Collecting orientation change detection threshold
+    oriThreshold = input('What orientation change magnitude, in degrees, is at detection threshold? (press enter for default value): '); 
+    if isempty(oriThreshold)
+        oriThreshold = 2;
+    end
+    p.trial.task.oriThreshold = oriThreshold;
+
     % Command to run experimemt
     p.run;
 
