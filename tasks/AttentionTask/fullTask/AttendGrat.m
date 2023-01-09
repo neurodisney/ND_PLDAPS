@@ -46,6 +46,16 @@ function p = AttendGrat(p, state)
 % Function to gather materials to start trial
 function TaskSetUp(p)
 
+        % Adding trial to running total for block
+        p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
+
+        % Flagging next block if max trial count reached
+        if p.trial.Block.trialCount == p.trial.Block.maxBlockTrials
+            p.trial.Block.flagNextBlock = 1;
+            p.trial.Block.trialCount = 0;
+            p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
+        end
+
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
         % Creating spot to store selection of target stimulus
@@ -66,10 +76,10 @@ function TaskSetUp(p)
 
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
-
+        
         % Shuffling positions in positions list
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
-
+        
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(p.trial.stim.posList(1));
@@ -107,7 +117,17 @@ function TaskSetUp(p)
         p.trial.stim.rings.distractor3 = pds.stim.Ring(p);
 
         % Gathing random orientations for gratings
-        p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 5);
+        p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
+        
+        % Assigning orientation change magnitude according to block
+        if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0 
+            p.trial.Block.changeMag = datasample(p.trial.Block.changeMagList, 1);
+            p.trial.Block.flagNextBlock = 0;
+        end
+
+        % Gathering random orientation for grating
+        p.trial.stim.gratingParameters.ori = datasample(p.trial.task.oriList, 1);
+        change_dir = datasample([1, -1], 1);
         
         % Creating target grating pre-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
@@ -120,7 +140,7 @@ function TaskSetUp(p)
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(2);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1) + (p.trial.Block.changeMag * change_dir);
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Creating distractor grating 1 by assigning values to grating properties in p object
@@ -128,7 +148,7 @@ function TaskSetUp(p)
         pos = cell2mat(p.trial.stim.posList(2));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(3);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(2);
         p.trial.stim.gratings.distractor1 = pds.stim.Grating(p);
 
         % Creating distractor grating 2 by assigning values to grating properties in p object
@@ -136,7 +156,7 @@ function TaskSetUp(p)
         pos = cell2mat(p.trial.stim.posList(3));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(4);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(3);
         p.trial.stim.gratings.distractor2 = pds.stim.Grating(p);
 
         % Creating distractor grating 3 by assigning values to grating properties in p object
@@ -144,7 +164,7 @@ function TaskSetUp(p)
         pos = cell2mat(p.trial.stim.posList(4));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(5);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(4);
         p.trial.stim.gratings.distractor3 = pds.stim.Grating(p);
         
         % Creating counter to track wait time before grating presentation 

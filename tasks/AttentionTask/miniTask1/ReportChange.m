@@ -53,7 +53,6 @@ function TaskSetUp(p)
             p.trial.Block.flagNextBlock = 1;
             p.trial.Block.trialCount = 0;
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
-            disp(2)
         end
 
         % Trial marked as incorrect(0) until it is done successfully(1)
@@ -81,7 +80,6 @@ function TaskSetUp(p)
         if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0 
             p.trial.Block.changeMag = datasample(p.trial.Block.changeMagList, 1);
             p.trial.Block.flagNextBlock = 0;
-            disp(3)
         end
 
         % Gathering random orientation for grating
@@ -93,13 +91,13 @@ function TaskSetUp(p)
         pos = cell2mat(p.trial.stim.posList(1));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori + (p.trial.Block.changeMag * change_dir);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori;
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori;
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori + (p.trial.Block.changeMag * change_dir);
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Setting wait before presenting fix point if trial presentation sequence is grat first and fix point second

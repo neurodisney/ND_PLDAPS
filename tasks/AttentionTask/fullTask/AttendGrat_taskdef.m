@@ -15,6 +15,9 @@ function p = AttendGrat_taskdef(p)
     
     % Setting time-out(s) for incorrect responses
     p.trial.task.Timing.TimeOut = 1;
+    
+    % Setting number of trials per block
+    p.trial.Block.maxBlockTrials = 2;
 
 
 
@@ -63,9 +66,8 @@ function p = AttendGrat_taskdef(p)
     end   
     p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
 
-    %
     
-    
+
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 1000];
     mean = 2;

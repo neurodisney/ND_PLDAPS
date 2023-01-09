@@ -32,7 +32,9 @@ function p = ReportChange_taskdef(p)
     p.trial.stim.FIXSPOT.size = 0.4;
     
     % Storing position of mapped receptive field collected from user or assigning default values
-    p.trial.task.RFpos = [4,4];
+    if isempty(p.trial.task.RFpos)
+        p.trial.task.RFpos = [4,4];
+    end
     
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
