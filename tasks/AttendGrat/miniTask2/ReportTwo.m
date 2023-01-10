@@ -1,4 +1,4 @@
- % Function to run task for experiment
+% Function to run task for experiment
 function p = ReportTwo(p, state)
 
     % Checking for task name and filling if empty
