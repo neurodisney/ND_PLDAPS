@@ -11,11 +11,9 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
-    p = ND_AddAsciiEntry(p, 'Target Pos X', ' p.trial.task.RFpos(1)',             '%d');
-    p = ND_AddAsciiEntry(p, 'Target Pos Y', ' p.trial.task.RFpos(2)',             '%d');
-
-    p = ND_AddAsciiEntry(p, 'TargetSel', 'p.trial.task.TargetSel', '%d');
-    p = ND_AddAsciiEntry(p, 'Cued', 'p.trial.stim.GRATING.cued', '%d');
+    p = ND_AddAsciiEntry(p, 'TargPosX', 'p.trial.stim.gratings.preTarget.pos(1)',  '%d');
+    p = ND_AddAsciiEntry(p, 'TargPosY', 'p.trial.stim.gratings.preTarget.pos(2)',  '%d');
+    p = ND_AddAsciiEntry(p, 'Cued', 'p.trial.stim.GRATING.cued',                  '%d');
 
     % Ensuring output directory above exists
     ND_Trial2Ascii(p, 'init');
