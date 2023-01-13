@@ -165,7 +165,7 @@ function TaskSetUp(p)
         p.trial.stim.gratings.distractor3 = pds.stim.Grating(p);
         
         % Creating counter to track wait time before grating presentation 
-        p.trial.task.CueWait.duration = 1; % Changed from 300
+        p.trial.task.CueWait.duration = 50; % Changed from 300
         p.trial.task.CueWait.counter = 0;
         
         % Selecting time of wait before target grating change from flat hazard function

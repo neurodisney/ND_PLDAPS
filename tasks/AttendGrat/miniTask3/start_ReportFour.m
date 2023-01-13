@@ -65,7 +65,7 @@ function p = start_ReportFour(subjectname, rig)
     % Collecting orientation change detection threshold
     oriThreshold = input('What orientation change magnitude, in degrees, is at detection threshold? (press enter for default value): '); 
     if isempty(oriThreshold)
-        oriThreshold = 200;
+        oriThreshold = 200; % Changed from 20
     end
     p.trial.task.oriThreshold = oriThreshold;
     

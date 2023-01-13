@@ -90,7 +90,7 @@ function p = AttendGrat_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = 0.1; % Changed from r
+    p.trial.task.flatHazard = 0.2; % Changed from r
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;

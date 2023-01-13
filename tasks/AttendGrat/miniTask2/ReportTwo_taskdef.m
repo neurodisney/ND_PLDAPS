@@ -73,7 +73,7 @@ function p = ReportTwo_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = r; % Changed from 'r' which is storing flat hazard function selection
+    p.trial.task.flatHazard = 0.2; % Changed from r
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;

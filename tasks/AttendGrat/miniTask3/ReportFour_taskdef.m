@@ -45,7 +45,7 @@ function p = ReportFour_taskdef(p)
     p.trial.stim.ringParameters.distractor.contrast = p.trial.task.contrast;
 
     % Turning flashing on (1) or off (0) for stimuli
-    p.trial.stim.GRATING.flashing = 0;
+    p.trial.stim.GRATING.flashing = 1;
 
     % Creating list of orientations using values collected from user or using default values
     if isempty(p.trial.task.oriRange)
@@ -77,7 +77,7 @@ function p = ReportFour_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = r;
+    p.trial.task.flatHazard = 0.2; % Changed from r
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;
