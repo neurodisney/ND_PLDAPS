@@ -14,6 +14,7 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'TargPosX', 'p.trial.stim.gratings.preTarget.pos(1)',  '%d');
     p = ND_AddAsciiEntry(p, 'TargPosY', 'p.trial.stim.gratings.preTarget.pos(2)',  '%d');
     p = ND_AddAsciiEntry(p, 'Cued', 'p.trial.stim.GRATING.cued',                  '%d');
+    p = ND_AddAsciiEntry(p, 'OriChangeMag', 'p.trial.Block.changeMag',            '%d');
 
     % Ensuring output directory above exists
     ND_Trial2Ascii(p, 'init');
