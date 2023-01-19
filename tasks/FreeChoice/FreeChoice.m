@@ -9,7 +9,7 @@ function p = FreeChoice(p, state)
      % Initializing task
     if(isempty(state))
         % Populating pldaps object with elements needed to begin task if empty
-        p = AttendGrat_init(p); % Needs to be converted to init for this task
+        p = FreeChoice_init(p);
 
     else
         % If pldaps object is populated, standard trial routines run
@@ -81,17 +81,23 @@ function TaskSetUp(p)
             p.trial.Block.flagNextBlock = 0;
         end
         
-        % Creating first stimulus by assigning values to grating properties in p object
-        % Compiling properties into pldaps struct to present grating on screen
+        % Creating cue ring by assigning values to ring properties in p object
+        % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(p.trial.stim.posList(1));
-        p.trial.stim.GRATING.pos = pos;
-        p.trial.stim.gratings.stim1 = pds.stim.Grating(p);
-        
-        % Creating second stimulus by assigning values to grating properties in p object
-        % Compiling properties into pldaps struct to present grating on screen
+        p.trial.stim.RING.pos = pos([1 2]);
+        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.cue.contrast;
+        p.trial.stim.RING.color = p.trial.stim.ringParameters.cue.color;
+        p.trial.stim.RING.isCue = 1;
+        p.trial.stim.stim1 = pds.stim.Ring(p);
+
+        % Creating distractor ring 1 by assigning values to ring properties in p object
+        % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(p.trial.stim.posList(2));
-        p.trial.stim.GRATING.pos = pos;
-        p.trial.stim.gratings.stim2 = pds.stim.Grating(p);
+        p.trial.stim.RING.pos = pos([1 2]);
+        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
+        p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
+        p.trial.stim.RING.isCue = 0;
+        p.trial.stim.stim2 = pds.stim.Ring(p);
 
         % Increasing Reward after specific number of correct trials
         reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
@@ -184,7 +190,7 @@ function TaskDesign(p)
                 % Confirming current gaze shift is first response made
                 if(~p.trial.task.stimFix)
                     % Checking if gaze specifically within target grating fix window
-                    if(p.trial.stim.gratings.stim1.fixating)
+                    if(p.trial.stim.stim1.fixating)
                         % Logging selection of grating: 1 = right stim, 2 = left stim
                         p.trial.task.TargetSel = 1;
                         % Logging fix duration
@@ -192,8 +198,8 @@ function TaskDesign(p)
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
                         
-                    % Checking if gaze specifically within distractor 1 grating fix window
-                    elseif(p.trial.stim.gratings.stim2.fixating)
+                    % Checking if gaze specifically within distractor grating fix window
+                    elseif(p.trial.stim.stim2.fixating)
                         % Logging selection of grating: 1 = right stim, 2 = left stim
                         p.trial.task.TargetSel = 2;
                         % Logging fix duration
@@ -217,16 +223,11 @@ function TaskDesign(p)
                     % Checking if gaze returned to fix point in time to be considered 'no response yet'    
                     elseif(p.trial.stim.fix.looking)
                         ND_SwitchEpoch(p, 'WaitSaccade');
-                    end
-                    
-
-
-
-                    
+                    end 
 
                 else
                     % Checking if fix on target held for pre-set minimum amount of time 
-                    if(p.trial.CurTime > p.trial.stim.gratings.postTarget.EV.FixStart + p.trial.task.minTargetFixTime)
+                    if(p.trial.CurTime > p.trial.stim.stim1.EV.FixStart + p.trial.task.minTargetFixTime)
                         % Marking trial as correct
                         p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
                         p.trial.task.Good = 1;
@@ -240,7 +241,7 @@ function TaskDesign(p)
                         ND_SwitchEpoch(p, 'WaitEnd');
                     
                     % Checking if gaze leaves target grating fix window
-                    elseif(~p.trial.stim.gratings.postTarget.fixating)
+                    elseif(~p.trial.stim.stim1.fixating)
                         % Marking trial as Target Break
                         p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
                         % Playing noise signaling break of fix from target
@@ -252,7 +253,7 @@ function TaskDesign(p)
                      
             % Checking if fixation was broken pre-maturely    
             case p.trial.epoch.BreakFixCheck
-                delay = p.trial.task.breakFixCheck;
+                %delay = p.trial.task.breakFixCheck;
                 % Checking if fix break was committed before response window
                 if(p.trial.task.stimState < 1)
                     % Marking trial as fix break if it occured before response window
@@ -260,31 +261,31 @@ function TaskDesign(p)
                     % Switching epoch to end task
                     ND_SwitchEpoch(p, 'TaskEnd');
                     
-                elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + delay)
-                    % Collecting screen frames for trial to check median eye position
-                    frames = ceil(p.trial.display.frate * delay);
-                    % Calculating median position of eyes across frames
-                    medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
-                    
-                    % Checking if median eye position is in fixation window of target 
-                    if(inFixWin(p.trial.stim.gratings.postTarget, medPos))
-                        % Marking trial as "hit" but early if eye position is in target fix window
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
-                    
-                    % Checking if median eye position is in fixation window of distractor 1
-                    elseif(inFixWin(p.trial.stim.gratings.distractor1, medPos))
-                        % Marking trial as "miss" but early if eye position is in distractor fix window
-                        if p.trial.stim.gratings.distractor1.hemifield == p.trial.stim.gratings.preTarget.hemifield
-                            p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseIpsi;
-                        else
-                            p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseContra;
-                        end
+%                 elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + delay)
+%                     % Collecting screen frames for trial to check median eye position
+%                     frames = ceil(p.trial.display.frate * delay);
+%                     % Calculating median position of eyes across frames
+%                     medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
+%                     
+%                     % Checking if median eye position is in fixation window of target 
+%                     if(inFixWin(p.trial.stim.gratings.postTarget, medPos))
+%                         % Marking trial as "hit" but early if eye position is in target fix window
+%                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+%                     
+%                     % Checking if median eye position is in fixation window of distractor 1
+%                     elseif(inFixWin(p.trial.stim.gratings.distractor1, medPos))
+%                         % Marking trial as "miss" but early if eye position is in distractor fix window
+%                         if p.trial.stim.gratings.distractor1.hemifield == p.trial.stim.gratings.preTarget.hemifield
+%                             p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseIpsi;
+%                         else
+%                             p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseContra;
+%                         end
                
-                    else
+                    %else
                         % Marking trial as fix break without relevance to task
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
+                    p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
                         
-                    end 
+                    %end 
                     
                     % Switching epoch to end task
                     ND_SwitchEpoch(p, 'TaskEnd');
@@ -303,8 +304,7 @@ function TaskDesign(p)
 
                 
                 % Turning gratings off
-                stimPreGratOriChange(p, 0);
-                stimPostGratOriChange(p, 0);
+                presentStim(p, 0);
                 
                 % Turning fix point off
                 ND_FixSpot(p, 0);
@@ -313,12 +313,12 @@ function TaskDesign(p)
                 Task_OFF(p);
                 
                 % Checking if there is "nan" value for start of fixation on target
-                if(~isnan(p.trial.stim.gratings.postTarget.EV.FixStart))
+                if(~isnan(p.trial.stim.stim1.EV.FixStart))
                     p.trial.EV.FixStimStart = p.trial.stim.gratings.postTarget.EV.FixStart;
                     p.trial.EV.FixStimStop = p.trial.stim.gratings.postTarget.EV.FixBreak;
                     
                 % Checking if there is "nan" value for start of fixation on distractor 1    
-                elseif(~isnan(p.trial.stim.gratings.distractor1.EV.FixStart))
+                elseif(~isnan(p.trial.stim.stim2.EV.FixStart))
                     p.trial.EV.FixStimStart = p.trial.stim.gratings.distractor1.EV.FixStart;
                     p.trial.EV.FixStimStop = p.trial.stim.gratings.distractor1.EV.FixBreak;
                 end 
@@ -341,16 +341,16 @@ function presentStim(p, val)
                 
                 % Implementing no stimulus presentation
                 case 0
-                    p.trial.stim.gratings.stim1.on = 0;
-                    p.trial.stim.gratings.stim2.on = 0;
+                    p.trial.stim.stim1.on = 0;
+                    p.trial.stim.stim2.on = 0;
                 
                 % Implementing stimulus presentation
                 case 1
-                    p.trial.stim.gratings.stim1.on = 1;
-                    p.trial.stim.gratings.stim2.on = 1;
+                    p.trial.stim.stim1.on = 1;
+                    p.trial.stim.stim2.on = 1;
                     
-                    p.trial.stim.gratings.stim1.fixActive = 1;
-                    p.trial.stim.gratings.stim2.fixActive = 1;
+                    p.trial.stim.stim1.fixActive = 1;
+                    p.trial.stim.stim2.fixActive = 1;
   
                 otherwise
                     error('unusable stim value')

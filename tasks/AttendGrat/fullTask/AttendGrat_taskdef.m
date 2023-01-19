@@ -57,7 +57,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.stim.RING.radius = 1.5;
 
     % Turning flashing on (1) or off (0) for stimuli
-    p.trial.stim.RING.flashing = 1;
+    p.trial.stim.RING.flashing = 0;
     p.trial.stim.GRATING.flashing = 1;
 
     % Creating list of orientations using values collected from user or using default values

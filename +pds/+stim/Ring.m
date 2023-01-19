@@ -1,6 +1,6 @@
 classdef Ring < pds.stim.BaseStim
-% Fix spot stimulus
-% Nate Faber, July 2017
+% Ring stimulus
+% John Amodeo, Oct 2022
 
 properties
     radius

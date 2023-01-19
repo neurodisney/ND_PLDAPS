@@ -377,6 +377,7 @@ SS.stim.GRATING.alpha    =  1; % Fully opaque
 SS.stim.GRATING.hemifield = NaN;
 SS.stim.GRATING.cued     = 0;
 SS.stim.GRATING.flashing = 0;
+SS.stim.GRATING.ori      = 1;
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 
 % Ring (i.e. location cue)
