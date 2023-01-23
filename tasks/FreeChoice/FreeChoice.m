@@ -74,7 +74,7 @@ function TaskSetUp(p)
         p.trial.stim.fix = pds.stim.FixSpot(p);
 
         % Shuffling positions in positions list
-        p.trial.stim.posList = {[0,4],[0,-4]};
+        p.trial.stim.posList = {[5,0],[-5,0]};
 
         % Assigning orientation change magnitude according to block
         if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0 
@@ -83,21 +83,17 @@ function TaskSetUp(p)
         
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        pos = cell2mat(p.trial.stim.posList(1));
-        p.trial.stim.RING.pos = pos([1 2]);
-        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.cue.contrast;
-        p.trial.stim.RING.color = p.trial.stim.ringParameters.cue.color;
-        p.trial.stim.RING.isCue = 1;
-        p.trial.stim.stim1 = pds.stim.Ring(p);
+        p.trial.stim.RECTANGLE.pos = [5,0];
+        p.trial.stim.RECTANGLE.contrast = p.trial.task.contrast;
+        p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim1.coordinates;
+        p.trial.stim.stim1 = pds.stim.Rectangle(p);
 
         % Creating distractor ring 1 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        pos = cell2mat(p.trial.stim.posList(2));
-        p.trial.stim.RING.pos = pos([1 2]);
-        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
-        p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
-        p.trial.stim.RING.isCue = 0;
-        p.trial.stim.stim2 = pds.stim.Ring(p);
+        p.trial.stim.RECTANGLE.pos = [-5,0];
+        p.trial.stim.RECTANGLE.contrast = p.trial.task.contrast;
+        p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim2.coordinates;
+        p.trial.stim.stim2 = pds.stim.Rectangle(p);
 
         % Increasing Reward after specific number of correct trials
         reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
@@ -198,6 +194,21 @@ function TaskDesign(p)
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
                         
+                        % Checking if fix on target held for pre-set minimum amount of time 
+                        if(p.trial.CurTime > p.trial.stim.stim1.EV.FixStart + p.trial.task.minTargetFixTime)
+                            % Marking trial as correct
+                            p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
+                            p.trial.task.Good = 1;
+                            % Dispensing reward for correct trial
+                            pds.reward.give(p, p.trial.reward.Dur);
+                            % Playing noise signaling correct selection
+                            pds.audio.playDP(p, 'reward', 'left')
+                            % Record time of reward
+                            p.trial.EV.Reward = p.trial.CurTime;
+                            % Switching epoch to wait period before ending trial to allow for juice flow 
+                            ND_SwitchEpoch(p, 'WaitEnd');
+                        end
+                        
                     % Checking if gaze specifically within distractor grating fix window
                     elseif(p.trial.stim.stim2.fixating)
                         % Logging selection of grating: 1 = right stim, 2 = left stim
@@ -206,6 +217,21 @@ function TaskDesign(p)
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                        
+                        % Checking if fix on target held for pre-set minimum amount of time 
+                        if(p.trial.CurTime > p.trial.stim.stim2.EV.FixStart + p.trial.task.minTargetFixTime)
+                            % Marking trial as correct
+                            p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
+                            p.trial.task.Good = 1;
+                            % Dispensing reward for correct trial
+                            pds.reward.give(p, p.trial.reward.Dur);
+                            % Playing noise signaling correct selection
+                            pds.audio.playDP(p, 'reward', 'left')
+                            % Record time of reward
+                            p.trial.EV.Reward = p.trial.CurTime;
+                            % Switching epoch to wait period before ending trial to allow for juice flow 
+                            ND_SwitchEpoch(p, 'WaitEnd');
+                        end
                         
                     % Verifying if gaze shifted from fix spot but no grating selected    
                     elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)
@@ -224,33 +250,8 @@ function TaskDesign(p)
                     elseif(p.trial.stim.fix.looking)
                         ND_SwitchEpoch(p, 'WaitSaccade');
                     end 
-
-                else
-                    % Checking if fix on target held for pre-set minimum amount of time 
-                    if(p.trial.CurTime > p.trial.stim.stim1.EV.FixStart + p.trial.task.minTargetFixTime)
-                        % Marking trial as correct
-                        p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
-                        p.trial.task.Good = 1;
-                        % Dispensing reward for correct trial
-                        pds.reward.give(p, p.trial.reward.Dur);
-                        % Playing noise signaling correct selection
-                        pds.audio.playDP(p, 'reward', 'left')
-                        % Record time of reward
-                        p.trial.EV.Reward = p.trial.CurTime;
-                        % Switching epoch to wait period before ending trial to allow for juice flow 
-                        ND_SwitchEpoch(p, 'WaitEnd');
-                    
-                    % Checking if gaze leaves target grating fix window
-                    elseif(~p.trial.stim.stim1.fixating)
-                        % Marking trial as Target Break
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
-                        % Playing noise signaling break of fix from target
-                        pds.audio.playDP(p, 'incorrect', 'left');
-                        % Switching epoch to end task
-                        ND_SwitchEpoch(p, 'TaskEnd');
-                    end
                 end
-                     
+                             
             % Checking if fixation was broken pre-maturely    
             case p.trial.epoch.BreakFixCheck
                 %delay = p.trial.task.breakFixCheck;
@@ -314,13 +315,13 @@ function TaskDesign(p)
                 
                 % Checking if there is "nan" value for start of fixation on target
                 if(~isnan(p.trial.stim.stim1.EV.FixStart))
-                    p.trial.EV.FixStimStart = p.trial.stim.gratings.postTarget.EV.FixStart;
-                    p.trial.EV.FixStimStop = p.trial.stim.gratings.postTarget.EV.FixBreak;
+                    p.trial.EV.FixStimStart = p.trial.stim.stim1.EV.FixStart;
+                    p.trial.EV.FixStimStop = p.trial.stim.stim2.EV.FixBreak;
                     
                 % Checking if there is "nan" value for start of fixation on distractor 1    
                 elseif(~isnan(p.trial.stim.stim2.EV.FixStart))
-                    p.trial.EV.FixStimStart = p.trial.stim.gratings.distractor1.EV.FixStart;
-                    p.trial.EV.FixStimStop = p.trial.stim.gratings.distractor1.EV.FixBreak;
+                    p.trial.EV.FixStimStart = p.trial.stim.stim1.EV.FixStart;
+                    p.trial.EV.FixStimStop = p.trial.stim.stim2.EV.FixBreak;
                 end 
                 
                 % Flagging completion of current trial so ITI is run before next trial

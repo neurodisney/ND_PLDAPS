@@ -389,6 +389,15 @@ SS.stim.RING.fixWin    = 2;
 SS.stim.RING.alpha     = 1; % Fully opaque
 SS.stim.RING.flashing  = 0;
 
+% Rectangle
+SS.stim.RECTANGLE.pos       = [0,0];
+SS.stim.RECTANGLE.size      = 2;
+SS.stim.RECTANGLE.linewidth = 0.1;
+SS.stim.RECTANGLE.color     = 'red'; 
+SS.stim.RECTANGLE.fixWin    = 3;
+SS.stim.RECTANGLE.alpha     = 1; % Fully opaque
+SS.stim.RECTANGLE.flashing  = 0;
+
 % ------------------------------------------------------------------------%
 %% Joystick
 SS.datapixx.useJoystick      = 0;

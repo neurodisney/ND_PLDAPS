@@ -11,8 +11,6 @@ function p = FreeChoice_init(p)
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
-    p = ND_AddAsciiEntry(p, 'TargPosX',    'p.trial.task.RFpos(1)',               '%d');
-    p = ND_AddAsciiEntry(p, 'TargPosY',    'p.trial.task.RFpos(2)',               '%d');
 
     % Ensuring output directory above exists
     ND_Trial2Ascii(p, 'init');

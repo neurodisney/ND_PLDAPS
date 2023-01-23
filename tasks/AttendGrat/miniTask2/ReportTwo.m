@@ -233,6 +233,7 @@ function TaskDesign(p)
                         % Logging correct selection of grating (target)
                         p.trial.task.stimFix = 1;
                         p.trial.task.TargetSel = 1;
+                        disp(1)
                         % Logging fix duration
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency

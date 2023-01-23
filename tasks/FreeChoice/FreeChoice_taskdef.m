@@ -30,23 +30,16 @@ function p = FreeChoice_taskdef(p)
     p.trial.stim.FIXSPOT.color = 'red';
     p.trial.stim.FIXSPOT.size = 0.4;
     
-    % Storing position of mapped receptive field collected from user or assigning default values
-    p.trial.task.RFpos = [4,4];
-    
-    target_posX = p.trial.task.RFpos(1);
-    target_posY = p.trial.task.RFpos(2);
-
-    p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
-    
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     p.trial.task.contrast = 0.90; % Changed from 0.96
     
-    % Turning flashing on (1) or off (0) for stimuli
-    p.trial.stim.GRATING.flashing = 1;
-
-    % Creating list of orientations using values collected from user or using default values  
-    p.trial.task.oriList = 0:15:200;
-
+    % Assigning color to stimuli
+    p.trial.stim.RECTANGLE.color = [0, 1, 1];
+    
+    % Assigning coordinates to stimuli
+    p.trial.stim.recParameters.stim1.coordinates = [4 -1 6 1];
+    p.trial.stim.recParameters.stim2.coordinates = [-6 -1 -4 1];
+    
 
 
     % Creating flat-hazard function from which to pull out time of wait before stim change
@@ -88,26 +81,5 @@ function p = FreeChoice_taskdef(p)
 
     % Degree to which current reward decreased for bad performance 
     p.trial.reward.DiscourageProp = 1.0;
-    
-    
-    
-% =================================================================    
-    % Storing contrast for cue and distractor rings collected from user or assigning default values
-    p.trial.task.contrast = 0.90; 
-    
-    p.trial.stim.ringParameters.cue.contrast = -1 * p.trial.task.contrast;
-    p.trial.stim.ringParameters.distractor.contrast = p.trial.task.contrast;
-    
-    % Assigning color (black) to cue ring
-    p.trial.stim.ringParameters.cue.color = [0, 1, 1];
-    
-    % Assigning color (white) to distractor rings
-    p.trial.stim.ringParameters.distractor.color = [1, 0, 0];
-    
-    % Assigning lineweight (thickness) to rings
-    p.trial.stim.RING.lineWeight = [0.3, 0.3];
-    
-    % Assigning radius to rings
-    p.trial.stim.RING.radius = 1.5;
     
 end
