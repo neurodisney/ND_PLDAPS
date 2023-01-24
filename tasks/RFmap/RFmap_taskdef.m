@@ -100,7 +100,7 @@ p.trial.reward.Dur          = 0.225; % reward duration for pulse in reward serie
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 1 1.5 2 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
-p.trial.reward.jackpotDur   = 0.125;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur   = 0.25;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
 
 % ------------------------------------------------------------------------%
@@ -108,9 +108,9 @@ p.trial.reward.jackpotnPulse = 1;
 p.trial.task.Timing.WaitFix = 1.4;    % Time to wait for fixation before NoStart
 
 % Main trial timings
-p.trial.task.CurRewDelay    = 0.27;  % Time to first reward
-p.trial.task.fixLatency     = 0.17;  % Time to hold fixation before mapping begins
-p.trial.task.jackpotTime    = 0.65;   % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.CurRewDelay    = 0.25;  % Time to first reward
+p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
+p.trial.task.jackpotTime    = 2.8;   % How long stimuli are presented before trial ends and jackpot is given
 p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
 p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
 
