@@ -40,8 +40,8 @@ methods
         
         % Fixspot is not counted as a stimulus, so it should not record its properties
         obj.recordProps = {};  
-        obj.color     = color;
-        obj.contrast  = contrast;
+        obj.color       = p.trial.display.clut.(color);
+        obj.contrast    = contrast;
         obj.coordinates = coordinates;
         
         % Save a reference to this object in a dependable place in the p struct
@@ -49,12 +49,12 @@ methods
    end
 
 
-    
+
    % Function to present cue and distractor rings on screen
    function draw(obj, p)
         if obj.on
             % Draw cue ring texture on screen
-            Screen('FillRect', p.trial.display.ptr, obj.color, obj.coordinates);
+            Screen('FillRect', p.trial.display.overlayptr, obj.color, obj.coordinates);
            
             % Flashing stimuli if flashing turned on
             if p.trial.stim.RECTANGLE.flashing

@@ -45,6 +45,7 @@ function p = FreeChoice(p, state)
 % Function to gather materials to start trial   
 function TaskSetUp(p)
 
+
         % Adding trial to running total for block
         p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
 
@@ -54,6 +55,25 @@ function TaskSetUp(p)
             p.trial.Block.trialCount = 0;
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
         end
+        
+        % Altering reward probabilities for stimuli if new block has started
+        if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0
+            p.trial.Block.rewardProbabilities = datasample(p.trial.reward.probabilities, 2);
+            p.trial.Block.flagNextBlock = 0;
+        end
+        
+        % Selecting rewarded target according to probabilities
+        p.trial.stim.rewardedStim = randsample([1, 2], 1, true, p.trial.Block.rewardProbabilities);
+        
+        % Increasing reward after specific number of correct trials
+        reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
+        p.trial.reward.Dur = p.trial.reward.IncrementDur(reward_duration);
+
+        % Reducing current reward if previous trial was incorrect
+        if(p.trial.LastHits == 0)
+            p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
+        end
+        
 
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
@@ -69,40 +89,24 @@ function TaskSetUp(p)
         p.trial.task.SRT_FixStart = NaN;
         % Creating place to save when stimuli came on screen
         p.trial.task.SRT_StimOn = NaN;
+        
 
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
-
-        % Shuffling positions in positions list
-        p.trial.stim.posList = {[5,0],[-5,0]};
-
-        % Assigning orientation change magnitude according to block
-        if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0 
-            p.trial.Block.flagNextBlock = 0;
-        end
         
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         p.trial.stim.RECTANGLE.pos = [5,0];
-        p.trial.stim.RECTANGLE.contrast = p.trial.task.contrast;
+        p.trial.stim.RECTANGLE.contrast = p.trial.stim.recParameters.contrast;
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim1.coordinates;
         p.trial.stim.stim1 = pds.stim.Rectangle(p);
 
         % Creating distractor ring 1 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         p.trial.stim.RECTANGLE.pos = [-5,0];
-        p.trial.stim.RECTANGLE.contrast = p.trial.task.contrast;
+        p.trial.stim.RECTANGLE.contrast = p.trial.stim.recParameters.contrast;
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim2.coordinates;
         p.trial.stim.stim2 = pds.stim.Rectangle(p);
-
-        % Increasing Reward after specific number of correct trials
-        reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
-        p.trial.reward.Dur = p.trial.reward.IncrementDur(reward_duration);
-
-        % Reducing current reward if previous trial was incorrect
-        if(p.trial.LastHits == 0)
-            p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
-        end
 
         % Moving task from step-up stage to wait period before launching
         ND_SwitchEpoch(p, 'ITI');
@@ -196,17 +200,26 @@ function TaskDesign(p)
                         
                         % Checking if fix on target held for pre-set minimum amount of time 
                         if(p.trial.CurTime > p.trial.stim.stim1.EV.FixStart + p.trial.task.minTargetFixTime)
-                            % Marking trial as correct
-                            p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
-                            p.trial.task.Good = 1;
-                            % Dispensing reward for correct trial
-                            pds.reward.give(p, p.trial.reward.Dur);
-                            % Playing noise signaling correct selection
-                            pds.audio.playDP(p, 'reward', 'left')
-                            % Record time of reward
-                            p.trial.EV.Reward = p.trial.CurTime;
-                            % Switching epoch to wait period before ending trial to allow for juice flow 
-                            ND_SwitchEpoch(p, 'WaitEnd');
+                            if (p.trial.stim.rewardedStim == 1)
+                                % Marking trial as correct
+                                p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
+                                p.trial.task.Good = 1;
+                                % Dispensing reward for correct trial
+                                pds.reward.give(p, p.trial.reward.Dur);
+                                % Playing noise signaling correct selection
+                                pds.audio.playDP(p, 'reward', 'left')
+                                % Record time of reward
+                                p.trial.EV.Reward = p.trial.CurTime;
+                                % Switching epoch to wait period before ending trial to allow for juice flow 
+                                ND_SwitchEpoch(p, 'WaitEnd');
+                            else
+                                % Marking trial as incorrect
+                                p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                                % Playing noise signaling inccorect selection made
+                                pds.audio.playDP(p, 'incorrect', 'left');
+                                % Switching epoch to end task 
+                                ND_SwitchEpoch(p, 'TaskEnd');
+                            end
                         end
                         
                     % Checking if gaze specifically within distractor grating fix window
@@ -220,17 +233,26 @@ function TaskDesign(p)
                         
                         % Checking if fix on target held for pre-set minimum amount of time 
                         if(p.trial.CurTime > p.trial.stim.stim2.EV.FixStart + p.trial.task.minTargetFixTime)
-                            % Marking trial as correct
-                            p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
-                            p.trial.task.Good = 1;
-                            % Dispensing reward for correct trial
-                            pds.reward.give(p, p.trial.reward.Dur);
-                            % Playing noise signaling correct selection
-                            pds.audio.playDP(p, 'reward', 'left')
-                            % Record time of reward
-                            p.trial.EV.Reward = p.trial.CurTime;
-                            % Switching epoch to wait period before ending trial to allow for juice flow 
-                            ND_SwitchEpoch(p, 'WaitEnd');
+                            if (p.trial.stim.rewardedStim == 1)
+                                % Marking trial as correct
+                                p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
+                                p.trial.task.Good = 1;
+                                % Dispensing reward for correct trial
+                                pds.reward.give(p, p.trial.reward.Dur);
+                                % Playing noise signaling correct selection
+                                pds.audio.playDP(p, 'reward', 'left')
+                                % Record time of reward
+                                p.trial.EV.Reward = p.trial.CurTime;
+                                % Switching epoch to wait period before ending trial to allow for juice flow 
+                                ND_SwitchEpoch(p, 'WaitEnd');
+                            else
+                                % Marking trial as incorrect
+                                p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+                                % Playing noise signaling inccorect selection made
+                                pds.audio.playDP(p, 'incorrect', 'left');
+                                % Switching epoch to end task 
+                                ND_SwitchEpoch(p, 'TaskEnd');
+                            end
                         end
                         
                     % Verifying if gaze shifted from fix spot but no grating selected    
@@ -254,39 +276,40 @@ function TaskDesign(p)
                              
             % Checking if fixation was broken pre-maturely    
             case p.trial.epoch.BreakFixCheck
-                %delay = p.trial.task.breakFixCheck;
-                % Checking if fix break was committed before response window
-                if(p.trial.task.stimState < 1)
-                    % Marking trial as fix break if it occured before response window
-                    p.trial.outcpme.CurrOutcome = p.trial.outcome.FixBreak;
-                    % Switching epoch to end task
-                    ND_SwitchEpoch(p, 'TaskEnd');
+                delay = p.trial.task.breakFixCheck;
+
+                if(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + delay)
+                    % Collecting screen frames for trial to check median eye position
+                    frames = ceil(p.trial.display.frate * delay);
+                    % Calculating median position of eyes across frames
+                    medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
                     
-%                 elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + delay)
-%                     % Collecting screen frames for trial to check median eye position
-%                     frames = ceil(p.trial.display.frate * delay);
-%                     % Calculating median position of eyes across frames
-%                     medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
-%                     
-%                     % Checking if median eye position is in fixation window of target 
-%                     if(inFixWin(p.trial.stim.gratings.postTarget, medPos))
-%                         % Marking trial as "hit" but early if eye position is in target fix window
-%                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
-%                     
-%                     % Checking if median eye position is in fixation window of distractor 1
-%                     elseif(inFixWin(p.trial.stim.gratings.distractor1, medPos))
-%                         % Marking trial as "miss" but early if eye position is in distractor fix window
-%                         if p.trial.stim.gratings.distractor1.hemifield == p.trial.stim.gratings.preTarget.hemifield
-%                             p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseIpsi;
-%                         else
-%                             p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseContra;
-%                         end
-               
-                    %else
-                        % Marking trial as fix break without relevance to task
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
+                    % Checking if median eye position is in fixation window of target 
+                    if(inFixWin(p.trial.stim.stim1, medPos))
+                        if (p.trial.stim.rewardedStim == 1)
+                            % Marking trial as "hit" but early if eye position is in target fix window
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                        else
+                            % Marking trial as early and false if eye position is in distractor fix window
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
+                        end
+                    
+                    % Checking if median eye position is in fixation window of distractor 1
+                    elseif(inFixWin(p.trial.stim.stim2, medPos))
+                        if (p.trial.stim.rewardedStim == 2)
+                            % Marking trial as "hit" but early if eye position is in target fix window
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                        else
+                            % Marking trial as early and false if eye position is in distractor fix window
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
+                        end
                         
-                    %end 
+               
+                    else
+                        % Marking trial as fix break without relevance to task
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+                        
+                    end 
                     
                     % Switching epoch to end task
                     ND_SwitchEpoch(p, 'TaskEnd');
