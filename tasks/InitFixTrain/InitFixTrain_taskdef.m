@@ -30,7 +30,7 @@ p.trial.reward.jackpotDur   = 0.1;  % final reward after keeping fixation for th
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = .250; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
+p.trial.behavior.fixation.MinFixStart = .500; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
 p.trial.task.Timing.WaitFix = 2.0;  % Time to get a solid fixation before trial ends unsuccessfully
 
@@ -125,4 +125,3 @@ p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixa
 % steps. It specifies a duration in seconds.
 
 %p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix + p.trial.reward.MaxWaitInitial + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
-
