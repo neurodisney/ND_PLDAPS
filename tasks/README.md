@@ -3,33 +3,23 @@ Task Protocols
 Quick summary of available task paradigms.
 ==========
 
+As of 5/27/21, these are the tasks that we have tested and used since coming to Duke from Vanderbilt. 
+
+Behavioral task code that WZ built that are no longer in circulation or need further testing can be found in 
+
+ND_PLDAPS/archived
+
+Note that archived task code must be thoroughly tested for compliant EV codes and functionality before being put in
+front of an animal. 
+
+==========
+
 ## main tasks
 
-### EyeCalib
-
-### FixCalib
-
-### DetectGrat
-
-### PercEqui
-
-### CuedChangeDetect
-
-### manual_rf_map
-
-### revcorr_rfmap
-
-### ScreenFlash
-
-
-## training tasks
-
-### NHP_training/InitFixTrain
-
-### NHP_training/FixTrain
-
-### NHP_training/DelayedSaccade
-
-### NHP_training/ContrastChange
-
-### NHP_training/DistractFix
+# ScreenFlash
+# InitFixTrain
+# DetectGrat
+# RFmap
+# PercEqui
+# DelayedSaccade 
+# ContrastChange
