@@ -15,11 +15,11 @@ elseif(numel(n) == 1 && n > 1)
 end
 
 if (~exist('minval','var') || isempty(minval))
-    minval = 0;
+    minval = .25;
 end
 
 if(~exist('maxval','var') || isempty(maxval))
-    maxval = 10;
+    maxval = 1.5;
 end
 
 if (~exist('mu','var') || isempty(mu))

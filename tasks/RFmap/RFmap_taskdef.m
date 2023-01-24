@@ -21,26 +21,25 @@ function p = RFmap_taskdef(p)
 %
 
 % !!! MAKE SURE TO ADJUST LOCATION FOR 'FINE' MAPPING !!!
-p.trial.stim.LocCtr = [-.5, 1];
+p.trial.stim.LocCtr = [-6 -1];
 
 p.trial.stim.RFmeth = 'coarse';
-% p.trial.stim.RFmeth = 'fine';
+%p.trial.stim.RFmeth = 'fine';
 
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.coarse.ori      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];   % orient of grating
+        p.trial.stim.coarse.ori      = [0, 45, 90, 135, 180];   % orient of grating
         %p.trial.stim.coarse.ori      = 90;   % orient of grating
-        p.trial.stim.coarse.radius   = 1.5;      % size of grating 
+        p.trial.stim.coarse.radius   = 0.75;      % size of grating 
         %p.trial.stim.coarse.contrast = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600];         % intensity contrast
-        p.trial.stim.coarse.contrast = 1.5;         % intensity contrast
-        %p.trial.stim.coarse.sFreq    = [0.125, 0.250, 0.50, 1.00, 2.00, 4.00, 8.00, 16.00];       % spatial frequency
+        p.trial.stim.coarse.contrast = 0.15;         % intensity contrast
         p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency  
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.1;      % spacing of grating centers       
         
-        p.trial.stim.coarse.xRange   = [-4, 0];
-        p.trial.stim.coarse.yRange   = [-4, 0];
+        p.trial.stim.coarse.xRange   = [-9 -2];
+        p.trial.stim.coarse.yRange   = [-9 -2];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -55,7 +54,7 @@ switch p.trial.stim.RFmeth
         p.trial.stim.fine.sFreq    = 1.5;
         p.trial.stim.fine.grdStp   = 0.5;
         
-        p.trial.stim.fine.extent   = [2, 2];
+        p.trial.stim.fine.extent   = [-2, 2; -2, 2];
         
         % do not change below
         p.trial.stim.fine.xRange   =  [-1, 1] * p.trial.stim.extent(1) + p.trial.stim.LocCtr(1);
@@ -95,29 +94,29 @@ p.trial.datapixx.TTL_InjStrobe = 6110;
 
 % manual reward from experimenter
 p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.1; % duration of the initial reward
+p.trial.reward.InitialRew   = 0.15; % duration of the initial reward
 p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur          = 0.1; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Dur          = 0.225; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 1 1.5 2 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
-p.trial.reward.jackpotDur   = 0.1;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur   = 0.0;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
+p.trial.task.Timing.WaitFix = 1.4;    % Time to wait for fixation before NoStart
 
 % Main trial timings
-p.trial.task.CurRewDelay    = 0.5;  % Time to first reward
+p.trial.task.CurRewDelay    = 0.25;  % Time to first reward
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
-p.trial.task.jackpotTime    = 2;   % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.jackpotTime    = 2.8;   % How long stimuli are presented before trial ends and jackpot is given
 p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
 p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = 3.5;  % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI  = 2.5;  % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
@@ -126,8 +125,8 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.pos   = [0,0];
 p.trial.stim.FIXSPOT.type  = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.color = 'white';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size  = 0.15;     % size of the fixation spot
+p.trial.stim.FIXSPOT.color = 'dRed';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size  = 0.25;     % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

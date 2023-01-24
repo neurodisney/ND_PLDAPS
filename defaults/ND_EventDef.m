@@ -92,6 +92,7 @@ end
 if(p.defaultParameters.behavior.fixation.use)
     p.defaultParameters.EV.FixEntry   = NaN; % entering fixation window
     p.defaultParameters.EV.FixStart   = NaN; % start of fixation
+    p.defaultParameters.EV.WaitFix    = NaN; % wait for fix to be achieved
     p.defaultParameters.EV.FixBreak   = NaN; % fixation break detected
     p.defaultParameters.EV.FixLeave   = NaN; % time when eyes leave fixation window
     p.defaultParameters.EV.Saccade    = NaN; % response saccade detected
@@ -165,6 +166,10 @@ p.defaultParameters.outcome.NoStart           =   5007;  % trial not started
 p.defaultParameters.outcome.PrematStart       =   5008;  % trial start not too early as response to cue
 p.defaultParameters.outcome.TaskStart         =   5009;  % trial not started
 p.defaultParameters.outcome.Break             =   5010;  % A break was triggered by the experimenter
+p.defaultParameters.outcome.EarlyFalseContra  =   5011;  % Early saccade made to distractor in opposite hemifield as target
+p.defaultParameters.outcome.EarlyFalseIpsi    =   5012;  % Early saccade made to distractor in same hemifield as target
+p.defaultParameters.outcome.FalseContra       =   5013;  % Timely saccade made to distractor in opposite hemifield as target
+p.defaultParameters.outcome.FalseIpsi         =   5014;  % Timely saccade made to distractor in same hemifield as target 
 
 
 % refinement of fixation break times
