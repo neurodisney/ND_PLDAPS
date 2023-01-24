@@ -31,13 +31,13 @@ switch p.trial.stim.RFmeth
     case 'coarse'
         p.trial.stim.coarse.ori      = [0, 90];   % orient of grating
         p.trial.stim.coarse.radius   = .75;      % size of grating 
-        p.trial.stim.coarse.contrast = .05;         % intensity contrast
+        p.trial.stim.coarse.contrast = .5;         % intensity contrast
         p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.1;      % spacing of grating centers 
         
-        p.trial.stim.coarse.xRange   = [-6, 0];
-        p.trial.stim.coarse.yRange   = [-6, 0];
+        p.trial.stim.coarse.xRange   = [-6, -0.5];
+        p.trial.stim.coarse.yRange   = [-6, -0.5];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -99,9 +99,9 @@ p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 % Main trial timings
 p.trial.task.CurRewDelay    = 0.10;  % Time to first reward
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
-p.trial.task.jackpotTime    = 4;   % How long stimuli are presented before trial ends and jackpot is given
+p.trial.task.jackpotTime    = 2.0;   % How long stimuli are presented before trial ends and jackpot is given
 p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
-p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
+p.trial.task.stimOffTime    = 0.2;   % Gaps between succesive stimuli
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
