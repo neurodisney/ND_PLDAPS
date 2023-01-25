@@ -11,6 +11,11 @@ function p = FreeChoice_init(p)
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
+    
+    p = ND_AddAsciiEntry(p, 'stim1_rewDur',   'p.trial.stim.recParameters.stim1.rewardDur',                   '%d');
+    p = ND_AddAsciiEntry(p, 'stim2_rewDur',   'p.trial.stim.recParameters.stim2.rewardDur',                   '%d');
+    p = ND_AddAsciiEntry(p, 'stim1_rewarded', 'p.trial.stim.stim1.reward',         '%d');
+    p = ND_AddAsciiEntry(p, 'stim2_rewarded', 'p.trial.stim.stim2.reward',         '%d');
 
     % Ensuring output directory above exists
     ND_Trial2Ascii(p, 'init');

@@ -5,12 +5,15 @@ classdef Rectangle < pds.stim.BaseStim
 properties
     coordinates
     contrast
-    color  
+    color
+    reward
 end
+
+
 
 methods
              
-   function obj = Rectangle(p, coordinates, contrast, pos, color, fixWin)
+   function obj = Rectangle(p, coordinates, contrast, pos, color, reward, fixWin)
        
         if nargin < 2 || isempty(coordinates)
             coordinates = p.trial.stim.RECTANGLE.coordinates;
@@ -28,7 +31,11 @@ methods
             color = p.trial.stim.RECTANGLE.color;
         end
         
-        if nargin < 6 || isempty(fixWin)
+        if nargin < 6 || isempty(reward)
+            reward = p.trial.stim.RECTANGLE.reward;
+        end
+        
+        if nargin < 7 || isempty(fixWin)
             fixWin = p.trial.stim.RECTANGLE.fixWin;
         end
            
@@ -43,6 +50,7 @@ methods
         obj.color       = p.trial.display.clut.(color);
         obj.contrast    = contrast;
         obj.coordinates = coordinates;
+        obj.reward      = reward;
         
         % Save a reference to this object in a dependable place in the p struct
         p.trial.behavior.stim.rectangle = obj;

@@ -397,6 +397,7 @@ SS.stim.RECTANGLE.color     = 'red';
 SS.stim.RECTANGLE.fixWin    = 3;
 SS.stim.RECTANGLE.alpha     = 1; % Fully opaque
 SS.stim.RECTANGLE.flashing  = 0;
+SS.stim.RECTANGLE.reward    = 0;
 
 % ------------------------------------------------------------------------%
 %% Joystick

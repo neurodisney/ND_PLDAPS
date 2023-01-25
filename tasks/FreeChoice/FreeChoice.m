@@ -45,7 +45,6 @@ function p = FreeChoice(p, state)
 % Function to gather materials to start trial   
 function TaskSetUp(p)
 
-
         % Adding trial to running total for block
         p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
 
@@ -59,20 +58,18 @@ function TaskSetUp(p)
         % Altering reward probabilities for stimuli if new block has started
         if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0
             p.trial.Block.rewardProbabilities = datasample(p.trial.reward.probabilities, 2);
+            p.trial.Block.rewardDurs = datasample(p.trial.stim.recParameters.rewardDurs, 2);
             p.trial.Block.flagNextBlock = 0;
         end
-        
-        % Selecting rewarded target according to probabilities
-        p.trial.stim.rewardedStim = randsample([1, 2], 1, true, p.trial.Block.rewardProbabilities);
         
         % Increasing reward after specific number of correct trials
         reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
         p.trial.reward.Dur = p.trial.reward.IncrementDur(reward_duration);
 
         % Reducing current reward if previous trial was incorrect
-        if(p.trial.LastHits == 0)
-            p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
-        end
+%         if(p.trial.LastHits == 0)
+%             p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
+%         end
         
 
         % Trial marked as incorrect(0) until it is done successfully(1)
@@ -94,18 +91,33 @@ function TaskSetUp(p)
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
         
-        % Creating cue ring by assigning values to ring properties in p object
-        % Compiling properties into pldaps struct to present ring on screen
+        % Creating stim 1 by assigning values to rec properties in p object
+        % Compiling properties into pldaps struct to present rectangle on screen
         p.trial.stim.RECTANGLE.pos = [5,0];
+        p.trial.stim.RECTANGLE.color = p.trial.stim.recParameters.stim1.color;
         p.trial.stim.RECTANGLE.contrast = p.trial.stim.recParameters.contrast;
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim1.coordinates;
+        if (p.trial.task.condition == 1)
+            p.trial.stim.RECTANGLE.reward = randsample([1, 0], 1, true, p.trial.Block.rewardProbabilities);
+            p.trial.stim.recParameters.stim1.rewardDur = p.trial.reward.Dur;
+        elseif (p.trial.task.condition == 2)
+            p.trial.stim.RECTANGLE.reward = 1;
+            p.trial.stim.recParameters.stim1.rewardDur = p.trial.Block.rewardDurs(1);
+        end
         p.trial.stim.stim1 = pds.stim.Rectangle(p);
-
-        % Creating distractor ring 1 by assigning values to ring properties in p object
-        % Compiling properties into pldaps struct to present ring on screen
+            
+        % Creating stim 2 by assigning values to rec properties in p object
+        % Compiling properties into pldaps struct to present rectangle on screen
         p.trial.stim.RECTANGLE.pos = [-5,0];
-        p.trial.stim.RECTANGLE.contrast = p.trial.stim.recParameters.contrast;
+        p.trial.stim.RECTANGLE.color = p.trial.stim.recParameters.stim2.color;
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim2.coordinates;
+        if (p.trial.task.condition == 1)
+            p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, p.trial.Block.rewardProbabilities);
+            p.trial.stim.recParameters.stim2.rewardDur = p.trial.reward.Dur;
+        elseif (p.trial.task.condition == 2)
+            p.trial.stim.RECTANGLE.reward = 1;
+            p.trial.stim.recParameters.stim2.rewardDur = p.trial.Block.rewardDurs(2);
+        end
         p.trial.stim.stim2 = pds.stim.Rectangle(p);
 
         % Moving task from step-up stage to wait period before launching
@@ -200,12 +212,12 @@ function TaskDesign(p)
                         
                         % Checking if fix on target held for pre-set minimum amount of time 
                         if(p.trial.CurTime > p.trial.stim.stim1.EV.FixStart + p.trial.task.minTargetFixTime)
-                            if (p.trial.stim.rewardedStim == 1)
+                            if (p.trial.stim.stim1.reward)
                                 % Marking trial as correct
                                 p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
                                 p.trial.task.Good = 1;
                                 % Dispensing reward for correct trial
-                                pds.reward.give(p, p.trial.reward.Dur);
+                                pds.reward.give(p, p.trial.stim.recParameters.stim1.rewardDur);
                                 % Playing noise signaling correct selection
                                 pds.audio.playDP(p, 'reward', 'left')
                                 % Record time of reward
@@ -233,12 +245,12 @@ function TaskDesign(p)
                         
                         % Checking if fix on target held for pre-set minimum amount of time 
                         if(p.trial.CurTime > p.trial.stim.stim2.EV.FixStart + p.trial.task.minTargetFixTime)
-                            if (p.trial.stim.rewardedStim == 1)
+                            if (p.trial.stim.stim2.reward)
                                 % Marking trial as correct
                                 p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
                                 p.trial.task.Good = 1;
                                 % Dispensing reward for correct trial
-                                pds.reward.give(p, p.trial.reward.Dur);
+                                pds.reward.give(p, p.trial.stim.recParameters.stim2.rewardDur);
                                 % Playing noise signaling correct selection
                                 pds.audio.playDP(p, 'reward', 'left')
                                 % Record time of reward
@@ -303,12 +315,10 @@ function TaskDesign(p)
                             % Marking trial as early and false if eye position is in distractor fix window
                             p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
                         end
-                        
                
                     else
                         % Marking trial as fix break without relevance to task
                         p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-                        
                     end 
                     
                     % Switching epoch to end task
@@ -326,7 +336,6 @@ function TaskDesign(p)
             % Ending task
             case p.trial.epoch.TaskEnd
 
-                
                 % Turning gratings off
                 presentStim(p, 0);
                 
@@ -375,6 +384,7 @@ function presentStim(p, val)
                     
                     p.trial.stim.stim1.fixActive = 1;
                     p.trial.stim.stim2.fixActive = 1;
+                    p.trial.stim.fix.fixWin = 0.2;
   
                 otherwise
                     error('unusable stim value')
