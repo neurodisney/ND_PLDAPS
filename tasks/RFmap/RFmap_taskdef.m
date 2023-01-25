@@ -94,7 +94,7 @@ p.trial.datapixx.TTL_InjStrobe = 6110;
 
 % manual reward from experimenter
 p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.15; % duration of the initial reward
+p.trial.reward.InitialRew   = 0.10; % duration of the initial reward
 p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of rewards until end of fixation period
 p.trial.reward.Dur          = 0.15; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
