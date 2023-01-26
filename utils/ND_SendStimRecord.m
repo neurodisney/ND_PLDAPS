@@ -52,7 +52,7 @@ if nStims > 0
                
             elseif iProp == 6
                 signalc = typecast(cast(round(property * 100), 'int16'), 'uint16');
-                contrast = 3000 + signalc;
+                contrast = 30000 + signalc;
                 pds.datapixx.strobe(contrast);
                
             elseif iProp == 7

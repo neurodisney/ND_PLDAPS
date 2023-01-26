@@ -28,7 +28,7 @@ if(~exist('SeriesPause','var') || isempty(SeriesPause))
 end
 
 if(~exist('InjStrobe','var') || isempty(InjStrobe))
-    InjStrobe = 667; % gap between subsequent series
+    InjStrobe = 6110; % gap between subsequent series
 end
 
 % check if DataPixx needs to be opened
