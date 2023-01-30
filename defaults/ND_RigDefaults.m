@@ -327,7 +327,7 @@ SS.stim.record.structs = {}; % Cell array to store the properties of stims as th
 SS.stim.pos = [0,0];
 
 % fixation window
-SS.stim.fixWin                       = 2.5;  % diameter of fixation window in dva
+SS.stim.fixWin                       = 3.0;  % diameter of fixation window in dva
 SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels

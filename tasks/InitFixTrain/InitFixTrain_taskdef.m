@@ -102,13 +102,13 @@ p.trial.Block.maxBlockTrials =  [1];
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size = 0.15;     % size of the fixation spot
-p.trial.stim.FIXSPOT.color  = 'cyan';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size = 0.20;     % size of the fixation spot
+p.trial.stim.FIXSPOT.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixWinStp = 0.2;  % refine resizing of fixation step for this task only(modify default rig settings)
 
 % color options (make sure colors are defined!)
 %p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
-p.trial.task.Color_list = {'cyan'};
+p.trial.task.Color_list = {'dRed'};
 
 % Enable random positions
 % p.trial.task.RandomPos = 0;

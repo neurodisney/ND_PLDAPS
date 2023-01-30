@@ -488,6 +488,12 @@ ND_Trial2Ascii(p, 'save');
 % ####################################################################### %
 function KeyAction(p)
 %% task specific action upon key press
+SS.key.reward    = KbName('space');  % trigger reward
+SS.key.quit      = KbName('ESCAPE'); % end experiment
+SS.key.pause     = KbName('p');      % pause the experiment
+SS.key.break     = KbName('b');      % give a break
+SS.key.CtrJoy    = KbName('j');      % set current joystick position as zero
+
 
 %% additional inline functions
 % ####################################################################### %
