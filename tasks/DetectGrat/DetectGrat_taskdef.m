@@ -12,7 +12,6 @@ function p = DetectGrat_taskdef(p)
 %% Reward
 
 % manual reward from experimenter
-<<<<<<< HEAD
 p.trial.reward.ManDur         = 0.15;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [10,  150, 250,  400, 450, 500]; % increase number of pulses with this trial number
 p.trial.reward.IncrementDur   = [0.175, 0.175, 0.175, 0.2, 0.2, 0.25]; % increase number of pulses with this trial number
@@ -23,7 +22,6 @@ p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
 % ------------------------------------------------------------------------%
 %% Timing
 p.trial.behavior.fixation.MinFixStart = ND_GetFixDur(.25, 1.5, [], [], 1, .25); % minimum time to wait for robust fixation
-=======
 p.trial.reward.ManDur         = 0.2;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [10,  150, 250,  400, 450, 500]; % increase number of pulses with this trial number
 p.trial.reward.IncrementDur   = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]; % increase number of pulses with this trial number
@@ -33,16 +31,11 @@ p.trial.reward.InitialRew   = 0.125; % duration of the initial reward
 % ------------------------------------------------------------------------%
 %% Timing
 p.trial.behavior.fixation.MinFixStart = ND_GetFixDur(.15, 0.25, [], [], 1, .05); % minimum time to wait for robust fixation
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
-
 p.trial.task.Timing.WaitFix = 1;    % Time to fixate before NoStart
 
 % Main trial timings
-<<<<<<< HEAD
 p.trial.task.stimLatency      = ND_GetITI(0.5, 1.5, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
-=======
 p.trial.task.stimLatency      = ND_GetITI(0.15, 0.25, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 0.1;   % Must fixate on target for at least this time before it counts
@@ -54,7 +47,6 @@ p.trial.task.Timing.ITI       = ND_GetITI(1.5, 2.25, [], [], 1, 0.10);
 %% Grating stimuli parameters
 p.trial.stim.GRATING.tFreq  = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 p.trial.stim.GRATING.res    = 300;
-<<<<<<< HEAD
 p.trial.stim.GRATING.fixWin = 2;  
 %p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % alternative radius of grating patch
 p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
@@ -64,7 +56,6 @@ p.trial.stim.AngLst = [45, 0, 45]; % If p.defaultParameters.task.RandomAng = 1, 
 
 % grating contrast
 p.trial.stim.trgtconts = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223 
-=======
 p.trial.stim.GRATING.fixWin = 3.5;  
 %p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % alternative radius of grating patch
 p.trial.stim.GRATING.radius = 1.0;  % radius of grating patch
@@ -75,7 +66,6 @@ p.trial.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % If p.de
 % grating contrast
 p.trial.stim.trgtconts = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 %p.trial.stim.trgtconts = [0, 0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223 
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 %p.trial.stim.trgtconts = [0, 0.015, 0.023, 0.035, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%Anita suggested on 20210222 
 %p.trial.stim.trgtconts = [0, 0, 0.01, 0.0152, 0.0217, 0.0248, 0.0504, 0.0951, 0.1727, 0.9500]; %%% used for behavior to make stationary data, 
 %p.trial.stim.trgtconts = round(logspace(log10(0.035),log10(0.31), 10), 4)-0.01; %%croc
@@ -131,9 +121,3 @@ p.trial.datapixx.TTL_spritzerPulseGap  = .1; % gap between subsequent pulses
 
 p.trial.datapixx.TTL_spritzerNseries   = 1;    % number of pulse series
 p.trial.datapixx.TTL_spritzerSeriesGap = 1 ;  % gap between subsequent series
-
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
