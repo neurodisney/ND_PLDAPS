@@ -21,42 +21,31 @@ function p = RFmap_taskdef(p)
 %
 
 % !!! MAKE SURE TO ADJUST LOCATION FOR 'FINE' MAPPING !!!
-<<<<<<< HEAD
 p.trial.stim.LocCtr = [-.5, 1];
-=======
 p.trial.stim.LocCtr = [-6 -1];
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
-
 p.trial.stim.RFmeth = 'coarse';
 %p.trial.stim.RFmeth = 'fine';
 
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-<<<<<<< HEAD
         p.trial.stim.coarse.ori      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];   % orient of grating
         %p.trial.stim.coarse.ori      = 90;   % orient of grating
         p.trial.stim.coarse.radius   = 0.50;      % size of grating 
         %p.trial.stim.coarse.contrast = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600];         % intensity contrast
         p.trial.stim.coarse.contrast = 0.75;         % intensity contrast
-=======
         p.trial.stim.coarse.ori      = [0, 45, 90, 135, 180];   % orient of grating
         %p.trial.stim.coarse.ori      = 90;   % orient of grating
         p.trial.stim.coarse.radius   = 0.75;      % size of grating 
         %p.trial.stim.coarse.contrast = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600];         % intensity contrast
         p.trial.stim.coarse.contrast = 0.15;         % intensity contrast
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
         p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency  
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.1;      % spacing of grating centers       
-        
-<<<<<<< HEAD
         p.trial.stim.coarse.xRange   = [-4, 0];
         p.trial.stim.coarse.yRange   = [-4, 0];
-=======
         p.trial.stim.coarse.xRange   = [-9 -2];
         p.trial.stim.coarse.yRange   = [-9 -2];
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -104,18 +93,14 @@ p.trial.datapixx.TTL_Npulse = 1;
 p.trial.datapixx.TTL_GapDur = .10; 
 p.trial.datapixx.TTL_Nseries = 1;
 p.trial.datapixx.TTL_SeriesPause = 0;
-<<<<<<< HEAD
 p.trial.datapixx.TTL_InjStrobe = 667; 
-=======
 p.trial.datapixx.TTL_InjStrobe = 6110; 
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 
 % ------------------------------------------------------------------------%
 %% Reward
 
 % manual reward from experimenter
 p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
-<<<<<<< HEAD
 p.trial.reward.InitialRew   = 0.1; % duration of the initial reward
 p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of rewards until end of fixation period
 p.trial.reward.Dur          = 0.1; % reward duration for pulse in reward series while keeping fixation
@@ -123,7 +108,6 @@ p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subs
 p.trial.reward.Period       = [0.5 1 1.5 2 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
 p.trial.reward.jackpotDur   = 0.1;  % final reward after keeping fixation for the complete time
-=======
 p.trial.reward.InitialRew   = 0.125; % duration of the initial reward
 p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of rewards until end of fixation period
 p.trial.reward.Dur          = 0.225; % reward duration for pulse in reward series while keeping fixation
@@ -131,7 +115,6 @@ p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subs
 p.trial.reward.Period       = [0.5 1 1.5 2 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
 p.trial.reward.jackpotDur   = 0.125;  % final reward after keeping fixation for the complete time
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 p.trial.reward.jackpotnPulse = 1;
 
 % ------------------------------------------------------------------------%
@@ -139,15 +122,12 @@ p.trial.reward.jackpotnPulse = 1;
 p.trial.task.Timing.WaitFix = 1.4;    % Time to wait for fixation before NoStart
 
 % Main trial timings
-<<<<<<< HEAD
 p.trial.task.CurRewDelay    = 0.5;  % Time to first reward
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
 p.trial.task.jackpotTime    = 2;   % How long stimuli are presented before trial ends and jackpot is given
-=======
 p.trial.task.CurRewDelay    = 0.27;  % Time to first reward
 p.trial.task.fixLatency     = 0.17;  % Time to hold fixation before mapping begins
 p.trial.task.jackpotTime    = 0.65;   % How long stimuli are presented before trial ends and jackpot is given
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
 p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
 

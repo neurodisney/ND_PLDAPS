@@ -4,7 +4,7 @@ function p = ReportChange_taskdef(p)
     % Setting sequence in which trial progresses
     % 0 presents grating first and fix point second
     % 1 presents fix point first and grating second
-    p.trial.task.sequence = 0;
+    p.trial.task.sequence = 1;
 
     % Setting time window for fixation before trial marked as 'NoStart'
     p.trial.task.Timing.WaitFix = 2;
@@ -28,7 +28,7 @@ function p = ReportChange_taskdef(p)
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
-    p.trial.stim.FIXSPOT.color = 'red';
+    p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
     
     % Storing position of mapped receptive field collected from user or assigning default values
@@ -45,14 +45,14 @@ function p = ReportChange_taskdef(p)
     p.trial.task.contrast = 0.90; % Changed from 0.96
 
     % Turning flashing on (1) or off (0) for stimuli
-    p.trial.stim.GRATING.flashing = 1;
+    p.trial.stim.GRATING.flashing = 0;
     
     % Creating list of orientations using values collected from user or using default values  
     p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
 
     % Creating list of orientation change magnitudes to apply to blocks
     th = p.trial.task.oriThreshold;
-    p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
+    p.trial.Block.changeMagList = th; % Changed from [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
 
 
