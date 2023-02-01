@@ -25,12 +25,12 @@ function p = FreeChoice_taskdef(p)
     
     % Setting number of trials per block
     % Note reward probability and duration/magnitude assignments to stims changed each block
-    p.trial.Block.maxBlockTrials = 20;
+    p.trial.Block.maxBlockTrials = 50;
     
     
     
     % Setting time window for fixation before trial marked as 'NoStart'
-    p.trial.task.Timing.WaitFix = 2;
+    p.trial.task.Timing.WaitFix = 2; % Time in seconds
     
     % Setting time that monkey has to fixate on target after leaving fix point (flight time) 
     p.trial.task.breakFixCheck = 0.5; % Changed from 0.2, more typical of tasks requiring fixation
@@ -50,7 +50,7 @@ function p = FreeChoice_taskdef(p)
     
     % Change this parameter to 100 to encompass full screen if fix point fixation difficult during training
     % Note this is resized in presentStim() for proper task flow
-    p.trial.stim.FIXSPOT.fixWin = 100; % Changed from 2
+    p.trial.stim.FIXSPOT.fixWin = 6; % Changed from 2
     
     
     
@@ -58,6 +58,7 @@ function p = FreeChoice_taskdef(p)
     p.trial.stim.recParameters.contrast = 0.90; % Changed from 0.96
     p.trial.stim.recParameters.stim1.color = 'blue';
     p.trial.stim.recParameters.stim2.color = 'blue';
+    % Don't mess with these!
     p.trial.stim.recParameters.stim1.coordinates = [4 -1 6 1];
     p.trial.stim.recParameters.stim2.coordinates = [-6 -1 -4 1];
 
