@@ -284,16 +284,7 @@ function TaskDesign(p)
                     % Checking if fix on target held for pre-set minimum amount of time 
                     if(p.trial.CurTime > p.trial.stim.gratings.postTarget.EV.FixStart + p.trial.task.minTargetFixTime)
                         % Marking trial as correct
-                        p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
-                        p.trial.task.Good = 1;
-                        % Dispensing reward for correct trial
-                        pds.reward.give(p, p.trial.reward.Dur);
-                        % Playing noise signaling correct selection
-                        pds.audio.playDP(p, 'reward', 'left')
-                        % Record time of reward
-                        p.trial.EV.Reward = p.trial.CurTime;
-                        % Switching epoch to wait period before ending trial to allow for juice flow 
-                        ND_SwitchEpoch(p, 'WaitEnd');
+                        Task_CorrectReward(p);
                     
                     % Checking if gaze leaves target grating fix window
                     elseif(~p.trial.stim.gratings.postTarget.fixating)
@@ -368,6 +359,7 @@ function TaskDesign(p)
                 p.trial.flagNextTrial = 1;
                
         end
+       
         
 % Function to present stimuli on screen before orientation change
 function stimPreGratOriChange(p, val)
@@ -404,7 +396,6 @@ function stimPreGratOriChange(p, val)
         end
         
         
-        
 % Function to present stimuli on screen after orientation change
 function stimPostGratOriChange(p, val)
         
@@ -438,9 +429,22 @@ function stimPostGratOriChange(p, val)
                 
             end 
         end
+         
+        
+% Function to mark trial as correct and dispense reward        
+function p = Task_CorrectReward(p)
+    p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
+    p.trial.task.Good = 1;
+
+    pds.reward.give(p, p.trial.reward.Dur);
+    pds.audio.playDP(p, 'reward', 'left');
+
+    % Record main reward time
+    p.trial.EV.Reward = p.trial.CurTime;
+
+    ND_SwitchEpoch(p, 'WaitEnd');
              
-        
-        
+         
 % Function to clean up screen textures and variables and to save data to ascii table (AttendGrat_init.m)
 function TaskCleanAndSave(p)
             

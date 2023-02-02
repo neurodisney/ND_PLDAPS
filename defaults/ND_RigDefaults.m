@@ -152,7 +152,7 @@ SS.mouse.useLocalCoordinates                    = 0;
 SS.mouse.initialCoordinates                     = [];
 % ------------------------------------------------------------------------%
 %% Sound: control sound playback
-SS.sound.use                                    = 0;     % toggle use of sound   !!!
+SS.sound.use                                    = 1;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
 
@@ -160,7 +160,7 @@ SS.sound.useForReward                           = 1;     % toggle playing a soun
 % maximize audio channels (Need to get datapixx working first)
 SS.sound.useDatapixx                            = 1;
 SS.sound.datapixxVolume                         = 0.9;
-SS.sound.datapixxInternalSpeakerVolume          = 0;
+SS.sound.datapixxInternalSpeakerVolume          = 1;
 
 SS.sound.usePsychPortAudio                      = 0;
 SS.sound.psychPortVolume                        = 0.9;
@@ -231,7 +231,7 @@ SS.pldaps.ptbVerbosity       = 3;  % See here https://github.com/Psychtoolbox-3/
 
 % ------------------------------------------------------------------------%
 %% Reward settings
-SS.datapixx.useForReward      = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
+SS.datapixx.useForReward      = 1;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
 SS.reward.defaultAmount       = 0.05;  % Default amount of reward.=0; [in seconds]
 SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
 SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
@@ -260,11 +260,9 @@ SS.datapixx.adc.YEyeposChannel = 4;
 SS.datapixx.adc.PupilChannel   = 5;
 
 % Saccade parameters
-%<<<<<<< HEAD
+
 SS.behavior.fixation.use       = 0;       % does this task require control of eye position
-%=======
 SS.behavior.fixation.use       = 1;       % does this task require control of eye position
-%>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 
 SS.behavior.fixation.on        =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
@@ -303,7 +301,6 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % Dingo hardstate screen Setting 1 6/22/20
-%<<<<<<< HEAD
         SS.eyeCalib.defaultGain      = [16.4697, -18.7675];  % default gain, used if no calibration points are entered
         SS.eyeCalib.defaultOffset    = [-1.5784, -1.7543];    % default offset, used if no calibration points are entered
      
@@ -311,26 +308,16 @@ switch rig
         % Dingo hardstate screen Setting 1 6/22/20 
         SS.eyeCalib.defaultGain      = [15.4337 -16.8761];  % default gain, used if no calibration points are entered
         SS.eyeCalib.defaultOffset    = [-1.3797 -1.7520];  % default offset, used if no calibration points are entered
-%=======
-        SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];    % default offset, used if no calibration points are entered
-     
-    case 2
+        
+    case 3
         % Dingo hardstate screen Setting 1 6/22/20 
         SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];  % default offset, used if no calibration points are entered
-%>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
-        
+        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];  % default offset, used if no calibration points are entered   
   
     otherwise
         % Dingo hardstate screen Setting 1 6/22/20
-%<<<<<<< HEAD
         SS.eyeCalib.defaultGain      = [16.4697, -18.767];  % default gain, used if no calibration points are entered
         SS.eyeCalib.defaultOffset    = [-1.5784, -1.7543];    % default offset, used if no calibration points are entered
-%=======
-        SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];    % default offset, used if no calibration points are entered%
-%>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 end
 
 % Define fixation states
