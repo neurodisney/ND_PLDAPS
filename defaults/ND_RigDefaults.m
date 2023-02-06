@@ -152,7 +152,7 @@ SS.mouse.useLocalCoordinates                    = 0;
 SS.mouse.initialCoordinates                     = [];
 % ------------------------------------------------------------------------%
 %% Sound: control sound playback
-SS.sound.use                                    = 0;     % toggle use of sound   !!!
+SS.sound.use                                    = 1;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
 
