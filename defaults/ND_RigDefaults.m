@@ -158,7 +158,7 @@ SS.sound.useForReward                           = 1;     % toggle playing a soun
 
 % Datapixx sound and PsychPortAudio can both be used simultaneously to
 % maximize audio channels (Need to get datapixx working first)
-SS.sound.useDatapixx                            = 1;
+SS.sound.useDatapixx                            = 0;
 SS.sound.datapixxVolume                         = 0.9;
 SS.sound.datapixxInternalSpeakerVolume          = 1;
 
@@ -320,7 +320,7 @@ switch rig
 end
 
 % Define fixation states
-SS.FixState.Current     = NaN;
+SS.FixState.Current     =  NaN;
 SS.FixState.FixOut      =    0;  % Gaze out of fixation window
 SS.FixState.startingFix = 0.25;  % Gaze has momentarily entered fixation window
 SS.FixState.FixIn       =    1;  % Gaze robustly within fixation window

@@ -506,5 +506,4 @@ if bool && ~p.trial.stim.fix.on
     p.trial.stim.fix.on = 1;
 elseif ~bool && p.trial.stim.fix.on
     p.trial.stim.fix.on = 0;
-%<<<<<<< HEAD
 end
