@@ -300,9 +300,9 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [16.4697, -18.7675];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.5784, -1.7543];    % default offset, used if no calibration points are entered
-     
+        SS.eyeCalib.defaultGain      = [19.9634, -20.8086];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.5894, -1.5327];    % default offset, used if no calibration points are entered
+
     case 2
         % Dingo hardstate screen Setting 1 6/22/20 
         SS.eyeCalib.defaultGain      = [15.4337 -16.8761];  % default gain, used if no calibration points are entered

@@ -18,8 +18,8 @@ function p = ReportChange_taskdef(p)
     % Selecting inter-trial interval (ITI)
     p.trial.task.Timing.ITI = ND_GetITI(1.25, 1.75, [], [], 1, 0.10);
     
-    % Setting time-out(s) for incorrect responses
-    p.trial.task.Timing.TimeOut = 1;
+    % Setting time-out(s) for incorrect response  Offset  = [-1.5894, -1.5327] <- [-1.5884, -1.5329]
+    p.trial.task.Timing.TimeOut = 1;   
 
     % Setting number of trials per block
     p.trial.Block.maxBlockTrials = 2;
@@ -39,12 +39,12 @@ function p = ReportChange_taskdef(p)
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
 
-    p.trial.task.posList = {[target_posX, target_posY, 1], [target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
+    p.trial.task.posList = {[target_posX, target_posY, 1],[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
 
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     p.trial.stim.gratingParameters.contrast = [0.25, 0.90]; % Changed from [0.96, 0.96]
 
-    p.trial.stim.gratingParameters.sFreq = 2;
+    p.trial.stim.gratingParameters.sFreq = 1.5;
 
     % Turning flashing on (1) or off (0) for stimuli
     p.trial.stim.GRATING.flashing = 0;
@@ -76,7 +76,7 @@ function p = ReportChange_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = 0.085; % Changed from r
+    p.trial.task.flatHazard = 0.077; % Changed from r
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;

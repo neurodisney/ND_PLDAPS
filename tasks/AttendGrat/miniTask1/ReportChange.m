@@ -437,8 +437,15 @@ function stimPostGratOriChange(p, val)
 function p = Task_CorrectReward(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
     p.trial.task.Good = 1;
+    
+    if (p.trial.stim.gratings.preTarget.pos(2) > 0)
+        pds.reward.give(p, 0.15);
+        disp(1);
+    else
+        pds.reward.give(p, p.trial.reward.Dur);
+        disp(2);
+    end
 
-    pds.reward.give(p, p.trial.reward.Dur);
     pds.audio.playDP(p, 'reward', 'left');
 
     % Record main reward time
