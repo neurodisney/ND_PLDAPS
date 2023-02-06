@@ -158,12 +158,12 @@ SS.sound.useForReward                           = 1;     % toggle playing a soun
 
 % Datapixx sound and PsychPortAudio can both be used simultaneously to
 % maximize audio channels (Need to get datapixx working first)
-SS.sound.useDatapixx                            = 0;
-SS.sound.datapixxVolume                         = 0.9;
-SS.sound.datapixxInternalSpeakerVolume          = 1;
+SS.sound.useDatapixx                            = 1;
+SS.sound.datapixxVolume                         = 1;
+SS.sound.datapixxInternalSpeakerVolume          = 0;
 
 SS.sound.usePsychPortAudio                      = 0;
-SS.sound.psychPortVolume                        = 0.9;
+SS.sound.psychPortVolume                        = 0;
 
 % ------------------------------------------------------------------------%
 %% PLDAPS settings: pldaps core parameters
