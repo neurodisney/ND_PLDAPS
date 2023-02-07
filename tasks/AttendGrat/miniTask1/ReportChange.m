@@ -1,4 +1,4 @@
- % Function to run task for experiment
+% Function to run task for experiment
 function p = ReportChange(p, state)
 
     % Checking for task name and filling if empty
@@ -42,7 +42,7 @@ function p = ReportChange(p, state)
     end
     
     
-% Function to gather materials to start trial   
+% Function to gather materials to start trial   ds.reward.give(p, 0.05);
 function TaskSetUp(p)
 
         % Adding trial to running total for block
@@ -107,6 +107,12 @@ function TaskSetUp(p)
         
         % Selecting time of wait before target grating change from flat hazard function
         wait_period = datasample(p.trial.task.flatHazard, 1);
+        
+        %if (p.trial.stim.gratings.preTarget.pos(2) > 0)
+        %if (mod(p.trial.Block.blockCount, 2) == 0)
+            %wait_period = 0.079;
+        %end
+        
         p.trial.task.GratWait.duration = round(wait_period * 200);
         p.trial.task.GratWait.counter = 0;
 
@@ -433,16 +439,16 @@ function stimPostGratOriChange(p, val)
         end
          
         
-% Function to mark trial as correct and dispense reward        
+% Function to mark trial asds.reward.give(p, 0.05); correct and dispense reward        
 function p = Task_CorrectReward(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
     p.trial.task.Good = 1;
     
     if (p.trial.stim.gratings.preTarget.pos(2) > 0)
-        pds.reward.give(p, 0.15);
+        pds.reward.give(p, 0.05);
         disp(1);
     else
-        pds.reward.give(p, p.trial.reward.Dur);
+        pds.reward.give(p, 0.05);
         disp(2);
     end
 

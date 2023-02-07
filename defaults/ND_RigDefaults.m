@@ -1,4 +1,4 @@
- function SS = ND_RigDefaults(rig)
+function SS = ND_RigDefaults(rig)
 % set default parameters for a rig in the Disney lab.
 %
 % This file summarizes gives an overview of parameters that could be set for

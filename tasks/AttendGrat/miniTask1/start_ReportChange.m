@@ -31,7 +31,7 @@ function p = start_ReportChange(subjectname, rig)
     % Specifying which matrix variables can be edited for future trials
     SS.editable = {};
 
-    % Loading non-default rig settings into pldaps matrix
+    % Loading non-default rig settings into pldaps ds.reward.give(p, 0.05);matrix
     SS.pldaps.draw.eyepos.use = 1;
     SS.pldaps.draw.grid.use = 1;
     SS.datapixx.useAsEyepos = 1;
@@ -61,7 +61,7 @@ function p = start_ReportChange(subjectname, rig)
     % Collecting orientation change detection threshold
     oriThreshold = input('What orientation change magnitude, in degrees, is at detection threshold? (press enter for default value): '); 
     if isempty(oriThreshold)
-        oriThreshold = 2000; % Changed from 20
+        oriThreshold = 90; % Changed from 20
     end
     p.trial.task.oriThreshold = oriThreshold;
 

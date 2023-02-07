@@ -22,7 +22,7 @@ function p = ReportChange_taskdef(p)
     p.trial.task.Timing.TimeOut = 1;   
 
     % Setting number of trials per block
-    p.trial.Block.maxBlockTrials = 2;
+    p.trial.Block.maxBlockTrials = 5;
 
 
 
@@ -40,11 +40,12 @@ function p = ReportChange_taskdef(p)
     target_posY = p.trial.task.RFpos(2);
 
     p.trial.task.posList = {[target_posX, target_posY, 1],[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
-
+    %p.trial.task.posList = {[target_posX, target_posY, 1], [-1 * target_posX, target_posY, 1]};
+    
     % Storing contrast for cue and distractor rings collected from user or assigning default values
-    p.trial.stim.gratingParameters.contrast = [0.25, 0.90]; % Changed from [0.96, 0.96]
+    p.trial.stim.gratingParameters.contrast = [0.15, 0.96]; % Changed from [0.96, 0.96]
 
-    p.trial.stim.gratingParameters.sFreq = 1.5;
+    p.trial.stim.gratingParameters.sFreq = 2;
 
     % Turning flashing on (1) or off (0) for stimuli
     p.trial.stim.GRATING.flashing = 0;
@@ -76,7 +77,7 @@ function p = ReportChange_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = 0.077; % Changed from r
+    p.trial.task.flatHazard = 0.77; % Changed from r
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;
