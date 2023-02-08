@@ -38,7 +38,8 @@ function p = ReportChange_taskdef(p)
     
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
-
+    
+    %p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
     p.trial.task.posList = {[target_posX, target_posY, 1],[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
     %p.trial.task.posList = {[target_posX, target_posY, 1], [-1 * target_posX, target_posY, 1]};
     
@@ -77,7 +78,7 @@ function p = ReportChange_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = 0.77; % Changed from r
+    p.trial.task.flatHazard = 0.077; % Changed from r
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;

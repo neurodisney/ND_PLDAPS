@@ -55,6 +55,9 @@ function TaskSetUp(p)
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
         end
 
+        p.trial.task.sequence = datasample([0,0,1,1,1],1);
+        p.trial.task.flatHazard = datasample([0.0780, 0.0782, 0.0785, 0.0787 0.079], 1);
+
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
         % Creating spot to store selection of target stimulus
@@ -102,16 +105,17 @@ function TaskSetUp(p)
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Setting wait before presenting fix point if trial presentation sequence is grat first and fix point second
-        p.trial.task.StartWait.duration = 200;
+        p.trial.task.StartWait.duration = 40;
         p.trial.task.StartWait.counter = 0;
         
         % Selecting time of wait before target grating change from flat hazard function
         wait_period = datasample(p.trial.task.flatHazard, 1);
         
-        %if (p.trial.stim.gratings.preTarget.pos(2) > 0)
+        if (p.trial.stim.gratings.preTarget.pos(2) < 0)
         %if (mod(p.trial.Block.blockCount, 2) == 0)
-            %wait_period = 0.079;
-        %end
+            wait_period = 0.105;
+            %p.trial.task.sequence = datasample([0,1],1);
+        end
         
         p.trial.task.GratWait.duration = round(wait_period * 200);
         p.trial.task.GratWait.counter = 0;
@@ -445,10 +449,10 @@ function p = Task_CorrectReward(p)
     p.trial.task.Good = 1;
     
     if (p.trial.stim.gratings.preTarget.pos(2) > 0)
-        pds.reward.give(p, 0.05);
+        pds.reward.give(p, 0.07);
         disp(1);
     else
-        pds.reward.give(p, 0.05);
+        pds.reward.give(p, 0.07);
         disp(2);
     end
 
