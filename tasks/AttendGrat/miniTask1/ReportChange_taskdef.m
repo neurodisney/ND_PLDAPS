@@ -58,13 +58,11 @@ function p = ReportChange_taskdef(p)
     th = p.trial.task.oriThreshold;
     p.trial.Block.changeMagList = th; % Changed from [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
-
-
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 1000];
     mean = 2;
-    bound1 = 1.25;
-    bound2 = 2.75;
+    bound1 = 0.20;
+    bound2 = 1.00;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -78,7 +76,7 @@ function p = ReportChange_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = 0.077; % Changed from r
+    p.trial.task.flatHazard = r;
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;

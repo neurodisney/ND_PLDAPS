@@ -56,7 +56,6 @@ function TaskSetUp(p)
         end
 
         p.trial.task.sequence = datasample([0,0,1,1,1],1);
-        p.trial.task.flatHazard = datasample([0.0780, 0.0782, 0.0785, 0.0787 0.079], 1);
 
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
@@ -105,15 +104,15 @@ function TaskSetUp(p)
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Setting wait before presenting fix point if trial presentation sequence is grat first and fix point second
-        p.trial.task.StartWait.duration = 40;
+        p.trial.task.StartWait.duration = 30;
         p.trial.task.StartWait.counter = 0;
         
         % Selecting time of wait before target grating change from flat hazard function
         wait_period = datasample(p.trial.task.flatHazard, 1);
         
-        if (p.trial.stim.gratings.preTarget.pos(2) < 0)
+        if (p.trial.stim.gratings.preTarget.pos(2) > 0)
         %if (mod(p.trial.Block.blockCount, 2) == 0)
-            wait_period = 0.105;
+            wait_period = datasample([0.085, 0.087, 0.089, 0.090, 0.092, 0.095], 1);
             %p.trial.task.sequence = datasample([0,1],1);
         end
         
@@ -130,7 +129,8 @@ function TaskSetUp(p)
 
         % Reducing current reward if previous trial was incorrect
         if(p.trial.LastHits == 0)
-            p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
+            %p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
+            p.trial.reward.earlyFlag = 1;
         end
 
         % Moving task from step-up stage to wait period before launching
@@ -369,6 +369,9 @@ function TaskDesign(p)
                 
                 % Flagging completion of current trial so ITI is run before next trial
                 p.trial.flagNextTrial = 1;
+%                 if (p.trial.outcome.CurrOutcome == p.trial.outcome.Early)
+%                     p.trial.reward.earlyFlag = 1;
+%                 end
                
         end
        

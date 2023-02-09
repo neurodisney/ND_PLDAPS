@@ -4,8 +4,14 @@ function p = Task_WaitITI(p)
 %
 % wolf zinke, Oct 2017
 
-if(p.trial.CurTime >= p.trial.EV.PlanStart || isnan(p.trial.EV.PlanStart))
+if (p.trial.reward.earlyFlag)
+    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 2.5;
+    disp(5)
+    p.trial.reward.earlyFlag = 0;
+end
 
+if(p.trial.CurTime >= p.trial.EV.PlanStart || isnan(p.trial.EV.PlanStart))
+    
     Tdiff =  p.trial.CurTime - p.trial.EV.PlanStart;
 
     if(Tdiff >= 2*p.trial.display.ifi)
