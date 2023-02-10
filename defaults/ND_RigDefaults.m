@@ -350,6 +350,7 @@ SS.stim.GRATING.contrastMethod = 'balanced';
 SS.stim.GRATING.pos      = [0, 0];
 SS.stim.GRATING.fixWin   =  4;  
 SS.stim.GRATING.alpha    = 1; % Fully opaque
+SS.stim.GRATING.hemifield = NaN;
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 
 % Ring (i.e. location cue)
