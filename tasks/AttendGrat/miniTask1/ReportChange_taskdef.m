@@ -24,7 +24,7 @@ function p = ReportChange_taskdef(p)
     % Setting number of trials per block
     p.trial.Block.maxBlockTrials = 5;
 
-
+    
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
@@ -61,7 +61,7 @@ function p = ReportChange_taskdef(p)
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 1000];
     mean = 2;
-    bound1 = 0.20;
+    bound1 = 0.09;
     bound2 = 1.00;
     
     r = exprnBounded(mean, num_range, bound1, bound2);

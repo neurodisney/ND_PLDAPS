@@ -237,7 +237,7 @@ SS.reward.ManDur              = 0.05;
 SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
 SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
-SS.reward.earlyFlag           = 0;
+SS.reward.earlyFlag = 0;
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
@@ -367,6 +367,7 @@ SS.stim.GRATING.hemifield = NaN;
 SS.stim.GRATING.cued     = 0;
 SS.stim.GRATING.flashing = 0;
 SS.stim.GRATING.ori      = 1;
+
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 
 % Ring (i.e. location cue)

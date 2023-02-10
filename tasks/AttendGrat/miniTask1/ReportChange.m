@@ -55,7 +55,15 @@ function TaskSetUp(p)
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
         end
 
-        p.trial.task.sequence = datasample([0,0,1,1,1],1);
+        if(p.trial.LastHits == 0)
+            if (p.trial.task.sequence == 1)
+                p.trial.reward.earlyFlag = 1;
+            else
+                p.trial.reward.earlyFlag = 2;
+            end
+        end
+
+        p.trial.task.sequence = datasample([0,1],1);
 
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
@@ -104,17 +112,17 @@ function TaskSetUp(p)
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Setting wait before presenting fix point if trial presentation sequence is grat first and fix point second
-        p.trial.task.StartWait.duration = 30;
+        p.trial.task.StartWait.duration = 25;
         p.trial.task.StartWait.counter = 0;
         
         % Selecting time of wait before target grating change from flat hazard function
         wait_period = datasample(p.trial.task.flatHazard, 1);
         
-        if (p.trial.stim.gratings.preTarget.pos(2) > 0)
-        %if (mod(p.trial.Block.blockCount, 2) == 0)
-            wait_period = datasample([0.085, 0.087, 0.089, 0.090, 0.092, 0.095], 1);
-            %p.trial.task.sequence = datasample([0,1],1);
-        end
+%         if (p.trial.stim.gratings.preTarget.pos(2) > 0)
+%         %if (mod(p.trial.Block.blockCount, 2) == 0)
+%             wait_period = datasample([0.085, 0.087, 0.089, 0.090, 0.092, 0.095], 1);
+%             %p.trial.task.sequence = datasample([0,1],1);
+%         end
         
         p.trial.task.GratWait.duration = round(wait_period * 200);
         p.trial.task.GratWait.counter = 0;
@@ -130,7 +138,6 @@ function TaskSetUp(p)
         % Reducing current reward if previous trial was incorrect
         if(p.trial.LastHits == 0)
             %p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
-            p.trial.reward.earlyFlag = 1;
         end
 
         % Moving task from step-up stage to wait period before launching
@@ -369,10 +376,6 @@ function TaskDesign(p)
                 
                 % Flagging completion of current trial so ITI is run before next trial
                 p.trial.flagNextTrial = 1;
-%                 if (p.trial.outcome.CurrOutcome == p.trial.outcome.Early)
-%                     p.trial.reward.earlyFlag = 1;
-%                 end
-               
         end
        
         
