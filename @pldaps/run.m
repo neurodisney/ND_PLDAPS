@@ -241,11 +241,11 @@ try
 
 catch me
     sca
-    if(isfield(p, 'defaultParameters.sound.use'))
-        if(p.defaultParameters.sound.use)
-            PsychPortAudio('Close');
-        end
-    end
+%     if(isfield(p, 'defaultParameters.sound.use'))
+%         if(p.defaultParameters.sound.use)
+%             PsychPortAudio('Close');
+%         end
+%     end
 
     % return cursor and command-line control
     ShowCursor
@@ -257,10 +257,8 @@ catch me
         fprintf('errors in %s line %d\r', me.stack(iErr).name, me.stack(iErr).line)
     end
     fprintf('\r\r')
-%<<<<<<< HEAD
-    %,keyboard
+
 end
-%=======
-    %keyboard
+
 end
-%>>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
+

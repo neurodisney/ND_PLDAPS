@@ -1,3 +1,4 @@
+
 function ND_FlushReward(opentime, voltage, chan)
 % Simple script that helps to flush/clean reward system.
 %
