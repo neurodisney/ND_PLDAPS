@@ -55,7 +55,7 @@ function TaskSetUp(p)
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
         end
 
-        p.trial.task.sequence = datasample([0,1,1],1);
+        p.trial.task.sequence = datasample([0,1,1,1],1);
 
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
@@ -109,13 +109,6 @@ function TaskSetUp(p)
         
         % Selecting time of wait before target grating change from flat hazard function
         wait_period = datasample(p.trial.task.flatHazard, 1);
-        
-%         if (p.trial.stim.gratings.preTarget.pos(2) > 0)
-%         %if (mod(p.trial.Block.blockCount, 2) == 0)
-%             wait_period = datasample([0.085, 0.087, 0.089, 0.090, 0.092, 0.095], 1);
-%             %p.trial.task.sequence = datasample([0,1],1);
-%         end
-        
         p.trial.task.GratWait.duration = round(wait_period * 200);
         p.trial.task.GratWait.counter = 0;
 
@@ -448,15 +441,7 @@ function stimPostGratOriChange(p, val)
 function p = Task_CorrectReward(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
     p.trial.task.Good = 1;
-    
-    if (p.trial.stim.gratings.preTarget.pos(2) > 0)
-        pds.reward.give(p, 0.07);
-        disp(1);
-    else
-        pds.reward.give(p, 0.07);
-        disp(2);
-    end
-
+    pds.reward.give(p, p.trial.reward.Dur);
     pds.audio.playDP(p, 'reward', 'left');
 
     % Record main reward time

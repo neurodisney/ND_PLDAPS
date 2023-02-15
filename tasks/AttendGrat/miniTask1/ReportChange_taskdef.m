@@ -18,7 +18,7 @@ function p = ReportChange_taskdef(p)
     % Selecting inter-trial interval (ITI)
     p.trial.task.Timing.ITI = ND_GetITI(1.25, 1.75, [], [], 1, 0.10);
     
-    % Setting time-out(s) for incorrect response  Offset  = [-1.5894, -1.5327] <- [-1.5884, -1.5329]
+    % Setting time-out(s) for incorrect response
     p.trial.task.Timing.TimeOut = 1;   
 
     % Setting number of trials per block
@@ -61,8 +61,8 @@ function p = ReportChange_taskdef(p)
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 1000];
     mean = 2;
-    bound1 = 0.20;
-    bound2 = 1.20;
+    bound1 = 0.80;
+    bound2 = 1.80;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
