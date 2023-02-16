@@ -44,7 +44,7 @@ function p = ReportChange_taskdef(p)
     %p.trial.task.posList = {[target_posX, target_posY, 1], [-1 * target_posX, target_posY, 1]};
     
     % Storing contrast for cue and distractor rings collected from user or assigning default values
-    p.trial.stim.gratingParameters.contrast = [0.15, 0.96]; % Changed from [0.96, 0.96]
+    p.trial.stim.gratingParameters.contrast = [0.45, 0.96]; % Changed from [0.96, 0.96]
 
     p.trial.stim.gratingParameters.sFreq = 2;
 
@@ -61,8 +61,8 @@ function p = ReportChange_taskdef(p)
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 1000];
     mean = 2;
-    bound1 = 0.80;
-    bound2 = 1.80;
+    bound1 = 0.20;
+    bound2 = 1.20;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
