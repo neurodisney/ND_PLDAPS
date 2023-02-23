@@ -1,4 +1,4 @@
- function p = PercEqui(p, state)
+function p = PercEqui(p, state)
 % Main trial function for a perceptual equilibrium task.
 %
 %
@@ -113,16 +113,11 @@ function TaskSetUp(p)
     end
 
     if(p.trial.task.RandomHemi == 1)
-        p.trial.stim.Hemi = datasample(['r', 'l', 'r', 'l'], 1);
-    
-    else 
-        p.trial.stim.Hemi = 'r';
-
+        p.trial.stim.Hemi = datasample(['l', 'r'], 1);
     end
 
     % define both gratings
-   p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1); 
-    %p.trial.stim.Trgt.Contrast = datasample([.35, .40, .45, .50],1); 
+    p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1); 
 
     % pick the higher contrast item as saccade target and make sure it is on the specified hemifield
     if(p.trial.stim.Trgt.Contrast >= p.trial.stim.Ref.Contrast)
@@ -130,13 +125,11 @@ function TaskSetUp(p)
         p.trial.stim.SaccadeDistractor = 'reference';
 
         if(p.trial.stim.Hemi == 'r')
-           p.trial.stim.Ref.Pos  = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
-           p.trial.stim.Trgt.Pos = [ p.trial.stim.PosX, p.trial.stim.PosY];
-          
+            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         else
-            p.trial.stim.Ref.Pos  = [ p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
-            
+            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         end
 
     else
@@ -144,13 +137,11 @@ function TaskSetUp(p)
         p.trial.stim.SaccadeDistractor = 'target';
 
         if(p.trial.stim.Hemi == 'l')
-            p.trial.stim.Ref.Pos  = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ p.trial.stim.PosX, p.trial.stim.PosY];
-            
+            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         else
-            p.trial.stim.Ref.Pos  = [ p.trial.stim.PosX, p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
-            
+            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         end
     end
 
@@ -495,7 +486,6 @@ if(~isempty(p.trial.LastKeyPress))
         case p.trial.key.GridKeyCell
             gpos = p.trial.key.GridKey == p.trial.LastKeyPress(1);
             p.trial.stim.PosY = p.trial.stim.GridPos(gpos);
-           
             ND_CtrlMsg(p, ['Moved Grating to Y ', num2str(p.trial.stim.PosY, '%.2f'), '.']);
     end
 end
@@ -560,7 +550,4 @@ function Calculate_SRT(p)
 %             p.trial.task.SRT_FixStart = NaN;
 %             p.trial.task.SRT_StimOn   = NaN;
 %     end
-
-
-
 

@@ -256,7 +256,7 @@ SS.datapixx.adc.YEyeposChannel = 1;
 SS.datapixx.adc.PupilChannel   = 2;
 
 % Saccade parameters
-SS.behavior.fixation.use       = 0;       % does this task require control of eye position
+SS.behavior.fixation.use       = 1;       % does this task require control of eye position
 
 SS.behavior.fixation.on        =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
@@ -300,14 +300,16 @@ switch rig
      
     case 2
         % Dingo hardstate screen Setting 1 6/22/20 
-        SS.eyeCalib.defaultGain      = [19.1915, -19.4401];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-2.0425, -1.4089];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];  % default offset, used if no calibration points are entered
         
   
     otherwise
         % Dingo hardstate screen Setting 1 6/22/20
         SS.eyeCalib.defaultGain      = [19.1915, -19.4401];  % default gain, used if no calibration points are entered
         SS.eyeCalib.defaultOffset    = [-2.0425, -1.4089];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
@@ -327,7 +329,7 @@ SS.stim.record.structs = {}; % Cell array to store the properties of stims as th
 SS.stim.pos = [0,0];
 
 % fixation window
-SS.stim.fixWin                       = 2.5;  % diameter of fixation window in dva
+SS.stim.fixWin                       = 3.0;  % diameter of fixation window in dva
 SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
@@ -350,7 +352,8 @@ SS.stim.GRATING.radius   = 1;
 SS.stim.GRATING.contrastMethod = 'balanced';
 SS.stim.GRATING.pos      = [0, 0];
 SS.stim.GRATING.fixWin   =  4;  
-SS.stim.GRATING.alpha    = 1; % Fully opaque
+SS.stim.GRATING.alpha    =  1; % Fully opaque
+SS.stim.GRATING.hemifield = NaN;
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 
 % Ring (i.e. location cue)

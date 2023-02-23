@@ -332,5 +332,3 @@ p.trial.EV.epochEnd = p.trial.CurTime;
     %p.trial.EV.FixOff = p.trial.CurTime;
     %pds.datapixx.strobe(p.trial.event.FIXSPOT_OFF);
 %end
-
-        

@@ -64,7 +64,7 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type   = 'disc';     % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.size   = 50;        % size of the fixation spot
-p.trial.stim.FIXSPOT.fixWin = 0;         %
+p.trial.stim.FIXSPOT.fixWin = 50;         %
 p.trial.stim.FIXSPOT.color  = 'white';
 
 % ------------------------------------------------------------------------%
@@ -78,4 +78,3 @@ p.trial.behavior.fixation.entryTime = 0.025;  % minimum time to stay within fixa
 % steps. It specifies a duration in seconds.
 
 p.trial.pldaps.maxTrialLength = 2*(p.trial.task.Timing.WaitFix + p.trial.reward.MaxWaitInitial + p.trial.reward.jackpotTime); % this parameter is used to pre-allocate memory at several initialization steps. Unclear yet, how this terminates the experiment if this number is reached.
-

@@ -64,7 +64,7 @@ try
     end
 
     % --------------------------------------------------------------------%
-    %% start recoding on all controlled components t0.31his in not currently done here
+    %% start recoding on all controlled components this in not currently done here
     % save timing info from all controlled components (datapixx, eyelink, this pc)
     p = ND_BeginExperiment(p);
 
@@ -74,7 +74,7 @@ try
 
     p.trial.flagNextTrial  = 0; % flag for ending the trial
     p.trial.pldaps.quit = 0;
-    p.trial.pldaps.pause = 0;
+    p.trial.pldaps.pause = 0;exp_fun = 'Attention';
 
     trialNr = 0;
     p.trial.pldaps.iTrial = 0;
@@ -114,7 +114,7 @@ try
             p.trial = p.defaultParameters;
 
             % ----------------------------------------------------------------%
-            %% Run current trial0.31
+            %% Run current trial
             dpPreTrial = p.defaultParameters;
 
             % run trial
@@ -176,7 +176,7 @@ try
                 pds.datapixx.strobe(p.trial.event.BREAK);
             end
         
-            KbQueueStart;
+            KbQueueStart;ND_reset; p=start_Attention('mouse')
 
             % check for keyboard actions while pausing
             while(p.trial.pldaps.pause > 0 && p.trial.pldaps.quit < 1)
@@ -256,6 +256,11 @@ catch me
     for iErr = 1:nErr
         fprintf('errors in %s line %d\r', me.stack(iErr).name, me.stack(iErr).line)
     end
+
     fprintf('\r\r')
     keyboard
+
 end
+
+end
+

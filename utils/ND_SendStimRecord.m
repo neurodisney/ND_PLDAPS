@@ -25,10 +25,15 @@ if nStims > 0
             if iProp == 1
                 pds.datapixx.strobe(property);
            
+           elseif property == 0 
+                % If the property is 0, transmit a special signal (since signals are interspersed with 0 strobes, it is lost
+                % otherwise)
+                pds.datapixx.strobe(p.trial.event.ZERO_CODE);
+                
             elseif iProp == 2
                 signalx = typecast(cast(round(property * 100), 'int16'), 'uint16');
                 pds.datapixx.strobe(signalx);
-               
+                            
             elseif iProp == 3
                 signaly = typecast(cast(round(property * 100), 'int16'), 'uint16');
                 pds.datapixx.strobe(signaly);
@@ -45,7 +50,7 @@ if nStims > 0
                
             elseif iProp == 6
                 signalc = typecast(cast(round(property * 100), 'int16'), 'uint16');
-                contrast = 3000 + signalc;
+                contrast = 30000 + signalc;
                 pds.datapixx.strobe(contrast);
                
             elseif iProp == 7
@@ -66,4 +71,4 @@ if nStims > 0
     
     pds.datapixx.strobe(p.trial.event.STIMPROP_BLOCK_OFF);
     
-end
+end  
