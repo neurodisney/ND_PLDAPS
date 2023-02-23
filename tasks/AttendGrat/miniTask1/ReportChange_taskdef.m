@@ -44,7 +44,7 @@ function p = ReportChange_taskdef(p)
     %p.trial.task.posList = {[target_posX, target_posY, 1], [-1 * target_posX, target_posY, 1]};
     
     % Storing contrast for cue and distractor rings collected from user or assigning default values
-    p.trial.stim.gratingParameters.contrast = [0.45, 0.96]; % Changed from [0.96, 0.96]
+    p.trial.stim.gratingParameters.contrast = [0.75, 0.90]; % Changed from [0.96, 0.96]
 
     p.trial.stim.gratingParameters.sFreq = 2;
 
@@ -61,8 +61,8 @@ function p = ReportChange_taskdef(p)
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 1000];
     mean = 2;
-    bound1 = 0.20;
-    bound2 = 1.20;
+    bound1 = 0.07;
+    bound2 = 0.70;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -89,6 +89,7 @@ function p = ReportChange_taskdef(p)
 
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
+    
 
     % List of increasing durations of juice flow for reward
     % This list is linked to trial increments for scaling size of reward

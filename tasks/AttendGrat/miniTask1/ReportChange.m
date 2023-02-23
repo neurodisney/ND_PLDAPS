@@ -85,7 +85,9 @@ function TaskSetUp(p)
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.ori = datasample(p.trial.task.oriList, 1);
 
-        p.trial.stim.gratingParameters.contrast(1) = datasample([0.40, 0.45, 0.45, 0.45], 1);
+        %p.trial.stim.gratingParameters.contrast(1) = datasample([0.41, 0.42, 0.43,0.44, 0.45, 0.45, 0.45], 1);
+        p.trial.task.sequence = datasample([0,1], 1);
+        p.trial.stim.gratingParameters.contrast(1) = datasample([0.70, 0.71, 0.72, 0.73, 0.74, 0.75, 0.75], 1);
         
         % Creating target grating pre-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
@@ -104,7 +106,7 @@ function TaskSetUp(p)
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Setting wait before presenting fix point if trial presentation sequence is grat first and fix point second
-        p.trial.task.StartWait.duration = 20;
+        p.trial.task.StartWait.duration = 1;
         p.trial.task.StartWait.counter = 0;
         
         % Selecting time of wait before target grating change from flat hazard function
@@ -197,6 +199,7 @@ function TaskDesign(p)
                             % Presenting grating
                             if p.trial.task.sequence == 1
                                 stimPreGratOriChange(p, 2);
+                                p.trial.Timer.stimOn = p.trial.CurTime;
                             elseif p.trial.task.sequence == 0
                                 p.trial.task.stimState = 2;
                             end
@@ -222,6 +225,7 @@ function TaskDesign(p)
                 if(p.trial.stim.fix.fixating)
                     if p.trial.task.GratWait.counter == p.trial.task.GratWait.duration
                         stimPostGratOriChange(p, 3);
+                        p.trial.Timer.stimChange = p.trial.CurTime;
                         ND_SwitchEpoch(p, 'WaitSaccade')
                     else
                         p.trial.task.GratWait.counter = p.trial.task.GratWait.counter + 1; 
@@ -339,6 +343,9 @@ function TaskDesign(p)
             % Wait period before turning off all stimuli 
             case p.trial.epoch.WaitEnd
                 if(p.trial.CurTime > p.trial.EV.epochEnd + p.trial.task.Timing.WaitEnd)
+                    % Storing wait period time
+                    p.trial.Timer.Wait = p.trial.Timer.stimChange - p.trial.Timer.stimOn;
+
                     % Switching epoch to end task
                     ND_SwitchEpoch(p, 'TaskEnd');
                 end
