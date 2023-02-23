@@ -176,7 +176,7 @@ try
                 pds.datapixx.strobe(p.trial.event.BREAK);
             end
         
-            KbQueueStart;ND_reset; p=start_Attention('mouse')
+            KbQueueStart;
 
             % check for keyboard actions while pausing
             while(p.trial.pldaps.pause > 0 && p.trial.pldaps.quit < 1)
