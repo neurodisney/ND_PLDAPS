@@ -70,13 +70,10 @@ p.defaultParameters.stim.PosYlst    = [0, -3, -5, -7];  % range of possible posi
 p.defaultParameters.stim.PosXlst    =  [-5, -4, 4, 5];  % range of possible positions on X axis 
 
 % define grid locations used by key selection
-<<<<<<< HEAD
 p.defaultParameters.stim.EccLst = [3, 4, 5]; % if p.defaultParameters.task.RandomEcc = 0; these are the eccentricities
 p.defaultParameters.stim.AngLst = [0, 30, 45]; % if p.defaultParameters.task.RandomAng  = 0; these are the angles
-=======
 p.defaultParameters.stim.EccLst = [2, 3, 4, 2, 3, 4, 2, 3, 4]; % if p.defaultParameters.task.RandomEcc = 0; these are the eccentricities
 p.defaultParameters.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % if p.defaultParameters.task.RandomAng  = 0; these are the angles
->>>>>>> 6d5711b9d4dfc69b33637a4eaaa7485f6787f4fc
 
 [p.defaultParameters.stim.GridX, p.defaultParameters.stim.GridY] = ...
     pol2cart(p.defaultParameters.stim.AngLst, p.defaultParameters.stim.EccLst); % determines the target position based off EccLst and AngLst
@@ -85,17 +82,14 @@ p.defaultParameters.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180
 cPos = randi(length(p.defaultParameters.stim.GridX));
 p.defaultParameters.stim.Ecc  = p.defaultParameters.stim.EccLst(cPos);
 p.defaultParameters.stim.Ang  = p.defaultParameters.stim.AngLst(cPos);
-<<<<<<< HEAD
 p.defaultParameters.stim.PosY = p.defaultParameters.stim.GridX(cPos); %use this line when you want random X positions
 p.defaultParameters.stim.PosX = p.defaultParameters.stim.GridY(cPos); %use this line when you want random Y positions 
 %p.defaultParameters.stim.PosY = [0]; % Corey Hack: to get hardcoded single position
 %p.defaultParameters.stim.PosX = [4]; %Corey Hack: to get hardcoded single position
-=======
 %p.defaultParameters.stim.PosY = p.defaultParameters.stim.GridX(cPos); %use this line when you want random X positions
 %p.defaultParameters.stim.PosX = p.defaultParameters.stim.GridY(cPos); %use this line when you want random Y positions 
 p.defaultParameters.stim.PosY = -3; %  to get hardcoded single position
 p.defaultParameters.stim.PosX = -3; % to get hardcoded single position
->>>>>>> 6d5711b9d4dfc69b33637a4eaaa7485f6787f4fc
 
 
 p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree

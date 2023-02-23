@@ -205,8 +205,8 @@ p.trial.stim.locations = combvec(allXPos,allYPos)';
 
 %% Generate a shuffled list of all possible stimuli and location indices for reference during the experiment
 % Only do this the first trial, because stim sequence should continue between trials
-if p.trial.stim.count == 0;
-reshuffle_stims(p);
+if p.trial.stim.count == 0
+    reshuffle_stims(p);
 end
 
 %% Preallocate memory for RF-calculations
@@ -356,7 +356,7 @@ switch p.trial.CurrEpoch
                     
                     % Reset the reward timer
                     p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
-                    end
+                end
                 
                 if p.trial.task.stimState
                     % Keep stim on for stimOn Time
