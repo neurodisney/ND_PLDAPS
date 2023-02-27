@@ -44,7 +44,7 @@ function p = ReportChange_taskdef(p)
     %p.trial.task.posList = {[target_posX, target_posY, 1], [-1 * target_posX, target_posY, 1]};
     
     % Storing contrast for cue and distractor rings collected from user or assigning default values
-    p.trial.stim.gratingParameters.contrast = [0.75, 0.90]; % Changed from [0.96, 0.96]
+    p.trial.stim.gratingParameters.contrast = [0.90, 0.90]; % Changed from [0.96, 0.96]
 
     p.trial.stim.gratingParameters.sFreq = 2;
 
@@ -62,7 +62,7 @@ function p = ReportChange_taskdef(p)
     num_range = [1, 1000];
     mean = 2;
     bound1 = 0.07;
-    bound2 = 0.70;
+    bound2 = 0.50;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -98,5 +98,8 @@ function p = ReportChange_taskdef(p)
 
     % Degree to which current reward decreased for bad performance 
     p.trial.reward.DiscourageProp = 1.0;
+
+    p.trial.Timer.stimOn = 0;
+    p.trial.Timer.stimChange = 0;
     
 end
