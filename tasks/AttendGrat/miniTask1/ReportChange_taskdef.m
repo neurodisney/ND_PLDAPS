@@ -28,7 +28,7 @@ function p = ReportChange_taskdef(p)
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
-    p.trial.stim.FIXSPOT.color = 'green';
+    p.trial.stim.FIXSPOT.color = 'red';
     p.trial.stim.FIXSPOT.size = 0.4;
     
     % Storing position of mapped receptive field collected from user or assigning default values
