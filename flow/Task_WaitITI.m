@@ -5,7 +5,7 @@ function p = Task_WaitITI(p)
 % wolf zinke, Oct 2017
 
 if (p.trial.reward.earlyFlag == 1)
-    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 2.5;
+    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 3;
     p.trial.reward.earlyFlag = 0;
 end
 

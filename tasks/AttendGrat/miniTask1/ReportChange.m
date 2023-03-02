@@ -85,8 +85,8 @@ function TaskSetUp(p)
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.ori = datasample(p.trial.task.oriList, 1);
 
-        p.trial.stim.gratingParameters.contrast(1) = datasample([0.75, 0.80, 0.85, 0.90, 0.95], 1);
-        p.trial.task.sequence = datasample([0,1,1,1], 1);
+        p.trial.stim.gratingParameters.contrast(1) = datasample([0.87,0.89, 0.90, 0.91, 0.92, 0.95], 1);
+        %p.trial.task.sequence = datasample([0,1,1,1], 1);
         
         % Creating target grating pre-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
