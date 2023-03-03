@@ -8,11 +8,11 @@ function p = ReportChange(p, state)
     
      % Initializing task
     if(isempty(state))
-        % Populating pldaps object with elements needed to begin task if empty
-        p = AttendGrat_init(p); % Needs to be converted to init for this task
+        % Populating pldaps structure with elements needed to begin task if empty
+        p = ReportChange_init(p);
 
     else
-        % If pldaps object is populated, standard trial routines run
+        % If pldaps structure is populated, standard trial routines run
         p = ND_GeneralTrialRoutines(p, state);
 
         % Executing events/epochs that make up trial
@@ -42,10 +42,10 @@ function p = ReportChange(p, state)
     end
     
     
-% Function to gather materials to start trial   ds.reward.give(p, 0.05);
+% Function to gather materials to start trial
 function TaskSetUp(p)
 
-        % Adding trial to running total for block
+        % Adding trial to running trial count for block
         p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
 
         % Flagging next block if max trial count reached
@@ -59,15 +59,15 @@ function TaskSetUp(p)
         p.trial.task.Good = 0;
         % Creating spot to store selection of target stimulus
         p.trial.task.TargetSel = NaN;
-        % Fixation has not yet been achieved(1), till then is marked as absent(0)
+        % Fixation has not yet been achieved(1), till then it is marked as absent(0)
         p.trial.task.fixFix = 0;
         % Tracking whether monkey is look at stim(1) or away from stim(0)
         p.trial.task.stimFix = 0;
         % Tracking whether stimuli are on(1) or off(0)
         p.trial.task.stimState = 0;
-        % Creating place to save when fixation started
+        % Creating place to save time when fixation started
         p.trial.task.SRT_FixStart = NaN;
-        % Creating place to save when stimuli came on screen
+        % Creating place to save time when stimuli came on screen
         p.trial.task.SRT_StimOn = NaN;
 
         % Generating fixation spot stimulus
@@ -85,51 +85,56 @@ function TaskSetUp(p)
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.ori = datasample(p.trial.task.oriList, 1);
 
-        p.trial.stim.gratingParameters.contrast(1) = datasample([0.87,0.89, 0.90, 0.91, 0.92, 0.95], 1);
+        % Manipulating specific trial parameters for training purposes
+        p.trial.stim.gratingParameters.contrast(1) = datasample([0.85, 0.87,0.89, 0.90, 0.91, 0.92, 0.95, 1.00], 1);
         %p.trial.task.sequence = datasample([0,1,1,1], 1);
         
-        % Creating target grating pre-orientation change by assigning values to grating properties in p object
-        % Compiling properties into pldaps struct to present grating on screen
+        % Creating target grating pre-orientation change by assigning
+        % values to grating properties in pldaps struct
         pos = cell2mat(p.trial.stim.posList(1));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(1);
         p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori;
+        % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
-        % Creating target grating post-orientation change by assigning values to grating properties in p object
-        % Compiling properties into pldaps struct to present grating on screen
+        % Creating target grating post-orientation change by assigning
+        % values to grating properties in pldaps struct
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(2);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori + p.trial.Block.changeMag;
+        % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Setting wait before presenting fix point if trial presentation sequence is grat first and fix point second
         p.trial.task.StartWait.duration = 1;
         p.trial.task.StartWait.counter = 0;
         
-        % Selecting time of wait before target grating change from flat hazard function
+        % Selecting time of wait before traget stimulus change from flat hazard function
         wait_period = datasample(p.trial.task.flatHazard, 1);
         p.trial.task.GratWait.duration = round(wait_period * 200);
         p.trial.task.GratWait.counter = 0;
 
         % Taking control of activation of grating fix windows
         p.trial.stim.gratingParameters.targetAutoFixWin = 0;
-        p.trial.stim.gratingParameters.distractorAutoFixWin =0;
 
-        % Increasing Reward after specific number of correct trials
+        % Increasing reward after specific number of correct trials
         reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
         p.trial.reward.Dur = p.trial.reward.IncrementDur(reward_duration);
 
         % Reducing current reward if previous trial was incorrect
         if(p.trial.LastHits == 0)
             %p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
+
+            % Flagging trial of incorrect response was made, which in turn
+            % increases inter-trial interval
             if (p.trial.task.sequence == 1)
                 p.trial.reward.earlyFlag = 1;
             end
         end
 
-        % Moving task from step-up stage to wait period before launching
+        % Moving task from set-up stage to wait period before launching
         ND_SwitchEpoch(p, 'ITI');
     
         
@@ -137,9 +142,11 @@ function TaskSetUp(p)
 % Function to execute trial
 function TaskDesign(p)
 
-        % Moving from epoch to epoch over course of trial
+        % Command moving trial from epoch to epoch over course of trial
         switch p.trial.CurrEpoch
-            % Implementing wait period to ensure enough time has passed since previous trial 
+
+            % Implementing wait period between trials (inter-trial
+            % interval)
             case p.trial.epoch.ITI
                 Task_WaitITI(p);
 
@@ -147,7 +154,7 @@ function TaskDesign(p)
             case p.trial.epoch.TrialStart
 
                 % Turning task on
-               % Task_ON(p);
+                %Task_ON(p);
 
                 % Presenting fix point
                 if p.trial.task.sequence == 1
@@ -158,7 +165,8 @@ function TaskDesign(p)
                     % Recording start time of task
                     p.trial.EV.TaskStart = p.trial.CurTime;
                     p.trial.EV.TaskStartTime = datestr(now, 'HH:MM:SS:FFF');
-
+                    
+                    % Switching task to epoch checking for fixation
                     ND_SwitchEpoch(p,'WaitFix');
 
                 elseif p.trial.task.sequence == 0
