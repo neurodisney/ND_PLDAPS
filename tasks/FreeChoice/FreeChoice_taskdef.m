@@ -5,10 +5,10 @@ function p = FreeChoice_taskdef(p)
     p.trial.task.condition =  2;
     
     % Setting reward probabilities for stimuli for *condition 1* in array [stim 1 prob, stim 2 prob] 
-    p.trial.reward.probabilities = [0.2, 0.8]; 
+    p.trial.reward.probabilities = [1.0, 1.0]; 
     
     % Assigning reward duration/magnitude to stimuli for *condition 2* in array [stim 1 dur, stim 2 dur] 
-    p.trial.stim.recParameters.rewardDurs = [10, 20];
+    p.trial.stim.recParameters.rewardDurs = [0.30, 1.0];
     
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
@@ -19,7 +19,7 @@ function p = FreeChoice_taskdef(p)
     %p.trial.reward.IncrementDur = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.3];
 
     % Degree to which current reward decreased for bad performance 
-    % p.trial.reward.DiscourageProp = 1.0;
+    % p.trial.reward.DiscourageProp = 0.1;
     
     
     
@@ -75,5 +75,7 @@ function p = FreeChoice_taskdef(p)
     
     % Setting time-out(s) for incorrect responses
     p.trial.task.Timing.TimeOut = 1;
+    
+    p.trial.stim.rewardedStim = 0;
     
 end
