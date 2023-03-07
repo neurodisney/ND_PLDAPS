@@ -8,7 +8,7 @@ function p = FreeChoice_taskdef(p)
     p.trial.reward.probabilities = [1.0, 1.0]; 
     
     % Assigning reward duration/magnitude to stimuli for *condition 2* in array [stim 1 dur, stim 2 dur] 
-    p.trial.stim.recParameters.rewardDurs = [0.30, 1.0];
+    p.trial.stim.recParameters.rewardDurs = [1.0, 1.0];
     
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
