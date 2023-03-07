@@ -100,7 +100,7 @@ p.trial.reward.Dur          = 0.15; % reward duration for pulse in reward series
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 1 1.5 2 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 p.trial.reward.ManDur       = 0.25; % reward duration [s] for reward given by keyboard presses
-p.trial.reward.jackpotDur   = 0.75;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur   = 1.00;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
 
 % ------------------------------------------------------------------------%
