@@ -94,13 +94,13 @@ p.trial.datapixx.TTL_InjStrobe = 6110;
 
 % manual reward from experimenter
 p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.2; % duration of the initial reward
-p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of rewards until end of fixation period
+p.trial.reward.InitialRew   = 0.25; % duration of the initial reward
+p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
 p.trial.reward.Dur          = 0.15; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 1 1.5 2 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
-p.trial.reward.jackpotDur   = 0.3;  % final reward after keeping fixation for the complete time
+p.trial.reward.ManDur       = 0.25; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.jackpotDur   = 0.75;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
 
 % ------------------------------------------------------------------------%
@@ -112,7 +112,7 @@ p.trial.task.CurRewDelay    = 0.25;  % Time to first reward
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
 p.trial.task.jackpotTime    = 2.0;   % How long stimuli are presented before trial ends and jackpot is given
 p.trial.task.stimOnTime     = 0.1;   % How long each stimulus is presented
-p.trial.task.stimOffTime    = 0.1;   % Gaps between succesive stimuli
+p.trial.task.stimOffTime    = 0.2;   % Gaps between succesive stimuli
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 1.0;  % minimum time period [s] between subsequent trials
