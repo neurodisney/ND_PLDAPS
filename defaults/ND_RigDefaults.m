@@ -237,8 +237,6 @@ SS.reward.ManDur              = 0.05;
 SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
 SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
-SS.reward.earlyFlag = 0;
-
 % ------------------------------------------------------------------------%
 %% Condition/Block design
 SS.Block.maxBlocks      = -1;  % max number of blocks to complete; if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks

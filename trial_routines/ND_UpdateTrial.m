@@ -16,6 +16,7 @@ if(p.trial.task.Good)
 else
     p.defaultParameters.NHits      = p.trial.NHits;
     p.defaultParameters.LastHits   = 0;     % how many correct trials since last error
+
 end
 
 if(p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)

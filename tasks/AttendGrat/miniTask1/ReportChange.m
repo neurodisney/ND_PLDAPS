@@ -86,7 +86,7 @@ function TaskSetUp(p)
         p.trial.stim.gratingParameters.ori = datasample(p.trial.task.oriList, 1);
 
         % Manipulating specific trial parameters for training purposes
-        p.trial.stim.gratingParameters.contrast(1) = datasample([0.85, 0.87,0.89, 0.90, 0.91, 0.92, 0.95, 1.00], 1);
+        p.trial.stim.gratingParameters.contrast(1) = datasample([0.89, 0.90, 0.91, 0.92, 0.95, 1.00], 1);
         %p.trial.task.sequence = datasample([0,1,1,1], 1);
         
         % Creating target grating pre-orientation change by assigning
@@ -125,13 +125,7 @@ function TaskSetUp(p)
 
         % Reducing current reward if previous trial was incorrect
         if(p.trial.LastHits == 0)
-            %p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
-
-            % Flagging trial of incorrect response was made, which in turn
-            % increases inter-trial interval
-            if (p.trial.task.sequence == 1)
-                p.trial.reward.earlyFlag = 1;
-            end
+            p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
         end
 
         % Moving task from set-up stage to wait period before launching
@@ -372,9 +366,15 @@ function TaskDesign(p)
                     if(inFixWin(p.trial.stim.gratings.postTarget, medPos))
                         % Marking trial as "hit" but early if eye position is in target fix window
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                        % Flagging trial if early response made, which in turn
+                        % increases inter-trial interval
+                        p.defaultParameters.earlyFlag = 1;
                     else
                         % Marking trial as fix break without relevance to task
                         p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
+                        % Flagging trial if break response made, which in turn
+                        % increases inter-trial interval
+                        p.defaultParameters.breakFlag = 1;
                         
                     end 
                     
