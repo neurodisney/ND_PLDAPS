@@ -28,7 +28,7 @@ function p = ReportChange_taskdef(p)
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
-    p.trial.stim.FIXSPOT.color = 'green';
+    p.trial.stim.FIXSPOT.color = 'blue';
     p.trial.stim.FIXSPOT.size = 0.4;
     p.trial.stim.FIXSPOT.fixWin = 2.1;
     
@@ -105,7 +105,7 @@ function p = ReportChange_taskdef(p)
     p.trial.reward.IncrementDur = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.3];
 
     % Degree to which current reward decreased for bad performance 
-    p.trial.reward.DiscourageProp = 1.0;
+    p.trial.reward.DiscourageProp = 0.8;
 
     % Resetting timer for important task epochs
     p.trial.Timer.stimOn = 0;
