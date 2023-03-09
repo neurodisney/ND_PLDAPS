@@ -28,9 +28,9 @@ function p = ReportChange_taskdef(p)
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
-    p.trial.stim.FIXSPOT.color = 'blue';
+    p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
-    p.trial.stim.FIXSPOT.fixWin = 2.1;
+    p.trial.stim.FIXSPOT.fixWin = 2.2;
     
     % Storing position of mapped receptive field collected from user or assigning default values
     if isempty(p.trial.task.RFpos)
@@ -64,10 +64,10 @@ function p = ReportChange_taskdef(p)
 
 
     % Creating flat-hazard function from which to pull out time of wait before stim change
-    num_range = [1, 1000];
+    num_range = [1, 100];
     mean = 2;
     bound1 = 0.07;
-    bound2 = 0.50;
+    bound2 = 0.70;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -89,7 +89,7 @@ function p = ReportChange_taskdef(p)
     p.trial.task.breakFixCheck = 0.2;
     
     % Setting time window in which response saccade allowed
-    p.trial.task.saccadeTimeout = 1.5;
+    p.trial.task.saccadeTimeout = 0.7;
     
     % Setting time for which target must be fixed on before trial marked correct
     p.trial.task.minTargetFixTime = 0.3; % Changed from 0.1
@@ -110,5 +110,7 @@ function p = ReportChange_taskdef(p)
     % Resetting timer for important task epochs
     p.trial.Timer.stimOn = 0;
     p.trial.Timer.stimChange = 0;
+
+    p.trial.task.saccadeStart = 0.025;
     
 end

@@ -86,7 +86,7 @@ function TaskSetUp(p)
         p.trial.stim.gratingParameters.ori = datasample(p.trial.task.oriList, 1);
 
         % Manipulating specific trial parameters for training purposes
-        p.trial.stim.gratingParameters.contrast(1) = datasample([0.89, 0.90, 0.91, 0.92, 0.95, 1.00], 1);
+        %p.trial.stim.gratingParameters.contrast(1) = datasample([0.89, 0.90, 0.91, 0.92, 0.95], 1);
         %p.trial.task.sequence = datasample([0,1,1,1], 1);
         
         % Creating target grating pre-orientation change by assigning
@@ -276,19 +276,31 @@ function TaskDesign(p)
                
             % Starting task epoch in which saccade to target must be performed
             case p.trial.epoch.WaitSaccade
-                % Checking if gaze has left fix point
-                if(~p.trial.stim.fix.looking)
-                    % If gaze has left fix point, checking if saccade was to target
-                    ND_SwitchEpoch(p, 'CheckResponse');
-                
-                % If fix held, checking time against pre-set response window before ending trial due to time-out    
-                elseif(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeTimeout)
-                    % Marking trial outcome as 'Miss' trial
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
-                    % Play noise signaling response period time-out
-                    pds.audio.playDP(p, 'incorrect', 'left');
-                    % Switching epoch to end task
-                    ND_SwitchEpoch(p, 'TaskEnd');
+                if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeStart)
+                    % Checking if gaze has left fix point
+                    if(~p.trial.stim.fix.looking)
+                        % If gaze has left fix point, checking if saccade was to target
+                        ND_SwitchEpoch(p, 'CheckResponse');
+                    
+                    % If fix held, checking time against pre-set response window before ending trial due to time-out    
+                    elseif(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeTimeout)
+                        % Marking trial outcome as 'Miss' trial
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
+                        % Play noise signaling response period time-out
+                        pds.audio.playDP(p, 'incorrect', 'left');
+                        % Switching epoch to end task
+                        ND_SwitchEpoch(p, 'TaskEnd');
+                    end
+                elseif (~p.trial.stim.fix.looking)
+                    % If fix broken, play noise signaling fix break
+                    pds.audio.playDP(p, 'breakfix', 'left'); 
+                    % Calculating and storing time from fix start to fix leave
+                    p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                    % Calculating and storing time from presenting fix point to fix leave
+                    p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
+                    % Switching task epoch to address fix break before 
+                    % ending trial
+                    ND_SwitchEpoch(p, 'BreakFixCheck');
                 end
                
             % Starting task epoch checking respone if saacade was made    
