@@ -89,6 +89,7 @@ function p = ReportChange_taskdef(p)
     p.trial.task.breakFixCheck = 0.2;
     
     % Setting time window in which response saccade allowed
+    p.trial.task.Timing.saccadeStart = 0.03;
     p.trial.task.saccadeTimeout = 0.7;
     
     % Setting time for which target must be fixed on before trial marked correct
@@ -111,7 +112,6 @@ function p = ReportChange_taskdef(p)
     p.trial.Timer.stimOn = 0;
     p.trial.Timer.stimChange = 0;
 
-    p.trial.task.Timing.saccadeStart = 0.03;
     p.trial.Timing.flightTime.start = 0;
     p.trial.Timing.flightTime.total = 0;
     

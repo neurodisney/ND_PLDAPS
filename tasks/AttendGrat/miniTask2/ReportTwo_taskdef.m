@@ -59,7 +59,7 @@ function p = ReportTwo_taskdef(p)
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 100];
     mean = 2;
-    bound1 = 0.08;
+    bound1 = 0.10;
     bound2 = 0.90;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
@@ -80,6 +80,7 @@ function p = ReportTwo_taskdef(p)
     p.trial.task.breakFixCheck = 0.2;
     
     % Setting time window in which response saccade allowed
+    p.trial.task.Timing.saccadeStart = 0.03;
     p.trial.task.saccadeTimeout = 0.7;
     
     % Setting time for which target must be fixed on before trial marked correct

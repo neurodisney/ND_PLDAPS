@@ -77,7 +77,7 @@ function TaskSetUp(p)
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
 
         % Assigning orientation change magnitude according to block
-        if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0 
+        if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0 
             p.trial.Block.changeMag = datasample(p.trial.Block.changeMagList, 1);
             p.trial.Block.flagNextBlock = 0;
         end
