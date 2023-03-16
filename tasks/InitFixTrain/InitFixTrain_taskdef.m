@@ -25,12 +25,12 @@ p.trial.reward.Period       = [2.5 3.4 4.3 5.2]; % the period between one reward
 
 p.trial.reward.ManDur       = 0.1; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime  = 0.50;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.1;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotTime  = 0.2;     % total time required to fixate to get full reward
+p.trial.reward.jackpotDur   = 0.2;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = 0.600; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
+p.trial.behavior.fixation.MinFixStart = 0.500; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
 p.trial.task.Timing.WaitFix = 2.0;  % Time to get a solid fixation before trial ends unsuccessfully
 
@@ -39,7 +39,7 @@ p.trial.task.Timing.MinITI  = 0.5;   % minimum time period [s] between subsequen
 p.trial.task.Timing.MaxITI  = 1;    % maximum time period [s] between subsequent trials
 
 % penalties
-p.trial.task.Timing.TimeOut =  2;     % Time [s] out for incorrect responses
+p.trial.task.Timing.TimeOut =  0;     % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
@@ -102,7 +102,7 @@ p.trial.Block.maxBlockTrials =  [1];
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size = 0.20;     % size of the fixation spot
+p.trial.stim.FIXSPOT.size = 0.25;     % size of the fixation spot
 p.trial.stim.FIXSPOT.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixWinStp = 0.2;  % refine resizing of fixation step for this task only(modify default rig settings)
 

@@ -242,6 +242,9 @@ SS.Block.maxBlocks      = -1;  % max number of blocks to complete; if negative b
 SS.Block.maxBlockTrials =  4;  % max number of trials per condition in a block (for unbalanced numbers use an array with the same length as number of condition and specify desired trial number per condition)
 SS.Block.EqualCorrect   =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 SS.Block.GenBlock       =  1;  % Flag to indicate that a block with a new condition list needs to be generated
+SS.Block.trialCount     =  0;
+SS.Block.blockCount     =  0;
+SS.Block.flagNextBlock  =  0;
 c1.Nr = 1;
 SS.Block.Conditions     = {c1}; % as default only one condition
 SS.Block.BlockList      = [];
@@ -251,9 +254,9 @@ SS.Block.BlockList      = [];
 SS.datapixx.useAsEyepos        = 1;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XEyeposChannel = 0;
-SS.datapixx.adc.YEyeposChannel = 1;
-SS.datapixx.adc.PupilChannel   = 2;
+SS.datapixx.adc.XEyeposChannel = 3;
+SS.datapixx.adc.YEyeposChannel = 4;
+SS.datapixx.adc.PupilChannel   = 5;
 
 % Saccade parameters
 SS.behavior.fixation.use       = 1;       % does this task require control of eye position

@@ -145,6 +145,24 @@ end  %/  if(nargin == 1) [...] else [...]
 % ####################################################################### %
 function TaskSetUp(p)
 %% main task outline
+
+% Adding trial to running trial count for block
+p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
+
+% Flagging next block if max trial count reached
+if p.trial.Block.trialCount == p.trial.Block.maxBlockTrials 
+    p.trial.Block.flagNextBlock = 1;
+    p.trial.Block.trialCount = 0;
+    p.trial.Block.blockcount = p.trial.Block.blockCount + 1;
+end
+
+% Changing task parameters for new block
+if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
+    % insert changes here
+    p.trial.Block.flagNextBlock = 0;
+end
+
+
 % Determine everything here that can be specified/calculated before the actual trial start
 p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
                             p.trial.task.Timing.MaxITI, ...
@@ -209,6 +227,14 @@ if p.trial.stim.count == 0
     reshuffle_stims(p);
 end
 
+% Increasing reward over course of task (if enabled)
+if p.trial.reward.IncrProgressive == 1
+    if ismember(p.trial.NCompleted, p.trial.reward.IncrementTrial)
+        trial_index = p.trial.reward.IncrementTrial==p.trial.NCompleted;
+        p.trial.reward.jackpotDur = p.trial.reward.IncrementDur(trial_index);
+    end
+end
+    
 %% Preallocate memory for RF-calculations
 % AD I think this code is NOT NEEDED, hangover for prior non-functional code that attempted real time RF calc
 % maxFrames = p.trial.pldaps.maxFrames;
@@ -397,16 +423,16 @@ switch p.trial.CurrEpoch
                 % Monkey has fixated long enough to get the jackpot
                 p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
                 
-%                 % Do incremental rewards (if enabled)
-%                 if(p.trial.reward.IncrConsecutive == 1)
-%                     AddPulse = find(p.trial.reward.PulseStep <= p.trial.LastHits+1, 1, 'last');
-%                     if(~isempty(AddPulse))
-%                         p.trial.reward.jackpotnPulse = p.trial.reward.jackpotnPulse + AddPulse;
-%                     end
-%                     
+                %Do incremental rewards (if enabled)
+                if(p.trial.reward.IncrConsecutive == 1)
+                    AddPulse = find(p.trial.reward.PulseStep <= p.trial.LastHits+1, 1, 'last');
+                    if(~isempty(AddPulse))
+                        p.trial.reward.jackpotnPulse = p.trial.reward.jackpotnPulse + AddPulse;
+                    end
+                    
 %                     fprintf('     REWARD!!!  [%d pulse(s) for %d subsequent correct trials]\n\n', ...
 %                         p.trial.reward.jackpotnPulse, p.trial.LastHits+1);
-%                 end
+                end
                 
                 pds.reward.give(p, p.trial.reward.Dur, p.trial.reward.jackpotnPulse);
                 pds.audio.playDP(p,'jackpot','left');
