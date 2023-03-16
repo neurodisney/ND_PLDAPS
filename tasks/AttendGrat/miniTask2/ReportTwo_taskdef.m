@@ -27,7 +27,7 @@ function p = ReportTwo_taskdef(p)
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
-    p.trial.stim.FIXSPOT.color = 'red';
+    p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
     
     % Storing position of mapped receptive field collected from user or assigning default values
@@ -41,25 +41,26 @@ function p = ReportTwo_taskdef(p)
     p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
     
     % Storing contrast for cue and distractor rings collected from user or assigning default values
-    p.trial.task.contrast = 0.90; % Changed from 0.96
+    p.trial.stim.gratingParameters.contrast = 0.90;
+    p.trial.stim.gratingParameters.sFreq = 2;
     
     % Turning flashing on (1) or off (0) for stimuli
-    p.trial.stim.GRATING.flashing = 1;
+    p.trial.stim.GRATING.flashing = 0;
 
     % Creating list of orientations using values collected from user or using default values  
     p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
 
     % Creating list of orientation change magnitudes to apply to blocks
     th = p.trial.task.oriThreshold;
-    p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
+    p.trial.Block.changeMagList = [th, th]; % [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
 
 
     % Creating flat-hazard function from which to pull out time of wait before stim change
-    num_range = [1, 1000];
+    num_range = [1, 100];
     mean = 2;
-    bound1 = 1.25;
-    bound2 = 2.75;
+    bound1 = 0.08;
+    bound2 = 0.90;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -73,16 +74,16 @@ function p = ReportTwo_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = 0.2; % Changed from r
+    p.trial.task.flatHazard = r;
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;
     
     % Setting time window in which response saccade allowed
-    p.trial.task.saccadeTimeout = 1.5;
+    p.trial.task.saccadeTimeout = 0.7;
     
     % Setting time for which target must be fixed on before trial marked correct
-    p.trial.task.minTargetFixTime = 1; % Changed from 0.1
+    p.trial.task.minTargetFixTime = 0.3; % Changed from 0.1
 
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];

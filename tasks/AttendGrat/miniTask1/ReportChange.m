@@ -86,7 +86,7 @@ function TaskSetUp(p)
         p.trial.stim.gratingParameters.ori = datasample(p.trial.task.oriList, 1);
 
         % Manipulating specific trial parameters for training purposes
-        %p.trial.stim.gratingParameters.contrast(1) = datasample([0.89, 0.90, 0.91, 0.92, 0.95], 1);
+        %p.trial.stim.gratingParameters.contrast(1) = datasample([0.85, 0.87, 0.90, 0.93, 0.95],1);
         %p.trial.task.sequence = datasample([0,1,1,1], 1);
         
         % Creating target grating pre-orientation change by assigning
@@ -276,9 +276,12 @@ function TaskDesign(p)
                
             % Starting task epoch in which saccade to target must be performed
             case p.trial.epoch.WaitSaccade
-                if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeStart)
+                if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.Timing.saccadeStart)
                     % Checking if gaze has left fix point
                     if(~p.trial.stim.fix.looking)
+
+                        p.trial.Timing.flightTime.start = p.trial.CurTime;
+
                         % If gaze has left fix point, checking if saccade was to target
                         ND_SwitchEpoch(p, 'CheckResponse');
                     
@@ -316,6 +319,8 @@ function TaskDesign(p)
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+
+                        p.trial.Timing.flightTime.total = p.trial.CurTime - p.trial.Timing.flightTime.start;
                         
                     % Verifying if gaze shifted from fix spot but no grating selected    
                     elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + p.trial.task.breakFixCheck)

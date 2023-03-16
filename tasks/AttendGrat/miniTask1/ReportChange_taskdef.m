@@ -24,13 +24,13 @@ function p = ReportChange_taskdef(p)
     % Setting number of trials per block
     p.trial.Block.maxBlockTrials = 5;
 
-    
+
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
-    p.trial.stim.FIXSPOT.fixWin = 2.2;
+    p.trial.stim.FIXSPOT.fixWin = 2.30;
     
     % Storing position of mapped receptive field collected from user or assigning default values
     if isempty(p.trial.task.RFpos)
@@ -66,8 +66,8 @@ function p = ReportChange_taskdef(p)
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 100];
     mean = 2;
-    bound1 = 0.07;
-    bound2 = 0.70;
+    bound1 = 0.08;
+    bound2 = 0.90;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -111,6 +111,8 @@ function p = ReportChange_taskdef(p)
     p.trial.Timer.stimOn = 0;
     p.trial.Timer.stimChange = 0;
 
-    p.trial.task.saccadeStart = 0.025;
+    p.trial.task.Timing.saccadeStart = 0.03;
+    p.trial.Timing.flightTime.start = 0;
+    p.trial.Timing.flightTime.total = 0;
     
 end

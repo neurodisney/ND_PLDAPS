@@ -9,7 +9,7 @@ function p = ReportTwo(p, state)
      % Initializing task
     if(isempty(state))
         % Populating pldaps object with elements needed to begin task if empty
-        p = AttendGrat_init(p); % Needs to be converted to init for this task
+        p = ReportTwo_init(p);
 
     else
         % If pldaps object is populated, standard trial routines run
@@ -84,7 +84,7 @@ function TaskSetUp(p)
 
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 2);
-        change_dir = datasample([1, -1], 1);
+        %change_dir = datasample([1, -1], 1);
         
         % Creating target grating pre-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
@@ -92,12 +92,14 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
+        p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
+        p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast;
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1) + (p.trial.Block.changeMag * change_dir);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1) + p.trial.Block.changeMag;
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
         
         % Creating distractor grating 1 by assigning values to grating properties in p object
@@ -393,6 +395,7 @@ function stimPreGratOriChange(p, val)
                 % Implementing no stimulus presentation
                 case 0
                     p.trial.stim.gratings.preTarget.on = 0;
+                    p.trial.stim.gratings.postTarget.on = 0;
                     p.trial.stim.gratings.distractor1.on = 0;
                 
                 % Implementing stimulus presentation
@@ -430,7 +433,9 @@ function stimPostGratOriChange(p, val)
             switch val
                 % Implementing no stimulus presentation
                 case 0
+                    p.trial.stim.gratings.preTarget.on = 0;
                     p.trial.stim.gratings.postTarget.on = 0;
+                    p.trial.stim.gratings.distractor1.on = 0;
                 
                 % Implementing stimulus presentation
                 case 3
