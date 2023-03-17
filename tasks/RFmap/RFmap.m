@@ -158,7 +158,18 @@ end
 
 % Changing task parameters for new block
 if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
-    % insert changes here
+    if p.trial.stim.fixSpotParameters.colorSwitch
+        %p.trial.stim.FIXSPOT.color = randsample(cell2mat(p.trial.stim.fixSpotParameters.colorList), 1);
+    end 
+    
+    if p.trial.stim.fixSpotParameters.sizeSwitch
+        %p.trial.stim.FIXSPOT.size = datasample(p.trial.stim.fixSpotParameters.sizeList, 1);
+    end
+    
+    if p.trial.stim.fixSpotParameters.shapeSwitch
+        %p.trial.stim.FIXSPOT.type = datasample(p.trial.stim.fixSpotParameters.shapeList, 1);
+    end
+         
     p.trial.Block.flagNextBlock = 0;
 end
 

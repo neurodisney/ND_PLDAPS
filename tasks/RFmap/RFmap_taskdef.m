@@ -145,6 +145,15 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
+p.trial.stim.fixSpotParameters.colorSwitch = 1;
+p.trial.stim.fixSpotParameters.colorList = {'red', 'green', 'blue'};
+
+p.trial.stim.fixSpotParameters.sizeSwitch = 1;
+p.trial.stim.fixSpotParameters.sizeList = [0.1, 0.2, 0.3, 0.4];
+
+p.trial.stim.fixSpotParameters.shapeSwitch = 1;
+p.trial.stim.fixSpotParameters.shapeList = ['disc', 'rect'];
+
 p.trial.stim.FIXSPOT.pos   = [0,0];
 p.trial.stim.FIXSPOT.type  = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color = 'dRed';  % color of fixation spot (as defined in the lookup tables)
