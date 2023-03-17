@@ -53,7 +53,7 @@ function p = start_ReportFour(subjectname, rig)
     
     % Collecting contrast value based on response threshold from user for rings
     contrast = input('What is a 0.XX contrast near response threshold? (press enter for default value): ');
-    p.trial.task.contrast = contrast;
+    p.trial.stim.gratingParameters.contrast = contrast;
     
     % Collecting orientations 0.5 standard deviation (SD) from peak on tuning curve for grating assignment
     oriRange = input('What orienations are + and -0.5 SD from preferred, as an array? (press enter for default values): ');
@@ -65,7 +65,7 @@ function p = start_ReportFour(subjectname, rig)
     % Collecting orientation change detection threshold
     oriThreshold = input('What orientation change magnitude, in degrees, is at detection threshold? (press enter for default value): '); 
     if isempty(oriThreshold)
-        oriThreshold = 200; % Changed from 20
+        oriThreshold = 90;
     end
     p.trial.task.oriThreshold = oriThreshold;
     
