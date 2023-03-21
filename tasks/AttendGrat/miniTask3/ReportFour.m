@@ -66,10 +66,15 @@ function TaskSetUp(p)
         p.trial.task.stimFix = 0;
         % Tracking whether stimuli are on(1) or off(0)
         p.trial.task.stimState = 0;
-        % Creating place to save when fixation started
+        % Creating place to save time when fixation started
         p.trial.task.SRT_FixStart = NaN;
-        % Creating place to save when stimuli came on screen
-        p.trial.task.SRT_StimOn = NaN;
+        % Creating place to save time when stimuli came on screen
+        p.trial.task.SRT_StimOn = NaN; 
+        % Creating space to save time taken for saccade 
+        p.trial.task.FlightTime = NaN;
+
+        p.trial.task.stimChange = NaN;
+        p.trial.task.trueWait   = NaN;
 
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
@@ -210,6 +215,7 @@ function TaskDesign(p)
                 if(p.trial.stim.fix.fixating)
                     if p.trial.task.GratWait.counter == p.trial.task.GratWait.duration
                         stimPostGratOriChange(p, 3);
+                        p.trial.task.trueWait = p.trial.CurTime - p.trial.EV.StimOn;
                         ND_SwitchEpoch(p, 'WaitSaccade')
                     else
                         p.trial.task.GratWait.counter = p.trial.task.GratWait.counter + 1; 
@@ -243,6 +249,7 @@ function TaskDesign(p)
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
                     end
+
                 elseif(~p.trial.stim.fix.looking)
                     % If fix broken, play noise signaling fix break
                     pds.audio.playDP(p, 'breakfix', 'left'); 
@@ -268,6 +275,8 @@ function TaskDesign(p)
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                        % Logging flight time
+                        p.trial.task.FlightTime = p.trial.CurTime - p.trial.EV.FixLeave;
                         
                     % Checking if gaze specifically within distractor 1 grating fix window
                     elseif(p.trial.stim.gratings.distractor1.fixating)
@@ -279,6 +288,8 @@ function TaskDesign(p)
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                        % Logging flight time
+                        p.trial.task.FlightTime = p.trial.CurTime - p.trial.EV.FixLeave;
                         % Marking trial as false and ending trial
                         if p.trial.stim.gratings.distractor1.hemifield == p.trial.stim.gratings.preTarget.hemifield
                             p.trial.outcome.CurrOutcome = p.trial.outcome.FalseIpsi;
@@ -297,6 +308,8 @@ function TaskDesign(p)
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                        % Logging flight time
+                        p.trial.task.FlightTime = p.trial.CurTime - p.trial.EV.FixLeave;
                         % Marking trial as false and ending trial
                         if p.trial.stim.gratings.distractor2.hemifield == p.trial.stim.gratings.preTarget.hemifield
                             p.trial.outcome.CurrOutcome = p.trial.outcome.FalseIpsi;
@@ -315,6 +328,8 @@ function TaskDesign(p)
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
+                        % Logging flight time
+                        p.trial.task.FlightTime = p.trial.CurTime - p.trial.EV.FixLeave;
                         % Marking trial as false and ending trial
                         if p.trial.stim.gratings.distractor3.hemifield == p.trial.stim.gratings.preTarget.hemifield
                             p.trial.outcome.CurrOutcome = p.trial.outcome.FalseIpsi;
@@ -552,7 +567,6 @@ function stimPostGratOriChange(p, val)
                 
             elseif(val == 3)
                 ND_AddScreenEvent(p, p.trial.event.STIM_CHNG, 'StimChange');
-                
             end 
         end
 

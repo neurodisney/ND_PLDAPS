@@ -13,13 +13,12 @@ function p = ReportFour_init(p)
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
     p = ND_AddAsciiEntry(p, 'TargPosX',    'p.trial.stim.gratings.preTarget.pos(1)', '%d');
     p = ND_AddAsciiEntry(p, 'TargPosY',    'p.trial.stim.gratings.preTarget.pos(2)', '%d');
-    p = ND_AddAsciiEntry(p, 'StartContrast','p.trial.stim.gratingParameters.contrast(1)', '%d');
+    p = ND_AddAsciiEntry(p, 'Contrast','p.trial.stim.gratingParameters.contrast(1)', '%d');
     p = ND_AddAsciiEntry(p, 'OriChangeMag','p.trial.Block.changeMag',             '%d');
-    p = ND_AddAsciiEntry(p, 'Response Time','p.trial.task.SRT_StimOn',            '%d');
-    %p = ND_AddAsciiEntry(p, 'Flight Time', 'p.trial.Timing.flightTime.total',     '%d');
-
-    p = ND_AddAsciiEntry(p, 'Coded Wait', 'p.trial.task.GratWait.duration',       '%d');
-    p = ND_AddAsciiEntry(p, 'Actual Wait', 'p.trial.Timer.Wait',                  '%d');
+    p = ND_AddAsciiEntry(p, 'ResponseTime','p.trial.task.SRT_StimOn',             '%d');
+    p = ND_AddAsciiEntry(p, 'FlightTime', 'p.trial.task.FlightTime',              '%d');
+    p = ND_AddAsciiEntry(p, 'CodedWait', 'p.trial.task.GratWait.duration',        '%d');
+    p = ND_AddAsciiEntry(p, 'ActualWait', 'p.trial.task.trueWait',                '%d');
 
     % Ensuring output directory above exists
     ND_Trial2Ascii(p, 'init');
