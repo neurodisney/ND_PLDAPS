@@ -109,11 +109,11 @@ p.trial.datapixx.TTL_InjStrobe = 6110;
 
 % manual reward from experimenter
 p.trial.reward.IncrConsecutive = 1; % Increases jackpot according to number of correct trials done in a row (1 = on, 0 = off)
-p.trial.reward.PulseStep    = [1,2,3,4,5]; % List of pulse numbers jackpot increases by, moving to next number in list after each correct trial
+p.trial.reward.PulseStep    = [1,2,3,4]; % List of pulse numbers jackpot increases by, moving to next number in list after each correct trial
 
 p.trial.reward.IncrProgressive = 1; % Increases jackpot as more and more trials completed, regardless of performance
 p.trial.reward.IncrementTrial = [50, 150, 300,  400, 500,  600, 650]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur   = [0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur   = [0.15, 0.175, 0.15, 0.15, 0.15, 0.15, 0.15]; % increase number of pulses with this trial number
 
 p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.10; % duration of the initial reward
@@ -121,8 +121,8 @@ p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of reward
 p.trial.reward.Dur          = 0.10; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 6, 12, 18 24]; % define the number of subsequent rewards after that the next delay period should be used
 p.trial.reward.Period       = [0.5, 1, 1.5, 2, 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-p.trial.reward.ManDur       = 0.1; % reward duration [s] for reward given by keyboard presses
-p.trial.reward.jackpotDur   = 0.275;  % final reward after keeping fixation for the complete time
+p.trial.reward.ManDur       = 0.10; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.jackpotDur   = 0.10;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
 
 % ------------------------------------------------------------------------%
