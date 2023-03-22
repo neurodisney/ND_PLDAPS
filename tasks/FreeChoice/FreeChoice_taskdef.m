@@ -5,7 +5,7 @@ function p = FreeChoice_taskdef(p)
     p.trial.task.condition =  2;
     
     % Setting reward probabilities for stimuli for *condition 1* in array [stim 1 prob, stim 2 prob] 
-    p.trial.reward.probabilities = [0.2, 0.8]; 
+    p.trial.reward.probabilities = [1.0, 0.0]; 
     
     % Assigning reward duration/magnitude to stimuli for *condition 2* in array [stim 1 dur, stim 2 dur] 
     p.trial.stim.recParameters.rewardDurs = [10, 20];
@@ -25,7 +25,7 @@ function p = FreeChoice_taskdef(p)
     
     % Setting number of trials per block
     % Note reward probability and duration/magnitude assignments to stims changed each block
-    p.trial.Block.maxBlockTrials = 50;
+    p.trial.Block.maxBlockTrials = 3;
     
     
     
@@ -55,9 +55,13 @@ function p = FreeChoice_taskdef(p)
     
     
     % Setting properties for stimuli
-    p.trial.stim.recParameters.contrast = 0.90; % Changed from 0.96
+    p.trial.task.colorSwitch = 1;
+    p.trial.stim.recParameters.colors.list = {'red', 'green', 'blue', 'yellow'};
     p.trial.stim.recParameters.stim1.color = 'blue';
     p.trial.stim.recParameters.stim2.color = 'blue';
+    p.trial.stim.recParameters.colors.index = 0;
+    
+    p.trial.stim.recParameters.contrast = 0.90; % Changed from 0.96
     % Don't mess with these!
     p.trial.stim.recParameters.stim1.coordinates = [4 -1 6 1];
     p.trial.stim.recParameters.stim2.coordinates = [-6 -1 -4 1];
