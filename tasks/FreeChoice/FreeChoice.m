@@ -384,7 +384,6 @@ function presentStim(p, val)
                     
                     p.trial.stim.stim1.fixActive = 1;
                     p.trial.stim.stim2.fixActive = 1;
-                    p.trial.stim.fix.fixWin = 0.2;
   
                 otherwise
                     error('unusable stim value')
