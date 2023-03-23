@@ -17,13 +17,13 @@ function p = ReportFour_taskdef(p)
     p.trial.task.Timing.TimeOut = 1;
     
     % Setting number of trials per block
-    p.trial.Block.maxBlockTrials = 2;
+    p.trial.Block.maxBlockTrials = 1;
 
 
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
-    p.trial.stim.FIXSPOT.color = 'green';
+    p.trial.stim.FIXSPOT.color = 'blue';
     p.trial.stim.FIXSPOT.size = 0.4;
     
     % Storing position of mapped receptive field collected from user or assigning default values
@@ -38,7 +38,7 @@ function p = ReportFour_taskdef(p)
     
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     if isempty(p.trial.stim.gratingParameters.contrast)
-        p.trial.stim.gratingParameters.contrast = 0.90;
+        p.trial.stim.gratingParameters.contrast = 0.70;
     end
     p.trial.stim.gratingParameters.sFreq = 2;
 
@@ -53,8 +53,8 @@ function p = ReportFour_taskdef(p)
     
     % Creating list of orientation change magnitudes to apply to blocks
     th = p.trial.task.oriThreshold;
-    p.trial.Block.changeMagList = [th,th]; %[th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
-
+    p.trial.Block.changeMagList = [th,th,th,th,th,th,th,th,th,th,th,0];
+    %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
     
 
     % Creating flat-hazard function from which to pull out time of wait before stim change

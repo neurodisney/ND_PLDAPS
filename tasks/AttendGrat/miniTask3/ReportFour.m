@@ -214,9 +214,13 @@ function TaskDesign(p)
             case p.trial.epoch.WaitChange
                 if(p.trial.stim.fix.fixating)
                     if p.trial.task.GratWait.counter == p.trial.task.GratWait.duration
-                        stimPostGratOriChange(p, 3);
-                        p.trial.task.trueWait = p.trial.CurTime - p.trial.EV.StimOn;
-                        ND_SwitchEpoch(p, 'WaitSaccade')
+                        if(p.trial.Block.changeMag == 0)
+                            ND_SwitchEpoch(p, 'WaitSaccade')
+                        else
+                            stimPostGratOriChange(p, 3);
+                            p.trial.task.trueWait = p.trial.CurTime - p.trial.EV.StimOn;
+                            ND_SwitchEpoch(p, 'WaitSaccade')
+                        end
                     else
                         p.trial.task.GratWait.counter = p.trial.task.GratWait.counter + 1; 
                     end
@@ -242,12 +246,18 @@ function TaskDesign(p)
                     
                     % If fix held, checking time against pre-set response window before ending trial due to time-out    
                     elseif(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeTimeout)
-                        % Marking trial outcome as 'Miss' trial
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
-                        % Play noise signaling response period time-out
-                        pds.audio.playDP(p, 'incorrect', 'left');
-                        % Switching epoch to end task
-                        ND_SwitchEpoch(p, 'TaskEnd');
+                        % Checking if trial was a catch trial (i.e., no stim
+                        % change)
+                        if(p.trial.Block.changeMag == 0)
+                            Task_CorrectReward(p);
+                        else
+                            % Marking trial outcome as 'Miss' trial
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
+                            % Play noise signaling response period time-out
+                            pds.audio.playDP(p, 'incorrect', 'left');
+                            % Switching epoch to end task
+                            ND_SwitchEpoch(p, 'TaskEnd');
+                        end
                     end
 
                 elseif(~p.trial.stim.fix.looking)
@@ -553,6 +563,7 @@ function stimPostGratOriChange(p, val)
                 % Implementing stimulus presentation
                 case 3
                     p.trial.stim.gratings.preTarget.on = 0;
+                    p.trial.stim.gratings.preTarget.fixActive = 0;
     
                     p.trial.stim.gratings.postTarget.on = 1;
                     p.trial.stim.gratings.postTarget.fixActive = 1;
