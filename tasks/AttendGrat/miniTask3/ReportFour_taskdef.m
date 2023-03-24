@@ -23,8 +23,9 @@ function p = ReportFour_taskdef(p)
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
-    p.trial.stim.FIXSPOT.color = 'blue';
+    p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
+    p.trial.stim.FIXSPOT.fixWin = 2.1;
     
     % Storing position of mapped receptive field collected from user or assigning default values
     if isempty(p.trial.task.RFpos)
@@ -53,7 +54,10 @@ function p = ReportFour_taskdef(p)
     
     % Creating list of orientation change magnitudes to apply to blocks
     th = p.trial.task.oriThreshold;
-    p.trial.Block.changeMagList = [th,th,th,th,th,th,th,th,th,th,th,0];
+    p.trial.Block.changeMagList = [th,th];
+    % Introducing catch trials
+    %p.trial.Block.changeMagList = [th,th,th,th,th,th,th,th,th,th,th,0];
+    % Introducing range of magnitudes for orientation change
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
     
 
