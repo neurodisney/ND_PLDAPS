@@ -55,10 +55,18 @@ function TaskSetUp(p)
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
         end
         
-        % Altering reward probabilities for stimuli if new block has started
-        if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0
+        % Altering task parameters if new block has started
+        if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0 
             p.trial.Block.rewardProbabilities = datasample(p.trial.reward.probabilities, 2);
             p.trial.Block.rewardDurs = datasample(p.trial.stim.recParameters.rewardDurs, 2);
+            
+            if p.trial.task.colorSwitch
+                p.defaultParameters.colorIndex = p.defaultParameters.colorIndex + 1;
+                if p.defaultParameters.colorIndex > size(p.trial.stim.recParameters.colors.list)
+                    p.defaultParameters.colorIndex = 1;
+                end
+            end
+                
             p.trial.Block.flagNextBlock = 0;
         end
         
@@ -94,8 +102,8 @@ function TaskSetUp(p)
         % Creating stim 1 by assigning values to rec properties in p object
         % Compiling properties into pldaps struct to present rectangle on screen
         p.trial.stim.RECTANGLE.pos = [5,0];
-        p.trial.stim.RECTANGLE.color = p.trial.stim.recParameters.stim1.color;
         p.trial.stim.RECTANGLE.contrast = p.trial.stim.recParameters.contrast;
+        p.trial.stim.RECTANGLE.color = cell2mat(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim1.coordinates;
         if (p.trial.task.condition == 1)
             p.trial.stim.RECTANGLE.reward = randsample([1, 0], 1, true, p.trial.Block.rewardProbabilities);
@@ -109,7 +117,6 @@ function TaskSetUp(p)
         % Creating stim 2 by assigning values to rec properties in p object
         % Compiling properties into pldaps struct to present rectangle on screen
         p.trial.stim.RECTANGLE.pos = [-5,0];
-        p.trial.stim.RECTANGLE.color = p.trial.stim.recParameters.stim2.color;
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim2.coordinates;
         if (p.trial.task.condition == 1)
             p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, p.trial.Block.rewardProbabilities);
@@ -171,7 +178,7 @@ function TaskDesign(p)
                 % Is monkey no longer fixating?
                 if(~p.trial.stim.fix.fixating)         
                     % Play noise signaling fix break
-                    pds.audio.playDP(p, 'breakfix', 'left'); 
+                    %pds.audio.playDP(p, 'breakfix', 'left'); 
                     % Calculating and storing time from fix start to fix leave if fix broken
                     p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                     % Calculating and storing time from presenting fix point to fix leave if fix broken
@@ -192,7 +199,7 @@ function TaskDesign(p)
                     % Marking trial outcome as 'Miss' trial
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
                     % Play noise signaling response period time-out
-                    pds.audio.playDP(p, 'incorrect', 'left');
+                    %pds.audio.playDP(p, 'incorrect', 'left');
                     % Switching epoch to end task
                     ND_SwitchEpoch(p, 'TaskEnd');
                 end
@@ -219,7 +226,7 @@ function TaskDesign(p)
                                 % Dispensing reward for correct trial
                                 pds.reward.give(p, p.trial.stim.recParameters.stim1.rewardDur);
                                 % Playing noise signaling correct selection
-                                pds.audio.playDP(p, 'reward', 'left')
+                                %pds.audio.playDP(p, 'reward', 'left')
                                 % Record time of reward
                                 p.trial.EV.Reward = p.trial.CurTime;
                                 % Switching epoch to wait period before ending trial to allow for juice flow 
@@ -228,7 +235,7 @@ function TaskDesign(p)
                                 % Marking trial as incorrect
                                 p.trial.outcome.CurrOutcome = p.trial.outcome.False;
                                 % Playing noise signaling inccorect selection made
-                                pds.audio.playDP(p, 'incorrect', 'left');
+                                %pds.audio.playDP(p, 'incorrect', 'left');
                                 % Switching epoch to end task 
                                 ND_SwitchEpoch(p, 'TaskEnd');
                             end
@@ -252,7 +259,7 @@ function TaskDesign(p)
                                 % Dispensing reward for correct trial
                                 pds.reward.give(p, p.trial.stim.recParameters.stim2.rewardDur);
                                 % Playing noise signaling correct selection
-                                pds.audio.playDP(p, 'reward', 'left')
+                                %pds.audio.playDP(p, 'reward', 'left')
                                 % Record time of reward
                                 p.trial.EV.Reward = p.trial.CurTime;
                                 % Switching epoch to wait period before ending trial to allow for juice flow 
@@ -261,7 +268,7 @@ function TaskDesign(p)
                                 % Marking trial as incorrect
                                 p.trial.outcome.CurrOutcome = p.trial.outcome.False;
                                 % Playing noise signaling inccorect selection made
-                                pds.audio.playDP(p, 'incorrect', 'left');
+                                %pds.audio.playDP(p, 'incorrect', 'left');
                                 % Switching epoch to end task 
                                 ND_SwitchEpoch(p, 'TaskEnd');
                             end
@@ -272,7 +279,7 @@ function TaskDesign(p)
                         % Marking trail as No Fix on Target
                         p.trial.outcome.CurrOutcome = p.trial.outcome.NoTargetFix;
                         % Playing noise signaling no selection made
-                        pds.audio.playDP(p, 'incorrect', 'left');
+                        %pds.audio.playDP(p, 'incorrect', 'left');
                         % Logging fix duration
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
@@ -384,7 +391,6 @@ function presentStim(p, val)
                     
                     p.trial.stim.stim1.fixActive = 1;
                     p.trial.stim.stim2.fixActive = 1;
-                    p.trial.stim.fix.fixWin = 0.2;
   
                 otherwise
                     error('unusable stim value')

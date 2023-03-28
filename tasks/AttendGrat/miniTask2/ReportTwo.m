@@ -9,7 +9,7 @@ function p = ReportTwo(p, state)
      % Initializing task
     if(isempty(state))
         % Populating pldaps object with elements needed to begin task if empty
-        p = AttendGrat_init(p); % Needs to be converted to init for this task
+        p = ReportTwo_init(p);
 
     else
         % If pldaps object is populated, standard trial routines run
@@ -77,14 +77,14 @@ function TaskSetUp(p)
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
 
         % Assigning orientation change magnitude according to block
-        if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0 
+        if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
             p.trial.Block.changeMag = datasample(p.trial.Block.changeMagList, 1);
             p.trial.Block.flagNextBlock = 0;
         end
 
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 2);
-        change_dir = datasample([1, -1], 1);
+        %change_dir = datasample([1, -1], 1);
         
         % Creating target grating pre-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
@@ -92,12 +92,14 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
+        p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
+        p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast;
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1) + (p.trial.Block.changeMag * change_dir);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1) + p.trial.Block.changeMag;
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
         
         % Creating distractor grating 1 by assigning values to grating properties in p object
@@ -209,19 +211,31 @@ function TaskDesign(p)
                
             % Beginning time period in which saccade to target must be performed
             case p.trial.epoch.WaitSaccade
-                % Checking if gaze has left fix point
-                if(~p.trial.stim.fix.looking)
-                    % If gaze has left fix point, checking if saccade was to target
-                    ND_SwitchEpoch(p, 'CheckResponse');
-                
-                % If fix held, checking time against pre-set response window before ending trial due to time-out    
-                elseif(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeTimeout)
-                    % Marking trial outcome as 'Miss' trial
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
-                    % Play noise signaling response period time-out
-                    pds.audio.playDP(p, 'incorrect', 'left');
-                    % Switching epoch to end task
-                    ND_SwitchEpoch(p, 'TaskEnd');
+                if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.Timing.saccadeStart)
+                    % Checking if gaze has left fix point
+                    if(~p.trial.stim.fix.looking)
+                        % If gaze has left fix point, checking if saccade was to target
+                        ND_SwitchEpoch(p, 'CheckResponse');
+                    
+                    % If fix held, checking time against pre-set response window before ending trial due to time-out    
+                    elseif(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeTimeout)
+                        % Marking trial outcome as 'Miss' trial
+                        p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
+                        % Play noise signaling response period time-out
+                        pds.audio.playDP(p, 'incorrect', 'left');
+                        % Switching epoch to end task
+                        ND_SwitchEpoch(p, 'TaskEnd');
+                    end
+                elseif(~p.trial.stim.fix.looking)
+                    % If fix broken, play noise signaling fix break
+                    pds.audio.playDP(p, 'breakfix', 'left'); 
+                    % Calculating and storing time from fix start to fix leave
+                    p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
+                    % Calculating and storing time from presenting fix point to fix leave
+                    p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
+                    % Switching task epoch to address fix break before 
+                    % ending trial
+                    ND_SwitchEpoch(p, 'BreakFixCheck');
                 end
                
             % Checking if saacade response made was to target    
@@ -233,7 +247,6 @@ function TaskDesign(p)
                         % Logging correct selection of grating (target)
                         p.trial.task.stimFix = 1;
                         p.trial.task.TargetSel = 1;
-                        disp(1)
                         % Logging fix duration
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
@@ -278,17 +291,9 @@ function TaskDesign(p)
                 else
                     % Checking if fix on target held for pre-set minimum amount of time 
                     if(p.trial.CurTime > p.trial.stim.gratings.postTarget.EV.FixStart + p.trial.task.minTargetFixTime)
-                        % Marking trial as correct
-                        p.trial.outcomeCurrOutcome = p.trial.outcome.Correct;
-                        p.trial.task.Good = 1;
-                        % Dispensing reward for correct trial
-                        pds.reward.give(p, p.trial.reward.Dur);
-                        % Playing noise signaling correct selection
-                        pds.audio.playDP(p, 'reward', 'left')
-                        % Record time of reward
-                        p.trial.EV.Reward = p.trial.CurTime;
-                        % Switching epoch to wait period before ending trial to allow for juice flow 
-                        ND_SwitchEpoch(p, 'WaitEnd');
+                        % If so, marking trial as correct and dispensing
+                        % reward
+                        Task_CorrectReward(p);
                     
                     % Checking if gaze leaves target grating fix window
                     elseif(~p.trial.stim.gratings.postTarget.fixating)
@@ -321,6 +326,9 @@ function TaskDesign(p)
                     if(inFixWin(p.trial.stim.gratings.postTarget, medPos))
                         % Marking trial as "hit" but early if eye position is in target fix window
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
+                        % Flagging trial if early response made, which in turn
+                        % increases inter-trial interval
+                        p.defaultParameters.earlyFlag = 1;
                     
                     % Checking if median eye position is in fixation window of distractor 1
                     elseif(inFixWin(p.trial.stim.gratings.distractor1, medPos))
@@ -330,10 +338,16 @@ function TaskDesign(p)
                         else
                             p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseContra;
                         end
+                        % Flagging trial if early response made, which in turn
+                        % increases inter-trial interval
+                        p.defaultParameters.earlyFlag = 1;
                
                     else
                         % Marking trial as fix break without relevance to task
                         p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
+                        % Flagging trial if break response made, which in turn
+                        % increases inter-trial interval
+                        p.defaultParameters.breakFlag = 1;
                         
                     end 
                     
@@ -393,6 +407,7 @@ function stimPreGratOriChange(p, val)
                 % Implementing no stimulus presentation
                 case 0
                     p.trial.stim.gratings.preTarget.on = 0;
+                    p.trial.stim.gratings.postTarget.on = 0;
                     p.trial.stim.gratings.distractor1.on = 0;
                 
                 % Implementing stimulus presentation
@@ -430,7 +445,9 @@ function stimPostGratOriChange(p, val)
             switch val
                 % Implementing no stimulus presentation
                 case 0
+                    p.trial.stim.gratings.preTarget.on = 0;
                     p.trial.stim.gratings.postTarget.on = 0;
+                    p.trial.stim.gratings.distractor1.on = 0;
                 
                 % Implementing stimulus presentation
                 case 3
@@ -452,9 +469,29 @@ function stimPostGratOriChange(p, val)
                 
             end 
         end
-             
-        
-        
+      
+
+
+% Function to mark trial correct and dispense reward        
+function p = Task_CorrectReward(p)
+    % Marking trial outcome as correct
+    p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
+    p.trial.task.Good = 1;
+
+    % Dispensing reward
+    pds.reward.give(p, p.trial.reward.Dur);
+
+    % Playing audio signaling correct trial
+    pds.audio.playDP(p, 'reward', 'left');
+
+    % Record time at which reward given
+    p.trial.EV.Reward = p.trial.CurTime;
+
+    % Switching epoch to end task
+    ND_SwitchEpoch(p, 'WaitEnd');
+       
+
+
 % Function to clean up screen textures and variables and to save data to ascii table (AttendGrat_init.m)
 function TaskCleanAndSave(p)
             

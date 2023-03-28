@@ -1,7 +1,26 @@
-function [ output_args ] = ReportFour_init( input_args )
-%REPORTFOUR_INIT Summary of this function goes here
-%   Detailed explanation goes here
+% Function to initialize task parameters
+function p = ReportFour_init(p)
 
+    % Building ascii tables in pldaps object
+    p = ND_AddAsciiEntry(p, 'Date',        'p.trial.DateStr',                     '%s');
+    p = ND_AddAsciiEntry(p, 'Time',        'p.trial.EV.TaskStartTime',            '%s');
+    p = ND_AddAsciiEntry(p, 'Subject',     'p.trial.session.subject',             '%s');
+    p = ND_AddAsciiEntry(p, 'Experiment',  'p.trial.session.experimentSetupFile', '%s');
+    p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
+    p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
+    p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
+    p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
+    p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
+    p = ND_AddAsciiEntry(p, 'TargPosX',    'p.trial.stim.gratings.preTarget.pos(1)', '%d');
+    p = ND_AddAsciiEntry(p, 'TargPosY',    'p.trial.stim.gratings.preTarget.pos(2)', '%d');
+    p = ND_AddAsciiEntry(p, 'Contrast','p.trial.stim.gratingParameters.contrast(1)', '%d');
+    p = ND_AddAsciiEntry(p, 'OriChangeMag','p.trial.Block.changeMag',             '%d');
+    p = ND_AddAsciiEntry(p, 'ResponseTime','p.trial.task.SRT_StimOn',             '%d');
+    p = ND_AddAsciiEntry(p, 'FlightTime', 'p.trial.task.FlightTime',              '%d');
+    p = ND_AddAsciiEntry(p, 'CodedWait', 'p.trial.task.GratWait.duration',        '%d');
+    p = ND_AddAsciiEntry(p, 'ActualWait', 'p.trial.task.trueWait',                '%d');
 
-end
+    % Ensuring output directory above exists
+    ND_Trial2Ascii(p, 'init');
+
 
