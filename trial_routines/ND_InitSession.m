@@ -55,6 +55,8 @@ p.defaultParameters.SmryStr          = ' '; % text message with trial/session su
 p.defaultParameters.earlyFlag        = 0;
 p.defaultParameters.breakFlag        = 0;
 
+p.defaultParameters.colorIndex       = 0;
+
 % --------------------------------------------------------------------%
 %% define drawing area for joystick representation
 if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.useJoystick)

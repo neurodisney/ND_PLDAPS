@@ -25,7 +25,7 @@ function p = FreeChoice_taskdef(p)
     
     % Setting number of trials per block
     % Note reward probability and duration/magnitude assignments to stims changed each block
-    p.trial.Block.maxBlockTrials = 3;
+    p.trial.Block.maxBlockTrials = 2;
     
     
     
@@ -56,10 +56,7 @@ function p = FreeChoice_taskdef(p)
     
     % Setting properties for stimuli
     p.trial.task.colorSwitch = 1;
-    p.trial.stim.recParameters.colors.list = {'red', 'green', 'blue', 'yellow'};
-    p.trial.stim.recParameters.stim1.color = 'blue';
-    p.trial.stim.recParameters.stim2.color = 'blue';
-    p.trial.stim.recParameters.colors.index = 0;
+    p.trial.stim.recParameters.colors.list = {'red', 'blue', 'yellow', 'green', 'cyan', 'white'};
     
     p.trial.stim.recParameters.contrast = 0.90; % Changed from 0.96
     % Don't mess with these!

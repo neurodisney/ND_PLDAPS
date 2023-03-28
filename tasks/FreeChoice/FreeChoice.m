@@ -55,15 +55,15 @@ function TaskSetUp(p)
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
         end
         
-        % Altering reward probabilities for stimuli if new block has started
+        % Altering task parameters if new block has started
         if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0 
             p.trial.Block.rewardProbabilities = datasample(p.trial.reward.probabilities, 2);
             p.trial.Block.rewardDurs = datasample(p.trial.stim.recParameters.rewardDurs, 2);
             
             if p.trial.task.colorSwitch
-                p.trial.stim.recParameters.colors.index = p.trial.stim.recParameters.colors.index + 1;
-                if p.trial.stim.recParameters.colors.index > length(p.trial.stim.recParameters.colors.list)
-                    p.trial.stim.recParameters.colors.index = 0;
+                p.defaultParameters.colorIndex = p.defaultParameters.colorIndex + 1;
+                if p.defaultParameters.colorIndex > size(p.trial.stim.recParameters.colors.list)
+                    p.defaultParameters.colorIndex = 1;
                 end
             end
                 
@@ -103,7 +103,7 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present rectangle on screen
         p.trial.stim.RECTANGLE.pos = [5,0];
         p.trial.stim.RECTANGLE.contrast = p.trial.stim.recParameters.contrast;
-        p.trial.stim.RECTANGLE.color = cell2mat(p.trial.stim.recParameters.colors.list(p.trial.stim.recParameters.colors.index));
+        p.trial.stim.RECTANGLE.color = cell2mat(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim1.coordinates;
         if (p.trial.task.condition == 1)
             p.trial.stim.RECTANGLE.reward = randsample([1, 0], 1, true, p.trial.Block.rewardProbabilities);
