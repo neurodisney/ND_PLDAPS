@@ -2,13 +2,15 @@ function p = FreeChoice_taskdef(p)
 
     % Assigning task condition (condition = 1 for probabilistic reward of both stimuli,
     % condition = 2 for confirmatory reward of both stimuli)
-    p.trial.task.condition =  2;
+    p.trial.task.condition =  1;
     
-    % Setting reward probabilities for stimuli for *condition 1* in array [stim 1 prob, stim 2 prob] 
-    p.trial.reward.probabilities = [1.0, 0.0]; 
+    % Setting reward probabilities for stimuli for *condition 1* in array [stim 1 prob, stim 2 prob]
+    p.trial.task.probSwitch = 0;
+    p.trial.stim.recParameters.stim1.probabilities = [1.0,1.0];
+    p.trial.stim.recParameters.stim2.probabilities = [0.0,0.00000000001];
     
     % Assigning reward duration/magnitude to stimuli for *condition 2* in array [stim 1 dur, stim 2 dur] 
-    p.trial.stim.recParameters.rewardDurs = [10, 20];
+    p.trial.stim.recParameters.rewardDurs = [0.05, 0.07];
     
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
@@ -25,7 +27,7 @@ function p = FreeChoice_taskdef(p)
     
     % Setting number of trials per block
     % Note reward probability and duration/magnitude assignments to stims changed each block
-    p.trial.Block.maxBlockTrials = 2;
+    p.trial.Block.maxBlockTrials = 20;
     
     
     

@@ -56,9 +56,9 @@ function TaskSetUp(p)
         end
         
         % Altering task parameters if new block has started
-        if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0 
-            p.trial.Block.rewardProbabilities = datasample(p.trial.reward.probabilities, 2);
-            p.trial.Block.rewardDurs = datasample(p.trial.stim.recParameters.rewardDurs, 2);
+        if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
+            
+            %p.trial.Block.rewardDurs = datasample(p.trial.stim.recParameters.rewardDurs, 2);
             
             if p.trial.task.colorSwitch
                 p.defaultParameters.colorIndex = p.defaultParameters.colorIndex + 1;
@@ -106,11 +106,11 @@ function TaskSetUp(p)
         p.trial.stim.RECTANGLE.color = cell2mat(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim1.coordinates;
         if (p.trial.task.condition == 1)
-            p.trial.stim.RECTANGLE.reward = randsample([1, 0], 1, true, p.trial.Block.rewardProbabilities);
+            p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, p.trial.stim.recParameters.stim1.probabilities);
             p.trial.stim.recParameters.stim1.rewardDur = p.trial.reward.Dur;
         elseif (p.trial.task.condition == 2)
             p.trial.stim.RECTANGLE.reward = 1;
-            p.trial.stim.recParameters.stim1.rewardDur = p.trial.Block.rewardDurs(1);
+            p.trial.stim.recParameters.stim1.rewardDur = p.trial.stim.recParameters.rewardDurs(1);
         end
         p.trial.stim.stim1 = pds.stim.Rectangle(p);
             
@@ -119,11 +119,11 @@ function TaskSetUp(p)
         p.trial.stim.RECTANGLE.pos = [-5,0];
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim2.coordinates;
         if (p.trial.task.condition == 1)
-            p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, p.trial.Block.rewardProbabilities);
+            p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, p.trial.stim.recParameters.stim2.probabilities);
             p.trial.stim.recParameters.stim2.rewardDur = p.trial.reward.Dur;
         elseif (p.trial.task.condition == 2)
             p.trial.stim.RECTANGLE.reward = 1;
-            p.trial.stim.recParameters.stim2.rewardDur = p.trial.Block.rewardDurs(2);
+            p.trial.stim.recParameters.stim2.rewardDur = p.trial.stim.recParameters.rewardDurs(2);
         end
         p.trial.stim.stim2 = pds.stim.Rectangle(p);
 
