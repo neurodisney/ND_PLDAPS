@@ -1,6 +1,7 @@
 % Function to define task parameters
 function p = AttendGrat_taskdef(p)
 
+
     % Setting time window for fixation before trial marked as 'NoStart'
     p.trial.task.Timing.WaitFix = 2;
 
@@ -20,10 +21,9 @@ function p = AttendGrat_taskdef(p)
     p.trial.Block.maxBlockTrials = 2;
 
 
-
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
-    p.trial.stim.FIXSPOT.color = 'red';
+    p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
     
     % Storing position of mapped receptive field collected from user or assigning default values
@@ -38,17 +38,12 @@ function p = AttendGrat_taskdef(p)
     
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     if isempty(p.trial.task.contrast)
-        p.trial.task.contrast = 0.90; % Changed from 0.96
+        p.trial.task.contrast = 0.65; % Changed from 0.96
     end
     
-    p.trial.stim.ringParameters.cue.contrast = -1 * p.trial.task.contrast;
-    p.trial.stim.ringParameters.distractor.contrast = p.trial.task.contrast;
-    
-    % Assigning color (black) to cue ring
-    p.trial.stim.ringParameters.cue.color = [0, 1, 1];
-    
-    % Assigning color (white) to distractor rings
-    p.trial.stim.ringParameters.distractor.color = [1, 0, 0];
+
+    % Selecting trial type: cued (1) or uncued (0)
+    p.trial.stim.GRATING.cued = 1; 
     
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
@@ -58,7 +53,8 @@ function p = AttendGrat_taskdef(p)
 
     % Turning flashing on (1) or off (0) for stimuli
     p.trial.stim.RING.flashing = 0;
-    p.trial.stim.GRATING.flashing = 1;
+    p.trial.stim.GRATING.flashing = 0;
+
 
     % Creating list of orientations using values collected from user or using default values
     if isempty(p.trial.task.oriRange)
@@ -68,15 +64,15 @@ function p = AttendGrat_taskdef(p)
     
     % Creating list of orientation change magnitudes to apply to blocks
     th = p.trial.task.oriThreshold;
-    p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
+    p.trial.Block.changeMagList = [th,th]; %[th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
     
 
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 1000];
     mean = 2;
-    bound1 = 1.25;
-    bound2 = 2.75;
+    bound1 = 0.60;
+    bound2 = 1.00;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -90,7 +86,9 @@ function p = AttendGrat_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = 0.2; % Changed from r
+    p.trial.task.flatHazard = r; % Changed from r
+
+
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;
@@ -99,7 +97,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.saccadeTimeout = 1.5;
     
     % Setting time for which target must be fixed on before trial marked correct
-    p.trial.task.minTargetFixTime = 1; % Changed from 0.1
+    p.trial.task.minTargetFixTime = 0.3; % Changed from 0.1
     
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
@@ -107,7 +105,7 @@ function p = AttendGrat_taskdef(p)
     % List of increasing durations of juice flow for reward
     % This list is linked to trial increments for scaling size of reward
     % p.trial.reward.IncrementDur = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
-    p.trial.reward.IncrementDur = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.3];
+    p.trial.reward.IncrementDur = [0.10, 0.15, 0.175, 0.20, 0.225, 0.25, 0.30];
 
     % Degree to which current reward decreased for bad performance 
     p.trial.reward.DiscourageProp = 1.0;

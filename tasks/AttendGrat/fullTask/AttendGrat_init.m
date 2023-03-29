@@ -13,11 +13,9 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
     p = ND_AddAsciiEntry(p, 'TargPosX', 'p.trial.stim.gratings.preTarget.pos(1)', '%d');
     p = ND_AddAsciiEntry(p, 'TargPosY', 'p.trial.stim.gratings.preTarget.pos(2)', '%d');
-    p = ND_AddAsciiEntry(p, 'Cued', 'p.trial.stim.GRATING.cued',                  '%d');
+    p = ND_AddAsciiEntry(p, 'Cued',     'p.trial.stim.GRATING.cued',              '%d');
     p = ND_AddAsciiEntry(p, 'OriChangeMag', 'p.trial.Block.changeMag',            '%d');
-    p = ND_AddAsciiEntry(p, 'Coded Wait', 'p.trial.task.GratWait.duration',       '%d');
-    p = ND_AddAsciiEntry(p, 'Actual Wait', 'p.trial.Timer.Wait',                  '%d');
-    p = ND_AddAsciiEntry(p, 'Response Time', 'p.trial.task.SRT_StimOn',           '%d');
+    p = ND_AddAsciiEntry(p, 'ResponseTime',  'p.trial.task.SRT_StimOn',           '%d');
 
     % Ensuring output directory above exists
     ND_Trial2Ascii(p, 'init');

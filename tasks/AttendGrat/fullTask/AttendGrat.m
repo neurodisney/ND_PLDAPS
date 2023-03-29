@@ -1,10 +1,12 @@
 % Function to run task for experiment
 function p = AttendGrat(p, state)
 
+
     % Checking for task name and filling if empty
     if(~exist('state','var'))
         state = [];
     end
+
 
     % Initializing task
     if(isempty(state))
@@ -37,14 +39,17 @@ function p = AttendGrat(p, state)
             % Cleaning up items used for trial and saving data
             case p.trial.pldaps.trialStates.trialCleanUpandSave
                 TaskCleanAndSave(p);
-                
+
         end
+
     end
+
 
 
 
 % Function to gather materials to start trial
 function TaskSetUp(p)
+
 
         % Adding trial to running total for block
         p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
@@ -55,6 +60,13 @@ function TaskSetUp(p)
             p.trial.Block.trialCount = 0;
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
         end
+        
+        % Assigning orientation change magnitude according to block
+        if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0 
+            p.trial.Block.changeMag = datasample(p.trial.Block.changeMagList, 1);
+            p.trial.Block.flagNextBlock = 0;
+        end
+
 
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
@@ -71,21 +83,24 @@ function TaskSetUp(p)
         % Creating place to save when stimuli came on screen
         p.trial.task.SRT_StimOn = NaN;
 
-        % Selecting trial type: cued (1) or uncued (0)
-        p.trial.stim.GRATING.cued = datasample([0 1], 1); 
 
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
         
+
         % Shuffling positions in positions list
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
+        p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
+        p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
+        % Gathering random orientation for grating
+        p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
         
+
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(p.trial.stim.posList(1));
         p.trial.stim.RING.pos = pos([1 2]);
-        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.cue.contrast;
-        p.trial.stim.RING.color = p.trial.stim.ringParameters.cue.color;
+        p.trial.stim.RING.color = 'cueGrey';
         p.trial.stim.RING.isCue = 1;
         p.trial.stim.rings.cue = pds.stim.Ring(p);
 
@@ -93,8 +108,7 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(p.trial.stim.posList(2));
         p.trial.stim.RING.pos = pos([1 2]);
-        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
-        p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
+        p.trial.stim.RING.color = 'distGrey';
         p.trial.stim.RING.isCue = 0;
         p.trial.stim.rings.distractor1 = pds.stim.Ring(p);
 
@@ -102,29 +116,14 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(p.trial.stim.posList(3));
         p.trial.stim.RING.pos = pos([1 2]);
-        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
-        p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
-        p.trial.stim.RING.isCue = 0;
         p.trial.stim.rings.distractor2 = pds.stim.Ring(p);
 
         % Creating distractor ring 3 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(p.trial.stim.posList(4));
         p.trial.stim.RING.pos = pos([1 2]);
-        p.trial.stim.RING.contrast = p.trial.stim.ringParameters.distractor.contrast;
-        p.trial.stim.RING.color = p.trial.stim.ringParameters.distractor.color;
-        p.trial.stim.RING.isCue = 0;
         p.trial.stim.rings.distractor3 = pds.stim.Ring(p);
         
-        % Assigning orientation change magnitude according to block
-        if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0 
-            p.trial.Block.changeMag = datasample(p.trial.Block.changeMagList, 1);
-            p.trial.Block.flagNextBlock = 0;
-        end
-
-        % Gathering random orientation for grating
-        p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
-        change_dir = datasample([1, -1], 1);
         
         % Creating target grating pre-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
@@ -137,7 +136,7 @@ function TaskSetUp(p)
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1) + (p.trial.Block.changeMag * change_dir);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1) + p.trial.Block.changeMag;
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Creating distractor grating 1 by assigning values to grating properties in p object
@@ -164,8 +163,9 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(4);
         p.trial.stim.gratings.distractor3 = pds.stim.Grating(p);
         
+
         % Creating counter to track wait time before grating presentation 
-        p.trial.task.CueWait.duration = 50; % Changed from 300
+        p.trial.task.CueWait.duration = 200; % Changed from 300
         p.trial.task.CueWait.counter = 0;
         
         % Selecting time of wait before target grating change from flat hazard function
@@ -177,6 +177,7 @@ function TaskSetUp(p)
         p.trial.stim.gratingParameters.targetAutoFixWin = 0;
         p.trial.stim.gratingParameters.distractorAutoFixWin = 0;
 
+
         % Increasing Reward after specific number of correct trials
         reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
         p.trial.reward.Dur = p.trial.reward.IncrementDur(reward_duration);
@@ -186,8 +187,10 @@ function TaskSetUp(p)
             p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
         end
 
+
         % Moving task from step-up stage to wait period before launching
         ND_SwitchEpoch(p, 'ITI');
+
 
 
 
@@ -493,7 +496,6 @@ function TaskDesign(p)
                 stimRings(p, 0);
                 
                 % Turning gratings off
-                stimPreGratOriChange(p, 0);
                 stimPostGratOriChange(p, 0);
                 
                 % Turning fix point off
@@ -629,10 +631,15 @@ function stimPostGratOriChange(p, val)
                 % Implementing no stimulus presentation
                 case 0
                     p.trial.stim.gratings.postTarget.on = 0;
+                    p.trial.stim.gratings.preTarget.on = 0;
+                    p.trial.stim.gratings.distractor1.on = 0;
+                    p.trial.stim.gratings.distractor2.on = 0;
+                    p.trial.stim.gratings.distractor3.on = 0;
                 
                 % Implementing stimulus presentation
                 case 3
                     p.trial.stim.gratings.preTarget.on = 0;
+                    p.trial.stim.gratings.preTarget.fixActive = 0;
     
                     p.trial.stim.gratings.postTarget.on = 1;
                     p.trial.stim.gratings.postTarget.fixActive = 1;

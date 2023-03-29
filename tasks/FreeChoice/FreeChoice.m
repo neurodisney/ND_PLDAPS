@@ -59,7 +59,10 @@ function TaskSetUp(p)
         if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
             
             %p.trial.Block.rewardDurs = datasample(p.trial.stim.recParameters.rewardDurs, 2);
-            
+            if p.trial.task.probSwitch
+                p.trial.stim.recParameters.probabilities = p.trial.stim.recParameters.probabilities(randperm(length(p.trial.stim.recParameters.probabilities)));
+            end
+
             if p.trial.task.colorSwitch
                 p.defaultParameters.colorIndex = p.defaultParameters.colorIndex + 1;
                 if p.defaultParameters.colorIndex > size(p.trial.stim.recParameters.colors.list)
@@ -106,7 +109,7 @@ function TaskSetUp(p)
         p.trial.stim.RECTANGLE.color = cell2mat(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim1.coordinates;
         if (p.trial.task.condition == 1)
-            p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, p.trial.stim.recParameters.stim1.probabilities);
+            p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, cell2mat(p.trial.stim.recParameters.probabilities(1)));
             p.trial.stim.recParameters.stim1.rewardDur = p.trial.reward.Dur;
         elseif (p.trial.task.condition == 2)
             p.trial.stim.RECTANGLE.reward = 1;
@@ -119,7 +122,7 @@ function TaskSetUp(p)
         p.trial.stim.RECTANGLE.pos = [-5,0];
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim2.coordinates;
         if (p.trial.task.condition == 1)
-            p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, p.trial.stim.recParameters.stim2.probabilities);
+            p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, cell2mat(p.trial.stim.recParameters.probabilities(2)));
             p.trial.stim.recParameters.stim2.rewardDur = p.trial.reward.Dur;
         elseif (p.trial.task.condition == 2)
             p.trial.stim.RECTANGLE.reward = 1;
