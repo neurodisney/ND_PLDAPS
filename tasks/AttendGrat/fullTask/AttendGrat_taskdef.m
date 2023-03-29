@@ -18,13 +18,17 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.Timing.TimeOut = 1;
     
     % Setting number of trials per block
-    p.trial.Block.maxBlockTrials = 2;
+    p.trial.Block.maxBlockTrials = 20;
+
+
+    p.trial.task.CueWait.duration = 100; 
 
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
+    p.trial.stim.FIXSPOT.fixWin = 2.1;
     
     % Storing position of mapped receptive field collected from user or assigning default values
     if isempty(p.trial.task.RFpos)
@@ -43,7 +47,7 @@ function p = AttendGrat_taskdef(p)
     
 
     % Selecting trial type: cued (1) or uncued (0)
-    p.trial.stim.GRATING.cued = 1; 
+    p.trial.task.cued = 0; 
     
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
@@ -66,13 +70,14 @@ function p = AttendGrat_taskdef(p)
     th = p.trial.task.oriThreshold;
     p.trial.Block.changeMagList = [th,th]; %[th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
-    
+    p.trial.stim.gratingParameters.sFreq = 2;
 
+    
     % Creating flat-hazard function from which to pull out time of wait before stim change
-    num_range = [1, 1000];
+    num_range = [1, 100];
     mean = 2;
-    bound1 = 0.60;
-    bound2 = 1.00;
+    bound1 = 0.10;
+    bound2 = 0.90;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -86,18 +91,18 @@ function p = AttendGrat_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = r; % Changed from r
-
+    p.trial.task.flatHazard = r;
 
     
     % Setting time that must transpire before saccade can be made without being marked as early
     p.trial.task.breakFixCheck = 0.2;
     
     % Setting time window in which response saccade allowed
-    p.trial.task.saccadeTimeout = 1.5;
+    p.trial.task.Timing.saccadeStart = 0.03;
+    p.trial.task.saccadeTimeout = 0.70;
     
     % Setting time for which target must be fixed on before trial marked correct
-    p.trial.task.minTargetFixTime = 0.3; % Changed from 0.1
+    p.trial.task.minTargetFixTime = 0.30; 
     
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
@@ -110,5 +115,6 @@ function p = AttendGrat_taskdef(p)
     % Degree to which current reward decreased for bad performance 
     p.trial.reward.DiscourageProp = 1.0;
     
+
 end
 

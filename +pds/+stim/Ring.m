@@ -4,7 +4,6 @@ classdef Ring < pds.stim.BaseStim
 
 properties
     radius
-    isCue
     lineWeight
     flashing    
     color
@@ -14,7 +13,7 @@ end
 
 methods
              
-    function obj = Ring(p, radius, pos, isCue, lineWeight, color, fixWin)
+    function obj = Ring(p, radius, pos, lineWeight, color, fixWin)
        
         if nargin < 2 || isempty(radius)
             radius = p.trial.stim.RING.radius;
@@ -24,19 +23,15 @@ methods
             pos = p.trial.stim.RING.pos;
         end
         
-        if nargin < 4 || isempty(isCue)
-            isCue = p.trial.stim.RING.isCue;
-        end
-        
-        if nargin < 5 || isempty(lineWeight)
+        if nargin < 4 || isempty(lineWeight)
             lineWeight = p.trial.stim.RING.lineWeight;
         end
         
-        if nargin < 6 || isempty(color)
+        if nargin < 5 || isempty(color)
             color = p.trial.stim.RING.color;
         end
         
-        if nargin < 7 || isempty(fixWin)
+        if nargin < 6 || isempty(fixWin)
             fixWin = p.trial.stim.RING.fixWin;
         end
            
@@ -51,7 +46,6 @@ methods
         obj.color         = p.trial.display.clut.(color);
         obj.radius        = radius;
         obj.displayRect   = [pos - [radius, radius], pos + [radius, radius]];
-        obj.isCue         = isCue;
         obj.lineWeight    = lineWeight;
         
         % Save a reference to this object in a dependable place in the p struct
@@ -61,23 +55,18 @@ methods
     
     % Function to present cue and distractor rings on screen
     function draw(obj, p)
-        if obj.on
-            if obj.isCue  
-                % Draw cue ring texture on screen
-                Screen('FrameOval', p.trial.display.overlayptr, obj.color, obj.displayRect, obj.lineWeight(1), obj.lineWeight(2));
-            elseif ~obj.isCue  
-                % Draw distractor ring texture on screen
-                Screen('FrameOval', p.trial.display.overlayptr, obj.color, obj.displayRect, obj.lineWeight(1), obj.lineWeight(2));
-            
+        if obj.on 
+            % Draw cue ring texture on screen
+            Screen('FrameOval', p.trial.display.overlayptr, obj.color, obj.displayRect, obj.lineWeight(1), obj.lineWeight(2));
+    
             % Flashing stimuli if flashing turned on
             if p.trial.stim.RING.flashing
                 Screen('Flip', p.trial.display.ptr);
             end
 
-            end
         end
     end
-    
 end
+    
 end
 

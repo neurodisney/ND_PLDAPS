@@ -108,6 +108,6 @@ for(i=1:9)
     ND_DefineCol(p, sprintf('grey%d',i), 60+i, [i, i, i] ./ 10);
 end
 
-ND_DefineCol(p,  'cueGrey',        56, [0.36, 0.36, 0.36]);
-ND_DefineCol(p,  'distGrey',       57, [0.38, 0.38, 0.38]);
+ND_DefineCol(p,  'cueGrey',        56, [0.35, 0.35, 0.35]);
+ND_DefineCol(p,  'distGrey',       57, [0.39, 0.39, 0.39]);
 
