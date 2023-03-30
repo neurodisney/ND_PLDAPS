@@ -13,29 +13,25 @@ classdef Rectangle < pds.stim.BaseStim
     
     methods
                  
-       function obj = Rectangle(p, coordinates, contrast, pos, color, reward, fixWin)
+        function obj = Rectangle(p, coordinates, pos, color, reward, fixWin)
            
             if nargin < 2 || isempty(coordinates)
                 coordinates = p.trial.stim.RECTANGLE.coordinates;
-            end
-           
-            if nargin < 2 || isempty(contrast)
-                contrast = p.trial.stim.RECTANGLE.contrast;
             end
           
             if nargin < 3 || isempty(pos)
                 pos = p.trial.stim.RECTANGLE.pos;
             end
             
-            if nargin < 5 || isempty(color)
+            if nargin < 4 || isempty(color)
                 color = p.trial.stim.RECTANGLE.color;
             end
             
-            if nargin < 6 || isempty(reward)
+            if nargin < 5 || isempty(reward)
                 reward = p.trial.stim.RECTANGLE.reward;
             end
             
-            if nargin < 7 || isempty(fixWin)
+            if nargin < 6 || isempty(fixWin)
                 fixWin = p.trial.stim.RECTANGLE.fixWin;
             end
                
@@ -48,7 +44,6 @@ classdef Rectangle < pds.stim.BaseStim
             % Fixspot is not counted as a stimulus, so it should not record its properties
             obj.recordProps = {};  
             obj.color       = p.trial.display.clut.(color);
-            obj.contrast    = contrast;
             obj.coordinates = coordinates;
             obj.reward      = reward;
             
