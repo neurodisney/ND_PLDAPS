@@ -21,7 +21,8 @@ function p = AttendGrat_taskdef(p)
     p.trial.Block.maxBlockTrials = 20;
 
 
-    p.trial.task.CueWait.duration = 100; 
+    p.trial.task.CueWait.duration = 75;
+    p.trial.task.breakFixCheck = 0.080;
 
 
     % Setting properties for fixation point
@@ -38,8 +39,8 @@ function p = AttendGrat_taskdef(p)
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
 
-    p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
-    
+    p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]};  
+
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     if isempty(p.trial.task.contrast)
         p.trial.task.contrast = 0.65; % Changed from 0.96
@@ -47,7 +48,7 @@ function p = AttendGrat_taskdef(p)
     
 
     % Selecting trial type: cued (1) or uncued (0)
-    p.trial.task.cued = 0; 
+    p.trial.task.cued = 1; 
     
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
@@ -113,7 +114,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.reward.IncrementDur = [0.10, 0.15, 0.175, 0.20, 0.225, 0.25, 0.30];
 
     % Degree to which current reward decreased for bad performance 
-    p.trial.reward.DiscourageProp = 1.0;
+    p.trial.reward.DiscourageProp = 0.7;
     
 
 end

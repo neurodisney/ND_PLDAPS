@@ -8,7 +8,7 @@ if (p.defaultParameters.earlyFlag == 1)
     p.trial.EV.PlanStart = p.trial.EV.PlanStart + 3;
     p.defaultParameters.earlyFlag = 0;
 elseif (p.defaultParameters.breakFlag == 1)
-    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 1;
+    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 2;
     p.defaultParameters.breakFlag = 0;
 end
 
