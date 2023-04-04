@@ -22,7 +22,7 @@ function p = AttendGrat_taskdef(p)
 
 
     p.trial.task.CueWait.duration = 75;
-    p.trial.task.breakFixCheck = 0.080;
+    p.trial.task.breakFixCheck = 0.150;
 
 
     % Setting properties for fixation point

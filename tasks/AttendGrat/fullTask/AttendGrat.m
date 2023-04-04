@@ -107,11 +107,13 @@ function TaskSetUp(p)
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
+        p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
+        
 
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
 
-        p.trial.task.cued = 1; %datasample([0,1], 1); 
+        p.trial.task.cued = datasample([0,1], 1); 
         
 
         % Creating cue ring by assigning values to ring properties in p object
@@ -509,6 +511,9 @@ function TaskDesign(p)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
 
                         p.defaultParameters.earlyFlag = 1;
+
+                        % Switching epoch to end task
+                        ND_SwitchEpoch(p, 'TaskEnd');
                     
                     % Checking if median eye position is in fixation window of distractor 1
                     elseif(inFixWin(p.trial.stim.gratings.distractor1, medPos))
@@ -520,6 +525,9 @@ function TaskDesign(p)
                         end
 
                         p.defaultParameters.earlyFlag = 1;
+
+                        % Switching epoch to end task
+                        ND_SwitchEpoch(p, 'TaskEnd');
                         
                     % Checking if median eye position is in fixation window of distractor 2
                     elseif(inFixWin(p.trial.stim.gratings.distractor2, medPos))
@@ -531,6 +539,9 @@ function TaskDesign(p)
                         end
 
                         p.defaultParameters.earlyFlag = 1;
+
+                        % Switching epoch to end task
+                        ND_SwitchEpoch(p, 'TaskEnd');
                         
                     % Checking if median eye position is in fixation window of distractor 3
                     elseif(inFixWin(p.trial.stim.gratings.distractor3, medPos))
@@ -543,15 +554,18 @@ function TaskDesign(p)
                
                         p.defaultParameters.earlyFlag = 1;
 
+                        % Switching epoch to end task
+                        ND_SwitchEpoch(p, 'TaskEnd');
+
                     else
                         % Marking trial as fix break without relevance to task
                         p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
                         p.defaultParameters.breakFlag = 1;
+
+                        % Switching epoch to end task
+                        ND_SwitchEpoch(p, 'TaskEnd');
                         
                     end 
-                    
-                    % Switching epoch to end task
-                    ND_SwitchEpoch(p, 'TaskEnd');
                 
                 end
                 
@@ -761,7 +775,11 @@ function p = Task_CorrectReward(p)
         p.trial.task.Good = 1;
         
         % Dispensing reward
-        pds.reward.give(p, p.trial.reward.Dur);
+        if p.trial.task.cued
+            pds.reward.give(p, 0.08);
+        else
+            pds.reward.give(p, 0.04);
+        end
         
         % Playing audio signaling correct trial
         pds.audio.playDP(p, 'reward', 'left');

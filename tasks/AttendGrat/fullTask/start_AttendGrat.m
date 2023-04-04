@@ -65,7 +65,7 @@ function p = start_AttendGrat(subjectname, rig)
     % Collecting orientation change detection threshold
     oriThreshold = input('What orientation change magnitude, in degrees, is at detection threshold? (press enter for default value): '); 
     if isempty(oriThreshold)
-        oriThreshold = 4;
+        oriThreshold = 30;
     end
     p.trial.task.oriThreshold = oriThreshold;
     
