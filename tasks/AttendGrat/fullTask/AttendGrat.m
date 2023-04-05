@@ -75,9 +75,11 @@ function TaskSetUp(p)
         
 
         % Assigning orientation change magnitude according to block
-        if p.trial.Block.flagNextBlock == 1 || p.trial.Block.trialCount == 1 && p.trial.Block.blockCount == 0 
+        if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
+
             p.trial.Block.changeMag = datasample(p.trial.Block.changeMagList, 1);
             p.trial.Block.flagNextBlock = 0;
+
         end
 
 
@@ -205,11 +207,11 @@ function TaskSetUp(p)
         p.trial.reward.Dur = p.trial.reward.IncrementDur(reward_duration);
 
         % Reducing current reward if previous trial was incorrect
-        if(p.trial.LastHits == 0)
-
-            p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
-            
-        end
+%         if(p.trial.LastHits == 0)
+% 
+%             p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
+%             
+%         end
 
 
         % Moving task from step-up stage to wait period before launching
@@ -496,6 +498,7 @@ function TaskDesign(p)
                 if(p.trial.task.stimState < 1)
                     % Marking trial as fix break if it occured before response window
                     p.trial.outcpme.CurrOutcome = p.trial.outcome.FixBreak;
+                    
                     % Switching epoch to end task
                     ND_SwitchEpoch(p, 'TaskEnd');
                     
