@@ -12,10 +12,12 @@ function p = FreeChoice_taskdef(p)
 
     % Setting reward probabilities for stimuli for *condition 1* in array [stim 1 prob, stim 2 prob]
     p.trial.task.probSwitch = 0;
-    p.trial.stim.recParameters.probabilities = [1.0,0.0];
+
+    p.trial.stim.recParameters.probabilities = [0.7,0.3];
+
     
     % Assigning reward duration/magnitude to stimuli in array [stim 1 dur, stim 2 dur] 
-    p.trial.stim.recParameters.rewardDurs = [0.05, 0.07];
+    p.trial.stim.recParameters.rewardDurs = [0.5, 0.75];
 
 
     % == GENERAL TASK PARAMETERS ==

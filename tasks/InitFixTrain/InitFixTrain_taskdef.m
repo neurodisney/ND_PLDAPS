@@ -16,17 +16,17 @@ function p = InitFixTrain_taskdef(p)
 %% Reward
 % manual reward from experimenter
 p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
+p.trial.reward.InitialRew   = 0.4; % duration of the initial reward
 
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur          = 0.1; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Dur          = 0.75; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 4, 8, 12];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
-p.trial.reward.ManDur       = 0.1; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur       = 0.75; % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.jackpotTime  = 1.00;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.1;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur   = 0.75;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -35,8 +35,8 @@ p.trial.behavior.fixation.MinFixStart = .250; % minimum time to wait for robust 
 p.trial.task.Timing.WaitFix = 2.0;  % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
-p.trial.task.Timing.MinITI  = 0.5;   % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = 1;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI  = 1.0;   % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI  = 1.5;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut =  2;     % Time [s] out for incorrect responses
