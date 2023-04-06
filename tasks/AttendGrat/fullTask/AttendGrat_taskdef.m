@@ -18,7 +18,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.Timing.TimeOut = 1;
     
     % Setting number of trials per block
-    p.trial.Block.maxBlockTrials = 20;
+    p.trial.Block.maxBlockTrials = 3;
 
 
     p.trial.task.CueWait.duration = 30;
@@ -67,8 +67,10 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
     
     % Creating list of orientation change magnitudes to apply to blocks
-    th = p.trial.task.oriThreshold;
-    p.trial.Block.changeMagList = [th,th]; %[th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
+    p.trial.Block.changeMagList = [0, 10, 10, 20, 20, 30, 30, 40, 40, 50, 50, 60, 60, 70, 70, 80, 80, 90];
+    
+    %th = p.trial.task.oriThreshold;
+    %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
     p.trial.stim.gratingParameters.sFreq = 2;
 
