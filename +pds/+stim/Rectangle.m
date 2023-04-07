@@ -5,7 +5,6 @@ classdef Rectangle < pds.stim.BaseStim
 
     properties
         coordinates
-        contrast
         color
         reward
     end
