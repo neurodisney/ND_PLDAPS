@@ -86,7 +86,7 @@ function TaskSetUp(p)
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
         % Creating spot to store selection of target stimulus
-        p.trial.task.TargetSel = NaN;
+        p.trial.task.StimSel = [NaN, NaN];
         % Fixation has not yet been achieved(1), till then is marked as absent(0)
         p.trial.task.fixFix = 0;
         % Tracking whether monkey is look at stim(1) or away from stim(0)
@@ -115,7 +115,7 @@ function TaskSetUp(p)
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
 
-        p.trial.task.cued = 1; %datasample([0,1], 1); 
+        p.trial.task.cued = datasample([0,0,1,1,1], 1); 
         
 
         % Creating cue ring by assigning values to ring properties in p object
@@ -262,6 +262,7 @@ function TaskDesign(p)
                         if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
                             % Presenting rings
                             stimRings(p, 1)
+
                             ND_SwitchEpoch(p, 'WaitCue');  
                         end
                     end
@@ -285,7 +286,7 @@ function TaskDesign(p)
             case p.trial.epoch.WaitCue
 
                 if(p.trial.stim.fix.fixating)
-                    if p.trial.task.CueWait.counter == p.trial.task.CueWait.duration
+                    if(p.trial.task.CueWait.counter == p.trial.task.CueWait.duration) %if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.CueWait.duration)
                         stimPreGratOriChange(p, 2);
                         ND_SwitchEpoch(p, 'WaitChange')
                     else
@@ -377,7 +378,7 @@ function TaskDesign(p)
 
                         % Logging correct selection of grating (target)
                         p.trial.task.stimFix = 1;
-                        p.trial.task.TargetSel = 1;
+                        p.trial.task.StimSel = p.trial.stim.gratings.preTarget.pos;
                         % Logging fix duration
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
@@ -391,7 +392,7 @@ function TaskDesign(p)
                         % Playing noise signaling incorrect selection
                         pds.audio.playDP(p, 'incorrect', 'left');
                         % Logging incorrect selection of grating (distractor)
-                        p.trial.task.TargetSel = 0;
+                        p.trial.task.StimSel = p.trial.stim.gratings.distractor1.pos;
                         % Logging fix duration
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
@@ -415,7 +416,7 @@ function TaskDesign(p)
                         % Playing noise signaling incorrect selection
                         pds.audio.playDP(p, 'incorrect', 'left');
                         % Logging incorrect selection of grating (distractor)
-                        p.trial.task.TargetSel = 0;
+                        p.trial.task.StimSel = p.trial.stim.gratings.distractor2.pos;
                         % Logging fix duration
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
@@ -436,7 +437,7 @@ function TaskDesign(p)
                         % Playing noise signaling incorrect selection
                         pds.audio.playDP(p, 'incorrect', 'left');
                         % Logging incorrect selection of grating (distractor)
-                        p.trial.task.TargetSel = 0;
+                        p.trial.task.StimSel = p.trial.stim.gratings.distractor3.pos;
                         % Logging fix duration
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
@@ -778,7 +779,11 @@ function p = Task_CorrectReward(p)
         p.trial.task.Good = 1;
         
         % Dispensing reward
-        pds.reward.give(p, p.trial.reward.Dur);
+        if p.trial.task.cued
+            pds.reward.give(p, 0.07) %(p, p.trial.reward.Dur);
+        else
+            pds.reward.give(p, 0.05)
+        end
         
         % Playing audio signaling correct trial
         pds.audio.playDP(p, 'reward', 'left');
