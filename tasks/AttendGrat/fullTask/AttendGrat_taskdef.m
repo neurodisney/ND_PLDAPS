@@ -18,11 +18,10 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.Timing.TimeOut = 1;
     
     % Setting number of trials per block
-    p.trial.Block.maxBlockTrials = 20;
+    p.trial.Block.maxBlockTrials = 3;
 
 
-    p.trial.task.CueWait.duration = 75;
-    p.trial.task.breakFixCheck = 0.080;
+    p.trial.task.CueWait.duration = 30;
 
 
     % Setting properties for fixation point
@@ -43,7 +42,7 @@ function p = AttendGrat_taskdef(p)
 
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     if isempty(p.trial.task.contrast)
-        p.trial.task.contrast = 0.65; % Changed from 0.96
+        p.trial.task.contrast = 0.65;
     end
     
 
@@ -68,8 +67,10 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
     
     % Creating list of orientation change magnitudes to apply to blocks
-    th = p.trial.task.oriThreshold;
-    p.trial.Block.changeMagList = [th,th]; %[th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
+    p.trial.Block.changeMagList = [0, 10, 10, 20, 20, 30, 30, 40, 40, 50, 50, 60, 60, 70, 70, 80, 80, 90];
+    
+    %th = p.trial.task.oriThreshold;
+    %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
     p.trial.stim.gratingParameters.sFreq = 2;
 
@@ -96,14 +97,14 @@ function p = AttendGrat_taskdef(p)
 
     
     % Setting time that must transpire before saccade can be made without being marked as early
-    p.trial.task.breakFixCheck = 0.2;
+    p.trial.task.breakFixCheck = 0.050;
     
     % Setting time window in which response saccade allowed
     p.trial.task.Timing.saccadeStart = 0.03;
     p.trial.task.saccadeTimeout = 0.70;
     
     % Setting time for which target must be fixed on before trial marked correct
-    p.trial.task.minTargetFixTime = 0.30; 
+    p.trial.task.minTargetFixTime = 0.40; 
     
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];

@@ -17,7 +17,7 @@ function p = FreeChoice_taskdef(p)
 
     
     % Assigning reward duration/magnitude to stimuli in array [stim 1 dur, stim 2 dur] 
-    p.trial.stim.recParameters.rewardDurs = [0.5, 0.75];
+    p.trial.stim.recParameters.rewardDurs = [0.25, 0.25];
 
 
     % == GENERAL TASK PARAMETERS ==
@@ -73,7 +73,6 @@ function p = FreeChoice_taskdef(p)
     % Setting properties for stimuli
     p.trial.task.colorSwitch = 1;
     p.trial.stim.recParameters.colors.list = {'red', 'blue', 'yellow', 'white', 'magenta'};
-    p.trial.stim.recParameters.contrast = 0.90;
 
     % Don't mess with these!
     p.trial.stim.recParameters.stim1.coordinates = [-6 -1 -4 1];
