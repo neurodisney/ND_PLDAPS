@@ -122,7 +122,8 @@ function TaskSetUp(p)
         % Creating stim 1 by assigning values to rec properties in p object
         % Compiling properties into pldaps struct to present rectangle on screen
         p.trial.stim.RECTANGLE.pos = [-5,0];
-        p.trial.stim.RECTANGLE.color = cell2mat(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
+        p.trial.stim.RECTANGLE.color = char(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
+        p.trial.stim.recParameters.stim1.color = char(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim1.coordinates;
         if (p.trial.task.condition == 1)
             p.trial.stim.RECTANGLE.reward = randsample([1, 0], 1, true, p.trial.stim.recParameters.probabilities);
@@ -136,6 +137,7 @@ function TaskSetUp(p)
         % Creating stim 2 by assigning values to rec properties in p object
         % Compiling properties into pldaps struct to present rectangle on screen
         p.trial.stim.RECTANGLE.pos = [5,0];
+        p.trial.stim.recParameters.stim2.color = char(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim2.coordinates;
         if (p.trial.task.condition == 1)
             p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, p.trial.stim.recParameters.probabilities);
@@ -258,7 +260,7 @@ function TaskDesign(p)
                     if(p.trial.stim.stim1.fixating)
 
                         % Logging selection of stimulus
-                        p.trial.task.TargetSel = 'Left';
+                        p.trial.task.TargetSel = 'stim1';
                         % Logging fix duration
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
@@ -292,7 +294,7 @@ function TaskDesign(p)
                     elseif(p.trial.stim.stim2.fixating)
 
                         % Logging selection of stimulus
-                        p.trial.task.TargetSel = 'Right';
+                        p.trial.task.TargetSel = 'stim2';
                         % Logging fix duration
                         p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                         % Logging response latency
