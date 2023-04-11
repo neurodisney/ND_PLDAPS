@@ -115,7 +115,7 @@ function TaskSetUp(p)
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
 
-        p.trial.task.cued = datasample([0,0,1,1,1], 1); 
+        p.trial.task.cued = datasample([1,0,0,1,1,1], 1); 
         
 
         % Creating cue ring by assigning values to ring properties in p object
