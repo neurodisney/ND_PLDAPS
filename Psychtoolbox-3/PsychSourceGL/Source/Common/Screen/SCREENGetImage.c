@@ -1,0 +1,668 @@
+/*
+    SCREENGetImage.c
+
+    AUTHORS:
+
+        Allen.Ingling@nyu.edu           awi
+        mario.kleiner.de@gmail.com      mk
+
+    PLATFORMS:
+
+        All.
+
+    HISTORY:
+
+        01/08/03    awi         Created.
+        10/12/04    awi         In useString: moved commas to inside [].
+        03/20/11    mk          Made 64-bit clean.
+
+*/
+
+#include "Screen.h"
+
+// If you change the useString then also change the corresponding synopsis string in ScreenSynopsis.c
+static char useString[] =  "imageArray=Screen('GetImage', windowPtr [,rect] [,bufferName] [,floatprecision=0] [,nrchannels=3])";
+//                                                        1           2       3             4                   5
+
+static char synopsisString[] =
+"Slowly copy an image from a window or texture to Matlab/Octave, by default returning a uint8 array.\n\n"
+"Calling this function on an onscreen window while an asynchronous flip is pending on "
+"the window due to Screen('AsyncFlipBegin') is not allowed. Finalize such flips first. "
+"Readback of other onscreen or offscreen windows or textures is possible during async "
+"flip, but discouraged because it will have a significant impact on performance.\n\n"
+"The returned imageArray by default has three layers, i.e. it is an RGB image.\n\n"
+"\"windowPtr\" is the handle of the onscreen window, offscreen window or texture whose image "
+"should be returned.\n\n"
+"\"rect\" is the rectangular subregion to copy, and its default is the whole window. "
+"The specified image subregion must be fully contained inside the window, otherwise this "
+"function will abort with an error.\n\n"
+"Matlab/Octave will complain if you try to do math on a uint8 array, so you may need "
+"to use DOUBLE to convert it, e.g. imageArray/255 will produce an error, but "
+"double(imageArray)/255 is ok. Also see Screen 'PutImage' and 'CopyWindow'.\n\n"
+"\"bufferName\" is a string specifying the buffer from which to copy the image: "
+"The 'bufferName' argument is meaningless for offscreen windows and textures and "
+"will be silently ignored. For onscreen windows, it defaults to 'frontBuffer', i.e., "
+"it returns the image that is sent through the video output of your graphics card to "
+"your display device at that moment. On OpenGL-ES graphics hardware, all 'bufferName' "
+"settings except 'backBuffer' or 'drawBuffer' will be ignored and image data is always "
+"read from either the 'drawBuffer' or the 'backBuffer'. This is an unavoidable system "
+"limitation of such embedded hardware.\n"
+"If frame-sequential stereo mode is enabled, 'frontLeftBuffer' returns the image generated "
+"for the left eye, 'frontRightBuffer' returns the right-eye view. If double-buffering "
+"is enabled, you can also return the 'backBuffer', i.e. what your subject will see after "
+"the next Screen('Flip') command, and for frame-sequential stereo also 'backLeftBuffer' "
+"and 'backRightBuffer' respectively. Both the 'frontBuffer' and 'backBuffer' images and "
+"their stereo variants will return the final images as they are really encoded in the system "
+"framebuffer and sent to the video outputs of your graphics hardware. These images are the "
+"result of any post-processing done by the Psychtoolbox imaging pipeline, e.g., Retina display "
+"processing, geometric transformations, color transformations, certain types of gamma correction, "
+"stereo post-processing, or special pixel encoding for devices like Bits# or Datapixx. As such "
+"they may differ in size and format from what you have drawn into the onscreen window.\n"
+"'aux0Buffer' - 'aux3Buffer' returns the content of OpenGL AUX buffers 0 to 3. Only query "
+"the AUX buffers if you know what you are doing, otherwise your script will crash. This is "
+"mostly meant for internal debugging of PTB.\n"
+"If the imaging pipeline is enabled, you can also return the content of the unprocessed "
+"backbuffer, ie. before processing by the pipeline, by requesting 'drawBuffer'.\n"
+"If the imaging pipeline is enabled, querying the 'backBuffer' will only give you up to date "
+"results after you called Screen('Flip') or Screen('AsyncFlipBegin') or Screen('DrawingFinished'), "
+"otherwise you may encounter stale results. If our own homegrown frame-sequential stereo mode "
+"is in use, querying the 'backLeftBuffer' and 'backRightBuffer' is well defined, after a Screen('Flip') "
+"or Screen('DrawingFinished'), but querying the 'frontLeftBuffer' or 'frontRightBuffer' or "
+"'frontBuffer' will result in an assignment of left- and right- stereo images that is mostly "
+"based on chance, e.g., you may get accidentally swapped left- and rightBuffer images!\n\n"
+"\"floatprecision\" If you set this optional flag to 1, the image data will be returned "
+"as a double precision matrix instead of a uint8 matrix. Please note that normal image "
+"data will be returned in the normalized range 0.0 to 1.0 instead of 0 - 255. Floating "
+"point readback is only beneficial when reading back floating point precision textures, "
+"offscreen windows or the framebuffer when the imaging pipeline is active and HDR mode "
+"is selected (ie. more than 8bpc framebuffer). On OpenGL-ES hardware, only floating point "
+"framebuffers do support 'floatprecision' readback.\n"
+"\"nrchannels\" Number of color channels to return. By default, 3 channels (RGB) are "
+"returned. Specify 1 for Red/Luminance only, 2 for Red+Green or Luminance+Alpha, 3 for "
+"RGB and 4 for RGBA. A setting of 2 is not supported on OpenGL-ES hardware. \n\n";
+
+static char useString2[] = "Screen('AddFrameToMovie', windowPtr [,rect] [,bufferName] [,moviePtr=0] [,frameduration=1])";
+//                                                    1           2       3             4             5
+
+static char synopsisString2[] =
+"Get an image from a window or texture and add it as a new video frame to a movie.\n\n"
+"Calling this function on an onscreen window while an asynchronous flip is pending on "
+"the window due to Screen('AsyncFlipBegin') is not allowed. Finalize such flips first. "
+"Readback of other onscreen or offscreen windows or textures is possible during async "
+"flip, but discouraged because it will have a significant impact on performance.\n\n"
+"\"windowPtr\" is the handle of the onscreen window, offscreen window or texture whose image "
+"should be added.\n\n"
+"\"rect\" is the rectangular subregion to get, and its default is the whole window. "
+"The function will only honor the top-left corner of the 'rect' argument, but ignore "
+"the bottom-right corner and thereby the width and height as defined by the 'rect'. "
+"The size of added video frames is fully defined as the fixed size of movie frames as "
+"specified at movie creation time via the Screen('CreateMovie') call. The specified "
+"image region must be fully contained inside the window.\n\n"
+"\"bufferName\" is a string specifying the buffer from which to copy the image: "
+"The 'bufferName' argument is meaningless for offscreen windows and textures and "
+"will be silently ignored. For onscreen windows, it defaults to 'frontBuffer', i.e., "
+"it returns the image that is sent through the video output of your graphics card to "
+"your display device at that moment. On OpenGL-ES graphics hardware, all 'bufferName' "
+"settings except 'backBuffer' or 'drawBuffer' will be ignored and image data is always "
+"read from either the 'drawBuffer' or the 'backBuffer'. This is an unavoidable system "
+"limitation of such embedded hardware.\n"
+"If frame-sequential stereo mode is enabled, 'frontLeftBuffer' returns the image generated "
+"for the left eye, 'frontRightBuffer' returns the right-eye view. If double-buffering "
+"is enabled, you can also return the 'backBuffer', i.e. what your subject will see after "
+"the next Screen('Flip') command, and for frame-sequential stereo also 'backLeftBuffer' "
+"and 'backRightBuffer' respectively. Both the 'frontBuffer' and 'backBuffer' images and "
+"their stereo variants will return the final images as they are really encoded in the system "
+"framebuffer and sent to the video outputs of your graphics hardware. These images are the "
+"result of any post-processing done by the Psychtoolbox imaging pipeline, e.g., Retina display "
+"processing, geometric transformations, color transformations, certain types of gamma correction, "
+"stereo post-processing, or special pixel encoding for devices like Bits# or Datapixx. As such "
+"they may differ in size and format from what you have drawn into the onscreen window.\n"
+"'aux0Buffer' - 'aux3Buffer' returns the content of OpenGL AUX buffers 0 to 3. Only query "
+"the AUX buffers if you know what you are doing, otherwise your script will crash. This is "
+"mostly meant for internal debugging of PTB.\n"
+"If the imaging pipeline is enabled, you can also return the content of the unprocessed "
+"backbuffer, ie. before processing by the pipeline, by requesting 'drawBuffer'.\n"
+"If the imaging pipeline is enabled, querying the 'backBuffer' will only give you up to date "
+"results after you called Screen('Flip') or Screen('AsyncFlipBegin') or Screen('DrawingFinished'), "
+"otherwise you may encounter stale results. If our own homegrown frame-sequential stereo mode "
+"is in use, querying the 'backLeftBuffer' and 'backRightBuffer' is well defined, after a Screen('Flip') "
+"or Screen('DrawingFinished'), but querying the 'frontLeftBuffer' or 'frontRightBuffer' or "
+"'frontBuffer' will result in an assignment of left- and right- stereo images that is mostly "
+"based on chance, e.g., you may get accidentally swapped left- and rightBuffer images!\n\n"
+"\"moviePtr\" is the optional handle to the movie to which the video frame should be "
+"added. You can get this handle from the Screen('CreateMovie') function when creating "
+"the movie. By default frames are added to the first movie created with Screen('CreateMovie').\n\n"
+"\"frameduration\" optionally defines the display duration of the added video frame in "
+"units of movie frame intervals. See the help for 'CreateMovie' for further explanation of "
+"\"frameduration\".\n\n"
+"Movie images are stored with 8 bits or 16 bits resolution per pixel color component. "
+"Images are stored as one (RED), three (RGB) or four channel (RGBA) frames. The number "
+"of channels and bitdepth is selected in the Screen('CreateMovie') call and then kept "
+"fixed throughout the movie. OpenGL-ES hardware only supports 8 bit storage in RGB or RGBA. "
+"Not all video codecs allow for lossless encoding or encoding of all color channels.\n\n"
+"See Screen('CreateMovie?') for help on movie creation.\n";
+
+static char seeAlsoString[] = "PutImage CopyWindow CreateMovie FinalizeMovie";
+
+// This also works as 'AddFrameToMovie', as almost all code is shared with 'GetImage'.
+// Only difference is where the fetched pixeldata is sent: To the movie encoder or to
+// a matlab/octave matrix.
+PsychError SCREENGetImage(void)
+{
+    PsychRectType   windowRect, sampleRect;
+    int             nrchannels, invertedY, stride;
+    size_t          ix, iy, sampleRectWidth, sampleRectHeight, redReturnIndex, greenReturnIndex, blueReturnIndex, alphaReturnIndex;
+    int             viewid = 0;
+    psych_uint8     *returnArrayBase, *redPlane;
+    float           *dredPlane;
+    double          *returnArrayBaseDouble;
+    PsychWindowRecordType *windowRecord;
+    GLboolean       isDoubleBuffer, isStereo;
+    char*           buffername = NULL;
+    psych_bool      floatprecision = FALSE;
+    GLenum          whichBuffer = 0;
+    int             frameduration = 1;
+    int             moviehandle = 0;
+    unsigned int    twidth, theight, numChannels, bitdepth;
+    unsigned char*  framepixels;
+    psych_bool      isOES;
+    psych_bool      readFromfinalizedFBO = FALSE;
+    PsychFBO*       resolveFBO = NULL;
+
+    // Called as 2nd personality "AddFrameToMovie" ?
+    psych_bool isAddMovieFrame = PsychMatch(PsychGetFunctionName(), "AddFrameToMovie");
+
+    // All sub functions should have these two lines
+    if (isAddMovieFrame) {
+        PsychPushHelp(useString2, synopsisString2, seeAlsoString);
+    }
+    else {
+        PsychPushHelp(useString, synopsisString, seeAlsoString);
+    }
+
+    if(PsychIsGiveHelp()){PsychGiveHelp();return(PsychError_none);};
+
+    //cap the numbers of inputs and outputs
+    PsychErrorExit(PsychCapNumInputArgs(5));   //The maximum number of inputs
+    PsychErrorExit(PsychCapNumOutputArgs(1));  //The maximum number of outputs
+
+    // Get windowRecord for this window:
+    PsychAllocInWindowRecordArg(kPsychUseDefaultArgPosition, TRUE, &windowRecord);
+
+    // Embedded subset has very limited support for readback formats :
+    isOES = PsychIsGLES(windowRecord);
+
+    // Make sure we don't execute on an onscreen window with pending async flip, as this would interfere
+    // by touching the system backbuffer -> Impaired timing of the flip thread and undefined readback
+    // of image data due to racing with the ops of the flipperthread on the same drawable.
+    //
+    // Note: It would be possible to allow drawBuffer readback if the drawBuffer is not multi-sampled
+    // or if we can safely multisample-resolve without touching the backbuffer, but checking for all
+    // special cases adds ugly complexity and is not really worth the effort, so we don't allow this.
+    //
+    // If this passes then PsychSetDrawingTarget() below will trigger additional validations to check
+    // if execution of 'GetImage' is allowed under the current conditions for offscreen windows and
+    // textures:
+    if (PsychIsOnscreenWindow(windowRecord) && (windowRecord->flipInfo->asyncstate > 0)) {
+        PsychErrorExitMsg(PsychError_user, "Calling this function on an onscreen window with a pending asynchronous flip is not allowed!");
+    }
+
+    // Set window as drawingtarget: Even important if this binding is changed later on!
+    // We need to make sure all needed transitions are done - esp. in non-imaging mode,
+    // so backbuffer is in a useable state:
+    PsychSetDrawingTarget(windowRecord);
+
+    // Disable shaders:
+    PsychSetShader(windowRecord, 0);
+
+    // Soft-Reset drawingtarget. This is important to make sure no FBO's are bound,
+    // otherwise the following glGets for GL_DOUBLEBUFFER and GL_STEREO will retrieve
+    // wrong results, leading to totally wrong read buffer assignments down the road!!
+    PsychSetDrawingTarget((PsychWindowRecordType*) 0x1);
+
+    // Queries only available on desktop OpenGL:
+    if (!isOES) {
+        glGetBooleanv(GL_DOUBLEBUFFER, &isDoubleBuffer);
+        glGetBooleanv(GL_STEREO, &isStereo);
+    }
+    else {
+        // Make something reasonable up:
+        isStereo = FALSE;
+        isDoubleBuffer = TRUE;
+    }
+
+    // Force "quad-buffered" stereo mode if our own homegrown implementation is active or dual-stream stereo for external display sinks is used:
+    if (windowRecord->stereomode == kPsychFrameSequentialStereo || windowRecord->stereomode == kPsychDualStreamStereo) isStereo = TRUE;
+
+    // Assign read buffer:
+    if (PsychIsOnscreenWindow(windowRecord)) {
+        // Onscreen window: We read from the front- or front-left buffer by default.
+        // This works on single-buffered and double buffered contexts in a consistent fashion:
+
+        // Copy in optional override buffer name:
+        PsychAllocInCharArg(3, FALSE, &buffername);
+
+        // Override buffer name provided?
+        if (buffername) {
+            // Which one is it?
+
+            // "frontBuffer" is always a valid choice:
+            if (PsychMatch(buffername, "frontBuffer")) whichBuffer = GL_FRONT;
+            // Allow selection of left- or right front stereo buffer in stereo mode:
+            if (PsychMatch(buffername, "frontLeftBuffer") && isStereo) whichBuffer = GL_FRONT_LEFT;
+            if (PsychMatch(buffername, "frontRightBuffer") && isStereo) whichBuffer = GL_FRONT_RIGHT;
+            // Allow selection of backbuffer in double-buffered mode:
+            if (PsychMatch(buffername, "backBuffer") && isDoubleBuffer) whichBuffer = GL_BACK;
+            // Allow selection of left- or right back stereo buffer in stereo mode:
+            if (PsychMatch(buffername, "backLeftBuffer") && isStereo && isDoubleBuffer) whichBuffer = GL_BACK_LEFT;
+            if (PsychMatch(buffername, "backRightBuffer") && isStereo && isDoubleBuffer) whichBuffer = GL_BACK_RIGHT;
+            // Allow AUX buffer access for debug purposes:
+            if (PsychMatch(buffername, "aux0Buffer")) whichBuffer = GL_AUX0;
+            if (PsychMatch(buffername, "aux1Buffer")) whichBuffer = GL_AUX1;
+            if (PsychMatch(buffername, "aux2Buffer")) whichBuffer = GL_AUX2;
+            if (PsychMatch(buffername, "aux3Buffer")) whichBuffer = GL_AUX3;
+
+            // If 'drawBuffer' is requested, but imaging pipeline inactive, ie., there is no real 'drawBuffer', then we
+            // map this to the backbuffer, as on a non-imaging configuration, the backbuffer is pretty much exactly the
+            // equivalent of the 'drawBuffer':
+            if (PsychMatch(buffername, "drawBuffer") && !(windowRecord->imagingMode & kPsychNeedFastBackingStore)) whichBuffer = GL_BACK;
+        }
+        else {
+            // Default is frontbuffer:
+            whichBuffer = GL_FRONT;
+        }
+    }
+    else {
+        // Offscreen window or texture: They only have one buffer, which is the
+        // backbuffer in double-buffered mode and the frontbuffer in single buffered mode:
+        whichBuffer=(isDoubleBuffer) ? GL_BACK : GL_FRONT;
+    }
+
+    // Enable this windowRecords framebuffer as current drawingtarget. This should
+    // also allow us to "GetImage" from Offscreen windows:
+    if ((windowRecord->imagingMode & kPsychNeedFastBackingStore) || (windowRecord->imagingMode & kPsychNeedFastOffscreenWindows)) {
+        // Special case: Imaging pipeline active - We need to activate system framebuffer
+        // so we really read the content of the framebuffer and not of some FBO:
+        if (PsychIsOnscreenWindow(windowRecord)) {
+            // It's an onscreen window:
+
+            // Homegrown frame-sequential stereo active? Need to remap some stuff:
+            if (windowRecord->stereomode == kPsychFrameSequentialStereo) {
+                // Back/Front buffers map to backleft/frontleft buffers:
+                if (whichBuffer == GL_BACK) whichBuffer = GL_BACK_LEFT;
+                if (whichBuffer == GL_FRONT) whichBuffer = GL_FRONT_LEFT;
+
+                // Special case: Want to read from stereo front buffer?
+                if ((whichBuffer == GL_FRONT_LEFT) || (whichBuffer == GL_FRONT_RIGHT)) {
+                    // These don't really exist in our homegrown implementation. Their equivalents are the
+                    // regular system front/backbuffers. Due to the bufferswaps happening every video
+                    // refresh cycle and the complex logic on when and how to blit finalizedFBOs into
+                    // the system buffers and the asynchronous execution of the parallel flipper thread,
+                    // we don't know which buffer (GL_BACK or GL_FRONT) corresponds to the leftFront or
+                    // rightFront buffer. Let's be stupid and just return the current front buffer for
+                    // FRONT_LEFT and the current back buffer for FRONT_RIGHT, but warn user about the
+                    // ambiguity:
+                    whichBuffer = (whichBuffer == GL_FRONT_LEFT) ? GL_FRONT : GL_BACK;
+
+                    if (PsychPrefStateGet_Verbosity() > 2) {
+                        printf("PTB-WARNING: In Screen('GetImage'): You selected retrieval of one of the stereo front buffers, while our homegrown frame-sequential\n");
+                        printf("PTB-WARNING: In Screen('GetImage'): stereo display mode is active. This will impair presentation timing and may cause flicker. The\n");
+                        printf("PTB-WARNING: In Screen('GetImage'): mapping of 'frontLeftBuffer' and 'frontRightBuffer' to actual stimulus content is very ambiguous\n");
+                        printf("PTB-WARNING: In Screen('GetImage'): in this mode. You may therefore end up with the content of the wrong buffer returned! Check results\n");
+                        printf("PTB-WARNING: In Screen('GetImage'): carefully! Better read from 'backLeftBuffer' or 'backRightBuffer' for well defined results.\n\n");
+                    }
+                }
+            }
+
+            // Dualstream stereo needs remapping:
+            if (windowRecord->stereomode == kPsychDualStreamStereo || windowRecord->imagingMode & kPsychNeedFinalizedFBOSinks) {
+                // Back/Front buffers map to backleft/frontleft buffers:
+                if (whichBuffer == GL_BACK) whichBuffer = GL_BACK_LEFT;
+                if (whichBuffer == GL_FRONT) whichBuffer = GL_FRONT_LEFT;
+
+                // Special case: Want to read from stereo front buffer?
+                if ((whichBuffer == GL_FRONT_LEFT) || (whichBuffer == GL_FRONT_RIGHT)) {
+                    // These don't really exist for Dualstream stereo. Their equivalents are the
+                    // display framebuffers of the special output device, e.g., the final output
+                    // buffers of a VR compositor if a VR HMD is connected as output device. The
+                    // regular windowing system or OpenGL context does not provide access to these
+                    // buffers in any standardized way, so some special purpose trickery is needed
+                    // to get some approximation of what the user would expect into the windowing
+                    // system front buffers before calling 'GetImage'. Output some debug output at
+                    // high verbosity to hint to this:
+                    if (PsychPrefStateGet_Verbosity() > 9) {
+                        printf("PTB-DEBUG: In Screen('GetImage'): Redirecting frontBuffer(s) read for dual-stream stereo/finalizedFBOs to true onscreen\n");
+                        printf("PTB-DEBUG: front buffers of window globalrect size [%i, %i, %i, %i]\n", windowRecord->globalrect[kPsychLeft],
+                               windowRecord->globalrect[kPsychTop], windowRecord->globalrect[kPsychRight], windowRecord->globalrect[kPsychBottom]);
+                    }
+                }
+            }
+
+            // Homegrown frame-sequential stereo or dual stream stereo active and backleft or backright buffer requested?
+            if (((whichBuffer == GL_BACK_LEFT) || (whichBuffer == GL_BACK_RIGHT)) &&
+                ((windowRecord->stereomode == kPsychFrameSequentialStereo) || (windowRecord->stereomode == kPsychDualStreamStereo) ||
+                 (windowRecord->imagingMode & kPsychNeedFinalizedFBOSinks))) {
+                // We can get the equivalent of the backLeft/RightBuffer from the finalizedFBO's in these modes. Get their content:
+                viewid = (whichBuffer == GL_BACK_RIGHT) ? 1 : 0;
+                whichBuffer = GL_COLOR_ATTACHMENT0_EXT;
+                readFromfinalizedFBO = TRUE;
+
+                // Is the finalizedFBO multisampled? If so, create a temporary MSAA resolve target FBO as
+                // resolveFBO, otherwise set resolveFBO == NULL:
+                resolveFBO = PsychMSAAResolveToTemp(windowRecord->fboTable[windowRecord->finalizedFBO[viewid]]);
+                if (!resolveFBO) {
+                    // Directly bind finalizedFBO as framebuffer to read from:
+                    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, windowRecord->fboTable[windowRecord->finalizedFBO[viewid]]->fboid);
+                }
+
+                // Make sure binding gets released at end of routine:
+                viewid = -1;
+
+            } // No frame-sequential stereo: Full imaging pipeline active and one of the drawBuffer's requested?
+            else if (buffername && (PsychMatch(buffername, "drawBuffer")) && (windowRecord->imagingMode & kPsychNeedFastBackingStore)) {
+                // Activate drawBufferFBO:
+                PsychSetDrawingTarget(windowRecord);
+                whichBuffer = GL_COLOR_ATTACHMENT0_EXT;
+
+                // Is the drawBufferFBO multisampled? If so, create a temporary MSAA resolve target FBO as
+                // resolveFBO, otherwise set resolveFBO == NULL:
+                viewid = (((windowRecord->stereomode > 0) && (windowRecord->stereodrawbuffer == 1)) ? 1 : 0);
+                resolveFBO = PsychMSAAResolveToTemp(windowRecord->fboTable[windowRecord->drawBufferFBO[viewid]]);
+                if (resolveFBO) {
+                    // MSAA resolved single-sample resolveFBO is now bound as framebuffer for pixel read:
+                    viewid = -1;
+                }
+            }
+            else {
+                // No: Activate system framebuffer:
+                PsychSetDrawingTarget(NULL);
+            }
+        }
+        else {
+            // Offscreen window or texture: Select drawing target as usual,
+            // but set color attachment as read buffer:
+            PsychSetDrawingTarget(windowRecord);
+            whichBuffer = GL_COLOR_ATTACHMENT0_EXT;
+
+            // We do not support multisampled readout:
+            resolveFBO = PsychMSAAResolveToTemp(windowRecord->fboTable[windowRecord->drawBufferFBO[0]]);
+            if (resolveFBO) {
+                // MSAA resolved single-sample resolveFBO is now bound as framebuffer for pixel read:
+                viewid = -1;
+            }
+        }
+    }
+    else {
+        // Normal case: No FBO based imaging - Select drawing target as usual:
+        PsychSetDrawingTarget(windowRecord);
+    }
+
+    if (!isOES) {
+        // Select requested read buffer, after some double-check:
+        if (whichBuffer == 0) PsychErrorExitMsg(PsychError_user, "Invalid or unknown 'bufferName' argument provided.");
+        glReadBuffer(whichBuffer);
+
+        if (PsychPrefStateGet_Verbosity() > 5) printf("PTB-DEBUG: In Screen('GetImage'): GL-Readbuffer whichBuffer = %i\n", whichBuffer);
+    }
+    else {
+        // OES: No way to select readbuffer, it is "hard-coded" by system spec, depending
+        // on framebuffer. For bound FBO, always color attachment zero, for system framebuffer,
+        // always front buffer on single-buffered setup, back buffer on double-buffered setup:
+        if (buffername && PsychIsOnscreenWindow(windowRecord) && (whichBuffer != GL_COLOR_ATTACHMENT0_EXT)) {
+            // Some part of the real system framebuffer of an onscreen window explicitely requested.
+            if ((windowRecord->windowType == kPsychSingleBufferOnscreen) && (whichBuffer != GL_FRONT) && (PsychPrefStateGet_Verbosity() > 1)) {
+                printf("PTB-WARNING: Tried to Screen('GetImage') single-buffered framebuffer '%s', but only 'frontBuffer' supported on OpenGL-ES. Returning that instead.\n", buffername);
+            }
+
+            if ((windowRecord->windowType == kPsychDoubleBufferOnscreen) && (whichBuffer != GL_BACK) && (PsychPrefStateGet_Verbosity() > 1)) {
+                printf("PTB-WARNING: Tried to Screen('GetImage') double-buffered framebuffer '%s', but only 'backBuffer' supported on OpenGL-ES. Returning that instead.\n", buffername);
+            }
+        }
+    }
+
+    if ((whichBuffer == GL_COLOR_ATTACHMENT0_EXT) && !readFromfinalizedFBO) {
+        // FBO of texture / offscreen window / onscreen drawBuffer/inputBuffer
+        // has size of clientrect -- potentially larger or smaller than backbuffer:
+        PsychCopyRect(windowRect, windowRecord->clientrect);
+    }
+    else {
+        // Non-FBO backed texture / offscreen window / onscreen window has size
+        // of raw rect (==clientrect for non-onscreen, == backbuffer size for onscreen):
+        PsychCopyRect(windowRect, windowRecord->rect);
+
+        // Special case, rendering into finalizedFBOs as final image sinks for the
+        // primary display output provider, e.g., for VR HMD's and similar, but code
+        // wants snapshot of the "frontBuffer(s)", iow. the final output image as
+        // displayed to that output device. We don't have a standardized way of getting
+        // to that content, so for now we get a snapshot for the onscreen windows real
+        // frontBuffer(s). External code is responsible to somehow get a useful snapshot
+        // of what the user actually wants into the onscreen windows frontbuffer.
+        // If kPsychFbOverrideSizeActive is set then use the windowRecords globalrect
+        // as proxy for the windows real frontBuffer size, as the clientrect and rect
+        // are overriden with values only useful for feeding the finalizedFBOs:
+        if ((windowRecord->imagingMode & kPsychNeedFinalizedFBOSinks) &&
+            (windowRecord->specialflags & kPsychFbOverrideSizeActive) &&
+            ((whichBuffer == GL_FRONT_LEFT) || (whichBuffer == GL_FRONT_RIGHT)))
+            PsychNormalizeRect(windowRecord->globalrect, windowRect);
+    }
+
+    // Retrieve optional read rectangle:
+    if (!PsychCopyInRectArg(2, FALSE, sampleRect)) PsychCopyRect(sampleRect, windowRect);
+
+    if (IsPsychRectEmpty(sampleRect)) return(PsychError_none);
+
+    // Compute sampling rectangle:
+    if ((PsychGetWidthFromRect(sampleRect) >= INT_MAX) || (PsychGetHeightFromRect(sampleRect) >= INT_MAX)) {
+        PsychErrorExitMsg(PsychError_user, "Too big 'rect' argument provided. Both width and height of the rect must not exceed 2^31 pixels!");
+    }
+
+    // Make sure the sampling rectangle is completely inside the source window:
+    if (sampleRect[kPsychLeft] < windowRect[kPsychLeft] || sampleRect[kPsychTop] < windowRect[kPsychTop] ||
+        sampleRect[kPsychRight] > windowRect[kPsychRight] || sampleRect[kPsychBottom] > windowRect[kPsychBottom]) {
+        PsychErrorExitMsg(PsychError_user, "Invalid 'rect' specified - (Partially) outside of source window.");
+    }
+
+    sampleRectWidth = (size_t) PsychGetWidthFromRect(sampleRect);
+    sampleRectHeight= (size_t) PsychGetHeightFromRect(sampleRect);
+
+    // Regular image fetch to runtime, or adding to a movie?
+    if (!isAddMovieFrame) {
+        // Regular fetch:
+
+        // Get optional floatprecision flag: We return data with float-precision if
+        // this flag is set. By default we return uint8 data:
+        PsychCopyInFlagArg(4, FALSE, &floatprecision);
+
+        // Get the optional number of channels flag: By default we return 3 channels,
+        // the Red, Green, and blue color channel:
+        nrchannels = 3;
+        PsychCopyInIntegerArg(5, FALSE, &nrchannels);
+        if (nrchannels < 1 || nrchannels > 4) PsychErrorExitMsg(PsychError_user, "Number of requested channels 'nrchannels' must be between 1 and 4!");
+
+        if (!floatprecision) {
+            // Readback of standard 8bpc uint8 pixels:
+
+            // No Luminance + Alpha on OES:
+            if (isOES && (nrchannels == 2)) PsychErrorExitMsg(PsychError_user, "Number of requested channels 'nrchannels' == 2 not supported on OpenGL-ES!");
+
+            PsychAllocOutUnsignedByteMatArg(1, TRUE, (int) sampleRectHeight, (int) sampleRectWidth, (int) nrchannels, &returnArrayBase);
+            if (isOES) {
+                // We only do RGBA reads on OES, then discard unwanted stuff ourselves:
+                redPlane  = (psych_uint8*) PsychMallocTemp((size_t) 4 * sampleRectWidth * sampleRectHeight);
+            }
+            else {
+                redPlane  = (psych_uint8*) PsychMallocTemp((size_t) nrchannels * sampleRectWidth * sampleRectHeight);
+            }
+
+            glPixelStorei(GL_PACK_ALIGNMENT,1);
+            invertedY = (int) (windowRect[kPsychBottom] - sampleRect[kPsychBottom]);
+
+            if (isOES) {
+                glReadPixels((int) sampleRect[kPsychLeft], invertedY, (int) sampleRectWidth, (int) sampleRectHeight, GL_RGBA, GL_UNSIGNED_BYTE, redPlane);
+                stride = 4;
+            }
+            else {
+                stride = nrchannels;
+                if (nrchannels==1) glReadPixels((int) sampleRect[kPsychLeft], invertedY, (int) sampleRectWidth, (int) sampleRectHeight, GL_RED, GL_UNSIGNED_BYTE, redPlane);
+                if (nrchannels==2) glReadPixels((int) sampleRect[kPsychLeft], invertedY, (int) sampleRectWidth, (int) sampleRectHeight, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, redPlane);
+                if (nrchannels==3) glReadPixels((int) sampleRect[kPsychLeft], invertedY, (int) sampleRectWidth, (int) sampleRectHeight, GL_RGB, GL_UNSIGNED_BYTE, redPlane);
+                if (nrchannels==4) glReadPixels((int) sampleRect[kPsychLeft], invertedY, (int) sampleRectWidth, (int) sampleRectHeight, GL_RGBA, GL_UNSIGNED_BYTE, redPlane);
+            }
+
+            //in one pass transpose and flip what we read with glReadPixels before returning.
+            //-glReadPixels insists on filling up memory in sequence by reading the screen row-wise whearas Matlab reads up memory into columns.
+            //-the Psychtoolbox screen as setup by gluOrtho puts 0,0 at the top left of the window but glReadPixels always believes that it's at the bottom left.
+            for(ix=0; ix < sampleRectWidth; ix++){
+                for(iy=0; iy < sampleRectHeight; iy++){
+                    // Compute write-indices for returned data:
+                    redReturnIndex=PsychIndexElementFrom3DArray(sampleRectHeight, sampleRectWidth, nrchannels, iy, ix, 0);
+                    greenReturnIndex=PsychIndexElementFrom3DArray(sampleRectHeight, sampleRectWidth,  nrchannels, iy, ix, 1);
+                    blueReturnIndex=PsychIndexElementFrom3DArray(sampleRectHeight, sampleRectWidth,  nrchannels, iy, ix, 2);
+                    alphaReturnIndex=PsychIndexElementFrom3DArray(sampleRectHeight, sampleRectWidth,  nrchannels, iy, ix, 3);
+
+                    // Always return RED/LUMINANCE channel:
+                    returnArrayBase[redReturnIndex] = redPlane[(ix + ((sampleRectHeight-1) - iy ) * sampleRectWidth) * (size_t) stride + 0];
+                    // Other channels on demand:
+                    if (nrchannels>1) returnArrayBase[greenReturnIndex] = redPlane[(ix + ((sampleRectHeight-1) - iy ) * sampleRectWidth) * (size_t) stride + 1];
+                    if (nrchannels>2) returnArrayBase[blueReturnIndex]  = redPlane[(ix + ((sampleRectHeight-1) - iy ) * sampleRectWidth) * (size_t) stride + 2];
+                    if (nrchannels>3) returnArrayBase[alphaReturnIndex] = redPlane[(ix + ((sampleRectHeight-1) - iy ) * sampleRectWidth) * (size_t) stride + 3];
+                }
+            }
+        }
+        else {
+            // Readback of standard 32bpc float pixels into a double matrix:
+
+            // No Luminance + Alpha on OES:
+            if (isOES && (nrchannels == 2)) PsychErrorExitMsg(PsychError_user, "Number of requested channels 'nrchannels' == 2 not supported on OpenGL-ES!");
+
+            // Only float readback on floating point FBO's with EXT_color_buffer_float support:
+            if (isOES && ((whichBuffer != GL_COLOR_ATTACHMENT0_EXT) || (windowRecord->bpc < 16) || !glewIsSupported("GL_EXT_color_buffer_float"))) {
+                printf("PTB-ERROR: Tried to 'GetImage' pixels in floating point format from a non-floating point surface, or not supported by your hardware.\n");
+                PsychErrorExitMsg(PsychError_user, "'GetImage' of floating point values from given object not supported on OpenGL-ES!");
+            }
+
+            PsychAllocOutDoubleMatArg(1, TRUE, (int) sampleRectHeight, (int) sampleRectWidth, (int) nrchannels, &returnArrayBaseDouble);
+            if (isOES) {
+                dredPlane = (float*) PsychMallocTemp((size_t) 4 * sizeof(float) * sampleRectWidth * sampleRectHeight);
+                stride = 4;
+            }
+            else {
+                dredPlane = (float*) PsychMallocTemp((size_t) nrchannels * sizeof(float) * sampleRectWidth * sampleRectHeight);
+                stride = nrchannels;
+            }
+
+            glPixelStorei(GL_PACK_ALIGNMENT, 1);
+            invertedY = (int) (windowRect[kPsychBottom]-sampleRect[kPsychBottom]);
+
+            if (!isOES) {
+                if (nrchannels==1) glReadPixels((int) sampleRect[kPsychLeft], invertedY, (int) sampleRectWidth, (int) sampleRectHeight, GL_RED, GL_FLOAT, dredPlane);
+                if (nrchannels==2) glReadPixels((int) sampleRect[kPsychLeft], invertedY, (int) sampleRectWidth, (int) sampleRectHeight, GL_LUMINANCE_ALPHA, GL_FLOAT, dredPlane);
+                if (nrchannels==3) glReadPixels((int) sampleRect[kPsychLeft], invertedY, (int) sampleRectWidth, (int) sampleRectHeight, GL_RGB, GL_FLOAT, dredPlane);
+                if (nrchannels==4) glReadPixels((int) sampleRect[kPsychLeft], invertedY, (int) sampleRectWidth, (int) sampleRectHeight, GL_RGBA, GL_FLOAT, dredPlane);
+            }
+            else {
+                glReadPixels((int) sampleRect[kPsychLeft], invertedY, (int) sampleRectWidth, (int) sampleRectHeight, GL_RGBA, GL_FLOAT, dredPlane);
+            }
+
+            //in one pass transpose and flip what we read with glReadPixels before returning.
+            //-glReadPixels insists on filling up memory in sequence by reading the screen row-wise whearas Matlab reads up memory into columns.
+            //-the Psychtoolbox screen as setup by gluOrtho puts 0,0 at the top left of the window but glReadPixels always believes that it's at the bottom left.
+            for(ix=0; ix < sampleRectWidth; ix++){
+                for(iy=0; iy < sampleRectHeight; iy++){
+                    // Compute write-indices for returned data:
+                    redReturnIndex=PsychIndexElementFrom3DArray(sampleRectHeight, sampleRectWidth, nrchannels, iy, ix, 0);
+                    greenReturnIndex=PsychIndexElementFrom3DArray(sampleRectHeight, sampleRectWidth,  nrchannels, iy, ix, 1);
+                    blueReturnIndex=PsychIndexElementFrom3DArray(sampleRectHeight, sampleRectWidth,  nrchannels, iy, ix, 2);
+                    alphaReturnIndex=PsychIndexElementFrom3DArray(sampleRectHeight, sampleRectWidth,  nrchannels, iy, ix, 3);
+
+                    // Always return RED/LUMINANCE channel:
+                    returnArrayBaseDouble[redReturnIndex] = dredPlane[(ix + ((sampleRectHeight-1) - iy ) * sampleRectWidth) * (size_t) stride + 0];
+                    // Other channels on demand:
+                    if (nrchannels>1) returnArrayBaseDouble[greenReturnIndex] = dredPlane[(ix + ((sampleRectHeight-1) - iy ) * sampleRectWidth) * (size_t) stride + 1];
+                    if (nrchannels>2) returnArrayBaseDouble[blueReturnIndex]  = dredPlane[(ix + ((sampleRectHeight-1) - iy ) * sampleRectWidth) * (size_t) stride + 2];
+                    if (nrchannels>3) returnArrayBaseDouble[alphaReturnIndex] = dredPlane[(ix + ((sampleRectHeight-1) - iy ) * sampleRectWidth) * (size_t) stride + 3];
+                }
+            }
+        }
+    }
+
+    if (isAddMovieFrame) {
+        // Adding of image to a movie requested:
+
+        // Get optional moviehandle:
+        moviehandle = 0;
+        PsychCopyInIntegerArg(4, FALSE, &moviehandle);
+        if (moviehandle < 0) PsychErrorExitMsg(PsychError_user, "Provided 'moviehandle' is negative. Must be greater or equal to zero!");
+
+        // Get optional frameduration:
+        frameduration = 1;
+        PsychCopyInIntegerArg(5, FALSE, &frameduration);
+        if (frameduration < 1) PsychErrorExitMsg(PsychError_user, "Number of requested framedurations 'frameduration' is negative. Must be greater than zero!");
+
+        framepixels = PsychGetVideoFrameForMoviePtr(moviehandle, &twidth, &theight, &numChannels, &bitdepth);
+        if (framepixels) {
+            glPixelStorei(GL_PACK_ALIGNMENT,1);
+            invertedY = (int) (windowRect[kPsychBottom] - sampleRect[kPsychBottom]);
+
+            if (isOES) {
+                if (bitdepth != 8) PsychErrorExitMsg(PsychError_user, "AddFrameToMovie failed due to wrong bpc value. Only 8 bpc supported on OpenGL-ES.");
+
+                if (numChannels == 4) {
+                    // OES: BGRA supported?
+                    if (glewIsSupported("GL_EXT_read_format_bgra")) {
+                        // Yep: Readback in a compatible and acceptably fast format:
+                        glReadPixels((int) sampleRect[kPsychLeft], invertedY, twidth, theight, GL_BGRA, GL_UNSIGNED_BYTE, framepixels);
+                    }
+                    else {
+                        // Suboptimal readback path. will also cause swapped colors in movie writing:
+                        glReadPixels((int) sampleRect[kPsychLeft], invertedY, twidth, theight, GL_RGBA, GL_UNSIGNED_BYTE, framepixels);
+                    }
+                }
+                else if (numChannels == 3) {
+                    glReadPixels((int) sampleRect[kPsychLeft], invertedY, twidth, theight, GL_RGB, GL_UNSIGNED_BYTE, framepixels);
+                }
+                else PsychErrorExitMsg(PsychError_user, "AddFrameToMovie failed due to wrong number of channels. Only 3 or 4 channels are supported on OpenGL-ES.");
+            }
+            else {
+                // Desktop-GL: Use optimal format and support 16 bpc bitdepth as well.
+                switch (numChannels) {
+                    case 4:
+                        glReadPixels((int) sampleRect[kPsychLeft], invertedY, twidth, theight, GL_BGRA, (bitdepth <= 8) ? GL_UNSIGNED_INT_8_8_8_8 : GL_UNSIGNED_SHORT, framepixels);
+                        break;
+
+                    case 3:
+                        glReadPixels((int) sampleRect[kPsychLeft], invertedY, twidth, theight, GL_RGB, (bitdepth <= 8) ? GL_UNSIGNED_BYTE : GL_UNSIGNED_SHORT, framepixels);
+                        break;
+
+                    case 1:
+                        glReadPixels((int) sampleRect[kPsychLeft], invertedY, twidth, theight, GL_RED, (bitdepth <= 8) ? GL_UNSIGNED_BYTE : GL_UNSIGNED_SHORT, framepixels);
+                        break;
+
+                    default:
+                        PsychErrorExitMsg(PsychError_user, "AddFrameToMovie failed due to wrong number of channels. Only 1, 3 or 4 channels are supported on OpenGL.");
+                        break;
+                }
+            }
+
+            // Add frame to movie, mark it as "upside down", with invalid -1 timestamp and a duration of frameduration ticks:
+            if (PsychAddVideoFrameToMovie(moviehandle, frameduration, TRUE, -1) != 0) {
+                PsychErrorExitMsg(PsychError_user, "AddFrameToMovie failed with error above!");
+            }
+        }
+        else {
+            PsychErrorExitMsg(PsychError_user, "Invalid 'moviePtr' provided. Doesn't correspond to a movie open for recording!");
+        }
+    }
+
+    if (viewid == -1) {
+        // Need to reset framebuffer binding to get rid of the inputBufferFBO which is bound due to
+        // multisample resolve ops, or of other special FBO bindings --> Activate system framebuffer:
+        PsychSetDrawingTarget(NULL);
+    }
+
+    // Delete temporary MSAA resolve FBO, if any:
+    if (resolveFBO)
+        PsychDeleteFBO(resolveFBO);
+
+    return(PsychError_none);
+}

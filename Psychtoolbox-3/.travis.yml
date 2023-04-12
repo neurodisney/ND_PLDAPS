@@ -1,0 +1,39 @@
+language: octave
+
+os:
+  - linux
+#  - osx
+
+sudo: required
+
+cache:
+  - apt
+
+compiler:
+  - gcc
+#  - clang
+
+#
+# TODOs:
+#  - create xvfb-runner helper
+#  - port running of the tests from the NeuroDebian's debian/rules
+#  - may be also prep it sufficient for running SetupPsychtoolbox.m
+#
+#env:
+#  global:
+#    - XVFB_OPTS="-screen 0 1024x768x24 -ac +extension GLX +render -noreset"
+
+# addons:
+#   apt:
+#     packages:
+#       - mplayer
+
+before_install:
+  - managementtools/ci/travis_${TRAVIS_OS_NAME}
+
+install:
+  - managementtools/ci/build_all
+
+script:
+  - cd Psychtoolbox
+#  - { yes | head -n 10; yes '' | head -n 3; } | xvfb-run --auto-servernum --server-num=20 -s "$XVFB_OPTS" octave --eval 'SetupPsychtoolbox.m'
