@@ -83,7 +83,7 @@ function p = AttendGrat_taskdef(p)
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
-    function r = exprnBounded(mean, num_range, bound1, bound2);
+    function r = exprnBounded(mean, num_range, bound1, bound2)
     
     minE = exp(-bound1 / mean);
     maxE = exp(-bound2 / mean);
