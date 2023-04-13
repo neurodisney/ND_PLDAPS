@@ -780,7 +780,7 @@ function p = Task_CorrectReward(p)
         
         % Dispensing reward
         if p.trial.task.cued
-            pds.reward.give(p, 0.065) %(p, p.trial.reward.Dur);
+            pds.reward.give(p, 0.060) %(p, p.trial.reward.Dur);
         else
             pds.reward.give(p, 0.050)
         end
@@ -813,19 +813,17 @@ function TaskCleanAndSave(p)
             
            
             
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+            
+       
+                    
+             
+
+
+
+
+
+
+
+
 
 
