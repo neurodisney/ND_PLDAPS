@@ -156,21 +156,31 @@ if p.trial.Block.trialCount == p.trial.Block.maxBlockTrials
     p.trial.Block.blockcount = p.trial.Block.blockCount + 1;
 end
 
+% Setting fix spot parameters
+p.trial.stim.FIXSPOT.color = p.trial.stim.fixSpotParameters.color;
+p.trial.stim.FIXSPOT.size = p.trial.stim.fixSpotParameters.size;
+p.trial.stim.FIXSPOT.type = p.trial.stim.fixSpotParameters.shape;
+
 % Changing task parameters for new block
 if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
+
+    % Switching fix spot color if toggled on, else hard setting color 
     if p.trial.stim.fixSpotParameters.colorSwitch
-        %p.trial.stim.FIXSPOT.color = randsample(cell2mat(p.trial.stim.fixSpotParameters.colorList), 1);
+        p.trial.stim.FIXSPOT.color = char(randsample(p.trial.stim.fixSpotParameters.colorList, 1));
     end 
     
+    % Switching fix spot size if toggled on, else hard setting size
     if p.trial.stim.fixSpotParameters.sizeSwitch
-        %p.trial.stim.FIXSPOT.size = datasample(p.trial.stim.fixSpotParameters.sizeList, 1);
+        p.trial.stim.FIXSPOT.size = datasample(p.trial.stim.fixSpotParameters.sizeList, 1);
     end
     
+    % Switching fix spot shape if toggled on, else hard setting shape
     if p.trial.stim.fixSpotParameters.shapeSwitch
-        %p.trial.stim.FIXSPOT.type = datasample(p.trial.stim.fixSpotParameters.shapeList, 1);
+        p.trial.stim.FIXSPOT.type = char(randsample(p.trial.stim.fixSpotParameters.shapeList, 1));
     end
          
     p.trial.Block.flagNextBlock = 0;
+
 end
 
 
@@ -178,7 +188,6 @@ end
 p.trial.task.Timing.ITI  = ND_GetITI(p.trial.task.Timing.MinITI,  ...
                             p.trial.task.Timing.MaxITI, ...
                             [], [], 1, 0.10);
-
 
 p.trial.CurrEpoch        = p.trial.epoch.ITI;
 

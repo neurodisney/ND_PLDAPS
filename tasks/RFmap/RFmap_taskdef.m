@@ -80,7 +80,7 @@ p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 
 % Block parameters
 p.trial.Block.maxBlocks      = -1;  % max number of blocks to complete; if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
-p.trial.Block.maxBlockTrials =  4;  % max number of trials in a block
+p.trial.Block.maxBlockTrials =  2;  % max number of trials in a block
 
 % ------------------------------------------------------------------------%
 %% Drug delivery parameters
@@ -145,19 +145,19 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
-p.trial.stim.fixSpotParameters.colorSwitch = 1;
-p.trial.stim.fixSpotParameters.colorList = {'red', 'green', 'blue'};
+p.trial.stim.fixSpotParameters.colorSwitch = 0;
+p.trial.stim.fixSpotParameters.colorList = {'red', 'green', 'blue'}; % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.fixSpotParameters.color = 'red';
 
-p.trial.stim.fixSpotParameters.sizeSwitch = 1;
-p.trial.stim.fixSpotParameters.sizeList = [0.1, 0.2, 0.3, 0.4];
+p.trial.stim.fixSpotParameters.sizeSwitch = 0;
+p.trial.stim.fixSpotParameters.sizeList = [0.3, 0.4, 0.5, 0.6]; % size of the fixation spot
+p.trial.stim.fixSpotParameters.size = 0.325;
 
-p.trial.stim.fixSpotParameters.shapeSwitch = 1;
-p.trial.stim.fixSpotParameters.shapeList = ['disc', 'rect'];
+p.trial.stim.fixSpotParameters.shapeSwitch = 0;
+p.trial.stim.fixSpotParameters.shapeList = {'disc', 'rect'}; % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.fixSpotParameters.shape = 'rect';
 
 p.trial.stim.FIXSPOT.pos   = [0,0];
-p.trial.stim.FIXSPOT.type  = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.color = 'dRed';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size  = 0.325;     % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
