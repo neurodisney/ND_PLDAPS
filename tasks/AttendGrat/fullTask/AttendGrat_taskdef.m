@@ -21,9 +21,6 @@ function p = AttendGrat_taskdef(p)
     p.trial.Block.maxBlockTrials = 3;
 
 
-    p.trial.task.CueWait.duration = 30;
-
-
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'green';
@@ -48,6 +45,9 @@ function p = AttendGrat_taskdef(p)
 
     % Selecting trial type: cued (1) or uncued (0)
     p.trial.task.cued = 1; 
+
+    % Setting amount of time rings are presented before grats come on
+    p.trial.task.CueWait = 0.50;
     
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
@@ -64,6 +64,7 @@ function p = AttendGrat_taskdef(p)
     if isempty(p.trial.task.oriRange)
         p.trial.task.oriRange = [176,0];
     end   
+    
     p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
     
     % Creating list of orientation change magnitudes to apply to blocks
@@ -78,8 +79,8 @@ function p = AttendGrat_taskdef(p)
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 100];
     mean = 2;
-    bound1 = 0.10;
-    bound2 = 0.90;
+    bound1 = 1.25;
+    bound2 = 2.25;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
