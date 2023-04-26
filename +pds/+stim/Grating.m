@@ -25,7 +25,6 @@ properties
     alpha
     hemifield
     cued
-    flashing
 end
 
 properties (SetAccess = protected)
@@ -185,16 +184,6 @@ methods
             % Draw the texture
             Screen('DrawTexture', p.trial.display.ptr, obj.texture, obj.srcRect, destRect, obj.angle, ...
                                   filterMode, obj.alpha, [], [], [], [0, phaseOffset, 0, 0]);
-            
-            % Checking if task is cued or uncued
-            if ~p.trial.stim.GRATING.cued
-
-                % If uncued, flashing stimuli if flashing turned on
-                if p.trial.stim.GRATING.flashing
-                    Screen('Flip', p.trial.display.ptr);
-                end
-            end
-
         end
     end
     

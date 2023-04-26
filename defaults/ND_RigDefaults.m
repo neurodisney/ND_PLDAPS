@@ -363,8 +363,10 @@ SS.stim.GRATING.fixWin   =  4;
 SS.stim.GRATING.alpha    =  1; % Fully opaque
 SS.stim.GRATING.hemifield = NaN;
 SS.stim.GRATING.cued     = 0;
-SS.stim.GRATING.flashing = 0;
 SS.stim.GRATING.ori      = 1;
+
+% Drifting sine Wave Grating stimlui
+SS.stim.DRIFTGRAT.fixWin   =  4;
 
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 

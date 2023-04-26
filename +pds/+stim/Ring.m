@@ -42,15 +42,13 @@ classdef Ring < pds.stim.BaseStim
             % Integer to define object (for sending event code)
             obj.classCode = p.trial.event.STIM.Ring;
             
-            % Fixspot is not counted as a stimulus, so it should not record its properties
+            % This cell array determines the order of properties when the propertyArray attribute is calculated
             obj.recordProps = {};
+
             obj.color         = p.trial.display.clut.(color);
             obj.radius        = radius;
             obj.displayRect   = [pos - [radius, radius], pos + [radius, radius]];
             obj.lineWeight    = lineWeight;
-            
-            % Save a reference to this object in a dependable place in the p struct
-            p.trial.behavior.cue.ring = obj;
     
        end
         

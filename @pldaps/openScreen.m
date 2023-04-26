@@ -93,7 +93,7 @@ else
     PsychImaging('AddTask', 'General', 'FloatingPoint32BitIfPossible');
 end
 
-if strcmp(p.defaultParameters.display.stereoFlip,'right');
+if strcmp(p.defaultParameters.display.stereoFlip,'right')
     disp('****************************************************************')
     disp('****************************************************************')
     disp('Setting stereo mode for use with planar')

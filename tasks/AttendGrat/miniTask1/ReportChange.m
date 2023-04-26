@@ -92,20 +92,29 @@ function TaskSetUp(p)
         % Creating target grating pre-orientation change by assigning
         % values to grating properties in pldaps struct
         pos = cell2mat(p.trial.stim.posList(1));
-        p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(1);
-        p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori;
+%         p.trial.stim.GRATING.pos = pos([1 2]);
+%         p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(1);
+%         p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
+%         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori;
+
+        p.trial.stim.DRIFTGRAT.pos = pos([1 2]);
+        p.trial.stim.DRIFTGRAT.size = 400;
+        p.trial.stim.DRIFTGRAT.cycles_per_sec = 1;
+        p.trial.stim.DRIFTGRAT.temp_f = 0.05;
+        p.trial.stim.DRIFTGRAT.angle = 30;
+        p.trial.stim.DRIFTGRAT.draw_mask = 0;
+
         % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
+%         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
+        p.trial.stim.gratings.preTarget = pds.stim.DriftGrat(p);
 
         % Creating target grating post-orientation change by assigning
         % values to grating properties in pldaps struct
-        p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(2);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori + p.trial.Block.changeMag;
-        % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
+%         p.trial.stim.GRATING.pos = pos([1 2]);
+%         p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(2);
+%         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori + p.trial.Block.changeMag;
+%         % Compiling properties into pldaps struct to present grating on screen
+%         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Setting wait before presenting fix point if trial presentation sequence is grat first and fix point second
         p.trial.task.StartWait.duration = 1;
