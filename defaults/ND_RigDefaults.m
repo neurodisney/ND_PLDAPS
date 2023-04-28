@@ -367,6 +367,10 @@ SS.stim.GRATING.ori      = 1;
 
 % Drifting sine Wave Grating stimlui
 SS.stim.DRIFTGRAT.fixWin   =  4;
+SS.stim.DRIFTGRAT.res      = 1000;
+SS.stim.DRIFTGRAT.radius   = 1;
+SS.stim.DRIFTGRAT.sFreq    = 3;
+
 
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 

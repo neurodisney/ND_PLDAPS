@@ -4,51 +4,59 @@ classdef DriftGrat < pds.stim.BaseStim
     
     properties
         
-        size
+        res
+        radius
+        
         cycles_per_sec
-        temp_f
+        sFreq
         angle
         draw_mask
 
         visible_size
         grating_tex
         masktex
+        
+        srcRect
 
     end
     
 
     methods
                  
-        function obj = DriftGrat(p, pos, fixWin, size, cycles_per_sec, temp_f, angle, draw_mask)
+        function obj = DriftGrat(p, pos, fixWin, res, radius, cycles_per_sec, sFreq, angle, draw_mask)
            
             if nargin < 2 || isempty(pos)
                 pos = p.trial.stim.DRIFTGRAT.pos;
             end
-
+            
             if nargin < 3 || isempty(fixWin)
                 fixWin = p.trial.stim.DRIFTGRAT.fixWin;
             end
-          
-            if nargin < 4 || isempty(size)
-                size = p.trial.stim.DRIFTGRAT.size;
+
+            if nargin < 4 || isempty(res)
+                res = p.trial.stim.DRIFTGRAT.res;
             end
             
-            if nargin < 5 || isempty(cycles_per_sec)
+            if nargin < 5 || isempty(radius)
+                radius = p.trial.stim.DRIFTGRAT.radius;
+            end
+            
+            if nargin < 6 || isempty(cycles_per_sec)
                 cycles_per_sec = p.trial.stim.DRIFTGRAT.cycles_per_sec;
             end
             
-            if nargin < 6 || isempty(temp_f)
-                temp_f = p.trial.stim.DRIFTGRAT.temp_f;
+            if nargin < 7 || isempty(sFreq)
+                sFreq = p.trial.stim.DRIFTGRAT.sFreq;
             end
             
-            if nargin < 7 || isempty(angle)
+            if nargin < 8 || isempty(angle)
                 angle = p.trial.stim.DRIFTGRAT.angle;
             end
 
-            if nargin < 8 || isempty(draw_mask)
+            if nargin < 9 || isempty(draw_mask)
                 draw_mask = p.trial.stim.DRIFTGRAT.draw_mask;
             end
-               
+            
             % Load the BaseStim superclass
             obj@pds.stim.BaseStim(p, pos, fixWin)
             
@@ -58,11 +66,16 @@ classdef DriftGrat < pds.stim.BaseStim
             % This cell array determines the order of properties when the propertyArray attribute is calculated
             obj.recordProps = {};
 
-            obj.size           = size;
+            obj.res            = res;
+            obj.radius         = radius;
+            
             obj.cycles_per_sec = cycles_per_sec;
-            obj.temp_f         = temp_f;
+            obj.sFreq          = sFreq;
+            
             obj.angle          = angle;
             obj.draw_mask      = draw_mask;
+            
+            obj.srcRect        = [0, 0, 2*obj.res + 1, 2*obj.res + 1];
 
             % Preparing drifting grating texture using DriftDemo2 in
             % Psychtoolbox3.
@@ -83,23 +96,30 @@ classdef DriftGrat < pds.stim.BaseStim
                 increment = white-gray;
 
                 if draw_mask
-                    Screen('BlendFunction', obj.w, GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    Screen('BlendFunction', obj.srcRect, GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 end
 
-                pix_per_cycle = ceil(1/temp_f);
-                freq_in_radians = temp_f*2*pi;
+                pix_per_cycle = ceil(1/sFreq);
+                freq_in_radians = sFreq*2*pi;
                 
-                tex_size = size/2;
-                obj.visible_size = 2*tex_size+1;
+                obj.visible_size = 2*obj.res+1;
 
-                x = meshgrid(-1*tex_size:1*tex_size + pix_per_cycle, 1);
+                x = meshgrid(-obj.res:obj.res + pix_per_cycle, 1);
                 grating = gray + increment*cos(freq_in_radians*x);
+                
+%                 CoorVec = linspace(-obj.res, obj.res, 2*obj.res);
+%                 [x, y]  = meshgrid(CoorVec, CoorVec);                
+                
+%                 circle = (x.^2 + y.^2 <= obj.res^2);
+%                 grating(:,:,2) = 0;
+%                 grating(1:2*obj.res, 1:2*obj.res, 2) = circle;
+                 
                 obj.grating_tex = Screen('MakeTexture', p.trial.display.ptr, grating);
 
-                mask = ones(2*tex_size+1, 2*tex_size+1, 2) * gray;
-                [x,y] = meshgrid(-1*tex_size:1*tex_size, -1*tex_size:1*tex_size);
-                mask(:, :, 2) = round(white*(1-exp(-((x/90).^2)-((y/90).^2))));
-                obj.masktex = Screen('MakeTexture', p.trial.display.ptr, mask);
+%                 mask = ones(2*tex_size+1, 2*tex_size+1, 2) * gray;
+%                 [x,y] = meshgrid(-1*tex_size:1*tex_size, -1*tex_size:1*tex_size);
+%                 mask(:, :, 2) = round(white*(1-exp(-((x/90).^2)-((y/90).^2))));
+%                 obj.masktex = Screen('MakeTexture', p.trial.display.ptr, mask);
 
             catch
                 sca;
@@ -110,24 +130,36 @@ classdef DriftGrat < pds.stim.BaseStim
         
         % Function to present cue and distractor rings on screen
         function draw(obj, p)
+            
+                if obj.on
+                    try
+                        % Draw  texture on screen
+                        priorityLevel = MaxPriority(p.trial.display.ptr);
 
-            try
-                if obj.on 
-                    % Draw  texture on screen
-                    priorityLevel = MaxPriority(p.trial.display.ptr);
-    
-                    dstRect = [0 0 obj.visible_size obj.visible_size];
-                    dstRect = CenterRect(dstRect, p.trial.display.winRect);
-    
-                    ifi = Screen('GetFlipInterval', p.trial.display.ptr);
-                    disp(1);
+                        dstRect = [obj.pos - obj.radius, obj.pos + obj.radius];
 
+                        ifi = p.trial.display.ifi;
+                        wait_frames = 1;
+                        wait_dur = ifi * wait_frames;
+
+                        pix_per_cycle = 1/obj.sFreq;
+
+                        shifts_per_frame = obj.cycles_per_sec * pix_per_cycle * wait_dur;
+
+                        i = 0;
+                        x_offset = mod(i*shifts_per_frame, pix_per_cycle);
+                        i = i + 1;
+
+                        %srcRect = [x_offset 0 x_offset + obj.visible_size obj.visible_size];
+
+                        Screen('DrawTexture', p.trial.display.ptr, obj.grating_tex, obj.srcRect, dstRect, obj.angle);
+                   
+                    catch
+                        sca;
+                        psychrethrow(psychlasterror);   
+                    end
+                    
                 end
-
-            catch
-                sca;
-                psychrethrow(psychlasterror);      
-            end
             
         end
 
