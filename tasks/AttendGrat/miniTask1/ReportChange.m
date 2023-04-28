@@ -110,11 +110,11 @@ function TaskSetUp(p)
 
         % Creating target grating post-orientation change by assigning
         % values to grating properties in pldaps struct
-%         p.trial.stim.GRATING.pos = pos([1 2]);
-%         p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(2);
-%         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori + p.trial.Block.changeMag;
-%         % Compiling properties into pldaps struct to present grating on screen
-%         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
+        p.trial.stim.GRATING.pos = pos([1 2]);
+        p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(2);
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori + p.trial.Block.changeMag;
+        % Compiling properties into pldaps struct to present grating on screen
+        p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Setting wait before presenting fix point if trial presentation sequence is grat first and fix point second
         p.trial.task.StartWait.duration = 1;
@@ -437,10 +437,10 @@ function TaskDesign(p)
                 
                 % Updating target fix start and target fix break times if 
                 % they are empty
-                if(~isnan(p.trial.stim.gratings.postTarget.EV.FixStart))
-                    p.trial.EV.FixStimStart = p.trial.stim.gratings.postTarget.EV.FixStart;
-                    p.trial.EV.FixStimStop = p.trial.stim.gratings.postTarget.EV.FixBreak;
-                end 
+%                 if(~isnan(p.trial.stim.gratings.postTarget.EV.FixStart))
+%                     p.trial.EV.FixStimStart = p.trial.stim.gratings.postTarget.EV.FixStart;
+%                     p.trial.EV.FixStimStop = p.trial.stim.gratings.postTarget.EV.FixBreak;
+%                 end 
                 
                 % Flagging completion of current trial so ITI is run before next trial
                 p.trial.flagNextTrial = 1;
