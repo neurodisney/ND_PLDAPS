@@ -35,7 +35,25 @@ function p = AttendGrat_taskdef(p)
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
 
-    p.trial.task.posList = {[-1*target_posX, -1*target_posY, 0], [target_posX, target_posY, 1], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]};  
+    p.trial.task.posList = {[-1*target_posX, -1*target_posY, 0], [target_posX, target_posY, 1], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]};
+
+
+    % Calculating points along line of is eccentricity
+    p.trial.task.angle = rad2deg(atan2(p.trial.task.RFpos(2), p.trial.task.RFpos(1)));
+    delta = 5;
+    p.trial.task.radius = sqrt(p.trial.task.RFpos(1)^2 + p.trial.task.RFpos(2)^2);
+    p.trial.task.angle_arr = [p.trial.task.angle];
+
+    for i = 1:3
+        theta = p.trial.task.angle - delta;
+        p.trial.task.angle_arr = [p.trial.task.angle_arr theta];
+    
+        theta = p.trial.task.angle + delta;
+        p.trial.task.angle_arr = [p.trial.task.angle_arr theta];
+
+        delta = delta + delta;
+    end
+
 
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     if isempty(p.trial.task.contrast)

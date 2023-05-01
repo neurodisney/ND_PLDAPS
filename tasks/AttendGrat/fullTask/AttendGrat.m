@@ -113,7 +113,7 @@ function TaskSetUp(p)
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
-        
+
 
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
@@ -124,6 +124,24 @@ function TaskSetUp(p)
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(p.trial.stim.posList(1));
+
+%         if pos([1 2]) == p.trial.task.RFpos
+% 
+%             p.trial.task.angle1 = datasample(p.trial.task.angle_arr, 1);
+%     
+%             if p.trial.task.angle1 ~= p.trial.task.angle
+%     
+%                 x = cosd(p.trial.task.angle1) * p.trial.task.radius;
+%                 y = sind(p.trial.task.angle1) * p.trial.task.radius;
+%                 p.trial.task.target1 = [x,y];
+%     
+%                 p.trial.task.posList = {[-1*p.trial.task.target1(1), -1*p.trial.task.target1(2), 0], [p.trial.task.target1(1), p.trial.task.target1(2), 1], [-1*p.trial.task.target1(1), p.trial.task.target1(2), 0], [p.trial.task.target1(1), -1*p.trial.task.target1(2), 1]};
+%                 pos = cell2mat(p.trial.task.posList(1));
+%     
+%             end
+% 
+%         end
+
         p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
         if p.trial.task.cued
