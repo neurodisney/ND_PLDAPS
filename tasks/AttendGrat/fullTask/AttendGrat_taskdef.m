@@ -55,6 +55,21 @@ function p = AttendGrat_taskdef(p)
     end
 
 
+    %             if p.trial.task.angle1 ~= p.trial.task.angle
+%     
+%                 x = cosd(p.trial.task.angle1) * p.trial.task.radius;
+%                 y = sind(p.trial.task.angle1) * p.trial.task.radius;
+%                 p.trial.task.target1 = [x,y];
+%     
+%                 p.trial.task.posList = {[-1*p.trial.task.target1(1), -1*p.trial.task.target1(2), 0], [p.trial.task.target1(1), p.trial.task.target1(2), 1], [-1*p.trial.task.target1(1), p.trial.task.target1(2), 0], [p.trial.task.target1(1), -1*p.trial.task.target1(2), 1]};
+%                 pos = cell2mat(p.trial.task.posList(1));
+%     
+%             end
+% 
+%         end
+
+
+
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     if isempty(p.trial.task.contrast)
         p.trial.task.contrast = 0.65;

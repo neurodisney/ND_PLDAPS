@@ -128,18 +128,7 @@ function TaskSetUp(p)
 %         if pos([1 2]) == p.trial.task.RFpos
 % 
 %             p.trial.task.angle1 = datasample(p.trial.task.angle_arr, 1);
-%     
-%             if p.trial.task.angle1 ~= p.trial.task.angle
-%     
-%                 x = cosd(p.trial.task.angle1) * p.trial.task.radius;
-%                 y = sind(p.trial.task.angle1) * p.trial.task.radius;
-%                 p.trial.task.target1 = [x,y];
-%     
-%                 p.trial.task.posList = {[-1*p.trial.task.target1(1), -1*p.trial.task.target1(2), 0], [p.trial.task.target1(1), p.trial.task.target1(2), 1], [-1*p.trial.task.target1(1), p.trial.task.target1(2), 0], [p.trial.task.target1(1), -1*p.trial.task.target1(2), 1]};
-%                 pos = cell2mat(p.trial.task.posList(1));
-%     
-%             end
-% 
+
 %         end
 
         p.trial.stim.RING.pos = pos([1 2]);
@@ -177,6 +166,7 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
+        p.trial.stim.GRATING.tFreq = 1;
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
