@@ -100,6 +100,9 @@ function TaskSetUp(p)
         % Creating space to save time taken for saccade 
         p.trial.task.FlightTime = NaN;
 
+        p.trial.task.CueOn = NaN;
+        p.trial.task.GratOn = NaN;
+
 
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
@@ -110,7 +113,7 @@ function TaskSetUp(p)
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
         p.trial.stim.posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
-        
+
 
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
@@ -121,6 +124,13 @@ function TaskSetUp(p)
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(p.trial.stim.posList(1));
+
+%         if pos([1 2]) == p.trial.task.RFpos
+% 
+%             p.trial.task.angle1 = datasample(p.trial.task.angle_arr, 1);
+
+%         end
+
         p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
         if p.trial.task.cued
@@ -156,6 +166,7 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
+        p.trial.stim.GRATING.tFreq = 1;
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
@@ -188,19 +199,13 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(4);
         p.trial.stim.gratings.distractor3 = pds.stim.Grating(p);
         
-
-        % Creating counter to track wait time before grating presentation 
-        p.trial.task.CueWait.counter = 0;
         
         % Selecting time of wait before target grating change from flat hazard function
-        wait_period = datasample(p.trial.task.flatHazard, 1);
-        p.trial.task.GratWait.duration = round(wait_period * 200);
-        p.trial.task.GratWait.counter = 0;
+        p.trial.task.GratWait = datasample(p.trial.task.flatHazard, 1);
 
         % Taking control of activation of grating fix windows
         p.trial.stim.gratingParameters.targetAutoFixWin = 0;
         p.trial.stim.gratingParameters.distractorAutoFixWin = 0;
-
 
         % Increasing Reward after specific number of correct trials
         reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
@@ -262,6 +267,7 @@ function TaskDesign(p)
                         if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
                             % Presenting rings
                             stimRings(p, 1)
+                            p.trial.task.CueOn = p.trial.CurTime;
 
                             ND_SwitchEpoch(p, 'WaitCue');  
                         end
@@ -286,11 +292,10 @@ function TaskDesign(p)
             case p.trial.epoch.WaitCue
 
                 if(p.trial.stim.fix.fixating)
-                    if(p.trial.task.CueWait.counter == p.trial.task.CueWait.duration) %if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.CueWait.duration)
+                    if(p.trial.CurTime > p.trial.task.CueOn + p.trial.task.CueWait)
                         stimPreGratOriChange(p, 2);
-                        ND_SwitchEpoch(p, 'WaitChange')
-                    else
-                        p.trial.task.CueWait.counter = p.trial.task.CueWait.counter + 1;   
+                        p.trial.task.GratOn = p.trial.CurTime;
+                        ND_SwitchEpoch(p, 'WaitChange')   
                     end
                     
                 elseif(~p.trial.stim.fix.fixating)        
@@ -311,11 +316,9 @@ function TaskDesign(p)
 
 
                 if(p.trial.stim.fix.fixating)
-                    if p.trial.task.GratWait.counter == p.trial.task.GratWait.duration
+                    if (p.trial.CurTime > p.trial.task.GratOn + p.trial.task.GratWait)
                         stimPostGratOriChange(p, 3);
                         ND_SwitchEpoch(p, 'WaitSaccade')
-                    else
-                        p.trial.task.GratWait.counter = p.trial.task.GratWait.counter + 1; 
                     end
                     
                 elseif(~p.trial.stim.fix.fixating)        
@@ -327,6 +330,7 @@ function TaskDesign(p)
                         p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
                         % Checking to confirm there was fix break before ending trial
                         ND_SwitchEpoch(p, 'BreakFixCheck');
+
                 end
                
 
@@ -780,9 +784,9 @@ function p = Task_CorrectReward(p)
         
         % Dispensing reward
         if p.trial.task.cued
-            pds.reward.give(p, 0.07) %(p, p.trial.reward.Dur);
+            pds.reward.give(p, 0.060) %(p, p.trial.reward.Dur);
         else
-            pds.reward.give(p, 0.05)
+            pds.reward.give(p, 0.050)
         end
         
         % Playing audio signaling correct trial
@@ -813,19 +817,17 @@ function TaskCleanAndSave(p)
             
            
             
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+            
+       
+                    
+             
+
+
+
+
+
+
+
+
 
 

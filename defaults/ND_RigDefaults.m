@@ -160,7 +160,7 @@ SS.sound.useForReward                           = 1;     % toggle playing a soun
 % maximize audio channels (Need to get datapixx working first)
 SS.sound.useDatapixx                            = 1;
 SS.sound.datapixxVolume                         = 1;
-SS.sound.datapixxInternalSpeakerVolume          = 0;
+SS.sound.datapixxInternalSpeakerVolume          = 1;
 
 SS.sound.usePsychPortAudio                      = 0;
 SS.sound.psychPortVolume                        = 0;
@@ -363,8 +363,14 @@ SS.stim.GRATING.fixWin   =  4;
 SS.stim.GRATING.alpha    =  1; % Fully opaque
 SS.stim.GRATING.hemifield = NaN;
 SS.stim.GRATING.cued     = 0;
-SS.stim.GRATING.flashing = 0;
 SS.stim.GRATING.ori      = 1;
+
+% Drifting sine Wave Grating stimlui
+SS.stim.DRIFTGRAT.fixWin   =  4;
+SS.stim.DRIFTGRAT.res      = 1000;
+SS.stim.DRIFTGRAT.radius   = 1;
+SS.stim.DRIFTGRAT.sFreq    = 3;
+
 
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 

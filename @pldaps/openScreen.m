@@ -31,7 +31,10 @@ function p = openScreen(p)
 %                           pldapsClassDefaultParameters
 
 InitializeMatlabOpenGL(0,0); %second 0: debug level =0 for speed
-% prevent splash screen
+
+% Preventing sync tests, which can impede task launch
+Screen('Preference', 'SkipSyncTests', 1)
+% Prevent splash screen
 Screen('Preference','VisualDebugLevel',3);
 % Decrease verbosity of PTB as well
 Screen('Preference', 'Verbosity', p.defaultParameters.pldaps.ptbVerbosity);
@@ -93,7 +96,7 @@ else
     PsychImaging('AddTask', 'General', 'FloatingPoint32BitIfPossible');
 end
 
-if strcmp(p.defaultParameters.display.stereoFlip,'right');
+if strcmp(p.defaultParameters.display.stereoFlip,'right')
     disp('****************************************************************')
     disp('****************************************************************')
     disp('Setting stereo mode for use with planar')

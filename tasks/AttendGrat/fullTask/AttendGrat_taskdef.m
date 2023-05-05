@@ -21,9 +21,6 @@ function p = AttendGrat_taskdef(p)
     p.trial.Block.maxBlockTrials = 3;
 
 
-    p.trial.task.CueWait.duration = 30;
-
-
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'green';
@@ -38,7 +35,40 @@ function p = AttendGrat_taskdef(p)
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
 
-    p.trial.task.posList = {[-1*target_posX, -1*target_posY, 0], [target_posX, target_posY, 1], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]};  
+    p.trial.task.posList = {[-1*target_posX, -1*target_posY, 0], [target_posX, target_posY, 1], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]};
+
+
+    % Calculating points along line of is eccentricity
+    p.trial.task.angle = rad2deg(atan2(p.trial.task.RFpos(2), p.trial.task.RFpos(1)));
+    delta = 5;
+    p.trial.task.radius = sqrt(p.trial.task.RFpos(1)^2 + p.trial.task.RFpos(2)^2);
+    p.trial.task.angle_arr = [p.trial.task.angle];
+
+    for i = 1:3
+        theta = p.trial.task.angle - delta;
+        p.trial.task.angle_arr = [p.trial.task.angle_arr theta];
+    
+        theta = p.trial.task.angle + delta;
+        p.trial.task.angle_arr = [p.trial.task.angle_arr theta];
+
+        delta = delta + delta;
+    end
+
+
+    %             if p.trial.task.angle1 ~= p.trial.task.angle
+%     
+%                 x = cosd(p.trial.task.angle1) * p.trial.task.radius;
+%                 y = sind(p.trial.task.angle1) * p.trial.task.radius;
+%                 p.trial.task.target1 = [x,y];
+%     
+%                 p.trial.task.posList = {[-1*p.trial.task.target1(1), -1*p.trial.task.target1(2), 0], [p.trial.task.target1(1), p.trial.task.target1(2), 1], [-1*p.trial.task.target1(1), p.trial.task.target1(2), 0], [p.trial.task.target1(1), -1*p.trial.task.target1(2), 1]};
+%                 pos = cell2mat(p.trial.task.posList(1));
+%     
+%             end
+% 
+%         end
+
+
 
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     if isempty(p.trial.task.contrast)
@@ -48,6 +78,9 @@ function p = AttendGrat_taskdef(p)
 
     % Selecting trial type: cued (1) or uncued (0)
     p.trial.task.cued = 1; 
+
+    % Setting amount of time rings are presented before grats come on
+    p.trial.task.CueWait = 0.50;
     
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
@@ -64,10 +97,11 @@ function p = AttendGrat_taskdef(p)
     if isempty(p.trial.task.oriRange)
         p.trial.task.oriRange = [176,0];
     end   
+    
     p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
     
     % Creating list of orientation change magnitudes to apply to blocks
-    p.trial.Block.changeMagList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    p.trial.Block.changeMagList = [1, 2, 2, 8, 8, 16, 16, 24, 24, 32, 32];
     
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
@@ -78,12 +112,12 @@ function p = AttendGrat_taskdef(p)
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 100];
     mean = 2;
-    bound1 = 0.10;
-    bound2 = 0.90;
+    bound1 = 1.25;
+    bound2 = 2.25;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
-    function r = exprnBounded(mean, num_range, bound1, bound2);
+    function r = exprnBounded(mean, num_range, bound1, bound2)
     
     minE = exp(-bound1 / mean);
     maxE = exp(-bound2 / mean);

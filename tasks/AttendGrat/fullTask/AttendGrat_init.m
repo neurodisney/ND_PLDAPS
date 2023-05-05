@@ -16,6 +16,7 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'ChoiceX',      'p.trial.task.StimSel(1)',             '%d');
     p = ND_AddAsciiEntry(p, 'ChoiceY',      'p.trial.task.StimSel(2)',             '%d');
     p = ND_AddAsciiEntry(p, 'Cued',         'p.trial.task.cued',                   '%d');
+    p = ND_AddAsciiEntry(p, 'WaitPeriod',   'p.trial.task.GratWait',               '%d');
     p = ND_AddAsciiEntry(p, 'OriChangeMag', 'p.trial.Block.changeMag',             '%d');
     p = ND_AddAsciiEntry(p, 'FlightTime',   'p.trial.task.FlightTime',             '%d');
     p = ND_AddAsciiEntry(p, 'ResponseTime', 'p.trial.task.SRT_StimOn',             '%d');
