@@ -12,8 +12,7 @@ function p = FreeChoice_taskdef(p)
 
     % Setting reward probabilities for stimuli for *condition 1* in array [stim 1 prob, stim 2 prob]
     p.trial.task.probSwitch = 0;
-
-    p.trial.stim.recParameters.probabilities = [0.8,0.2];
+    p.trial.stim.recParameters.probabilities = [0.8,0.9];
 
     
     % Assigning reward duration/magnitude to stimuli in array [stim 1 dur, stim 2 dur] 
@@ -24,7 +23,7 @@ function p = FreeChoice_taskdef(p)
 
     % Setting number of trials per block
     % Note reward probability and duration/magnitude assignments to stims changed each block
-    p.trial.Block.maxBlockTrials = 20;
+    p.trial.Block.maxBlockTrials = 5;
 
     % Selecting inter-trial interval (ITI)
     p.trial.task.Timing.ITI = ND_GetITI(1.25, 1.75, [], [], 1, 0.10);
@@ -53,8 +52,8 @@ function p = FreeChoice_taskdef(p)
     % == FIX POINT/FIXATION PARAMETERS ==
 
     % Setting properties for fixation point
-    p.trial.stim.FIXSPOT.type = 'rect'; % Use 'rect' for rectangle, and use 'disc' for circle
-    p.trial.stim.FIXSPOT.color = 'cyan';
+    p.trial.stim.FIXSPOT.type = 'disc'; % Use 'rect' for rectangle, and use 'disc' for circle
+    p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
     
     % Change this parameter to 100 to encompass full screen if fix point fixation difficult during training
