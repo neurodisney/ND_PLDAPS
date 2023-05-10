@@ -301,23 +301,23 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [19.9634, -20.8086];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.5894, -1.5327];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [21.1597, -16.8761];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.0124, -1.3589];    % default offset, used if no calibration points are entered
 
     case 2
         % Dingo hardstate screen Setting 1 6/22/20 
-        SS.eyeCalib.defaultGain      = [15.4337 -16.8761];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.3797 -1.7520];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [21.1597, -16.8761];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.0124, -1.3589];  % default offset, used if no calibration points are entered
         
     case 3
         % Dingo hardstate screen Setting 1 6/22/20 
-        SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];  % default offset, used if no calibration points are entered   
+        SS.eyeCalib.defaultGain      = [21.1597, -16.8761];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.0124, -1.3589];  % default offset, used if no calibration points are entered   
   
     otherwise
         % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [16.4697, -18.767];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.5784, -1.7543];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [21.1597, -16.8761];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.0124, -1.3589];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
