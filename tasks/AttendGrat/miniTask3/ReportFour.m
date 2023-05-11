@@ -90,7 +90,7 @@ function TaskSetUp(p)
 
         % Gathering random orientation for grating
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
-        %change_dir = datasample([1, -1], 1);
+
         
         % Creating target grating pre-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
@@ -100,6 +100,7 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
         p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast;
         p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
+        p.trial.stim.GRATING.tFreq = 1;
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
@@ -118,7 +119,7 @@ function TaskSetUp(p)
 
         % Creating distractor grating 2 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        pos = cell2mat(p.trial.stim.posList(3));
+%         pos = cell2mat(p.trial.stim.posList(3));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(3);
@@ -126,7 +127,7 @@ function TaskSetUp(p)
 
         % Creating distractor grating 3 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        pos = cell2mat(p.trial.stim.posList(4));
+%         pos = cell2mat(p.trial.stim.posList(4));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(4);
@@ -519,13 +520,13 @@ function stimPreGratOriChange(p, val)
                 case 2
                     p.trial.stim.gratings.preTarget.on = 1;
                     p.trial.stim.gratings.distractor1.on = 1;
-                    p.trial.stim.gratings.distractor2.on = 1;
-                    p.trial.stim.gratings.distractor3.on = 1;
+%                     p.trial.stim.gratings.distractor2.on = 1;
+%                     p.trial.stim.gratings.distractor3.on = 1;
                     
                     p.trial.stim.gratings.preTarget.fixActive = 1;
                     p.trial.stim.gratings.distractor1.fixActive = 1;
-                    p.trial.stim.gratings.distractor2.fixActive = 1;
-                    p.trial.stim.gratings.distractor3.fixActive = 1;
+%                     p.trial.stim.gratings.distractor2.fixActive = 1;
+%                     p.trial.stim.gratings.distractor3.fixActive = 1;
                     
                 otherwise
                     error('unusable stim value')

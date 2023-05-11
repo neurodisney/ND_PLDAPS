@@ -49,6 +49,7 @@ function p = start_AttendGrat(subjectname, rig)
     if isempty(RFsize)
        RFsize = 1; 
     end
+    p.trial.stim.RING.radius = RFsize + 0.5;
     p.trial.stim.GRATING.radius = RFsize;
     
     % Collecting contrast value based on response threshold from user for rings

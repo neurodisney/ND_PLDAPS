@@ -147,13 +147,13 @@ function TaskSetUp(p)
 
         % Creating distractor ring 2 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        pos = cell2mat(posList(3));
+%         pos = cell2mat(posList(3));
         p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.rings.distractor2 = pds.stim.Ring(p);
 
         % Creating distractor ring 3 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        pos = cell2mat(posList(4));
+%         pos = cell2mat(posList(4));
         p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.rings.distractor3 = pds.stim.Ring(p);
         
@@ -164,7 +164,7 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
-        p.trial.stim.GRATING.tFreq = 1;
+        p.trial.stim.GRATING.tFreq = 0;
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
@@ -183,7 +183,7 @@ function TaskSetUp(p)
 
         % Creating distractor grating 2 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        pos = cell2mat(posList(3));
+%         pos = cell2mat(posList(3));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(3);
@@ -191,7 +191,7 @@ function TaskSetUp(p)
 
         % Creating distractor grating 3 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        pos = cell2mat(posList(4));
+%         pos = cell2mat(posList(4));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(4);
@@ -642,15 +642,15 @@ function stimRings(p, val)
                 case 0
                     p.trial.stim.rings.cue.on = 0;
                     p.trial.stim.rings.distractor1.on = 0;
-                    p.trial.stim.rings.distractor2.on = 0;
-                    p.trial.stim.rings.distractor3.on = 0;
+%                     p.trial.stim.rings.distractor2.on = 0;
+%                     p.trial.stim.rings.distractor3.on = 0;
                 
                 % Implementing stimulus presentation
                 case 1
                     p.trial.stim.rings.cue.on = 1;
                     p.trial.stim.rings.distractor1.on = 1;
-                    p.trial.stim.rings.distractor2.on = 1;
-                    p.trial.stim.rings.distractor3.on = 1;
+%                     p.trial.stim.rings.distractor2.on = 1;
+%                     p.trial.stim.rings.distractor3.on = 1;
                     
                 otherwise
                     error('unusable stim value')
@@ -696,13 +696,13 @@ function stimPreGratOriChange(p, val)
                 case 2
                     p.trial.stim.gratings.preTarget.on = 1;
                     p.trial.stim.gratings.distractor1.on = 1;
-                    p.trial.stim.gratings.distractor2.on = 1;
-                    p.trial.stim.gratings.distractor3.on = 1;
+%                     p.trial.stim.gratings.distractor2.on = 1;
+%                     p.trial.stim.gratings.distractor3.on = 1;
                     
                     p.trial.stim.gratings.preTarget.fixActive = 1;
                     p.trial.stim.gratings.distractor1.fixActive = 1;
-                    p.trial.stim.gratings.distractor2.fixActive = 1;
-                    p.trial.stim.gratings.distractor3.fixActive = 1;
+%                     p.trial.stim.gratings.distractor2.fixActive = 1;
+%                     p.trial.stim.gratings.distractor3.fixActive = 1;
                     
                 otherwise
                     error('unusable stim value')

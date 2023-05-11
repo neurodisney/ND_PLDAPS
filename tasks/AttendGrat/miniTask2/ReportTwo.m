@@ -93,6 +93,7 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
         p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
+        p.trial.stim.GRATING.tFreq = 1;
         p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast;
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 

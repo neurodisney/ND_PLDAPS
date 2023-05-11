@@ -33,52 +33,90 @@ function p = AttendGrat_taskdef(p)
     end
     
     targ_x = p.trial.task.RFpos(1);
-    targ_y = p.trial.task.RFpos(2);
+    targ_y = p.trial.task.RFpos(2); 
 
-    posList = {[-1*targ_x, targ_y, 0], [targ_x, targ_y, 1], [-1*targ_x, -1*targ_y, 0], [targ_x, -1*targ_y, 1]};
+%     posList = {[-1*targ_x, targ_y, 0], [targ_x, targ_y, 1], [-1*targ_x, -1*targ_y, 0], [targ_x, -1*targ_y, 1]};
+    posList = {[targ_x, targ_y, 1], [-1*targ_x, -1*targ_y, 0]};
     p.trial.task.posList = posList(randperm(length(posList)));
 
     % Calculating points along line of is eccentricity
-    angle = rad2deg(atan2(targ_y, targ_x));
-    radius = sqrt(targ_x^2 + targ_y^2);
-    delta = 5;
-    
-    angle_arr = [angle];
-    for b = 1:3
-        theta = angle - delta;
-        angle_arr = [angle_arr theta];
-    
-        theta = angle + delta;
-        angle_arr = [angle_arr theta];
+%     targ_angle = rad2deg(atan2(targ_y, targ_x));
+%     angle_arr = [targ_angle, targ_angle + 90, targ_angle + 180, targ_angle + 270];
+%     radius = sqrt(targ_x^2 + targ_y^2);
+%     delta = 5;
+% 
+%     p.trial.task.targPosList = posList;
+%     for i = 1:3
+%         delta_arr = [delta, delta, delta, delta];
+%         theta_arr = angle_arr + delta_arr;
+%         
+%         delta_up = {};
+%         for q = 1:4
+%           x = cosd(theta_arr(q)) * radius;
+%           y = sind(theta_arr(q)) * radius;
+% 
+%           delta_up = [delta_up [x, y, 1]];
+%         end
+% 
+%         theta_arr = angle_arr - delta_arr;
+% 
+%         delta_down = {};
+%         for q = 1:4
+%           x = cosd(theta_arr(q)) * radius;
+%           y = sind(theta_arr(q)) * radius;
+% 
+%           delta_down = [delta_down [x, y, 1]];
+%         end
+% 
+%         p.trial.task.targPosList = [p.trial.task.targPosList; delta_up; delta_down];
+% 
+%         delta = delta + delta;
+%     end
 
-        delta = delta + delta;
-    end
 
-    p.trial.task.targPosList = {};
-    for c = 1:7
-        x = cosd(angle_arr(c)) * radius;
-        y = sind(angle_arr(c)) * radius;
 
-        x_diff = sqrt(targ_x^2 - x^2);
-        y_diff = sqrt(targ_y^2 - y^2);
+            
 
-        if x < targ_x
-            if y > targ_y
-                p.trial.task.targPosList = [p.trial.task.targPosList; {[x, y, 1], [-1*(sqrt(targ_x^2 - x_diff^2)), -1*(sqrt(targ_y^2 + y_diff^2)), 0], [sqrt(targ_x^2 + x_diff^2), -1*(sqrt(targ_y^2 - y_diff^2)), 1], [-1*(sqrt(targ_x^2 + x_diff^2)), sqrt(targ_y^2 - y_diff^2), 0]}];
-            elseif y < targ_y
-                p.trial.task.targPosList = [p.trial.task.targPosList; {[sqrt(targ_x^2 + x_diff^2), -1*(sqrt(targ_y^2 - y_diff^2)), 1], [-1*(sqrt(targ_x^2 - x_diff^2)), -1*(sqrt(targ_y^2 + y_diff^2)), 0], [x, y, 1], [-1*(sqrt(targ_x^2 + x_diff^2)), sqrt(targ_y^2 - y_diff^2), 0]}];
-            end
 
-        elseif x > targ_x
-            if y > targ_y
-                p.trial.task.targPosList = [p.trial.task.targPosList; {[-1*(sqrt(targ_x^2 + x_diff^2)), sqrt(targ_y^2 - y_diff^2), 0], [x, y, 1], [-1*(sqrt(targ_x^2 - x_diff^2)), -1*(sqrt(targ_y^2 + y_diff^2)), 0], [sqrt(targ_x^2 - x_diff^2), -1*(sqrt(targ_y^2 - y_diff^2)), 1]}];
-            elseif y < targ_y
-                p.trial.task.targPosList = [p.trial.task.targPosList; {[x, y, 1], [-1*(sqrt(targ_x^2 - x_diff^2)), sqrt(targ_y^2 + y_diff^2), 0], [sqrt(targ_x^2 - x_diff^2), -1*(sqrt(targ_y^2 + y_diff^2)), 1], [-1*(sqrt(targ_x^2 + x_diff^2)), -1*(sqrt(targ_y^2 - y_diff^2)), 0]}];
-            end
-
-        end
-
-    end 
+%     radius = sqrt(targ_x^2 + targ_y^2);
+%     delta = 5;
+%     
+%     angle_arr = [angle];
+%     for b = 1:3
+%         theta = angle - delta;
+%         angle_arr = [angle_arr theta];
+%     
+%         theta = angle + delta;
+%         angle_arr = [angle_arr theta];
+% 
+%         delta = delta + delta;
+%     end
+% 
+%     p.trial.task.targPosList = {};
+%     for c = 1:7
+%         x = cosd(angle_arr(c)) * radius;
+%         y = sind(angle_arr(c)) * radius;
+% 
+%         x_diff = sqrt(targ_x^2 - x^2);
+%         y_diff = sqrt(targ_y^2 - y^2);
+% 
+%         if x < targ_x
+%             if y > targ_y
+%                 p.trial.task.targPosList = [p.trial.task.targPosList; {[x, y, 1], [-1*(sqrt(targ_x^2 - x_diff^2)), -1*(sqrt(targ_y^2 + y_diff^2)), 0], [sqrt(targ_x^2 + x_diff^2), -1*(sqrt(targ_y^2 - y_diff^2)), 1], [-1*(sqrt(targ_x^2 + x_diff^2)), sqrt(targ_y^2 - y_diff^2), 0]}];
+%             elseif y < targ_y
+%                 p.trial.task.targPosList = [p.trial.task.targPosList; {[sqrt(targ_x^2 + x_diff^2), -1*(sqrt(targ_y^2 - y_diff^2)), 1], [-1*(sqrt(targ_x^2 - x_diff^2)), -1*(sqrt(targ_y^2 + y_diff^2)), 0], [x, y, 1], [-1*(sqrt(targ_x^2 + x_diff^2)), sqrt(targ_y^2 - y_diff^2), 0]}];
+%             end
+% 
+%         elseif x > targ_x
+%             if y > targ_y
+%                 p.trial.task.targPosList = [p.trial.task.targPosList; {[-1*(sqrt(targ_x^2 + x_diff^2)), sqrt(targ_y^2 - y_diff^2), 0], [x, y, 1], [-1*(sqrt(targ_x^2 - x_diff^2)), -1*(sqrt(targ_y^2 + y_diff^2)), 0], [sqrt(targ_x^2 - x_diff^2), -1*(sqrt(targ_y^2 - y_diff^2)), 1]}];
+%             elseif y < targ_y
+%                 p.trial.task.targPosList = [p.trial.task.targPosList; {[x, y, 1], [-1*(sqrt(targ_x^2 - x_diff^2)), sqrt(targ_y^2 + y_diff^2), 0], [sqrt(targ_x^2 - x_diff^2), -1*(sqrt(targ_y^2 + y_diff^2)), 1], [-1*(sqrt(targ_x^2 + x_diff^2)), -1*(sqrt(targ_y^2 - y_diff^2)), 0]}];
+%             end
+% 
+%         end
+% 
+%     end 
 
 
     % Storing contrast for cue and distractor rings collected from user or assigning default values
@@ -95,13 +133,6 @@ function p = AttendGrat_taskdef(p)
     
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
-    
-    % Assigning radius to rings
-    p.trial.stim.RING.radius = 1.5;
-
-    % Turning flashing on (1) or off (0) for stimuli
-    p.trial.stim.RING.flashing = 0;
-    p.trial.stim.GRATING.flashing = 0;
 
 
     % Creating list of orientations using values collected from user or using default values

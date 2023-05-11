@@ -35,16 +35,15 @@ function p = ReportFour_taskdef(p)
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
 
-    p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
-    
+    %p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
+    p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0]};
+
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     if isempty(p.trial.stim.gratingParameters.contrast)
         p.trial.stim.gratingParameters.contrast = 0.70;
     end
     p.trial.stim.gratingParameters.sFreq = 2;
-
-    % Turning flashing on (1) or off (0) for stimuli
-    p.trial.stim.GRATING.flashing = 0;
+    
 
     % Creating list of orientations using values collected from user or using default values
     if isempty(p.trial.task.oriRange)

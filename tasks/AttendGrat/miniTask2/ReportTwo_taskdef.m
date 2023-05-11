@@ -38,8 +38,9 @@ function p = ReportTwo_taskdef(p)
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
 
-    p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
-    
+    %p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
+    p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0]};
+
     % Storing contrast for cue and distractor rings collected from user or assigning default values
     p.trial.stim.gratingParameters.contrast = 0.90;
     p.trial.stim.gratingParameters.sFreq = 2;
