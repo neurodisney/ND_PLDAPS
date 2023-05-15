@@ -71,8 +71,7 @@ function TaskSetUp(p)
             p.trial.Block.trialCount = 0;
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
 
-        end
-        
+        end 
 
         % Assigning orientation change magnitude according to block
         if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
@@ -95,38 +94,38 @@ function TaskSetUp(p)
         p.trial.task.stimState = 0;
         % Creating place to save when fixation started
         p.trial.task.SRT_FixStart = NaN;
-        % Creating place to save when stimuli came on screen
+        % Creating place to save time when stimuli came on screen
         p.trial.task.SRT_StimOn = NaN;
         % Creating space to save time taken for saccade 
         p.trial.task.FlightTime = NaN;
-
+        % Creating space to save time when cued presented  
         p.trial.task.CueOn = NaN;
+        % Creating space to save time when gratings presented 
         p.trial.task.GratOn = NaN;
-
 
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
         
 
-        % Shuffling positions in positions list
-        posList = p.trial.task.posList(randperm(length(p.trial.task.posList)));
+        % Randomly selecting stimulus arrangement
+        % Shuffling stim positions for certain arrangements
+        posIndex = datasample([1,1,1,2,3,4,5,6,7], 1); 
+        posList = p.trial.task.posList(posIndex, :);
 
-        % Gathering random orientation for grating
+        if posIndex == 1
+            posList = posList(randperm(length(posList)));
+        end
+
+        % Randomly selecting orientations for gratings
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
 
+        % Randomly selecting task condition (cued = 1 or uncued = 0)
         p.trial.task.cued = datasample([1,0,0,1,1,1], 1); 
         
 
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(posList(1));
-
-%         if pos([1 2]) == p.trial.task.RFpos
-%             index = datasample([1,2,3,4,5,6,7], 1);
-%             posList = p.trial.task.targPosList(index,:);
-%             pos = cell2mat(posList(1));
-%         end
-
         p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
 
@@ -147,13 +146,13 @@ function TaskSetUp(p)
 
         % Creating distractor ring 2 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-%         pos = cell2mat(posList(3));
+        pos = cell2mat(posList(3));
         p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.rings.distractor2 = pds.stim.Ring(p);
 
         % Creating distractor ring 3 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-%         pos = cell2mat(posList(4));
+        pos = cell2mat(posList(4));
         p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.rings.distractor3 = pds.stim.Ring(p);
         
@@ -183,7 +182,7 @@ function TaskSetUp(p)
 
         % Creating distractor grating 2 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-%         pos = cell2mat(posList(3));
+        pos = cell2mat(posList(3));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(3);
@@ -191,7 +190,7 @@ function TaskSetUp(p)
 
         % Creating distractor grating 3 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-%         pos = cell2mat(posList(4));
+        pos = cell2mat(posList(4));
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(4);
@@ -642,15 +641,15 @@ function stimRings(p, val)
                 case 0
                     p.trial.stim.rings.cue.on = 0;
                     p.trial.stim.rings.distractor1.on = 0;
-%                     p.trial.stim.rings.distractor2.on = 0;
-%                     p.trial.stim.rings.distractor3.on = 0;
+                    p.trial.stim.rings.distractor2.on = 0;
+                    p.trial.stim.rings.distractor3.on = 0;
                 
                 % Implementing stimulus presentation
                 case 1
                     p.trial.stim.rings.cue.on = 1;
                     p.trial.stim.rings.distractor1.on = 1;
-%                     p.trial.stim.rings.distractor2.on = 1;
-%                     p.trial.stim.rings.distractor3.on = 1;
+                    p.trial.stim.rings.distractor2.on = 1;
+                    p.trial.stim.rings.distractor3.on = 1;
                     
                 otherwise
                     error('unusable stim value')
@@ -696,13 +695,13 @@ function stimPreGratOriChange(p, val)
                 case 2
                     p.trial.stim.gratings.preTarget.on = 1;
                     p.trial.stim.gratings.distractor1.on = 1;
-%                     p.trial.stim.gratings.distractor2.on = 1;
-%                     p.trial.stim.gratings.distractor3.on = 1;
+                    p.trial.stim.gratings.distractor2.on = 1;
+                    p.trial.stim.gratings.distractor3.on = 1;
                     
                     p.trial.stim.gratings.preTarget.fixActive = 1;
                     p.trial.stim.gratings.distractor1.fixActive = 1;
-%                     p.trial.stim.gratings.distractor2.fixActive = 1;
-%                     p.trial.stim.gratings.distractor3.fixActive = 1;
+                    p.trial.stim.gratings.distractor2.fixActive = 1;
+                    p.trial.stim.gratings.distractor3.fixActive = 1;
                     
                 otherwise
                     error('unusable stim value')
@@ -811,21 +810,4 @@ function TaskCleanAndSave(p)
         
         % Loading data into ascii table for plotting
         ND_Trial2Ascii(p, 'save');
-            
-            
-           
-            
-            
-       
-                    
-             
-
-
-
-
-
-
-
-
-
-
+        
