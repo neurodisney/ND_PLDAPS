@@ -1,6 +1,7 @@
-classdef Ring < pds.stim.BaseStim
 % Ring stimulus
 % John Amodeo, Oct 2022
+
+classdef Ring < pds.stim.BaseStim
 
     properties
 

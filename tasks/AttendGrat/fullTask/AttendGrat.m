@@ -127,7 +127,6 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(posList(1));
         p.trial.stim.RING.pos = pos([1 2]);
-        p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
 
         if p.trial.task.cued
             p.trial.stim.RING.color = 'cueGrey';
@@ -164,6 +163,7 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
         p.trial.stim.GRATING.tFreq = 0;
+        p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object

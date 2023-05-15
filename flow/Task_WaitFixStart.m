@@ -10,6 +10,7 @@ if(p.trial.task.fixFix == 0)
     % Fixation has occured
     if(p.trial.stim.fix.fixating)
         p.trial.task.fixFix = 1;
+        p.trial.task.SRT_FixStart = p.trial.CurTime;
 
         % Time to fixate has expired
     elseif(p.trial.CurTime > p.trial.EV.TaskStart + p.trial.task.Timing.WaitFix)
