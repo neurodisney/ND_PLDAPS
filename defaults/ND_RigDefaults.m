@@ -371,18 +371,16 @@ SS.stim.DRIFTGRAT.res      = 1000;
 SS.stim.DRIFTGRAT.radius   = 1;
 SS.stim.DRIFTGRAT.sFreq    = 3;
 
-
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 
 % Ring (i.e. location cue)
-SS.stim.RING.pos       = [0,0];
-SS.stim.RING.size      = 2;
-SS.stim.RING.linewidth = 0.1;
-SS.stim.RING.color     = 'fixspot'; 
-SS.stim.RING.fixWin    = 2;
-SS.stim.RING.alpha     = 1; % Fully opaque
-SS.stim.RING.flashing  = 0;
-
+SS.stim.RING.pos           = [0,0];
+SS.stim.RING.size          = 2;
+SS.stim.RING.linewidth     = 0.1;
+SS.stim.RING.color         = 'fixspot'; 
+SS.stim.RING.fixWin        = 2;
+SS.stim.RING.alpha         = 1; % Fully opaque
+ 
 % Rectangle
 SS.stim.RECTANGLE.pos       = [0,0];
 SS.stim.RECTANGLE.size      = 2;

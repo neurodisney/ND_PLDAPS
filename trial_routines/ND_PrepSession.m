@@ -35,6 +35,7 @@ if(strcmp(p.defaultParameters.session.subject,'mouse') || strcmp(p.defaultParame
             p.defaultParameters.behavior.joystick.use         = 0;
             % p.defaultParameters.datapixx.useForReward       = 0;
             % p.defaultParameters.sound.use                   = 0;
+            
         case 'debug'
             
         case 'test'

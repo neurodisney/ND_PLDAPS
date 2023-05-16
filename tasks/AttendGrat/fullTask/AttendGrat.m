@@ -129,9 +129,9 @@ function TaskSetUp(p)
         p.trial.stim.RING.pos = pos([1 2]);
 
         if p.trial.task.cued
-            p.trial.stim.RING.color = 'cueGrey';
+            p.trial.stim.RING.color = p.trial.stim.ringParameters.cueCon;
         else
-            p.trial.stim.RING.color = 'distGrey';
+            p.trial.stim.RING.color = p.trial.stim.ringParameters.distCon;
         end
 
         p.trial.stim.rings.cue = pds.stim.Ring(p);
@@ -140,7 +140,7 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(posList(2));
         p.trial.stim.RING.pos = pos([1 2]);
-        p.trial.stim.RING.color = 'distGrey';
+        p.trial.stim.RING.color = p.trial.stim.ringParameters.distCon;
         p.trial.stim.rings.distractor1 = pds.stim.Ring(p);
 
         % Creating distractor ring 2 by assigning values to ring properties in p object
