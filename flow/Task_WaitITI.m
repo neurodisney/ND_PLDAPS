@@ -5,10 +5,10 @@ function p = Task_WaitITI(p)
 % wolf zinke, Oct 2017
 
 if (p.defaultParameters.earlyFlag == 1)
-    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 4;
+    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 2;
     p.defaultParameters.earlyFlag = 0;
 elseif (p.defaultParameters.breakFlag == 1)
-    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 2;
+    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 1;
     p.defaultParameters.breakFlag = 0;
 end
 

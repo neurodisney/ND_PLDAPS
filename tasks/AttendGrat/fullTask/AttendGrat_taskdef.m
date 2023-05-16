@@ -102,12 +102,13 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
     
     % Creating list of orientation change magnitudes to apply to blocks
-    p.trial.Block.changeMagList = [1, 2, 2, 8, 8, 16, 16, 24, 24, 32, 32];
+    p.trial.Block.changeMagList = [1, 2, 2, 8, 8, 16, 16, 16, 24, 24, 24, 32, 32, 32, 32];
     
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
     p.trial.stim.gratingParameters.sFreq = 2;
+    p.trial.stim.gratingParameters.tFreq = 1.0;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
@@ -135,7 +136,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.breakFixCheck = 0.050;
     
     % Setting time window in which response saccade allowed
-    p.trial.task.Timing.saccadeStart = 0.030;
+    p.trial.task.Timing.saccadeStart = 0.020;
     p.trial.task.saccadeTimeout = 0.70;
     
     % Setting time for which target must be fixed on before trial marked correct
@@ -150,7 +151,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.reward.IncrementDur = [0.10, 0.15, 0.175, 0.20, 0.225, 0.25, 0.30];
 
     % Degree to which current reward decreased for bad performance 
-    p.trial.reward.DiscourageProp = 0.7;
+    p.trial.reward.DiscourageProp = 0.8;
     
 
 end
