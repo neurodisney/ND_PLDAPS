@@ -30,5 +30,3 @@ p.defaultParameters.pldaps.trialStates.frameUpdate           =  1;  % read in ha
 p.defaultParameters.pldaps.trialStates.framePrepareDrawing   =  2;  % determine current task state and prepare whatever needed based on current time and behavior
 p.defaultParameters.pldaps.trialStates.frameDraw             =  3;  % update graphic buffer as preparation to be shown on screen
 p.defaultParameters.pldaps.trialStates.frameFlip             =  4;  % screen refresh, put stuff on screen
-
-  

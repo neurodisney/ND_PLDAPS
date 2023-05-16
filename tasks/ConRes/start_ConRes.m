@@ -30,7 +30,7 @@ function p = start_ConRes(subjectname, rig)
     % Specifying which matrix variables can be edited for future trials
     SS.editable = {};
 
-    % Loading non-default rig settings into pldaps ds.reward.give(p, 0.05);matrix
+    % Loading non-default rig settings into pldaps matrix
     SS.pldaps.draw.eyepos.use = 1;
     SS.pldaps.draw.grid.use = 1;
     SS.datapixx.useAsEyepos = 1;
@@ -51,8 +51,8 @@ function p = start_ConRes(subjectname, rig)
     if isempty(RFsize)
        RFsize = 1; 
     end
-    p.trial.stim.RING.radius = RFsize;
-
+    p.trial.stim.RING.radius = RFsize + 0.5;
+    
     % Command to run experimemt
     p.run;
 

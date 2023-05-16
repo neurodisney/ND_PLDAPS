@@ -11,7 +11,7 @@ function p = ConRes(p, state)
      % Initializing task
     if(isempty(state))
         % Populating pldaps structure with elements needed to begin task if empty
-        p = ContResponse_init(p);
+        p = ConRes_init(p);
 
     else
         % If pldaps structure is populated, standard trial routines run
@@ -67,25 +67,15 @@ function TaskSetUp(p)
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
 
-        % Gathering random orientation for grating
-        %p.trial.stim.gratingParameters.ori = datasample(p.trial.task.oriList, 1);
-
-        % Manipulating specific trial parameters for training purposes
-        %p.trial.stim.gratingParameters.contrast(1) = datasample([0.85, 0.87, 0.90, 0.93, 0.95],1);
-
-
         
         % Creating distractor ring 1 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         pos = [4,4];
         p.trial.stim.RING.pos = pos;
-        p.trial.stim.RING.color = 'distGrey';
+        p.trial.stim.RING.color = char(datasample(p.trial.task.upConRange, 1, 'Replace', false));
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.ring = pds.stim.Ring(p);
-
-
-        % Turning off autofix so fix windows can be set manually
-        p.trial.stim.gratingParameters.targetAutoFixWin = 0;
+        
 
         % Increasing reward after specific number of correct trials
         reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
@@ -246,11 +236,13 @@ function presentStim(p, val)
                 % Implementing no stimulus (grat) presentation
                 case 0
                    p.trial.stim.ring.on = 0;
+                   p.trial.stim.ring.fixActive = 0;
                 
                 % Implementing stimulus (grat) presentation, both object on
                 % screen and fixation window around it
                 case 2
-                    p.trial.stim.ring.on = 1;                  
+                    p.trial.stim.ring.on = 1;
+                    p.trial.stim.ring.fixActive = 0;
                 
                 % Error thrown if neither case designated
                 otherwise

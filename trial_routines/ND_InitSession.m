@@ -54,7 +54,6 @@ p.defaultParameters.SmryStr          = ' '; % text message with trial/session su
 
 p.defaultParameters.earlyFlag        = 0;
 p.defaultParameters.breakFlag        = 0;
-
 p.defaultParameters.colorIndex       = 0;
 
 % --------------------------------------------------------------------%

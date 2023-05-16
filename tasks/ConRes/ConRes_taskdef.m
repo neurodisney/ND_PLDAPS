@@ -24,24 +24,20 @@ function p = ConRes_taskdef(p)
 
 
     % Setting properties for fixation point
-    p.trial.stim.FIXSPOT.type = 'disc';    
-    p.trial.stim.FIXSPOT.color = 'red';
-    p.trial.stim.FIXSPOT.size = 0.4;
-    p.trial.stim.FIXSPOT.fixWin = 2.30;
+    p.trial.stim.FIXSPOT.type = 'rect';    
+    p.trial.stim.FIXSPOT.color = 'dRed';
+    p.trial.stim.FIXSPOT.size = 0.25;
+    p.trial.stim.FIXSPOT.fixWin = 2;
 
 
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
 
-    % Assigning properties to stimuli
-    p.trial.stim.gratingParameters.contrast = [0.90, 0.90]; % Changed from [0.96, 0.96]
-
     % Creating flat-hazard function from which to pull out time of wait before stim change
-    p.trial.task.presDur = 0.500;
+    p.trial.task.presDur = 1.5;
 
     % Creating trial increments to scale size of reward based on good performance
-    p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
-    
+    p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];    
     
 
     % List of increasing durations of juice flow for reward

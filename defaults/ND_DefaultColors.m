@@ -108,6 +108,33 @@ for(i=1:9)
     ND_DefineCol(p, sprintf('grey%d',i), 60+i, [i, i, i] ./ 10);
 end
 
-ND_DefineCol(p,  'cueGrey',        56, [0.29, 0.29, 0.29]);
-ND_DefineCol(p,  'distGrey',       57, [0.45, 0.45, 0.45]);
+
+% Creating color range for contrast response function (used in ConRes)
+up = bgColor;
+down   = bgColor;
+
+step  = 0.01; 
+
+p.trial.task.upConRange = {'bg'};
+p.trial.task.downConRange = {'bg'};
+for i = 1:20
+    
+    up = up + step;
+    down = down - step;
+    
+    up_name = sprintf('up%d',i);
+    down_name = sprintf('down%d',i);
+    
+    ND_DefineCol(p, up_name, 70+i, up);
+    ND_DefineCol(p, down_name, 100+i, down);
+    
+    p.trial.task.upConRange = [p.trial.task.upConRange up_name];
+    p.trial.task.downConRange = [p.trial.task.downConRange down_name];
+    
+end
+
+
+% Default distractor and cue ring colors    
+ND_DefineCol(p, 'cueGrey',        56, [0.29, 0.29, 0.29]);
+ND_DefineCol(p, 'distGrey',       57, [0.45, 0.45, 0.45]);
 

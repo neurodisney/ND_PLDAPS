@@ -78,11 +78,14 @@ function p = AttendGrat_taskdef(p)
     end
 
 
-    % Storing contrast for cue and distractor rings collected from user or assigning default values
-    if isempty(p.trial.task.contrast)
-        p.trial.task.contrast = 0.65;
+    % Loading contrast for cue and distractor rings
+    if ~p.trial.task.cStep
+        p.trial.stim.ringParameters.cueCon = 'cueGrey';
+        p.trial.stim.ringParameters.distCon = 'distGrey';
+    else
+        p.trial.stim.ringParameters.cueCon = sprintf('down%d', p.trial.task.cStep);
+        p.trial.stim.ringParameters.distCon = sprintf('up%d', p.trial.task.cStep);
     end
-    
 
     % Selecting trial type: cued (1) or uncued (0)
     p.trial.task.cued = 1; 
@@ -94,12 +97,8 @@ function p = AttendGrat_taskdef(p)
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
 
 
-    % Creating list of orientations using values collected from user or using default values
-    if isempty(p.trial.task.oriRange)
-        p.trial.task.oriRange = [176,0];
-    end   
-    
-    p.trial.task.oriList = p.trial.task.oriRange(2):15:p.trial.task.oriRange(1); % 15 should be changed to something smaller for true trials
+    % Creating list of orientations using values collected from user or using default values 
+    p.trial.task.oriList = p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
     
     % Creating list of orientation change magnitudes to apply to blocks
     p.trial.Block.changeMagList = [1, 2, 2, 8, 8, 16, 16, 24, 24, 32, 32];

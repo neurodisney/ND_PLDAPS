@@ -53,13 +53,16 @@ function p = start_AttendGrat(subjectname, rig)
     p.trial.stim.GRATING.radius = RFsize;
     
     % Collecting contrast value based on response threshold from user for rings
-    contrast = input('What is a 0.XX contrast near response threshold? (press enter for default value): ');
-    p.trial.task.contrast = contrast;
+    cStep = input('What is a contrast step number near response threshold? (press enter for default value): ');
+    if isempty(cStep)
+        cStep = 0;
+    end
+    p.trial.task.cStep = cStep;
     
     % Collecting orientations 0.5 standard deviation (SD) from peak on tuning curve for grating assignment
     oriRange = input('What orienations are + and -0.5 SD from preferred, as an array? (press enter for default values): ');
     if isempty(oriRange)
-        p.trial.task.oriRange = [176,0];
+        oriRange = [0, 176];
     end   
     p.trial.task.oriRange = oriRange;
 
