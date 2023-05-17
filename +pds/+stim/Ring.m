@@ -10,6 +10,8 @@ classdef Ring < pds.stim.BaseStim
         displayRect 
         lineWeight  
         color
+        
+        flash_screen
 
     end
     
@@ -17,7 +19,7 @@ classdef Ring < pds.stim.BaseStim
     methods
             
         
-        function obj = Ring(p, pos, fixWin, radius, lineWeight, color)
+        function obj = Ring(p, pos, fixWin, radius, lineWeight, color, flash_screen)
             
             if nargin < 2 || isempty(pos)
                 pos = p.trial.stim.RING.pos;
@@ -39,6 +41,10 @@ classdef Ring < pds.stim.BaseStim
                 color = p.trial.stim.RING.color;
             end
             
+            if nargin < 7 || isempty(flash_screen)
+                flash_screen = p.trial.stim.RING.flash_screen;
+            end
+            
             
             % Load the BaseStim superclass
             obj@pds.stim.BaseStim(p, pos, fixWin)
@@ -52,7 +58,8 @@ classdef Ring < pds.stim.BaseStim
             obj.radius        = radius;
             obj.displayRect   = [pos - [radius, radius], pos + [radius, radius]];
             obj.lineWeight    = lineWeight;
-            obj.color = p.trial.display.clut.(color);   
+            obj.color = p.trial.display.clut.(color);
+            obj.flash_screen  = flash_screen;
     
        end
         
@@ -60,9 +67,19 @@ classdef Ring < pds.stim.BaseStim
        function draw(obj, p)
 
             if obj.on 
-                % Draw cue ring texture on screen
+                
+                % Flickering screen if screen_flash is set to on
+                if obj.flash_screen
+               
+                    Screen('Flip', p.trial.display.ptr);
+                    Screen('Flip', p.trial.display.ptr);
+                    Screen('Flip', p.trial.display.ptr);
+                    
+                end
+                
+                % Drawing cue ring texture on screen
                 Screen('FrameOval', p.trial.display.overlayptr, obj.color, obj.displayRect, obj.lineWeight(1), obj.lineWeight(2));
-
+                
             end
             
        end

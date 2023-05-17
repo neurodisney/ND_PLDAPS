@@ -19,9 +19,6 @@ function p = ConRes_taskdef(p)
     % Setting time-out(s) for incorrect response
     p.trial.task.Timing.TimeOut = 1;   
 
-    % Setting number of trials per block
-    p.trial.Block.maxBlockTrials = 5;
-
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
@@ -30,11 +27,12 @@ function p = ConRes_taskdef(p)
     p.trial.stim.FIXSPOT.fixWin = 2;
 
 
-    % Assigning lineweight (thickness) to rings
+    % Assigning parameters to ring
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
+    p.trial.stim.RING.flash_screen = 1;
 
-    % Creating flat-hazard function from which to pull out time of wait before stim change
-    p.trial.task.presDur = 1.5;
+    % Creating duration for stimulus presentation
+    p.trial.task.presDur = 5;
 
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];    

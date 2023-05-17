@@ -380,6 +380,7 @@ SS.stim.RING.linewidth     = 0.1;
 SS.stim.RING.color         = 'fixspot'; 
 SS.stim.RING.fixWin        = 2;
 SS.stim.RING.alpha         = 1; % Fully opaque
+SS.stim.RING.flash_screen  = 0;
  
 % Rectangle
 SS.stim.RECTANGLE.pos       = [0,0];

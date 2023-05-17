@@ -3,6 +3,7 @@
 % Function to run task for experiment
 function p = ConRes(p, state)
 
+
     % Checking for task name and filling if empty
     if(~exist('state','var'))
         state = [];
@@ -94,6 +95,7 @@ function TaskSetUp(p)
 % Function to execute trial
 function TaskDesign(p)
 
+
         % Command moving trial from epoch to epoch over course of trial
         switch p.trial.CurrEpoch
 
@@ -131,19 +133,22 @@ function TaskDesign(p)
 
                 % Checking if monkey is contining to fixate
                 if(p.trial.stim.fix.fixating)
+                    
                     % Checking if current time is pre-set amount after 
                     % point at which fixation started
                     if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
                         % Presenting ring
                         presentStim(p, 2);
-                        % Marking time stimulus was presented
+     
+                        % Marking time stimulus presented
                         p.trial.task.SRT_StimOn = p.trial.CurTime;
-
+               
                         % Switching task to epoch in which stimulus
                         % changes in orientation after variable amount
                         % of time
                         ND_SwitchEpoch(p, 'WaitReward')  
                     end
+                    
                 end
                 
                 % Checking if monkey has broken fixation
@@ -166,15 +171,14 @@ function TaskDesign(p)
             case p.trial.epoch.WaitReward
 
                 % Confirming monkey is still fixating
-                if(p.trial.stim.fix.fixating)
-                    % Checking fixation time against value selected from flat
-                    % hazard function
+                if(p.trial.stim.fix.fixating)     
+                    % Checking fixation time against pre-set wait period
                     if (p.trial.CurTime > p.trial.task.SRT_StimOn + p.trial.task.presDur)
                         Task_CorrectReward(p);
                     end
 
                 % Checking if fixation has been broken    
-                elseif(~p.trial.stim.fix.fixating)        
+                elseif(~p.trial.stim.fix.fixating) 
                         % If fix broken, play noise signaling fix break
                         pds.audio.playDP(p, 'breakfix', 'left'); 
                         % Calculating and storing time from fix start to fix leave
@@ -223,47 +227,50 @@ function TaskDesign(p)
 % Function to present stimuli on screen
 function presentStim(p, val)
         
-        % Checking if stimulus status, which reflects stage of stimulus
-        % presentation (i.e., what is on the screen and what is not), is 
-        % different from previous trial
-        if(val ~= p.trial.task.stimState)
-            % Updating stimulus status if so
-            p.trial.task.stimState = val;
-            
-            % Turning stimulus presentation on/off based on stimulus presentation status
-            switch val
-                
-                % Implementing no stimulus (grat) presentation
-                case 0
-                   p.trial.stim.ring.on = 0;
-                   p.trial.stim.ring.fixActive = 0;
-                
-                % Implementing stimulus (grat) presentation, both object on
-                % screen and fixation window around it
-                case 2
-                    p.trial.stim.ring.on = 1;
-                    p.trial.stim.ring.fixActive = 0;
-                
-                % Error thrown if neither case designated
-                otherwise
-                    error('unusable stim value')
-      
-            end
-            
-            % Recording start time of present/absent stimulus presentation
-            if(val == 0)
-                ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');    
-            elseif(val == 2)
-                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
-            end 
+
+    % Checking if stimulus status, which reflects stage of stimulus
+    % presentation (i.e., what is on the screen and what is not), is 
+    % different from previous trial
+    if(val ~= p.trial.task.stimState)
+        % Updating stimulus status if so
+        p.trial.task.stimState = val;
+
+        % Turning stimulus presentation on/off based on stimulus presentation status
+        switch val
+
+            % Implementing no stimulus (grat) presentation
+            case 0
+               p.trial.stim.ring.on = 0;
+               p.trial.stim.ring.fixActive = 0;
+
+            % Implementing stimulus (grat) presentation, both object on
+            % screen and fixation window around it
+            case 2
+                p.trial.stim.ring.on = 1;
+                p.trial.stim.ring.fixActive = 0;
+
+            % Error thrown if neither case designated
+            otherwise
+                error('unusable stim value')
 
         end
+
+        % Recording start time of present/absent stimulus presentation
+        if(val == 0)
+            ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');    
+        elseif(val == 2)
+            ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+        end 
+
+    end
         
          
         
 
 % Function to mark trial correct and dispense reward        
 function p = Task_CorrectReward(p)
+
+
     % Marking trial outcome as correct
     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
     p.trial.task.Good = 1;
@@ -286,15 +293,16 @@ function p = Task_CorrectReward(p)
 % Function to clean up screen textures and variables, and to save data to 
 % ascii table (ReportChange_init.m)
 function TaskCleanAndSave(p)
-            
-            % Saving key variables
-            Task_Finish(p);
-            
-            % Trial outcome saved as event code and converted to str for
-            % ascii table loading
-            p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-            
-            % Loading data into ascii table for export and analysis
-            ND_Trial2Ascii(p, 'save');
+      
+
+    % Saving key variables
+    Task_Finish(p);
+
+    % Trial outcome saved as event code and converted to str for
+    % ascii table loading
+    p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+
+    % Loading data into ascii table for export and analysis
+    ND_Trial2Ascii(p, 'save');
 
 
