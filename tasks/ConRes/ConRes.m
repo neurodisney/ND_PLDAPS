@@ -71,8 +71,7 @@ function TaskSetUp(p)
         
         % Creating distractor ring 1 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        pos = [4,4];
-        p.trial.stim.RING.pos = pos;
+        p.trial.stim.RING.pos = p.trial.task.RFpos;
         p.trial.stim.RING.color = char(datasample(p.trial.task.upConRange, 1, 'Replace', false));
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.ring = pds.stim.Ring(p);
