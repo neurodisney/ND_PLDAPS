@@ -109,7 +109,7 @@ function TaskSetUp(p)
 
         % Randomly selecting stimulus arrangement
         % Shuffling stim positions for certain arrangements
-        posIndex = datasample([1,1,1,2,3,4,5,6,7], 1); 
+        posIndex = datasample([1,1,1,1,1,1,2,3,4,5,6,7], 1); 
         posList = p.trial.task.posList(posIndex, :);
 
         if posIndex == 1
@@ -162,7 +162,7 @@ function TaskSetUp(p)
         p.trial.stim.GRATING.pos = pos([1 2]);
         p.trial.stim.GRATING.hemifield = pos(3);
         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1);
-        p.trial.stim.GRATING.tFreq = 0;
+        p.trial.stim.GRATING.tFreq = p.trial.stim.gratingParameters.tFreq;
         p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
@@ -209,11 +209,11 @@ function TaskSetUp(p)
         p.trial.reward.Dur = p.trial.reward.IncrementDur(reward_duration);
 
         % Reducing current reward if previous trial was incorrect
-%         if(p.trial.LastHits == 0)
-% 
-%             p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
-%             
-%         end
+        if(p.trial.LastHits == 0)
+
+            p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
+            
+        end
 
 
         % Moving task from step-up stage to wait period before launching
@@ -781,9 +781,7 @@ function p = Task_CorrectReward(p)
         
         % Dispensing reward
         if p.trial.task.cued
-            pds.reward.give(p, 0.060) %(p, p.trial.reward.Dur);
-        else
-            pds.reward.give(p, 0.050)
+            pds.reward.give(p, p.trial.reward.Dur);
         end
         
         % Playing audio signaling correct trial
