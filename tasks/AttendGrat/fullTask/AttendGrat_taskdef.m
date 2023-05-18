@@ -18,8 +18,10 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.Timing.TimeOut = 1;
     
     % Setting number of trials per block
-    p.trial.Block.maxBlockTrials = 3;
-
+    p.trial.Block.maxBlockTrials = 4;
+    
+    p.trial.task.shuffleRange = [0, 0, 1];
+    
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
@@ -27,13 +29,8 @@ function p = AttendGrat_taskdef(p)
     p.trial.stim.FIXSPOT.size = 0.4;
     p.trial.stim.FIXSPOT.fixWin = 2.1;
     
-    % Storing position of mapped receptive field collected from user or 
-    % assigning default values
-    % Calculating points along line of is eccentricity
-    if isempty(p.trial.task.RFpos)
-        p.trial.task.RFpos = [4,4];
-    end
     
+    % Calculating points along line of is eccentricity
     targ_x = p.trial.task.RFpos(1);
     targ_y = p.trial.task.RFpos(2); 
 
@@ -86,9 +83,7 @@ function p = AttendGrat_taskdef(p)
         p.trial.stim.ringParameters.cueCon = sprintf('down%d', p.trial.task.cStep);
         p.trial.stim.ringParameters.distCon = sprintf('up%d', p.trial.task.cStep);
     end
-
-    % Selecting trial type: cued (1) or uncued (0)
-    p.trial.task.cued = 1; 
+    
 
     % Setting amount of time rings are presented before grats come on
     p.trial.task.CueWait = 0.50;
@@ -101,7 +96,8 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.oriList = p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
     
     % Creating list of orientation change magnitudes to apply to blocks
-    p.trial.Block.changeMagList = [1, 2, 2, 8, 8, 16, 16, 16, 24, 24, 24, 32, 32, 32, 32];
+    p.trial.Block.cuedMagList = [1, 2, 4, 8, 16, 16, 16, 32];
+    p.trial.Block.uncuedMagList = [2, 32];
     
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
