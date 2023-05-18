@@ -139,7 +139,7 @@ function TaskSetUp(p)
         
         
         % Checking for blown trials and mixing them in
-        if ~isempty(p.defaultParameters.blownTrials);
+        if ~isempty(p.defaultParameters.blownTrials)
             
             mix_in = datasample(p.trial.task.shuffleRange, 1);
             blown_trial = p.defaultParameters.blownTrials(1, :);

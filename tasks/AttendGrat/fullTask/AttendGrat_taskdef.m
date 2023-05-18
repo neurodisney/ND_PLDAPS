@@ -95,15 +95,9 @@ function p = AttendGrat_taskdef(p)
     % Creating list of orientations using values collected from user or using default values 
     p.trial.task.oriList = p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
     
-    % Creating list of orientation change magnitudes to apply to blocks
-<<<<<<< HEAD
-    p.trial.Block.changeMagList = [1, 2, 2, 8, 8, 16, 16, 24, 24, 24, 24, 32, 32, 32, 32, 32];
-||||||| 2ef907e
-    p.trial.Block.changeMagList = [1, 2, 2, 8, 8, 16, 16, 16, 24, 24, 24, 32, 32, 32, 32];
-=======
+    % Creating lists of orientation change magnitudes to apply to blocks
     p.trial.Block.cuedMagList = [1, 2, 4, 8, 16, 16, 16, 32];
     p.trial.Block.uncuedMagList = [2, 32];
->>>>>>> 18724257a6fd56b0f0490631a0ef3442cd6c779d
     
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
@@ -152,7 +146,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.reward.IncrementDur = [0.10, 0.15, 0.175, 0.20, 0.225, 0.25, 0.30];
 
     % Degree to which current reward decreased for bad performance 
-    p.trial.reward.DiscourageProp = 0.8;
+    p.trial.reward.DiscourageProp = 0.7;
     
 
 end
