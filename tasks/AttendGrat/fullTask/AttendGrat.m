@@ -76,7 +76,8 @@ function TaskSetUp(p)
         % Assigning orientation change magnitude according to block
         if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
 
-            p.trial.Block.changeMag = datasample(p.trial.Block.changeMagList, 1);
+            p.trial.Block.cuedMag = datasample(p.trial.Block.cuedMagList, 1);
+            p.trial.Block.uncuedMag = datasample(p.trial.Block.uncuedMagList, 1);
             p.trial.Block.flagNextBlock = 0;
 
         end
@@ -102,6 +103,12 @@ function TaskSetUp(p)
         p.trial.task.CueOn = NaN;
         % Creating space to save time when gratings presented 
         p.trial.task.GratOn = NaN;
+        % Creating space to save magnitude of grating change 
+        p.trial.task.changeMag = NaN;
+        % Creating space to save task condition (cued = 1, uncued = 0)
+        p.trial.task.cued = NaN;
+        
+        p.trial.task.trialConfig = {};
 
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
@@ -109,20 +116,49 @@ function TaskSetUp(p)
 
         % Randomly selecting stimulus arrangement
         % Shuffling stim positions for certain arrangements
-        posIndex = datasample([1,1,1,1,1,1,2,3,4,5,6,7], 1); 
+        posIndex = datasample([1,2,3,4,5,6,7], 1); 
         posList = p.trial.task.posList(posIndex, :);
-
-        if posIndex == 1
-            posList = posList(randperm(length(posList)));
-        end
+        posList = posList(randperm(length(posList)));
+        p.trial.task.trialConfig = [p.trial.task.trialConfig posList];
 
         % Randomly selecting orientations for gratings
         p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
+        p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gratingParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([1,0,0,1,1,1], 1); 
+        p.trial.task.cued = datasample([0,0,0,1,1,1], 1);
         
-
+        if p.trial.task.cued
+            p.trial.task.changeMag = p.trial.Block.cuedMag;
+        else
+            p.trial.task.changeMag = p.trial.Block.uncuedMag;
+        end
+        
+        p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.task.cued];
+        p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.task.changeMag];
+        
+        
+        % Checking for blown trials and mixing them in
+        if ~isempty(p.defaultParameters.blownTrials);
+            
+            mix_in = datasample(p.trial.task.shuffleRange, 1);
+            blown_trial = p.defaultParameters.blownTrials(1, :);
+            
+            if mix_in
+                
+                posList = blown_trial([1 2 3 4]);
+                p.trial.stim.gratingParameters.oriList = cell2mat(blown_trial(5));
+                p.trial.task.cued = cell2mat(blown_trial(6));
+                p.trial.task.changeMag = cell2mat(blown_trial(7));
+                
+                p.defaultParameters.blownTrials(1,:) = [];
+                
+            end
+            
+            p.defaultParameters.mixList = [p.defaultParameters.mixList mix_in];
+        end
+                
+        
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
         pos = cell2mat(posList(1));
@@ -169,7 +205,7 @@ function TaskSetUp(p)
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1) + p.trial.Block.changeMag;
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.oriList(1) + p.trial.task.changeMag;
         p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
 
         % Creating distractor grating 1 by assigning values to grating properties in p object
@@ -565,8 +601,13 @@ function TaskDesign(p)
                     else
                         % Marking trial as fix break without relevance to task
                         p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
+                        
                         p.defaultParameters.breakFlag = 1;
-
+                        
+                        if ~p.trial.task.cued
+                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
+                        end
+                            
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
                         

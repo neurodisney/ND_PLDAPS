@@ -55,6 +55,9 @@ p.defaultParameters.SmryStr          = ' '; % text message with trial/session su
 p.defaultParameters.earlyFlag        = 0;
 p.defaultParameters.breakFlag        = 0;
 p.defaultParameters.colorIndex       = 0;
+p.defaultParameters.blownTrials      = {};
+
+p.defaultParameters.mixList = [];
 
 % --------------------------------------------------------------------%
 %% define drawing area for joystick representation
