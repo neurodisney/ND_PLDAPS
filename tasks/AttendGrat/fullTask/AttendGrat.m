@@ -51,7 +51,6 @@ function p = AttendGrat(p, state)
 
         end
 
-
     end
 
 
@@ -107,6 +106,8 @@ function TaskSetUp(p)
         p.trial.task.changeMag = NaN;
         % Creating space to save task condition (cued = 1, uncued = 0)
         p.trial.task.cued = NaN;
+        % Flagging trial as repeat of blown trial
+        p.trial.task.blown_repeat = 0;
         
         p.trial.task.trialConfig = {};
 
@@ -126,7 +127,7 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gratingParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([0,0,0,1,1,1], 1);
+        p.trial.task.cued = datasample([0,0,1,1,1], 1);
         
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
@@ -150,8 +151,8 @@ function TaskSetUp(p)
                 p.trial.stim.gratingParameters.oriList = cell2mat(blown_trial(5));
                 p.trial.task.cued = cell2mat(blown_trial(6));
                 p.trial.task.changeMag = cell2mat(blown_trial(7));
-                
-                p.defaultParameters.blownTrials(1,:) = [];
+
+                p.trial.task.blown_repeat = 1;
                 
             end
             
@@ -261,6 +262,7 @@ function TaskSetUp(p)
 % Function to execute trial
 function TaskDesign(p)
 
+
         % Moving from epoch to epoch over course of trial
         switch p.trial.CurrEpoch
             % Implementing wait period to ensure enough time has passed since previous trial 
@@ -347,7 +349,6 @@ function TaskDesign(p)
             % Checking if fixation held for time pulled from hazard function before presenting gratings post-orientation change
             case p.trial.epoch.WaitChange
 
-
                 if(p.trial.stim.fix.fixating)
                     if (p.trial.CurTime > p.trial.task.GratOn + p.trial.task.GratWait)
                         stimPostGratOriChange(p, 3);
@@ -370,7 +371,6 @@ function TaskDesign(p)
             % Beginning time period in which saccade to target must be performed
             case p.trial.epoch.WaitSaccade
 
-
                 if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.Timing.saccadeStart)
 
                     % Checking if gaze has left fix point
@@ -380,13 +380,21 @@ function TaskDesign(p)
                     
                     % If fix held, checking time against pre-set response window before ending trial due to time-out    
                     elseif(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeTimeout)
-                        % Marking trial outcome as 'Miss' trial
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
-                        % Play noise signaling response period time-out
-                        pds.audio.playDP(p, 'incorrect', 'left');
-                        % Switching epoch to end task
-                        ND_SwitchEpoch(p, 'TaskEnd');
 
+                        % Checking if no orientation change applied
+                        if p.trial.task.changeMag == 0
+                            % If so, marking trial as correct reject and 
+                            % dispensing reward
+                            Task_CorrectReward(p);
+
+                        else
+                            % Marking trial outcome as 'Miss' trial
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
+                            % Play noise signaling response period time-out
+                            pds.audio.playDP(p, 'incorrect', 'left');
+                            % Switching epoch to end task
+                            ND_SwitchEpoch(p, 'TaskEnd');
+                        end
                     end
 
                 elseif(~p.trial.stim.fix.looking)
@@ -405,7 +413,6 @@ function TaskDesign(p)
                    
             % Checking if saacade response made was to target    
             case p.trial.epoch.CheckResponse
-
 
                 % Confirming current gaze shift is first response made
                 if(~p.trial.task.stimFix)
@@ -553,6 +560,10 @@ function TaskDesign(p)
 
                         p.defaultParameters.earlyFlag = 1;
 
+                        if ~p.trial.task.cued
+                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
+                        end
+
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
                     
@@ -566,6 +577,10 @@ function TaskDesign(p)
                         end
 
                         p.defaultParameters.earlyFlag = 1;
+
+                        if ~p.trial.task.cued
+                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
+                        end
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -581,6 +596,10 @@ function TaskDesign(p)
 
                         p.defaultParameters.earlyFlag = 1;
 
+                        if ~p.trial.task.cued
+                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
+                        end
+
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
                         
@@ -594,6 +613,10 @@ function TaskDesign(p)
                         end
                
                         p.defaultParameters.earlyFlag = 1;
+
+                        if ~p.trial.task.cued
+                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
+                        end
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -830,6 +853,11 @@ function p = Task_CorrectReward(p)
         
         % Record time at which reward given
         p.trial.EV.Reward = p.trial.CurTime;
+
+        if p.trial.task.blown_repeat
+            p.defaultParameters.blownTrials(1,:) = [];
+            disp(20)
+        end
         
         % Switching epoch to end task
         ND_SwitchEpoch(p, 'WaitEnd');

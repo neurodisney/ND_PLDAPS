@@ -18,9 +18,9 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.Timing.TimeOut = 1;
     
     % Setting number of trials per block
-    p.trial.Block.maxBlockTrials = 4;
+    p.trial.Block.maxBlockTrials = 2;
     
-    p.trial.task.shuffleRange = [0, 0, 1];
+    p.trial.task.shuffleRange = [0, 1];
     
 
     % Setting properties for fixation point
@@ -96,14 +96,14 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.oriList = p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
     
     % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [1, 2, 4, 8, 16, 16, 16, 32];
-    p.trial.Block.uncuedMagList = [2, 32];
+    p.trial.Block.cuedMagList = [0, 0, 1, 2, 4, 8, 16, 32];
+    p.trial.Block.uncuedMagList = [0, 0, 2, 32, 90, 90];
     
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
     p.trial.stim.gratingParameters.sFreq = 2;
-    p.trial.stim.gratingParameters.tFreq = 1.0;
+    p.trial.stim.gratingParameters.tFreq = 0.3;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
