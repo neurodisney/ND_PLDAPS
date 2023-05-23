@@ -265,8 +265,11 @@ function TaskDesign(p)
 
         % Moving from epoch to epoch over course of trial
         switch p.trial.CurrEpoch
-            % Implementing wait period to ensure enough time has passed since previous trial 
+
+            % Implementing wait period to ensure enough time has passed 
+            % since previous trial 
             case p.trial.epoch.ITI
+
                 Task_WaitITI(p);
 
             % Starting trial by presenting fix point
@@ -285,14 +288,15 @@ function TaskDesign(p)
                 ND_SwitchEpoch(p,'WaitFix');
 
 
-            % Checking if fixation has been achieved within pre-set abount time 
+            % Checking if fixation has been achieved within pre-set amount 
+            % of time 
             case p.trial.epoch.WaitFix
+
                 Task_WaitFixStart(p);
 
 
             % Presenting rings if fixation held
             case p.trial.epoch.Fixating
-
 
                 % Is monkey fixating at this point in task?
                 if(p.trial.stim.fix.fixating)
@@ -308,10 +312,10 @@ function TaskDesign(p)
                         end
                     end
                 end
-                
 
                 % Is monkey no longer fixating?
-                if(~p.trial.stim.fix.fixating)         
+                if(~p.trial.stim.fix.fixating) 
+
                     % Play noise signaling fix break
                     pds.audio.playDP(p, 'breakfix', 'left'); 
                     % Calculating and storing time from fix start to fix leave if fix broken
@@ -320,6 +324,7 @@ function TaskDesign(p)
                     p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
                     % Checking to confirm there was fix break before ending trial
                     ND_SwitchEpoch(p, 'BreakFixCheck');
+
                 end
             
 
@@ -327,13 +332,15 @@ function TaskDesign(p)
             case p.trial.epoch.WaitCue
 
                 if(p.trial.stim.fix.fixating)
+
                     if(p.trial.CurTime > p.trial.task.CueOn + p.trial.task.CueWait)
                         stimPreGratOriChange(p, 2);
                         p.trial.task.GratOn = p.trial.CurTime;
                         ND_SwitchEpoch(p, 'WaitChange')   
                     end
                     
-                elseif(~p.trial.stim.fix.fixating)        
+                elseif(~p.trial.stim.fix.fixating) 
+
                         % Play noise signaling fix break
                         pds.audio.playDP(p, 'breakfix', 'left'); 
                         % Calculating and storing time from fix start to fix leave if fix broken
@@ -350,12 +357,14 @@ function TaskDesign(p)
             case p.trial.epoch.WaitChange
 
                 if(p.trial.stim.fix.fixating)
+
                     if (p.trial.CurTime > p.trial.task.GratOn + p.trial.task.GratWait)
                         stimPostGratOriChange(p, 3);
                         ND_SwitchEpoch(p, 'WaitSaccade')
                     end
                     
-                elseif(~p.trial.stim.fix.fixating)        
+                elseif(~p.trial.stim.fix.fixating)   
+
                         % Play noise signaling fix break
                         pds.audio.playDP(p, 'breakfix', 'left'); 
                         % Calculating and storing time from fix start to fix leave if fix broken
@@ -375,6 +384,7 @@ function TaskDesign(p)
 
                     % Checking if gaze has left fix point
                     if(~p.trial.stim.fix.looking)
+
                         % If gaze has left fix point, checking if saccade was to target
                         ND_SwitchEpoch(p, 'CheckResponse');
                     
@@ -395,6 +405,7 @@ function TaskDesign(p)
                             % Switching epoch to end task
                             ND_SwitchEpoch(p, 'TaskEnd');
                         end
+
                     end
 
                 elseif(~p.trial.stim.fix.looking)
@@ -409,8 +420,7 @@ function TaskDesign(p)
                     ND_SwitchEpoch(p, 'BreakFixCheck');
 
                 end
-
-                   
+        
             % Checking if saacade response made was to target    
             case p.trial.epoch.CheckResponse
 
@@ -451,6 +461,7 @@ function TaskDesign(p)
                             p.trial.outcome.CurrOutcome = p.trial.outcome.FalseContra;
                         end
 
+                        % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
                         
 
@@ -474,6 +485,8 @@ function TaskDesign(p)
                         else
                             p.trial.outcome.CurrOutcome = p.trial.outcome.FalseContra;
                         end
+
+                        % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd')
                         
                     % Checking if gaze specifically within distractor 3 grating fix window   
@@ -495,6 +508,8 @@ function TaskDesign(p)
                         else
                             p.trial.outcome.CurrOutcome = p.trial.outcome.FalseContra;
                         end
+
+                        % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd')
                         
                     % Verifying if gaze shifted from fix spot but no grating selected    
@@ -534,13 +549,16 @@ function TaskDesign(p)
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
                     end
+
                 end
                      
             % Checking if fixation was broken pre-maturely    
             case p.trial.epoch.BreakFixCheck
+
                 delay = p.trial.task.breakFixCheck;
                 % Checking if fix break was committed before response window
                 if(p.trial.task.stimState < 1)
+
                     % Marking trial as fix break if it occured before response window
                     p.trial.outcpme.CurrOutcome = p.trial.outcome.FixBreak;
                     
@@ -548,6 +566,7 @@ function TaskDesign(p)
                     ND_SwitchEpoch(p, 'TaskEnd');
                     
                 elseif(p.trial.CurTime > p.trial.stim.fix.EV.FixBreak + delay)
+
                     % Collecting screen frames for trial to check median eye position
                     frames = ceil(p.trial.display.frate * delay);
                     % Calculating median position of eyes across frames
@@ -558,6 +577,7 @@ function TaskDesign(p)
                         % Marking trial as "hit" but early if eye position is in target fix window
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
 
+                        % Flagging trial as early
                         p.defaultParameters.earlyFlag = 1;
 
                         if ~p.trial.task.cued
@@ -576,6 +596,7 @@ function TaskDesign(p)
                             p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseContra;
                         end
 
+                        % Flagging trial as early
                         p.defaultParameters.earlyFlag = 1;
 
                         if ~p.trial.task.cued
@@ -594,6 +615,7 @@ function TaskDesign(p)
                             p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseContra;
                         end
 
+                        % Flagging trial as early
                         p.defaultParameters.earlyFlag = 1;
 
                         if ~p.trial.task.cued
@@ -612,6 +634,7 @@ function TaskDesign(p)
                             p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalseContra;
                         end
                
+                        % Flagging trial as early
                         p.defaultParameters.earlyFlag = 1;
 
                         if ~p.trial.task.cued
@@ -625,6 +648,7 @@ function TaskDesign(p)
                         % Marking trial as fix break without relevance to task
                         p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
                         
+                        % Flagging trial as early
                         p.defaultParameters.breakFlag = 1;
                         
                         if ~p.trial.task.cued
@@ -656,31 +680,19 @@ function TaskDesign(p)
                 % Turning fix point off
                 ND_FixSpot(p, 0);
                 
-                % Running clean-up and storage routine before concluding trial
+                % Running clean-up and storage routine before concluding 
+                % trial
                 Task_OFF(p);
                 
-                % Checking if there is "nan" value for start of fixation on target
+                % Checking if there is "nan" value for start of fixation 
+                % on target
                 if(~isnan(p.trial.stim.gratings.postTarget.EV.FixStart))
                     p.trial.EV.FixStimStart = p.trial.stim.gratings.postTarget.EV.FixStart;
                     p.trial.EV.FixStimStop = p.trial.stim.gratings.postTarget.EV.FixBreak;
-                    
-                % Checking if there is "nan" value for start of fixation on distractor 1    
-                elseif(~isnan(p.trial.stim.gratings.distractor1.EV.FixStart))
-                    p.trial.EV.FixStimStart = p.trial.stim.gratings.distractor1.EV.FixStart;
-                    p.trial.EV.FixStimStop = p.trial.stim.gratings.distractor1.EV.FixBreak;
-                    
-                % Checking if there is "nan" value for start of fixation on distractor 2    
-                elseif(~isnan(p.trial.stim.gratings.distractor2.EV.FixStart))
-                    p.trial.EV.FixStimStart = p.trial.stim.gratings.distractor2.EV.FixStart;
-                    p.trial.EV.FixStimStop = p.trial.stim.gratings.distractor2.EV.FixBreak;
+                end
                 
-                % Checking if there is "nan" value for start of fixation on distractor 3    
-                elseif(~isnan(p.trial.stim.gratings.distractor3.EV.FixStart))
-                    p.trial.EV.FixStimStart = p.trial.stim.gratings.distractor3.EV.FixStart;
-                    p.trial.EV.FixStimStop = p.trial.stim.gratings.distractor3.EV.FixBreak;
-                end 
-                
-                % Flagging completion of current trial so ITI is run before next trial
+                % Flagging completion of current trial so ITI run before 
+                % next trial
                 p.trial.flagNextTrial = 1;
                
         end

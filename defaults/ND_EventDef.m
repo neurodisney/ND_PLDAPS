@@ -156,11 +156,11 @@ end
 
 % Other outcome related codes
 p.defaultParameters.outcome.Correct           =   5000;  % correct performance, no error occurred
-p.defaultParameters.outcome.Abort             =   5001;     % early joystick release prior stimulus onset
+p.defaultParameters.outcome.Abort             =   5001;  % early joystick release prior stimulus onset
 p.defaultParameters.outcome.Early             =   5002;  % correct response selection prior to go signal
 p.defaultParameters.outcome.False             =   5003;  % wrong response within response window
 p.defaultParameters.outcome.EarlyFalse        =   5004;  % wrong response selection prior to go signal
-p.defaultParameters.outcome.Late              =   5005;     % response occurred after response window
+p.defaultParameters.outcome.Late              =   5005;  % response occurred after response window
 p.defaultParameters.outcome.Miss              =   5006;  % no response at a reasonable time
 p.defaultParameters.outcome.NoStart           =   5007;  % trial not started
 p.defaultParameters.outcome.PrematStart       =   5008;  % trial start not too early as response to cue
@@ -176,7 +176,7 @@ p.defaultParameters.outcome.FalseIpsi         =   5014;  % Timely saccade made t
 % ToDo: WZ - need to check what encodes should/need to be used as events and
 %            what should be used as outcome encoded in the trial header
 p.defaultParameters.event.FIX_BRK_BSL   = 1231; % fixation break during the pre-stimulus period
-p.defaultParameters.event.FIX_BRK_CUE   = 1232; % fixation break while the cue is on
+p.defaultParameters.event.FIX_BRK_CUE   = 1232; % fixation break wh% Flagging trial as earlyile the cue is on
 p.defaultParameters.event.FIX_BRK_STIM  = 1233; % fixation break during stimulus presentation
 p.defaultParameters.event.FIX_BRK_SPEED = 1234;
 
@@ -239,7 +239,7 @@ p.defaultParameters.event.STIM.FixSpot   = 2101;
 p.defaultParameters.event.STIM.Grating   = 2102;
 p.defaultParameters.event.STIM.Ring      = 2103;
 p.defaultParameters.event.STIM.DriftGrat = 2104;
-
+% Flagging trial as early
 
 %% Integer encoding blocks
 % Reserve the 15xxx block for sending integers 0-999
