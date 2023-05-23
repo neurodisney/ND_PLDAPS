@@ -160,7 +160,7 @@ SS.sound.useForReward                           = 1;     % toggle playing a soun
 % maximize audio channels (Need to get datapixx working first)
 SS.sound.useDatapixx                            = 1;
 SS.sound.datapixxVolume                         = 1;
-SS.sound.datapixxInternalSpeakerVolume          = 0;
+SS.sound.datapixxInternalSpeakerVolume          = 1;
 
 SS.sound.usePsychPortAudio                      = 0;
 SS.sound.psychPortVolume                        = 1;

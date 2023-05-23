@@ -127,7 +127,7 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gratingParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([0,0,1,1,1], 1);
+        p.trial.task.cued = datasample([0,0,0,1,1], 1);
         
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
@@ -402,6 +402,11 @@ function TaskDesign(p)
                             p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
                             % Play noise signaling response period time-out
                             pds.audio.playDP(p, 'incorrect', 'left');
+
+                            if p.trial.task.blown_repeat
+                                p.defaultParameters.blownTrials(1,:) = [];
+                            end
+
                             % Switching epoch to end task
                             ND_SwitchEpoch(p, 'TaskEnd');
                         end
@@ -868,7 +873,6 @@ function p = Task_CorrectReward(p)
 
         if p.trial.task.blown_repeat
             p.defaultParameters.blownTrials(1,:) = [];
-            disp(20)
         end
         
         % Switching epoch to end task

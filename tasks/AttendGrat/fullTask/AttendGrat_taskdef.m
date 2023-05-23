@@ -86,7 +86,7 @@ function p = AttendGrat_taskdef(p)
     
 
     % Setting amount of time rings are presented before grats come on
-    p.trial.task.CueWait = 0.50;
+    p.trial.task.CueWait = 0.02;
     
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
@@ -103,7 +103,7 @@ function p = AttendGrat_taskdef(p)
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
     p.trial.stim.gratingParameters.sFreq = 2;
-    p.trial.stim.gratingParameters.tFreq = 0.3;
+    p.trial.stim.gratingParameters.tFreq = 0.1;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
@@ -124,7 +124,7 @@ function p = AttendGrat_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = r;
+    p.trial.task.flatHazard = 0.2; %r;
 
     
     % Setting time that must transpire before saccade can be made without being marked as early
