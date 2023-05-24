@@ -127,7 +127,7 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gratingParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([0,0,0,1,1], 1);
+        p.trial.task.cued = 0; %datasample([0,1], 1);
         
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
@@ -551,6 +551,11 @@ function TaskDesign(p)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
                         % Playing noise signaling break of fix from target
                         pds.audio.playDP(p, 'incorrect', 'left');
+                                                
+                        if ~p.trial.task.cued
+                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
+                        end
+
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
                     end
@@ -559,6 +564,10 @@ function TaskDesign(p)
                      
             % Checking if fixation was broken pre-maturely    
             case p.trial.epoch.BreakFixCheck
+
+                if ~p.trial.task.cued
+                    p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
+                end
 
                 delay = p.trial.task.breakFixCheck;
                 % Checking if fix break was committed before response window
@@ -585,10 +594,6 @@ function TaskDesign(p)
                         % Flagging trial as early
                         p.defaultParameters.earlyFlag = 1;
 
-                        if ~p.trial.task.cued
-                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
-                        end
-
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
                     
@@ -603,10 +608,6 @@ function TaskDesign(p)
 
                         % Flagging trial as early
                         p.defaultParameters.earlyFlag = 1;
-
-                        if ~p.trial.task.cued
-                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
-                        end
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -623,10 +624,6 @@ function TaskDesign(p)
                         % Flagging trial as early
                         p.defaultParameters.earlyFlag = 1;
 
-                        if ~p.trial.task.cued
-                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
-                        end
-
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
                         
@@ -642,10 +639,6 @@ function TaskDesign(p)
                         % Flagging trial as early
                         p.defaultParameters.earlyFlag = 1;
 
-                        if ~p.trial.task.cued
-                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
-                        end
-
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
 
@@ -655,10 +648,6 @@ function TaskDesign(p)
                         
                         % Flagging trial as early
                         p.defaultParameters.breakFlag = 1;
-                        
-                        if ~p.trial.task.cued
-                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
-                        end
                             
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -737,7 +726,6 @@ function stimRings(p, val)
       
             end
 
-
             % Recording strat time of no stimulus presentation
             if(val == 0)
                 ND_AddScreenEvent(p, p.trial.event.CUE_OFF, 'CueOff');
@@ -745,7 +733,6 @@ function stimRings(p, val)
             elseif(val == 1)
                 ND_AddScreenEvent(p, p.trial.event.CUE_ON, 'CueOn');   
             end 
-
 
         end
         
@@ -863,6 +850,8 @@ function p = Task_CorrectReward(p)
         % Dispensing reward
         if p.trial.task.cued
             pds.reward.give(p, p.trial.reward.Dur);
+        else
+            pds.reward.give(p, 0.08);
         end
         
         % Playing audio signaling correct trial

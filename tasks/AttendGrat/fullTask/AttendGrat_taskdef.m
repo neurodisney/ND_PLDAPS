@@ -86,7 +86,7 @@ function p = AttendGrat_taskdef(p)
     
 
     % Setting amount of time rings are presented before grats come on
-    p.trial.task.CueWait = 0.02;
+    p.trial.task.CueWait = 0.50;
     
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
@@ -96,21 +96,21 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.oriList = p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
     
     % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [0, 0, 1, 2, 4, 8, 16, 32];
-    p.trial.Block.uncuedMagList = [0, 0, 2, 32, 90, 90];
+    p.trial.Block.cuedMagList = [0, 1, 2, 4, 8, 16, 32];
+    p.trial.Block.uncuedMagList = [90, 90, 0]; %[0, 2, 32, 32, 90, 90, 90];
     
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
     p.trial.stim.gratingParameters.sFreq = 2;
-    p.trial.stim.gratingParameters.tFreq = 0.1;
+    p.trial.stim.gratingParameters.tFreq = 0.5;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 100];
-    mean = 2;
-    bound1 = 1.25;
-    bound2 = 2.25;
+    mean = 1;
+    bound1 = 0.500; %1.75;
+    bound2 = 1.500; %2.25;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -124,7 +124,7 @@ function p = AttendGrat_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = 0.2; %r;
+    p.trial.task.flatHazard = r;
 
     
     % Setting time that must transpire before saccade can be made without being marked as early
@@ -135,7 +135,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.saccadeTimeout = 0.70;
     
     % Setting time for which target must be fixed on before trial marked correct
-    p.trial.task.minTargetFixTime = 0.40; 
+    p.trial.task.minTargetFixTime = 0.20; 
     
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
