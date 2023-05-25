@@ -97,7 +97,7 @@ function p = AttendGrat_taskdef(p)
     
     % Creating lists of orientation change magnitudes to apply to blocks
     p.trial.Block.cuedMagList = [0, 1, 2, 4, 8, 16, 32];
-    p.trial.Block.uncuedMagList = [90, 90, 0]; %[0, 2, 32, 32, 90, 90, 90];
+    p.trial.Block.uncuedMagList = [32, 32, 32, 0]; %[0, 2, 32, 32, 90, 90, 90];
     
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
@@ -108,9 +108,9 @@ function p = AttendGrat_taskdef(p)
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 100];
-    mean = 1;
-    bound1 = 0.500; %1.75;
-    bound2 = 1.500; %2.25;
+    mean = 2;
+    bound1 = 1.75;
+    bound2 = 2.25;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     

@@ -848,11 +848,7 @@ function p = Task_CorrectReward(p)
         p.trial.task.Good = 1;
         
         % Dispensing reward
-        if p.trial.task.cued
-            pds.reward.give(p, p.trial.reward.Dur);
-        else
-            pds.reward.give(p, 0.08);
-        end
+        pds.reward.give(p, p.trial.reward.Dur);
         
         % Playing audio signaling correct trial
         pds.audio.playDP(p, 'reward', 'left');
