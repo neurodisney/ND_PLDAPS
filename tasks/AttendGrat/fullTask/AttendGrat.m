@@ -127,7 +127,7 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gratingParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = 0; %datasample([0,1], 1);
+        p.trial.task.cued = datasample([0, 0, 0, 0, 1], 1);
         
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
@@ -848,7 +848,11 @@ function p = Task_CorrectReward(p)
         p.trial.task.Good = 1;
         
         % Dispensing reward
-        pds.reward.give(p, p.trial.reward.Dur);
+        if p.trial.task.cued
+            pds.reward.give(p, 0.07);
+        else
+            pds.reward.give(p, p.trial.reward.Dur);
+        end
         
         % Playing audio signaling correct trial
         pds.audio.playDP(p, 'reward', 'left');

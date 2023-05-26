@@ -97,13 +97,13 @@ function p = AttendGrat_taskdef(p)
     
     % Creating lists of orientation change magnitudes to apply to blocks
     p.trial.Block.cuedMagList = [0, 1, 2, 4, 8, 16, 32];
-    p.trial.Block.uncuedMagList = [32, 32, 32, 0]; %[0, 2, 32, 32, 90, 90, 90];
+    p.trial.Block.uncuedMagList = [0, 0, 2, 32, 32, 32];
     
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
-    p.trial.stim.gratingParameters.sFreq = 2;
-    p.trial.stim.gratingParameters.tFreq = 0.5;
+    p.trial.stim.gratingParameters.sFreq = 1.5;
+    p.trial.stim.gratingParameters.tFreq = 2;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
