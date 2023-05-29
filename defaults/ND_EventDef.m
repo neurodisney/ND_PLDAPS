@@ -85,7 +85,7 @@ if(p.defaultParameters.behavior.joystick.use)
 end
 
 if(p.defaultParameters.behavior.joystick.use)
-    p.defaultParameters.outcome.NoPress       =   1;  % No joystick press occurred to initialize trial
+    p.defaultParameters.outcome.NoPress   =   1;  % No joystick press occurred to initialize trial
 end
 
 % if fixation is used
@@ -134,8 +134,12 @@ p.defaultParameters.event.RESP_FALSE_EARLY = 4404; % early response towards wron
 p.defaultParameters.event.RESP_LATE        = 4405; % late response occurred
 
 % fixation related events
-p.defaultParameters.event.FIXSPOT_ON    =  1200; % onset of fixation spot
-p.defaultParameters.event.FIXSPOT_OFF   =  1201; % offset of fixation spot
+p.defaultParameters.event.FIXSPOT_ON    = 1200; % onset of fixation spot
+p.defaultParameters.event.FIXSPOT_OFF   = 1201; % offset of fixation spot
+
+p.defaultParameters.event.FIXSPOT_PRES  = 1202; % frame with fixspot presented
+p.defaultParameters.event.FIXSPOT_REMV  = 1203; % frame without fixspot presented 
+
 p.defaultParameters.event.FIX_IN        = 1210; % gaze enters fixation window
 p.defaultParameters.event.FIX_OUT       = 1211; % gaze leaves fixation window
 p.defaultParameters.event.FIXATION      = 1220; % gaze has been in the fix window long enought ot be considered a fix
@@ -188,7 +192,6 @@ p.defaultParameters.outcome.lateSaccade       = 5054;  % Saccade still occured, 
 p.defaultParameters.outcome.wrongSaccade      = 5055;  % saccade to wrong target or in wrong direction
 p.defaultParameters.outcome.glance            = 5056;  % saccade made to target, but not held for long enough
 
-
 % joystick related
 p.defaultParameters.event.JOY_PRESS     = 6600;    % joystick press detected
 p.defaultParameters.event.JOY_RELEASE   = 6601;    % joystick release detected
@@ -196,9 +199,18 @@ p.defaultParameters.event.JOY_ON        = 6610;    % joystick elevation above pr
 p.defaultParameters.event.JOY_OFF       = 6611;    % joystick elevation below releasing threshold
 
 % visual stimulus
-p.defaultParameters.event.STIM_ON       = 2500;     % stimulus onset
-p.defaultParameters.event.STIM_CHNG     = 2502;     % stimulus change (e.g. dimming)
-p.defaultParameters.event.STIM_OFF      = 2501;     % stimulus offset
+p.defaultParameters.event.STIM_ON       = 2500;     % stimulus added to frame
+p.defaultParameters.event.STIM_OFF      = 2501;     % stimulus removed from frame
+
+p.defaultParameters.event.RING_PRES     = 2502;     % frame with ring presented
+p.defaultParameters.event.RING_REMV     = 2503;     % frame without ring presented
+
+p.defaultParameters.event.GRAT_PRES     = 2504;     % frame with grating presented
+p.defaultParameters.event.GRAT_REMV     = 2505;     % frame without grating presented
+
+p.defaultParameters.event.STIM_CHNG     = 2506;     % stimulus change (e.g. dimming)
+p.defaultParameters.event.CHNG_PRES     = 2507;     % frame with stimulus change presented
+p.defaultParameters.event.CHNG_REMV     = 2508;     % frame without stimulus change presented
 
 % stimulus movement
 p.defaultParameters.event.START_MOVE    = 2610;     % movement onset
@@ -207,9 +219,7 @@ p.defaultParameters.event.SPEED_Down    = 2612;     % movement deceleration
 p.defaultParameters.event.STOP_MOVE     = 2613;     % movement offset
 
 % task cues
-p.defaultParameters.event.CUE_ON        = 1300;     % onset of cue to select task relevant stimulus
-p.defaultParameters.event.CUE_OFF       = 1301;     % onset of cue to select task relevant stimulus
-p.defaultParameters.event.GOCUE         = 1302;     % cue to give a response
+p.defaultParameters.event.GOCUE         = 1300;     % cue to give a response
 
 % auditory stimulus
 p.defaultParameters.event.SOUND_ON      = 9100;     % stimulus onset
@@ -239,7 +249,6 @@ p.defaultParameters.event.STIM.FixSpot   = 2101;
 p.defaultParameters.event.STIM.Grating   = 2102;
 p.defaultParameters.event.STIM.Ring      = 2103;
 p.defaultParameters.event.STIM.DriftGrat = 2104;
-% Flagging trial as early
 
 %% Integer encoding blocks
 % Reserve the 15xxx block for sending integers 0-999

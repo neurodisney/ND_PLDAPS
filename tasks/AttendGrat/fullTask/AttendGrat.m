@@ -171,6 +171,7 @@ function TaskSetUp(p)
             p.trial.stim.RING.color = p.trial.stim.ringParameters.distCon;
         end
 
+        p.trial.stim.RING.contrast = p.trial.display.clut.(p.trial.stim.RING.color) / 100;
         p.trial.stim.rings.cue = pds.stim.Ring(p);
 
         % Creating distractor ring 1 by assigning values to ring properties in p object
@@ -178,6 +179,7 @@ function TaskSetUp(p)
         pos = cell2mat(posList(2));
         p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.RING.color = p.trial.stim.ringParameters.distCon;
+        p.trial.stim.RING.contrast = p.trial.display.clut.(p.trial.stim.RING.color) / 100;
         p.trial.stim.rings.distractor1 = pds.stim.Ring(p);
 
         % Creating distractor ring 2 by assigning values to ring properties in p object
@@ -669,7 +671,7 @@ function TaskDesign(p)
                 stimRings(p, 0);
                 
                 % Turning gratings off
-                stimPostGratOriChange(p, 0);
+                stimPreGratOriChange(p, 0);
                 
                 % Turning fix point off
                 ND_FixSpot(p, 0);
@@ -728,10 +730,10 @@ function stimRings(p, val)
 
             % Recording strat time of no stimulus presentation
             if(val == 0)
-                ND_AddScreenEvent(p, p.trial.event.CUE_OFF, 'CueOff');
+                ND_AddScreenEvent(p, p.trial.event.RING_REMV, 'RingRemv');
                 
             elseif(val == 1)
-                ND_AddScreenEvent(p, p.trial.event.CUE_ON, 'CueOn');   
+                ND_AddScreenEvent(p, p.trial.event.RING_PRES, 'RingPres');   
             end 
 
         end
@@ -754,6 +756,7 @@ function stimPreGratOriChange(p, val)
                 
                 % Implementing no stimulus presentation
                 case 0
+                    p.trial.stim.gratings.postTarget.on = 0;
                     p.trial.stim.gratings.preTarget.on = 0;
                     p.trial.stim.gratings.distractor1.on = 0;
                     p.trial.stim.gratings.distractor2.on = 0;
@@ -779,10 +782,10 @@ function stimPreGratOriChange(p, val)
 
             % Recording strat time of no stimulus presentation
             if(val == 0)
-                ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
+                ND_AddScreenEvent(p, p.trial.event.GRAT_REMV, 'GratRemv');
                 
             elseif(val == 2)
-                ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
+                ND_AddScreenEvent(p, p.trial.event.GRAT_PRES, 'GratPres');
             end 
 
 
@@ -806,10 +809,6 @@ function stimPostGratOriChange(p, val)
                 % Implementing no stimulus presentation
                 case 0
                     p.trial.stim.gratings.postTarget.on = 0;
-                    p.trial.stim.gratings.preTarget.on = 0;
-                    p.trial.stim.gratings.distractor1.on = 0;
-                    p.trial.stim.gratings.distractor2.on = 0;
-                    p.trial.stim.gratings.distractor3.on = 0;
                 
                 % Implementing stimulus presentation
                 case 3
@@ -826,10 +825,10 @@ function stimPostGratOriChange(p, val)
 
             % Recording strat time of no stimulus presentation
             if(val == 0)
-                ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff');
+                ND_AddScreenEvent(p, p.trial.event.CHNG_REMV, 'ChangeRemv');
                 
             elseif(val == 3)
-                ND_AddScreenEvent(p, p.trial.event.STIM_CHNG, 'StimChange');
+                ND_AddScreenEvent(p, p.trial.event.CHNG_PRES, 'ChangePres');
                 
             end 
 

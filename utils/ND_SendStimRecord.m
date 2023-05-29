@@ -44,16 +44,16 @@ if nStims > 0
                 signalr = typecast(cast(round(property * 100), 'int16'), 'uint16');
                 radius = 18000 + signalr;
                 pds.datapixx.strobe(radius);
-               
+
             elseif iProp == 5
-                signalo = typecast(cast(round(property), 'int16'), 'uint16');
-                orientation = 15000 + signalo;
-                pds.datapixx.strobe(orientation);
-               
-            elseif iProp == 6
                 signalc = typecast(cast(round(property * 100), 'int16'), 'uint16');
                 contrast = 30000 + signalc;
                 pds.datapixx.strobe(contrast);
+               
+            elseif iProp == 6
+                signalo = typecast(cast(round(property), 'int16'), 'uint16');
+                orientation = 15000 + signalo;
+                pds.datapixx.strobe(orientation);
                
             elseif iProp == 7
                 signals = typecast(cast(round(property * 100), 'int16'), 'uint16');

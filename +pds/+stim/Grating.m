@@ -99,7 +99,7 @@ methods
         obj.classCode = p.trial.event.STIM.Grating;
         
         % This cell array determines the order of properties when the propertyArray attribute is calculated
-        obj.recordProps = {'xpos', 'ypos', 'radius', 'orientation', 'contrast', 'sFreq', 'tFreq'};
+        obj.recordProps = {'xpos', 'ypos', 'radius', 'contrast', 'orientation', 'sFreq', 'tFreq'};
 
         obj.alpha  = alpha;
         obj.tFreq  = tFreq;
