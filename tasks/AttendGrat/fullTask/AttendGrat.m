@@ -127,7 +127,7 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gratingParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([0, 0, 0, 0, 1], 1);
+        p.trial.task.cued = datasample([0, 1], 1);
         
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
@@ -554,9 +554,9 @@ function TaskDesign(p)
                         % Playing noise signaling break of fix from target
                         pds.audio.playDP(p, 'incorrect', 'left');
                                                 
-                        if ~p.trial.task.cued
-                            p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
-                        end
+                        %if ~p.trial.task.cued
+                        p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
+                        %end
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -567,9 +567,9 @@ function TaskDesign(p)
             % Checking if fixation was broken pre-maturely    
             case p.trial.epoch.BreakFixCheck
 
-                if ~p.trial.task.cued
-                    p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
-                end
+                %if ~p.trial.task.cued
+                p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
+                %end
 
                 delay = p.trial.task.breakFixCheck;
                 % Checking if fix break was committed before response window
