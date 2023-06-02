@@ -395,9 +395,26 @@ function TaskDesign(p)
 
                         % Checking if no orientation change applied
                         if p.trial.task.changeMag == 0
-                            % If so, marking trial as correct reject and 
-                            % dispensing reward
-                            Task_CorrectReward(p);
+
+                            % Marking trial outcome as correct
+                            p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
+                            p.trial.task.Good = 1;
+                            
+                            % Dispensing reward
+                            pds.reward.give(p, p.trial.reward.Dur);
+                            
+                            % Playing audio signaling correct trial
+                            pds.audio.playDP(p, 'reward', 'left');
+                            
+                            % Record time at which reward given
+                            p.trial.EV.Reward = p.trial.CurTime;
+                    
+                            if p.trial.task.blown_repeat
+                                p.defaultParameters.blownTrials(1,:) = [];
+                            end
+                            
+                            % Switching epoch to end task
+                            ND_SwitchEpoch(p, 'WaitEnd');
 
                         else
                             % Marking trial outcome as 'Miss' trial
@@ -848,7 +865,7 @@ function p = Task_CorrectReward(p)
         
         % Dispensing reward
         if p.trial.task.cued
-            pds.reward.give(p, 0.07);
+            pds.reward.give(p, 0.09);
         else
             pds.reward.give(p, p.trial.reward.Dur);
         end
