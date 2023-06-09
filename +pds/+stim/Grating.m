@@ -38,7 +38,7 @@ properties (SetAccess = protected)
 end
 
 properties (SetAccess = private, Hidden = true)
-    genTime %When the grating was created (to calculate drifting phase)
+    genTime % When the grating was created (to calculate drifting phase)
     texture % The actual texture used for drawing
     pcmult
     srcRect   
