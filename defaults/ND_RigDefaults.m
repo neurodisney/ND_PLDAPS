@@ -367,12 +367,14 @@ SS.stim.GRATING.cued     = 0;
 SS.stim.GRATING.ori      = 1;
 
 % Drifting sine Wave Grating stimlui
-SS.stim.DRIFTGRAT.fixWin   =  4;
-SS.stim.DRIFTGRAT.res      = 1000;
-SS.stim.DRIFTGRAT.radius   = 1;
-SS.stim.DRIFTGRAT.sFreq    = 3;
-
-% SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
+SS.stim.DRIFTGABOR.fixWin = 4;
+SS.stim.DRIFTGABOR.size = [4, 4];
+SS.stim.DRIFTGABOR.frequency = 3;
+SS.stim.DRIFTGABOR.angle = 45;
+SS.stim.DRIFTGABOR.phase = 10;
+SS.stim.DRIFTGABOR.speed = 0.5;
+SS.stim.DRIFTGABOR.sigma = 1;
+SS.stim.DRIFTGABOR.contrast = 1;
 
 % Ring (i.e. location cue)
 SS.stim.RING.pos           = [0,0];
