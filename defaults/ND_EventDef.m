@@ -244,11 +244,11 @@ p.defaultParameters.event.STIMPROP_BLOCK_OFF = 2001;  % End of stim prop block
 % Note: 21xx block reserved for stim types
 % These are encoded in the actual stim class files, but are put here for easy reference
 
-p.defaultParameters.event.STIM.BaseStim  = 2100;
-p.defaultParameters.event.STIM.FixSpot   = 2101;
-p.defaultParameters.event.STIM.Grating   = 2102;
-p.defaultParameters.event.STIM.Ring      = 2103;
-p.defaultParameters.event.STIM.DriftGrat = 2104;
+p.defaultParameters.event.STIM.BaseStim   = 2100;
+p.defaultParameters.event.STIM.FixSpot    = 2101;
+p.defaultParameters.event.STIM.Grating    = 2102;
+p.defaultParameters.event.STIM.Ring       = 2103;
+p.defaultParameters.event.STIM.DriftGabor = 2104;
 
 %% Integer encoding blocks
 % Reserve the 15xxx block for sending integers 0-999

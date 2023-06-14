@@ -83,7 +83,7 @@ function p = ReportChange_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = 200;
+    p.trial.task.flatHazard = r;
     
 
 

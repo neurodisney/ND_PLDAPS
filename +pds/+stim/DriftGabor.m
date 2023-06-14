@@ -62,7 +62,7 @@ classdef DriftGabor < pds.stim.BaseStim
             obj@pds.stim.BaseStim(p, pos, fixWin)
             
             % Integer to define object (for sending event code)
-            obj.classCode = p.trial.event.STIM.DriftGrat;
+            obj.classCode = p.trial.event.STIM.DriftGabor;
 
             % This cell array determines the order of properties when the propertyArray attribute is calculated
             obj.recordProps = {};

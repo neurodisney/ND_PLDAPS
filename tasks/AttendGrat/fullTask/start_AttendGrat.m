@@ -50,10 +50,10 @@ function p = start_AttendGrat(subjectname, rig)
     % Collecting receptive field (RF) size from user, and scaling grating size with it 
     RFsize = input('What is the radius of the mapped RF? (press enter for default value): ');
     if isempty(RFsize)
-       RFsize = 1; 
+       RFsize = 4; 
     end
-    p.trial.stim.RING.radius = RFsize + 0.5;
-    p.trial.stim.GRATING.radius = RFsize;
+    p.trial.stim.RING.radius = RFsize - 1.5;
+    p.trial.stim.DRIFTGABOR.size = [RFsize,RFsize];
     
     % Collecting contrast value based on response threshold from user for rings
     cStep = input('What is a contrast step number near response threshold? (press enter for default value): ');
