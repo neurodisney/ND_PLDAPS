@@ -18,7 +18,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.Timing.TimeOut = 1;
     
     % Setting number of trials per block
-    p.trial.Block.maxBlockTrials = 2;
+    p.trial.Block.maxBlockTrials = 1;
     
     p.trial.task.shuffleRange = [0, 1];
     
@@ -96,7 +96,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.oriList = p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
     
     % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [0, 2, 4, 8];
+    p.trial.Block.cuedMagList = [0, 2, 8, 16];
     p.trial.Block.uncuedMagList = [0, 2, 32, 32];
     
     %th = p.trial.task.oriThreshold;

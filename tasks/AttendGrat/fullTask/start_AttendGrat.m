@@ -43,7 +43,7 @@ function p = start_AttendGrat(subjectname, rig)
     % Collecting receptive field (RF) coordinates from user for stimulus display
     RFpos = input('What are the mapped RF [x,y] coordinates, as an array? (press enter for default values): ');
     if isempty(RFpos)
-        RFpos = [4,4];
+        RFpos = [-3.7,-5.2];
     end
     p.trial.task.RFpos = RFpos;
     
