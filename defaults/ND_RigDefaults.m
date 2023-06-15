@@ -360,21 +360,20 @@ SS.stim.GRATING.res      = 1000; % Half the size of the texture matrix
 SS.stim.GRATING.radius   = 1;
 SS.stim.GRATING.contrastMethod = 'balanced';
 SS.stim.GRATING.pos      = [0, 0];
-SS.stim.GRATING.fixWin   =  4;  
-SS.stim.GRATING.alpha    =  1; % Fully opaque
-SS.stim.GRATING.hemifield = NaN;
+SS.stim.GRATING.fixWin   = 4;  
+SS.stim.GRATING.alpha    = 1; % Fully opaque
 SS.stim.GRATING.cued     = 0;
 SS.stim.GRATING.ori      = 1;
 
 % Drifting sine Wave Grating stimlui
 SS.stim.DRIFTGABOR.fixWin = 4;
-SS.stim.DRIFTGABOR.size = [4, 4];
+SS.stim.DRIFTGABOR.size = [5, 5];
 SS.stim.DRIFTGABOR.frequency = 3;
 SS.stim.DRIFTGABOR.angle = 45;
-SS.stim.DRIFTGABOR.phase = 10;
+SS.stim.DRIFTGABOR.phase = 0;
 SS.stim.DRIFTGABOR.speed = 0.5;
-SS.stim.DRIFTGABOR.sigma = 1;
-SS.stim.DRIFTGABOR.contrast = 1;
+SS.stim.DRIFTGABOR.sigma = 0.4;
+SS.stim.DRIFTGABOR.contrast = 2;
 
 % Ring (i.e. location cue)
 SS.stim.RING.pos           = [0,0];

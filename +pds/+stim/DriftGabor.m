@@ -75,7 +75,7 @@ classdef DriftGabor < pds.stim.BaseStim
             obj.sigma = sigma;
             obj.contrast = contrast;
             
-            obj.gaborTex = CreateProceduralGabor(p.trial.display.ptr, size(1), size(2));
+            obj.gaborTex = CreateProceduralGabor(p.trial.display.ptr, size(1), size(2), [], [], 1, 0.5);
             obj.genTime = p.trial.CurTime;
 
         end % Close obj function
@@ -87,10 +87,10 @@ classdef DriftGabor < pds.stim.BaseStim
                     destRect = CenterRectOnPoint([0, 0, obj.size(1), obj.size(2)], obj.pos(1), obj.pos(2));
                     
                     elapsedTime = p.trial.CurTime - obj.genTime;
-                    phaseShift = obj.phase + ((360 * obj.speed) * elapsedTime);     
+                    phaseOffset = obj.phase + ((360 * obj.speed) * elapsedTime);     
                     
                     Screen('DrawTexture', p.trial.display.ptr, obj.gaborTex, [], destRect, obj.angle, [], [],...
-                        [], [], kPsychDontDoRotation,[phaseShift, obj.frequency, obj.sigma, obj.contrast]);   
+                        [0 0 0 1], [], kPsychDontDoRotation,[phaseOffset + 180, obj.frequency, obj.sigma, obj.contrast]);   
                 end
        
         end % Close draw function

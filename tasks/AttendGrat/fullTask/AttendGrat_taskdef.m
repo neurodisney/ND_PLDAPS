@@ -102,8 +102,8 @@ function p = AttendGrat_taskdef(p)
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
 
-    p.trial.stim.gratingParameters.sFreq = 5;
-    p.trial.stim.gratingParameters.tFreq = 2;
+    p.trial.stim.gratingParameters.sFreq = 1.5;
+    p.trial.stim.gratingParameters.tFreq = 5;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
