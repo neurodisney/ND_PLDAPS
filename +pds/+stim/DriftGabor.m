@@ -11,6 +11,7 @@ classdef DriftGabor < pds.stim.BaseStim
         angle
         speed % Measured in Hertz: cycles(360 deg) per sec
         contrast
+        alpha
         
         gaborTex
         genTime
@@ -19,7 +20,7 @@ classdef DriftGabor < pds.stim.BaseStim
     % Functions for class
     methods
            
-        function obj = DriftGabor(p, pos, fixWin, size, frequency, sigma, phase, angle, speed, contrast)
+        function obj = DriftGabor(p, pos, fixWin, size, frequency, sigma, phase, angle, speed, contrast, alpha)
            
             if nargin < 2 || isempty(pos)
                 pos = p.trial.stim.DRIFTGABOR.pos;
@@ -56,6 +57,10 @@ classdef DriftGabor < pds.stim.BaseStim
             if nargin < 10 || isempty(contrast)
                 contrast = p.trial.stim.DRIFTGABOR.contrast;
             end
+
+            if nargin < 11 || isempty(alpha)
+                alpha = p.trial.stim.DRIFTGABOR.alpha;
+            end
             
             
             % Load the BaseStim superclass
@@ -75,7 +80,8 @@ classdef DriftGabor < pds.stim.BaseStim
             obj.sigma = sigma;
             obj.contrast = contrast;
             
-            obj.gaborTex = CreateProceduralGabor(p.trial.display.ptr, size(1), size(2), [], [], 1, 0.5);
+            bg = [p.trial.display.bgColor alpha];
+            obj.gaborTex = CreateProceduralGabor(p.trial.display.ptr, size(1), size(2), [], bg, 1, contrast);
             obj.genTime = p.trial.CurTime;
 
         end % Close obj function
@@ -90,7 +96,7 @@ classdef DriftGabor < pds.stim.BaseStim
                     phaseOffset = obj.phase + ((360 * obj.speed) * elapsedTime);     
                     
                     Screen('DrawTexture', p.trial.display.ptr, obj.gaborTex, [], destRect, obj.angle, [], [],...
-                        [0 0 0 1], [], kPsychDontDoRotation,[phaseOffset + 180, obj.frequency, obj.sigma, obj.contrast]);   
+                        [], [], kPsychDontDoRotation,[phaseOffset + 180, obj.frequency, obj.sigma obj.contrast]);   
                 end
        
         end % Close draw function

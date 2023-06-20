@@ -52,7 +52,7 @@ function p = start_AttendGrat(subjectname, rig)
     if isempty(RFsize)
        RFsize = 2; 
     end
-    p.trial.stim.RING.radius = 4;
+    p.trial.stim.RING.radius = 1.5;
     %p.trial.stim.DRIFTGABOR.size = [RFsize,RFsize];
     
     % Collecting contrast value based on response threshold from user for rings

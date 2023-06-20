@@ -123,8 +123,8 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig posList];
 
         % Randomly selecting orientations for gratings
-        p.trial.stim.gratingParameters.oriList = datasample(p.trial.task.oriList, 4);
-        p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gratingParameters.oriList];
+        p.trial.stim.gaborParameters.oriList = datasample(p.trial.task.oriList, 4);
+        p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gaborParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
         p.trial.task.cued = datasample([0, 1, 1], 1);
@@ -199,36 +199,37 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(1));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gratingParameters.oriList(1);
-        p.trial.stim.DRIFTGABOR.speed = p.trial.stim.gratingParameters.tFreq;
-        p.trial.stim.DRIFTGABOR.frequency = p.trial.stim.gratingParameters.sFreq;
+        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(1);
+        p.trial.stim.DRIFTGABOR.speed = p.trial.stim.gaborParameters.tFreq;
+        p.trial.stim.DRIFTGABOR.frequency = p.trial.stim.gaborParameters.sFreq;
+        p.trial.stim.DRIFTGABOR.contrast = p.trial.stim.gaborParameters.contrast;
         p.trial.stim.gabors.preTarget = pds.stim.DriftGabor(p);
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gratingParameters.oriList(1) + p.trial.task.changeMag;
+        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(1) + p.trial.task.changeMag;
         p.trial.stim.gabors.postTarget = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 1 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(2));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gratingParameters.oriList(2);
+        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(2);
         p.trial.stim.gabors.distractor1 = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 2 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(3));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gratingParameters.oriList(3);
+        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(3);
         p.trial.stim.gabors.distractor2 = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 3 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(4));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gratingParameters.oriList(4);
+        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(4);
         p.trial.stim.gabors.distractor3 = pds.stim.DriftGabor(p);
         
         
@@ -837,7 +838,7 @@ function p = Task_CorrectReward(p)
         
         % Dispensing reward
         if p.trial.task.cued
-            pds.reward.give(p, 0.09);
+            pds.reward.give(p, 0.05);
         else
             pds.reward.give(p, p.trial.reward.Dur);
         end

@@ -338,14 +338,14 @@ SS.stim.record.structs = {}; % Cell array to store the properties of stims as th
 SS.stim.pos = [0,0];
 
 % fixation window
-SS.stim.fixWin                       = 2.5;  % diameter of fixation window in dva
+SS.stim.fixWin                       = 2.5; % diameter of fixation window in dva
 SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
 % Fixation spot stimuli
 SS.stim.FIXSPOT.pos          = [0,0];
-SS.stim.FIXSPOT.fixWin       =  2.0;        % diameter of fixation window in dva
+SS.stim.FIXSPOT.fixWin       =  2.0;      % diameter of fixation window in dva
 SS.stim.FIXSPOT.type         = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 SS.stim.FIXSPOT.color        = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
 SS.stim.FIXSPOT.size         = 0.2;       % size of the fixation spot
@@ -371,9 +371,10 @@ SS.stim.DRIFTGABOR.size = [5, 5];
 SS.stim.DRIFTGABOR.frequency = 3;
 SS.stim.DRIFTGABOR.angle = 45;
 SS.stim.DRIFTGABOR.phase = 0;
-SS.stim.DRIFTGABOR.speed = 0.5;
+SS.stim.DRIFTGABOR.speed = 1;
 SS.stim.DRIFTGABOR.sigma = 0.4;
-SS.stim.DRIFTGABOR.contrast = 2;
+SS.stim.DRIFTGABOR.contrast = 1;
+SS.stim.DRIFTGABOR.alpha = 1;
 
 % Ring (i.e. location cue)
 SS.stim.RING.pos           = [0,0];
