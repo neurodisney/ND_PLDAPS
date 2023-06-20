@@ -1,7 +1,7 @@
 classdef Grating < pds.stim.BaseStim
 
 % A class for creating and drawing procedurally generated sine wave gratings
-% within the
+% within tasks
 
 %%% Variables that can be changed about the sine wave grating after it has been created:
 % Temporal Frequency
@@ -104,7 +104,6 @@ methods
         obj.alpha  = alpha;
         obj.tFreq  = tFreq;
         obj.angle  = ori;
-        obj.hemifield = p.trial.stim.GRATING.hemifield;
         
         % Unchangeable after loading
         obj.res            = res;

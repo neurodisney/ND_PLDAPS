@@ -1,27 +1,32 @@
 classdef DriftGabor < pds.stim.BaseStim
-% Drifting grating stimulus
+% Drifting gabor stimulus
 % John Amodeo, Apr 2023    
 
-    % Properties of class
+    % Public properties of class
     properties
-        size % Rectangle in which stim is presented on screen 
-        frequency
-        sigma
-        phase
-        angle
-        speed % Measured in Hertz: cycles(360 deg) per sec
-        contrast
-        alpha
-        
-        gaborTex
-        genTime
+        size % Rectangle in which stim is presented on screen (pixels) 
+        frequency % Cycles per pixel
+        sigma % Standard deviation of Gaussian envelope
+        phase % Starting point of cycle (degrees)
+        angle % Angle (degrees) of gabor lines (i.e., orientation)
+        speed % Measured in Hertz: cycles (360 degrees) per sec
+        contrast % Michelson contrast value (0, no difference from bg, to 1, max difference)
+        alpha % Controls transparency (0, fully transparent, to 1, fully opaque)
+        radius % Stores stim size in *visual angle degrees* based on sigma
+    end
+    
+    % Hidden properties of class
+    properties (SetAccess = private, Hidden = true)
+        gaborTex % Texture used to draw gabor
+        genTime % Time at which gabor created, later used for drifting
+        bg % Array used to apply contrast
     end
     
     % Functions for class
     methods
            
         function obj = DriftGabor(p, pos, fixWin, size, frequency, sigma, phase, angle, speed, contrast, alpha)
-           
+            % Loading stimulus paramters
             if nargin < 2 || isempty(pos)
                 pos = p.trial.stim.DRIFTGABOR.pos;
             end
@@ -62,31 +67,28 @@ classdef DriftGabor < pds.stim.BaseStim
                 alpha = p.trial.stim.DRIFTGABOR.alpha;
             end
             
-            
-            % Load the BaseStim superclass
+            % Loading BaseStim superclass
             obj@pds.stim.BaseStim(p, pos, fixWin)
             
-            % Integer to define object (for sending event code)
+            % Giving object integer ID for sending event code
             obj.classCode = p.trial.event.STIM.DriftGabor;
 
-            % This cell array determines the order of properties when the propertyArray attribute is calculated
-            obj.recordProps = {};
+            % Assigning order of properties when propertyArray attribute is calculated
+            obj.recordProps = {'xpos', 'ypos', 'radius', 'contrast', 'angle', 'frequency', 'speed'};
 
             obj.size = size;
             obj.frequency = frequency;
-            obj.angle = angle;
+            obj.angle = mod(angle + 180, 360) - 180; % Returning angle always within range [-180, 180]
             obj.phase = phase;
             obj.speed = speed;
             obj.sigma = sigma;
             obj.contrast = contrast;
-            
-            bg = [p.trial.display.bgColor alpha];
-            obj.gaborTex = CreateProceduralGabor(p.trial.display.ptr, size(1), size(2), [], bg, 1, contrast);
+            obj.radius = (sigma * 10) / 3.5; % Converting sigma to radius to report size of gabor  
+            obj.bg = [p.trial.display.bgColor alpha];
+            obj.gaborTex = CreateProceduralGabor(p.trial.display.ptr, size(1), size(2), [], obj.bg, 1, contrast);
             obj.genTime = p.trial.CurTime;
-
-        end % Close obj function
+        end
      
-
         % Function to present cue and distractor rings on screen
         function draw(obj, p)
                 if obj.on
@@ -97,10 +99,8 @@ classdef DriftGabor < pds.stim.BaseStim
                     
                     Screen('DrawTexture', p.trial.display.ptr, obj.gaborTex, [], destRect, obj.angle, [], [],...
                         [], [], kPsychDontDoRotation,[phaseOffset + 180, obj.frequency, obj.sigma obj.contrast]);   
-                end
-       
-        end % Close draw function
-
+                end  
+        end
 
     end % Close methods
 
