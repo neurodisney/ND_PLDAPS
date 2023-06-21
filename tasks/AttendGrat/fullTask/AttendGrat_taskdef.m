@@ -27,7 +27,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
-    p.trial.stim.FIXSPOT.fixWin = 2.1;
+    p.trial.stim.FIXSPOT.fixWin = 1.5;
     
     
     % Calculating points along line of is eccentricity
@@ -96,8 +96,8 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.oriList = p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
     
     % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [16, 32];
-    p.trial.Block.uncuedMagList = [0, 32];
+    p.trial.Block.cuedMagList = [32, 90, 90];
+    p.trial.Block.uncuedMagList = [0, 90, 90];
     
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
@@ -105,7 +105,7 @@ function p = AttendGrat_taskdef(p)
     % Setting stimulus parameters
     p.trial.stim.gaborParameters.sFreq = 1.5;
     p.trial.stim.gaborParameters.tFreq = 5;
-    p.trial.stim.gaborParameters.contrast = 0.65;
+    p.trial.stim.gaborParameters.contrast = 0.8;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change

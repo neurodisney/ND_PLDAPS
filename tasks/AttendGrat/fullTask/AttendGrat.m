@@ -127,7 +127,7 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gaborParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([0, 1, 1], 1);
+        p.trial.task.cued = datasample([0, 1, 1, 1, 1], 1);
         
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
@@ -838,7 +838,7 @@ function p = Task_CorrectReward(p)
         
         % Dispensing reward
         if p.trial.task.cued
-            pds.reward.give(p, 0.05);
+            pds.reward.give(p, 0.07);
         else
             pds.reward.give(p, p.trial.reward.Dur);
         end
