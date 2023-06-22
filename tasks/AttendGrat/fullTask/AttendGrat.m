@@ -127,7 +127,7 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gaborParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([0, 1, 1, 1, 1], 1);
+        p.trial.task.cued = datasample([1, 1, 1, 1, 1], 1);
         
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
@@ -478,6 +478,8 @@ function TaskDesign(p)
                         % Marking trial as false and ending trial
                         p.trial.outcome.CurrOutcome = p.trial.outcome.False;
 
+                        p.defaultParameters.breakFlag = 1;
+
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
                         
@@ -499,6 +501,8 @@ function TaskDesign(p)
                         % Marking trial as false and ending trial  
                         p.trial.outcome.CurrOutcome = p.trial.outcome.False;
 
+                        p.defaultParameters.breakFlag = 1;
+
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd')
                         
@@ -517,6 +521,8 @@ function TaskDesign(p)
 
                         % Marking trial as false and ending trial
                         p.trial.outcome.CurrOutcome = p.trial.outcome.False;
+
+                        p.defaultParameters.breakFlag = 1;
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd')
@@ -638,7 +644,7 @@ function TaskDesign(p)
                         % Marking trial as fix break without relevance to task
                         p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
                         
-                        % Flagging trial as early
+                        % Flagging trial as stim break
                         p.defaultParameters.breakFlag = 1;
                             
                         % Switching epoch to end task

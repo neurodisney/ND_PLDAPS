@@ -134,6 +134,6 @@ for i = 1:20
 end
 
 % Default distractor and cue ring colors    
-ND_DefineCol(p, 'cueGrey',        56, [0.29, 0.29, 0.29]);
-ND_DefineCol(p, 'distGrey',       57, [0.45, 0.45, 0.45]);
+ND_DefineCol(p, 'cueGrey',        56, [0.22, 0.22, 0.22]);
+ND_DefineCol(p, 'distGrey',       57, [0.52, 0.52, 0.52]);
 
