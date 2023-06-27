@@ -127,7 +127,7 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gaborParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([1, 1, 1, 1, 1], 1);
+        p.trial.task.cued = datasample([0, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1, 1, 1], 1);
         
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
@@ -602,7 +602,7 @@ function TaskDesign(p)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
 
                         % Flagging trial as early
-                        p.defaultParameters.earlyFlag = 1;
+                        p.defaultParameters.earlyFlag = 0;
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -846,7 +846,7 @@ function p = Task_CorrectReward(p)
         if p.trial.task.cued
             pds.reward.give(p, 0.07);
         else
-            pds.reward.give(p, p.trial.reward.Dur);
+            pds.reward.give(p, 0.07);
         end
         
         % Playing audio signaling correct trial
