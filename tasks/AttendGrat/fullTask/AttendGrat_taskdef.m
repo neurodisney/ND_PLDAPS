@@ -97,7 +97,12 @@ function p = AttendGrat_taskdef(p)
     
     % Creating lists of orientation change magnitudes to apply to blocks
     p.trial.Block.cuedMagList = [2, 4, 8];
-    p.trial.Block.uncuedMagList = [0, 90, 90];
+    cuedStr = num2str(p.trial.Block.cuedMagList);
+    p.trial.Block.cuedMagListStr = strrep(cuedStr, ' ', ',');
+
+    p.trial.Block.uncuedMagList = [0, 0, 2, 32, 90];
+    uncuedStr = num2str(p.trial.Block.uncuedMagList);
+    p.trial.Block.uncuedMagListStr = strrep(uncuedStr, ' ', ',');
     
     %th = p.trial.task.oriThreshold;
     %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
