@@ -96,11 +96,11 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.oriList = p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
     
     % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [2, 4, 8];
+    p.trial.Block.cuedMagList = [2, 4, 8, 32];
     cuedStr = num2str(p.trial.Block.cuedMagList);
     p.trial.Block.cuedMagListStr = strrep(cuedStr, ' ', ',');
 
-    p.trial.Block.uncuedMagList = [0, 0, 2, 32, 90];
+    p.trial.Block.uncuedMagList = [0, 2, 32, 32];
     uncuedStr = num2str(p.trial.Block.uncuedMagList);
     p.trial.Block.uncuedMagListStr = strrep(uncuedStr, ' ', ',');
     
