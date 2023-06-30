@@ -100,7 +100,7 @@ function p = AttendGrat_taskdef(p)
     cuedStr = num2str(p.trial.Block.cuedMagList);
     p.trial.Block.cuedMagListStr = strrep(cuedStr, ' ', ',');
 
-    p.trial.Block.uncuedMagList = [0, 2, 32, 32];
+    p.trial.Block.uncuedMagList = [0, 2, 32, 40, 50, 60, 70, 80];
     uncuedStr = num2str(p.trial.Block.uncuedMagList);
     p.trial.Block.uncuedMagListStr = strrep(uncuedStr, ' ', ',');
     
