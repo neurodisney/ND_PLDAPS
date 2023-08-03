@@ -141,12 +141,12 @@ function TaskSetUp(p)
         
         % Checking for blown trials and mixing them in
         if ~isempty(p.defaultParameters.blownTrials)
-            
+
             mix_in = datasample(p.trial.task.shuffleRange, 1);
             blown_trial = p.defaultParameters.blownTrials(1, :);
             
             if mix_in
-                
+               
                 posList = blown_trial([1 2 3 4]);
                 p.trial.stim.gratingParameters.oriList = cell2mat(blown_trial(5));
                 p.trial.task.cued = cell2mat(blown_trial(6));
@@ -407,7 +407,12 @@ function TaskDesign(p)
                             p.trial.EV.Reward = p.trial.CurTime;
                     
                             if p.trial.task.blown_repeat
-                                p.defaultParameters.blownTrials(1,:) = [];
+                                numRows = size(p.defaultParameters.blownTrials, 1);
+                                if numRows > 1
+                                    p.defaultParameters.blownTrials = p.defaultParameters.blownTrials(2:end,:);
+                                else
+                                    p.defaultParameters.blownTrials = [];
+                                end
                             end
                             
                             % Switching epoch to end task
@@ -420,7 +425,12 @@ function TaskDesign(p)
                             pds.audio.playDP(p, 'incorrect', 'left');
 
                             if p.trial.task.blown_repeat
-                                p.defaultParameters.blownTrials(1,:) = [];
+                                numRows = size(p.defaultParameters.blownTrials, 1);
+                                if numRows > 1
+                                    p.defaultParameters.blownTrials = p.defaultParameters.blownTrials(2:end,:);
+                                else
+                                    p.defaultParameters.blownTrials = [];
+                                end
                             end
 
                             % Switching epoch to end task
@@ -544,8 +554,8 @@ function TaskDesign(p)
                         ND_SwitchEpoch(p, 'TaskEnd');
                     
                     % Checking if gaze returned to fix point in time to be considered 'no response yet'    
-                    elseif(p.trial.stim.fix.looking)
-                        ND_SwitchEpoch(p, 'WaitSaccade');
+                    %elseif(p.trial.stim.fix.looking)
+                    %    ND_SwitchEpoch(p, 'WaitSaccade');
                     end
                     
                 else
@@ -562,9 +572,7 @@ function TaskDesign(p)
                         % Playing noise signaling break of fix from target
                         pds.audio.playDP(p, 'incorrect', 'left');
                                                 
-                        %if ~p.trial.task.cued
                         p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
-                        %end
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -575,9 +583,7 @@ function TaskDesign(p)
             % Checking if fixation was broken pre-maturely    
             case p.trial.epoch.BreakFixCheck
 
-                %if ~p.trial.task.cued
                 p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
-                %end
 
                 delay = p.trial.task.breakFixCheck;
                 % Checking if fix break was committed before response window
@@ -856,7 +862,12 @@ function p = Task_CorrectReward(p)
         p.trial.EV.Reward = p.trial.CurTime;
 
         if p.trial.task.blown_repeat
-            p.defaultParameters.blownTrials(1,:) = [];
+            numRows = size(p.defaultParameters.blownTrials, 1);
+            if numRows > 1
+                p.defaultParameters.blownTrials = p.defaultParameters.blownTrials(2:end,:);
+            else
+                p.defaultParameters.blownTrials = [];
+            end
         end
         
         % Switching epoch to end task

@@ -20,7 +20,8 @@ function p = AttendGrat_taskdef(p)
     % Setting number of trials per block
     p.trial.Block.maxBlockTrials = 1;
     
-    p.trial.task.shuffleRange = [0, 1];
+    % Setting probability of repeating blown trial vs creating new trial
+    p.trial.task.shuffleRange = [0, 0, 0, 1];
     
 
     % Setting properties for fixation point
@@ -96,11 +97,11 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.oriList = p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
     
     % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [0, 4, 8, 16, 32, 64];
+    p.trial.Block.cuedMagList = [0, 0.1, 0.3, 0.5, 32, 64];
     cuedStr = num2str(p.trial.Block.cuedMagList);
     p.trial.Block.cuedMagListStr = strrep(cuedStr, ' ', ',');
 
-    p.trial.Block.uncuedMagList = [0, 4, 8, 16, 32, 64];
+    p.trial.Block.uncuedMagList = [0, 0.5, 8, 16, 32, 64];
     uncuedStr = num2str(p.trial.Block.uncuedMagList);
     p.trial.Block.uncuedMagListStr = strrep(uncuedStr, ' ', ',');
     
@@ -116,8 +117,8 @@ function p = AttendGrat_taskdef(p)
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 100];
     mean = 2;
-    bound1 = 1.25;
-    bound2 = 2.75;
+    bound1 = 1;
+    bound2 = 3;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
