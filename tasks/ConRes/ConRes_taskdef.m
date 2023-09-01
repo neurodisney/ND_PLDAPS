@@ -24,7 +24,7 @@ function p = ConRes_taskdef(p)
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'dRed';
     p.trial.stim.FIXSPOT.size = 0.25;
-    p.trial.stim.FIXSPOT.fixWin = 2;
+    p.trial.stim.FIXSPOT.fixWin = 1.5;
 
 
     % Assigning parameters to ring
@@ -32,7 +32,7 @@ function p = ConRes_taskdef(p)
     p.trial.stim.RING.flash_screen = 1;
 
     % Creating duration for stimulus presentation
-    p.trial.task.presDur = 5;
+    p.trial.task.presDur = 3;
 
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];    
@@ -40,8 +40,8 @@ function p = ConRes_taskdef(p)
 
     % List of increasing durations of juice flow for reward
     % This list is linked to trial increments for scaling size of reward
-    %p.trial.reward.IncrementDur = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
-    p.trial.reward.IncrementDur = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.3];
+    p.trial.reward.IncrementDur = [0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03];
+    %p.trial.reward.IncrementDur = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.3];
 
     % Degree to which current reward decreased for bad performance 
     p.trial.reward.DiscourageProp = 0.8;

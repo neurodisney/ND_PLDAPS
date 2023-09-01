@@ -10,7 +10,6 @@ classdef Ring < pds.stim.BaseStim
         displayRect 
         lineWeight  
         color
-        contrast
         
         flash_screen
 
@@ -20,7 +19,7 @@ classdef Ring < pds.stim.BaseStim
     methods
             
         
-        function obj = Ring(p, pos, fixWin, radius, lineWeight, color, contrast, flash_screen)
+        function obj = Ring(p, pos, fixWin, radius, lineWeight, color, flash_screen)
             
             if nargin < 2 || isempty(pos)
                 pos = p.trial.stim.RING.pos;
@@ -41,12 +40,8 @@ classdef Ring < pds.stim.BaseStim
             if nargin < 6 || isempty(color)
                 color = p.trial.stim.RING.color;
             end
-
-            if nargin < 7 || isempty(contrast)
-                contrast = p.trial.stim.RING.contrast;
-            end
             
-            if nargin < 8 || isempty(flash_screen)
+            if nargin < 7 || isempty(flash_screen)
                 flash_screen = p.trial.stim.RING.flash_screen;
             end
             
@@ -58,13 +53,12 @@ classdef Ring < pds.stim.BaseStim
             obj.classCode = p.trial.event.STIM.Ring;
             
             % This cell array determines the order of properties when the propertyArray attribute is calculated
-            obj.recordProps = {'xpos', 'ypos', 'radius', 'contrast'};
+            obj.recordProps = {'xpos', 'ypos', 'radius'};
   
             obj.radius        = radius;
             obj.displayRect   = [pos - [radius, radius], pos + [radius, radius]];
             obj.lineWeight    = lineWeight;
             obj.color = p.trial.display.clut.(color);
-            obj.contrast = contrast;
             obj.flash_screen  = flash_screen;
     
        end
@@ -90,9 +84,7 @@ classdef Ring < pds.stim.BaseStim
             
        end
        
-
     end
-    
-    
+
 end
 

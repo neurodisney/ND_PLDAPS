@@ -524,7 +524,11 @@ switch val
     case 1
         % Select the proper stim
         stimNum = p.trial.stim.count;
+        if (stimNum > 9)
+            stimNum = 9;
+        end
         stim = p.trial.stim.gratings{p.trial.stim.iStim(stimNum)};
+
         
         % Move the stim to the proper position
         curPos = p.trial.stim.locations(p.trial.stim.iPos(stimNum,:),:);

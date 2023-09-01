@@ -173,11 +173,26 @@ function TaskDesign(p)
                 if(p.trial.stim.fix.fixating)     
                     % Checking fixation time against pre-set wait period
                     if (p.trial.CurTime > p.trial.task.SRT_StimOn + p.trial.task.presDur)
+
+                                        
+                        % Turning gratings off
+                        presentStim(p, 0);
+                
+                        % Turning fix point off
+                        ND_FixSpot(p, 0);
+
                         Task_CorrectReward(p);
                     end
 
                 % Checking if fixation has been broken    
                 elseif(~p.trial.stim.fix.fixating) 
+
+                        % Turning gratings off
+                        presentStim(p, 0);
+                
+                        % Turning fix point off
+                        ND_FixSpot(p, 0);
+
                         % If fix broken, play noise signaling fix break
                         pds.audio.playDP(p, 'breakfix', 'left'); 
                         % Calculating and storing time from fix start to fix leave
@@ -206,12 +221,6 @@ function TaskDesign(p)
 
             % Starting task epoch that ends task
             case p.trial.epoch.TaskEnd
-                
-                % Turning gratings off
-                presentStim(p, 0);
-                
-                % Turning fix point off
-                ND_FixSpot(p, 0);
                 
                 % Running clean-up and storage routine before concluding trial
                 Task_OFF(p);
