@@ -7,9 +7,10 @@ classdef Ring < pds.stim.BaseStim
     properties
 
         radius
-        displayRect 
+        displayRect
         lineWeight  
         color
+        contrast
         
         flash_screen
 
@@ -53,12 +54,13 @@ classdef Ring < pds.stim.BaseStim
             obj.classCode = p.trial.event.STIM.Ring;
             
             % This cell array determines the order of properties when the propertyArray attribute is calculated
-            obj.recordProps = {'xpos', 'ypos', 'radius'};
+            obj.recordProps = {'xpos', 'ypos', 'radius', 'contrast'};
   
             obj.radius        = radius;
             obj.displayRect   = [pos - [radius, radius], pos + [radius, radius]];
             obj.lineWeight    = lineWeight;
             obj.color = p.trial.display.clut.(color);
+            obj.contrast = p.trial.display.clut.(color);
             obj.flash_screen  = flash_screen;
     
        end
