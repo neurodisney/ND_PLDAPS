@@ -1,84 +1,63 @@
-% Function to run task for experiment
+%% This is the function to run the task
 function p = AttendGrat(p, state)
 
-
-    % Checking for task name and filling if empty
+    % Check for task name, fill if empty
     if(~exist('state','var'))
-
         state = [];
-
     end
 
+    %% Below is the framework used for the task
+        % The task parameters are loaded and the task is flip through
+        % the following series of states: task setup for equipment syncs,
+        % trial setup to log the start time of each trial,
+        % task design to loop over each epoch of the task within trials,
+        % and task clean and save to save the data from the previous trial
+        % and clean things up in preparation for the next one.
+        % NOTE: a 'struct' is a nested matrix
 
-    % Initializing task
+    % Populating empty p struct with info needed to begin task
     if(isempty(state))
-
-        % Populating pldaps object with elements needed to begin task if empty
         p = AttendGrat_init(p);
-
     else
-        % If pldaps object is populated, standard trial routines run
+        % General info needed for all tasks loaded in p struct with general
+        % trial routines function
         p = ND_GeneralTrialRoutines(p, state);
-
-        % Executing events/epochs that make up trial
+        % Flipping through epochs (cases) that make up trial based on state
         switch state
-
-            % Gathing information to start trial
+            % Loading info specific to this task in p struct with function
             case p.trial.pldaps.trialStates.trialSetup
-
-                TaskSetUp(p);  
-
-            % Perparing gathered information before trial launch to ensure precise timing    
+                TaskSetUp(p); % DEFINED BELOW  
+            % Marking trial start time based on current time    
             case p.trial.pldaps.trialStates.trialPrepare
-
                 p.trial.EV.TrialStart = p.trial.CurTime;
-
-            % Launching trial    
+            % Passing p struct into function to flip through trial epochs     
             case p.trial.pldaps.trialStates.framePrepareDrawing 
-
-                % Function for doing task-specific actions using keyboard
-                % commands--not set up, look at DetectGrat for reference 
-                %if(~isempty(p.trial.LastKeyPress))
-                    %KeyAction(p);
-                %end
-
-                TaskDesign(p);
-            
-            % Cleaning up items used for trial and saving data
+                TaskDesign(p); % DEFINED BELOW
+            % Cleaning up info used for trial and saving data
             case p.trial.pldaps.trialStates.trialCleanUpandSave
-
-                TaskCleanAndSave(p);
-
+                TaskCleanAndSave(p); % DEFINED BELOW
         end
-
     end
 
 
-
-
-% Function to gather materials to start trial
+%% This function loads info specific to this task in p struct
 function TaskSetUp(p)
-
 
         % Adding trial to running total for block
         p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
 
         % Flagging next block if max trial count reached
         if p.trial.Block.trialCount == p.trial.Block.maxBlockTrials
-
             p.trial.Block.flagNextBlock = 1;
             p.trial.Block.trialCount = 0;
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
-
         end 
 
         % Assigning orientation change magnitude according to block
         if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
-
             p.trial.Block.cuedMag = datasample(p.trial.Block.cuedMagList, 1);
             p.trial.Block.uncuedMag = datasample(p.trial.Block.uncuedMagList, 1);
             p.trial.Block.flagNextBlock = 0;
-
         end
 
 
@@ -608,7 +587,9 @@ function TaskDesign(p)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
 
                         % Flagging trial as early
-                        p.defaultParameters.earlyFlag = 0;
+                        if p.trial.task.cued
+                            p.defaultParameters.earlyFlag = 1;
+                        end
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -619,7 +600,7 @@ function TaskDesign(p)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
 
                         % Flagging trial as early
-                        p.defaultParameters.earlyFlag = 1;
+                        p.defaultParameters.breakFlag = 1;
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -630,7 +611,7 @@ function TaskDesign(p)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
 
                         % Flagging trial as early
-                        p.defaultParameters.earlyFlag = 1;
+                        p.defaultParameters.breakFlag = 1;
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -641,7 +622,7 @@ function TaskDesign(p)
                         p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
                
                         % Flagging trial as early
-                        p.defaultParameters.earlyFlag = 1;
+                        p.defaultParameters.breakFlag = 1;
 
                         % Switching epoch to end task
                         ND_SwitchEpoch(p, 'TaskEnd');
@@ -850,9 +831,9 @@ function p = Task_CorrectReward(p)
         
         % Dispensing reward
         if p.trial.task.cued
-            pds.reward.give(p, 0.07);
+            pds.reward.give(p, 0.09);
         else
-            pds.reward.give(p, 0.07);
+            pds.reward.give(p, 0.09);
         end
         
         % Playing audio signaling correct trial
