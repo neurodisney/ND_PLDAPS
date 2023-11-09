@@ -35,7 +35,8 @@ function p = ConRes_taskdef(p)
     p.trial.task.presDur = 3;
 
     % Creating trial increments to scale size of reward based on good performance
-    p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];    
+    p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
+    p.trial.reward.Dur = 0.04;
     
 
     % List of increasing durations of juice flow for reward

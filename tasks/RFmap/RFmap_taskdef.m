@@ -92,6 +92,7 @@ p.trial.datapixx.TTL_InjStrobe = 6110;
 % ------------------------------------------------------------------------%
 %% Reward
 
+
 % manual reward from experimenter
 p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.125; % duration of the initial reward
