@@ -5,7 +5,7 @@ function p = Task_WaitITI(p)
 % wolf zinke, Oct 2017
 
 if (p.defaultParameters.earlyFlag == 1)
-    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 7;
+    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 9;
     p.defaultParameters.earlyFlag = 0;
 elseif (p.defaultParameters.breakFlag == 1)
     p.trial.EV.PlanStart = p.trial.EV.PlanStart + 3;
