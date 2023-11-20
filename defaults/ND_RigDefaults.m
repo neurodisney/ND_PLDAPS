@@ -375,6 +375,7 @@ SS.stim.DRIFTGABOR.speed = 1;
 SS.stim.DRIFTGABOR.sigma = 0.4; % This wraps stim texture with Gaussian envelope, controlling stim on-screen size 
 SS.stim.DRIFTGABOR.contrast = 1;
 SS.stim.DRIFTGABOR.alpha = 1;
+SS.stim.DRIFTGABOR.pos   = [0, 0];
 
 % Ring (i.e. location cue)
 SS.stim.RING.pos           = [0,0];

@@ -25,7 +25,7 @@ classdef DriftGabor < pds.stim.BaseStim
     % Functions for class
     methods
            
-        function obj = DriftGabor(p, pos, fixWin, size, frequency, sigma, phase, angle, speed, contrast, alpha)
+        function obj = DriftGabor(p, pos, fixWin, size, frequency, radius, phase, angle, speed, contrast, alpha)
             % Loading stimulus paramters
             if nargin < 2 || isempty(pos)
                 pos = p.trial.stim.DRIFTGABOR.pos;
@@ -55,8 +55,8 @@ classdef DriftGabor < pds.stim.BaseStim
                 speed = p.trial.stim.DRIFTGABOR.speed;
             end
             
-            if nargin < 9 || isempty(sigma)
-                sigma = p.trial.stim.DRIFTGABOR.sigma;
+            if nargin < 9 || isempty(radius)
+                radius = p.trial.stim.DRIFTGABOR.radius;
             end
             
             if nargin < 10 || isempty(contrast)
@@ -81,9 +81,10 @@ classdef DriftGabor < pds.stim.BaseStim
             obj.angle = mod(angle + 180, 360) - 180; % Returning angle always within range [-180, 180]
             obj.phase = phase;
             obj.speed = speed;
-            obj.sigma = sigma;
             obj.contrast = contrast;
-            obj.radius = (sigma * 10) / 3.5; % Converting sigma to radius to report size of gabor  
+            obj.radius = radius;
+            % Converting radius to sigma to use for Gaussian  
+            obj.sigma = (radius * 3.5) / 10;  
             obj.bg = [p.trial.display.bgColor alpha];
             obj.gaborTex = CreateProceduralGabor(p.trial.display.ptr, size(1), size(2), [], obj.bg, 1, contrast);
             obj.genTime = p.trial.CurTime;

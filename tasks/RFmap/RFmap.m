@@ -175,21 +175,21 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 p.trial.stim.gratings = {};
 stimdef = p.trial.stim.(p.trial.stim.RFmeth);
 for ori = stimdef.ori
-    p.trial.stim.GRATING.ori = ori;
+    p.trial.stim.DRIFTGABOR.angle = ori;
     
     for radius = stimdef.radius
-        p.trial.stim.GRATING.radius = radius;
+        p.trial.stim.DRIFTGABOR.radius = radius;
         
         for sFreq = stimdef.sFreq
-            p.trial.stim.GRATING.sFreq = sFreq;
+            p.trial.stim.DRIFTGABOR.frequency = sFreq;
             
             for tFreq = stimdef.tFreq
-                p.trial.stim.GRATING.tFreq = tFreq;
+                p.trial.stim.DRIFTGABOR.speed = tFreq;
                 
                 for contr = stimdef.contrast
-                    p.trial.stim.GRATING.contrast = contr;
+                    p.trial.stim.DRIFTGABOR.contrast = contr;
                     
-                    p.trial.stim.gratings{end+1} = pds.stim.Grating(p);
+                    p.trial.stim.gratings{end+1} = pds.stim.DriftGabor(p);
                     
                 end
             end
@@ -205,8 +205,8 @@ p.trial.stim.locations = combvec(allXPos,allYPos)';
 
 %% Generate a shuffled list of all possible stimuli and location indices for reference during the experiment
 % Only do this the first trial, because stim sequence should continue between trials
-if p.trial.stim.count == 0;
-reshuffle_stims(p);
+if p.trial.stim.count == 0
+    reshuffle_stims(p);
 end
 
 %% Preallocate memory for RF-calculations
@@ -524,11 +524,7 @@ switch val
     case 1
         % Select the proper stim
         stimNum = p.trial.stim.count;
-        if (stimNum > 9)
-            stimNum = 9;
-        end
         stim = p.trial.stim.gratings{p.trial.stim.iStim(stimNum)};
-
         
         % Move the stim to the proper position
         curPos = p.trial.stim.locations(p.trial.stim.iPos(stimNum,:),:);

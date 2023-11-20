@@ -53,7 +53,7 @@ function p = start_AttendGrat(subjectname, rig)
        RFsize = 1; 
     end
     p.trial.stim.RING.radius = RFsize + 0.5;
-    p.trial.stim.DRIFTGABOR.sigma = (RFsize * 3.5) / 10;
+    p.trial.stim.DRIFTGABOR.radius = RFsize;
     
     % Collecting contrast value based on response threshold from user for rings
     cStep = input('What is a contrast step number near response threshold? (press enter for default value): ');
