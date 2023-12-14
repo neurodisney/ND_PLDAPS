@@ -297,22 +297,17 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 % rig specific eye calibration parameter
 switch rig
     case 1
-        % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [19.1915, -19.4401];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-2.0425, -1.4089];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [19.4461, -21.4500];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.0309, -1.3851];    % default offset, used if no calibration points are entered
      
     case 2
-        % Dingo hardstate screen Setting 1 6/22/20 
-        SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [19.4461, -21.4500];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.0309, -1.3851];  % default offset, used if no calibration points are entered
         
   
     otherwise
-        % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [19.1915, -19.4401];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-2.0425, -1.4089];    % default offset, used if no calibration points are entered
-        SS.eyeCalib.defaultGain      = [19.8293, -20.5942];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.1493, -1.5073];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [119.4461, -21.4500];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.0309, -1.3851];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
