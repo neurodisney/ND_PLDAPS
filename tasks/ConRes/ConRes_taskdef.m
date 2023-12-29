@@ -32,11 +32,11 @@ function p = ConRes_taskdef(p)
     p.trial.stim.RING.flash_screen = 1;
 
     % Creating duration for stimulus presentation
-    p.trial.task.presDur = 3;
+    p.trial.task.presDur = 2;
 
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
-    p.trial.reward.Dur = 0.04;
+    p.trial.reward.Dur = 0.045;
     
 
     % List of increasing durations of juice flow for reward

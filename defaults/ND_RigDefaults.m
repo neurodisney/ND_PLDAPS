@@ -21,7 +21,7 @@ function SS = ND_RigDefaults(rig)
 % If no rig is specified, use rig1
 if(~exist('rig','var') || isempty(rig))
     [~, rigname] = system('hostname');
-    rig = str2num(regexp(rigname,'\d+','match','once'));
+    rig = str2double(regexp(rigname,'\d+','match','once'));
 end
 
 SS.defaultParameters.session.rig = rig;
@@ -257,9 +257,16 @@ SS.Block.BlockList      = [];
 SS.datapixx.useAsEyepos        = 0;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XEyeposChannel = 0;
-SS.datapixx.adc.YEyeposChannel = 1;
-SS.datapixx.adc.PupilChannel   = 2;
+switch rig
+    case 1
+        SS.datapixx.adc.XEyeposChannel = 0;
+        SS.datapixx.adc.YEyeposChannel = 1;
+        SS.datapixx.adc.PupilChannel   = 2;
+    case 2
+        SS.datapixx.adc.XEyeposChannel = 3;
+        SS.datapixx.adc.YEyeposChannel = 4;
+        SS.datapixx.adc.PupilChannel   = 5;
+end
 
 % Saccade parameters
 
