@@ -136,6 +136,9 @@ function TaskDesign(p)
                     % Checking if current time is pre-set amount after 
                     % point at which fixation started
                     if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
+                        % Dispensing reward
+                        pds.reward.give(p, 0.01);
+
                         % Presenting ring
                         presentStim(p, 2);
      
@@ -284,7 +287,7 @@ function p = Task_CorrectReward(p)
     p.trial.task.Good = 1;
 
     % Dispensing reward
-    pds.reward.give(p, p.trial.reward.Dur);
+    pds.reward.give(p, 0.03);
 
     % Playing audio signaling correct trial
     pds.audio.playDP(p, 'reward', 'left');
