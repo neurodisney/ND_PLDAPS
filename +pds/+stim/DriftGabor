@@ -25,7 +25,7 @@ classdef DriftGabor < pds.stim.BaseStim
     % Functions for class
     methods
            
-        function obj = DriftGabor(p, pos, fixWin, size, frequency, radius, phase, angle, speed, contrast, alpha)
+        function obj = DriftGabor(p, pos, fixWin, size, radius, sFreq, phase, ori, tFreq, contrast, alpha)
             % Loading stimulus paramters
             if nargin < 2 || isempty(pos)
                 pos = p.trial.stim.DRIFTGABOR.pos;
@@ -38,29 +38,29 @@ classdef DriftGabor < pds.stim.BaseStim
             if nargin < 4 || isempty(size)
                 size = p.trial.stim.DRIFTGABOR.size;
             end
-            
-            if nargin < 5 || isempty(frequency)
-                frequency = p.trial.stim.DRIFTGABOR.frequency;
+
+            if nargin < 5 || isempty(radius)
+                radius = p.trial.stim.DRIFTGABOR.radius;
             end
             
-            if nargin < 6 || isempty(angle)
-                angle = p.trial.stim.DRIFTGABOR.angle;
+            if nargin < 6 || isempty(sFreq)
+                sFreq = p.trial.stim.DRIFTGABOR.sFreq;
             end
             
             if nargin < 7 || isempty(phase)
                 phase = p.trial.stim.DRIFTGABOR.phase;
             end
             
-            if nargin < 8 || isempty(speed)
-                speed = p.trial.stim.DRIFTGABOR.speed;
+            if nargin < 8 || isempty(ori)
+                ori = p.trial.stim.DRIFTGABOR.ori;
             end
-            
-            if nargin < 9 || isempty(radius)
-                radius = p.trial.stim.DRIFTGABOR.radius;
+
+            if nargin < 9 || isempty(tFreq)
+                tFreq = p.trial.stim.DRIFTGABOR.tFreq;
             end
-            
+
             if nargin < 10 || isempty(contrast)
-                contrast = p.trial.stim.DRIFTGABOR.contrast;
+                contrast = p.trial.stim.DRIFTGABOR.contr;
             end
 
             if nargin < 11 || isempty(alpha)
@@ -74,13 +74,13 @@ classdef DriftGabor < pds.stim.BaseStim
             obj.classCode = p.trial.event.STIM.DriftGabor;
 
             % Assigning order of properties when propertyArray attribute is calculated
-            obj.recordProps = {'xpos', 'ypos', 'radius', 'contrast', 'angle', 'frequency', 'speed'};
+            obj.recordProps = {'xpos', 'ypos', 'radius', 'contrast', 'ori', 'sFreq', 'tFreq'};
 
             obj.size = size;
-            obj.frequency = frequency;
-            obj.angle = mod(angle + 180, 360) - 180; % Returning angle always within range [-180, 180]
+            obj.sFreq = sFreq;
+            obj.ori = mod(ori + 180, 360) - 180; % Returning angle always within range [-180, 180]
             obj.phase = phase;
-            obj.speed = speed;
+            obj.tFreq = tFreq;
             obj.contrast = contrast;
             obj.radius = radius;
             % Converting radius to sigma to use for Gaussian  
