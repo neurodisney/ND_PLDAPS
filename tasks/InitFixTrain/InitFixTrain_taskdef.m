@@ -15,7 +15,7 @@ function p = InitFixTrain_taskdef(p)
 % ------------------------------------------------------------------------%
 %% Reward
 % manual reward from experimenter
-p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
+p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
 
 p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period

@@ -360,7 +360,7 @@ switch p.trial.CurrEpoch
                     
                     % Reset the reward timer
                     p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
-                    end
+                end
                 
                 if p.trial.task.stimState
                     % Keep stim on for stimOn Time
@@ -383,7 +383,7 @@ switch p.trial.CurrEpoch
                                pds.datapixx.strobe(p.trial.datapixx.TTL_InjStrobe);
                                 
                                %Run the Pulses_CR
-                                pds.datapixx.TTL(p.trial.datapixx.TTL_chan, 1, p.trial.datapixx.TTL_PulseDur);
+                               pds.datapixx.TTL(p.trial.datapixx.TTL_chan, 1, p.trial.datapixx.TTL_PulseDur);
                             end
                         end    
                     end

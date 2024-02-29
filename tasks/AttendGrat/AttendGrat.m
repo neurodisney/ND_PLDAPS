@@ -1,4 +1,7 @@
-%% This is the function to run the task
+% John Amodeo, May 2023
+
+
+%% RUN FUNCTION FOR TASK SESSION
 function p = AttendGrat(p, state)
 
     % Check for task name, fill if empty
@@ -40,7 +43,8 @@ function p = AttendGrat(p, state)
     end
 
 
-%% This function loads info specific to this task in p struct
+%% FUNCTIONS FOR TASK STAGES
+% This function loads info specific to this task in p struct
 function TaskSetUp(p)
 
         % Adding trial to running total for block
@@ -310,6 +314,8 @@ function TaskDesign(p)
             case p.trial.epoch.WaitCue
 
                 if(p.trial.stim.fix.fixating)
+                    % Dispensing reward
+                    pds.reward.give(p, 0.005);
 
                     if(p.trial.CurTime > p.trial.task.CueOn + p.trial.task.CueWait)
                         stimPreGratOriChange(p, 2);
@@ -672,26 +678,20 @@ function TaskDesign(p)
                 
                 % Flagging completion of current trial so ITI run before 
                 % next trial
-                p.trial.flagNextTrial = 1;
-               
+                p.trial.flagNextTrial = 1; 
         end
         
-
-        
-        
+     
+%% SUPPORT FUNCTIONS
 % Function to present stimuli on screen before orientation change
 function stimRings(p, val)
-        
 
         % Checking if status of stimulus presentation is different from previous trial
         if(val ~= p.trial.task.stimState)
             % Updating status of stimulus presentation if different from previous trial 
             p.trial.task.stimState = val;
-            
-
             % Turning stimulus presentation on/off based on stimulus presentation status
             switch val
-                
                 % Implementing no stimulus presentation
                 case 0
                     p.trial.stim.rings.cue.on = 0;
@@ -708,32 +708,25 @@ function stimRings(p, val)
                     
                 otherwise
                     error('unusable stim value')
-      
             end
 
             % Recording strat time of no stimulus presentation
             if(val == 0)
-                ND_AddScreenEvent(p, p.trial.event.RING_REMV, 'RingRemv');
-                
+                ND_AddScreenEvent(p, p.trial.event.RING_REMV, 'RingRemv');   
             elseif(val == 1)
                 ND_AddScreenEvent(p, p.trial.event.RING_PRES, 'RingPres');   
             end 
-
         end
-        
-        
-        
+           
 
 % Function to present stimuli on screen before orientation change
 function stimPreGratOriChange(p, val)
         
-
         % Checking if status of stimulus presentation is different from previous trial
         if(val ~= p.trial.task.stimState)
             % Updating status of stimulus presentation if different from previous trial 
             p.trial.task.stimState = val;
             
-
             % Turning stimulus presentation on/off based on stimulus presentation status
             switch val
                 
@@ -761,7 +754,6 @@ function stimPreGratOriChange(p, val)
                     error('unusable stim value')
       
             end
-            
 
             % Recording strat time of no stimulus presentation
             if(val == 0)
@@ -770,22 +762,16 @@ function stimPreGratOriChange(p, val)
             elseif(val == 2)
                 ND_AddScreenEvent(p, p.trial.event.GRAT_PRES, 'GratPres');
             end 
-
-
         end
-        
-
-        
+         
         
 % Function to present stimuli on screen after orientation change
 function stimPostGratOriChange(p, val)
         
-
         % Checking if status of stimulus presentation is different from previous trial
         if(val ~= p.trial.task.stimState)
             % Updating status of stimulus presentation if different from previous trial 
             p.trial.task.stimState = val;
-            
             
             % Turning stimulus presentation on/off based on stimulus presentation status
             switch val
@@ -804,7 +790,6 @@ function stimPostGratOriChange(p, val)
                 otherwise
                     error('unusable stim value')     
             end
-            
 
             % Recording strat time of no stimulus presentation
             if(val == 0)
@@ -814,23 +799,18 @@ function stimPostGratOriChange(p, val)
                 ND_AddScreenEvent(p, p.trial.event.CHNG_PRES, 'ChangePres');
                 
             end 
-
-
         end
-
-
 
 
 % Function to mark trial correct and dispense reward        
 function p = Task_CorrectReward(p)
-
 
         % Marking trial outcome as correct
         p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
         p.trial.task.Good = 1;
         
         % Dispensing reward
-        pds.reward.give(p, 0.09);
+        pds.reward.give(p, 0.08);
         
         % Playing audio signaling correct trial
         pds.audio.playDP(p, 'reward', 'left');
@@ -850,19 +830,14 @@ function p = Task_CorrectReward(p)
         % Switching epoch to end task
         ND_SwitchEpoch(p, 'WaitEnd');
         
-
-
-        
+ 
 % Function to clean up screen textures and variables and to save data to ascii table (AttendGrat_init.m)
 function TaskCleanAndSave(p)
-            
-
+           
         % Saving key variables
         Task_Finish(p);
-        
         % Trial outcome saved as code, and this is converting it to str name
         p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-        
         % Loading data into ascii table for plotting
         ND_Trial2Ascii(p, 'save');
         

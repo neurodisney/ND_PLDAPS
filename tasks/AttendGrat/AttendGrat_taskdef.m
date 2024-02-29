@@ -1,3 +1,6 @@
+% John Amodeo, May 2023
+
+
 % Function to define task parameters
 function p = AttendGrat_taskdef(p)
 
@@ -140,7 +143,7 @@ function p = AttendGrat_taskdef(p)
     
     % Setting time window in which response saccade allowed
     p.trial.task.Timing.saccadeStart = 0.100;
-    p.trial.task.saccadeTimeout = 0.70;
+    p.trial.task.saccadeTimeout = 0.50;
     
     % Setting time for which target must be fixed on before trial marked correct
     p.trial.task.minTargetFixTime = 0.20; 

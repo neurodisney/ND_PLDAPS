@@ -24,7 +24,7 @@ function p = ConRes_taskdef(p)
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'dRed';
     p.trial.stim.FIXSPOT.size = 0.25;
-    p.trial.stim.FIXSPOT.fixWin = 1.5;
+    p.trial.stim.FIXSPOT.fixWin = 1.75;
 
 
     % Assigning parameters to ring
@@ -36,7 +36,10 @@ function p = ConRes_taskdef(p)
 
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
-    p.trial.reward.Dur = 0.045;
+    p.trial.reward.Continuous = 1;
+    p.trial.reward.duration = 0.015;
+    p.trial.reward.Period = 0.5;
+    p.trial.reward.jackpotnPulse = 1;
     
 
     % List of increasing durations of juice flow for reward
