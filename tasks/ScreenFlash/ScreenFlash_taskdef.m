@@ -48,10 +48,7 @@ p.trial.datapixx.TTL_InjStrobe = p.defaultParameters.event.INJECT;
 %--------------------------------------------------------------%
 %% Timing
 p.trial.task.Timing.WaitFix = 0.100;    % Time to get a solid fixation before trial ends unsuccessfully
-<<<<<<< HEAD
 
-=======
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 drugFlashDelay = 5;
 p.trial.task.Timing.drugFlashDelay = drugFlashDelay;
 minInterFlash = 1;

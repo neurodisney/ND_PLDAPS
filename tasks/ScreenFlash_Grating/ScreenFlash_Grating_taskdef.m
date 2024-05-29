@@ -51,7 +51,7 @@ end
 p.trial.stim.GRATING.res    = 300;
 p.trial.stim.GRATING.fixWin = 0;
 
-p.trial.stim.OnTime  = 0.5;   % How long each stimulus is presented
+p.trial.stim.OnTime  = 2.0;   % How long each stimulus is presented
 p.trial.stim.OffTime = 5.0;   % Gaps between succesive stimuli
 p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 
@@ -88,8 +88,6 @@ p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
 p.trial.task.CurRewDelay    = 0.5;  % Time to first reward
 p.trial.task.fixLatency     = 0.15;  % Time to hold fixation before mapping begins
 p.trial.task.jackpotTime    = 4;   % How long stimuli are presented before trial ends and jackpot is given
-p.trial.task.stimOnTime     = 0.15;   % How long each stimulus is presented
-p.trial.task.stimOffTime    = 2.00;   % Gaps between succesive stimuli
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 0.5;  % minimum time period [s] between subsequent trials
@@ -103,7 +101,7 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 p.trial.stim.FIXSPOT.pos   = [0,0];
 p.trial.stim.FIXSPOT.type  = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color = 'white';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size  = 0.0001;     % size of the fixation spot
+p.trial.stim.FIXSPOT.size  = 0.5;     % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
@@ -126,3 +124,7 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 %% Break color
 p.trial.display.breakColor = 'black';
 % ------------------------------------------------------------------------%
+
+
+
+p.trial.stim.coarse.ori      = 0;          % orient of grating

@@ -41,7 +41,7 @@ function p = AttendGrat_taskdef(p)
     targ_angle = rad2deg(atan2(targ_y, targ_x));
     angle_arr = [targ_angle, targ_angle + 90, targ_angle + 180, targ_angle + 270];
     radius = sqrt(targ_x^2 + targ_y^2);
-    delta = 20;
+    delta = 5;
 
     p.trial.task.posList = {};
     for q = 1:4

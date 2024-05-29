@@ -176,7 +176,7 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 p.trial.stim.gratings = {};
 stimdef = p.trial.stim.(p.trial.stim.RFmeth);
 for ori = stimdef.ori
-    p.trial.stim.GRATING.ori = ori;
+    p.trial.stim.GRATING.ori =ori;
     
     for radius = stimdef.radius
         p.trial.stim.GRATING.radius = radius;

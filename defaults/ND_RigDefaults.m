@@ -374,7 +374,7 @@ SS.stim.GRATING.ori      = 1;
 
 % Drifting sine Wave Grating stimlui
 SS.stim.DRIFTGABOR.fixWin = 4;
-SS.stim.DRIFTGABOR.size = [7, 7]; % This controls stim texture size, not size of stim shown on screen
+SS.stim.DRIFTGABOR.size = [3, 3]; % This controls stim texture size, not size of stim shown on screen
 SS.stim.DRIFTGABOR.frequency = 3;
 SS.stim.DRIFTGABOR.angle = 45;
 SS.stim.DRIFTGABOR.phase = 0;
