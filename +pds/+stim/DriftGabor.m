@@ -74,7 +74,8 @@ classdef DriftGabor < pds.stim.BaseStim
             obj.classCode = p.trial.event.STIM.DriftGabor;
 
             % Assigning order of properties when propertyArray attribute is calculated
-            obj.recordProps = {'xpos', 'ypos', 'radius', 'contrast', 'angle', 'frequency', 'speed'};
+            % Storing this info in ascii table instead
+            obj.recordProps = {};
 
             obj.size = size;
             obj.frequency = frequency;

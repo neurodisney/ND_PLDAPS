@@ -154,7 +154,7 @@ function TaskSetUp(p)
             p.trial.stim.RING.color = p.trial.stim.ringParameters.distCon;
         end
 
-        p.trial.stim.RING.contrast = p.trial.display.clut.(p.trial.stim.RING.color) / 100;
+        p.trial.stim.RING.contrast = p.trial.display.clut.(p.trial.stim.RING.color);
         p.trial.stim.rings.cue = pds.stim.Ring(p);
 
         % Creating distractor ring 1 by assigning values to ring properties in p object
@@ -162,7 +162,7 @@ function TaskSetUp(p)
         pos = cell2mat(posList(2));
         p.trial.stim.RING.pos = pos([1 2]);
         p.trial.stim.RING.color = p.trial.stim.ringParameters.distCon;
-        p.trial.stim.RING.contrast = p.trial.display.clut.(p.trial.stim.RING.color) / 100;
+        p.trial.stim.RING.contrast = p.trial.display.clut.(p.trial.stim.RING.color);
         p.trial.stim.rings.distractor1 = pds.stim.Ring(p);
 
         % Creating distractor ring 2 by assigning values to ring properties in p object
@@ -229,9 +229,7 @@ function TaskSetUp(p)
 
         % Reducing current reward if previous trial was incorrect
         if(p.trial.LastHits == 0)
-
-            p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;
-            
+            p.trial.reward.Dur = p.trial.reward.Dur * p.trial.reward.DiscourageProp;    
         end
 
 
