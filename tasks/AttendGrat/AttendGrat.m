@@ -110,7 +110,7 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gaborParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([0, 1], 1);
+        p.trial.task.cued = datasample([0, 1, 1], 1);
         
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
@@ -275,13 +275,13 @@ function TaskDesign(p)
                 Task_WaitFixStart(p);
 
 
-            % Presenting rings if fixation held
+            % Checking if animal is in fix window
             case p.trial.epoch.Fixating
-
-                % Is monkey fixating at this point in task?
+                % Checking if animal is fixating on fix spot
                 if(p.trial.stim.fix.fixating)
-                    % Are stimuli on screen?
+                    % Checking phase of trial
                     if(p.trial.task.stimState == 0)
+                        ND_AddScreenEvent(p, p.trial.event.FIXSPOT_FIX, 'fixspotFix');
                         % Is current time after presentation of fix point?
                         if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
                             % Presenting rings

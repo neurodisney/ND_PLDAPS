@@ -41,7 +41,7 @@ function p = AttendGrat_taskdef(p)
     targ_angle = rad2deg(atan2(targ_y, targ_x));
     angle_arr = [targ_angle, targ_angle + 90, targ_angle + 180, targ_angle + 270];
     radius = sqrt(targ_x^2 + targ_y^2);
-    delta = 20;
+    delta = 0;
 
     p.trial.task.posList = {};
     for q = 1:4
@@ -97,14 +97,14 @@ function p = AttendGrat_taskdef(p)
 
 
     % Creating list of orientations using values collected from user or using default values 
-    p.trial.task.oriList = p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
+    p.trial.task.oriList = [125, 127, 129, 133, 135, 137, 139, 143, 145]; % p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
     
     % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [0, 4, 8, 16, 32, 64, 64];
+    p.trial.Block.cuedMagList = [0, 4, 8, 16, 16, 32, 32, 64, 64];
     cuedStr = num2str(p.trial.Block.cuedMagList);
     p.trial.Block.cuedMagListStr = strrep(cuedStr, ' ', ',');
 
-    p.trial.Block.uncuedMagList = [0, 4, 8, 16, 32, 64, 64];
+    p.trial.Block.uncuedMagList = [0, 4, 8, 16, 16, 32, 32, 64, 64];
     uncuedStr = num2str(p.trial.Block.uncuedMagList);
     p.trial.Block.uncuedMagListStr = strrep(uncuedStr, ' ', ',');
     

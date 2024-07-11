@@ -18,7 +18,7 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.coarse.ori      = 0;          % orient of grating
+        p.trial.stim.coarse.ori      = 90;          % orient of grating
         p.trial.stim.coarse.radius   = 50.0;        % size of grating 
         p.trial.stim.coarse.contrast = 1;           % intensity contrast
         p.trial.stim.coarse.sFreq    = 0.5;         % spatial frequency 
@@ -125,4 +125,12 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 % ------------------------------------------------------------------------%
 %% Break color
 p.trial.display.breakColor = 'black';
+
+
+
+p.trial.stim.coarse.ori = 90;
+
+
+
+
 % ------------------------------------------------------------------------%

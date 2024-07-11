@@ -18,7 +18,7 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.coarse.ori      = 90;          % orient of grating
+        p.trial.stim.coarse.ori      = 45;          % orient of grating
         p.trial.stim.coarse.radius   = 50.0;        % size of grating 
         p.trial.stim.coarse.contrast = 0.75;           % intensity contrast
         p.trial.stim.coarse.sFreq    = 0.5;         % spatial frequency 

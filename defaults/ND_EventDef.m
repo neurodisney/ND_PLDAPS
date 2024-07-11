@@ -138,7 +138,8 @@ p.defaultParameters.event.FIXSPOT_ON    = 1200; % onset of fixation spot
 p.defaultParameters.event.FIXSPOT_OFF   = 1201; % offset of fixation spot
 
 p.defaultParameters.event.FIXSPOT_PRES  = 1202; % frame with fixspot presented
-p.defaultParameters.event.FIXSPOT_REMV  = 1203; % frame without fixspot presented 
+p.defaultParameters.event.FIXSPOT_FIX   = 1203; % animal fixating on fix spot
+p.defaultParameters.event.FIXSPOT_REMV  = 1204; % frame without fixspot presented 
 
 p.defaultParameters.event.FIX_IN        = 1210; % gaze enters fixation window
 p.defaultParameters.event.FIX_OUT       = 1211; % gaze leaves fixation window
@@ -180,7 +181,7 @@ p.defaultParameters.outcome.FalseIpsi         =   5014;  % Timely saccade made t
 % ToDo: WZ - need to check what encodes should/need to be used as events and
 %            what should be used as outcome encoded in the trial header
 p.defaultParameters.event.FIX_BRK_BSL   = 1231; % fixation break during the pre-stimulus period
-p.defaultParameters.event.FIX_BRK_CUE   = 1232; % fixation break wh% Flagging trial as earlyile the cue is on
+p.defaultParameters.event.FIX_BRK_CUE   = 1232; % fixation break wh% Flagging trial as early the cue is on
 p.defaultParameters.event.FIX_BRK_STIM  = 1233; % fixation break during stimulus presentation
 p.defaultParameters.event.FIX_BRK_SPEED = 1234;
 
