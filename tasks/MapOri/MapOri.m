@@ -181,7 +181,6 @@ function presentStim(p, val)
             % screen and fixation window around it
             case 2
                 p.trial.stim.gabor.on = 1;
-                p.trial.stim.gabor.fixActive = 1;
             % Error thrown if neither case designated
             otherwise
                 error('unusable stim value')
