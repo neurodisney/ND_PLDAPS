@@ -1,4 +1,4 @@
-function SS = ND_RigDefaults(rig)
+ function SS = ND_RigDefaults(rig)
 % set default parameters for a rig in the Disney lab.
 %
 % This file summarizes gives an overview of parameters that could be set for
@@ -21,7 +21,7 @@ function SS = ND_RigDefaults(rig)
 % If no rig is specified, use rig1
 if(~exist('rig','var') || isempty(rig))
     [~, rigname] = system('hostname');
-    rig = str2double(regexp(rigname,'\d+','match','once'));
+    rig = str2num(regexp(rigname,'\d+','match','once'));
 end
 
 SS.defaultParameters.session.rig = rig;
@@ -42,7 +42,7 @@ SS.datapixx.use                                 = 1;      % enable control of VP
 SS.datapixx.enablePropixxCeilingMount           = 0;      % ProPixx: enableCeilingMount   (flip image vertically)
 SS.datapixx.enablePropixxRearProjection         = 1;      % ProPixx: enableRearProjection (flip image horizontally)    !!!
 
-SS.datapixx.propixxIntensity                    = 0;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
+SS.datapixx.propixxIntensity                    = 3;      % Projector brightness (0 = 100%, 1 = 50%, 2 = 25%, 3 = 12.5%, 4 = 6.25%). [] to not change.
 
 % GetPreciseTime: Set internal parameters for PsychDatapixx('GetPreciseTime').
 % This is highly recommend to speed up inter trial interval. see pldapsSyncTests, PsychDatapixx('GetPreciseTime?')
@@ -71,26 +71,26 @@ SS.datapixx.adc.channelMapping                  = {};     % Specify where to sto
 %% Display settings: specify options for the screen.
 switch rig
     case 1
-        SS.display.viewdist                     = 61; % screen distance to the observer
-        SS.display.heightcm                     = 47; % height of the visible screen in cm
-        SS.display.widthcm                      = 82; % width  of the visible screen in cm
+        SS.display.viewdist                     = 57.0; % screen distance to the observer
+        SS.display.heightcm                     = 30.0; % height of the visible screen in cm
+        SS.display.widthcm                      = 53.5; % width  of the visible screen in cm
         SS.display.bgColor                      = [0.37, 0.37, 0.37];  % datapixx background color. This is the base color datapix uses a screen color and has to be monochrome. It can be changed during trial.
     case 2
-        SS.display.viewdist                     = 61;   
-        SS.display.heightcm                     = 47;     
-        SS.display.widthcm                      = 82;  
+        SS.display.viewdist                     = 57.0;   
+        SS.display.heightcm                     = 30.0;     
+        SS.display.widthcm                      = 53.5;  
         SS.display.bgColor                      = [0.37, 0.37, 0.37]; % datapixx background color: target 20 cd/m^2
     otherwise
-        SS.display.viewdist                     = 61;   
-        SS.display.heightcm                     = 47;    
-        SS.display.widthcm                      = 82;   
+        SS.display.viewdist                     = 57.0;   
+        SS.display.heightcm                     = 30.0;    
+        SS.display.widthcm                      = 53.5;   
 end
 
 SS.display.breakColor                           = 'black';  % screen color during breaks
 SS.display.scrnNum                              = 1;      % screen number for full screen display, 1 is monkey-screen,0 is experimenter screen
-SS.display.viewdist                             = 61;    % screen distance to the observer
-SS.display.heightcm                             = 47;     % height of the visible screen in cm
-SS.display.widthcm                              = 82;     % width  of the visible screen in cm
+SS.display.viewdist                             = 57.0;    % screen distance to the observer
+SS.display.heightcm                             = 30.0;     % height of the visible screen in cm
+SS.display.widthcm                              = 53.5;     % width  of the visible screen in cm
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
@@ -152,18 +152,18 @@ SS.mouse.useLocalCoordinates                    = 0;
 SS.mouse.initialCoordinates                     = [];
 % ------------------------------------------------------------------------%
 %% Sound: control sound playback
-SS.sound.use                                    = 1;     % toggle use of sound   !!!
+SS.sound.use                                    = 0;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
 
 % Datapixx sound and PsychPortAudio can both be used simultaneously to
 % maximize audio channels (Need to get datapixx working first)
 SS.sound.useDatapixx                            = 1;
-SS.sound.datapixxVolume                         = 1;
-SS.sound.datapixxInternalSpeakerVolume          = 1;
+SS.sound.datapixxVolume                         = 1.0;
+SS.sound.datapixxInternalSpeakerVolume          = 0;
 
 SS.sound.usePsychPortAudio                      = 0;
-SS.sound.psychPortVolume                        = 1;
+SS.sound.psychPortVolume                        = 0.9;
 
 % ------------------------------------------------------------------------%
 %% PLDAPS settings: pldaps core parameters
@@ -178,7 +178,7 @@ SS.pldaps.quit                                  = 0;     % control experiment du
 SS.pldaps.trialMasterFunction         = 'ND_runTrial';   % function to be called to run a single Trial.
 SS.pldaps.useFileGUI                            = 0;     % use a GUI to specify the output file. (WZ TODO: I think could be removed. File names generated automatically.)
 SS.pldaps.experimentAfterTrialsFunction         = [];    % a function to be called after each trial.
-SS.pldaps.eyeposMovAv                           = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
+SS.pldaps.MovAv                                 = 25;    % if > 1 it defines a time window to calculate a moving average of the eye position (.eyeX and .eyeY) over this many samples (TODO: Maybe use a time period instead of number of sample. Right now there is a clear inconsistency when using the mouse).
 
 % dirs: configure pldaps' built-in drawing options
 if(exist('/DATA/ExpData', 'dir'))
@@ -231,9 +231,8 @@ SS.pldaps.ptbVerbosity       = 3;  % See here https://github.com/Psychtoolbox-3/
 
 % ------------------------------------------------------------------------%
 %% Reward settings
-SS.datapixx.useForReward      = 1;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
-SS.reward.defaultAmount       = 0.05;  % Default amount of reward.=0; [in seconds]
-SS.reward.ManDur              = 0.05;
+SS.datapixx.useForReward      = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
+SS.reward.defaultAmount       = 0.125;  % Default amount of reward.=0; [in seconds]
 SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
 SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
 
@@ -243,11 +242,6 @@ SS.Block.maxBlocks      = -1;  % max number of blocks to complete; if negative b
 SS.Block.maxBlockTrials =  4;  % max number of trials per condition in a block (for unbalanced numbers use an array with the same length as number of condition and specify desired trial number per condition)
 SS.Block.EqualCorrect   =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 SS.Block.GenBlock       =  1;  % Flag to indicate that a block with a new condition list needs to be generated
-SS.Block.trialCount     =  0;
-SS.Block.blockCount     =  0;
-SS.Block.cuedMag        =  0;
-SS.Block.uncuedMag      =  0;
-SS.Block.flagNextBlock  =  0;
 c1.Nr = 1;
 SS.Block.Conditions     = {c1}; % as default only one condition
 SS.Block.BlockList      = [];
@@ -257,20 +251,12 @@ SS.Block.BlockList      = [];
 SS.datapixx.useAsEyepos        = 0;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-switch rig
-    case 1
-        SS.datapixx.adc.XEyeposChannel = 0;
-        SS.datapixx.adc.YEyeposChannel = 1;
-        SS.datapixx.adc.PupilChannel   = 2;
-    case 2
-        SS.datapixx.adc.XEyeposChannel = 3;
-        SS.datapixx.adc.YEyeposChannel = 4;
-        SS.datapixx.adc.PupilChannel   = 5;
-end
+SS.datapixx.adc.XEyeposChannel = 0;
+SS.datapixx.adc.YEyeposChannel = 1;
+SS.datapixx.adc.PupilChannel   = 2;
 
 % Saccade parameters
-
-SS.behavior.fixation.use       = 1;       % does this task require control of eye position
+SS.behavior.fixation.use       =  0;       % does this task require control of eye position
 
 SS.behavior.fixation.on        =  0;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
@@ -308,28 +294,23 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 % rig specific eye calibration parameter
 switch rig
     case 1
-        % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [21.1597, -16.8761];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0124, -1.3589];    % default offset, used if no calibration points are entered
-
+        % defaults before Screen Resize 6/22/20
+        SS.eyeCalib.defaultGain      = [16.7233 -17.3001];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.7326, -1.6799];    % default offset, used if no calibration points are entered
+     
     case 2
-        % Dingo hardstate screen Setting 1 6/22/20 
-        SS.eyeCalib.defaultGain      = [21.1597, -16.8761];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0124, -1.3589];  % default offset, used if no calibration points are entered
+        % defaults before Screen Resize 
+        SS.eyeCalib.defaultGain      = [16.7233 -17.3001];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.7326, -1.6799];  % default offset, used if no calibration points are entered
         
-    case 3
-        % Dingo hardstate screen Setting 1 6/22/20 
-        SS.eyeCalib.defaultGain      = [21.1597, -16.8761];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0124, -1.3589];  % default offset, used if no calibration points are entered   
-  
     otherwise
-        % Dingo hardstate screen Setting 1 6/22/20
-        SS.eyeCalib.defaultGain      = [21.1597, -16.8761];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.0124, -1.3589];    % default offset, used if no calibration points are entered
+        % defaults before Screen Resize 
+        SS.eyeCalib.defaultGain      = [16.7233 -17.3001];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-1.7326, -1.6799];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states
-SS.FixState.Current     =  NaN;
+SS.FixState.Current     = NaN;
 SS.FixState.FixOut      =    0;  % Gaze out of fixation window
 SS.FixState.startingFix = 0.25;  % Gaze has momentarily entered fixation window
 SS.FixState.FixIn       =    1;  % Gaze robustly within fixation window
@@ -345,14 +326,14 @@ SS.stim.record.structs = {}; % Cell array to store the properties of stims as th
 SS.stim.pos = [0,0];
 
 % fixation window
-SS.stim.fixWin                       = 2.5; % diameter of fixation window in dva
+SS.stim.fixWin                       =  2.5;  % diameter of fixation window in dva
 SS.pldaps.draw.eyepos.history        = 60;  % show eye position of the previous n frames in addition to current one
 SS.pldaps.draw.eyepos.sz             = 8;   % size in pixels of the eye pos indicator
 SS.pldaps.draw.eyepos.fixwinwdth_pxl = 2;   % frame width of the fixation window in pixels
 
 % Fixation spot stimuli
 SS.stim.FIXSPOT.pos          = [0,0];
-SS.stim.FIXSPOT.fixWin       =  2.0;      % diameter of fixation window in dva
+SS.stim.FIXSPOT.fixWin       =  2.0;        % diameter of fixation window in dva
 SS.stim.FIXSPOT.type         = 'disc';    % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 SS.stim.FIXSPOT.color        = 'fixspot'; % color of fixation spot (as defined in the lookup tables)
 SS.stim.FIXSPOT.size         = 0.2;       % size of the fixation spot
@@ -364,44 +345,21 @@ SS.stim.GRATING.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
 SS.stim.GRATING.angle    = 0; % Rotation
 SS.stim.GRATING.contrast = 1;
 SS.stim.GRATING.res      = 1000; % Half the size of the texture matrix
-SS.stim.GRATING.radius   = 0.75;
+SS.stim.GRATING.radius   = 1;
 SS.stim.GRATING.contrastMethod = 'balanced';
 SS.stim.GRATING.pos      = [0, 0];
-SS.stim.GRATING.fixWin   = 4;  
+SS.stim.GRATING.fixWin   =  4;  
 SS.stim.GRATING.alpha    = 1; % Fully opaque
-SS.stim.GRATING.cued     = 0;
-SS.stim.GRATING.ori      = 1;
-
-% Drifting sine Wave Grating stimlui
-SS.stim.DRIFTGABOR.fixWin = 4;
-SS.stim.DRIFTGABOR.size = [5, 5]; % This controls stim texture size, not size of stim shown on screen
-SS.stim.DRIFTGABOR.frequency = 3;
-SS.stim.DRIFTGABOR.angle = 45;
-SS.stim.DRIFTGABOR.phase = 0;
-SS.stim.DRIFTGABOR.speed = 1;
-SS.stim.DRIFTGABOR.sigma = 0.4; % This wraps stim texture with Gaussian envelope, controlling on-screen stim size 
-SS.stim.DRIFTGABOR.contrast = 1;
-SS.stim.DRIFTGABOR.alpha = 1;
-SS.stim.DRIFTGABOR.pos   = [0, 0];
+SS.stim.GRATING.hemifield = NaN;
+% SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 
 % Ring (i.e. location cue)
-SS.stim.RING.pos           = [0,0];
-SS.stim.RING.size          = 2;
-SS.stim.RING.linewidth     = 0.1;
-SS.stim.RING.color         = 'fixspot'; 
-SS.stim.RING.fixWin        = 2;
-SS.stim.RING.alpha         = 1; % Fully opaque
-SS.stim.RING.flash_screen  = 0;
- 
-% Rectangle
-SS.stim.RECTANGLE.pos       = [0,0];
-SS.stim.RECTANGLE.size      = 2;
-SS.stim.RECTANGLE.linewidth = 0.1;
-SS.stim.RECTANGLE.color     = 'red'; 
-SS.stim.RECTANGLE.fixWin    = 3;
-SS.stim.RECTANGLE.alpha     = 1; % Fully opaque
-SS.stim.RECTANGLE.flashing  = 0;
-SS.stim.RECTANGLE.reward    = 0;
+SS.stim.RING.pos       = [0,0];
+SS.stim.RING.size      = 2;
+SS.stim.RING.linewidth = 0.1;
+SS.stim.RING.color     = 'fixspot'; 
+SS.stim.RING.fixWin    = 2;
+SS.stim.RING.alpha     = 1; % Fully opaque
 
 % ------------------------------------------------------------------------%
 %% Joystick
@@ -483,8 +441,12 @@ SS.key.spritz    = KbName('tab');    % Send a TTL pulse over the analog channel 
 SS.key.BlockAdvance      = KbName('a'); % advance to next block
 SS.key.BlockEqualCorrect = KbName('s'); % switch between accepting only correct trials or all trials
 
-% view eye calibration on screen
-SS.key.viewEyeCalib      = KbName('insert'); % View the calibration points
+% eye calibration
+SS.key.viewEyeCalib      = KbName('insert'); % View the current calibration points on screen
+SS.key.CalibrateEyeOffset= KbName('Home'); % toggle between off, xTweak and yTweak for offset
+SS.key.CalibrateEyeGain  = KbName('End'); % toggle between off, xTweak and yTweak for gain
+SS.key.CalibrateEyeUp    = KbName('PageUp'); %increase or move offset/gain up
+SS.key.CalibrateEyeDown  = KbName('PageDown'); %decrease oe move offset/gain down
 
 % Keys for freeing the keyboard, allowing for use in other programs while the task is going
 SS.pldaps.keyboardFree   = 0; % Start with PLDAPS interpretting key strokes.
@@ -501,6 +463,3 @@ SS.editable   = {};
 SS.plot.do_online =  0;  % run online data analysis between two subsequent trials
 SS.plot.routine   = [];  % matlab function to be called for online analysis (TODO: make a default routine for the most rudimentary analysis)
 SS.plot.fig       = [];  % figure handle for online plot (leave empty)
-
-
-
