@@ -295,18 +295,18 @@ SS.behavior.fixation.NumSmplCtr      = 10;     % number of recent samples to use
 switch rig
     case 1
         % defaults before Screen Resize 6/22/20
-        SS.eyeCalib.defaultGain      = [16.7233 -17.3001];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.7326, -1.6799];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [-14.8258 -13.2805];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.9830, -1.7773];    % default offset, used if no calibration points are entered
      
     case 2
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [16.7233 -17.3001];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.7326, -1.6799];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [-14.8258 -13.2805];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.9830, -1.7773];  % default offset, used if no calibration points are entered
         
     otherwise
         % defaults before Screen Resize 
-        SS.eyeCalib.defaultGain      = [16.7233 -17.3001];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-1.7326, -1.6799];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultGain      = [-14.8258 -13.2805];  % default gain, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [-0.9830, -1.7773];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states

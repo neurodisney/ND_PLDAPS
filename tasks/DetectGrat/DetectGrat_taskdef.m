@@ -12,12 +12,12 @@ function p = DetectGrat_taskdef(p)
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.ManDur         = 0.15;  % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur         = 0.20;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [10,  150, 250,  400, 450, 500]; % increase number of pulses with this trial number
 p.trial.reward.IncrementDur   = [0.175, 0.175, 0.175, 0.2, 0.2, 0.25]; % increase number of pulses with this trial number
 
 p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
+p.trial.reward.Dur   = 0.5; % duration of the initial reward
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -25,8 +25,8 @@ p.trial.behavior.fixation.MinFixStart = ND_GetFixDur(.25, 1.5, [], [], 1, .25); 
 p.trial.reward.ManDur         = 0.2;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [10,  150, 250,  400, 450, 500]; % increase number of pulses with this trial number
 p.trial.reward.IncrementDur   = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]; % increase number of pulses with this trial number
-p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
-p.trial.reward.InitialRew   = 0.125; % duration of the initial reward
+p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
+p.trial.reward.InitialRew   = 0.5; % duration of the initial reward
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -34,8 +34,8 @@ p.trial.behavior.fixation.MinFixStart = ND_GetFixDur(.15, 0.25, [], [], 1, .05);
 p.trial.task.Timing.WaitFix = 1;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.5, 1.5, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
-p.trial.task.stimLatency      = ND_GetITI(0.15, 0.25, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.75, 1.75, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.55, 0.75, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
 p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 0.1;   % Must fixate on target for at least this time before it counts
@@ -48,16 +48,13 @@ p.trial.task.Timing.ITI       = ND_GetITI(1.5, 2.25, [], [], 1, 0.10);
 p.trial.stim.GRATING.tFreq  = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 p.trial.stim.GRATING.res    = 300;
 p.trial.stim.GRATING.fixWin = 2;  
-%p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % alternative radius of grating patch
 p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 
-p.trial.stim.EccLst = [ 2, 3, 4]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
-p.trial.stim.AngLst = [45, 0, 45]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
+p.trial.stim.EccLst = [ 4, 5, 6]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
+p.trial.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
 
 % grating contrast
 p.trial.stim.trgtconts = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223 
-p.trial.stim.GRATING.fixWin = 3.5;  
-%p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % alternative radius of grating patch
 p.trial.stim.GRATING.radius = 1.0;  % radius of grating patch
 
 p.trial.stim.EccLst = [4, 5, 6]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
@@ -65,10 +62,8 @@ p.trial.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % If p.de
 
 % grating contrast
 p.trial.stim.trgtconts = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-%p.trial.stim.trgtconts = [0, 0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223 
-%p.trial.stim.trgtconts = [0, 0.015, 0.023, 0.035, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%Anita suggested on 20210222 
-%p.trial.stim.trgtconts = [0, 0, 0.01, 0.0152, 0.0217, 0.0248, 0.0504, 0.0951, 0.1727, 0.9500]; %%% used for behavior to make stationary data, 
-%p.trial.stim.trgtconts = round(logspace(log10(0.035),log10(0.31), 10), 4)-0.01; %%croc
+%p.trial.stim.trgtconts = [0, 0, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 0.9600]; 
+
 p.trial.stim.RespThr = 0.001; % contrast where it can be assumed the grating is seen
 
 % ------------------------------------------------------------------------%
@@ -102,7 +97,7 @@ p.trial.datapixx.TTL_Npulse = 1;
 p.trial.datapixx.TTL_GapDur = .10; 
 p.trial.datapixx.TTL_Nseries = 1;
 p.trial.datapixx.TTL_SeriesPause = 0;
-p.trial.datapixx.TTL_InjStrobe = 667; 
+p.trial.datapixx.TTL_InjStrobe = 6110; 
 
 %% Fixation parameters
 p.trial.behavior.fixation.BreakTime = 0.05;  % minimum time [ms] to identify a fixation break

@@ -15,17 +15,17 @@ function p = InitFixTrain_taskdef(p)
 % ------------------------------------------------------------------------%
 %% Reward
 % manual reward from experimenter
-p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
+p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.05; % duration of the initial reward
 
-p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
+p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of rewards until end of fixation period
 p.trial.reward.Dur          = 0.1; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 4, 8, 12];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
 p.trial.reward.ManDur       = 0.1; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime  = 1.00;     % total time required to fixate to get full reward
+p.trial.reward.jackpotTime  = 0.80;     % total time required to fixate to get full reward
 p.trial.reward.jackpotDur   = 0.1;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
@@ -102,7 +102,7 @@ p.trial.Block.maxBlockTrials =  [1];
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size = 0.25;     % size of the fixation spot
+p.trial.stim.FIXSPOT.size = 0.2;     % size of the fixation spot
 p.trial.stim.FIXSPOT.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixWinStp = 0.2;  % refine resizing of fixation step for this task only(modify default rig settings)
 

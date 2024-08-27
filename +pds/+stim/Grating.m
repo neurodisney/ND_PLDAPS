@@ -68,7 +68,7 @@ methods
         end
         
         if nargin < 5 || isempty(ori)
-            ori = p.trial.stim.GRATING.ori;
+            ori = p.trial.stim.GRATING.angle;
         end
                 
         if nargin < 6 || isempty(sFreq)
