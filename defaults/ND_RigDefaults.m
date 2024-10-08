@@ -353,6 +353,16 @@ SS.stim.GRATING.alpha    = 1; % Fully opaque
 SS.stim.GRATING.hemifield = NaN;
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
 
+SS.stim.DRIFTGABOR.fixWin       = 2;
+SS.stim.DRIFTGABOR.size         = [5, 5]; %this controls stim texture size, not size of stim shown
+SS.stim.DRIFTGABOR.frequency    = 3;
+SS.stim.DRIFTGABOR.angle        = 45;
+SS.stim.DRIFTGABOR.phase        = 0;
+SS.stim.DRIFTGABOR.sigma        = 0.4; %this wraps stim texture with Gaussian envelope, controlling on-screen stim size
+SS.stim.DRIFTGABOR.contrast     = 1;
+SS.stim.DRIFTGABOR.alpha        = 1;
+SS.stim.DRIFTGABOR.pos          = [0, 0];
+
 % Ring (i.e. location cue)
 SS.stim.RING.pos       = [0,0];
 SS.stim.RING.size      = 2;

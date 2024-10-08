@@ -175,21 +175,21 @@ p.trial.stim.gratings = {};
 stimdef = p.trial.stim.(p.trial.stim.RFmeth);
 
 for ori = stimdef.ori
-    p.trial.stim.GRATING.angle = ori;
+    p.trial.stim.DRIFTGABOR.angle = ori;
     
     for radius = stimdef.radius
-        p.trial.stim.GRATING.radius = radius;
+        p.trial.stim.DRIFTGABOR.radius = radius;
         
         for sFreq = stimdef.sFreq
-            p.trial.stim.GRATING.frequency = sFreq;
+            p.trial.stim.DRIFTGABOR.frequency = sFreq;
             
             for tFreq = stimdef.tFreq
-                p.trial.stim.GRATING.speed = tFreq;
+                p.trial.stim.DRIFTGABOR.speed = tFreq;
                 
                 for contr = stimdef.contrast
-                    p.trial.stim.GRATING.contrast = contr;
+                    p.trial.stim.DRIFTGABOR.contrast = contr;
                     
-                    p.trial.stim.gratings{end+1} = pds.stim.Grating(p);
+                    p.trial.stim.gratings{end+1} = pds.stim.DriftGabor(p);
                     
                 end
             end
@@ -543,9 +543,17 @@ function reshuffle_stims(p)
 nStims = length(p.trial.stim.gratings);
 nLocs = size(p.trial.stim.locations,1);
 
-% Rerandomize the list of stimuli
+if nLocs>1
+% Rerandomize the list of stimuli if mapping (if # locations greater than 3)
 indexReference = Shuffle(CombVec(1:nStims,1:nLocs)');
 p.trial.stim.iStim = indexReference(:,1);
 p.trial.stim.iPos = indexReference(:,2);
+else
+% Order stims by ascending contrast values
+indexReference = CombVec(1:nStims,1:nLocs)';
+p.trial.stim.iStim = indexReference(:,1);
+p.trial.stim.iPos = indexReference(:,2);
+end
 
 p.trial.stim.count = 1;   
+

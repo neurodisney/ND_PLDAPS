@@ -47,7 +47,7 @@ p.trial.task.Timing.ITI       = ND_GetITI(1.5, 2.25, [], [], 1, 0.10);
 %% Grating stimuli parameters
 p.trial.stim.GRATING.tFreq  = 0;  % temporal frequency of grating; drift speed, 0 is stationary
 p.trial.stim.GRATING.res    = 300;
-p.trial.stim.GRATING.fixWin = 2;  
+p.trial.stim.GRATING.fixWin = 3.5;  
 p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 
 p.trial.stim.EccLst = [ 4, 5, 6]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
