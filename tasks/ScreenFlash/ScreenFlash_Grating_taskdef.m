@@ -21,7 +21,7 @@ switch p.trial.stim.RFmeth
         p.trial.stim.coarse.ori      = 45;          % orient of grating
         p.trial.stim.coarse.radius   = 50.0;        % size of grating 
         p.trial.stim.coarse.contrast = 0.75;           % intensity contrast
-        p.trial.stim.coarse.sFreq    = 0.5;         % spatial frequency 
+        p.trial.stim.coarse.sFreq    = 1.5;         % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;           % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.01;         % spacing of grating centers       
         
