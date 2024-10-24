@@ -1,5 +1,5 @@
 % John Amodeo, July 2024
-function p = MapSize_taskdef(p)
+function p = SizeTune_taskdef(p)
 
 % Setting time window for fixation before trial marked as 'NoStart'
 p.trial.task.Timing.WaitFix = 2;

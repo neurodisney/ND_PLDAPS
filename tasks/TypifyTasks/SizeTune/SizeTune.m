@@ -2,12 +2,12 @@
 
 
 %% RUN FUNCTION FOR TASK SESSION
-function p = MapOri(p, state)
+function p = SizeTune(p, state)
     if(~exist('state','var'))
         state = [];
     end
     if(isempty(state))
-        p = MapOri_init(p);
+        p = SizeTune_init(p);
     else
         p = ND_GeneralTrialRoutines(p, state);
         switch state
@@ -40,8 +40,8 @@ function TaskSetUp(p)
 
         % Creating gabor
         p.trial.stim.DRIFTGABOR.pos = [4,4];
-        p.trial.stim.DRIFTGABOR.radius = 1;
-        p.trial.stim.DRIFTGABOR.angle = datasample([0, 45, 90, 135, 180, 225, 270, 315, 360], 1);
+        p.trial.stim.DRIFTGABOR.radius = datasample([1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3], 1);
+        p.trial.stim.DRIFTGABOR.angle = datasample([0, 45, 90, 135], 1);
         p.trial.stim.DRIFTGABOR.speed = 5;
         p.trial.stim.DRIFTGABOR.frequency = 1.5;
         p.trial.stim.DRIFTGABOR.contrast = 0.8;
@@ -214,7 +214,5 @@ function TaskCleanAndSave(p)
     Task_Finish(p);
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
     ND_Trial2Ascii(p, 'save');
-
-
 
 

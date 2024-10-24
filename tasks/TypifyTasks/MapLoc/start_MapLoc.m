@@ -1,7 +1,7 @@
-% John Amodeo, July 2024
+% John Amodeo, October 2024
 
 % Function to run experiment
-function p = start_MapSize(subjectname, rig)
+function p = start_MapLoc(subjectname, rig)
 
     % Checking for subject name and filling if empty
     if(~exist('subjectname', 'var') || isempty(subjectname))
@@ -18,14 +18,14 @@ function p = start_MapSize(subjectname, rig)
     % default rig settings
     SS = ND_RigDefaults(rig); 
 
-    % Specifying task: calling AttendGrat.m file
-    exp_fun = 'MapSize'; 
+    % Specifying task
+    exp_fun = 'MapLoc'; 
 
     % Loading task information into pldaps matrix
     SS.pladaps.trialFunction = exp_fun; 
 
-    % Loading task-specific parameters: calling AttendGrat_taskdef.m file 
-    SS.task.TaskDef = 'MapSize_taskdef';
+    % Loading task-specific parameters
+    SS.task.TaskDef = 'MapLoc_taskdef';
 
     % Specifying which matrix variables can be edited for future trials
     SS.editable = {};
@@ -46,4 +46,5 @@ function p = start_MapSize(subjectname, rig)
     if(Datapixx('IsReady'))
         Datapixx('Close');
     end
+
 
