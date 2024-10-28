@@ -7,7 +7,7 @@ function p = OriTune(p, state)
         state = [];
     end
     if(isempty(state))
-        p = MapOri_init(p);
+        p = OriTune_init(p);
     else
         p = ND_GeneralTrialRoutines(p, state);
         switch state

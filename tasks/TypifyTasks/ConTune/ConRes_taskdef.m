@@ -26,13 +26,19 @@ function p = ConRes_taskdef(p)
     p.trial.stim.FIXSPOT.size = 0.25;
     p.trial.stim.FIXSPOT.fixWin = 1.75;
 
+    % Set RF parameters
+    p.trial.task.RFpos = [4, 4];
+    RFsize = 1;
+    p.trial.stim.RING.radius = RFsize + 0.5;
+
+
 
     % Assigning parameters to ring
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
     p.trial.stim.RING.flash_screen = 1;
 
     % Creating duration for stimulus presentation
-    p.trial.task.presDur = 2;
+    p.trial.task.presDur = 1;
 
     % Creating trial increments to scale size of reward based on good performance
     p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];

@@ -39,20 +39,6 @@ function p = start_ConRes(subjectname, rig)
     % Creating pldaps object
     p = pldaps(subjectname, SS, exp_fun);
     
-    % Collecting receptive field (RF) coordinates from user for stimulus display
-    RFpos = input('What are the mapped RF [x,y] coordinates, as an array? (press enter for default values): ');
-    if isempty(RFpos)
-       RFpos = [4,4]; 
-    end
-    p.trial.task.RFpos = RFpos;
-    
-    % Collecting receptive field (RF) size from user, and scaling grating size with it 
-    RFsize = input('What is the radius of the mapped RF? (press enter for default value): ');
-    if isempty(RFsize)
-       RFsize = 1; 
-    end
-    p.trial.stim.RING.radius = RFsize + 0.5;
-    
     % Command to run experimemt
     p.run;
 

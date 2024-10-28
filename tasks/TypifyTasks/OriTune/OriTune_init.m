@@ -1,7 +1,7 @@
 % John Amodeo, July 2024
 
 % Function to initialize task parameters
-function p = MapOri_init(p)
+function p = OriTune_init(p)
 
     % Building ascii tables in pldaps object
     p = ND_AddAsciiEntry(p, 'Date',        'p.trial.DateStr',                     '%s');
