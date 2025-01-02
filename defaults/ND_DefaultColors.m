@@ -105,7 +105,7 @@ ND_DefineCol(p, 'FixHold',         55, [1.00, 1.00, 1.00]);  % Maintain fixation
 
 
 % Grey levels Deciles (CLUT index 61-69)
-for(i=1:9)
+for i = 1:9
     ND_DefineCol(p, sprintf('grey%d',i), 60+i, [i, i, i] ./ 10);
 end
 

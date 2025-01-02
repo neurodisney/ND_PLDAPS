@@ -20,8 +20,8 @@ p.trial.task.Timing.TimeOut = 1;
 p.trial.task.presDur = 1;
 
 % Build grid of absolute value x,y coordinates
-xRange = [1, 7];
-yRange = [1, 7];
+xRange = [2, 4];
+yRange = [3, 5];
 
 p.trial.task.xyGrid = {};
 
@@ -37,4 +37,11 @@ p.trial.reward.Continuous = 1;
 p.trial.reward.duration = 0.015;
 p.trial.reward.Period = 0.5;
 p.trial.reward.jackpotnPulse = 1;
+
+% Fixation spot parameters
+p.trial.stim.FIXSPOT.pos   = [0,0];
+p.trial.stim.FIXSPOT.type  = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.FIXSPOT.color = 'dRed';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size  = 0.25;     % size of the fixation spot
+
 

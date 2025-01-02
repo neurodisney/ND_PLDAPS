@@ -51,7 +51,7 @@ end
 p.trial.stim.GRATING.res    = 300;
 p.trial.stim.GRATING.fixWin = 0;
 
-p.trial.stim.OnTime  = 0.5;   % How long each stimulus is presented
+p.trial.stim.OnTime  = 1;   % How long each stimulus is presented
 p.trial.stim.OffTime = 5.0;   % Gaps between succesive stimuli
 p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 

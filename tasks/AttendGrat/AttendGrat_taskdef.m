@@ -41,7 +41,7 @@ function p = AttendGrat_taskdef(p)
     targ_angle = rad2deg(atan2(targ_y, targ_x));
     angle_arr = [targ_angle, targ_angle + 90, targ_angle + 180, targ_angle + 270];
     radius = sqrt(targ_x^2 + targ_y^2);
-    delta = 0;
+    delta = 5;
 
     p.trial.task.posList = {};
     for q = 1:4
@@ -53,6 +53,7 @@ function p = AttendGrat_taskdef(p)
 
     for i = 1:3
         delta_arr = [delta, delta, delta, delta];
+
         theta_arr = angle_arr + delta_arr;
         
         delta_up = {};
@@ -90,37 +91,35 @@ function p = AttendGrat_taskdef(p)
     
 
     % Setting amount of time rings are presented before grats come on
-    p.trial.task.CueWait = 0.50;
+    p.trial.task.CueWait = 1;
     
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
 
-
-    % Creating list of orientations using values collected from user or using default values 
-    p.trial.task.oriList = [125, 127, 129, 133, 135, 137, 139, 143, 145]; % p.trial.task.oriRange(1):15:p.trial.task.oriRange(2); % 15 should be changed to something smaller for true trials
-    
     % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [0, 4, 8, 16, 16, 32, 32, 64, 64];
+    p.trial.Block.cuedMagList = [0, 4, 8, 16, 32, 64, 64, 64];
     cuedStr = num2str(p.trial.Block.cuedMagList);
     p.trial.Block.cuedMagListStr = strrep(cuedStr, ' ', ',');
 
-    p.trial.Block.uncuedMagList = [0, 4, 8, 16, 16, 32, 32, 64, 64];
+    p.trial.Block.uncuedMagList = [0, 16, 64, 64];
     uncuedStr = num2str(p.trial.Block.uncuedMagList);
     p.trial.Block.uncuedMagListStr = strrep(uncuedStr, ' ', ',');
-    
-    %th = p.trial.task.oriThreshold;
-    %p.trial.Block.changeMagList = [th, th + (0.10 * th), th + (0.20 * th), th + (0.40 * th), th + (0.60 * th), th + (0.80 *th)];
+
 
     % Setting stimulus parameters
     p.trial.stim.gaborParameters.sFreq = 1.5;
     p.trial.stim.gaborParameters.tFreq = 5;
-    p.trial.stim.gaborParameters.contrast = 0.8;
+    p.trial.stim.gaborParameters.contrast = 0.65;
+
+    rfPrefOri = 45;
+    p.trial.task.oriList = [rfPrefOri, rfPrefOri, rfPrefOri + 90];
+    p.trial.task.rfPrefOri = rfPrefOri;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 100];
     mean = 2;
-    bound1 = 0.5;
+    bound1 = 1.25;
     bound2 = 5;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
@@ -138,12 +137,13 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.flatHazard = r;
 
     
-    % Setting time that must transpire before saccade can be made without being marked as early
+    % Setting time that must transpire before saccade can be made without
+    % being marked as fix break
     p.trial.task.breakFixCheck = 0.050;
     
     % Setting time window in which response saccade allowed
     p.trial.task.Timing.saccadeStart = 0.100;
-    p.trial.task.saccadeTimeout = 0.50;
+    p.trial.task.saccadeTimeout = 0.500;
     
     % Setting time for which target must be fixed on before trial marked correct
     p.trial.task.minTargetFixTime = 0.20; 
@@ -153,11 +153,11 @@ function p = AttendGrat_taskdef(p)
 
     % List of increasing durations of juice flow for reward
     % This list is linked to trial increments for scaling size of reward
-    % p.trial.reward.IncrementDur = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
-    p.trial.reward.IncrementDur = [0.10, 0.15, 0.175, 0.20, 0.225, 0.25, 0.30];
+    p.trial.reward.IncrementDur = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
+    %p.trial.reward.IncrementDur = [0.10, 0.15, 0.175, 0.20, 0.225, 0.25, 0.30];
 
     % Degree to which current reward decreased for bad performance 
-    p.trial.reward.DiscourageProp = 0.7;
+    p.trial.reward.DiscourageProp = 1;
     
 
 end

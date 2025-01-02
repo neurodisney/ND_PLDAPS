@@ -43,7 +43,7 @@ function p = start_AttendGrat(subjectname, rig)
     % Collecting receptive field (RF) coordinates from user for stimulus display
     RFpos = input('What are the mapped RF [x,y] coordinates, as an array? (press enter for default values): ');
     if isempty(RFpos)
-        RFpos = [-4,4];
+        RFpos = [3, -2];
     end
     p.trial.task.RFpos = RFpos;
     
@@ -58,7 +58,7 @@ function p = start_AttendGrat(subjectname, rig)
     % Collecting contrast value based on response threshold from user for rings
     cStep = input('What is a contrast step number near response threshold? (press enter for default value): ');
     if isempty(cStep)
-        cStep = 2;
+        cStep = 3;
     end
     p.trial.task.cStep = cStep;
     

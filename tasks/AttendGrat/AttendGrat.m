@@ -110,7 +110,7 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gaborParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([0, 1, 1], 1);
+        p.trial.task.cued = datasample([0, 1, 1, 1], 1);
         
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
@@ -138,8 +138,9 @@ function TaskSetUp(p)
                 p.trial.task.blown_repeat = 1;
                 
             end
-            
+
             p.defaultParameters.mixList = [p.defaultParameters.mixList mix_in];
+
         end
                 
         
@@ -198,21 +199,24 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(2));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(2);
+        offset1 = datasample([0, 20, 40, 60], 1);
+        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(2) + offset1;
         p.trial.stim.gabors.distractor1 = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 2 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(3));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(3);
+        offset2 = datasample([0, 20, 40, 60], 1);
+        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(3) + offset2;
         p.trial.stim.gabors.distractor2 = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 3 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(4));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(4);
+        offset3 = datasample([0, 20, 40, 60], 1);
+        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(4) + offset3;
         p.trial.stim.gabors.distractor3 = pds.stim.DriftGabor(p);
         
         
@@ -808,7 +812,7 @@ function p = Task_CorrectReward(p)
         p.trial.task.Good = 1;
         
         % Dispensing reward
-        pds.reward.give(p, 0.08);
+        pds.reward.give(p, p.trial.reward.Dur);
         
         % Playing audio signaling correct trial
         pds.audio.playDP(p, 'reward', 'left');
@@ -820,7 +824,7 @@ function p = Task_CorrectReward(p)
             numRows = size(p.defaultParameters.blownTrials, 1);
             if numRows > 1
                 p.defaultParameters.blownTrials = p.defaultParameters.blownTrials(2:end,:);
-            else
+            else 
                 p.defaultParameters.blownTrials = [];
             end
         end

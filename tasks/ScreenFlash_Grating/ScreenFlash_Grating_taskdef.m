@@ -18,7 +18,7 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.coarse.ori      = 90;          % orient of grating
+        p.trial.stim.coarse.ori      = 0;          % orient of grating
         p.trial.stim.coarse.radius   = 50.0;        % size of grating 
         p.trial.stim.coarse.contrast = 1;           % intensity contrast
         p.trial.stim.coarse.sFreq    = 0.5;         % spatial frequency 
@@ -51,7 +51,7 @@ end
 p.trial.stim.GRATING.res    = 300;
 p.trial.stim.GRATING.fixWin = 0;
 
-p.trial.stim.OnTime  = 0.5;   % How long each stimulus is presented
+p.trial.stim.OnTime  = 1;   % How long each stimulus is presented
 p.trial.stim.OffTime = 5.0;   % Gaps between succesive stimuli
 p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 
