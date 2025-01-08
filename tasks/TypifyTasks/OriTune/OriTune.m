@@ -40,7 +40,7 @@ function TaskSetUp(p)
 
         % Creating gabor
         p.trial.stim.DRIFTGABOR.pos = [4,4];
-        p.trial.stim.DRIFTGABOR.radius = 1;
+        p.trial.stim.DRIFTGABOR.radius = 2;
         p.trial.stim.DRIFTGABOR.angle = datasample([0, 45, 90, 135, 180, 225, 270, 315, 360], 1);
         p.trial.stim.DRIFTGABOR.speed = 5;
         p.trial.stim.DRIFTGABOR.frequency = 1.5;

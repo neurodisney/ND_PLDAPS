@@ -199,7 +199,7 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(2));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        offset1 = datasample([0, 20, 40, 60], 1);
+        offset1 = datasample([0, 30, 60, 90], 1);
         p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(2) + offset1;
         p.trial.stim.gabors.distractor1 = pds.stim.DriftGabor(p);
 
@@ -207,7 +207,7 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(3));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        offset2 = datasample([0, 20, 40, 60], 1);
+        offset2 = datasample([0, 30, 60, 90], 1);
         p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(3) + offset2;
         p.trial.stim.gabors.distractor2 = pds.stim.DriftGabor(p);
 
@@ -215,7 +215,7 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(4));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        offset3 = datasample([0, 20, 40, 60], 1);
+        offset3 = datasample([0, 30, 60, 90], 1);
         p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(4) + offset3;
         p.trial.stim.gabors.distractor3 = pds.stim.DriftGabor(p);
         

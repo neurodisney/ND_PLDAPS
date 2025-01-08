@@ -25,7 +25,19 @@ function p = AttendGrat_taskdef(p)
     
     % Setting probability of repeating blown trial vs creating new trial
     p.trial.task.shuffleRange = [0, 0, 0, 1];
-    
+
+
+    % Setting RF properties
+    p.trial.task.RFpos = [4, 0];
+
+    rfPrefOri = 45;
+    p.trial.task.oriList = [rfPrefOri, rfPrefOri, rfPrefOri + 90];
+    p.trial.task.rfPrefOri = rfPrefOri;
+
+    RFsize = 1; 
+    p.trial.stim.RING.radius = RFsize + 0.5;
+    p.trial.stim.DRIFTGABOR.radius = RFsize;
+
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
@@ -36,58 +48,50 @@ function p = AttendGrat_taskdef(p)
     
     % Calculating points along line of is eccentricity
     targ_x = p.trial.task.RFpos(1);
-    targ_y = p.trial.task.RFpos(2); 
+    targ_y = p.trial.task.RFpos(2);
 
     targ_angle = rad2deg(atan2(targ_y, targ_x));
     angle_arr = [targ_angle, targ_angle + 90, targ_angle + 180, targ_angle + 270];
     radius = sqrt(targ_x^2 + targ_y^2);
-    delta = 5;
+
+    % Angle (degrees) between line connecting origin (0, 0) and
+    % preceeding point and line connecting origin and succeeding point.
+    angular_offset = 0;
 
     p.trial.task.posList = {};
     for q = 1:4
         x = cosd(angle_arr(q)) * radius;
         y = sind(angle_arr(q)) * radius;
-
         p.trial.task.posList = [p.trial.task.posList [x, y, 1]];
     end
 
     for i = 1:3
-        delta_arr = [delta, delta, delta, delta];
+        offsets_up = {};
+        offsets_down = {};
 
-        theta_arr = angle_arr + delta_arr;
-        
-        delta_up = {};
         for q = 1:4
-          x = cosd(theta_arr(q)) * radius;
-          y = sind(theta_arr(q)) * radius;
+            % Upward
+            theta_up = angle_arr(q) + i * angular_offset;
+            x_up = cosd(theta_up) * radius;
+            y_up = sind(theta_up) * radius;
+            offsets_up = [offsets_up [x_up, y_up, 1]];
 
-          delta_up = [delta_up [x, y, 1]];
+            % Downward
+            theta_down = angle_arr(q) - i * angular_offset;
+            x_down = cosd(theta_down) * radius;
+            y_down = sind(theta_down) * radius;
+            offsets_down = [offsets_down [x_down, y_down, 1]];
         end
 
-        theta_arr = angle_arr - delta_arr;
+        p.trial.task.posList = [p.trial.task.posList; offsets_up; offsets_down];
 
-        delta_down = {};
-        for q = 1:4
-          x = cosd(theta_arr(q)) * radius;
-          y = sind(theta_arr(q)) * radius;
-
-          delta_down = [delta_down [x, y, 1]];
-        end
-
-        p.trial.task.posList = [p.trial.task.posList; delta_up; delta_down];
-        
-        delta = delta + delta;
     end
 
 
     % Loading contrast for cue and distractor rings
-    if ~p.trial.task.cStep
-        p.trial.stim.ringParameters.cueCon = 'cueGrey';
-        p.trial.stim.ringParameters.distCon = 'distGrey';
-    else
-        p.trial.stim.ringParameters.cueCon = sprintf('down%d', p.trial.task.cStep);
-        p.trial.stim.ringParameters.distCon = sprintf('up%d', p.trial.task.cStep);
-    end
+    p.trial.task.cStep = 3;
+    p.trial.stim.ringParameters.cueCon = sprintf('down%d', p.trial.task.cStep);
+    p.trial.stim.ringParameters.distCon = sprintf('up%d', p.trial.task.cStep);
     
 
     % Setting amount of time rings are presented before grats come on
@@ -110,10 +114,6 @@ function p = AttendGrat_taskdef(p)
     p.trial.stim.gaborParameters.sFreq = 1.5;
     p.trial.stim.gaborParameters.tFreq = 5;
     p.trial.stim.gaborParameters.contrast = 0.65;
-
-    rfPrefOri = 45;
-    p.trial.task.oriList = [rfPrefOri, rfPrefOri, rfPrefOri + 90];
-    p.trial.task.rfPrefOri = rfPrefOri;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change

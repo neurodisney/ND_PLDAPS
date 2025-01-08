@@ -17,7 +17,7 @@ p.trial.task.Timing.ITI = ND_GetITI(1.25, 1.75, [], [], 1, 0.10);
 p.trial.task.Timing.TimeOut = 1;   
 
 % Creating duration for stimulus presentation
-p.trial.task.presDur = 1;
+p.trial.task.presDur = 100000000;
 
 % Reward parameters
 p.trial.reward.Continuous = 1;

@@ -20,7 +20,6 @@ function p = AttendGrat_init(p)
 
     p = ND_AddAsciiEntry(p, 'RFposX',       'p.trial.task.RFpos(1)',                   '%d');
     p = ND_AddAsciiEntry(p, 'RFposY',       'p.trial.task.RFpos(2)',                   '%d');
-    p = ND_AddAsciiEntry(p, 'RFprefOri',    'p.trial.task.rfPrefOri',                  '%d');
 
     p = ND_AddAsciiEntry(p, 'TargPosX',     'p.trial.stim.gabors.preTarget.pos(1)',    '%d');
     p = ND_AddAsciiEntry(p, 'TargPosY',     'p.trial.stim.gabors.preTarget.pos(2)',    '%d');

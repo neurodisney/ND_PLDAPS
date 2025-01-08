@@ -40,42 +40,6 @@ function p = start_AttendGrat(subjectname, rig)
     % Creating pldaps object
     p = pldaps(subjectname, SS, exp_fun);
     
-    % Collecting receptive field (RF) coordinates from user for stimulus display
-    RFpos = input('What are the mapped RF [x,y] coordinates, as an array? (press enter for default values): ');
-    if isempty(RFpos)
-        RFpos = [3, -2];
-    end
-    p.trial.task.RFpos = RFpos;
-    
-    % Collecting receptive field (RF) size from user, and scaling grating size with it 
-    RFsize = input('What is the radius of the mapped RF? (press enter for default value): ');
-    if isempty(RFsize)
-       RFsize = 1; 
-    end
-    p.trial.stim.RING.radius = RFsize + 0.5;
-    p.trial.stim.DRIFTGABOR.radius = RFsize;
-    
-    % Collecting contrast value based on response threshold from user for rings
-    cStep = input('What is a contrast step number near response threshold? (press enter for default value): ');
-    if isempty(cStep)
-        cStep = 3;
-    end
-    p.trial.task.cStep = cStep;
-    
-    % Collecting orientations 0.5 standard deviation (SD) from peak on tuning curve for grating assignment
-    oriRange = input('What orienations are + and -0.5 SD from preferred, as an array? (press enter for default values): ');
-    if isempty(oriRange)
-        oriRange = [0, 176];
-    end   
-    p.trial.task.oriRange = oriRange;
-
-    % Collecting orientation change detection threshold
-    oriThreshold = input('What orientation change magnitude, in degrees, is at detection threshold? (press enter for default value): '); 
-    if isempty(oriThreshold)
-        oriThreshold = 50;
-    end
-    p.trial.task.oriThreshold = oriThreshold;
-    
     % Command to run experimemt
     p.run;
 
