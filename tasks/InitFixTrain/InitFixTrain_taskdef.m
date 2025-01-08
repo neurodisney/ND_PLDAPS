@@ -23,10 +23,10 @@ p.trial.reward.Dur          = 0.1; % reward duration for pulse in reward series 
 p.trial.reward.Step         = [0, 4, 8, 12];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [2.5 3.4 4.3 5.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
-p.trial.reward.ManDur       = 0.1; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur       = 0.12; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime  = 0.2;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.2;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotTime  = 0.12;     % total time required to fixate to get full reward
+p.trial.reward.jackpotDur   = 0.4;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -101,10 +101,10 @@ p.trial.Block.maxBlockTrials =  [1];
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
-p.trial.stim.FIXSPOT.type = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size = 0.25;     % size of the fixation spot
+p.trial.stim.FIXSPOT.type = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.FIXSPOT.size = 0.5;     % size of the fixation spot
 p.trial.stim.FIXSPOT.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
-p.trial.behavior.fixation.FixWinStp = 0.2;  % refine resizing of fixation step for this task only(modify default rig settings)
+p.trial.behavior.fixation.FixWinStp = 0.4;  % refine resizing of fixation step for this task only(modify default rig settings)
 
 % color options (make sure colors are defined!)
 %p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
