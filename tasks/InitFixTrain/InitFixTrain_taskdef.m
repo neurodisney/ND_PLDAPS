@@ -12,6 +12,7 @@ function p = InitFixTrain_taskdef(p)
 %
 % wolf zinke, Sep. 2017
 
+
 % ------------------------------------------------------------------------%
 %% Reward
 % manual reward from experimenter
@@ -25,14 +26,14 @@ p.trial.reward.Period       = [2.5 3.4 4.3 5.2]; % the period between one reward
 
 p.trial.reward.ManDur       = 0.12; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime  = 0.12;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.4;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotTime  = 0.15;     % total time required to fixate to get full reward
+p.trial.reward.jackpotDur   = 0.3;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
 p.trial.behavior.fixation.MinFixStart = 0.500; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
-p.trial.task.Timing.WaitFix = 2.0;  % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 3.0;  % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 0.5;   % minimum time period [s] between subsequent trials
@@ -46,72 +47,73 @@ p.trial.task.Timing.TimeOut =  0;     % Time [s] out for incorrect responses
 p.trial.Block.maxBlocks    = -1;  % if negative blocks continue until experimenter stops, otherwise task stops after completion of all blocks
 p.trial.Block.EqualCorrect =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
-% condition 1
-c1.Nr = 1;
-c1.reward.MinWaitInitial  = 0.05; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c1.reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-
-% condition 2
-c2.Nr = 2;
-c2.reward.MinWaitInitial  = 0.1;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c2.reward.MaxWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-
-% condition 3
-c3.Nr = 3;
-c3.reward.MinWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c3.reward.MaxWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-
-% condition 4
-c4.Nr = 4;
-c4.reward.MinWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c4.reward.MaxWaitInitial  = 0.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-
-% condition 5
-c5.Nr = 5;
-c5.reward.MinWaitInitial  = 0.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c5.reward.MaxWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-
-% condition 6
-c6.Nr = 6;
-c6.reward.MinWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c6.reward.MaxWaitInitial  = 1.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-
-% condition 7
-c7.Nr = 7;
-c7.reward.MinWaitInitial  = 1.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c7.reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-
-% condition 8
-c8.Nr = 8;
-c8.reward.MinWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c8.reward.MaxWaitInitial  = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
- 
-% condition 9
-c9.Nr = 9;
-c9.reward.MinWaitInitial  = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c9.reward.MaxWaitInitial  = 2;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-
-c0.Nr = 0;
-c0.reward.MinWaitInitial  = 0.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-c0.reward.MaxWaitInitial  = 0.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
-
-
-p.trial.Block.Conditions     = {c0};
-p.trial.Block.maxBlockTrials =  [1]; 
+% % condition 1
+% c1.Nr = 1;
+% c1.reward.MinWaitInitial  = 0.05; % min wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% c1.reward.MaxWaitInitial  = 0.1;  % max wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% 
+% % condition 2
+% c2.Nr = 2;
+% c2.reward.MinWaitInitial  = 0.1;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% c2.reward.MaxWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% 
+% % condition 3
+% c3.Nr = 3;
+% c3.reward.MinWaitInitial  = 0.25; % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% c3.reward.MaxWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% 
+% % condition 4
+% c4.Nr = 4;
+% c4.reward.MinWaitInitial  = 0.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% c4.reward.MaxWaitInitial  = 0.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% 
+% % condition 5
+% c5.Nr = 5;
+% c5.reward.MinWaitInitial  = 0.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% c5.reward.MaxWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% 
+% % condition 6
+% c6.Nr = 6;
+% c6.reward.MinWaitInitial  = 1.0;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% c6.reward.MaxWaitInitial  = 1.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% 
+% % condition 7
+% c7.Nr = 7;
+% c7.reward.MinWaitInitial  = 1.25;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% c7.reward.MaxWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% 
+% % condition 8
+% c8.Nr = 8;
+% c8.reward.MinWaitInitial  = 1.5;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% c8.reward.MaxWaitInitial  = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+%  
+% % condition 9
+% c9.Nr = 9;
+% c9.reward.MinWaitInitial  = 1.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% c9.reward.MaxWaitInitial  = 2;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% 
+% c0.Nr = 0;
+% c0.reward.MinWaitInitial  = 0.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% c0.reward.MaxWaitInitial  = 0.75;  % wait period for initial reward after arriving in FixWin (in s, how long to hold for first reward)
+% 
+% 
+% p.trial.Block.Conditions     = {c0};
+% p.trial.Block.maxBlockTrials =  [1]; 
 
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
-p.trial.stim.FIXSPOT.type = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size = 0.5;     % size of the fixation spot
-p.trial.stim.FIXSPOT.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
-p.trial.behavior.fixation.FixWinStp = 0.4;  % refine resizing of fixation step for this task only(modify default rig settings)
+p.trial.stim.FIXSPOT.type = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off' 
+p.trial.stim.FIXSPOT.size = 0.4;     % size of the fixation spot
+
+p.defaultParameters.stim.FIXSPOT.fixWin = 4;    
+p.trial.behavior.fixation.FixWinStp = 0.5;  % refine resizing of fixation step for this task only(modify default rig settings)
 
 % color options (make sure colors are defined!)
 %p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
-p.trial.task.Color_list = {'dRed'};
+p.trial.task.Color_list = {'yellow'};
 
 % Enable random positions
-% p.trial.task.RandomPos = 0;
+p.trial.task.RandomPos = 0; 
 p.trial.task.RandomPosRange = [4, 4];  % range of x and y dva for random position
 
 % ------------------------------------------------------------------------%

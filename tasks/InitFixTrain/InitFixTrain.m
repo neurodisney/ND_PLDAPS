@@ -55,8 +55,7 @@ if(isempty(state))
     % basic fixation spot parameters
     p.defaultParameters.behavior.fixation.FixGridStp = [4, 4]; % x,y coordinates in a 9pt grid
     p.defaultParameters.behavior.fixation.FixWinStp  = 1;      % change of the size of the fixation window upon key press
-    p.defaultParameters.behavior.fixation.FixSPotStp = 0.25;
-    p.defaultParameters.stim.FIXSPOT.fixWin          = 4;         
+    p.defaultParameters.behavior.fixation.FixSPotStp = 0.25;     
     
     % just initialize here, will be overwritten by conditions
     p.defaultParameters.reward.MinWaitInitial  = 0.05;
