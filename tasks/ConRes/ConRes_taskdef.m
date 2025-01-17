@@ -5,7 +5,7 @@ function p = ConRes_taskdef(p)
 
 
     % Setting time window for fixation before trial marked as 'NoStart'
-    p.trial.task.Timing.WaitFix = 2;
+    p.trial.task.Timing.WaitFix = 0.25;
 
     % Storing expected latency of stim presentation to use for trial timing calculations
     p.trial.task.stimLatency = ND_GetITI(0.75, 1.5);

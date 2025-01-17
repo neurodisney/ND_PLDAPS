@@ -403,6 +403,11 @@ SS.stim.RECTANGLE.alpha     = 1; % Fully opaque
 SS.stim.RECTANGLE.flashing  = 0;
 SS.stim.RECTANGLE.reward    = 0;
 
+% Video stimulus
+SS.stim.VIDEO.pos       = [0,0];
+SS.stim.VIDEO.fixWin    = 30;
+SS.stim.VIDEO.moviePath = false;
+
 % ------------------------------------------------------------------------%
 %% Joystick
 SS.datapixx.useJoystick      = 0;
@@ -413,7 +418,7 @@ SS.datapixx.adc.YJoyChannel  = 4;
 
 SS.behavior.joystick.use     =  0;         % does this task require control of joystick state
 SS.behavior.joystick.Zero    = [2.6, 2.6]; % joystick signal at resting state (released)
-SS.behavior.joystick.Sample  = 20;         % how many data points to use for determining joystick state.
+SS.behavior.joystick.Sample  = 0;         % how many data points to use for determining joystick state.
 SS.behavior.joystick.PullThr = 1.5;        % threshold to detect a joystick press
 SS.behavior.joystick.RelThr  = 1.0;        % threshold to detect a joystick release
 

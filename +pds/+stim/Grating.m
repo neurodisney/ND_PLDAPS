@@ -187,7 +187,6 @@ methods
     end
     
     function cleanup(obj)
-        %% Handle cleanup operations
         cleanup@pds.stim.BaseStim(obj);
         Screen('Close', obj.texture);
         

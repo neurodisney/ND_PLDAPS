@@ -90,7 +90,6 @@ classdef DriftGabor < pds.stim.BaseStim
             obj.genTime = p.trial.CurTime;
         end
      
-        % Function to present cue and distractor rings on screen
         function draw(obj, p)
                 if obj.on
                     destRect = CenterRectOnPoint([0, 0, obj.size(1), obj.size(2)], obj.pos(1), obj.pos(2));
