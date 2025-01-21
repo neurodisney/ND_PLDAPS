@@ -8,8 +8,12 @@ function p = ViewScene_taskdef(p)
     % Setting time-out(s) for incorrect response
     p.trial.task.Timing.TimeOut = 1; 
 
-    % fill in with task parameters
-        %video size
-        %video fix size
+    p.trial.task.stim.videoDir = '/home/rig1-user/MatlabFiles/Videos/HierarchyVideos';
+    videos = dir(p.trial.task.stim.videoDir);
+    p.trial.task.stim.videoNames = {videos(~[videos.isdir]).name};
+
+    p.trial.stim.VIDEO.sizeGain = 2.1;
+    p.trial.stim.VIDEO.fixWin   = 80;
+    
 end
 

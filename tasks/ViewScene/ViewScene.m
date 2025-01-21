@@ -36,8 +36,12 @@ function TaskSetUp(p)
         p.trial.task.stimState = 0;
         p.trial.task.SRT_FixStart = NaN;
         p.trial.stim.fix = pds.stim.FixSpot(p);
-        p.trial.stim.VIDEO.moviePath = '/home/rig1-user/Downloads/M33atM1_F (1).mp4';
-        p.trial.stim.video = pds.stim.Video(p);
+
+        rng('shuffle');
+        video = datasample(p.trial.task.stim.videoNames, 1);
+        p.trial.stim.VIDEO.moviePath = fullfile(p.trial.task.stim.videoDir, video{1});
+        p.trial.stim.scene = pds.stim.Video(p);
+
         ND_SwitchEpoch(p, 'ITI');
 
 
@@ -61,12 +65,12 @@ function TaskDesign(p)
                 end
             case p.trial.epoch.WaitResponse
                 ND_FixSpot(p, 0);
-                if(p.trial.stim.video.fixating)
-                    if (p.trial.EV.TaskStart + p.trial.stim.video.duration) < p.trial.CurTime
+                if(p.trial.stim.scene.fixating)
+                    if (p.trial.EV.TaskStart + p.trial.stim.scene.duration) < p.trial.CurTime
                         Task_Correct(p)
                     end
                 end
-                if(~p.trial.stim.video.fixating)         
+                if(~p.trial.stim.scene.fixating)         
                     Task_Incorrect(p)
                 end
             case p.trial.epoch.TaskEnd
@@ -80,12 +84,12 @@ function showScene(p, display_val)
         p.trial.task.stimState = display_val;
         switch display_val
             case 0
-               p.trial.stim.video.on = 0;
-               p.trial.stim.video.fixActive = 0;
+               p.trial.stim.scene.on = 0;
+               p.trial.stim.scene.fixActive = 0;
                ND_AddScreenEvent(p, p.trial.event.STIM_OFF, 'StimOff'); 
             case 1
-                p.trial.stim.video.on = 1;
-                p.trial.stim.video.fixActive = 1;
+                p.trial.stim.scene.on = 1;
+                p.trial.stim.scene.fixActive = 1;
                 ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
             otherwise
                 error('Unusable stimulus or display value')

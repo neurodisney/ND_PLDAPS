@@ -6,7 +6,7 @@ classdef Video < pds.stim.BaseStim
         moviePath
         playRate
         volume
-        size
+        dispSize
         loop
     end
 
@@ -19,15 +19,15 @@ classdef Video < pds.stim.BaseStim
     end
     
     methods 
-        function obj = Video(p, moviePath, pos, size, playRate, volume, loop, fixWin)
+        function obj = Video(p, moviePath, pos, sizeGain, playRate, volume, loop, fixWin)
             if nargin < 2 || isempty(moviePath)
                 moviePath = p.trial.stim.VIDEO.moviePath;
             end
             if nargin < 3 || isempty(pos)
                 pos = p.trial.stim.VIDEO.pos;
             end
-            if nargin < 4 || isempty(size)
-                size = [p.trial.display.winRect(3), p.trial.display.winRect(4)];
+            if nargin < 4 || isempty(sizeGain)
+                sizeGain = p.trial.stim.VIDEO.sizeGain;
             end
             if nargin < 5 || isempty(playRate)
                 playRate = 1;
@@ -46,7 +46,7 @@ classdef Video < pds.stim.BaseStim
             obj.recordProps = {};
 
             obj.moviePath = moviePath;
-            obj.size = size;
+            obj.dispSize = [p.trial.display.winRect(3), p.trial.display.winRect(4)] * sizeGain;
             obj.playRate = playRate;
             obj.volume = volume;
             obj.loop = loop;
@@ -64,7 +64,7 @@ classdef Video < pds.stim.BaseStim
                     Screen('PlayMovie', obj.moviePtr, obj.playRate);
                     obj.texturePtr = Screen('GetMovieImage', p.trial.display.ptr, obj.moviePtr);
                     if obj.texturePtr > 0
-                        destRect = CenterRectOnPoint([0, 0, obj.size(1), obj.size(2)], obj.pos(1), obj.pos(2));
+                        destRect = CenterRectOnPoint([0, 0, obj.dispSize(1), obj.dispSize(2)], obj.pos(1), obj.pos(2));
                         Screen('DrawTexture', p.trial.display.ptr, obj.texturePtr, [], destRect, 180);
                         Screen('Close', obj.texturePtr);
                     end

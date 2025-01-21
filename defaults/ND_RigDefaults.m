@@ -404,9 +404,10 @@ SS.stim.RECTANGLE.flashing  = 0;
 SS.stim.RECTANGLE.reward    = 0;
 
 % Video stimulus
-SS.stim.VIDEO.pos       = [0,0];
+SS.stim.VIDEO.pos       = [0, 0];
 SS.stim.VIDEO.fixWin    = 30;
 SS.stim.VIDEO.moviePath = false;
+SS.stim.VIDEO.sizeGain  = 1;
 
 % ------------------------------------------------------------------------%
 %% Joystick
