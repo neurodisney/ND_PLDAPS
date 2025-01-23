@@ -7,6 +7,8 @@ function p = ViewScene_taskdef(p)
     p.trial.task.Timing.ITI = ND_GetITI(1.25, 1.75, [], [], 1, 0.10);
     % Setting time-out(s) for incorrect response
     p.trial.task.Timing.TimeOut = 1; 
+    % Duration offset (sec) for video at normal play rate
+    p.trial.task.durOffset = 60;
 
     p.trial.task.stim.videoDir = '/home/rig1-user/MatlabFiles/Videos/HierarchyVideos';
     videos = dir(p.trial.task.stim.videoDir);
@@ -14,6 +16,7 @@ function p = ViewScene_taskdef(p)
 
     p.trial.stim.VIDEO.sizeGain = 2.1;
     p.trial.stim.VIDEO.fixWin   = 80;
+    p.trial.stim.VIDEO.playRate = 0.1;
     
 end
 

@@ -408,6 +408,7 @@ SS.stim.VIDEO.pos       = [0, 0];
 SS.stim.VIDEO.fixWin    = 30;
 SS.stim.VIDEO.moviePath = false;
 SS.stim.VIDEO.sizeGain  = 1;
+SS.stim.VIDEO.playRate  = 1;
 
 % ------------------------------------------------------------------------%
 %% Joystick

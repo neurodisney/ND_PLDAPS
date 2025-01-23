@@ -30,7 +30,7 @@ classdef Video < pds.stim.BaseStim
                 sizeGain = p.trial.stim.VIDEO.sizeGain;
             end
             if nargin < 5 || isempty(playRate)
-                playRate = 1;
+                playRate = p.trial.stim.VIDEO.playRate;
             end
             if nargin < 6 || isempty(volume)
                 volume = 0;

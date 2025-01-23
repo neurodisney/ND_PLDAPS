@@ -66,7 +66,8 @@ function TaskDesign(p)
             case p.trial.epoch.WaitResponse
                 ND_FixSpot(p, 0);
                 if(p.trial.stim.scene.fixating)
-                    if (p.trial.EV.TaskStart + p.trial.stim.scene.duration) < p.trial.CurTime
+                    dur = p.trial.stim.scene.duration + p.trial.task.durOffset;
+                    if (p.trial.EV.TaskStart + dur) < p.trial.CurTime
                         Task_Correct(p)
                     end
                 end
