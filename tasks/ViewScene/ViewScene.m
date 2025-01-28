@@ -39,6 +39,7 @@ function TaskSetUp(p)
 
         rng('shuffle');
         video = datasample(p.trial.task.stim.videoNames, 1);
+        p.trial.stim.sceneName = video{1};
         p.trial.stim.VIDEO.moviePath = fullfile(p.trial.task.stim.videoDir, video{1});
         p.trial.stim.scene = pds.stim.Video(p);
 
