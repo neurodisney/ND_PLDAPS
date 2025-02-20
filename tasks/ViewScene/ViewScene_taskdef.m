@@ -17,6 +17,13 @@ function p = ViewScene_taskdef(p)
     p.trial.stim.VIDEO.sizeGain = 2.1;
     p.trial.stim.VIDEO.fixWin   = 80;
     p.trial.stim.VIDEO.playRate = 1;
+
+    % Setting properties for fixation point
+    p.trial.stim.FIXSPOT.type = 'rect';    
+    p.trial.stim.FIXSPOT.color = 'red';
+    p.trial.stim.FIXSPOT.size = 0.4;
+    p.trial.stim.FIXSPOT.fixWin = 1.5;
+    
     
 end
 
