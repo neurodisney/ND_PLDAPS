@@ -1,7 +1,7 @@
 % John Amodeo, July 2024
 
 % Function to run experiment
-function p = start_OriTune(subjectname, rig)
+function p = start_MapOriScreen(subjectname, rig)
 
     % Checking for subject name and filling if empty
     if(~exist('subjectname', 'var') || isempty(subjectname))
@@ -19,13 +19,13 @@ function p = start_OriTune(subjectname, rig)
     SS = ND_RigDefaults(rig); 
 
     % Specifying task: calling AttendGrat.m file
-    exp_fun = 'OriTune'; 
+    exp_fun = 'MapOriScreen'; 
 
     % Loading task information into pldaps matrix
     SS.pladaps.trialFunction = exp_fun; 
 
     % Loading task-specific parameters: calling AttendGrat_taskdef.m file 
-    SS.task.TaskDef = 'OriTune_taskdef';
+    SS.task.TaskDef = 'MapOriScreen_taskdef';
 
     % Specifying which matrix variables can be edited for future trials
     SS.editable = {};

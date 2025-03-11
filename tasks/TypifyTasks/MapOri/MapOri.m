@@ -2,12 +2,12 @@
 
 
 %% RUN FUNCTION FOR TASK SESSION
-function p = OriTune(p, state)
+function p = MapOri(p, state)
     if(~exist('state','var'))
         state = [];
     end
     if(isempty(state))
-        p = OriTune_init(p);
+        p = MapOri_init(p);
     else
         p = ND_GeneralTrialRoutines(p, state);
         switch state
@@ -39,12 +39,12 @@ function TaskSetUp(p)
         p.trial.stim.fix = pds.stim.FixSpot(p);
 
         % Creating gabor
-        p.trial.stim.DRIFTGABOR.pos = [4,4];
-        p.trial.stim.DRIFTGABOR.radius = 2;
-        p.trial.stim.DRIFTGABOR.angle = datasample([0, 45, 90, 135, 180, 225, 270, 315, 360], 1);
+        p.trial.stim.DRIFTGABOR.pos = [2, -3];
+        p.trial.stim.DRIFTGABOR.radius = 1;
+        p.trial.stim.DRIFTGABOR.angle = datasample(p.trial.task.oriRange, 1);
         p.trial.stim.DRIFTGABOR.speed = 5;
         p.trial.stim.DRIFTGABOR.frequency = 1.5;
-        p.trial.stim.DRIFTGABOR.contrast = 0.8;
+        p.trial.stim.DRIFTGABOR.contrast = 0.65;
         p.trial.stim.gabor = pds.stim.DriftGabor(p);
 
         % Moving task from set-up stage to wait period before launching
@@ -214,7 +214,3 @@ function TaskCleanAndSave(p)
     Task_Finish(p);
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
     ND_Trial2Ascii(p, 'save');
-
-
-
-

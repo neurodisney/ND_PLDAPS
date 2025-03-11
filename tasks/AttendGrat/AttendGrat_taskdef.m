@@ -22,17 +22,22 @@ function p = AttendGrat_taskdef(p)
     
     % Setting number of trials per block
     p.trial.Block.maxBlockTrials = 1;
+
     
     % Setting probability of repeating blown trial vs creating new trial
     p.trial.task.shuffleRange = [0, 0, 0, 1];
 
+    % Set ratio of cued to uncued trials
+    p.trial.task.cued_ratio = [0, 1, 1];
+
 
     % Setting RF properties
-    p.trial.task.RFpos = [4, 0];
+    RFpos = [4, 0];
+    p.trial.task.RFpos = RFpos;
 
-    rfPrefOri = 45;
-    p.trial.task.oriList = [rfPrefOri, rfPrefOri, rfPrefOri + 90];
-    p.trial.task.rfPrefOri = rfPrefOri;
+    RFori = 45;
+    p.trial.task.RFori = RFori;
+    p.trial.task.oriList = [RFori - 20, RFori - 40, RFori, RFori + 20, RFori + 40];
 
     RFsize = 1; 
     p.trial.stim.RING.radius = RFsize + 0.5;
@@ -56,7 +61,7 @@ function p = AttendGrat_taskdef(p)
 
     % Angle (degrees) between line connecting origin (0, 0) and
     % preceeding point and line connecting origin and succeeding point.
-    angular_offset = 0;
+    angular_offset = 7;
 
     p.trial.task.posList = {};
     for q = 1:4

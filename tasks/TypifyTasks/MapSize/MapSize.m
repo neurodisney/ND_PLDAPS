@@ -2,12 +2,12 @@
 
 
 %% RUN FUNCTION FOR TASK SESSION
-function p = SizeTune(p, state)
+function p = MapSize(p, state)
     if(~exist('state','var'))
         state = [];
     end
     if(isempty(state))
-        p = SizeTune_init(p);
+        p = MapSize_init(p);
     else
         p = ND_GeneralTrialRoutines(p, state);
         switch state
@@ -40,8 +40,9 @@ function TaskSetUp(p)
 
         % Creating gabor
         p.trial.stim.DRIFTGABOR.pos = [4,4];
-        p.trial.stim.DRIFTGABOR.radius = datasample([1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3], 1);
-        p.trial.stim.DRIFTGABOR.angle = datasample([0, 45, 90, 135], 1);
+        p.trial.stim.DRIFTGABOR.size = [9, 9];
+        p.trial.stim.DRIFTGABOR.radius = datasample(p.trial.task.sizeRange, 1);
+        p.trial.stim.DRIFTGABOR.angle = 45;
         p.trial.stim.DRIFTGABOR.speed = 5;
         p.trial.stim.DRIFTGABOR.frequency = 1.5;
         p.trial.stim.DRIFTGABOR.contrast = 0.8;

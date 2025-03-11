@@ -1,5 +1,5 @@
 % John Amodeo, July 2024
-function p = OriTune_taskdef(p)
+function p = MapSize_taskdef(p)
 
 % Setting time window for fixation before trial marked as 'NoStart'
 p.trial.task.Timing.WaitFix = 2;
@@ -17,10 +17,16 @@ p.trial.task.Timing.ITI = ND_GetITI(1.25, 1.75, [], [], 1, 0.10);
 p.trial.task.Timing.TimeOut = 1;   
 
 % Creating duration for stimulus presentation
-p.trial.task.presDur = 100000000;
+p.trial.task.presDur = 1;
 
 % Reward parameters
 p.trial.reward.Continuous = 1;
 p.trial.reward.duration = 0.015;
 p.trial.reward.Period = 0.5;
 p.trial.reward.jackpotnPulse = 1;
+
+% Gabor parameters
+sizeStep = 0.25;
+p.trial.task.sizeRange = 0.25:sizeStep:1.75;
+
+

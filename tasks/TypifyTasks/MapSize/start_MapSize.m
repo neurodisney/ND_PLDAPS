@@ -1,7 +1,7 @@
 % John Amodeo, July 2024
 
 % Function to run experiment
-function p = start_SizeTune(subjectname, rig)
+function p = start_MapSize(subjectname, rig)
 
     % Checking for subject name and filling if empty
     if(~exist('subjectname', 'var') || isempty(subjectname))
@@ -19,13 +19,13 @@ function p = start_SizeTune(subjectname, rig)
     SS = ND_RigDefaults(rig); 
 
     % Specifying task
-    exp_fun = 'SizeTune'; 
+    exp_fun = 'MapSize'; 
 
     % Loading task information into pldaps matrix
     SS.pladaps.trialFunction = exp_fun; 
 
     % Loading task-specific parameters 
-    SS.task.TaskDef = 'SizeTune_taskdef';
+    SS.task.TaskDef = 'MapSize_taskdef';
 
     % Specifying which matrix variables can be edited for future trials
     SS.editable = {};

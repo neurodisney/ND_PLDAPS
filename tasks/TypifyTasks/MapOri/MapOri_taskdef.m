@@ -1,5 +1,5 @@
 % John Amodeo, July 2024
-function p = SizeTune_taskdef(p)
+function p = MapOri_taskdef(p)
 
 % Setting time window for fixation before trial marked as 'NoStart'
 p.trial.task.Timing.WaitFix = 2;
@@ -19,13 +19,18 @@ p.trial.task.Timing.TimeOut = 1;
 % Creating duration for stimulus presentation
 p.trial.task.presDur = 1;
 
-% Expanding base gabor background for bigger sizes
-% This controls stim texture size, not size of stim shown on screen
-p.trial.stim.DRIFTGABOR.size = [9, 9];
-
 % Reward parameters
 p.trial.reward.Continuous = 1;
 p.trial.reward.duration = 0.015;
 p.trial.reward.Period = 0.5;
 p.trial.reward.jackpotnPulse = 1;
 
+% Fixation spot parameters
+p.trial.stim.FIXSPOT.pos   = [0,0];
+p.trial.stim.FIXSPOT.type  = 'rect';  % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.FIXSPOT.color = 'dRed';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
+
+% Gabor parameters
+oriStep = 5;
+p.trial.task.oriRange = 0:oriStep:360;

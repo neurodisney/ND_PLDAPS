@@ -1,13 +1,13 @@
-% John Amodeo, October 2024
+% John Amodeo, July 2024
 
 
 %% RUN FUNCTION FOR TASK SESSION
-function p = MapLoc(p, state)
+function p = MapOriScreen(p, state)
     if(~exist('state','var'))
         state = [];
     end
     if(isempty(state))
-        p = MapLoc_init(p);
+        p = MapOriScreen_init(p);
     else
         p = ND_GeneralTrialRoutines(p, state);
         switch state
@@ -39,9 +39,10 @@ function TaskSetUp(p)
         p.trial.stim.fix = pds.stim.FixSpot(p);
 
         % Creating gabor
-        p.trial.stim.DRIFTGABOR.pos = p.trial.task.xyGrid{randi(numel(p.trial.task.xyGrid))};
-        p.trial.stim.DRIFTGABOR.radius = 1; %DVA
-        p.trial.stim.DRIFTGABOR.angle = 45;
+        p.trial.stim.DRIFTGABOR.pos = [0, 0];
+        p.trial.stim.DRIFTGABOR.size = [100, 100];
+        p.trial.stim.DRIFTGABOR.radius = 500;
+        p.trial.stim.DRIFTGABOR.angle = datasample(p.trial.task.oriRange, 1);
         p.trial.stim.DRIFTGABOR.speed = 5;
         p.trial.stim.DRIFTGABOR.frequency = 1.5;
         p.trial.stim.DRIFTGABOR.contrast = 0.65;
@@ -214,3 +215,5 @@ function TaskCleanAndSave(p)
     Task_Finish(p);
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
     ND_Trial2Ascii(p, 'save');
+
+

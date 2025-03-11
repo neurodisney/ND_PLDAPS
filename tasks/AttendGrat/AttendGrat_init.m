@@ -15,22 +15,22 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'FlightTm',     'p.trial.task.FlightTime',                 '%d');
     p = ND_AddAsciiEntry(p, 'ResponseTm',   'p.trial.task.SRT_StimOn',                 '%d');
 
-    p = ND_AddAsciiEntry(p, 'CuedMagList',  'p.trial.Block.cuedMagListStr',            '%s');
-    p = ND_AddAsciiEntry(p, 'UncuedMagList','p.trial.Block.uncuedMagListStr',          '%s');
-
     p = ND_AddAsciiEntry(p, 'RFposX',       'p.trial.task.RFpos(1)',                   '%d');
     p = ND_AddAsciiEntry(p, 'RFposY',       'p.trial.task.RFpos(2)',                   '%d');
+    p = ND_AddAsciiEntry(p, 'RFori',        'p.trial.task.RFori',                      '%d');
 
     p = ND_AddAsciiEntry(p, 'TargPosX',     'p.trial.stim.gabors.preTarget.pos(1)',    '%d');
     p = ND_AddAsciiEntry(p, 'TargPosY',     'p.trial.stim.gabors.preTarget.pos(2)',    '%d');
+    
     p = ND_AddAsciiEntry(p, 'TargSize',     'p.trial.stim.gabors.preTarget.radius',    '%d');
     p = ND_AddAsciiEntry(p, 'TargOri',      'p.trial.stim.gabors.preTarget.angle',     '%d');
-    p = ND_AddAsciiEntry(p, 'TargTf',       'p.trial.stim.gabors.preTarget.speed',     '%d');
-    p = ND_AddAsciiEntry(p, 'TargSf',       'p.trial.stim.gabors.preTarget.frequency', '%d');
-    p = ND_AddAsciiEntry(p, 'TargCon',      'p.trial.stim.gabors.preTarget.contrast',  '%d');
 
     p = ND_AddAsciiEntry(p, 'TargChange',   'p.trial.task.changeMag',                  '%d');
     p = ND_AddAsciiEntry(p, 'TargNewOri',   'p.trial.stim.gabors.postTarget.angle',    '%d');
+
+    p = ND_AddAsciiEntry(p, 'TargTf',       'p.trial.stim.gabors.preTarget.speed',     '%d');
+    p = ND_AddAsciiEntry(p, 'TargSf',       'p.trial.stim.gabors.preTarget.frequency', '%d');
+    p = ND_AddAsciiEntry(p, 'TargCon',      'p.trial.stim.gabors.preTarget.contrast',  '%d');
 
     p = ND_AddAsciiEntry(p, 'CueRingSize',  'p.trial.stim.rings.cue.radius',           '%d');
     p = ND_AddAsciiEntry(p, 'ConStep',      'p.trial.task.cStep',                      '%s');
@@ -53,3 +53,6 @@ function p = AttendGrat_init(p)
 
     %p = ND_AddAsciiEntry(p, 'ChoicePosX',   'p.trial.task.StimSel(1)',                  '%d');
     %p = ND_AddAsciiEntry(p, 'ChoicePosY',   'p.trial.task.StimSel(2)',                  '%d');
+
+    %p = ND_AddAsciiEntry(p, 'CuedMagList',  'p.trial.Block.cuedMagListStr',             '%s');
+    %p = ND_AddAsciiEntry(p, 'UncuedMagList','p.trial.Block.uncuedMagListStr',           '%s');

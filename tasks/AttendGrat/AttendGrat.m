@@ -110,8 +110,8 @@ function TaskSetUp(p)
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gaborParameters.oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        p.trial.task.cued = datasample([0, 1, 1, 1], 1);
-        
+        p.trial.task.cued = datasample(p.trial.task.cued_ratio, 1);
+        [0, 1, 1, 1]
         if p.trial.task.cued
             p.trial.task.changeMag = p.trial.Block.cuedMag;
         else
@@ -239,8 +239,6 @@ function TaskSetUp(p)
 
         % Moving task from step-up stage to wait period before launching
         ND_SwitchEpoch(p, 'ITI');
-
-
 
 
 % Function to execute trial
