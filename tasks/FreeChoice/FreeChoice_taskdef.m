@@ -11,11 +11,11 @@ function p = FreeChoice_taskdef(p)
     p.trial.task.condition =  1;
 
     % Setting reward probabilities for stimuli for *condition 1* in array [stim 1 prob, stim 2 prob]
-    p.trial.task.probSwitch = 0;
-    p.trial.stim.recParameters.probabilities = [0.8,0.9];
+    p.trial.task.probSwitch = 0; 
+    p.trial.stim.recParameters.probabilities = [0.0,0.9];
     
     % Assigning reward duration/magnitude to stimuli in array [stim 1 dur, stim 2 dur] 
-    p.trial.stim.recParameters.rewardDurs = [0.05, 0.07];
+    p.trial.stim.recParameters.rewardDurs = [0.05, 0.05]; %changed from 0.05,0.07
 
 
     % == GENERAL TASK PARAMETERS ==
@@ -57,13 +57,13 @@ function p = FreeChoice_taskdef(p)
     
     % Change this parameter to 100 to encompass full screen if fix point fixation difficult during training
     % Note this is resized in presentStim() for proper task flow
-    p.trial.stim.FIXSPOT.fixWin = 6; % Changed from 2
+    p.trial.stim.FIXSPOT.fixWin = 3; % Changed from 2
 
     % Setting time window for fixation before trial marked as 'NoStart'
-    p.trial.task.Timing.WaitFix = 2; % Time in seconds
+    p.trial.task.Timing.WaitFix = 3; % Time in seconds
     
     % Setting time that monkey has to fixate on target after leaving fix point (flight time) 
-    p.trial.task.breakFixCheck = 0.5; % Changed from 0.2
+    p.trial.task.breakFixCheck = 0.4; 
 
     
     % == STIMULUS PARAMETERS ==
@@ -80,7 +80,7 @@ function p = FreeChoice_taskdef(p)
     p.trial.task.stimLatency = ND_GetITI(0.75, 1.5);
 
     % Setting time for which target must be fixed on before trial marked correct
-    p.trial.task.minTargetFixTime = 0.1;
+    p.trial.task.minTargetFixTime = 0.3;
 
     % Setting time stimuli are left on screen after correct trial before task ends
     p.trial.task.Timing.WaitEnd = 0.25;

@@ -8,15 +8,15 @@ function p = ViewScene_taskdef(p)
     % Setting time-out(s) for incorrect response
     p.trial.task.Timing.TimeOut = 1; 
     % Duration offset (sec) for video at normal play rate
-    p.trial.task.durOffset = 60;
+    p.trial.task.durOffset = 0;
 
-    p.trial.task.stim.videoDir = '/home/rig1-user/MatlabFiles/Videos/HierarchyVideos';
+    p.trial.task.stim.videoDir = '/home/rig2-user/Videos/HierarchyVideos';
     videos = dir(p.trial.task.stim.videoDir);
     p.trial.task.stim.videoNames = {videos(~[videos.isdir]).name};
 
     p.trial.stim.VIDEO.sizeGain = 2.1;
     p.trial.stim.VIDEO.fixWin   = 80;
-    p.trial.stim.VIDEO.playRate = 0.1;
+    p.trial.stim.VIDEO.playRate = 1;
     
 end
 

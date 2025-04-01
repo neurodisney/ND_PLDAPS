@@ -101,7 +101,7 @@ function showScene(p, display_val)
 function p = Task_Correct(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
     p.trial.task.Good = 1;
-    pds.audio.playDP(p,'jackpot','left');
+    % pds.audio.playDP(p,'jackpot','left');
     pds.reward.give(p, 0.1);
     p.trial.EV.Reward = p.trial.CurTime;
     ND_SwitchEpoch(p,'TaskEnd');
@@ -110,7 +110,7 @@ function p = Task_Correct(p)
 function p = Task_Incorrect(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
     p.trial.task.Good = 0;
-    pds.audio.playDP(p, 'breakfix', 'left');
+    % pds.audio.playDP(p, 'breakfix', 'left');
     ND_SwitchEpoch(p,'TaskEnd');
 
 
