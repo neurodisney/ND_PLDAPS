@@ -200,7 +200,7 @@ end
 % Generate all the possible positions for the stimulus to be
 allXPos = stimdef.xRange(1) : stimdef.grdStp : stimdef.xRange(2);
 allYPos = stimdef.yRange(1) : stimdef.grdStp : stimdef.yRange(2);
-p.trial.stim.locations = CombVec(allXPos,allYPos)';
+p.trial.stim.locations = combvec(allXPos,allYPos)';
 
 
 %% Generate a shuffled list of all possible stimuli and location indices for reference during the experiment
@@ -544,7 +544,7 @@ nStims = length(p.trial.stim.gratings);
 nLocs = size(p.trial.stim.locations,1);
 
 % Rerandomize the list of stimuli
-indexReference = Shuffle(CombVec(1:nStims,1:nLocs)');
+indexReference = Shuffle(combvec(1:nStims,1:nLocs)');
 p.trial.stim.iStim = indexReference(:,1);
 p.trial.stim.iPos = indexReference(:,2);
 

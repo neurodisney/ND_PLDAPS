@@ -87,7 +87,7 @@ SS.datapixx.adc.srate = 1000; % for a 1k tracker
 
 SS.behavior.fixation.FixWin     = 50.0;
 SS.behavior.fixation.FixGridStp = [3, 3]; % x,y coordinates in a 9pt grid
-SS.behavior.fixation.FixWinStp  = 100.00;    % change of the size of the fixation window upon key press
+SS.behavior.fixation.FixWinStp  = 30.00;    % change of the size of the fixation window upon key press
 
 SS.Block.maxBlockTrials = 10000;
 

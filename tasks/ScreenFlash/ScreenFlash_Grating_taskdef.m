@@ -18,12 +18,12 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.coarse.ori      = 90;          % orient of grating
+        p.trial.stim.coarse.ori      = 0;          % orient of grating
         p.trial.stim.coarse.radius   = 50.0;        % size of grating 
-        p.trial.stim.coarse.contrast = 0.75;           % intensity contrast
-        p.trial.stim.coarse.sFreq    = 0.5;         % spatial frequency 
+        p.trial.stim.coarse.contrast = 0.85;           % intensity contrast
+        p.trial.stim.coarse.sFreq    = 1.5;         % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;           % temporal frequency (0 means static grating) 
-        p.trial.stim.coarse.grdStp   = 0.01;         % spacing of grating centers       
+        p.trial.stim.coarse.grdStp   = 0.5;         % spacing of grating centers       
         
         p.trial.stim.coarse.xRange   = [-0.0, -0.0];
         p.trial.stim.coarse.yRange   = [-0.0, -0.0];
@@ -76,13 +76,13 @@ p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of reward
 p.trial.reward.Dur          = 0.0; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur       = 0.15; % reward duration [s] for reward given by keyboard presses
 p.trial.reward.jackpotDur   = 0.0;  % fSS.datapixx.useJoystick       = 0;inal reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 0;
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.task.Timing.WaitFix = 4;    % Time to wait for fixation before NoStart
+p.trial.task.Timing.WaitFix = 3;    % Time to wait for fixation before NoStart
 
 % Main trial timings
 p.trial.task.CurRewDelay    = 0.5;  % Time to first reward
@@ -95,7 +95,7 @@ p.trial.task.stimOffTime    = 2.00;   % Gaps between succesive stimuli
 p.trial.task.Timing.MinITI  = 0.5;  % minimum time period [s] between subsequent trials
 p.trial.task.Timing.MaxITI  = 2.0;  % maximum time period [s] between subsequent trials
 
-% penalties
+% penalties4
 p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
