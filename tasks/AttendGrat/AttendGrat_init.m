@@ -21,21 +21,30 @@ function p = AttendGrat_init(p)
 
     p = ND_AddAsciiEntry(p, 'TargPosX',     'p.trial.stim.gabors.preTarget.pos(1)',    '%d');
     p = ND_AddAsciiEntry(p, 'TargPosY',     'p.trial.stim.gabors.preTarget.pos(2)',    '%d');
-    
     p = ND_AddAsciiEntry(p, 'TargSize',     'p.trial.stim.gabors.preTarget.radius',    '%d');
     p = ND_AddAsciiEntry(p, 'TargOri',      'p.trial.stim.gabors.preTarget.angle',     '%d');
-
     p = ND_AddAsciiEntry(p, 'TargChange',   'p.trial.task.changeMag',                  '%d');
     p = ND_AddAsciiEntry(p, 'TargNewOri',   'p.trial.stim.gabors.postTarget.angle',    '%d');
-
     p = ND_AddAsciiEntry(p, 'TargTf',       'p.trial.stim.gabors.preTarget.speed',     '%d');
     p = ND_AddAsciiEntry(p, 'TargSf',       'p.trial.stim.gabors.preTarget.frequency', '%d');
     p = ND_AddAsciiEntry(p, 'TargCon',      'p.trial.stim.gabors.preTarget.contrast',  '%d');
 
-    p = ND_AddAsciiEntry(p, 'CueRingSize',  'p.trial.stim.rings.cue.radius',           '%d');
+    p = ND_AddAsciiEntry(p, 'Dis1PosX',    'p.trial.stim.gabors.distractor1.pos(1)',   '%d');
+    p = ND_AddAsciiEntry(p, 'Dis1PosY',    'p.trial.stim.gabors.distractor1.pos(2)',   '%d');
+    p = ND_AddAsciiEntry(p, 'Dis1Ori',     'p.trial.stim.gabors.distractor1.angle',    '%d');
+
+    p = ND_AddAsciiEntry(p, 'Dis2PosX',    'p.trial.stim.gabors.distractor2.pos(1)',   '%d');
+    p = ND_AddAsciiEntry(p, 'Dis2PosY',    'p.trial.stim.gabors.distractor2.pos(2)',   '%d');
+    p = ND_AddAsciiEntry(p, 'Dis2Ori',     'p.trial.stim.gabors.distractor2.angle',    '%d');
+
+    p = ND_AddAsciiEntry(p, 'Dis3PosX',    'p.trial.stim.gabors.distractor3.pos(1)',   '%d');
+    p = ND_AddAsciiEntry(p, 'Dis3PosY',    'p.trial.stim.gabors.distractor3.pos(2)',   '%d');
+    p = ND_AddAsciiEntry(p, 'Dis3Ori',     'p.trial.stim.gabors.distractor3.angle',    '%d');
+
     p = ND_AddAsciiEntry(p, 'ConStep',      'p.trial.task.cStep',                      '%s');
     p = ND_AddAsciiEntry(p, 'CueRingCon',   'p.trial.stim.rings.cue.contrast',         '%d');
     p = ND_AddAsciiEntry(p, 'DisRingCon',   'p.trial.stim.rings.distractor1.contrast', '%d');
+    p = ND_AddAsciiEntry(p, 'CueRingSize',  'p.trial.stim.rings.cue.radius',           '%d');
 
     % Ensuring output directory above exists
     ND_Trial2Ascii(p, 'init');

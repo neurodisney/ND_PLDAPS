@@ -21,16 +21,17 @@ p.trial.task.presDur = 1;
 
 % Build grid of absolute value x,y coordinates
 % Scale coorindates up by 10
-xRange = [2, 70];
-yRange = [2, 70];
+xRange = [5, 9];
+yRange = [1, 5];
+
+scaler = 1;
+xRange = xRange * scaler;
+yRange = yRange * scaler;
 
 p.trial.task.xyGrid = {};
-
 for x = xRange(1):xRange(2)
     for y = yRange(1):yRange(2)
-        % Apply negatives here if desired
-        % Scale coorindates down by 10
-        p.trial.task.xyGrid{end+1} = [x / 10, -y / 10];
+        p.trial.task.xyGrid{end+1} = [x / scaler, -y / scaler]; % Apply negatives here if desired
     end
 end
 
@@ -45,3 +46,8 @@ p.trial.stim.FIXSPOT.pos   = [0,0];
 p.trial.stim.FIXSPOT.type  = 'rect';  % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color = 'dRed';  % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
+p.trial.stim.FIXSPOT.fixWin = 1.75;
+
+% Gabor parameters
+p.trial.task.orientation = 340;
+p.trial.task.radius = 1.25; % DVA

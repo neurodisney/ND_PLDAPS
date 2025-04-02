@@ -39,7 +39,7 @@ function TaskSetUp(p)
         p.trial.stim.fix = pds.stim.FixSpot(p);
 
         % Creating gabor
-        p.trial.stim.DRIFTGABOR.pos = [2, -3];
+        p.trial.stim.DRIFTGABOR.pos = p.trial.task.pos;
         p.trial.stim.DRIFTGABOR.radius = 1;
         p.trial.stim.DRIFTGABOR.angle = datasample(p.trial.task.oriRange, 1);
         p.trial.stim.DRIFTGABOR.speed = 5;

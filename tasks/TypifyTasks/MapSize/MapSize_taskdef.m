@@ -25,8 +25,18 @@ p.trial.reward.duration = 0.015;
 p.trial.reward.Period = 0.5;
 p.trial.reward.jackpotnPulse = 1;
 
+% Fixation spot parameters
+p.trial.stim.FIXSPOT.pos   = [0,0];
+p.trial.stim.FIXSPOT.type  = 'rect';  % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
+p.trial.stim.FIXSPOT.color = 'dRed';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
+p.trial.stim.FIXSPOT.fixWin = 1.75;
+
 % Gabor parameters
-sizeStep = 0.25;
-p.trial.task.sizeRange = 0.25:sizeStep:1.75;
+% sizeStep = 0.25;
+% p.trial.task.sizeRange = 0.75:sizeStep:4;
+p.trial.task.sizeRange = [0.5, 1, 1.5 2, 2.5];
+p.trial.task.pos =  [1.5, -3.5];
+p.trial.task.orientation = 0;
 
 

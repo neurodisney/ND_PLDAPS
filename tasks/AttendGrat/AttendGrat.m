@@ -57,14 +57,6 @@ function TaskSetUp(p)
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
         end 
 
-        % Assigning orientation change magnitude according to block
-        if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
-            p.trial.Block.cuedMag = datasample(p.trial.Block.cuedMagList, 1);
-            p.trial.Block.uncuedMag = datasample(p.trial.Block.uncuedMagList, 1);
-            p.trial.Block.flagNextBlock = 0;
-        end
-
-
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
         % Creating spot to store selection of target stimulus
@@ -100,47 +92,52 @@ function TaskSetUp(p)
 
         % Randomly selecting stimulus arrangement
         % Shuffling stim positions for certain arrangements
+        rng('shuffle', 'twister')
         posIndex = datasample([1,2,3,4,5,6,7], 1); 
         posList = p.trial.task.posList(posIndex, :);
+        rng('shuffle', 'twister')
         posList = posList(randperm(length(posList)));
         p.trial.task.trialConfig = [p.trial.task.trialConfig posList];
 
         % Randomly selecting orientations for gratings
-        p.trial.stim.gaborParameters.oriList = datasample(p.trial.task.oriList, 4);
-        p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.stim.gaborParameters.oriList];
+        rng('shuffle', 'twister')
+        randOri = datasample(p.trial.task.oriList, 1);
+        oriList = [p.trial.task.oriList randOri];
+        rng('shuffle', 'twister')
+        oriList = oriList(randperm(length(oriList)));
+        p.trial.task.trialConfig = [p.trial.task.trialConfig oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
+        rng('shuffle', 'twister')
         p.trial.task.cued = datasample(p.trial.task.cued_ratio, 1);
-        [0, 1, 1, 1]
+
         if p.trial.task.cued
-            p.trial.task.changeMag = p.trial.Block.cuedMag;
+            rng('shuffle', 'twister')
+            p.trial.task.changeMag = datasample(p.trial.Block.cuedMagList, 1);
         else
-            p.trial.task.changeMag = p.trial.Block.uncuedMag;
+            rng('shuffle', 'twister')
+            p.trial.task.changeMag = datasample(p.trial.Block.uncuedMagList, 1);
         end
         
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.task.cued];
         p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.task.changeMag];
-        
+  
         
         % Checking for blown trials and mixing them in
         if ~isempty(p.defaultParameters.blownTrials)
-
+            rng('shuffle', 'twister')
             mix_in = datasample(p.trial.task.shuffleRange, 1);
             blown_trial = p.defaultParameters.blownTrials(1, :);
             
             if mix_in
-               
                 posList = blown_trial([1 2 3 4]);
-                p.trial.stim.gratingParameters.oriList = cell2mat(blown_trial(5));
+                oriList = cell2mat(blown_trial(5));
                 p.trial.task.cued = cell2mat(blown_trial(6));
                 p.trial.task.changeMag = cell2mat(blown_trial(7));
-
-                p.trial.task.blown_repeat = 1;
-                
+                p.trial.task.blown_repeat = 1;  
             end
 
             p.defaultParameters.mixList = [p.defaultParameters.mixList mix_in];
-
         end
                 
         
@@ -183,7 +180,7 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(1));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(1);
+        p.trial.stim.DRIFTGABOR.angle = oriList(1);
         p.trial.stim.DRIFTGABOR.speed = p.trial.stim.gaborParameters.tFreq;
         p.trial.stim.DRIFTGABOR.frequency = p.trial.stim.gaborParameters.sFreq;
         p.trial.stim.DRIFTGABOR.contrast = p.trial.stim.gaborParameters.contrast;
@@ -192,31 +189,28 @@ function TaskSetUp(p)
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(1) + p.trial.task.changeMag;
+        p.trial.stim.DRIFTGABOR.angle = oriList(1) + p.trial.task.changeMag;
         p.trial.stim.gabors.postTarget = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 1 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(2));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        offset1 = datasample([0, 30, 60, 90], 1);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(2) + offset1;
+        p.trial.stim.DRIFTGABOR.angle = oriList(2);
         p.trial.stim.gabors.distractor1 = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 2 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(3));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        offset2 = datasample([0, 30, 60, 90], 1);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(3) + offset2;
+        p.trial.stim.DRIFTGABOR.angle = oriList(3);
         p.trial.stim.gabors.distractor2 = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 3 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
         pos = cell2mat(posList(4));
         p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        offset3 = datasample([0, 30, 60, 90], 1);
-        p.trial.stim.DRIFTGABOR.angle = p.trial.stim.gaborParameters.oriList(4) + offset3;
+        p.trial.stim.DRIFTGABOR.angle = oriList(4);
         p.trial.stim.gabors.distractor3 = pds.stim.DriftGabor(p);
         
         

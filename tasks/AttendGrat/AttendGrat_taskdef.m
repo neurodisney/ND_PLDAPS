@@ -32,23 +32,30 @@ function p = AttendGrat_taskdef(p)
 
 
     % Setting RF properties
-    RFpos = [4, 0];
+    RFpos = [7.5, -2];
     p.trial.task.RFpos = RFpos;
 
-    RFori = 45;
-    p.trial.task.RFori = RFori;
-    p.trial.task.oriList = [RFori - 20, RFori - 40, RFori, RFori + 20, RFori + 40];
+    p.trial.task.oriList = [180, 260, 40];
+    p.trial.task.RFori = 180;
 
-    RFsize = 1; 
+    RFsize = 1.5; 
     p.trial.stim.RING.radius = RFsize + 0.5;
     p.trial.stim.DRIFTGABOR.radius = RFsize;
 
+    
+    % Setting stimulus parameters
+    p.trial.stim.gaborParameters.sFreq = 1.5;
+    p.trial.stim.gaborParameters.tFreq = 5;
+    p.trial.stim.gaborParameters.contrast = 0.65;
 
-    % Setting properties for fixation point
-    p.trial.stim.FIXSPOT.type = 'rect';    
-    p.trial.stim.FIXSPOT.color = 'green';
-    p.trial.stim.FIXSPOT.size = 0.4;
-    p.trial.stim.FIXSPOT.fixWin = 1.5;
+    % Creating lists of orientation change magnitudes to apply to blocks
+    p.trial.Block.cuedMagList = [0, 0, 4, 8, 16, 16, 16, 32, 32, 32, 32, 64, 64, 64, 64];
+    cuedStr = num2str(p.trial.Block.cuedMagList);
+    p.trial.Block.cuedMagListStr = strrep(cuedStr, ' ', ',');
+
+    p.trial.Block.uncuedMagList = [0, 0, 4, 8, 16, 16, 16, 32, 32, 32, 32, 64, 64, 64, 64];
+    uncuedStr = num2str(p.trial.Block.uncuedMagList);
+    p.trial.Block.uncuedMagListStr = strrep(uncuedStr, ' ', ',');
     
     
     % Calculating points along line of is eccentricity
@@ -61,7 +68,7 @@ function p = AttendGrat_taskdef(p)
 
     % Angle (degrees) between line connecting origin (0, 0) and
     % preceeding point and line connecting origin and succeeding point.
-    angular_offset = 7;
+    angular_offset = 6;
 
     p.trial.task.posList = {};
     for q = 1:4
@@ -105,27 +112,19 @@ function p = AttendGrat_taskdef(p)
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
 
-    % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [0, 4, 8, 16, 32, 64, 64, 64];
-    cuedStr = num2str(p.trial.Block.cuedMagList);
-    p.trial.Block.cuedMagListStr = strrep(cuedStr, ' ', ',');
 
-    p.trial.Block.uncuedMagList = [0, 16, 64, 64];
-    uncuedStr = num2str(p.trial.Block.uncuedMagList);
-    p.trial.Block.uncuedMagListStr = strrep(uncuedStr, ' ', ',');
-
-
-    % Setting stimulus parameters
-    p.trial.stim.gaborParameters.sFreq = 1.5;
-    p.trial.stim.gaborParameters.tFreq = 5;
-    p.trial.stim.gaborParameters.contrast = 0.65;
+    % Setting properties for fixation point
+    p.trial.stim.FIXSPOT.type = 'rect';    
+    p.trial.stim.FIXSPOT.color = 'green';
+    p.trial.stim.FIXSPOT.size = 0.25;
+    p.trial.stim.FIXSPOT.fixWin = 1.75;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
     num_range = [1, 100];
     mean = 2;
     bound1 = 1.25;
-    bound2 = 5;
+    bound2 = 3.75;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -154,15 +153,15 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.minTargetFixTime = 0.20; 
     
     % Creating trial increments to scale size of reward based on good performance
-    p.trial.reward.IncrementTrial = [50, 150, 300, 400, 500, 600, 650];
+    p.trial.reward.IncrementTrial = [100, 250, 400, 550, 700, 850, 1000];
 
     % List of increasing durations of juice flow for reward
     % This list is linked to trial increments for scaling size of reward
-    p.trial.reward.IncrementDur = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
-    %p.trial.reward.IncrementDur = [0.10, 0.15, 0.175, 0.20, 0.225, 0.25, 0.30];
+    %p.trial.reward.IncrementDur = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
+    p.trial.reward.IncrementDur = [0.10, 0.15, 0.175, 0.20, 0.225, 0.25, 0.30];
 
     % Degree to which current reward decreased for bad performance 
-    p.trial.reward.DiscourageProp = 1;
+    p.trial.reward.DiscourageProp = 0.9;
     
 
 end

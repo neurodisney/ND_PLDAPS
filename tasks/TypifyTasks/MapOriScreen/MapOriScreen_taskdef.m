@@ -30,8 +30,9 @@ p.trial.stim.FIXSPOT.pos   = [0,0];
 p.trial.stim.FIXSPOT.type  = 'rect';  % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color = 'dRed';  % color of fixation spot (as defined in the lookup tables)
 p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
+p.trial.stim.FIXSPOT.fixWin = 1.75;
 
 % Gabor parameters
-oriStep = 5;
+oriStep = 20;
 p.trial.task.oriRange = 0:oriStep:360;
 

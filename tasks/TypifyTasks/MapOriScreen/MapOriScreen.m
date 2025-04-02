@@ -42,6 +42,7 @@ function TaskSetUp(p)
         p.trial.stim.DRIFTGABOR.pos = [0, 0];
         p.trial.stim.DRIFTGABOR.size = [100, 100];
         p.trial.stim.DRIFTGABOR.radius = 500;
+        rng('shuffle', 'twister')
         p.trial.stim.DRIFTGABOR.angle = datasample(p.trial.task.oriRange, 1);
         p.trial.stim.DRIFTGABOR.speed = 5;
         p.trial.stim.DRIFTGABOR.frequency = 1.5;

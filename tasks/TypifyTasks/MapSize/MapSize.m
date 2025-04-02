@@ -39,10 +39,10 @@ function TaskSetUp(p)
         p.trial.stim.fix = pds.stim.FixSpot(p);
 
         % Creating gabor
-        p.trial.stim.DRIFTGABOR.pos = [4,4];
-        p.trial.stim.DRIFTGABOR.size = [9, 9];
+        p.trial.stim.DRIFTGABOR.pos = p.trial.task.pos;
+        p.trial.stim.DRIFTGABOR.size = [20, 20];
         p.trial.stim.DRIFTGABOR.radius = datasample(p.trial.task.sizeRange, 1);
-        p.trial.stim.DRIFTGABOR.angle = 45;
+        p.trial.stim.DRIFTGABOR.angle = 0;
         p.trial.stim.DRIFTGABOR.speed = 5;
         p.trial.stim.DRIFTGABOR.frequency = 1.5;
         p.trial.stim.DRIFTGABOR.contrast = 0.8;
