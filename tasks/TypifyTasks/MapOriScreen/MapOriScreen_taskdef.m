@@ -33,6 +33,5 @@ p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
 p.trial.stim.FIXSPOT.fixWin = 1.75;
 
 % Gabor parameters
-oriStep = 20;
-p.trial.task.oriRange = 0:oriStep:360;
+p.trial.task.oriRange = [0, 45, 90, 135];
 

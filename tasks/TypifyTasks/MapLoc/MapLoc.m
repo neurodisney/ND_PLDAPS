@@ -47,7 +47,7 @@ function TaskSetUp(p)
         p.trial.stim.DRIFTGABOR.contrast = 0.65;
         p.trial.stim.gabor = pds.stim.DriftGabor(p);
 
-        if (p.trial.Block.locIdx > length(xyGrid))
+        if (p.trial.Block.locIdx == length(xyGrid))
             p.trial.Block.locIdx = 1;
         else
             p.trial.Block.locIdx = p.trial.Block.locIdx + 1;

@@ -39,15 +39,22 @@ function TaskSetUp(p)
         p.trial.stim.fix = pds.stim.FixSpot(p);
 
         % Creating gabor
+        oriRange = p.trial.task.oriRange;
+
         p.trial.stim.DRIFTGABOR.pos = [0, 0];
         p.trial.stim.DRIFTGABOR.size = [100, 100];
         p.trial.stim.DRIFTGABOR.radius = 500;
-        rng('shuffle', 'twister')
-        p.trial.stim.DRIFTGABOR.angle = datasample(p.trial.task.oriRange, 1);
+        p.trial.stim.DRIFTGABOR.angle = oriRange(p.trial.Block.locIdx);
         p.trial.stim.DRIFTGABOR.speed = 5;
         p.trial.stim.DRIFTGABOR.frequency = 1.5;
         p.trial.stim.DRIFTGABOR.contrast = 0.65;
         p.trial.stim.gabor = pds.stim.DriftGabor(p);
+
+        if (p.trial.Block.locIdx == length(oriRange))
+            p.trial.Block.locIdx = 1;
+        else
+            p.trial.Block.locIdx = p.trial.Block.locIdx + 1;
+        end
 
         % Moving task from set-up stage to wait period before launching
         ND_SwitchEpoch(p, 'ITI');
