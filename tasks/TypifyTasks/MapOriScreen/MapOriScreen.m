@@ -44,6 +44,7 @@ function TaskSetUp(p)
         p.trial.stim.DRIFTGABOR.pos = [0, 0];
         p.trial.stim.DRIFTGABOR.size = [100, 100];
         p.trial.stim.DRIFTGABOR.radius = 500;
+        disp(p.trial.Block.locIdx)
         p.trial.stim.DRIFTGABOR.angle = oriRange(p.trial.Block.locIdx);
         p.trial.stim.DRIFTGABOR.speed = 5;
         p.trial.stim.DRIFTGABOR.frequency = 1.5;
@@ -95,18 +96,8 @@ function TaskDesign(p)
                 end
                 
                 % Checking if monkey has broken fixation
-                if(~p.trial.stim.fix.fixating)         
-                    % If fix broken, play noise signaling fix break
-                    pds.audio.playDP(p, 'breakfix', 'left'); 
-                    % Calculating and storing time from fix start to fix leave
-                    p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
-                    % Calculating and storing time from presenting fix point to fix leave
-                    p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
-                    % Marking trial as fix break
-                    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-                    % Switching task epoch to address fix break before 
-                    % ending trial
-                    ND_SwitchEpoch(p, 'TaskEnd');
+                if(~p.trial.stim.fix.fixating)
+                    Task_Incorrect(p);
                 end
                 
             % Checking if fixation is maintained 
@@ -132,31 +123,11 @@ function TaskDesign(p)
                     else
                         % Monkey has fixated long enough to get the jackpot
                         Task_CorrectReward(p);
-                        % Turning stim off
-                        presentStim(p, 0);
-                        % Turning fix point off
-                        ND_FixSpot(p, 0);
-                        % Switching epoch to end task
-                        ND_SwitchEpoch(p, 'TaskEnd');
                     end
 
                 % Checking if fixation has been broken    
-                elseif(~p.trial.stim.fix.fixating) 
-                        % Turning stim off
-                        presentStim(p, 0);
-                        % Turning fix point off
-                        ND_FixSpot(p, 0);
-                        % If fix broken, play noise signaling fix break
-                        pds.audio.playDP(p, 'breakfix', 'left'); 
-                        % Calculating and storing time from fix start to fix leave
-                        p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
-                        % Calculating and storing time from presenting fix point to fix leave
-                        p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
-                        % Marking trial as fix break
-                        p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-                        % Switching task epoch to address fix break before 
-                        % ending trial
-                        ND_SwitchEpoch(p, 'TaskEnd');
+                elseif(~p.trial.stim.fix.fixating)
+                    Task_Incorrect(p);
                 end
 
             % Starting task epoch that ends task
@@ -207,14 +178,25 @@ function presentStim(p, val)
          
 % Function to mark trial correct and dispense reward        
 function p = Task_CorrectReward(p)
-    % Marking trial outcome as correct
-    p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
-    % Dispensing reward
-    pds.reward.give(p, p.trial.reward.duration, p.trial.reward.jackpotnPulse);
-    % Playing audio signaling correct trial
+    presentStim(p, 0);
+    ND_FixSpot(p, 0);
     pds.audio.playDP(p,'jackpot','left');
-    % Record time at which reward given
+    p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
+    pds.reward.give(p, p.trial.reward.duration, p.trial.reward.jackpotnPulse);
     p.trial.EV.Reward = p.trial.CurTime;
+    ND_SwitchEpoch(p, 'TaskEnd');
+
+function p = Task_Incorrect(p)
+    presentStim(p, 0);
+    ND_FixSpot(p, 0);
+    pds.audio.playDP(p, 'breakfix', 'left'); 
+    p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
+    if (p.trial.Block.locIdx == 1)
+        p.trial.Block.locIdx = length(p.trial.task.oriRange);
+    else
+        p.trial.Block.locIdx = p.trial.Block.locIdx - 1;
+    end
+    ND_SwitchEpoch(p, 'TaskEnd');
             
 
 % Function to clean up screen textures and variables, and to save data to 

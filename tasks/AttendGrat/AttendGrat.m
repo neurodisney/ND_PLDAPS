@@ -93,16 +93,12 @@ function TaskSetUp(p)
         % Randomly selecting stimulus arrangement
         % Shuffling stim positions for certain arrangements
         rng('shuffle', 'twister')
-        posIndex = datasample([1,2,3,4,5,6,7], 1); 
+        posIndex = datasample([1, 2, 3, 4, 5, 6, 7], 1); 
         posList = p.trial.task.posList(posIndex, :);
-        rng('shuffle', 'twister')
-        posList = posList(randperm(length(posList)));
         p.trial.task.trialConfig = [p.trial.task.trialConfig posList];
 
         % Randomly selecting orientations for gratings
-        rng('shuffle', 'twister')
-        randOri = datasample(p.trial.task.oriList, 1);
-        oriList = [p.trial.task.oriList randOri];
+        oriList = p.trial.task.oriList;
         rng('shuffle', 'twister')
         oriList = oriList(randperm(length(oriList)));
         p.trial.task.trialConfig = [p.trial.task.trialConfig oriList];
@@ -143,43 +139,49 @@ function TaskSetUp(p)
         
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        pos = cell2mat(posList(1));
-        p.trial.stim.RING.pos = pos([1 2]);
+        idxRange = [1, 2, 3, 4];
 
         if p.trial.task.cued
             p.trial.stim.RING.color = p.trial.stim.ringParameters.cueCon;
+            rng('shuffle', 'twister')
+            posIdx = datasample([2, 1, 1, 3, 3, 1, 1, 3, 3, 1, 1, 3, 3, 4], 1);
+            idxRange(idxRange == posIdx) = [];
         else
             p.trial.stim.RING.color = p.trial.stim.ringParameters.distCon;
+            rng('shuffle', 'twister')
+            posIdx = datasample([2, 1, 4, 3], 1);
+            idxRange(idxRange == posIdx) = [];
         end
 
+        TargPos = cell2mat(posList(posIdx));
+        p.trial.stim.RING.pos = TargPos([1 2]);
         p.trial.stim.RING.contrast = p.trial.display.clut.(p.trial.stim.RING.color);
         p.trial.stim.rings.cue = pds.stim.Ring(p);
 
         % Creating distractor ring 1 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        pos = cell2mat(posList(2));
-        p.trial.stim.RING.pos = pos([1 2]);
+        Dis1Pos = cell2mat(posList(idxRange(1)));
+        p.trial.stim.RING.pos = Dis1Pos([1 2]);
         p.trial.stim.RING.color = p.trial.stim.ringParameters.distCon;
         p.trial.stim.RING.contrast = p.trial.display.clut.(p.trial.stim.RING.color);
         p.trial.stim.rings.distractor1 = pds.stim.Ring(p);
 
         % Creating distractor ring 2 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        pos = cell2mat(posList(3));
-        p.trial.stim.RING.pos = pos([1 2]);
+        Dis2Pos = cell2mat(posList(idxRange(2)));
+        p.trial.stim.RING.pos = Dis2Pos([1 2]);
         p.trial.stim.rings.distractor2 = pds.stim.Ring(p);
 
         % Creating distractor ring 3 by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        pos = cell2mat(posList(4));
-        p.trial.stim.RING.pos = pos([1 2]);
+        Dis3Pos = cell2mat(posList(idxRange(3)));
+        p.trial.stim.RING.pos = Dis3Pos([1 2]);
         p.trial.stim.rings.distractor3 = pds.stim.Ring(p);
         
         
         % Creating target grating pre-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        pos = cell2mat(posList(1));
-        p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
+        p.trial.stim.DRIFTGABOR.pos = TargPos([1 2]);
         p.trial.stim.DRIFTGABOR.angle = oriList(1);
         p.trial.stim.DRIFTGABOR.speed = p.trial.stim.gaborParameters.tFreq;
         p.trial.stim.DRIFTGABOR.frequency = p.trial.stim.gaborParameters.sFreq;
@@ -188,28 +190,25 @@ function TaskSetUp(p)
 
         % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
+        p.trial.stim.DRIFTGABOR.pos = TargPos([1 2]);
         p.trial.stim.DRIFTGABOR.angle = oriList(1) + p.trial.task.changeMag;
         p.trial.stim.gabors.postTarget = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 1 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        pos = cell2mat(posList(2));
-        p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
+        p.trial.stim.DRIFTGABOR.pos = Dis1Pos([1 2]);
         p.trial.stim.DRIFTGABOR.angle = oriList(2);
         p.trial.stim.gabors.distractor1 = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 2 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        pos = cell2mat(posList(3));
-        p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
+        p.trial.stim.DRIFTGABOR.pos = Dis2Pos([1 2]);
         p.trial.stim.DRIFTGABOR.angle = oriList(3);
         p.trial.stim.gabors.distractor2 = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 3 by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        pos = cell2mat(posList(4));
-        p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
+        p.trial.stim.DRIFTGABOR.pos = Dis3Pos([1 2]);
         p.trial.stim.DRIFTGABOR.angle = oriList(4);
         p.trial.stim.gabors.distractor3 = pds.stim.DriftGabor(p);
         

@@ -25,17 +25,17 @@ function p = AttendGrat_taskdef(p)
 
     
     % Setting probability of repeating blown trial vs creating new trial
-    p.trial.task.shuffleRange = [0, 0, 0, 1];
+    p.trial.task.shuffleRange = [0, 0, 1, 0];
 
     % Set ratio of cued to uncued trials
-    p.trial.task.cued_ratio = [0, 1, 1];
+    p.trial.task.cued_ratio = [1, 1, 0];
 
 
     % Setting RF properties
     RFpos = [7.5, -2];
     p.trial.task.RFpos = RFpos;
 
-    p.trial.task.oriList = [180, 260, 40];
+    p.trial.task.oriList = [0, 45, 90, 135];
     p.trial.task.RFori = 180;
 
     RFsize = 1.5; 
@@ -49,11 +49,11 @@ function p = AttendGrat_taskdef(p)
     p.trial.stim.gaborParameters.contrast = 0.65;
 
     % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [0, 0, 4, 8, 16, 16, 16, 32, 32, 32, 32, 64, 64, 64, 64];
+    p.trial.Block.cuedMagList = [0, 0, 4, 8, 8, 16, 16, 16, 32, 32, 32, 32, 64, 64, 64];
     cuedStr = num2str(p.trial.Block.cuedMagList);
     p.trial.Block.cuedMagListStr = strrep(cuedStr, ' ', ',');
 
-    p.trial.Block.uncuedMagList = [0, 0, 4, 8, 16, 16, 16, 32, 32, 32, 32, 64, 64, 64, 64];
+    p.trial.Block.uncuedMagList = [0, 0, 4, 8, 8, 16, 16, 16, 32, 32, 32, 32, 64, 64, 64];
     uncuedStr = num2str(p.trial.Block.uncuedMagList);
     p.trial.Block.uncuedMagListStr = strrep(uncuedStr, ' ', ',');
     
@@ -101,7 +101,7 @@ function p = AttendGrat_taskdef(p)
 
 
     % Loading contrast for cue and distractor rings
-    p.trial.task.cStep = 3;
+    p.trial.task.cStep = 4;
     p.trial.stim.ringParameters.cueCon = sprintf('down%d', p.trial.task.cStep);
     p.trial.stim.ringParameters.distCon = sprintf('up%d', p.trial.task.cStep);
     

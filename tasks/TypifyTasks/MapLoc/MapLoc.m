@@ -187,7 +187,11 @@ function p = Task_Incorrect(p)
     ND_FixSpot(p, 0);
     pds.audio.playDP(p, 'breakfix', 'left'); 
     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-    p.trial.Block.locIdx = p.trial.Block.locIdx - 1;
+    if (p.trial.Block.locIdx == 1)
+        p.trial.Block.locIdx = length(p.trial.task.xyGrid);
+    else
+        p.trial.Block.locIdx = p.trial.Block.locIdx - 1;
+    end
     ND_SwitchEpoch(p, 'TaskEnd');
             
 

@@ -32,6 +32,6 @@ p.trial.stim.FIXSPOT.color = 'dRed';  % color of fixation spot (as defined in th
 p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
 
 % Gabor parameters
-oriStep = 20;
-p.trial.task.oriRange = 0:oriStep:360;
+p.trial.task.oriRange = [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340];
 p.trial.task.pos = [8.5, -7];
+p.trial.task.radius = 1;
