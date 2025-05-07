@@ -11,7 +11,8 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'Cued',         'p.trial.task.cued',                       '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',      'p.trial.outcome.CurrOutcomeStr',          '%s');
 
-    p = ND_AddAsciiEntry(p, 'WaitPeriod',   'p.trial.task.GratWait',                   '%d');
+    p = ND_AddAsciiEntry(p, 'CueWait',     'p.trial.task.CueWait',                     '%d');
+    p = ND_AddAsciiEntry(p, 'GaborWait',   'p.trial.task.GratWait',                    '%d');
     p = ND_AddAsciiEntry(p, 'FlightTm',     'p.trial.task.FlightTime',                 '%d');
     p = ND_AddAsciiEntry(p, 'ResponseTm',   'p.trial.task.SRT_StimOn',                 '%d');
 
@@ -41,10 +42,10 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'Dis3PosY',    'p.trial.stim.gabors.distractor3.pos(2)',   '%d');
     p = ND_AddAsciiEntry(p, 'Dis3Ori',     'p.trial.stim.gabors.distractor3.angle',    '%d');
 
-    p = ND_AddAsciiEntry(p, 'ConStep',      'p.trial.task.cStep',                      '%s');
-    p = ND_AddAsciiEntry(p, 'CueRingCon',   'p.trial.stim.rings.cue.contrast',         '%d');
-    p = ND_AddAsciiEntry(p, 'DisRingCon',   'p.trial.stim.rings.distractor1.contrast', '%d');
+    p = ND_AddAsciiEntry(p, 'ContrastStep', 'p.trial.task.cStep',                      '%d');
     p = ND_AddAsciiEntry(p, 'CueRingSize',  'p.trial.stim.rings.cue.radius',           '%d');
+
+    p = ND_AddAsciiEntry(p, 'StimOffset',   'p.trial.task.stimOffset',                 '%d');
 
     % Ensuring output directory above exists
     ND_Trial2Ascii(p, 'init');

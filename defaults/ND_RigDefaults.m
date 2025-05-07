@@ -252,6 +252,7 @@ c1.Nr = 1;
 SS.Block.Conditions     = {c1}; % as default only one condition
 SS.Block.BlockList      = [];
 SS.Block.locIdx         = 1;
+SS.Block.missLog        = 0;
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
