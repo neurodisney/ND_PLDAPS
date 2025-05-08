@@ -24,11 +24,11 @@ function p = AttendGrat_taskdef(p)
     p.trial.Block.maxBlockTrials = 1;
 
     % Set ratio of cued to uncued trials
-    p.trial.task.cuedRatio = [1, 1, 1];
+    p.trial.task.cuedRatio = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 
     % Setting RF properties
-    RFpos = [-3, 2];
+    RFpos = [3, -4];
     p.trial.task.RFpos = RFpos;
 
     RFori = 70;
@@ -48,8 +48,8 @@ function p = AttendGrat_taskdef(p)
     p.trial.stim.DRIFTGABOR.size = [5, 5];
 
     % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [64, 32, 32, 0, 8, 16, 16, 32, 32, 32, 64, 64];
-    p.trial.Block.uncuedMagList = [64, 32, 32, 0, 8, 16, 16, 32, 32, 32, 64, 64];
+    p.trial.Block.cuedMagList = [0, 8, 16, 16, 32, 32, 32, 64, 64];
+    p.trial.Block.uncuedMagList = [0, 8, 16, 16, 32, 32, 32, 64, 64];
 
     % Calculating points along line of is eccentricity
     targ_x = p.trial.task.RFpos(1);

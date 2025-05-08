@@ -232,7 +232,7 @@ SS.pldaps.ptbVerbosity       = 3;  % See here https://github.com/Psychtoolbox-3/
 % ------------------------------------------------------------------------%
 %% Reward settings
 SS.datapixx.useForReward      = 1;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
-SS.reward.defaultAmount       = 0.05;  % Default amount of reward.=0; [in seconds]
+SS.reward.defaultAmount       = 0.05;  % Default amount of reward [in seconds]
 SS.reward.ManDur              = 0.05;
 SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
 SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
@@ -245,14 +245,23 @@ SS.Block.EqualCorrect   =  0;  % if set to one, trials within a block are repeat
 SS.Block.GenBlock       =  1;  % Flag to indicate that a block with a new condition list needs to be generated
 SS.Block.trialCount     =  0;
 SS.Block.blockCount     =  0;
-SS.Block.cuedMag        =  0;
-SS.Block.uncuedMag      =  0;
 SS.Block.flagNextBlock  =  0;
 c1.Nr = 1;
 SS.Block.Conditions     = {c1}; % as default only one condition
 SS.Block.BlockList      = [];
+
+%SS.Block.cuedMag        =  0;
+%SS.Block.uncuedMag      =  0;
+
 SS.Block.locIdx         = 1;
 SS.Block.missLog        = 0;
+SS.Block.blownTrial     = 0;
+SS.Block.stimConfigs    = [1, 2, 3, 4, 5];
+SS.Block.quadList       = [1, 2, 3, 4];
+SS.Block.cuedRatio      = [1, 1, 1, 1, 1, 1, 1, 0];
+SS.Block.cuedMagList    = [0, 8, 8, 16, 16, 16, 16, 32, 32, 32, 32, 32, 32, 64, 64];
+SS.Block.uncuedMagList  = [0, 8, 8, 16, 16, 16, 16, 32, 32, 32, 32, 32, 64, 64, 64];
+
 
 % ------------------------------------------------------------------------%
 %% Eye tracking

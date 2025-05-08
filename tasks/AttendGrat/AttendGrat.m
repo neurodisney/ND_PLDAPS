@@ -81,138 +81,161 @@ function TaskSetUp(p)
         p.trial.task.changeMag = NaN;
         % Creating space to save task condition (cued = 1, uncued = 0)
         p.trial.task.cued = NaN;
-        % Flagging trial as repeat of blown trial
-        p.trial.task.blown_repeat = 0;
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
-        % Initializing trial configuration
-        p.trial.task.trialConfig = {};
+
         % Setting cue ring flash timer
         p.trial.stim.flashClock = 0;
 
 
         % Randomly selecting stimulus arrangement
         % Shuffling stim positions for certain arrangements
+        if isempty(p.trial.Block.stimConfigs)
+            stimConfigs = [1, 2, 3, 4, 5];
+        else
+            stimConfigs = p.trial.Block.stimConfigs;
+        end
+
         rng('shuffle');
-        groupList = [1, 2, 3, 4, 5, 6, 7];
-        groupList = datasample(groupList, length(groupList), 'Replace', false);
+        stimConfigs = datasample(stimConfigs, length(stimConfigs), 'Replace', false);
+
         r = java.security.SecureRandom();
         seed = double(r.nextInt() + double(r.nextInt()*2^16));
         seed = mod(seed, 2^32);
         rng(seed);
-        groupList = datasample(groupList, length(groupList), 'Replace', false);
-        rng('shuffle');
-        groupList = datasample(groupList, length(groupList), 'Replace', false);
 
-        rng('shuffle', 'combRecursive');
-        groupIndex = datasample(groupList, 1);
+        configIndex = datasample(stimConfigs, 1);
+        stimConfigs(stimConfigs == configIndex) = [];
+        p.trial.Block.stimConfigs = stimConfigs;
+
+        posList = p.trial.task.posList(configIndex, :);
+
+        if isempty(p.trial.Block.quadList)
+            quadList = [1, 2, 3, 4];
+        else
+            quadList = p.trial.Block.quadList;
+        end
 
         rng('shuffle');
-        posList = p.trial.task.posList(groupIndex, :);
-        posList = datasample(posList, length(posList), 'Replace', false);
+        quadList = datasample(quadList, length(quadList), 'Replace', false);
+
         r = java.security.SecureRandom();
         seed = double(r.nextInt() + double(r.nextInt()*2^16));
         seed = mod(seed, 2^32);
         rng(seed);
-        posList = datasample(posList, length(posList), 'Replace', false);
-        rng('shuffle');
-        posList = datasample(posList, length(posList), 'Replace', false);
 
-        p.trial.task.trialConfig = [p.trial.task.trialConfig posList];
+        quadIndex = datasample(quadList, 1);
+        quadList(quadList == quadIndex) = [];
+        p.trial.Block.quadList = quadList;
+
+        targPos = posList{quadIndex};
+        posList(quadIndex) = [];
+
+        r = java.security.SecureRandom();
+        seed = double(r.nextInt() + double(r.nextInt()*2^16));
+        seed = mod(seed, 2^32);
+        rng(seed);
+
+        posList = datasample(posList, length(posList), 'Replace', false);
+        posList = [{targPos}, posList];
+
 
         % Randomly selecting orientations for gratings
-        rng('shuffle');
         targOriList = p.trial.task.targOriList;
-        targOriList = datasample(targOriList, length(targOriList), 'Replace', false);
-        r = java.security.SecureRandom();
-        seed = double(r.nextInt() + double(r.nextInt()*2^16));
-        seed = mod(seed, 2^32);
-        rng(seed);
-        targOriList = datasample(targOriList, length(targOriList), 'Replace', false);
         rng('shuffle');
         targOriList = datasample(targOriList, length(targOriList), 'Replace', false);
 
-        rng('shuffle');
         disOriList = p.trial.task.disOriList;
+        rng('shuffle');
         disOriList = datasample(disOriList, length(disOriList), 'Replace', false);
+
         r = java.security.SecureRandom();
         seed = double(r.nextInt() + double(r.nextInt()*2^16));
         seed = mod(seed, 2^32);
         rng(seed);
-        disOriList = datasample(disOriList, length(disOriList), 'Replace', false);
-        rng('shuffle');
-        disOriList = datasample(disOriList, length(disOriList), 'Replace', false);
-
-        rng('shuffle', 'combRecursive');
+        
         disOri = datasample(disOriList, 1);
         oriList = [targOriList disOri];
-        
-        rng('shuffle');
-        oriList = datasample(oriList, length(oriList), 'Replace', false);
+
         r = java.security.SecureRandom();
         seed = double(r.nextInt() + double(r.nextInt()*2^16));
         seed = mod(seed, 2^32);
         rng(seed);
+        
         oriList = datasample(oriList, length(oriList), 'Replace', false);
-        rng('shuffle');
-        oriList = datasample(oriList, length(oriList), 'Replace', false);
-
-        p.trial.task.trialConfig = [p.trial.task.trialConfig oriList];
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
-        rng('shuffle');
-        cuedRatio = p.trial.task.cuedRatio;
-        cuedRatio = datasample(cuedRatio, length(cuedRatio), 'Replace', false);
-        r = java.security.SecureRandom();
-        seed = double(r.nextInt() + double(r.nextInt()*2^16));
-        seed = mod(seed, 2^32);
-        rng(seed);
-        cuedRatio = datasample(cuedRatio, length(cuedRatio), 'Replace', false);
-        rng('shuffle');
-        cuedRatio = datasample(cuedRatio, length(cuedRatio), 'Replace', false);
-        
-        rng('shuffle', 'combRecursive');
-        p.trial.task.cued = datasample(cuedRatio, 1);
-
-        p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.task.cued];
-
-        if p.trial.task.cued
-            magList = p.trial.Block.cuedMagList;
+        if p.trial.Block.blownTrial
+            p.trial.task.cued = 0;
         else
-            magList = p.trial.Block.uncuedMagList;
-        end
+            if isempty(p.trial.Block.cuedRatio)
+                cuedRatio = [1, 1, 1, 1, 1, 1, 1, 0];
+            else
+                cuedRatio = p.trial.Block.cuedRatio;
+            end
         
-        rng('shuffle');
-        magList = datasample(magList, length(magList), 'Replace', false);
-        r = java.security.SecureRandom();
-        seed = double(r.nextInt() + double(r.nextInt()*2^16));
-        seed = mod(seed, 2^32);
-        rng(seed);
-        magList = datasample(magList, length(magList), 'Replace', false);
-        rng('shuffle');
-        magList = datasample(magList, length(magList), 'Replace', false);
+            rng('shuffle');
+            cuedRatio = datasample(cuedRatio, length(cuedRatio), 'Replace', false);
 
-        rng('shuffle', 'combRecursive')
-        p.trial.task.changeMag = datasample(magList, 1);
-
-        p.trial.task.trialConfig = [p.trial.task.trialConfig p.trial.task.changeMag];
-  
-        % Checking for blown trials and mixing them in
-        if ~isempty(p.defaultParameters.blownTrials)
             r = java.security.SecureRandom();
             seed = double(r.nextInt() + double(r.nextInt()*2^16));
             seed = mod(seed, 2^32);
             rng(seed);
-            mix_in = 0; %datasample([0, 1], 1);
-            if mix_in
-                blown_trial = p.defaultParameters.blownTrials(1, :);
-                posList = blown_trial([1 2 3 4]);
-                oriList = cell2mat(blown_trial(5));
-                p.trial.task.cued = cell2mat(blown_trial(6));
-                p.trial.task.changeMag = cell2mat(blown_trial(7));
-                p.trial.task.blown_repeat = 1;  
+
+            p.trial.task.cued = datasample(cuedRatio, 1);
+
+            cuedIndex = find(cuedRatio == p.trial.task.cued, 1, 'first');
+            cuedRatio(cuedIndex) = [];
+            p.trial.Block.cuedRatio = cuedRatio;
+        end
+
+
+        if p.trial.task.cued
+            if isempty(p.trial.Block.cuedMagList)
+                magList = [0, 8, 8, 16, 16, 16, 16, 32, 32, 32, 32, 32, 32, 64, 64];
+            else
+                magList = p.trial.Block.cuedMagList;
             end
-            p.defaultParameters.mixList = [p.defaultParameters.mixList mix_in];
+
+            rng('shuffle');
+            magList = datasample(magList, length(magList), 'Replace', false);
+
+            r = java.security.SecureRandom();
+            seed = double(r.nextInt() + double(r.nextInt()*2^16));
+            seed = mod(seed, 2^32);
+            rng(seed);
+
+            p.trial.task.changeMag = datasample(magList, 1);
+            magIndex = find(magList == p.trial.task.changeMag, 1, 'first');
+            magList(magIndex) = [];
+
+            p.trial.Block.cuedMagList = magList;
+        else
+            if isempty(p.trial.Block.uncuedMagList)
+                magList = [0, 8, 8, 16, 16, 16, 16, 32, 32, 32, 32, 32, 64, 64, 64];
+            else
+                magList = p.trial.Block.uncuedMagList;
+            end
+
+            rng('shuffle');
+            magList = datasample(magList, length(magList), 'Replace', false);
+
+            r = java.security.SecureRandom();
+            seed = double(r.nextInt() + double(r.nextInt()*2^16));
+            seed = mod(seed, 2^32);
+            rng(seed);
+
+            p.trial.task.changeMag = datasample(magList, 1);
+            magIndex = find(magList == p.trial.task.changeMag, 1, 'first');
+            magList(magIndex) = [];
+
+            p.trial.Block.uncuedMagList = magList;
+        end
+
+  
+        % Checking for blown trials and mixing them in
+        if ~isempty(p.defaultParameters.blownTrials)
+
         end
                 
         % Creating cue ring by assigning values to ring properties in p object
@@ -452,7 +475,6 @@ function TaskDesign(p)
                      
             % Checking if fixation was broken pre-maturely    
             case p.trial.epoch.BreakFixCheck
-                p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
                 delay = p.trial.task.breakFixCheck;
                 % Checking if fix break was committed before response window
                 if(p.trial.task.stimState < 1)
@@ -629,6 +651,10 @@ function p = Handle_Early(p, type)
         p.defaultParameters.breakFlag = 1;
     end
 
+    if ~p.trial.task.cued
+        p.trial.Block.blownTrial = 1;
+    end
+
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
 
     % Switching epoch to end task
@@ -667,13 +693,9 @@ function p = Task_Miss(p)
     pds.audio.playDP(p, 'incorrect', 'left');
     % Marking trial outcome as 'Miss' trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
-    if p.trial.task.blown_repeat
-        numRows = size(p.defaultParameters.blownTrials, 1);
-        if numRows > 1
-            p.defaultParameters.blownTrials = p.defaultParameters.blownTrials(2:end,:);
-        else
-            p.defaultParameters.blownTrials = [];
-        end
+
+    if p.trial.Block.blownTrial
+        p.trial.Block.blownTrial = 0;
     end
 
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
@@ -692,7 +714,10 @@ function p = Task_False(p)
     p.trial.task.FlightTime = p.trial.CurTime - p.trial.EV.FixLeave;
     % Marking trial as false and ending trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.False;
-    p.defaultParameters.breakFlag = 1;
+    
+    if p.trial.Block.blownTrial
+        p.trial.Block.blownTrial = 0;
+    end
     
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
 
@@ -709,13 +734,9 @@ function p = Task_Correct(p)
     pds.reward.give(p, p.trial.reward.Dur);
     % Record time at which reward given
     p.trial.EV.Reward = p.trial.CurTime;
-    if p.trial.task.blown_repeat
-        numRows = size(p.defaultParameters.blownTrials, 1);
-        if numRows > 1
-            p.defaultParameters.blownTrials = p.defaultParameters.blownTrials(2:end,:);
-        else 
-            p.defaultParameters.blownTrials = [];
-        end
+
+    if p.trial.Block.blownTrial
+        p.trial.Block.blownTrial = 0;
     end
 
     if (p.trial.Block.missLog > 0)
@@ -730,7 +751,6 @@ function Target_Break(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
     % Playing noise signaling break of fix from target
     pds.audio.playDP(p, 'incorrect', 'left');
-    p.defaultParameters.blownTrials = [p.defaultParameters.blownTrials; p.trial.task.trialConfig];
 
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
 
