@@ -512,6 +512,3 @@ SS.editable   = {};
 SS.plot.do_online =  0;  % run online data analysis between two subsequent trials
 SS.plot.routine   = [];  % matlab function to be called for online analysis (TODO: make a default routine for the most rudimentary analysis)
 SS.plot.fig       = [];  % figure handle for online plot (leave empty)
-
-
-
