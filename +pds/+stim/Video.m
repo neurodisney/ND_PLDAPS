@@ -54,25 +54,23 @@ classdef Video < pds.stim.BaseStim
             if obj.moviePath
                 [obj.moviePtr, obj.duration, fr, w, h, c, ar] = Screen('OpenMovie', p.trial.display.ptr, obj.moviePath);
                 Screen('SetMovieTimeIndex', obj.moviePtr, 0)
+            else
+                error('No movie path provided to pds.stim.Video() or set to p.trial.stim.VIDEO.moviePath.')
             end
 
         end
 
         function draw(obj, p)
-            if obj.moviePath
-                if obj.on
-                    Screen('PlayMovie', obj.moviePtr, obj.playRate);
-                    obj.texturePtr = Screen('GetMovieImage', p.trial.display.ptr, obj.moviePtr);
-                    if obj.texturePtr > 0
-                        destRect = CenterRectOnPoint([0, 0, obj.dispSize(1), obj.dispSize(2)], obj.pos(1), obj.pos(2));
-                        Screen('DrawTexture', p.trial.display.ptr, obj.texturePtr, [], destRect, 180);
-                        Screen('Close', obj.texturePtr);
-                    end
-                else
-                    Screen('PlayMovie', obj.moviePtr, 0);
+            if obj.on
+                Screen('PlayMovie', obj.moviePtr, obj.playRate);
+                obj.texturePtr = Screen('GetMovieImage', p.trial.display.ptr, obj.moviePtr);
+                if obj.texturePtr > 0
+                    destRect = CenterRectOnPoint([0, 0, obj.dispSize(1), obj.dispSize(2)], obj.pos(1), obj.pos(2));
+                    Screen('DrawTexture', p.trial.display.ptr, obj.texturePtr, [], destRect, 180);
+                    Screen('Close', obj.texturePtr);
                 end
             else
-                error('No movie path provided to pds.stim.Video() or set to p.trial.stim.VIDEO.moviePath.')
+                Screen('PlayMovie', obj.moviePtr, 0);
             end
         end
 

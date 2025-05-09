@@ -1,6 +1,8 @@
+% Task for presenting still or moving image sets
+% John Amodeo, May 2025
+
 % Function to run task for experiment
 function p = ViewScene(p, state)
-
     % Checking for task name
     if(~exist('state','var'))
         state = [];
@@ -27,58 +29,60 @@ function MasterFlow(p, state)
             TaskCleanAndSave(p);
     end
     
-    
 % Function to gather materials to start trial
 function TaskSetUp(p)
+    p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
+    p.trial.task.fixFix = 0;
+    p.trial.task.stimState = 0;
+    p.trial.task.SRT_FixStart = NaN;
+    p.trial.stim.fix = pds.stim.FixSpot(p);
 
-        p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
-        p.trial.task.fixFix = 0;
-        p.trial.task.stimState = 0;
-        p.trial.task.SRT_FixStart = NaN;
-        p.trial.stim.fix = pds.stim.FixSpot(p);
+    rng('shuffle');
+    scene = datasample(p.trial.task.stim.sceneNames, 1);
+    p.trial.stim.sceneName = scene{1};
 
-        rng('shuffle');
-        video = datasample(p.trial.task.stim.videoNames, 1);
-        p.trial.stim.sceneName = video{1};
-        p.trial.stim.VIDEO.moviePath = fullfile(p.trial.task.stim.videoDir, video{1});
+    if strcmp(p.trial.task.stim.sceneType, 'image')
+        p.trial.stim.IMAGE.imagePath = fullfile(p.trial.task.stim.sceneDir, scene{1});
+        p.trial.stim.scene = pds.stim.Image(p);
+    elseif strcmp(p.trial.task.stim.sceneType, 'video')
+        p.trial.stim.VIDEO.moviePath = fullfile(p.trial.task.stim.sceneDir, scene{1});
         p.trial.stim.scene = pds.stim.Video(p);
+    end
 
-        ND_SwitchEpoch(p, 'ITI');
-
+    ND_SwitchEpoch(p, 'ITI');
 
 function TaskDesign(p)
-
-        % Command moving trial from epoch to epoch over course of trial
-        switch p.trial.CurrEpoch
-            case p.trial.epoch.ITI
-                Task_WaitITI(p);
-            case p.trial.epoch.TrialStart
-                Task_ON(p);
-                ND_FixSpot(p, 1);
-                p.trial.EV.TaskStart = p.trial.CurTime;
-                ND_SwitchEpoch(p,'WaitFix')
-            case p.trial.epoch.WaitFix
-                Task_WaitFixStart(p);
-            case p.trial.epoch.Fixating
-                if(p.trial.stim.fix.fixating)
-                    showScene(p, 1)
-                    ND_SwitchEpoch(p,'WaitResponse')
+    % Command moving trial from epoch to epoch over course of trial
+    switch p.trial.CurrEpoch
+        case p.trial.epoch.ITI
+            Task_WaitITI(p);
+        case p.trial.epoch.TrialStart
+            Task_ON(p);
+            ND_FixSpot(p, 1);
+            p.trial.EV.TaskStart = p.trial.CurTime;
+            ND_SwitchEpoch(p,'WaitFix')
+        case p.trial.epoch.WaitFix
+            Task_WaitFixStart(p);
+        case p.trial.epoch.Fixating
+            if(p.trial.stim.fix.fixating)
+                showScene(p, 1)
+                ND_SwitchEpoch(p,'WaitResponse')
+            end
+        case p.trial.epoch.WaitResponse
+            ND_FixSpot(p, 0);
+            if(p.trial.stim.scene.fixating)
+                dur = p.trial.stim.scene.duration + p.trial.task.durOffset;
+                if (p.trial.EV.TaskStart + dur) < p.trial.CurTime
+                    Task_Correct(p)
                 end
-            case p.trial.epoch.WaitResponse
-                ND_FixSpot(p, 0);
-                if(p.trial.stim.scene.fixating)
-                    dur = p.trial.stim.scene.duration + p.trial.task.durOffset;
-                    if (p.trial.EV.TaskStart + dur) < p.trial.CurTime
-                        Task_Correct(p)
-                    end
-                end
-                if(~p.trial.stim.scene.fixating)         
-                    Task_Incorrect(p)
-                end
-            case p.trial.epoch.TaskEnd
-                p.trial.flagNextTrial = 1;
-                Task_OFF(p);
-        end
+            end
+            if(~p.trial.stim.scene.fixating)         
+                Task_Incorrect(p)
+            end
+        case p.trial.epoch.TaskEnd
+            p.trial.flagNextTrial = 1;
+            Task_OFF(p);
+    end
 
 
 function showScene(p, display_val)
@@ -96,8 +100,7 @@ function showScene(p, display_val)
             otherwise
                 error('Unusable stimulus or display value')
         end
-    end
-    
+    end  
 
 function p = Task_Correct(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
@@ -107,16 +110,13 @@ function p = Task_Correct(p)
     p.trial.EV.Reward = p.trial.CurTime;
     ND_SwitchEpoch(p,'TaskEnd');
 
-
 function p = Task_Incorrect(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
     p.trial.task.Good = 0;
     pds.audio.playDP(p, 'breakfix', 'left');
     ND_SwitchEpoch(p,'TaskEnd');
 
-
 function TaskCleanAndSave(p)
     Task_Finish(p);
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
     ND_Trial2Ascii(p, 'save');
-
