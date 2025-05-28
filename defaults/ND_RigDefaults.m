@@ -403,10 +403,15 @@ SS.stim.RECTANGLE.alpha     = 1; % Fully opaque
 SS.stim.RECTANGLE.flashing  = 0;
 SS.stim.RECTANGLE.reward    = 0;
 
+% Image stimulus
+SS.stim.IMAGE.pos       = [0, 0];
+SS.stim.IMAGE.fixWin    = 30;
+SS.stim.IMAGE.sizeGain  = 1;
+SS.stim.IMAGE.duration  = 5;
+
 % Video stimulus
 SS.stim.VIDEO.pos       = [0, 0];
 SS.stim.VIDEO.fixWin    = 30;
-SS.stim.VIDEO.moviePath = false;
 SS.stim.VIDEO.sizeGain  = 1;
 SS.stim.VIDEO.playRate  = 1;
 
