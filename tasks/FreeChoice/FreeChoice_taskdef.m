@@ -11,7 +11,7 @@ function p = FreeChoice_taskdef(p)
     p.trial.task.condition =  1;
 
     % Setting reward probabilities for stimuli for *condition 1* in array [stim 1 prob, stim 2 prob]
-    p.trial.task.probSwitch = 0; 
+    p.trial.task.probSwitch = 1; 
     p.trial.stim.recParameters.probabilities = [0.0,0.9];
     
     % Assigning reward duration/magnitude to stimuli in array [stim 1 dur, stim 2 dur] 
@@ -22,7 +22,7 @@ function p = FreeChoice_taskdef(p)
 
     % Setting number of trials per block
     % Note reward probability and duration/magnitude assignments to stims changed each block
-    p.trial.Block.maxBlockTrials = 5;
+    p.trial.Block.maxBlockTrials = 10;
 
     % Selecting inter-trial interval (ITI)
     p.trial.task.Timing.ITI = ND_GetITI(1.25, 1.75, [], [], 1, 0.10);

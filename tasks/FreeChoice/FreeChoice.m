@@ -55,8 +55,7 @@ function p = FreeChoice(p, state)
     
 % Function to gather materials to start trial   
 function TaskSetUp(p)
-
-
+  
         % Adding trial to running total for block
         p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
 
@@ -72,7 +71,7 @@ function TaskSetUp(p)
         if p.trial.Block.flagNextBlock == 1 || p.trial.NCompleted == 0
             
             % Switching probability assignments between stimuli
-            if p.trial.task.probSwitch
+            if p.trial.task.probSwitch 
                 p.trial.stim.recParameters.probabilities = p.trial.stim.recParameters.probabilities(randperm(length(p.trial.stim.recParameters.probabilities)));
             end
 
