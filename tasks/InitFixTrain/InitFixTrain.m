@@ -143,7 +143,7 @@ function TaskSetUp(p)
     p.trial.reward.count = 0;
     
     % Outcome if no fixation occurs at all during the trial
-    p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;        
+    p.trial.outcome.CurrOutcome = p.trial.outcome.NoFix;    
     p.trial.task.Good   = 0;
     
     % State for achieving fixation

@@ -72,7 +72,7 @@ if(~exist('experimenter','var') || isempty(experimenter))
     experimenter = getenv('USER');
 end
 
-% function to set up experiment (and maybe also including trial function)
+% function to set up experiment (and  maybe also including trial function)
 exp_fun = 'joy_train';
 
 % ------------------------------------------------------------------------%

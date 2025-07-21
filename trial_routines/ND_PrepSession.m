@@ -32,7 +32,7 @@ if(strcmp(p.defaultParameters.session.subject,'mouse') || strcmp(p.defaultParame
             p.defaultParameters.datapixx.adc.YEyeposChannel   = [];
             % p.defaultParameters.datapixx.adc.RewardChannel  = [];  
             p.defaultParameters.datapixx.useAsEyepos          = 0;
-            p.defaultParameters.behavior.joystick.use         = 0;
+            p.defaultParameters.behavior.joystick.use         = 1; %MJH
             % p.defaultParameters.datapixx.useForReward       = 0;
             % p.defaultParameters.sound.use                   = 0;
             

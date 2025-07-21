@@ -69,6 +69,7 @@ if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
     % draw current joystick level
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joypos , ...
                        p.trial.pldaps.draw.joystick.levelrect);
+    
 end
 
 

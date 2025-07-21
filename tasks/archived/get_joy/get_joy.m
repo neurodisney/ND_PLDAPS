@@ -9,7 +9,7 @@ function p = get_joy(p, state)
 %% define the task name that will be used to create a sub-structure in the trial struct
 
 if(~exist('state', 'var'))
-    state = [];
+    state = NaN;
 end
 
 % ####################################################################### %

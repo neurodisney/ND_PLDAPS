@@ -159,8 +159,8 @@ SS.sound.useForReward                           = 1;     % toggle playing a soun
 % Datapixx sound and PsychPortAudio can both be used simultaneously to
 % maximize audio channels (Need to get datapixx working first)
 SS.sound.useDatapixx                            = 1;
-SS.sound.datapixxVolume                         = 1;
-SS.sound.datapixxInternalSpeakerVolume          = 1;
+SS.sound.datapixxVolume                         = 0;
+SS.sound.datapixxInternalSpeakerVolume          = 0;
 
 SS.sound.usePsychPortAudio                      = 0;
 SS.sound.psychPortVolume                        = 1;
@@ -420,12 +420,12 @@ SS.stim.VIDEO.playRate  = 1;
 SS.datapixx.useJoystick      = 0;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XJoyChannel  = 3;
-SS.datapixx.adc.YJoyChannel  = 4;
+SS.datapixx.adc.XJoyChannel  = 6;
+SS.datapixx.adc.YJoyChannel  = 7;
 
 SS.behavior.joystick.use     =  0;         % does this task require control of joystick state
 SS.behavior.joystick.Zero    = [2.6, 2.6]; % joystick signal at resting state (released)
-SS.behavior.joystick.Sample  = 0;         % how many data points to use for determining joystick state.
+SS.behavior.joystick.Sample  = 0;          % how many data points to use for determining joystick state.
 SS.behavior.joystick.PullThr = 1.5;        % threshold to detect a joystick press
 SS.behavior.joystick.RelThr  = 1.0;        % threshold to detect a joystick release
 

@@ -52,7 +52,7 @@ function p = ND_runTrial(p)
             setTimeAndFrameState(p,p.trial.pldaps.trialStates.frameDraw);
         end
         tfh(p, p.trial.pldaps.trialStates.frameDraw);
-
+        
         % Frame Flip
         if(p.trial.pldaps.GetTrialStateTimes)
             setTimeAndFrameState(p,p.trial.pldaps.trialStates.frameFlip)
@@ -75,6 +75,10 @@ function p = ND_runTrial(p)
     end
     
     tfh(p, p.trial.pldaps.trialStates.trialCleanUpandSave);
+    
+    %disp(p.trial.AI.Joy.X)
+    %disp(p.trial.AI.Joy.Y)
+    %disp(p.trial.AI.Joy.Amp)
 
 end %runTrial
     

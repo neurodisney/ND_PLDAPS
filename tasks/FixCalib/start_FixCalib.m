@@ -58,19 +58,19 @@ SS.editable = {'task.RandomPos', 'stim.FIXSPOT.pos'};
 % Most of the components are disabled as default. If needed for the task enable them here.
 SS.sound.use                  = 1;
 SS.sound.useDatapixx          = 1;
-SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
-SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
+SS.behavior.fixation.use      = 0; % eye position is behavioral relevant
+SS.behavior.joystick.use      = 1; % joystick is behavioral relevant
 SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 1; % disable saving data to pds files
-SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
-SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
+SS.pldaps.draw.joystick.use   = 1; % draw joystick states on control screen
+SS.pldaps.draw.eyepos.use     = 0; % enable drawing of the eye position.
 SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
 SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
 
 SS.pldaps.draw.grid.use       = 1;
 
-SS.datapixx.useAsEyepos       = 1;
-SS.datapixx.useJoystick       = 0;
+SS.datapixx.useAsEyepos       = 0;
+SS.datapixx.useJoystick       = 1;
 SS.datapixx.TTL_trialOn       = 0;
 
 % switch here to get calibration functionality
