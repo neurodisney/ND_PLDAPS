@@ -61,11 +61,13 @@ end
 % show a representation of the joystick elevation level
 if(p.trial.pldaps.draw.joystick.use && p.trial.datapixx.useJoystick)
     % draw joystick area above threshold (i.e. pressed)
-    Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joythr , ...
-                       p.trial.pldaps.draw.joystick.rect);
+    %Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joythr , ...
+    %                   p.trial.pldaps.draw.joystick.rect);
     % draw joystick area below threshold
-    Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joybox , ...
-                       p.trial.pldaps.draw.joystick.threct);
+    %Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joybox , ...
+    %                   p.trial.pldaps.draw.joystick.threct);
+    % ^^^ COMMENTED OUT THE ABOVE IN ORDER TO JUST GET THE SLIDER STIMULUS ON THE SCREEN
+    
     % draw current joystick level
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.clut.joypos , ...
                        p.trial.pldaps.draw.joystick.levelrect);

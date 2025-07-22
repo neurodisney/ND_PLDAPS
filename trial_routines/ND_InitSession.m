@@ -70,17 +70,21 @@ if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.
     end
 
     % Draw the joystick meter on the right side of the screen
-    p.defaultParameters.pldaps.draw.joystick.pos     = [p.defaultParameters.display.winRect(3) - 3 * p.defaultParameters.pldaps.draw.joystick.size(1), 0];
-
+    %p.defaultParameters.pldaps.draw.joystick.pos     = [p.defaultParameters.display.winRect(3) - 3 * p.defaultParameters.pldaps.draw.joystick.size(1), 0];
+    p.defaultParameters.pldaps.draw.joystick.pos     = [0,0]; %<< changed so position starts at center of screen.
+    
+    
     p.defaultParameters.pldaps.draw.joystick.sclfac  = p.defaultParameters.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
 
-    p.defaultParameters.pldaps.draw.joystick.rect    = ND_GetRect(p.defaultParameters.pldaps.draw.joystick.pos, ...
-                                                               p.defaultParameters.pldaps.draw.joystick.size);
+    %p.defaultParameters.pldaps.draw.joystick.rect    = ND_GetRect(p.defaultParameters.pldaps.draw.joystick.pos, ...
+    %                                                           p.defaultParameters.pldaps.draw.joystick.size); 
+    p.defaultParameters.pldaps.draw.joystick.rect    = [0 0 0 0]; %dummy rectangle that doesn't get drawn. For now wanting to keep the option of a slider bar...hoping to make this all conditional. either "rect" meter or just single 2d point on screen. MJH
 
     p.defaultParameters.pldaps.draw.joystick.levelsz =  p.defaultParameters.pldaps.draw.joystick.size .* [1.25, 0.01];
 
     % initialize joystick level at zero
-    cjpos = [p.defaultParameters.pldaps.draw.joystick.pos(1), p.defaultParameters.pldaps.draw.joystick.rect(2)];
+    %cjpos = [p.defaultParameters.pldaps.draw.joystick.pos(1), p.defaultParameters.pldaps.draw.joystick.rect(2)];
+    cjpos = [p.defaultParameters.pldaps.draw.joystick.pos(1), p.defaultParameters.pldaps.draw.joystick.pos(2)]; %instead of drawing the rect, just focus on the slider bar
     p.defaultParameters.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.defaultParameters.pldaps.draw.joystick.levelsz);
 end
 
