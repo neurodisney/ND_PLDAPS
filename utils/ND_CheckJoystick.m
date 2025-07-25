@@ -77,9 +77,9 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
     %-------------------------------------------------------------------------%
     %% if joystick state needs to be shown on experimenter screen update it now   
     if(p.trial.pldaps.draw.joystick.use)
-        % show current elevation
-        cjpos = [p.trial.pldaps.draw.joystick.pos(1) + p.trial.joyX * p.trial.pldaps.draw.joystick.sclfac, ... % << added the joyX * sclfac section to see if I can get the joystick moving differently
-            p.trial.pldaps.draw.joystick.rect(4) - p.trial.joyAmp * p.trial.pldaps.draw.joystick.sclfac];
+        % show current position on screen - MJH changed from elevation
+        cjpos = [p.trial.pldaps.draw.joystick.pos(1) + p.trial.joyX * p.trial.pldaps.draw.joystick.sclfac, ... % << added the joyX and joyY * sclfac section to see if I can get the joystick moving differently
+            p.trial.pldaps.draw.joystick.rect(4) - p.trial.joyY * p.trial.pldaps.draw.joystick.sclfac];
         
         p.trial.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.trial.pldaps.draw.joystick.levelsz);
         

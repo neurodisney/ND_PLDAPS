@@ -91,7 +91,7 @@ end
 % This function allows to pass variable content between trials. Otherwise,
 % the variables that are changed within a trial will not be updated and
 % reset to the initial value for the subsequent trial.
-% if(~isfield(p.defaultParameters.pldaps, 'experimentAfterTrialsFunction') || ...
+% if(~isfield(p.defaultParameters.pldaps, 'experimentAfterTrialsFunction') || ....
 %     isempty(p.defaultParameters.pldaps.experimentAfterTrialsFunction) )
 %     p.defaultParameters.pldaps.experimentAfterTrialsFunction = 'ND_AfterTrial';  % a function to be called after each trial.
 % end

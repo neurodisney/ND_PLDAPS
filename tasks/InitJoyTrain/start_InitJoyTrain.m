@@ -1,12 +1,9 @@
-function p = start_joy_train(subjname, rig)
+function p = start_InitJoyTrain(subjname, rig)
 % function adapted from wolf's original joy train task for successful implementation 
 % in ND_PLDAPS ecosystem - michael harris, Jul. 2025
 
 % use this script to define a default configuration in order to create a
-% pldaps object and run it with the joy_train trial function.
-%
-%
-% wolf zinke, Dec. 2016
+% pldaps object and run it with the InitJoyTrain function.
 
 % ------------------------------------------------------------------------%
 %% Set default variables
@@ -44,13 +41,16 @@ SS.plot.routine     = 'InitJoyTrain_plots';      % function for online plotting 
 % step 1: handle = juice paired w/ dot on screen; step 2: handle in a direction = juice
 % step 3: handle after cue, etc...
 
+% What start_InitFixTrain uses:
+SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.pos'};
+
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
-SS.sound.use                  = 0; % no sound for now
-SS.sound.useDatapixx          = 0; % no sound for now
-SS.behavior.fixation.use      = 0; % eye position is behavioral relevant
+SS.sound.use                  = 1; % no sound for now
+SS.sound.useDatapixx          = 1; % no sound for now
+SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 1; % joystick is behavioral relevant
-SS.plot.do_online             = 1; % run online data analysis between two subsequent trials
+SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
 SS.pldaps.draw.joystick.use   = 1; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
@@ -68,7 +68,7 @@ SS.behavior.fixation.useCalibration = 0;
 SS.behavior.fixation.enableCalib    = 0;
 
 
-SS.pldaps.GetTrialStateTimes  = 1; % for debugging, save times when trial states are called
+SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 
 % ------------------------------------------------------------------------%
 %% make modifications of default settings

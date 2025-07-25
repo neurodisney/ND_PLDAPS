@@ -1,4 +1,4 @@
-function p = joy_train(p, state)
+function p = InitJoyTrain(p, state)
 % Main trial function for initial joystick training.
 %
 % The animal needs to learn how to operate a joystick (i.e. lever) in order
@@ -13,11 +13,24 @@ function p = joy_train(p, state)
 %    releases it, the square changes its contrast and another reward will be
 %    delivered.
 %
-%
 % TODO: add accoustic feedback
 %
-%
 % wolf zinke, Dec. 2016
+
+% 7/25/2025 - Updating all scripts within InitJoyTrain folder for an adapted 
+% joystick training timeline. Keeping older comments and notes and attempting 
+% to just build on top for multiple condition interoperability.
+
+% New structure (currently):
+% 1) Trial start with joystick(JS) dot at center of screen. Animal needs to touch joystick
+% to gain juice reward.
+% 2) Animal has to push JS dot outside a radial distance from the center point. Radius
+% starts small, and increases as the animal gains more successes. 
+% 3) Animal has to hold dot position outside the set radius for a minimum time interval.
+% 4) Directionality is introduced. Background stimulus is introduced that indicates a particular
+% side of the screen the animal needs to send the JS dot to. First this is just bidirectional, 
+% either left or side hemifield, then quadrant-level, then particular ROI (target circle on screen), 
+% etc. 
 
 % ####################################################################### %
 %% define the task name that will be used to create a sub-structure in the trial struct
@@ -27,12 +40,7 @@ if(~exist('state', 'var'))
 end
 
 % ####################################################################### %
-%% Call standard routines before executing task related code
-% This carries out standard routines, mainly in respect to hardware interfacing.
-% Be aware that this is done first for each trial state!
-p = ND_GeneralTrialRoutines(p, state);
 
-% ####################################################################### %
 %% Initial call of this function. Use this to define general settings of the experiment/session.
 % Here, default parameters of the pldaps class could be adjusted if needed.
 % This part corresponds to the experimental setup file and could be a separate
@@ -122,6 +130,10 @@ if(isempty(state))
 
 else
 % ####################################################################### %
+%% Call standard routines before executing task related code
+% This carries out standard routines, mainly in respect to hardware interfacing.
+% Be aware that this is done first for each trial state!
+    p = ND_GeneralTrialRoutines(p, state);
 %% Subsequent calls during actual trials
 % execute trial specific commands here.
 
