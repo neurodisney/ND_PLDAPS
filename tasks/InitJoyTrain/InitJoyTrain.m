@@ -51,9 +51,34 @@ end
 if(isempty(state))
 
     % --------------------------------------------------------------------%
+    
     %% define ascii output file
+    p = ND_AddAsciiEntry(p, 'Date',        'p.trial.DateStr',                     '%s');
+    p = ND_AddAsciiEntry(p, 'Time',        'p.trial.EV.TaskStartTime',            '%s');
+    p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%s');
+    p = ND_AddAsciiEntry(p, 'Subject',     'p.trial.session.subject',             '%s');
+    p = ND_AddAsciiEntry(p, 'Experiment',  'p.trial.session.experimentSetupFile', '%s');
+    p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
+    p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
+    p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart',   '%d');
+    %p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.FixOn',                     '%d');
+    p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
+    p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
+
+    p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
+    p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
+    
+    %p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
+    %p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
+    p = ND_AddAsciiEntry(p, 'intITI',      'p.trial.task.Timing.ITI',             '%.5f');
+
+    %p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
+    %p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
+    %p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
+    
+    
     % call this after ND_InitSession to be sure that output directory exists!
-    Trial2Ascii(p, 'init');
+    ND_Trial2Ascii(p, 'init');
 
     % --------------------------------------------------------------------%
     %% Color definitions of stuff shown during the trial

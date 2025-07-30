@@ -18,28 +18,28 @@ function p = InitFixTrain_taskdef(p)
 p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.3; % duration of the initial reward
 
-p.trial.reward.GiveSeries   = 1; % If set to 1 give a continous series of rewards until end of fixation period
+p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of rewards until end of fixation period
 p.trial.reward.Dur          = 0.3; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 4, 8, 12];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
 p.trial.reward.ManDur       = 0.1; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime  = 1.00;     % total time required to fixate to get full reward
+p.trial.reward.jackpotTime  = 0.30;     % total time required to fixate to get full reward
 p.trial.reward.jackpotDur   = 0.3;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
 p.trial.behavior.fixation.MinFixStart = .125; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
-p.trial.task.Timing.WaitFix = 5.0;  % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 1.0;  % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
 p.trial.task.Timing.MinITI  = 0.5;   % minimum time period [s] between subsequent trials
 p.trial.task.Timing.MaxITI  = 1;    % maximum time period [s] between subsequent trials
 
 % penalties
-p.trial.task.Timing.TimeOut =  2;     % Time [s] out for incorrect responses
+p.trial.task.Timing.TimeOut =  1;     % Time [s] out for incorrect responses
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design

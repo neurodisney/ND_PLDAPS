@@ -12,7 +12,7 @@ function ND_FlushReward(opentime, voltage, chan)
 
  % opening time (for full flush, cleaning a value of 120 ore more would be better)
 if (~exist('opentime','var') || isempty(opentime))
-    opentime = 10; 
+    opentime = 5; 
 end
 
 % DAC output voltage
