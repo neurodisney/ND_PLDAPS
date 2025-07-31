@@ -85,73 +85,14 @@ if(isempty(state))
     % PLDAPS uses color lookup tables that need to be defined before executing pds.datapixx.init, hence
     % this is a good place to do so. To avoid conflicts with future changes in the set of default
     % colors, use entries later in the lookup table for the definition of task related colors.
-    ND_DefineCol(p, 'TargetOn',   30, [1.00, 1.00, 1.00]);
-    ND_DefineCol(p, 'TargetDimm', 31, [0.5, 0.5, 0.5]);
+    %ND_DefineCol(p, 'TargetOn',   30, [1.00, 1.00, 1.00]);
+    %ND_DefineCol(p, 'TargetDimm', 31, [0.5, 0.5, 0.5]);
 
     % ND_DefineCol(p, 'TargetDimm', 30, [0.00, 1.00, 0.00]);
     % ND_DefineCol(p, 'TargetOn',   31, [1.00, 0.00, 0.00]);
 
     % --------------------------------------------------------------------%
-    %% Determine conditions and their sequence
-    % define conditions (conditions could be passed to the pldaps call as
-    % cell array, or defined here within the main trial function. The
-    % control of trials, especially the use of blocks, i.e. the repetition
-    % of a defined number of trials per condition, needs to be clarified.
 
-    maxTrials_per_BlockCond = 4;
-    maxBlocks = 1000;
-
-    % condition 1
-    c1.Nr = 1;
-    c1.task.Timing.MinHoldTime = 0.2;
-    c1.task.Timing.MaxHoldTime = 0.4;
-
-    % condition 2
-    c2.Nr = 2;
-    c2.task.Timing.MinHoldTime = 0.4;
-    c2.task.Timing.MaxHoldTime = 0.6;
-
-    % condition 3
-    c3.Nr = 3;
-    c3.task.Timing.MinHoldTime = 0.6;
-    c3.task.Timing.MaxHoldTime = 0.8;
-
-    % condition 4
-    c4.Nr = 4;
-    c4.task.Timing.MinHoldTime = 0.8;
-    c4.task.Timing.MaxHoldTime = 1.0;
-
-    % condition 5
-    c5.Nr = 5;
-    c5.task.Timing.MinHoldTime = 1.0;
-    c5.task.Timing.MaxHoldTime = 1.2;
-    
-    % condition 6
-    c6.Nr = 6;
-    c6.task.Timing.MinHoldTime = 1.2;
-    c6.task.Timing.MaxHoldTime = 1.4;
-    
-    % condition 7
-    c7.Nr = 7;
-    c7.task.Timing.MinHoldTime = 1.4;
-    c7.task.Timing.MaxHoldTime = 1.6;
-    
-    % condition 8
-    c8.Nr = 8;
-    c8.task.Timing.MinHoldTime = 1.6;
-    c8.task.Timing.MaxHoldTime = 1.8;
-    
-    % condition 9
-    c9.Nr = 9;
-    c9.task.Timing.MinHoldTime = 1.8;
-    c9.task.Timing.MaxHoldTime = 2.0;
-
-    % create a cell array containing all conditions
-    % conditions = {c1, c2, c3, c4, c5};
-    %conditions = {c1, c2, c3, c4, c5, c6, c7, c8, c9};
-    conditions = {c1, c2, c3, c4, c5, c6};
-
-    p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
 else
 % ####################################################################### %
@@ -195,7 +136,7 @@ else
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
             
-            TaskDraw(p)
+            %TaskDraw(p) % 7/31/2025 - MJH - Appears deprecated according to new task structure.
                         
 % ####################################################################### %
 % DONE AFTER THE MAIN TRIAL LOOP:
@@ -206,7 +147,7 @@ else
             Task_Finish(p);
                         
             Trial2Ascii(p, 'save');
-                        
+                        CheckBar
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
 
@@ -333,91 +274,96 @@ function TaskDesign(p)
     end  % switch p.trial.CurrEpoch
 
 % ------------------------------------------------------------------------%
-function TaskDraw(p)
+% function TaskDraw(p)
 %% show epoch dependent stimuli
+
+% 7/31/2025 - MJH - these appear to be deprecated according to the new task structure. 
+
 % go through the task epochs as defined in TaskDesign and draw the stimulus
 % content that needs to be shown during this epoch.
-    switch p.trial.CurrEpoch
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.WaitStart
-        %% Wait for joystick press
-            TrialOn(p);
+%     switch p.trial.CurrEpoch
+%         % ----------------------------------------------------------------%
+%         case p.trial.epoch.WaitStart
+%         %% Wait for joystick press
+%             TrialOn(p);
+% 
+%         % ----------------------------------------------------------------%
+%         case p.trial.epoch.WaitGo
+%         %% delay before response is needed
+%             TrialOn(p);
+%             Target(p, 'TargetOn');
+% 
+%         % ----------------------------------------------------------------%
+%         case p.trial.epoch.WaitResponse
+%         %% Wait for joystick release
+%             TrialOn(p);
+%             Target(p, 'TargetDimm');
+% 
+%         % ----------------------------------------------------------------%
+%         case p.trial.epoch.WaitReward
+%         %% Wait for for reward
+%             TrialOn(p);
+%             Target(p, 'TargetDimm');
+%     end
 
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.WaitGo
-        %% delay before response is needed
-            TrialOn(p);
-            Target(p, 'TargetOn');
 
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.WaitResponse
-        %% Wait for joystick release
-            TrialOn(p);
-            Target(p, 'TargetDimm');
-
-        % ----------------------------------------------------------------%
-        case p.trial.epoch.WaitReward
-        %% Wait for for reward
-            TrialOn(p);
-            Target(p, 'TargetDimm');
-    end
 
 % ####################################################################### %
 %% additional inline functions that
-
+% 7/31/2025 - MJH - The two functions below here appears to be deprecated per the new task structure.
 % ------------------------------------------------------------------------%
-function TrialOn(p)
-%% show a frame to indicate the trial is active
-    Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.TrialStart, ...
-                        p.trial.task.FrameRect , p.trial.task.FrameWdth);
-
+% function TrialOn(p)
+% %% show a frame to indicate the trial is active
+%     Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.TrialStart, ...
+%                         p.trial.task.FrameRect , p.trial.task.FrameWdth);
+% 
+% % ------------------------------------------------------------------------%
+% function Target(p, colstate)
+% %% show the target item with the given color
+%     Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(colstate), p.trial.task.TargetRect);
+%%
 % ------------------------------------------------------------------------%
-function Target(p, colstate)
-%% show the target item with the given color
-    Screen('FillOval',  p.trial.display.overlayptr, p.trial.display.clut.(colstate), p.trial.task.TargetRect);
-
-% ------------------------------------------------------------------------%
-function Trial2Ascii(p, act)
-%% Save trial progress in an ASCII table
-% 'init' creates the file with a header defining all columns
-% 'save' adds a line with the information for the current trial
-%
-% make sure that number of header names is the same as the number of entries
-% to write, also that the position matches.
-
-    switch act
-        case 'init'
-            tblptr = fopen(p.trial.session.asciitbl , 'w');
-
-            fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  JPress  GoCue  JRelease  Reward  RewDur  ',...
-                             'Result  Outcome  StartRT  RT  ChangeTime \n']);
-            fclose(tblptr);
-
-        case 'save'
-            if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && ...
-               p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)  % we might loose the last trial when pressing esc.
-                
-                if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct || ...
-                   p.trial.outcome.CurrOutcome == p.trial.outcome.Early)
-                    RT = p.trial.EV.JoyRelease - p.trial.task.Timing.HoldTime;
-                else
-                    RT = NaN;
-                end
-                
-                trltm = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
-
-                cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-
-                tblptr = fopen(p.trial.session.asciitbl, 'a');
-
-                fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s  %.5f  %.5f  %.5f\n' , ...
-                                datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
-                                p.trial.EV.TaskStart, p.trial.session.subject, ...
-                                p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
-                                trltm, p.trial.EV.JoyPress, ...
-                                p.trial.EV.GoCue, p.trial.EV.JoyRelease, p.trial.EV.Reward, ...
-                                p.trial.reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
-                                p.trial.EV.StartRT, RT, p.trial.task.Timing.HoldTime);
-               fclose(tblptr);
-            end
-    end
+% function Trial2Ascii(p, act)
+% %% Save trial progress in an ASCII table
+% % 'init' creates the file with a header defining all columns
+% % 'save' adds a line with the information for the current trial
+% %
+% % make sure that number of header names is the same as the number of entries
+% % to write, also that the position matches.
+% 
+%     switch act
+%         case 'init'
+%             tblptr = fopen(p.trial.session.asciitbl , 'w');
+% 
+%             fprintf(tblptr, ['Date  Time  Secs  Subject  Experiment  Tcnt  Cond  Tstart  JPress  GoCue  JRelease  Reward  RewDur  ',...
+%                              'Result  Outcome  StartRT  RT  ChangeTime \n']);
+%             fclose(tblptr);
+% 
+%         case 'save'
+%             if(p.trial.pldaps.quit == 0 && p.trial.outcome.CurrOutcome ~= p.trial.outcome.NoStart && ...
+%                p.trial.outcome.CurrOutcome ~= p.trial.outcome.PrematStart)  % we might loose the last trial when pressing esc.
+%                 
+%                 if(p.trial.outcome.CurrOutcome == p.trial.outcome.Correct || ...
+%                    p.trial.outcome.CurrOutcome == p.trial.outcome.Early)
+%                     RT = p.trial.EV.JoyRelease - p.trial.task.Timing.HoldTime;
+%                 else
+%                     RT = NaN;
+%                 end
+%                 
+%                 trltm = p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart;
+% 
+%                 cOutCome = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+% 
+%                 tblptr = fopen(p.trial.session.asciitbl, 'a');
+% 
+%                 fprintf(tblptr, '%s  %s  %.4f  %s  %s  %d  %d  %.5f %.5f  %.5f  %.5f  %.5f  %.5f  %d  %s  %.5f  %.5f  %.5f\n' , ...
+%                                 datestr(p.trial.session.initTime,'yyyy_mm_dd'), p.trial.EV.TaskStartTime, ...
+%                                 p.trial.EV.TaskStart, p.trial.session.subject, ...
+%                                 p.trial.session.experimentSetupFile, p.trial.pldaps.iTrial, p.trial.Nr, ...
+%                                 trltm, p.trial.EV.JoyPress, ...
+%                                 p.trial.EV.GoCue, p.trial.EV.JoyRelease, p.trial.EV.Reward, ...
+%                                 p.trial.reward.Curr, p.trial.outcome.CurrOutcome, cOutCome, ...
+%                                 p.trial.EV.StartRT, RT, p.trial.task.Timing.HoldTime);
+%                fclose(tblptr);
+%             end
+%     end
