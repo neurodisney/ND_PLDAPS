@@ -27,7 +27,7 @@ p.trial.Block.maxBlocks = -1; % appears to be a change to this structure from ol
 % condition 1
 c1.Nr = 1;
 c1.task.Timing.MinHoldTime = 0.2;
-c1.task.Timing.MaxHoldTime = 0.4;
+c1.task.Timing.MaxHoldTime = 5.4;
 
 % condition 2
 c2.Nr = 2;

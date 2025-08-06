@@ -61,20 +61,20 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
     p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
     p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart',   '%d');
-    %p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.FixOn',                     '%d');
+    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.FixOn',                     '%d');
     p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
     p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
 
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     
-    %p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
-    %p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
+    p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
+    p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
     p = ND_AddAsciiEntry(p, 'intITI',      'p.trial.task.Timing.ITI',             '%.5f');
 
-    %p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
-    %p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
-    %p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
+    p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
+    p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
     
     
     % call this after ND_InitSession to be sure that output directory exists!
@@ -165,8 +165,12 @@ function TaskSetUp(p)
 
     p.trial.CurrEpoch = p.trial.epoch.GetReady;
     
-    p.trial.reward.Curr = ND_GetRewDur(p); % determine reward amount based on number of previous correct trials
-
+    p.trial.reward.count = 0; % set initial reward 8/1/2025 - MJH - Matching to InitFixTrain.
+    
+    %p.trial.reward.Curr = ND_GetRewDur(p); % 8/6/25 - MJH - reward dur handled in "_taskdef" now. %determine reward amount based on number of previous correct trials
+    
+    ND_SwitchEpoch(p, 'GetReady');  % define first task epoch % 8/1/25 - MJH - copied from FixTrain, but GetReady seems to be the epoch to kick things off for joystick.
+    %ND_SwitchEpoch(p, 'GoMichael') % Debug idea John came up with lol see how it switches.
 % ------------------------------------------------------------------------%
 function TaskDesign(p)
 %% main task outline
@@ -177,8 +181,14 @@ function TaskDesign(p)
         %% before the trial can start joystick needs to be in a released state
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
                 p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.MinRel;
-                p.trial.CurrEpoch = p.trial.epoch.CheckBarRel;
+                %p.trial.CurrEpoch = p.trial.epoch.CheckBarRel; % MJH - not how the new task structure works
+                ND_SwitchEpoch(p,'CheckBarRel') % MJH updated
             end
+            
+            
+            
+        %case p.trial.epoch.GoMichael
+        %    disp('you rock');
 
         case p.trial.epoch.CheckBarRel
         %% make sure that the bar is fully release by waiting for a specified time    
@@ -187,12 +197,15 @@ function TaskDesign(p)
                 Task_NotReady(p);  % Go directly to TaskEnd, do not start task, do not collect reward
             elseif(p.trial.CurTime > p.trial.Timer.Wait)
             % joystick in a properly released state, let's start the trial
-                Task_Ready(p);               
+                Task_Ready(p); 
+                %p.trial.CurrEpoch = p.defaultParameters.epoch.WaitStart; % 8/1/2025 - MJH - Added here since it doesn't seem like things switch? not sure...
+                ND_SwitchEpoch(p,'WaitStart'); % MJH - another version of the above...still not sure.
             end
 
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitStart
         %% Wait for joystick press
+            %ND_SwitchEpoch(p,'WaitPress'); %MJH - Added but trying to figure out. Waitpress and WaitStart appear redundant. In either case, begin waiting for press...
             if(p.trial.CurTime > p.trial.Timer.Wait)
             % no trial initiated in the given time window
                 Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
@@ -206,11 +219,12 @@ function TaskDesign(p)
                 % we just got a press in time
                     Task_ON(p);
                     
+                    
                    if(p.trial.task.FullTask)
                         % do full task, use other task epochs
                         p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;
-                        p.trial.CurrEpoch = p.trial.epoch.WaitGo;
-
+                        %p.trial.CurrEpoch = p.trial.epoch.WaitGo; 8/4/2025 - MJH - Deprecated per new task structure
+                        ND_SwitchEpoch(p,'WaitGo')%Trying to emulate the above w/ the new function. 
                         if(p.trial.reward.Pull)
                             pds.reward.give(p, p.trial.reward.PullRew);
                         end
@@ -245,15 +259,17 @@ function TaskDesign(p)
                      Response_Early(p); % Go directly to TaskEnd, do not continue task, do not collect reward
                 else
                 % correct response
-                    Task_Correct(p);
+                    %Task_Correct(p); % 8/6/25 - MJH - Task_Correct appears not used now. It included an epoch switch to "WaitReward" which itself called to a "Task_Reward" function. New "Task_CorrectReward" seems to just invoke pds.reward.give directly. Reward dur is also specified in the "_taskdef" script and is used by the new Task_CorrectReward.
+                    Task_CorrectReward(p)
                 end
             end
 
         % ----------------------------------------------------------------%
-        case p.trial.epoch.WaitReward
+        
+        %case p.trial.epoch.WaitReward  %8/6/2025 - MJH - This epoch may not be needed now.
         %% Wait for for reward
         % add error condition for new press
-            Task_Reward(p);
+            %Task_Reward(p);
 
         % ----------------------------------------------------------------%
         case p.trial.epoch.WaitRelease

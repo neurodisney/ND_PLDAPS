@@ -46,6 +46,7 @@ if(p.defaultParameters.behavior.joystick.use)
     p.defaultParameters.epoch.Pressing    =  41;  % Ongoing joystick press
     p.defaultParameters.epoch.WaitPress   =  42;  % Wait for a joystick press
     p.defaultParameters.epoch.WaitRelease =  43;  % Wait for joystick release
+    p.defaultParameters.epoch.GoMichael =  4300;
 end
 
 % fixation related

@@ -107,7 +107,7 @@ else
                 KeyAction(p);
             end
             TaskDesign(p);
-            
+            % another version of the above
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
@@ -123,7 +123,7 @@ else
                         
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
-
+% another version of the above
 % ------------------------------------------------------------------------%
 %% Task related functions
 
