@@ -27,7 +27,7 @@ p.trial.Block.maxBlocks = -1; % appears to be a change to this structure from ol
 % condition 1
 c1.Nr = 1;
 c1.task.Timing.MinHoldTime = 0.2;
-c1.task.Timing.MaxHoldTime = 5.4;
+c1.task.Timing.MaxHoldTime = 0.4;
 
 % condition 2
 c2.Nr = 2;
@@ -92,7 +92,10 @@ p.trial.reward.Pull    = 1;          % If 1 then give reward for pulling the joy
 p.trial.reward.PullRew = 0.05;        % reward amount for pulling joystick (if p.trial.reward.Pull == 1)
 
 p.trial.reward.IncrConsecutive = 1;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-p.trial.reward.Dur  = [0.6, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
+
+%p.trial.reward.Dur  = [0.6, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.reward.Dur  = [0.6];   % 8/7/25 - MJH - currently the above definition is causing an error. It must be not calling element-wise into the array. just using a single value for the time being. reward duration [s], user vector to specify values used for incremental reward scheme
+
 p.trial.reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.reward.Dur
 
 p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses

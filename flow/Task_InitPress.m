@@ -1,4 +1,4 @@
-function p = Task_Response(p)
+function p = Task_InitPress(p) % 8/7/25 - MJH - This was incorrectly typed as TaskResponse
 % default actions when the task starts
 %
 %

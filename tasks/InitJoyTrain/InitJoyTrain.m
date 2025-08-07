@@ -130,7 +130,7 @@ else
         % prepare the stimuli that should be shown, do some required calculations
             
             TaskDesign(p);
-            
+            disp(p.trial.CurrEpoch)
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
@@ -169,7 +169,7 @@ function TaskSetUp(p)
     
     %p.trial.reward.Curr = ND_GetRewDur(p); % 8/6/25 - MJH - reward dur handled in "_taskdef" now. %determine reward amount based on number of previous correct trials
     
-    ND_SwitchEpoch(p, 'GetReady');  % define first task epoch % 8/1/25 - MJH - copied from FixTrain, but GetReady seems to be the epoch to kick things off for joystick.
+    ND_SwitchEpoch(p, 'ITI');  % define first task epoch % 8/1/25 - MJH - copied from FixTrain, but GetReady seems to be the epoch to kick things off for joystick.
     %ND_SwitchEpoch(p, 'GoMichael') % Debug idea John came up with lol see how it switches.
 % ------------------------------------------------------------------------%
 function TaskDesign(p)
@@ -177,6 +177,11 @@ function TaskDesign(p)
 % The different task stages (i.e. 'epochs') are defined here.
     switch p.trial.CurrEpoch
         % ----------------------------------------------------------------%
+        
+        case p.trial.epoch.TrialStart % 8/7/25 - MJH - added attempting to get ITI established and then start a "next trial" not working though as of yet 
+            ND_SwitchEpoch(p,'GetReady')
+        
+        
         case p.trial.epoch.GetReady
         %% before the trial can start joystick needs to be in a released state
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
@@ -282,8 +287,10 @@ function TaskDesign(p)
         % set timer for intertrial interval
             Task_OFF(p);
 
+            % Flag next trial %8/7/25 - MJH - added since trials were never ending and think this may be why.
+            p.trial.flagNextTrial = 1; 
         % ----------------------------------------------------------------%
-        case p.trial.epoch.ITI
+        case p.trial.epoch.ITI % 8/7/25 - MJH - is likely important, currently no called within TaskDesign. Need to keep.
         %% inter-trial interval: wait before next trial to start
             Task_WaitITI(p);
             
