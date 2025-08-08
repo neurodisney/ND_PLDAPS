@@ -61,20 +61,20 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Tcnt',        'p.trial.pldaps.iTrial',               '%d');
     p = ND_AddAsciiEntry(p, 'Cond',        'p.trial.Nr',                          '%d');
     p = ND_AddAsciiEntry(p, 'Tstart',      'p.trial.EV.TaskStart - p.trial.timing.datapixxSessionStart',   '%d');
-    p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.FixOn',                     '%d');
-    p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
+    %p = ND_AddAsciiEntry(p, 'FixRT',       'p.trial.EV.FixStart-p.trial.EV.FixOn',                     '%d');
+    %p = ND_AddAsciiEntry(p, 'FirstReward', 'p.trial.task.CurRewDelay',            '%d');
     p = ND_AddAsciiEntry(p, 'RewCnt',      'p.trial.reward.count',                '%d');
 
     p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     
-    p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
-    p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
+    %p = ND_AddAsciiEntry(p, 'FixPeriod',   'p.trial.EV.FixBreak-p.trial.EV.FixStart', '%.5f');
+    %p = ND_AddAsciiEntry(p, 'FixColor',    'p.trial.stim.FIXSPOT.color',          '%s');
     p = ND_AddAsciiEntry(p, 'intITI',      'p.trial.task.Timing.ITI',             '%.5f');
 
-    p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
-    p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
+    %p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.fix.fixWin',             '%.5f');
+    %p = ND_AddAsciiEntry(p, 'fixPos_X',    'p.trial.stim.fix.pos(1)',             '%.5f');
+    %p = ND_AddAsciiEntry(p, 'fixPos_Y',    'p.trial.stim.fix.pos(2)',             '.%5f');
     
     
     % call this after ND_InitSession to be sure that output directory exists!
@@ -130,7 +130,7 @@ else
         % prepare the stimuli that should be shown, do some required calculations
             
             TaskDesign(p);
-            disp(p.trial.CurrEpoch)
+            disp(p.trial.CurrEpoch) % 8/8/25 - MJH - debugging and want to see trial state switches
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
@@ -144,10 +144,12 @@ else
         case p.trial.pldaps.trialStates.trialCleanUpandSave
         %% trial end
             
-            Task_Finish(p);
+            TaskCleanAndSave(p); % 8/8/25 - MJH - emulating the function called after main trial loop shown in InitFixTrain. function defined below
+            
+            % Task_Finish(p);
                         
-            Trial2Ascii(p, 'save');
-                        CheckBar
+            % Trial2Ascii(p, 'save');
+            %            CheckBar
     end  %/ switch state
 end  %/  if(nargin == 1) [...] else [...]
 
@@ -163,7 +165,7 @@ function TaskSetUp(p)
     p.trial.task.Timing.HoldTime = ND_GetITI(p.trial.task.Timing.MinHoldTime, ...
                                              p.trial.task.Timing.MaxHoldTime, [], [], 1, 0.02);   % Minimum time before response is expected
 
-    p.trial.CurrEpoch = p.trial.epoch.GetReady;
+    %p.trial.CurrEpoch = p.trial.epoch.GetReady;
     
     p.trial.reward.count = 0; % set initial reward 8/1/2025 - MJH - Matching to InitFixTrain.
     
@@ -178,7 +180,15 @@ function TaskDesign(p)
     switch p.trial.CurrEpoch
         % ----------------------------------------------------------------%
         
+        case p.trial.epoch.ITI % 8/7/25 - MJH - is likely important, currently no called within TaskDesign. Need to keep.
+        %% inter-trial interval: wait before next trial to start
+        Task_WaitITI(p);
+        
         case p.trial.epoch.TrialStart % 8/7/25 - MJH - added attempting to get ITI established and then start a "next trial" not working though as of yet 
+            
+            p.trial.EV.TaskStart     = p.trial.CurTime; % 8/8/25 mark the start of trial
+            p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
+            
             ND_SwitchEpoch(p,'GetReady')
         
         
@@ -290,13 +300,23 @@ function TaskDesign(p)
             % Flag next trial %8/7/25 - MJH - added since trials were never ending and think this may be why.
             p.trial.flagNextTrial = 1; 
         % ----------------------------------------------------------------%
-        case p.trial.epoch.ITI % 8/7/25 - MJH - is likely important, currently no called within TaskDesign. Need to keep.
-        %% inter-trial interval: wait before next trial to start
-            Task_WaitITI(p);
+
             
     end  % switch p.trial.CurrEpoch
 
 % ------------------------------------------------------------------------%
+function TaskCleanAndSave(p)
+%% Clean up textures, variables, and save useful info to ascii table
+Task_Finish(p);
+
+% Get the text name of the outcome
+p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+
+% Save useful info to an ascii table for plotting
+ND_Trial2Ascii(p, 'save');
+
+
+
 % function TaskDraw(p)
 %% show epoch dependent stimuli
 

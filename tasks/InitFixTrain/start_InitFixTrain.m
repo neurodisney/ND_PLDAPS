@@ -52,7 +52,7 @@ SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
 SS.plot.do_online             = 0; % run online data analysis between two subsequent trials
 SS.pldaps.nosave              = 0; % disable saving data to pds files
-SS.pldaps.draw.joystick.use   = 1; % draw joystick states on control screen
+SS.pldaps.draw.joystick.use   = 0; % draw joystick states on control screen
 SS.pldaps.draw.eyepos.use     = 1; % enable drawing of the eye position.
 SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
 SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
@@ -64,8 +64,8 @@ SS.datapixx.useJoystick       = 0;
 SS.datapixx.TTL_trialOn       = 0;
 
 % switch here to get calibration functionality
-SS.behavior.fixation.useCalibration = 0;
-SS.behavior.fixation.enableCalib    = 0;
+SS.behavior.fixation.useCalibration = 1;
+SS.behavior.fixation.enableCalib    = 1;
 
 SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
 

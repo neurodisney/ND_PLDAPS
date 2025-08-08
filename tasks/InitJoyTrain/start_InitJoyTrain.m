@@ -42,7 +42,7 @@ SS.plot.routine     = 'InitJoyTrain_plots';      % function for online plotting 
 % step 3: handle after cue, etc...
 
 % What start_InitFixTrain uses:
-SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.pos'};
+%SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.pos'};
 
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
