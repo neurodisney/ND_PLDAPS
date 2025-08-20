@@ -11,8 +11,45 @@ function p = InitJoyTrain_taskdef(p)
 % wolf zinke, Dec. 2016
 
 % ------------------------------------------------------------------------%
+%% levels of complexity
+% Full task requires to press joystick after trial start cue goes on, waits for a change of target and then 
+% release the joystick as response. 
+% If FullTask is set to zero, it just waits for trial start cue and rewards when pressed as response to cue onset.
+p.trial.task.FullTask = 0;
+% ------------------------------------------------------------------------%
+%% Task Timings
+p.trial.task.Timing.WaitStart   = 2.50;   % maximal time period [s] in seconds to press the lever in order to start a trial.
+p.trial.task.Timing.WaitResp    = 2.50;   % Only response times [s] after this wait period will be considered stimulus driven responses
+
+p.trial.task.Timing.MinRel      = 0.2;    % minimum time to consider a bar released prior trial start
+p.trial.task.Timing.minRT       = 0.20;   % If a response occurs prior this time it is considered an early response
+
+% inter-trial interval
+p.trial.task.Timing.MinITI      = 0.25;   % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI      = 1.0;    % maximum time period [s] between subsequent trials
+
+% penalties
+p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
+p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a trial starts after random lever presses (NIY!)
+
+% ------------------------------------------------------------------------%
+%% Reward
+p.trial.reward.Pull    = 0;          % If 1 then give reward for pulling the joystick
+p.trial.reward.PullRew = 0.3;        % reward amount for pulling joystick (if p.trial.reward.Pull == 1)
+
+p.trial.reward.IncrConsecutive = 1;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
+
+%p.trial.reward.Dur  = [0.6, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
+p.trial.reward.Dur  = [0.6];   % 8/7/25 - MJH - currently the above definition is causing an error. It must be not calling element-wise into the array. just using a single value for the time being. reward duration [s], user vector to specify values used for incremental reward scheme
+
+p.trial.reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.reward.Dur
+
+p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
+
+% ------------------------------------------------------------------------%
 %% Condition/Block design
 p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
+
 %% Determine conditions and their sequence
 % define conditions (conditions could be passed to the pldaps call as
 % cell array, or defined here within the main trial function. The
@@ -22,7 +59,7 @@ p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeat
 %maxTrials_per_BlockCond = 4;
 %maxBlocks = 1000;
 
-p.trial.Block.maxBlocks = -1; % appears to be a change to this structure from old (commented out above), -1 value indicates the experiment determines when max block has occurred. This would be different for an actual task.
+p.trial.Block.maxBlocks = -1; % appears to be a change to this structure from old (commented out above), -1 indicates the experimenter determines when max block has occurred. This would be different for an actual task.
 
 % condition 1
 c1.Nr = 1;
@@ -76,48 +113,12 @@ c9.task.Timing.MaxHoldTime = 2.0;
 
 %p = ND_GetConditionList(p, conditions, maxTrials_per_BlockCond, maxBlocks);
 
-p.trial.Block.Conditions = {c1}; % 7/31/2025 adding here so p will -hopefully- pass these into p.trial.task similarly to how fixtrain-taskdef works for its 'MinWaitInitial' fields.
+p.trial.Block.Conditions = {c5}; % 7/31/2025 adding here so p will -hopefully- pass these into p.trial.task similarly to how fixtrain-taskdef works for its 'MinWaitInitial' fields.
 
 % ------------------------------------------------------------------------%
-%% levels of complexity
-% the full task requires to press the joystick after trial start cue gets
-% on, wait for a change of the target and then release the joystick as
-% response. If FullTask is set to zero it just waits for the trial start
-% cue and rewards when pressed as response to the cue onset.
-p.trial.task.FullTask = 1;
 
-% ------------------------------------------------------------------------%
-%% Reward
-p.trial.reward.Pull    = 1;          % If 1 then give reward for pulling the joystick
-p.trial.reward.PullRew = 0.05;        % reward amount for pulling joystick (if p.trial.reward.Pull == 1)
-
-p.trial.reward.IncrConsecutive = 1;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
-
-%p.trial.reward.Dur  = [0.6, 0.75];   % reward duration [s], user vector to specify values used for incremental reward scheme
-p.trial.reward.Dur  = [0.6];   % 8/7/25 - MJH - currently the above definition is causing an error. It must be not calling element-wise into the array. just using a single value for the time being. reward duration [s], user vector to specify values used for incremental reward scheme
-
-p.trial.reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.reward.Dur
-
-p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
-
-% ------------------------------------------------------------------------%
 %% 
-%% Task Timings
-p.trial.task.Timing.WaitStart   = 2.50;   % maximal time period [s] in seconds to press the lever in order to start a trial.
-p.trial.task.Timing.WaitResp    = 2.50;   % Only response times [s] after this wait period will be considered stimulus driven responses
 
-p.trial.task.Timing.MinRel      = 1.0;    % minimum time to consider a bar released prior trial start
-p.trial.task.Timing.minRT       = 0.20;   % If a response occurs prior this time it is considered an early response
-
-% inter-trial interval
-p.trial.task.Timing.MinITI      = 0.25;   % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI      = 1.5;    % maximum time period [s] between subsequent trials
-
-% penalties
-p.trial.task.Timing.TimeOut     =  0;     % Time [s] out for incorrect responses
-p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a trial starts after random lever presses (NIY!)
-
-% ------------------------------------------------------------------------%
 %% Stimulus parameters
 
 % 7/30/2025 - MJH - error throws because p.trial.display does not exist yet according to the newer structure. stimulus parameters may need to go directly to InitJoyTrain? ...

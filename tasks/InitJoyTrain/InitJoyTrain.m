@@ -171,8 +171,14 @@ function TaskSetUp(p)
     
     %p.trial.reward.Curr = ND_GetRewDur(p); % 8/6/25 - MJH - reward dur handled in "_taskdef" now. %determine reward amount based on number of previous correct trials
     
+    % present joystick pointer on screen
+    
+    
+    
     ND_SwitchEpoch(p, 'ITI');  % define first task epoch % 8/1/25 - MJH - copied from FixTrain, but GetReady seems to be the epoch to kick things off for joystick.
     %ND_SwitchEpoch(p, 'GoMichael') % Debug idea John came up with lol see how it switches.
+    
+    
 % ------------------------------------------------------------------------%
 function TaskDesign(p)
 %% main task outline
@@ -180,7 +186,7 @@ function TaskDesign(p)
     switch p.trial.CurrEpoch
         % ----------------------------------------------------------------%
         
-        case p.trial.epoch.ITI % 8/7/25 - MJH - is likely important, currently no called within TaskDesign. Need to keep.
+        case p.trial.epoch.ITI % 8/7/25 - MJH - is likely important, currently not called within TaskDesign. Need to keep.
         %% inter-trial interval: wait before next trial to start
         Task_WaitITI(p);
         
@@ -206,9 +212,9 @@ function TaskDesign(p)
         %    disp('you rock');
 
         case p.trial.epoch.CheckBarRel
-        %% make sure that the bar is fully release by waiting for a specified time    
+        %% make sure that the bar is fully released by waiting for a specified time    
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
-            % pressed again to quickly
+            % pressed again too quickly
                 Task_NotReady(p);  % Go directly to TaskEnd, do not start task, do not collect reward
             elseif(p.trial.CurTime > p.trial.Timer.Wait)
             % joystick in a properly released state, let's start the trial
@@ -239,13 +245,13 @@ function TaskDesign(p)
                         % do full task, use other task epochs
                         p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.HoldTime;
                         %p.trial.CurrEpoch = p.trial.epoch.WaitGo; 8/4/2025 - MJH - Deprecated per new task structure
-                        ND_SwitchEpoch(p,'WaitGo')%Trying to emulate the above w/ the new function. 
                         if(p.trial.reward.Pull)
                             pds.reward.give(p, p.trial.reward.PullRew);
                         end
+                        ND_SwitchEpoch(p,'WaitGo')%Trying to emulate the above w/ the new function.
                     else
                         % That was the task, reward animal and done                        
-                        Task_Correct(p);
+                        Task_CorrectReward(p); % << MJH - switched from Task_Correct, as this has different epoch switches
                     end
                 end
             end
@@ -279,7 +285,7 @@ function TaskDesign(p)
                 end
             end
 
-        % ----------------------------------------------------------------%
+        % ----------------------------------------------Task_GoCue(p);------------------%
         
         %case p.trial.epoch.WaitReward  %8/6/2025 - MJH - This epoch may not be needed now.
         %% Wait for for reward
@@ -292,6 +298,11 @@ function TaskDesign(p)
             Task_WaitRelease(p);
 
         % ----------------------------------------------------------------%
+        case p.trial.epoch.WaitEnd % << MJH - copying this from TaskEnd, but seems like I need this due to the structure of Task_CorrectReward.m (<< don't change anything of the flow scripts! used by other tasks)
+            Task_OFF(p); % sets timer for intertrial interval
+            p.trial.flagNextTrial = 1; %flag next trial
+            
+        
         case p.trial.epoch.TaskEnd
         %% finish trial and error handling
         % set timer for intertrial interval

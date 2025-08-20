@@ -25,18 +25,18 @@ p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward
 
 p.trial.reward.ManDur       = 0.3; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime  = 0.30;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.3;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotTime  = 0.20;     % total time required to fixate to get full reward
+p.trial.reward.jackpotDur   = 0.4;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
 p.trial.behavior.fixation.MinFixStart = .125; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
-p.trial.task.Timing.WaitFix = 5.0;  % Time to get a solid fixation before trial ends unsuccessfully
+p.trial.task.Timing.WaitFix = 2.0;  % Time to get a solid fixation before trial ends unsuccessfully
 
 % inter-trial interval
-p.trial.task.Timing.MinITI  = 5;   % minimum time period [s] between subsequent trials
-p.trial.task.Timing.MaxITI  = 7;    % maximum time period [s] between subsequent trials
+p.trial.task.Timing.MinITI  = 2.5;   % minimum time period [s] between subsequent trials
+p.trial.task.Timing.MaxITI  = 4;    % maximum time period [s] between subsequent trials
 
 % penalties
 p.trial.task.Timing.TimeOut =  1;     % Time [s] out for incorrect responses
@@ -103,15 +103,15 @@ p.trial.Block.maxBlockTrials =  [1];
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.size = 0.5;     % size of the fixation spot
-p.trial.stim.FIXSPOT.color  = 'cyan';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixWinStp = 0.6;  % refine resizing of fixation step for this task only(modify default rig settings)
 
 % color options (make sure colors are defined!)
-%p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
-p.trial.task.Color_list = {'cyan'};
+p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
+%p.trial.task.Color_list = {'dRed'};
 
 % Enable random positions
-% p.trial.task.RandomPos = 0;
+p.trial.task.RandomPos = 0;
 p.trial.task.RandomPosRange = [4, 4];  % range of x and y dva for random position
 
 % ------------------------------------------------------------------------%

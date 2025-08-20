@@ -68,7 +68,7 @@ SS.behavior.fixation.useCalibration = 0;
 SS.behavior.fixation.enableCalib    = 0;
 
 
-SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called
+SS.pldaps.GetTrialStateTimes  = 0; % for debugging, save times when trial states are called, may hinder performance.
 
 % ------------------------------------------------------------------------%
 %% make modifications of default settings

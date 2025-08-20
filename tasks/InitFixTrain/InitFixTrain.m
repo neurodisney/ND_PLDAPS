@@ -162,7 +162,8 @@ function TaskSetUp(p)
     % Fixation spot
     p.trial.stim.fix = pds.stim.FixSpot(p);
     
-    ND_SwitchEpoch(p, 'ITI');  % define first task epoch
+    % define first task epoch
+    ND_SwitchEpoch(p, 'ITI');  
     
 % ####################################################################### %
 function TaskDesign(p)
