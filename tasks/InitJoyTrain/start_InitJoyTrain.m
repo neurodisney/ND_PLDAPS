@@ -46,8 +46,8 @@ SS.plot.routine     = 'InitJoyTrain_plots';      % function for online plotting 
 
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
-SS.sound.use                  = 1; % no sound for now
-SS.sound.useDatapixx          = 1; % no sound for now
+SS.sound.use                  = 0; % no sound for now
+SS.sound.useDatapixx          = 0; % no sound for now
 SS.behavior.fixation.use      = 0; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 1; % joystick is behavioral relevant
 SS.plot.do_online             = 0; % run online data analysis between two subsequent trials

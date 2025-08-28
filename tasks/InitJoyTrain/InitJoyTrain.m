@@ -173,10 +173,10 @@ function TaskSetUp(p)
     
     % present joystick pointer on screen
     
-    
-    
+       
     ND_SwitchEpoch(p, 'ITI');  % define first task epoch % 8/1/25 - MJH - copied from FixTrain, but GetReady seems to be the epoch to kick things off for joystick.
     %ND_SwitchEpoch(p, 'GoMichael') % Debug idea John came up with lol see how it switches.
+    
     
     
 % ------------------------------------------------------------------------%
@@ -219,6 +219,10 @@ function TaskDesign(p)
             elseif(p.trial.CurTime > p.trial.Timer.Wait)
             % joystick in a properly released state, let's start the trial
                 Task_Ready(p); 
+                
+                %play cue sound
+                pds.audio.playDP(p,'cue','left');
+                
                 %p.trial.CurrEpoch = p.defaultParameters.epoch.WaitStart; % 8/1/2025 - MJH - Added here since it doesn't seem like things switch? not sure...
                 ND_SwitchEpoch(p,'WaitStart'); % MJH - another version of the above...still not sure.
             end
@@ -227,8 +231,9 @@ function TaskDesign(p)
         case p.trial.epoch.WaitStart
         %% Wait for joystick press
             %ND_SwitchEpoch(p,'WaitPress'); %MJH - Added but trying to figure out. Waitpress and WaitStart appear redundant. In either case, begin waiting for press...
-            if(p.trial.CurTime > p.trial.Timer.Wait)
-            % no trial initiated in the given time window
+            
+            if(p.trial.CurTime > p.trial.Timer.Wait)                
+                % no trial initiated in the given time window
                 Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
             elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
                 Task_InitPress(p);
@@ -316,6 +321,15 @@ function TaskDesign(p)
     end  % switch p.trial.CurrEpoch
 
 % ------------------------------------------------------------------------%
+
+%% New Task for radius-oriented task structure
+function AltTaskDesign(p)
+
+p.trial.stim.RING = pds.stim.Ring(p,[0,0],0,10,2,'blue',0); %stim will come in handy down the road...was thinking I could use this as a center circle to start and if ~Ring stim, then reward, etc...
+%but otherwise, maybe somehow just display a line and monitor x,y values so that whenoutside it, give reward...still thinking on this.
+
+
+%%
 function TaskCleanAndSave(p)
 %% Clean up textures, variables, and save useful info to ascii table
 Task_Finish(p);

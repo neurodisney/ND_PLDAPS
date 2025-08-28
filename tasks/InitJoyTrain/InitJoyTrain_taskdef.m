@@ -15,7 +15,7 @@ function p = InitJoyTrain_taskdef(p)
 % Full task requires to press joystick after trial start cue goes on, waits for a change of target and then 
 % release the joystick as response. 
 % If FullTask is set to zero, it just waits for trial start cue and rewards when pressed as response to cue onset.
-p.trial.task.FullTask = 0;
+p.trial.task.FullTask = 1;
 % ------------------------------------------------------------------------%
 %% Task Timings
 p.trial.task.Timing.WaitStart   = 2.50;   % maximal time period [s] in seconds to press the lever in order to start a trial.
@@ -47,6 +47,7 @@ p.trial.reward.Step = [1, 2];        % define the number of trials when to incre
 p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
+
 %% Condition/Block design
 p.trial.task.EqualCorrect = 0; % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 
@@ -117,7 +118,8 @@ p.trial.Block.Conditions = {c5}; % 7/31/2025 adding here so p will -hopefully- p
 
 % ------------------------------------------------------------------------%
 
-%% 
+%% Get both screens to s how the same
+p.defaultParameters.display.monkeyCLUT = p.defaultParameters.display.humanCLUT; % simple switch so that display shows up on both...may need to check output logs though.
 
 %% Stimulus parameters
 

@@ -23,10 +23,10 @@ p.trial.reward.Dur          = 0.5; % reward duration for pulse in reward series 
 p.trial.reward.Step         = [0, 4, 8, 12];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
-p.trial.reward.ManDur       = 0.3; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur       = 0.2; % reward duration [s] for reward given by keyboard presses
 
 p.trial.reward.jackpotTime  = 0.20;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.4;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotDur   = 0.2;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
