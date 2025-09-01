@@ -83,6 +83,8 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
         
         p.trial.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.trial.pldaps.draw.joystick.levelsz);
         
+        %disp(cjpos) % MJH - display cjpos while I run task to see values...
+        
         % get a representation of the current threshold to recognize pull/release
         p.trial.pldaps.draw.joystick.threct = p.trial.pldaps.draw.joystick.rect;
         

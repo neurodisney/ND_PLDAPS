@@ -173,6 +173,7 @@ function TaskSetUp(p)
     
     % present joystick pointer on screen
     
+
        
     ND_SwitchEpoch(p, 'ITI');  % define first task epoch % 8/1/25 - MJH - copied from FixTrain, but GetReady seems to be the epoch to kick things off for joystick.
     %ND_SwitchEpoch(p, 'GoMichael') % Debug idea John came up with lol see how it switches.
@@ -191,7 +192,8 @@ function TaskDesign(p)
         Task_WaitITI(p);
         
         case p.trial.epoch.TrialStart % 8/7/25 - MJH - added attempting to get ITI established and then start a "next trial" not working though as of yet 
-            
+            %ND_FixSpot(p,1) % MJH 8/29/2025 - adding to attempt getting circle/ring onto screen.
+            %p.trial.stim.rings.cue.on = 1; % MJH 8/29/2025 - the above and this are not getting any ring on the screen...
             p.trial.EV.TaskStart     = p.trial.CurTime; % 8/8/25 mark the start of trial
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             
@@ -244,7 +246,12 @@ function TaskDesign(p)
                 else
                 % we just got a press in time
                     Task_ON(p);
-                    
+                   
+                   if(p.trial.task.AltDesign)
+                       % present ring stimuli on screen
+                       p.trial.task.stimState = 1; % trying different things to get a stimulus on the screen. Not sure right now though.
+                       pds.stim.Ring(p) % same issue as above.
+                   end
                     
                    if(p.trial.task.FullTask)
                         % do full task, use other task epochs

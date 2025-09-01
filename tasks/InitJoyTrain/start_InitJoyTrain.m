@@ -63,6 +63,9 @@ SS.datapixx.useAsEyepos       = 0;
 SS.datapixx.useJoystick       = 1;
 SS.datapixx.TTL_trialOn       = 0;
 
+% Creating a stim field in the p struct so that a ring stimulus object can be invoked
+SS.stim.fix.on = 0; %MJH 8/29/2025
+
 % switch here to get calibration functionality
 SS.behavior.fixation.useCalibration = 0;
 SS.behavior.fixation.enableCalib    = 0;

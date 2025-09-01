@@ -17,6 +17,9 @@ function p = InitJoyTrain_taskdef(p)
 % If FullTask is set to zero, it just waits for trial start cue and rewards when pressed as response to cue onset.
 p.trial.task.FullTask = 1;
 % ------------------------------------------------------------------------%
+
+p.trial.task.AltDesign = 1; % MJH 9/1/2025 - If true, circumvent timing-related condition, and proceed to alternate circle stim task.
+
 %% Task Timings
 p.trial.task.Timing.WaitStart   = 2.50;   % maximal time period [s] in seconds to press the lever in order to start a trial.
 p.trial.task.Timing.WaitResp    = 2.50;   % Only response times [s] after this wait period will be considered stimulus driven responses
@@ -154,6 +157,15 @@ p.trial.behavior.joystick.PullThr = 1.5;  % threshold to detect a joystick press
 p.trial.behavior.joystick.RelThr  = 1.0;  % threshold to detect a joystick release
 
 % ------------------------------------------------------------------------%
+%% Boundary parameters
+    % trying to get stimulus properties set that will present ring stimulus MJH 9/1/2025
+    p.trial.stim.RING.linewidth = 3;
+    p.trial.stim.RING.pos = [0,0];
+    p.trial.stim.RING.fixWin = 3;
+    p.trial.stim.RING.radius = 10;
+    p.trial.stim.RING.lineWeight = 3;
+    p.trial.stim.RING.color = 'blue';
+    
 %% Trial duration
 % maxTrialLength is used to pre-allocate memory at several initialization
 % steps. It specifies a duration in seconds.
