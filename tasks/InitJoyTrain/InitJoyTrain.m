@@ -173,6 +173,14 @@ function TaskSetUp(p)
     
     % present joystick pointer on screen
     
+    %p.trial.stim.ringObj = pds.stim.Ring(p.trial.stim.RING);
+    p.trial.stim.ringObj = pds.stim.Ring(p,[0,0],0,5,[1,1],'blue',0); % somehow I need to have more control over these variables, currently just hardcoding them in here.
+    p.trial.stim.ringObj.on = true;
+    p.trial.stim.allStims{end+1} = p.trial.stim.ringObj;
+    % 9/1/2025 MJH - No idea what to do here yet, how to define the stim object, how to get it to show. Deadend currently.
+    
+
+    
 
        
     ND_SwitchEpoch(p, 'ITI');  % define first task epoch % 8/1/25 - MJH - copied from FixTrain, but GetReady seems to be the epoch to kick things off for joystick.
@@ -249,8 +257,11 @@ function TaskDesign(p)
                    
                    if(p.trial.task.AltDesign)
                        % present ring stimuli on screen
-                       p.trial.task.stimState = 1; % trying different things to get a stimulus on the screen. Not sure right now though.
-                       pds.stim.Ring(p) % same issue as above.
+                       
+
+                       
+                       %p.trial.task.stimState = 1; % trying different things to get a stimulus on the screen. Not sure right now though.
+                       %pds.stim.Ring(p) % same issue as above.
                    end
                     
                    if(p.trial.task.FullTask)

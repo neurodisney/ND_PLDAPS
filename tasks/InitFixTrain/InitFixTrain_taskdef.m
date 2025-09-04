@@ -15,22 +15,22 @@ function p = InitFixTrain_taskdef(p)
 % ------------------------------------------------------------------------%
 %% Reward
 % manual reward from experimenter
-p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
+p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.5; % duration of the initial reward
 
 p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur          = 0.5; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Dur          = 0.25; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 4, 8, 12];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
 
 p.trial.reward.ManDur       = 0.2; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime  = 0.20;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.2;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotTime  = 0.15;     % total time required to fixate to get full reward
+p.trial.reward.jackpotDur   = 0.3;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = .125; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
+p.trial.behavior.fixation.MinFixStart = .3; % minimum time to wait for robust fixation, if GiveInitial == 1 after this period a reward is given
 
 p.trial.task.Timing.WaitFix = 2.0;  % Time to get a solid fixation before trial ends unsuccessfully
 
@@ -102,13 +102,13 @@ p.trial.Block.maxBlockTrials =  [1];
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size = 0.5;     % size of the fixation spot
-p.trial.stim.FIXSPOT.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
+p.trial.stim.FIXSPOT.size = 0.35;     % size of the fixation spot
+p.trial.stim.FIXSPOT.color  = 'cyan';  % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixWinStp = 0.6;  % refine resizing of fixation step for this task only(modify default rig settings)
 
 % color options (make sure colors are defined!)
-p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
-%p.trial.task.Color_list = {'dRed'};
+%p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
+p.trial.task.Color_list = {'cyan'};
 
 % Enable random positions
 p.trial.task.RandomPos = 0;

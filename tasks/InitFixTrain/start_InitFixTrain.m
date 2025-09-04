@@ -46,8 +46,8 @@ SS.editable = {'task.RandomPos', 'task.Color_list', 'stim.FIXSPOT.pos'};
 % ------------------------------------------------------------------------%
 %% Enable required components if needed
 % Most of the components are disabled as default. If needed for the task enable them here.
-SS.sound.use                  = 1;
-SS.sound.useDatapixx          = 1;
+SS.sound.use                  = 0;
+SS.sound.useDatapixx          = 0;
 SS.behavior.fixation.use      = 1; % eye position is behavioral relevant
 SS.behavior.joystick.use      = 0; % joystick is behavioral relevant
 SS.plot.do_online             = 0; % run online data analysis between two subsequent trials

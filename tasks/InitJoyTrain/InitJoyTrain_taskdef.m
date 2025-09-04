@@ -158,13 +158,15 @@ p.trial.behavior.joystick.RelThr  = 1.0;  % threshold to detect a joystick relea
 
 % ------------------------------------------------------------------------%
 %% Boundary parameters
-    % trying to get stimulus properties set that will present ring stimulus MJH 9/1/2025
-    p.trial.stim.RING.linewidth = 3;
-    p.trial.stim.RING.pos = [0,0];
-    p.trial.stim.RING.fixWin = 3;
-    p.trial.stim.RING.radius = 10;
-    p.trial.stim.RING.lineWeight = 3;
-    p.trial.stim.RING.color = 'blue';
+%     % trying to get stimulus properties set that will present ring stimulus MJH 9/1/2025
+p.trial.stim.RING.linewidth = 3;
+p.trial.stim.RING.pos = [0,0];
+p.trial.stim.RING.fixWin = 3;
+p.trial.stim.RING.radius = 10;
+p.trial.stim.RING.lineWeight = 3;
+p.trial.stim.RING.color = 'blue';
+
+
     
 %% Trial duration
 % maxTrialLength is used to pre-allocate memory at several initialization

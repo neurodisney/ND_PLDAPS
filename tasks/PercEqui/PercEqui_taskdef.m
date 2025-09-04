@@ -14,42 +14,30 @@ function p = PercEqui_taskdef(p)
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.2;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [50, 150, 300,  400, 500,  600, 650]; % increase number of pulses with this trial number
-<<<<<<< HEAD
 p.trial.reward.IncrementDur   = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]; % increase number of pulses with this trial number
 p.trial.reward.DiscourageProp = 1.0;  % proportion of reward given if previous trial was an error
 
 %%p.trial.reward.IncrementTrial = [150,  250,   350, 450,   550,  650, 750]; % increase number of pulses with this trial number
 %%p.trial.reward.IncrementDur   = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.25]; % increase number of pulses with this trial number
-=======
 p.trial.reward.IncrementDur   = [0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15]; % increase number of pulses with this trial number
 p.trial.reward.DiscourageProp = 1.0;  % proportion of reward given if previous trial was an error
 
 %p.trial.reward.IncrementTrial = [150,  250,   350, 450,   550,  650, 750]; % increase number of pulses with this trial number
 %p.trial.reward.IncrementDur   = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.3]; % increase number of pulses with this trial number
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 
 % ------------------------------------------------------------------------%
 %% Timing
-p.trial.behavior.fixation.MinFixStart = ND_GetFixDur(.75, 2.5, [],[],1,.25);  % minimum time to wait for robust fixation
+p.trial.behavior.fixation.MinFixStart = ND_GetFixDur(.15, 0.15, [],[],0.1,.10);  % minimum time to wait for robust fixation
 
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
-<<<<<<< HEAD
-p.trial.task.stimLatency      = ND_GetITI(0.5, 1.5, [], [], 1, 0.10); % Time from fixation onset to stim appearing
-=======
-p.trial.task.stimLatency      = ND_GetITI(0.10); % Time from fixation onset to stim appearing
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
-
+p.trial.task.stimLatency      = ND_GetITI(0.10, 0.10, [], [], 0.1, 0.10); % Time from fixation onset to stim appearing
 p.trial.task.saccadeTimeout   = 1.5;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = .1;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
-<<<<<<< HEAD
-p.trial.task.Timing.TimeOut   =  2.5;  % Time-out[s]  for incorrect responses
-=======
-p.trial.task.Timing.TimeOut   =  1;  % Time-out[s]  for incorrect responses
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
+p.trial.task.Timing.TimeOut   =  1.5;  % Time-out[s]  for incorrect responses
 p.trial.task.Timing.ITI       = ND_GetITI(1.25,  1.75,  [], [], 1, 0.10);
 
 % ----------------------------------- -------------------------------------%
@@ -67,8 +55,7 @@ p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 % p.trial.stim.EccLst =  3;
 %p.trial.stim.AngLst = [45, 0, -45]; 
 
-p.trial.stim.PosX = 2.5;
-<<<<<<< HEAD
+p.trial.stim.PosX = 3.0;
 %p.trial.stim.PosX = datasample([-2.5, 2.5], 1);
 %p.trial.stim.PosY = datasample([-4, 4], 1);
 p.trial.stim.PosY = 0;
@@ -81,7 +68,6 @@ cCtr = 0.3;
 %ctrng = ND_HalfSpace(0, 8, 9);
 ScaleCtr = round (cCtr*100);
 ctrng = ND_HalfSpace(0,ScaleCtr,5);
-=======
 %p.trial.stim.PosY = datasample([-2, 0, 2], 1);
 p.trial.stim.PosY = 0;
 
@@ -93,7 +79,6 @@ ScaleCtr = round(cCtr*100);
 
 % ctrng = ND_HalfSpace(0, 5, 8);
 ctrng = ND_HalfSpace(0, ScaleCtr, 5);
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
 
 %ctrng = unique(cCtr * [0, fliplr(1 - ctrng(2:end)), 1 + ctrng]);
 ctrng = unique(cat(2,(cCtr+ctrng./100),(cCtr-ctrng./100)));
@@ -120,7 +105,7 @@ p.trial.stim.trgtconts    = ctrng;
 p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color  = 'dGreen';   % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size   = 0.2;    % size of the fixation spot
+p.trial.stim.FIXSPOT.size   = 0.35;    % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters
