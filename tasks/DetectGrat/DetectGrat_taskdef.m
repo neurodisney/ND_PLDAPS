@@ -62,7 +62,7 @@ p.trial.stim.GRATING.fixWin = 5;
 p.trial.stim.GRATING.radius = 1.0;  % radius of grating patch
 
 p.trial.stim.EccLst = [3]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
-p.trial.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
+%p.trial.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
 
 % grating contrast
 %p.trial.stim.trgtconts = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
@@ -90,7 +90,7 @@ p.trial.Block.maxBlockTrials = 10;
 p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'rect';          % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color  = 'white';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size   = 0.750;           % size of the fixation spot
+p.trial.stim.FIXSPOT.size   = 0.50;           % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Drug delivery parameters (added by Corey)

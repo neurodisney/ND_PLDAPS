@@ -128,9 +128,13 @@ else
         case p.trial.pldaps.trialStates.framePrepareDrawing
         %% Get ready to display
         % prepare the stimuli that should be shown, do some required calculations
+            if(p.trial.task.AltDesign)
+                AltTaskDesign(p);
+            else
+                TaskDesign(p);
+            end
+            %disp(p.trial.CurrEpoch) % 8/8/25 - MJH - debugging and want to see trial state switches
             
-            TaskDesign(p);
-            disp(p.trial.CurrEpoch) % 8/8/25 - MJH - debugging and want to see trial state switches
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
@@ -174,8 +178,8 @@ function TaskSetUp(p)
     % present joystick pointer on screen
     
     %p.trial.stim.ringObj = pds.stim.Ring(p.trial.stim.RING);
-    p.trial.stim.ringObj = pds.stim.Ring(p,[0,0],0,5,[1,1],'blue',0); % somehow I need to have more control over these variables, currently just hardcoding them in here.
-    p.trial.stim.ringObj.on = true;
+    p.trial.stim.ringObj = pds.stim.Ring(p,[0,0],0,4,[0.5,0.5],'blue',0); % somehow I need to have more control over these variables, currently just hardcoding them in here.
+    %p.trial.stim.ringObj.on = true; % << this line I should try only within a specific part of TaskDesign...
     p.trial.stim.allStims{end+1} = p.trial.stim.ringObj;
     % 9/1/2025 MJH - No idea what to do here yet, how to define the stim object, how to get it to show. Deadend currently.
     
@@ -242,6 +246,13 @@ function TaskDesign(p)
         %% Wait for joystick press
             %ND_SwitchEpoch(p,'WaitPress'); %MJH - Added but trying to figure out. Waitpress and WaitStart appear redundant. In either case, begin waiting for press...
             
+            %present ring stim if that is the trial condition we are working with
+            if(p.trial.task.AltDesign)
+                p.trial.stim.ringObj.on = true;
+            end
+                    
+                       
+            
             if(p.trial.CurTime > p.trial.Timer.Wait)                
                 % no trial initiated in the given time window
                 Task_NoStart(p);   % Go directly to TaskEnd, do not start task, do not collect reward
@@ -254,15 +265,9 @@ function TaskDesign(p)
                 else
                 % we just got a press in time
                     Task_ON(p);
+                    
                    
-                   if(p.trial.task.AltDesign)
-                       % present ring stimuli on screen
-                       
 
-                       
-                       %p.trial.task.stimState = 1; % trying different things to get a stimulus on the screen. Not sure right now though.
-                       %pds.stim.Ring(p) % same issue as above.
-                   end
                     
                    if(p.trial.task.FullTask)
                         % do full task, use other task epochs
@@ -341,10 +346,61 @@ function TaskDesign(p)
 % ------------------------------------------------------------------------%
 
 %% New Task for radius-oriented task structure
-function AltTaskDesign(p)
+function AltTaskDesign(p) %this entire alternate trial progression is based on whether p.trial.task.AltDesign in 
 
-p.trial.stim.RING = pds.stim.Ring(p,[0,0],0,10,2,'blue',0); %stim will come in handy down the road...was thinking I could use this as a center circle to start and if ~Ring stim, then reward, etc...
-%but otherwise, maybe somehow just display a line and monitor x,y values so that whenoutside it, give reward...still thinking on this.
+    switch p.trial.CurrEpoch
+        
+        case p.trial.epoch.ITI % ITI kicks things off, shown at the end of TaskSetup()
+            Task_WaitITI(p); 
+            % there is a switch case within Task_WaitITI to go to TrialStart (below)
+            
+        case p.trial.epoch.TrialStart
+            p.trial.EV.TaskStart = p.trial.CurTime; % capture trial start time and date info 
+            p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
+            p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.MinRel;% Establish wait period after trial start
+            ND_SwitchEpoch(p,'GetReady')
+            
+        case p.trial.epoch.GetReady % joystick needs to be in released state for a period of time to properly start trial
+            if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
+                Task_NotReady(p); %joystick pressed too quickly, go directly to TaskEnd, do not start task, do not reward
+            elseif(p.trial.CurTime > p.trial.Timer.Wait)
+                Task_Ready(p); %joystick has been in non-held state long enough
+                pds.audio.playDP(p,'cue','left');
+                ND_SwitchEpoch(p,'WaitStart');
+            end
+            
+        case p.trial.epoch.WaitStart
+            p.trial.stim.ringObj.on = true;
+            if(p.trial.CurTime > p.trial.Timer.Wait)
+                Task_NoStart(p); % no trial initiated in given time window, go directly to TaskEnd, do not start task, do not reward
+            elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
+                Task_InitPress(p);
+                if(p.trial.EV.StartRT < p.trial.task.Timing.minRT)
+                    Task_PrematStart(p); % response was too quick to be real
+                else
+                    Task_ON(p);
+                    if(p.trial.task.FullTask)
+                        if p.trial.joyDist > 4 % adding this in coarsely for time being - MJH 9/7/2025
+                            Task_CorrectReward(p)
+                        end
+                        %use line 269 as a basis but there is where specific arguments for levelrect in and outside boundary
+                        % in combination w/ ND_CheckJoystick become important.
+                    else
+                        Task_CorrectReward(p); % that was the task, reward animal and done
+                    end
+                end
+            end
+            
+        case p.trial.epoch.WaitEnd %Need to include WaitEnd due to Task_CorrectReward() function
+            Task_OFF(p);
+            p.trial.flagNextTrial = 1;
+            
+%         case p.trial.epoch.TaskEnd
+%             Task_OFF(p);
+%             p.trial.flagN
+            
+    end
+                    
 
 
 %%
@@ -358,7 +414,7 @@ p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes
 % Save useful info to an ascii table for plotting
 ND_Trial2Ascii(p, 'save');
 
-
+%p.trial.flagNextTrial = 1;
 
 % function TaskDraw(p)
 %% show epoch dependent stimuli

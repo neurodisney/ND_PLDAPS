@@ -26,6 +26,12 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
     p.trial.joyY   = mean(p.trial.AI.Joy.Y(sIdx) - p.trial.behavior.joystick.Zero(2));
     p.trial.joyAmp = mean(p.trial.AI.Joy.Amp(sIdx));
     
+    
+    % create a distance variable to be used for measuring position from center w/ euclidean distance (dist. = sqrt(x^2 + y^2))
+    p.trial.joyDist = sqrt((p.trial.joyX)^2 + (p.trial.joyY)^2)*p.trial.pldaps.draw.joystick.sclfac;
+    
+    
+    
     % if relevant for task determine joystick state
     if(p.trial.behavior.joystick.use)
         % ND_CtrlMsg(p, ['Joystick State: ',int2str(p.trial.JoyState.Current),'; curr Amp: ',num2str(p.trial.joyAmp,'%.4f')]);
@@ -84,7 +90,8 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
         p.trial.pldaps.draw.joystick.levelrect = ND_GetRect(cjpos, p.trial.pldaps.draw.joystick.levelsz);
         
         %disp(cjpos) % MJH - display cjpos while I run task to see values...
-        
+        %disp(p.trial.pldaps.draw.joystick.levelrect)
+        disp(p.trial.joyDist)
         % get a representation of the current threshold to recognize pull/release
         p.trial.pldaps.draw.joystick.threct = p.trial.pldaps.draw.joystick.rect;
         
