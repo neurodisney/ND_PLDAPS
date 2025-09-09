@@ -133,7 +133,7 @@ else
             else
                 TaskDesign(p);
             end
-            %disp(p.trial.CurrEpoch) % 8/8/25 - MJH - debugging and want to see trial state switches
+            disp(p.trial.CurrEpoch) % 8/8/25 - MJH - debugging and want to see trial state switches
             
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
@@ -371,9 +371,11 @@ function AltTaskDesign(p) %this entire alternate trial progression is based on w
             
         case p.trial.epoch.WaitStart
             p.trial.stim.ringObj.on = true;
-            if(p.trial.CurTime > p.trial.Timer.Wait)
-                Task_NoStart(p); % no trial initiated in given time window, go directly to TaskEnd, do not start task, do not reward
-            elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
+            %if(p.trial.CurTime > p.trial.Timer.Wait)
+            %    Task_NoStart(p); % no trial initiated in given time window, go directly to TaskEnd, do not start task, do not reward
+            
+            %elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
+            if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
                 Task_InitPress(p);
                 if(p.trial.EV.StartRT < p.trial.task.Timing.minRT)
                     Task_PrematStart(p); % response was too quick to be real
@@ -381,6 +383,7 @@ function AltTaskDesign(p) %this entire alternate trial progression is based on w
                     Task_ON(p);
                     if(p.trial.task.FullTask)
                         if p.trial.joyDist > 4 % adding this in coarsely for time being - MJH 9/7/2025
+                            pds.reward.give(p, p.trial.reward.PullRew);
                             Task_CorrectReward(p)
                         end
                         %use line 269 as a basis but there is where specific arguments for levelrect in and outside boundary
@@ -395,9 +398,10 @@ function AltTaskDesign(p) %this entire alternate trial progression is based on w
             Task_OFF(p);
             p.trial.flagNextTrial = 1;
             
-%         case p.trial.epoch.TaskEnd
-%             Task_OFF(p);
-%             p.trial.flagN
+        case p.trial.epoch.TaskEnd
+            Task_OFF(p);
+            p.trial.epoch.TaskEnd = 1;
+           
             
     end
                     

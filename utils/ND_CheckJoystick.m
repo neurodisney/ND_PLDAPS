@@ -91,7 +91,7 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
         
         %disp(cjpos) % MJH - display cjpos while I run task to see values...
         %disp(p.trial.pldaps.draw.joystick.levelrect)
-        disp(p.trial.joyDist)
+        %disp(p.trial.joyDist)
         % get a representation of the current threshold to recognize pull/release
         p.trial.pldaps.draw.joystick.threct = p.trial.pldaps.draw.joystick.rect;
         
