@@ -250,17 +250,78 @@ c1.Nr = 1;
 SS.Block.Conditions     = {c1}; % as default only one condition
 SS.Block.BlockList      = [];
 
-%SS.Block.cuedMag        =  0;
-%SS.Block.uncuedMag      =  0;
+% Typify tasks
+SS.Block.locIdx             = 1;
 
-SS.Block.locIdx         = 1;
-SS.Block.missLog        = 0;
-SS.Block.blownTrial     = 0;
-SS.Block.stimConfigs    = [1, 2, 3, 4, 5];
-SS.Block.quadList       = [1, 2, 3, 4];
-SS.Block.cuedRatio      = [1, 1, 1, 1, 1, 1, 1, 0];
-SS.Block.cuedMagList    = [0, 8, 8, 16, 16, 16, 16, 32, 32, 32, 32, 32, 32, 64, 64];
-SS.Block.uncuedMagList  = [0, 8, 8, 16, 16, 16, 16, 32, 32, 32, 32, 32, 64, 64, 64];
+% AttendGrat
+SS.Block.missLog            = 0;
+SS.Block.cuedRatio          = [];
+SS.Block.cuedMagList        = [];
+SS.Block.uncuedMagList      = [];
+SS.Block.repeatFlag         = 0;
+SS.Block.repeatConfig       = [];
+
+SS.Block.cuedQuadList       = [];
+
+SS.Block.cuedConfigs1       = [];
+SS.Block.cuedConfigs2       = [];
+SS.Block.cuedConfigs3       = [];
+SS.Block.cuedConfigs4       = [];
+
+SS.Block.cuedOriList11      = [];
+SS.Block.cuedOriList12      = [];
+SS.Block.cuedOriList13      = [];
+SS.Block.cuedOriList14      = [];
+SS.Block.cuedOriList15      = [];
+
+SS.Block.cuedOriList21      = [];
+SS.Block.cuedOriList22      = [];
+SS.Block.cuedOriList23      = [];
+SS.Block.cuedOriList24      = [];
+SS.Block.cuedOriList25      = [];
+
+SS.Block.cuedOriList31      = [];
+SS.Block.cuedOriList32      = [];
+SS.Block.cuedOriList33      = [];
+SS.Block.cuedOriList34      = [];
+SS.Block.cuedOriList35      = [];
+
+SS.Block.cuedOriList41      = [];
+SS.Block.cuedOriList42      = [];
+SS.Block.cuedOriList43      = [];
+SS.Block.cuedOriList44      = [];
+SS.Block.cuedOriList45      = [];
+
+SS.Block.uncuedQuadList     = [];
+
+SS.Block.uncuedConfigs1     = [];
+SS.Block.uncuedConfigs2     = [];
+SS.Block.uncuedConfigs3     = [];
+SS.Block.uncuedConfigs4     = [];
+
+SS.Block.uncuedOriList11    = [];
+SS.Block.uncuedOriList12    = [];
+SS.Block.uncuedOriList13    = [];
+SS.Block.uncuedOriList14    = [];
+SS.Block.uncuedOriList15    = [];
+
+SS.Block.uncuedOriList21    = [];
+SS.Block.uncuedOriList22    = [];
+SS.Block.uncuedOriList23    = [];
+SS.Block.uncuedOriList24    = [];
+SS.Block.uncuedOriList25    = [];
+
+SS.Block.uncuedOriList31    = [];
+SS.Block.uncuedOriList32    = [];
+SS.Block.uncuedOriList33    = [];
+SS.Block.uncuedOriList34    = [];
+SS.Block.uncuedOriList35    = [];
+
+SS.Block.uncuedOriList41    = [];
+SS.Block.uncuedOriList42    = [];
+SS.Block.uncuedOriList43    = [];
+SS.Block.uncuedOriList44    = [];
+SS.Block.uncuedOriList45    = [];
 
 
 % ------------------------------------------------------------------------%
@@ -419,8 +480,8 @@ SS.stim.RECTANGLE.reward    = 0;
 SS.datapixx.useJoystick      = 0;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XJoyChannel  = 3;
-SS.datapixx.adc.YJoyChannel  = 4;
+SS.datapixx.adc.XJoyChannel  = 4;
+SS.datapixx.adc.YJoyChannel  = 5;
 
 SS.behavior.joystick.use     =  0;         % does this task require control of joystick state
 SS.behavior.joystick.Zero    = [2.6, 2.6]; % joystick signal at resting state (released)
@@ -475,6 +536,11 @@ SS.pldaps.draw.ScreenEventName = {};      % keep track of times in pldaps data f
 %% Keyboard assignments
 % assign keys to specific functions here and utilize these in the
 % ND_CheckKey function to trigger defined actions.
+
+% ptb = '/usr/local/Psychtoolbox-3/Psychtoolbox';
+% addpath(ptb);
+% addpath(fullfile(ptb, 'PsychBasic'));
+% addpath(fullfile(ptb, 'PsychHardware'))
 KbName('UnifyKeyNames');
 
 SS.key.reward    = KbName('space');  % trigger reward

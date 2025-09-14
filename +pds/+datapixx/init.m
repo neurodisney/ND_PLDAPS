@@ -36,6 +36,8 @@ function p =  init(p)
 % 2017       Nate adds option to decrease propixx screen brightness
 global dpx GL;
 
+% --- Open (quietly) and verify readiness
+
 if ~Datapixx('IsReady')
     Datapixx('Open');
 end
@@ -45,6 +47,7 @@ end
 % computational overhead to acquire and log timestamps, typically up to 2-3
 % msecs of extra time per 'Flip' command.
 % Buffer is collected at the end of the expeiment!
+
 PsychDataPixx('LogOnsetTimestamps',p.defaultParameters.datapixx.LogOnsetTimestampLevel);%2
 PsychDataPixx('ClearTimestampLog');
 
@@ -65,6 +68,7 @@ if Datapixx('IsPropixx')
     if ~Datapixx('IsPropixxAwake')
         Datapixx('SetPropixxAwake');
     end
+    Datapixx('SetPropixxAwake');
     Datapixx('EnablePropixxLampLed');
 
     if p.defaultParameters.datapixx.enablePropixxRearProjection

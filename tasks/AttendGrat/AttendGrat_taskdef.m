@@ -4,7 +4,6 @@
 % Function to define task parameters
 function p = AttendGrat_taskdef(p)
 
-
     % Setting time window for fixation before trial marked as 'NoStart'
     p.trial.task.Timing.WaitFix = 2;
 
@@ -23,37 +22,47 @@ function p = AttendGrat_taskdef(p)
     % Setting number of trials per block
     p.trial.Block.maxBlockTrials = 1;
 
-    % Set ratio of cued to uncued trials
-    p.trial.task.cuedRatio = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-
 
     % Setting RF properties
-    RFpos = [3, -4];
-    p.trial.task.RFpos = RFpos;
+    RfPos = [6, -8];
+    p.trial.task.RfPos = RfPos;
 
-    RFori = 70;
-    p.trial.task.RFori = RFori;
-    p.trial.task.targOriList = [RFori - 20, RFori, RFori + 20];
-    p.trial.task.disOriList = [RFori - 40, RFori + 40];
+    RfOri = 270;
+    p.trial.task.RfOri = RfOri;
+    p.trial.task.RfOriCurve = [RfOri - 40, RfOri - 20, RfOri, RfOri + 20, RfOri + 20];
 
-    RFsize = 1.25; 
-    p.trial.stim.RING.radius = RFsize + 0.5;
-    p.trial.stim.DRIFTGABOR.radius = RFsize;
+    RfRadius = 1.5; 
+    p.trial.task.RfSize = RfRadius;
+    p.trial.stim.DRIFTGABOR.radius = RfRadius;
 
-    
-    % Setting stimulus parameters
+    % Setting ring properties
+    ringPos = RfPos;
+    p.trial.task.ringPos = ringPos;
+
+    ringRadius = RfRadius + 0.5;
+    p.trial.task.ringSize = ringRadius;
+    p.trial.stim.RING.radius = ringRadius;
+
+    cueRingDelta = 10;
+    p.trial.task.cueRingDelta = cueRingDelta;
+    p.trial.stim.ringParameters.cueCon = sprintf('down%d', cueRingDelta);
+
+    baseRingDelta = 1;
+    p.trial.task.baseRingDelta = baseRingDelta;
+    p.trial.stim.ringParameters.distCon = sprintf('up%d', baseRingDelta);
+
+    p.trial.task.ringFlash = 0.200;
+    p.trial.stim.ringParameters.cue2Con =  sprintf('down%d', 6);
+
+    % Setting gabor properties
     p.trial.stim.gaborParameters.sFreq = 1.5;
     p.trial.stim.gaborParameters.tFreq = 5;
     p.trial.stim.gaborParameters.contrast = 0.80;
     p.trial.stim.DRIFTGABOR.size = [5, 5];
 
-    % Creating lists of orientation change magnitudes to apply to blocks
-    p.trial.Block.cuedMagList = [0, 8, 16, 16, 32, 32, 32, 64, 64];
-    p.trial.Block.uncuedMagList = [0, 8, 16, 16, 32, 32, 32, 64, 64];
-
     % Calculating points along line of is eccentricity
-    targ_x = p.trial.task.RFpos(1);
-    targ_y = p.trial.task.RFpos(2);
+    targ_x = RfPos(1);
+    targ_y = RfPos(2);
 
     targ_angle = rad2deg(atan2(targ_y, targ_x));
     angle_arr = [targ_angle, targ_angle + 90, targ_angle + 180, targ_angle + 270];
@@ -93,15 +102,8 @@ function p = AttendGrat_taskdef(p)
 
     end
 
-
-    % Loading contrast for cue and distractor rings
-    p.trial.task.cStep = 5;
-    p.trial.stim.ringParameters.cueCon = sprintf('down%d', p.trial.task.cStep);
-    p.trial.stim.ringParameters.distCon = sprintf('up%d', p.trial.task.cStep);
-    
-
     % Setting amount of time rings are presented before grats come on
-    p.trial.task.CueWait = 1.5;
+    p.trial.task.CueWait = 1.25;
     
     % Assigning lineweight (thickness) to rings
     p.trial.stim.RING.lineWeight = [0.3, 0.3];
@@ -114,10 +116,10 @@ function p = AttendGrat_taskdef(p)
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
-    num_range = [1, 100];
-    mean = 2;
-    bound1 = 1.5;
-    bound2 = 3;
+    num_range = [1, 5];
+    mean = 1.5;
+    bound1 = 1.25;
+    bound2 = 3.25;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -136,7 +138,7 @@ function p = AttendGrat_taskdef(p)
     
     % Setting time that must transpire before saccade can be made without
     % being marked as fix break
-    p.trial.task.breakFixCheck = 0.050;
+    p.trial.task.breakFixCheck = 0.010;
     
     % Setting time window in which response saccade allowed
     p.trial.task.Timing.saccadeStart = 0.100;
@@ -146,10 +148,16 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.minTargetFixTime = 0.20; 
     
     % Creating trial increments to scale size of reward based on good performance
-    p.trial.reward.IncrementTrial = 10:10:1000;
+    p.trial.reward.IncrementTrial = 40:40:2000;
+    p.trial.reward.penalty = 0.005;
     
     % List of increasing durations of juice flow for reward
     p.trial.reward.IncrementDur = 0.15:0.001:(0.15 + 0.001*(length(p.trial.reward.IncrementTrial) - 1));
 
+    % Setting rig equipment distances (inches)
+    p.trial.task.VPixx2ScreenDis = 60;
+    p.trial.task.Screen2MonkeyDis = 25;
+    p.trial.task.EyeCam2MonkeyDis = 18;
+    
 end
 

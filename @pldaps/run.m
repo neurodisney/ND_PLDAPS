@@ -144,7 +144,14 @@ try
                 end
             end
             
-            % ----------------------------------------------------------------%
+            % ------------);
+
+    % Setting amount of time rings are presented before grats come on
+    p.trial.task.CueWait = 1.2;
+    
+    % Assigning lineweight (thickness) to rings
+    p.trial.stim.RING.lineWeight = [0.3, 0.3];
+%----------------------------------------------------%
             %% make online plots
             if(p.trial.plot.do_online)
                 feval(p.trial.plot.routine, p);

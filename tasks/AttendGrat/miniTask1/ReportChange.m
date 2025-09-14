@@ -92,16 +92,15 @@ function TaskSetUp(p)
         % Creating target grating pre-orientation change by assigning
         % values to grating properties in pldaps struct
         pos = cell2mat(p.trial.stim.posList(1));
-%         p.trial.stim.GRATING.pos = pos([1 2]);
-%         p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(1);
-%         p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
-%         p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori;
+        p.trial.stim.GRATING.pos = pos([1 2]);
+        p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(1);
+        p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
+        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori;
 
-        p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
+        %p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
         
         % Compiling properties into pldaps struct to present grating on screen
-%         p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
-        p.trial.stim.gratings.preTarget = pds.stim.DriftGabor(p);
+        p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
 
         % Creating target grating post-orientation change by assigning
         % values to grating properties in pldaps struct

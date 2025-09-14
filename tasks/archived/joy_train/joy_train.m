@@ -26,11 +26,12 @@ if(~exist('state', 'var'))
     state = [];
 end
 
+
 % ####################################################################### %
 %% Call standard routines before executing task related code
 % This carries out standard routines, mainly in respect to hardware interfacing.
 % Be aware that this is done first for each trial state!
-p = ND_GeneralTrialRoutines(p, state);
+% p = ND_GeneralTrialRoutines(p, state);
 
 % ####################################################################### %
 %% Initial call of this function. Use this to define general settings of the experiment/session.
@@ -45,7 +46,7 @@ if(isempty(state))
     % --------------------------------------------------------------------%
     %% define ascii output file
     % call this after ND_InitSession to be sure that output directory exists!
-    Trial2Ascii(p, 'init');
+    %Trial2Ascii(p, 'init');
 
     % --------------------------------------------------------------------%
     %% Color definitions of stuff shown during the trial
@@ -124,6 +125,8 @@ else
 % ####################################################################### %
 %% Subsequent calls during actual trials
 % execute trial specific commands here.
+
+    p = ND_GeneralTrialRoutines(p, state);
 
     switch state
 % ####################################################################### %
