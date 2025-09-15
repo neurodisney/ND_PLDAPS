@@ -181,24 +181,14 @@ function TaskSetUp(p)
     p.trial.stim.ringObj = pds.stim.Ring(p,[0,0],0,4,[0.5,0.5],'blue',0); % somehow I need to have more control over these variables, currently just hardcoding them in here.
     %p.trial.stim.ringObj.on = true; % << this line I should try only within a specific part of TaskDesign...
     p.trial.stim.allStims{end+1} = p.trial.stim.ringObj;
-    % 9/1/2025 MJH - No idea what to do here yet, how to define the stim object, how to get it to show. Deadend currently.
-    
-
-    
-
-       
-    ND_SwitchEpoch(p, 'ITI');  % define first task epoch % 8/1/25 - MJH - copied from FixTrain, but GetReady seems to be the epoch to kick things off for joystick.
-    %ND_SwitchEpoch(p, 'GoMichael') % Debug idea John came up with lol see how it switches.
-    
-    
-    
+   
+    ND_SwitchEpoch(p, 'ITI');  % define first task epoch % 8/1/25 - MJH - copied from FixTrain, but GetReady seems to be the epoch to kick things off for joystick.   
 % ------------------------------------------------------------------------%
 function TaskDesign(p)
 %% main task outline
 % The different task stages (i.e. 'epochs') are defined here.
     switch p.trial.CurrEpoch
         % ----------------------------------------------------------------%
-        
         case p.trial.epoch.ITI % 8/7/25 - MJH - is likely important, currently not called within TaskDesign. Need to keep.
         %% inter-trial interval: wait before next trial to start
         Task_WaitITI(p);
@@ -210,8 +200,7 @@ function TaskDesign(p)
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             
             ND_SwitchEpoch(p,'GetReady')
-        
-        
+         
         case p.trial.epoch.GetReady
         %% before the trial can start joystick needs to be in a released state
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
@@ -222,9 +211,6 @@ function TaskDesign(p)
             
             
             
-        %case p.trial.epoch.GoMichael
-        %    disp('you rock');
-
         case p.trial.epoch.CheckBarRel
         %% make sure that the bar is fully released by waiting for a specified time    
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
@@ -245,12 +231,6 @@ function TaskDesign(p)
         case p.trial.epoch.WaitStart
         %% Wait for joystick press
             %ND_SwitchEpoch(p,'WaitPress'); %MJH - Added but trying to figure out. Waitpress and WaitStart appear redundant. In either case, begin waiting for press...
-            
-            %present ring stim if that is the trial condition we are working with
-            if(p.trial.task.AltDesign)
-                p.trial.stim.ringObj.on = true;
-            end
-                    
                        
             
             if(p.trial.CurTime > p.trial.Timer.Wait)                
@@ -357,10 +337,16 @@ function AltTaskDesign(p) %this entire alternate trial progression is based on w
         case p.trial.epoch.TrialStart
             p.trial.EV.TaskStart = p.trial.CurTime; % capture trial start time and date info 
             p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
-            p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.MinRel;% Establish wait period after trial start
+            
             ND_SwitchEpoch(p,'GetReady')
             
         case p.trial.epoch.GetReady % joystick needs to be in released state for a period of time to properly start trial
+            if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
+                p.trial.Timer.Wait = p.trial.CurTime + p.trial.task.Timing.MinRel;% Establish wait period after trial start
+                ND_SwitchEpoch(p, 'CheckBarRel')
+            end
+            
+        case p.trial.epoch.CheckBarRel %make sure bar/stick is release for specified time
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
                 Task_NotReady(p); %joystick pressed too quickly, go directly to TaskEnd, do not start task, do not reward
             elseif(p.trial.CurTime > p.trial.Timer.Wait)
@@ -384,23 +370,55 @@ function AltTaskDesign(p) %this entire alternate trial progression is based on w
                     if(p.trial.task.FullTask)
                         if p.trial.joyDist > 4 % adding this in coarsely for time being - MJH 9/7/2025
                             pds.reward.give(p, p.trial.reward.PullRew);
-                            Task_CorrectReward(p)
+                            %Task_CorrectReward(p)
                         end
                         %use line 269 as a basis but there is where specific arguments for levelrect in and outside boundary
                         % in combination w/ ND_CheckJoystick become important.
+                        ND_SwitchEpoch(p, 'WaitGo')
                     else
                         Task_CorrectReward(p); % that was the task, reward animal and done
                     end
                 end
             end
             
+        case p.trial.epoch.WaitGo
+            if(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
+                Response_JoyRelease(p);
+                Response_Early(p);
+            elseif(p.trial.CurTime > p.trial.Timer.Wait)
+                Task_GoCue(p);
+            end
+            
+        case p.trial.epoch.WaitResponse
+            %% Wait for joystick release
+            if(p.trial.CurTime > p.trial.Timer.Wait)
+                Response_Miss(p);  % Go directly to TaskEnd, do not continue task, do not collect reward
+            elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyRest)
+                Response_JoyRelease(p);
+                p.trial.EV.RespRT = p.trial.EV.JoyRelease - p.trial.EV.GoCue;
+                
+                if(p.trial.EV.RespRT <  p.trial.task.Timing.minRT)
+                % premature response - too early to be a true response
+                     Response_Early(p); % Go directly to TaskEnd, do not continue task, do not collect reward
+                else
+                % correct response
+                    %Task_Correct(p); % 8/6/25 - MJH - Task_Correct appears not used now. It included an epoch switch to "WaitReward" which itself called to a "Task_Reward" function. New "Task_CorrectReward" seems to just invoke pds.reward.give directly. Reward dur is also specified in the "_taskdef" script and is used by the new Task_CorrectReward.
+                    Task_CorrectReward(p)
+                end
+            end
+            
+        case p.trial.epoch.WaitRelease
+            Task_WaitRelease(p);
+            
+            
         case p.trial.epoch.WaitEnd %Need to include WaitEnd due to Task_CorrectReward() function
             Task_OFF(p);
             p.trial.flagNextTrial = 1;
             
-        case p.trial.epoch.TaskEnd
+        case p.trial.epoch.TaskEnd % Need TaskEnd for Task_NotRead() function
             Task_OFF(p);
-            p.trial.epoch.TaskEnd = 1;
+            %p.trial.epoch.TaskEnd = 1; % might have written this in error -MJH
+            p.trial.flagNextTrial = 1;
            
             
     end

@@ -29,7 +29,7 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
     
     % create a distance variable to be used for measuring position from center w/ euclidean distance (dist. = sqrt(x^2 + y^2))
     p.trial.joyDist = sqrt((p.trial.joyX)^2 + (p.trial.joyY)^2)*p.trial.pldaps.draw.joystick.sclfac;
-    
+    % 9/10/2025 >> COMMENT OUT ABOVE LINE TO GET FIXTRAIN TO WORK. HAVENT LOOKED INTO THIS BUG YET. ND_CheckJoystick SHOULD NOT BE CALLED SINCE JOYSTICK TO SELECTED TO BE OFF IN start_InitFixTrain
     
     
     % if relevant for task determine joystick state
