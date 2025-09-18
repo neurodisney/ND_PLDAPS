@@ -133,13 +133,13 @@ else
             else
                 TaskDesign(p);
             end
-            disp(p.trial.CurrEpoch) % 8/8/25 - MJH - debugging and want to see trial state switches
+            %disp(p.trial.CurrEpoch) % 8/8/25 - MJH - debugging and want to see trial state switches
             
         % ----------------------------------------------------------------%
         case p.trial.pldaps.trialStates.frameDraw
         %% Display stuff on the screen
         % Just call graphic routines, avoid any computations
-            
+            %disp(p.trial.CurrEpoch)
             %TaskDraw(p) % 7/31/2025 - MJH - Appears deprecated according to new task structure.
                         
 % ####################################################################### %
@@ -359,25 +359,40 @@ function AltTaskDesign(p) %this entire alternate trial progression is based on w
             p.trial.stim.ringObj.on = true;
             %if(p.trial.CurTime > p.trial.Timer.Wait)
             %    Task_NoStart(p); % no trial initiated in given time window, go directly to TaskEnd, do not start task, do not reward
-            
+            if p.trial.joyDist >= double(4)
+                Task_CorrectReward(p);
+            end
             %elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
             if(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
                 Task_InitPress(p);
+                
+                %disp('checking timing')
+                
                 if(p.trial.EV.StartRT < p.trial.task.Timing.minRT)
                     Task_PrematStart(p); % response was too quick to be real
                 else
                     Task_ON(p);
-                    if(p.trial.task.FullTask)
-                        if p.trial.joyDist > 4 % adding this in coarsely for time being - MJH 9/7/2025
-                            pds.reward.give(p, p.trial.reward.PullRew);
-                            %Task_CorrectReward(p)
-                        end
-                        %use line 269 as a basis but there is where specific arguments for levelrect in and outside boundary
-                        % in combination w/ ND_CheckJoystick become important.
-                        ND_SwitchEpoch(p, 'WaitGo')
-                    else
-                        Task_CorrectReward(p); % that was the task, reward animal and done
-                    end
+                end
+                
+                       
+                %disp('move joystick')
+                    
+                if p.trial.joyDist >= double(4)%(4/p.trial.pldaps.draw.joystick.sclfac);
+                    
+                    %pds.reward.give(p,p.trial.reward.PullRew);
+                    %Task_CorrectReward(p)
+                        %ND_S
+                        
+                    
+%                     if(p.trial.task.FullTask)
+%                         if p.trial.joyDist > 4 % adding this in coarsely for time being - MJH 9/7/2025
+%                             pds.reward.give(p, p.trial.reward.PullRew);
+%                             %Task_CorrectReward(p)
+%                         end
+%                         ND_SwitchEpoch(p, 'WaitGo')
+%                     else
+%                         Task_CorrectReward(p); % that was the task, reward animal and done
+                   
                 end
             end
             

@@ -28,10 +28,14 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
     
     
     % create a distance variable to be used for measuring position from center w/ euclidean distance (dist. = sqrt(x^2 + y^2))
-    p.trial.joyDist = sqrt((p.trial.joyX)^2 + (p.trial.joyY)^2)*p.trial.pldaps.draw.joystick.sclfac;
+    %p.trial.joyDist = (sqrt((p.trial.joyX)^2 + (p.trial.joyY)^2))*p.trial.pldaps.draw.joystick.sclfac;
+    %p.trial.joyDist = (sqrt((p.trial.joyX)^2 + (p.trial.joyY)^2));
+    %p.trial.joyDist = sqrt((p.trial.joyX*p.trial.pldaps.draw.joystick.sclfac)^2 + (p.trial.joyY*p.trial.pldaps.draw.joystick.sclfac)^2);
     % 9/10/2025 >> COMMENT OUT ABOVE LINE TO GET FIXTRAIN TO WORK. HAVENT LOOKED INTO THIS BUG YET. ND_CheckJoystick SHOULD NOT BE CALLED SINCE JOYSTICK TO SELECTED TO BE OFF IN start_InitFixTrain
-    
-    
+%     p.trial.joyXScale = p.trial.joyX * p.trial.pldaps.draw.joystick.sclfac;
+%     p.trial.joyYScale = p.trial.joyY * p.trial.pldaps.draw.joystick.sclfac;
+%     p.trial.joyDistance = sqrt(p.trial.joyXScale^2 + p.trial.joyYScale^2);
+
     % if relevant for task determine joystick state
     if(p.trial.behavior.joystick.use)
         % ND_CtrlMsg(p, ['Joystick State: ',int2str(p.trial.JoyState.Current),'; curr Amp: ',num2str(p.trial.joyAmp,'%.4f')]);
@@ -92,6 +96,11 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
         %disp(cjpos) % MJH - display cjpos while I run task to see values...
         %disp(p.trial.pldaps.draw.joystick.levelrect)
         %disp(p.trial.joyDist)
+        %disp(p.trial.joyAmp)
+        %disp(p.trial.pldaps.draw.joystick.sclfac)
+        %disp(p.trial.joyX)
+        %disp(cjpos)
+        %disp([p.trial.joyXScale, p.trial.joyYScale])
         % get a representation of the current threshold to recognize pull/release
         p.trial.pldaps.draw.joystick.threct = p.trial.pldaps.draw.joystick.rect;
         

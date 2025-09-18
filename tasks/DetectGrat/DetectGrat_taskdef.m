@@ -31,17 +31,16 @@ p.trial.reward.InitialRew   = 0.125; % duration of the initial reward
 % ------------------------------------------------------------------------%
 %% Timing
 p.trial.behavior.fixation.MinFixStart = ND_GetFixDur(.15, 0.25, [], [], 1, .05); % minimum time to wait for robust fixation
-p.trial.task.Timing.WaitFix = 1;    % Time to fixate before NoStart
+p.trial.task.Timing.WaitFix = 1.25;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.15, 0.2, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
-p.trial.task.stimLatency      = ND_GetITI(0.15, 0.2, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.35, 0.4, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
 p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 0.1;   % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
 p.trial.task.Timing.TimeOut   =  1.5;  % Time-out[s]  for incorrect responses
-p.trial.task.Timing.ITI       = ND_GetITI(1.5, 2.25, [], [], 1, 0.10);
+p.trial.task.Timing.ITI       = ND_GetITI(1.75, 2.5, [], [], 1, 0.10);
 
 % ----------------------------------- -------------------------------------%
 %% Grating stimuli parameters
@@ -51,8 +50,8 @@ p.trial.stim.GRATING.fixWin = 5;
 %p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % alternative radius of grating patch
 p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 
-p.trial.stim.EccLst = [3]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
-p.trial.stim.AngLst = [45, 0]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
+p.trial.stim.EccLst = [3,4]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
+p.trial.stim.AngLst = [0, 45, 90, 135, 180, 225, 270, 315]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
 
 % grating contrast
 %p.trial.stim.trgtconts = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600]; %%changed on 20210223 
@@ -61,7 +60,7 @@ p.trial.stim.GRATING.fixWin = 5;
 %p.trial.stim.GRATING.radius = datasample([0.5, 0.75, 1], 1);  % alternative radius of grating patch
 p.trial.stim.GRATING.radius = 1.0;  % radius of grating patch
 
-p.trial.stim.EccLst = [3]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
+p.trial.stim.EccLst = [3,4]; % If p.defaultParameters.task.RandomEcc = 1, these are the  eccentriticies (see DetectGrat_init) 
 %p.trial.stim.AngLst = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180]; % If p.defaultParameters.task.RandomAng = 1, these are the angles (see DetectGrat_init)
 
 % grating contrast

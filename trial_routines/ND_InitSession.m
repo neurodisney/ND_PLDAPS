@@ -62,7 +62,9 @@ p.defaultParameters.mixList = [];
 % --------------------------------------------------------------------%
 %% define drawing area for joystick representation
 if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.useJoystick)
-    p.defaultParameters.pldaps.draw.joystick.size   = [60 400];
+    %p.defaultParameters.pldaps.draw.joystick.size   = [60 400];
+    p.defaultParameters.pldaps.draw.joystick.size   = [400 400];
+    
 
     % hardcoded location and size of joystick representation
     if p.defaultParameters.display.useDegreeUnits
