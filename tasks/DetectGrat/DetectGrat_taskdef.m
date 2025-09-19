@@ -34,7 +34,7 @@ p.trial.behavior.fixation.MinFixStart = ND_GetFixDur(.15, 0.25, [], [], 1, .05);
 p.trial.task.Timing.WaitFix = 1.25;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.35, 0.4, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.4, 0.5, [], [], 1, 0.10); %  SOA: Time from fixation onset to stim appearing
 p.trial.task.saccadeTimeout   = 0.75;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = 0.1;   % Must fixate on target for at least this time before it counts

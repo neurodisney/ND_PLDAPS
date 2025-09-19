@@ -429,7 +429,7 @@ SS.behavior.joystick.Sample  = 0;          % how many data points to use for det
 SS.behavior.joystick.PullThr = 1.5;        % threshold to detect a joystick press
 SS.behavior.joystick.RelThr  = 1.0;        % threshold to detect a joystick release
 
-SS.pldaps.draw.joystick.use  = 1;          % draw joystick states on control screen
+SS.pldaps.draw.joystick.use  = 0;          % draw joystick states on control screen
 
 % Define joystick states
 SS.JoyState.Current     = NaN;

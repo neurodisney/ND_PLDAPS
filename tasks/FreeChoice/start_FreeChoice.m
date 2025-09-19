@@ -38,8 +38,9 @@ function p = start_FreeChoice(subjectname, rig)
     SS.pldaps.draw.eyepos.use = 1;
     SS.pldaps.draw.grid.use = 1;
     SS.datapixx.useAsEyepos = 1;
+    %SS.pldaps.draw.joystick.use   = 0; % 9/19/2025 - MJH joystick drawing seems to be the default, need to suppress.
     SS.datapixx.adc.srate = 1000;
-
+    
 
     % Creating pldaps object
     p = pldaps(subjectname, SS, exp_fun);
