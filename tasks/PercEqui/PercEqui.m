@@ -166,6 +166,11 @@ function TaskSetUp(p)
     p.trial.stim.GRATING.pos      = p.trial.stim.Trgt.Pos;
     p.trial.stim.GRATING.contrast = p.trial.stim.Trgt.Contrast;
     p.trial.stim.target           = pds.stim.Grating(p);
+    
+    p.trial.stim.tardiff          = abs((p.trial.stim.Trgt.Contrast)-(p.trial.stim.Ref.Contrast));
+    if p.trial.stim.tardiff <= p.trial.stim.tardiffthresh
+        p.trial.reward.randy = 1;
+    end
 
     % Assume manual control of the activation of the grating fix windows
     p.trial.stim.grating_target.autoFixWin    = 0;

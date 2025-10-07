@@ -17,6 +17,9 @@ p.trial.reward.IncrementTrial = [50, 150, 300,  400, 500,  600, 650]; % increase
 p.trial.reward.IncrementDur   = [0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35]; % increase number of pulses with this trial number
 p.trial.reward.DiscourageProp = 1.0;  % proportion of reward given if previous trial was an error
 p.trial.reward.Dur            = 0.2; %initial reward duration
+p.trial.reward.prob           = 0.8; %probability of reward for when ref and target very close in contrast (based on tardiff)
+p.trial.stim.tardiffthresh    = 0.05; %if target and reference within 5% contrast of each other, use random reward probability
+p.trial.reward.randy          = 0;
 
 %p.trial.reward.IncrementTrial = [150,  250,   350, 450,   550,  650, 750]; % increase number of pulses with this trial number
 %p.trial.reward.IncrementDur   = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.3]; % increase number of pulses with this trial number
