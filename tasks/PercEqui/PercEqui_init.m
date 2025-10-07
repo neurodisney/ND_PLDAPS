@@ -19,10 +19,10 @@ p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%
 
 p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.Hemi',                     '%s');
 p = ND_AddAsciiEntry(p, 'RefSpFreq',   'p.trial.stim.Ref.sFreq',              '%.4f');
-p = ND_AddAsciiEntry(p, 'RefOri',      'p.trial.stim.Ref.sFreq',              '%.4f');
+p = ND_AddAsciiEntry(p, 'RefOri',      'p.trial.stim.Ref.ori',              '%.4f');
 p = ND_AddAsciiEntry(p, 'RefContr',    'p.trial.stim.Ref.Contrast',           '%.4f');
 p = ND_AddAsciiEntry(p, 'TargetSpFreq','p.trial.stim.Trgt.sFreq',             '%.4f');
-p = ND_AddAsciiEntry(p, 'TargetOri',   'p.trial.stim.Trgt.sFreq',             '%.4f');
+p = ND_AddAsciiEntry(p, 'TargetOri',   'p.trial.stim.Trgt.ori',             '%.4f');
 p = ND_AddAsciiEntry(p, 'TargetContr', 'p.trial.stim.Trgt.Contrast',          '%.4f');
 p = ND_AddAsciiEntry(p, 'RefX',        'p.trial.stim.Ref.Pos(1)',             '%.2f');
 p = ND_AddAsciiEntry(p, 'RefY',        'p.trial.stim.Ref.Pos(2)',             '%.2f');
@@ -63,13 +63,14 @@ ND_Trial2Ascii(p, 'init');
 p.defaultParameters.stim.FIXSPOT.fixWin = 2;
 
 p.defaultParameters.task.RandomHemi = 1; % if 1, randomly pick left or right hemifield
-p.defaultParameters.task.RandomPar  = 1; % if 1, randomly change orientation and spatial frequency of the grating each trial
+p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
 
 p.defaultParameters.task.EqualStim  = 1; % both gratings have the same spatial frequency and orientation
 
 % define random grating parameters for each session
-p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
+p.defaultParameters.stim.sFreqLst   = [3]; % spatial frequency as cycles per degree
 p.defaultParameters.stim.OriLst     = 0:15:179;  % orientation of grating
+%p.defaultParameters.stim.OriLst     = 20;  % orientation of grating
 
 p.defaultParameters.stim.Hemi       = datasample(['l', 'r'], 1);
 p.defaultParameters.stim.Ref.sFreq  = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree

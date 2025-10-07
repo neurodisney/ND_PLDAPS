@@ -128,8 +128,8 @@ function TaskSetUp(p)
             p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         else
-            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Ref.Pos  = [  1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [ -1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         end
 
     else
@@ -137,11 +137,11 @@ function TaskSetUp(p)
         p.trial.stim.SaccadeDistractor = 'target';
 
         if(p.trial.stim.Hemi == 'l')
-            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Ref.Pos  = [  1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [ -1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         else
-            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Ref.Pos  = [ -1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         end
     end
 
@@ -172,8 +172,8 @@ function TaskSetUp(p)
     p.trial.stim.grating_reference.autoFixWin = 0;
 
     % increase reward after defined number of correct trials
-    RewDur = find(p.trial.reward.IncrementTrial > p.trial.NHits+1, 1, 'first');
-    p.trial.reward.Dur = p.trial.reward.IncrementDur(RewDur);
+    %RewDur = find(p.trial.reward.IncrementTrial > p.trial.NHits+1, 1, 'first');
+    %p.trial.reward.Dur = p.trial.reward.IncrementDur(RewDur);
     
     if(p.trial.LastHits == 0)
         % previous trial was error, discourage by reducing the current reward
