@@ -54,6 +54,8 @@ p = ND_AddAsciiEntry(p, 'TargetSel',   'p.trial.task.TargetSel',                
 p = ND_AddAsciiEntry(p, 'FixWin',      'p.trial.stim.FIXSPOT.fixWin',         '%.5f');
 p = ND_AddAsciiEntry(p, 'Reward',      'p.trial.EV.Reward',                   '%.5f');
 p = ND_AddAsciiEntry(p, 'RewardDur',   'p.trial.reward.Dur * ~isnan(p.trial.EV.Reward)', '%.5f');
+p = ND_AddAsciiEntry(p, 'useProb',     'p.trial.reward.useProb',              '%.5f');
+p = ND_AddAsciiEntry(p, 'rewardProb',  'p.trial.reward.probabilities(2)',     '%.5f');
 
 % call this after ND_InitSession to be sure that output directory exists!
 ND_Trial2Ascii(p, 'init');

@@ -169,7 +169,8 @@ function TaskSetUp(p)
     
     p.trial.stim.tardiff          = abs((p.trial.stim.Trgt.Contrast)-(p.trial.stim.Ref.Contrast));
     if p.trial.stim.tardiff <= p.trial.stim.tardiffthresh
-        p.trial.reward.randy = 1;
+        p.trial.reward.useProb = 1;
+        p.trial.reward.giverew = randsrc(1,1,[0,1;0.25,0.75]);
     end
 
     % Assume manual control of the activation of the grating fix windows
@@ -278,7 +279,16 @@ function TaskDesign(p)
                 elseif(p.trial.stim.(p.trial.stim.SaccadeDistractor).looking)
                 % wrong item chosen
                     % Play breakfix sound
-                    pds.audio.playDP(p, 'incorrect','left');
+                        if p.trial.reward.useProb==1
+                        if p.trial.reward.giverew==1
+                            pds.reward.give(p,p.trial.reward.Dur);
+                            pds.audio.playDP(p,'reward','left');
+                        elseif p.trial.reward.giverew==0
+                            pds.audio.playDP(p,'incorrect','left');
+                        end
+                        elseif p.trial.reward.useProb==0
+                            pds.audio.playDP(p, 'incorrect', 'left');
+                        end
 
                     switch p.trial.stim.SaccadeDistractor
                         case 'target'
@@ -321,9 +331,18 @@ function TaskDesign(p)
 
                     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
                     p.trial.task.Good = 1;
-
-                    pds.reward.give(p, p.trial.reward.Dur);
-                    pds.audio.playDP(p, 'reward', 'left');
+                    
+                    if p.trial.reward.useProb==1
+                        if p.trial.reward.giverew==1
+                            pds.reward.give(p,p.trial.reward.Dur);
+                            pds.audio.playDP(p,'reward','left');
+                        elseif p.trial.reward.giverew==0
+                            pds.audio.playDP(p,'incorrect','left');
+                        end
+                    elseif p.trial.reward.useProb==0
+                        pds.reward.give(p, p.trial.reward.Dur);
+                        pds.audio.playDP(p, 'reward', 'left');
+                    end
 
                     % Record main reward time
                     p.trial.EV.Reward = p.trial.CurTime;
