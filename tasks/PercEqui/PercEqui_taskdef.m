@@ -52,26 +52,29 @@ p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 % p.trial.stim.AngLst = [45, 0, -45];
 % 
 p.trial.stim.EccLst =  [2];
-p.trial.stim.AngLst = [150];
+p.trial.stim.AngLst = [45];
 % 
 
 p.trial.stim.PosX = 3.0;
 %p.trial.stim.PosY = datasample([-1.5, 1.5], 1);
 %p.trial.stim.PosX = datasample([-1.5, 1.5], 1);
-p.trial.stim.PosY = 3.0;
+p.trial.stim.PosY = 0.0;
 
 % grating contrast
-cCtr = datasample([0.25, 0.50], 1);
+cCtr = datasample([0.25], 1);
 %cCtr =  0.25;
 ScaleCtr = round(cCtr*100);
 Ctrdiff = 100-ScaleCtr;
 
 % ctrng = ND_HalfSpace(0, 5, 8);
-ctrng = ND_HalfSpace(0, Ctrdiff, 7);
+ctrng = ND_HalfSpace(25, Ctrdiff, 3);
 
 %ctrng = unique(cCtr * [0, fliplr(1 - ctrng(2:end)), 1 + ctrng]);
 ctrng = unique(cat(2,(cCtr+ctrng./100),(cCtr-ctrng./100)));
 ctrng = abs(ctrng);
+
+ctrng = [0.0 0.5 0.75 1.0];
+
 % ctrngP = ctrng * 0.5;
 % plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
 % hold on

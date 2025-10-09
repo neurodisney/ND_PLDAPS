@@ -31,14 +31,14 @@ switch p.trial.stim.RFmeth
     case 'coarse'
         p.trial.stim.coarse.ori      = [0, 22.5, 45, 57.5, 90, 112.5, 135, 157.5, 180];   % orient of grating
         %p.trial.stim.coarse.ori      = [128];   % orient of grating
-        p.trial.stim.coarse.radius   = 0.9;      % size of grating 
+        p.trial.stim.coarse.radius   = 0.75;      % size of grating 
         %p.trial.stim.coarse.contrast = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600];         % intensity contrast
         p.trial.stim.coarse.contrast = 0.95;         % intensity contrast
         p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency  
         p.trial.stim.coarse.tFreq    = 0;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.5;      % spacing of grating centers       
         
-        p.trial.stim.coarse.xRange   = [3.0 3.0];
+        p.trial.stim.coarse.xRange   = [3.8 3.8];
         p.trial.stim.coarse.yRange   = [-3.0 -3.0];
 
         % do not change below
