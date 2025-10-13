@@ -152,7 +152,7 @@ SS.mouse.useLocalCoordinates                    = 0;
 SS.mouse.initialCoordinates                     = [];
 % ------------------------------------------------------------------------%
 %% Sound: control sound playback
-SS.sound.use                                    = 0;     % toggle use of sound   !!!
+SS.sound.use                                    = 1;     % toggle use of sound   !!!
 SS.sound.deviceid                               = [];    % PsychPortAudio deviceID, empty for default
 SS.sound.useForReward                           = 1;     % toggle playing a sound for reward   !!!
 
@@ -160,10 +160,10 @@ SS.sound.useForReward                           = 1;     % toggle playing a soun
 % maximize audio channels (Need to get datapixx working first)
 SS.sound.useDatapixx                            = 1;
 SS.sound.datapixxVolume                         = 1.0;
-SS.sound.datapixxInternalSpeakerVolume          = 0;
+SS.sound.datapixxInternalSpeakerVolume          = 1.0;
 
 SS.sound.usePsychPortAudio                      = 0;
-SS.sound.psychPortVolume                        = 0.9;
+SS.sound.psychPortVolume                        = 1.0;
 
 % ------------------------------------------------------------------------%
 %% PLDAPS settings: pldaps core parameters
@@ -231,10 +231,11 @@ SS.pldaps.ptbVerbosity       = 3;  % See here https://github.com/Psychtoolbox-3/
 
 % ------------------------------------------------------------------------%
 %% Reward settings
-SS.datapixx.useForReward      = 0;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
+SS.datapixx.useForReward      = 1;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
 SS.reward.defaultAmount       = 0.125;  % Default amount of reward.=0; [in seconds]
 SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
 SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
+SS.reward.ManDur              = 0.05;
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
@@ -245,6 +246,9 @@ SS.Block.GenBlock       =  1;  % Flag to indicate that a block with a new condit
 c1.Nr = 1;
 SS.Block.Conditions     = {c1}; % as default only one condition
 SS.Block.BlockList      = [];
+SS.Block.trialCount     =  0;
+SS.Block.flagNextBlock  =  1;
+SS.Block.blockCount     =  0;
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
@@ -256,9 +260,8 @@ SS.datapixx.adc.YEyeposChannel = 1;
 SS.datapixx.adc.PupilChannel   = 2;
 
 % Saccade parameters
-SS.behavior.fixation.use       =  0;       % does this task require control of eye position
-
-SS.behavior.fixation.on        =  0;       % If not required, fixation states will be ignored
+SS.behavior.fixation.use       =  1;       % does this task require control of eye position
+SS.behavior.fixation.on        =  1;       % If not required, fixation states will be ignored
 SS.behavior.fixation.Sample    = 25;       % how many data points to use for determining fixation state.
 SS.behavior.fixation.entryTime = 0.025;    % minimum time [s] before fixation is registered when gaze enters fixation window
 SS.behavior.fixation.BreakTime = 0.05;     % minimum time [s] to identify a fixation break

@@ -170,7 +170,7 @@ function TaskSetUp(p)
     p.trial.stim.tardiff          = abs((p.trial.stim.Trgt.Contrast)-(p.trial.stim.Ref.Contrast));
     if p.trial.stim.tardiff <= p.trial.stim.tardiffthresh
         p.trial.reward.useProb = 1;
-        p.trial.reward.giverew = randsrc(1,1,[0,1;p.trial.reward.probabilities(1),0.75p.trial.reward.probabilities(2)]);
+        p.trial.reward.giverew = randsrc(1,1,[0,1;p.trial.reward.probabilities(1),p.trial.reward.probabilities(2)]);
     end
 
     % Assume manual control of the activation of the grating fix windows
