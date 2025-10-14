@@ -12,11 +12,11 @@ function p = PercEqui_taskdef(p)
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.ManDur         = 0.2;  % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur         = 0.15;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [50, 150, 300,  400, 500,  600, 650]; % increase number of pulses with this trial number
 p.trial.reward.IncrementDur   = [0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35]; % increase number of pulses with this trial number
 p.trial.reward.DiscourageProp = 1.0;  % proportion of reward given if previous trial was an error
-p.trial.reward.Dur            = 0.2; %initial reward duration
+p.trial.reward.Dur            = 0.15; %initial reward duration
 p.trial.reward.prob           = 0.8; %probability of reward for when ref and target very close in contrast (based on tardiff)
 p.trial.stim.tardiffthresh    = 0.03; %if target and reference within 5% contrast of each other, use random reward probability
 p.trial.reward.useProb        = 0;
@@ -52,7 +52,7 @@ p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 % p.trial.stim.AngLst = [45, 0, -45];
 % 
 p.trial.stim.EccLst =  [2];
-p.trial.stim.AngLst = [45];
+p.trial.stim.AngLst = [0,45,90,135];
 % 
 
 p.trial.stim.PosX = 3.0;
@@ -67,11 +67,10 @@ ScaleCtr = round(cCtr*100);
 Ctrdiff = 100-ScaleCtr;
 
 % ctrng = ND_HalfSpace(0, 5, 8);
-ctrng = ND_HalfSpace(25, Ctrdiff, 3);
+%ctrng = ND_HalfSpace(25, Ctrdiff, 3);
 
-%ctrng = unique(cCtr * [0, fliplr(1 - ctrng(2:end)), 1 + ctrng]);
-ctrng = unique(cat(2,(cCtr+ctrng./100),(cCtr-ctrng./100)));
-ctrng = abs(ctrng);
+%ctrng = unique(cat(2,(cCtr+ctrng./100),(cCtr-ctrng./100)));
+%ctrng = abs(ctrng);
 
 ctrng = [0.0 0.15 0.65 0.75 1.0];
 

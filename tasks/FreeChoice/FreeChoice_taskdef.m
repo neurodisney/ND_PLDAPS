@@ -13,10 +13,10 @@ function p = FreeChoice_taskdef(p)
 
     % Setting reward probabilities for stimuli for *condition 1* in array [stim 1 prob, stim 2 prob]
     p.trial.task.probSwitch = 0; 
-    p.trial.stim.recParameters.probabilities = [0.0,0.9];
+    p.trial.stim.recParameters.probabilities = [0.2,0.8];
     
     % Assigning reward duration/magnitude to stimuli in array [stim 1 dur, stim 2 dur] 
-    p.trial.stim.recParameters.rewardDurs = [0.05, 0.05]; %changed from 0.05,0.07
+    p.trial.stim.recParameters.rewardDurs = [0.15, 0.15]; %changed from 0.05,0.07
 
 
     % == GENERAL TASK PARAMETERS ==
@@ -55,10 +55,9 @@ function p = FreeChoice_taskdef(p)
     p.trial.stim.FIXSPOT.type = 'disc'; % Use 'rect' for rectangle, and use 'disc' for circle
     p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
-    
     % Change this parameter to 100 to encompass full screen if fix point fixation difficult during training
     % Note this is resized in presentStim() for proper task flow
-    p.trial.stim.FIXSPOT.fixWin = 3; % Changed from 2
+    p.trial.stim.FIXSPOT.fixWin = 3;
 
     % Setting time window for fixation before trial marked as 'NoStart'
     p.trial.task.Timing.WaitFix = 3; % Time in seconds
@@ -70,8 +69,13 @@ function p = FreeChoice_taskdef(p)
     % == STIMULUS PARAMETERS ==
 
     % Setting properties for stimuli
-    p.trial.task.colorSwitch = 1;
+    p.trial.task.colorSwitch = 0;
     p.trial.stim.recParameters.colors.list = {'red', 'blue', 'yellow', 'white', 'magenta'};
+    % if not randomizing colors for each stim, define them here
+    p.trial.stim.recParameters.stim1.color = 'red';
+    p.trial.stim.recParameters.stim2.color = 'blue';
+    p.trial.stim.recParameters.stim1.fixWin = 2; %fix window size for stim
+    p.trial.stim.recParameters.stim2.fixWin = 2; %fix window size for stim
 
     % Don't mess with these!
     p.trial.stim.recParameters.stim1.coordinates = [-6 -1 -4 1];

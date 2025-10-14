@@ -77,12 +77,12 @@ function TaskSetUp(p)
             end
 
             % Changing color in which stimuli are presented
-            if p.trial.task.colorSwitch
-                p.defaultParameters.colorIndex = p.defaultParameters.colorIndex + 1;
-                if p.defaultParameters.colorIndex > size(p.trial.stim.recParameters.colors.list)
-                    p.defaultParameters.colorIndex = 1;
-                end
-            end
+            %if p.trial.task.colorSwitch
+            %    p.defaultParameters.colorIndex = p.defaultParameters.colorIndex + 1;
+            %    if p.defaultParameters.colorIndex > size(p.trial.stim.recParameters.colors.list)
+            %        p.defaultParameters.colorIndex = 1;
+            %    end
+            %end
                 
             p.trial.Block.flagNextBlock = 0;
             %p.trial.Block.rewardDurs = datasample(p.trial.stim.recParameters.rewardDurs, 2);
@@ -122,8 +122,10 @@ function TaskSetUp(p)
         % Creating stim 1 by assigning values to rec properties in p object
         % Compiling properties into pldaps struct to present rectangle on screen
         p.trial.stim.RECTANGLE.pos = [-5,0];
-        p.trial.stim.RECTANGLE.color = char(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
-        p.trial.stim.recParameters.stim1.color = char(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
+        p.trial.stim.RECTANGLE.fixWin = p.trial.stim.recParameters.stim1.fixWin; 
+        %p.trial.stim.RECTANGLE.color = char(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
+        p.trial.stim.RECTANGLE.color = p.trial.stim.recParameters.stim1.color;
+        %p.trial.stim.recParameters.stim1.color = char(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim1.coordinates;
         if (p.trial.task.condition == 1)
             p.trial.stim.RECTANGLE.reward = randsample([1, 0], 1, true, p.trial.stim.recParameters.probabilities);
@@ -137,7 +139,9 @@ function TaskSetUp(p)
         % Creating stim 2 by assigning values to rec properties in p object
         % Compiling properties into pldaps struct to present rectangle on screen
         p.trial.stim.RECTANGLE.pos = [5,0];
-        p.trial.stim.recParameters.stim2.color = char(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex));
+        p.trial.stim.RECTANLGE.fixWin = p.trial.stim.recParameters.stim2.fixWin; 
+        %char(p.trial.stim.recParameters.colors.list(p.defaultParameters.colorIndex)); %use this line if randomizing color of rectangles from trial to trial
+        p.trial.stim.RECTANGLE.color = p.trial.stim.recParameters.stim2.color;
         p.trial.stim.RECTANGLE.coordinates = p.trial.stim.recParameters.stim2.coordinates;
         if (p.trial.task.condition == 1)
             p.trial.stim.RECTANGLE.reward = randsample([0, 1], 1, true, p.trial.stim.recParameters.probabilities);
