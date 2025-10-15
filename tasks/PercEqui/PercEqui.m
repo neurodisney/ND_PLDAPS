@@ -136,7 +136,7 @@ function TaskSetUp(p)
         p.trial.stim.SaccadeTarget     = 'reference';
         p.trial.stim.SaccadeDistractor = 'target';
 
-        if(p.trial.stim.Hemi == 'l')
+        if(p.trial.stim.Hemi == 'r')
             p.trial.stim.Ref.Pos  = [  1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ -1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         else
