@@ -127,6 +127,7 @@ function TaskSetUp(p)
         if(p.trial.stim.Hemi == 'r')
             p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.reward.Dur = p.trial.reward.Dur + p.trial.reward.boost;
         else
             p.trial.stim.Ref.Pos  = [  1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ -1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
@@ -139,6 +140,7 @@ function TaskSetUp(p)
         if(p.trial.stim.Hemi == 'r')
             p.trial.stim.Ref.Pos  = [  1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ -1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+            p.trial.reward.Dur = p.trial.reward.Dur + p.trial.reward.boost;
         else
             p.trial.stim.Ref.Pos  = [ -1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
@@ -171,6 +173,8 @@ function TaskSetUp(p)
     if p.trial.stim.tardiff <= p.trial.stim.tardiffthresh
         p.trial.reward.useProb = 1;
         p.trial.reward.giverew = randsrc(1,1,[0,1;p.trial.reward.probabilities(1),p.trial.reward.probabilities(2)]);
+    else
+        p.trial.reward.useProb = 0;
     end
 
     % Assume manual control of the activation of the grating fix windows
