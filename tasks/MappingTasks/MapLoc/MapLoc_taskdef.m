@@ -21,8 +21,8 @@ p.trial.task.presDur = 1;
 
 % Build grid of absolute value x,y coordinates
 % Scale coorindates up by 10
-xRange = [6, 10];
-yRange = [0, 4];
+xRange = [4, 6];
+yRange = [0, 1];
 
 scaler = 2;
 xRange = xRange * scaler;
@@ -31,7 +31,8 @@ yRange = yRange * scaler;
 xyGrid = {};
 for x = xRange(1):xRange(2)
     for y = yRange(1):yRange(2)
-        xyGrid{end+1} = [x / scaler, -y / scaler]; % Apply negatives here if desired
+        xyGrid{end+1} = [x / scaler, -y / scaler];
+        xyGrid{end+1} = [x / scaler, y / scaler];
     end
 end
 xyGrid = xyGrid(randperm(length(xyGrid)));
@@ -51,5 +52,5 @@ p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
 p.trial.stim.FIXSPOT.fixWin = 1.75;
 
 % Gabor parameters
-p.trial.task.orientation = 20;
+p.trial.task.orientation = 0;
 p.trial.task.radius = 0.75; % DVA

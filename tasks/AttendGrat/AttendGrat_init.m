@@ -24,8 +24,6 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'FixSpotFixWin',     'p.trial.stim.FIXSPOT.fixWin',              '%d');
     p = ND_AddAsciiEntry(p, 'FixSpotWaitTm',     'p.trial.task.stimLatency',                 '%d');
 
-    p = ND_AddAsciiEntry(p, 'RingPosX',          'p.trial.task.ringPos(1)',                  '%d');
-    p = ND_AddAsciiEntry(p, 'RingPosY',          'p.trial.task.ringPos(2)',                  '%d');
     p = ND_AddAsciiEntry(p, 'RingSize',          'p.trial.task.ringSize',                    '%d');
     p = ND_AddAsciiEntry(p, 'RingWeight',        'p.trial.stim.RING.lineWeight(1)',          '%d');
     p = ND_AddAsciiEntry(p, 'CueRingDelta',      'p.trial.task.cueRingDelta',                '%d');
@@ -41,9 +39,11 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'GaborOri',          'p.trial.stim.gabors.preTarget.angle',      '%d');
     p = ND_AddAsciiEntry(p, 'GaborFixWinSize',   'p.trial.stim.DRIFTGABOR.fixWin',           '%d');
     p = ND_AddAsciiEntry(p, 'GaborWaitTm',       'p.trial.task.GratWait',                    '%d');
+    p = ND_AddAsciiEntry(p, 'GaborConfig',       'p.trial.task.gaborConfig',                 '%d');
 
     p = ND_AddAsciiEntry(p, 'TargPosX',          'p.trial.stim.gabors.preTarget.pos(1)',     '%d');
     p = ND_AddAsciiEntry(p, 'TargPosY',          'p.trial.stim.gabors.preTarget.pos(2)',     '%d');
+    p = ND_AddAsciiEntry(p, 'TargQuad',          'p.trial.task.targQuad',                    '%d');
     p = ND_AddAsciiEntry(p, 'TargChange',        'p.trial.task.changeMag',                   '%d');
     p = ND_AddAsciiEntry(p, 'TargNewOri',        'p.trial.stim.gabors.postTarget.angle',     '%d');
 

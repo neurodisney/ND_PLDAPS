@@ -24,14 +24,14 @@ function p = AttendGrat_taskdef(p)
 
 
     % Setting RF properties
-    RfPos = [6, -8];
+    RfPos = [3, -3];
     p.trial.task.RfPos = RfPos;
 
-    RfOri = 270;
+    RfOri = 0;
     p.trial.task.RfOri = RfOri;
-    p.trial.task.RfOriCurve = [RfOri - 40, RfOri - 20, RfOri, RfOri + 20, RfOri + 20];
+    p.trial.task.RfOriCurve = [340, 0, 20]; %[RfOri - 20, RfOri, RfOri + 20];
 
-    RfRadius = 1.5; 
+    RfRadius = 0.75; 
     p.trial.task.RfSize = RfRadius;
     p.trial.stim.DRIFTGABOR.radius = RfRadius;
 
@@ -47,7 +47,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.cueRingDelta = cueRingDelta;
     p.trial.stim.ringParameters.cueCon = sprintf('down%d', cueRingDelta);
 
-    baseRingDelta = 1;
+    baseRingDelta = 6;
     p.trial.task.baseRingDelta = baseRingDelta;
     p.trial.stim.ringParameters.distCon = sprintf('up%d', baseRingDelta);
 
@@ -58,7 +58,8 @@ function p = AttendGrat_taskdef(p)
     p.trial.stim.gaborParameters.sFreq = 1.5;
     p.trial.stim.gaborParameters.tFreq = 5;
     p.trial.stim.gaborParameters.contrast = 0.80;
-    p.trial.stim.DRIFTGABOR.size = [5, 5];
+
+    p.trial.stim.DRIFTGABOR.size = [3, 3];
 
     % Calculating points along line of is eccentricity
     targ_x = RfPos(1);
@@ -70,7 +71,7 @@ function p = AttendGrat_taskdef(p)
 
     % Angle (degrees) between line connecting origin (0, 0) and
     % preceeding point and line connecting origin and succeeding point.
-    angular_offset = 8;
+    angular_offset = 7.94;
     p.trial.task.stimOffset = angular_offset;
 
     p.trial.task.posList = {};
@@ -102,6 +103,7 @@ function p = AttendGrat_taskdef(p)
 
     end
 
+    
     % Setting amount of time rings are presented before grats come on
     p.trial.task.CueWait = 1.25;
     
@@ -142,7 +144,7 @@ function p = AttendGrat_taskdef(p)
     
     % Setting time window in which response saccade allowed
     p.trial.task.Timing.saccadeStart = 0.100;
-    p.trial.task.saccadeTimeout = 0.400;
+    p.trial.task.saccadeTimeout = 0.500;
     
     % Setting time for which target must be fixed on before trial marked correct
     p.trial.task.minTargetFixTime = 0.20; 

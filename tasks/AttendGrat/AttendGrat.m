@@ -75,8 +75,9 @@ function TaskSetUp(p)
         p.trial.task.FlightTime = NaN;
         % Creating space to save time when cued presented  
         p.trial.task.CueOn = NaN;
-        % Creating space to save time when gratings presented 
-        p.trial.task.GratOn = NaN;
+        % Creating space to save time when gratings presented
+        p.trial.task.GaborOn = NaN;
+        p.trial.task.gaborOnsetTm = NaN;
         % Creating space to save magnitude of grating change 
         p.trial.task.changeMag = NaN;
         % Creating space to save task condition (cued = 1, uncued = 0)
@@ -93,9 +94,9 @@ function TaskSetUp(p)
             p.trial.task.cued = p.trial.Block.repeatConfig(1);
         else
             if isempty(p.trial.Block.cuedRatio)
-                rng('shuffle');
-                cuedRatio = [1, 1, 1, 1, 0];
-                cuedRatio = cuedRatio(randperm(length(cuedRatio)));
+                staticSet = [1, 1, 0, 1, 1];
+                dynamicSet = staticSet(randperm(length(staticSet)));
+                cuedRatio = [staticSet, dynamicSet];
             else
                 cuedRatio = p.trial.Block.cuedRatio;
             end
@@ -114,29 +115,33 @@ function TaskSetUp(p)
                 quadList = p.trial.Block.cuedQuadList;
                 if isempty(quadList)
                     rng('shuffle');
-                    quadList = [1, 2, 3, 4];
-                    quadList = quadList(randperm(length(quadList)));
+                    listIndices = [1, 2, 3, 4];
+                    quadArray = {
+                        [1, 2, 3, 4]
+                        [1, 3, 2, 4]
+                        [2, 3, 1, 4]
+                        [1, 2, 4, 3]
+                    };
+                    listIndex = datasample(listIndices, 1);
+                    quadList = quadArray{listIndex};
                 end
                 quadIndex = quadList(1);
                 quadList(1) = [];
                 p.trial.Block.cuedQuadList = quadList;
-                disp(quadList);
-                disp(quadIndex);
             else
                 quadList = p.trial.Block.uncuedQuadList;
                 if isempty(quadList)
-                    rng('shuffle');
-                    quadList = [3, 1, 4, 2];
-                    quadList = quadList(randperm(length(quadList)));
+                    quadList = [4, 1, 3, 2];
                 end
                 quadIndex = quadList(1);
                 quadList(1) = [];
                 p.trial.Block.uncuedQuadList = quadList;
-                disp(quadList);
-                disp(quadIndex);
             end
             p.trial.Block.repeatConfig = [p.trial.Block.repeatConfig, quadIndex];
         end
+
+        %disp(quadList);
+        %disp(quadIndex);
 
         if p.trial.Block.repeatFlag
             configIndex = p.trial.Block.repeatConfig(3);
@@ -161,7 +166,7 @@ function TaskSetUp(p)
                 stimConfigs = p.trial.Block.(['uncuedConfigs' num2str(quadIndex)]);
                 if isempty(stimConfigs)
                     rng('shuffle');
-                    stimConfigs = [1, 2, 3, 4, 5];
+                    stimConfigs = [2, 1, 5, 3, 4];
                     stimConfigs = stimConfigs(randperm(length(stimConfigs)));
                 end
                 configIndex = stimConfigs(1);
@@ -174,12 +179,12 @@ function TaskSetUp(p)
             p.trial.Block.repeatConfig = [p.trial.Block.repeatConfig, configIndex];
         end
 
-        r = java.security.SecureRandom();
-        seed = double(r.nextInt() + double(r.nextInt()*2^16));
-        seed = mod(seed, 2^32);
-        rng(seed);
-        posList = posList(randperm(length(posList)));
         posList = [{targPos}, posList];
+
+        p.trial.task.targQuad = quadIndex;
+        configMapping = containers.Map([5, 3, 1, 2, 4], [1, 2, 3, 4, 5]);
+        gaborConfig = configMapping(configIndex);
+        p.trial.task.gaborConfig = gaborConfig;
 
         % Randomly selecting orientations for gratings
         if p.trial.Block.repeatFlag
@@ -211,7 +216,7 @@ function TaskSetUp(p)
         if p.trial.task.cued
             if isempty(p.trial.Block.cuedMagList)
                 rng('shuffle');
-                magList = [0, 3, 6, 12, 12, 12, 24, 24, 24, 48, 48, 48];
+                magList = [0, 6, 12, 24, 48, 48, 48, 48, 96, 96, 96, 96];
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.cuedMagList;
@@ -222,7 +227,7 @@ function TaskSetUp(p)
         else
             if isempty(p.trial.Block.uncuedMagList)
                 rng('shuffle');
-                magList = [0, 3, 6, 12, 24, 48];
+                magList = [0, 6, 12, 12, 24, 24, 24, 48, 48, 48, 96, 96];
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.uncuedMagList;
@@ -352,7 +357,6 @@ function TaskDesign(p)
                     if(p.trial.task.stimState == 0)
                         % Is current time after presentation of fix point?
                         if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
-                            % Presenting rings
                             ND_AddScreenEvent(p, p.trial.event.RING_PRES, 'RingPres');
                             p.trial.task.CueOn = p.trial.CurTime;
                             stimRings(p, 1)
@@ -374,8 +378,9 @@ function TaskDesign(p)
                     end
 
                     if(p.trial.CurTime > p.trial.task.CueOn + p.trial.task.CueWait)
+                        ND_AddScreenEvent(p, p.trial.event.GRAT_PRES, 'GratPres');
+                        p.trial.task.GaborOn = p.trial.CurTime;
                         stimPreGratOriChange(p, 2);
-                        p.trial.task.GratOn = p.trial.CurTime;
                         ND_SwitchEpoch(p, 'WaitChange')   
                     end
 
@@ -389,7 +394,8 @@ function TaskDesign(p)
             case p.trial.epoch.WaitChange
                 if(p.trial.stim.fix.fixating)
                     % Waiting for orientation change
-                    if (p.trial.CurTime > p.trial.task.GratOn + p.trial.task.GratWait)
+                    if (p.trial.CurTime > p.trial.task.GaborOn + p.trial.task.GratWait)
+                        ND_AddScreenEvent(p, p.trial.event.CHNG_PRES, 'ChangePres'); 
                         stimPostGratOriChange(p, 3);
                         ND_SwitchEpoch(p, 'WaitSaccade')
                     end
@@ -514,9 +520,9 @@ function stimRings(p, val)
     end
 
 function flashCue(p)
-    if p.trial.stim.flashClock > 20 && p.trial.stim.flashClock < 35
+    if p.trial.stim.flashClock > 20 && p.trial.stim.flashClock < 40
         p.trial.stim.rings.cue2.on = 1; 
-    elseif p.trial.stim.flashClock > 35
+    elseif p.trial.stim.flashClock > 40
         p.trial.stim.rings.cue3.on = 0;
         p.trial.stim.rings.cue2.on = 0;
     end  
@@ -544,17 +550,15 @@ function stimPreGratOriChange(p, val)
                 p.trial.stim.gabors.distractor1.fixActive = 1;
                 p.trial.stim.gabors.distractor2.fixActive = 1;
                 p.trial.stim.gabors.distractor3.fixActive = 1;
+
                 p.trial.stim.gabors.preTarget.on = 1;
                 p.trial.stim.gabors.distractor1.on = 1;
                 p.trial.stim.gabors.distractor2.on = 1;
                 p.trial.stim.gabors.distractor3.on = 1;
+
             otherwise
                 error('unusable stim value')
         end
-        % Passing event time for stimulus to TDT
-        if(val == 2)
-            ND_AddScreenEvent(p, p.trial.event.GRAT_PRES, 'GratPres');
-        end 
     end
            
 % Function to present stimuli on screen after orientation change
@@ -578,10 +582,6 @@ function stimPostGratOriChange(p, val)
             otherwise
                 error('unusable stim value')     
         end
-        % Passing event time for stimulus to TDT
-        if(val == 3)
-            ND_AddScreenEvent(p, p.trial.event.CHNG_PRES, 'ChangePres');   
-        end 
     end
 
 function p = Fix_Broken(p)
@@ -595,7 +595,7 @@ function p = Fix_Broken(p)
 
 function Handle_Break(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.FixBreak;
-    p.defaultParameters.earlyFlag = 1;
+    p.defaultParameters.breakFlag = 1;
     p.trial.Block.repeatFlag = 1;
     ND_SwitchEpoch(p, 'TaskEnd');
 
@@ -605,13 +605,13 @@ function p = Handle_Early(p, type)
         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
         % Flagging trial as early
         if p.trial.task.cued
-            p.defaultParameters.earlyFlag = 1;
+            p.defaultParameters.breakFlag = 1;
         end
     elseif strcmp(type, 'EarlyFalse')
         % Marking trial as "miss" but early if eye position is in distractor fix window
         p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
         % Flagging trial as early
-        p.defaultParameters.breakFlag = 1;
+        p.defaultParameters.earlyFlag = 1;
     elseif strcmp(type, 'StimBreak')
         % Marking trial as fix break without relevance to task
         p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
@@ -634,7 +634,7 @@ function p = No_Selection(p)
     % Logging flight time
     p.trial.task.FlightTime = p.trial.CurTime - p.trial.EV.FixLeave;
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
-    p.defaultParameters.breakFlag = 1;
+    p.defaultParameters.earlyFlag = 1;
     p.trial.Block.repeatFlag = 1;
     % Switching epoch to end task
     ND_SwitchEpoch(p, 'TaskEnd');
@@ -656,11 +656,8 @@ function p = Task_Miss(p)
     % Marking trial outcome as 'Miss' trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
-    p.trial.Block.repeatFlag = 0;
-    if p.trial.task.cued
-        p.trial.Block.repeatFlag = 1;
-        p.defaultParameters.earlyFlag = 1;
-    end
+    p.defaultParameters.earlyFlag = 1;
+    p.trial.Block.repeatFlag = 1;
     % Switching epoch to end task
     ND_SwitchEpoch(p, 'TaskEnd');
 
@@ -676,7 +673,7 @@ function p = Task_False(p)
     % Marking trial as false and ending trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.False;
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
-    p.defaultParameters.breakFlag = 1;
+    p.defaultParameters.earlyFlag = 1;
     p.trial.Block.repeatFlag = 1;
     % Switching epoch to end task
     ND_SwitchEpoch(p, 'TaskEnd');

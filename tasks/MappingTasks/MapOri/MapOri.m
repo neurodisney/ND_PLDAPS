@@ -34,13 +34,14 @@ function TaskSetUp(p)
         p.trial.task.stimFix = 0;
         % Establishing stim state for stim presentation
         p.trial.task.stimState = 0;
+        % Creating space to save time when gratings presented
+        p.trial.task.gaborOnsetTm = NaN;
         
         % Creating fix spot
         p.trial.stim.fix = pds.stim.FixSpot(p);
 
         % Creating gabor
         oriRange = p.trial.task.oriRange;
-
         p.trial.stim.DRIFTGABOR.pos = p.trial.task.pos;
         p.trial.stim.DRIFTGABOR.radius = p.trial.task.radius;
         p.trial.stim.DRIFTGABOR.angle = oriRange(p.trial.Block.locIdx);

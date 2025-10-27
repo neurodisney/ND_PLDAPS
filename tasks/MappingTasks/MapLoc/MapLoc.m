@@ -34,6 +34,9 @@ function TaskSetUp(p)
         p.trial.task.stimFix = 0;
         % Establishing stim state for stim presentation
         p.trial.task.stimState = 0;
+        % Creating space to save time when gratings presented
+        p.trial.task.gaborOnsetTm = NaN;
+
         % Creating fix spot
         p.trial.stim.fix = pds.stim.FixSpot(p);
 
