@@ -70,9 +70,9 @@ p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and
 p.defaultParameters.task.EqualStim  = 1; % both gratings have the same spatial frequency and orientation
 
 % define random grating parameters for each session
-p.defaultParameters.stim.sFreqLst   = [3]; % spatial frequency as cycles per degree
+p.defaultParameters.stim.sFreqLst   = [1.5]; % spatial frequency as cycles per degree
 %p.defaultParameters.stim.OriLst     = 0:15:179;  % orientation of grating
-p.defaultParameters.stim.OriLst     = 45;  % orientation of grating
+p.defaultParameters.stim.OriLst     = 160;  % orientation of grating
 
 p.defaultParameters.stim.Hemi       = datasample(['l', 'r'], 1);
 p.defaultParameters.stim.Ref.sFreq  = datasample(p.defaultParameters.stim.sFreqLst,1); % spatial frequency as cycles per degree
