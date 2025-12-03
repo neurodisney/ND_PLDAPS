@@ -16,9 +16,9 @@ p.trial.reward.ManDur         = 0.2;  % reward duration [s] for reward given by 
 p.trial.reward.IncrementTrial = [50, 150, 300,  400, 500,  600, 650]; % increase number of pulses with this trial number
 p.trial.reward.IncrementDur   = [0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35]; % increase number of pulses with this trial number
 p.trial.reward.DiscourageProp = 1.0;  % proportion of reward given if previous trial was an error
-p.trial.reward.Dur            = 0.22; %initial reward duration
-p.trial.reward.boost          = 0.03;
-p.trial.stim.tardiffthresh    = 0.01; %if target and reference within 3% contrast of each other, use random reward probability
+p.trial.reward.Dur            = 0.25; %initial reward duration
+p.trial.reward.boost          = 0.04;
+p.trial.stim.tardiffthresh    = 0.03; %if target and reference within 3% contrast of each other, use random reward probability
 p.trial.reward.useProb        = 1;
 p.trial.reward.probabilities  = [0.25, 0.75]; %probability for will NOT or WILL be rewarded
 %p.trial.reward.IncrementTrial = [150,  250,   350, 450,   550,  650, 750]; % increase number of pulses with this trial number
@@ -52,13 +52,13 @@ p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 % p.trial.stim.AngLst = [45, 0, -45];
 % 
 p.trial.stim.EccLst =  [2];
-p.trial.stim.AngLst = [160];
+p.trial.stim.AngLst = [125];
 % 
 
-p.trial.stim.PosX = 2.75;
+p.trial.stim.PosX = 2.0;
 %p.trial.stim.PosY = datasample([-1.5, 1.5], 1);
 %p.trial.stim.PosX = datasample([-1.5, 1.5], 1);
-p.trial.stim.PosY = 2.5;
+p.trial.stim.PosY = 1.0;
 
 % grating contrast
 cCtr = datasample([0.2, 0.4], 1);
