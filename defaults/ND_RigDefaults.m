@@ -232,10 +232,10 @@ SS.pldaps.ptbVerbosity       = 3;  % See here https://github.com/Psychtoolbox-3/
 % ------------------------------------------------------------------------%
 %% Reward settings
 SS.datapixx.useForReward      = 1;     % WZ TODO: What else could be needed for reward? Maybe we should get rid of this option...
-SS.reward.defaultAmount       = 0.125;  % Default amount of reward.=0; [in seconds]
+SS.reward.defaultAmount       = 0.25;  % Default amount of reward.=0; [in seconds]
+SS.reward.ManDur              = 0.25;  % Default amount of reward for manual reward delivery
 SS.reward.Lag                 = 0.15;  % Delay between response and reward onset
 SS.datapixx.adc.RewardChannel = 3;     % Default ADC output channel
-SS.reward.ManDur              = 0.05;
 
 % ------------------------------------------------------------------------%
 %% Condition/Block design
@@ -243,12 +243,12 @@ SS.Block.maxBlocks      = -1;  % max number of blocks to complete; if negative b
 SS.Block.maxBlockTrials =  4;  % max number of trials per condition in a block (for unbalanced numbers use an array with the same length as number of condition and specify desired trial number per condition)
 SS.Block.EqualCorrect   =  0;  % if set to one, trials within a block are repeated until the same number of correct trials is obtained for all conditions
 SS.Block.GenBlock       =  1;  % Flag to indicate that a block with a new condition list needs to be generated
+SS.Block.trialCount     =  0;
+SS.Block.blockCount     =  0;
+SS.Block.flagNextBlock  =  0;
 c1.Nr = 1;
 SS.Block.Conditions     = {c1}; % as default only one condition
 SS.Block.BlockList      = [];
-SS.Block.trialCount     =  0;
-SS.Block.flagNextBlock  =  1;
-SS.Block.blockCount     =  0;
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
@@ -343,18 +343,30 @@ SS.stim.FIXSPOT.size         = 0.2;       % size of the fixation spot
 SS.behavior.fixation.fix.pos = [0,0];     % Somethings may rely on this, will be overwritten upon creation of first FixSpot
 
 % Sine Wave Grating stimlui
-SS.stim.GRATING.sFreq    = 3; % Spatial frequency, cycles/deg
-SS.stim.GRATING.tFreq    = 0; % Temporal frequency, drift speed. 0 is no drift
-SS.stim.GRATING.angle    = 0; % Rotation
-SS.stim.GRATING.contrast = 1;
-SS.stim.GRATING.res      = 1000; % Half the size of the texture matrix
-SS.stim.GRATING.radius   = 1;
+SS.stim.GRATING.sFreq          = 3; % Spatial frequency, cycles/deg
+SS.stim.GRATING.tFreq          = 0; % Temporal frequency, drift speed. 0 is no drift
+SS.stim.GRATING.angle          = 0; % Rotation
+SS.stim.GRATING.contrast       = 1;
+SS.stim.GRATING.res            = 1000; % Half the size of the texture matrix
+SS.stim.GRATING.radius         = 1;
 SS.stim.GRATING.contrastMethod = 'balanced';
-SS.stim.GRATING.pos      = [0, 0];
-SS.stim.GRATING.fixWin   =  4;  
-SS.stim.GRATING.alpha    = 1; % Fully opaque
-SS.stim.GRATING.hemifield = NaN;
+SS.stim.GRATING.pos            = [0, 0];
+SS.stim.GRATING.fixWin         =  4;  
+SS.stim.GRATING.alpha          = 1; % Fully opaque
+SS.stim.GRATING.hemifield      = NaN;
 % SS.stim.GRATING.srcRadius  = 500; % Big source to allow for more resolution
+
+% Drifting sine wave grating stimuli
+SS.stim.DRIFTGABOR.fixWin      = 3;
+SS.stim.DRIFTGABOR.size        = [5, 5]; %this controls stim texture size, not size of stim shown on screen
+SS.stim.DRIFTGABOR.frequency   = 3;
+SS.stim.DRIFTGABOR.angle       = 45;
+SS.stim.DRIFTGABOR.phase       = 0;
+SS.stim.DRIFTGABOR.speed       = 1;
+SS.stim.DRIFTGABOR.sigma       = 0.4; %this wraps stim texture with gassian envelope, controlling on-screen stim size
+SS.stim.DRIFTGABOR.contrast    = 1;
+SS.stim.DRIFTGABOR.alpha       = 1;
+SS.stim.DRIFTGABOR.pos         = [0, 0];
 
 % Ring (i.e. location cue)
 SS.stim.RING.pos       = [0,0];
@@ -363,6 +375,16 @@ SS.stim.RING.linewidth = 0.1;
 SS.stim.RING.color     = 'fixspot'; 
 SS.stim.RING.fixWin    = 2;
 SS.stim.RING.alpha     = 1; % Fully opaque
+
+% Rectangle
+SS.stim.RECTANGLE.pos       = [0, 0];
+SS.stim.RECTANGLE.size      = 2;
+SS.stim.RECTANGLE.linewidth = 0.1;
+SS.stim.RECTANGLE.color     = 'red';
+SS.stim.RECTANGLE.fixWin    = 3;
+SS.stim.RECTANGLE.alpha     = 1; %fully opaque
+SS.stim.RECTANGLE.flashing  = 0;
+SS.stim.RECTANGLE.reward    = 0;
 
 % ------------------------------------------------------------------------%
 %% Joystick
@@ -440,7 +462,7 @@ SS.key.FixDec    = KbName('-_');     % decrease size of fixation window
 % trigger pico spritzer injection
 SS.key.spritz    = KbName('tab');    % Send a TTL pulse over the analog channel connected to the pico spritzer
 
-% block controll
+% block control
 SS.key.BlockAdvance      = KbName('a'); % advance to next block
 SS.key.BlockEqualCorrect = KbName('s'); % switch between accepting only correct trials or all trials
 
