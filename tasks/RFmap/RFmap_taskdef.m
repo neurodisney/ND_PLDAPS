@@ -29,17 +29,18 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        %p.trial.stim.coarse.ori      = [0, 45, 90, 135, 180, 270];   % orient of grating
-        p.trial.stim.coarse.ori      = 45;   % orient of grating
-        p.trial.stim.coarse.radius   = 2;      % size of grating 
+        p.trial.stim.coarse.ori      = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180, 202.5, 225, 257.5, 270, 292.5, 315, 337.5];   % orient of grating
+        %p.trial.stim.coarse.ori      = 0;   % orient of grating
+        p.trial.stim.coarse.radius   = 1.0;      % size of grating 
         %p.trial.stim.coarse.contrast = [0, 0.014, 0.023, 0.034, 0.081, 0.187, 0.285, 0.658, 0.9600];         % intensity contrast
-        p.trial.stim.coarse.contrast = 0.85;         % intensity contrast
-        p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency  
+        p.trial.stim.coarse.contrast = 0.95;         % intensity contrast
+        p.trial.stim.coarse.sFreq    = 1.5;       % spatial frequency
+        %p.trial.stim.coarse.sFreq    = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]; %spatial frequency
         p.trial.stim.coarse.tFreq    = 3;         % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.5;      % spacing of grating centers       
         
-        p.trial.stim.coarse.xRange   = [2, 12];
-        p.trial.stim.coarse.yRange   = [-12, -2];
+        p.trial.stim.coarse.xRange   = [0.5, 5.5];
+        p.trial.stim.coarse.yRange   = [-5.5, -0.5];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -93,14 +94,14 @@ p.trial.datapixx.TTL_InjStrobe = 6110;
 %% Reward
 
 % manual reward from experimenter
-p.trial.reward.GiveInitial  = 1; % If set to 1 reward animal when starting to fixate
+p.trial.reward.GiveInitial  = 0; % If set to 1 reward animal when starting to fixate
 p.trial.reward.InitialRew   = 0.01; % duration of the initial reward
 p.trial.reward.GiveSeries   = 0; % If set to 1 give a continous series of rewards until end of fixation period
-p.trial.reward.Dur          = 0.04; % reward duration for pulse in reward series while keeping fixation
+p.trial.reward.Dur          = 0.25; % reward duration for pulse in reward series while keeping fixation
 p.trial.reward.Step         = [0, 6, 12, 18 24];     % define the number of subsequent rewards after that the next delay period should be used.
 p.trial.reward.Period       = [0.5 1 1.5 2 2.5]; % the period between one reward and the next NEEDS TO BE GREATER THAN Dur
-p.trial.reward.ManDur       = 0.05; % reward duration [s] for reward given by keyboard presses
-p.trial.reward.jackpotDur   = 0.2;  % final reward after keeping fixation for the complete time
+p.trial.reward.ManDur       = 0.25; % reward duration [s] for reward given by keyboard presses
+p.trial.reward.jackpotDur   = 0.25;  % final reward after keeping fixation for the complete time
 p.trial.reward.jackpotnPulse = 1;
 
 % ------------------------------------------------------------------------%

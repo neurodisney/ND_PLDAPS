@@ -358,7 +358,7 @@ SS.stim.GRATING.hemifield      = NaN;
 
 % Drifting sine wave grating stimuli
 SS.stim.DRIFTGABOR.fixWin      = 3;
-SS.stim.DRIFTGABOR.size        = [5, 5]; %this controls stim texture size, not size of stim shown on screen
+SS.stim.DRIFTGABOR.size        = [3, 3]; %this controls stim texture size, not size of stim shown on screen
 SS.stim.DRIFTGABOR.frequency   = 3;
 SS.stim.DRIFTGABOR.angle       = 45;
 SS.stim.DRIFTGABOR.phase       = 0;
