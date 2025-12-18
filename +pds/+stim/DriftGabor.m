@@ -34,7 +34,7 @@ classdef DriftGabor < pds.stim.BaseStim
             if nargin < 3 || isempty(fixWin)
                 fixWin = p.trial.stim.DRIFTGABOR.fixWin;
             end
-
+            
             if nargin < 4 || isempty(size)
                 size = p.trial.stim.DRIFTGABOR.size;
             end
@@ -74,8 +74,7 @@ classdef DriftGabor < pds.stim.BaseStim
             obj.classCode = p.trial.event.STIM.DriftGabor;
 
             % Assigning order of properties when propertyArray attribute is calculated
-            % Storing this info in ascii table instead
-            obj.recordProps = {};
+            obj.recordProps = {'xpos', 'ypos', 'frequency', 'radius', 'angle', 'speed', 'contrast'};
 
             obj.size = size;
             obj.frequency = frequency;
@@ -96,11 +95,20 @@ classdef DriftGabor < pds.stim.BaseStim
                     destRect = CenterRectOnPoint([0, 0, obj.size(1), obj.size(2)], obj.pos(1), obj.pos(2));
                     
                     elapsedTime = p.trial.CurTime - obj.genTime;
-                    phaseOffset = obj.phase + ((360 * obj.speed) * elapsedTime);     
+                    phaseOffset = obj.phase + ((360 * obj.speed) * elapsedTime); 
+                    
+                    % Filter mode (not sure what the best value is yet)
+                    % For more information see the PTB documentation for Screen('DrawTexture')
+                    filterMode = [];                  
                     
                     Screen('DrawTexture', p.trial.display.ptr, obj.gaborTex, [], destRect, obj.angle, [], [],...
                         [], [], kPsychDontDoRotation,[phaseOffset + 180, obj.frequency, obj.sigma obj.contrast]);   
                 end  
+        end
+        
+        function cleanup(obj)
+        %% Handle cleanup operations
+        cleanup@pds.stim.BaseStim(obj);
         end
 
     end % Close methods

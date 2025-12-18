@@ -33,10 +33,11 @@ if(isempty(state))
     p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
     
-    p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.GRATING.tFreq',          '%.2f');
-    p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.GRATING.sFreq',          '%.2f');
-    p = ND_AddAsciiEntry(p, 'contrast',    'p.trial.stim.GRATING.contrast',       '%.1f');
-    p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.GRATING.radius',       '%.1f');
+    p = ND_AddAsciiEntry(p, 'tFreq',       'p.trial.stim.DRIFTGABOR.speed',       '%.2f');
+    p = ND_AddAsciiEntry(p, 'sFreq',       'p.trial.stim.DRIFTGABOR.frequency',   '%.2f');
+    p = ND_AddAsciiEntry(p, 'contrast',    'p.trial.stim.DRIFTGABOR.contrast',    '%.2f');
+    p = ND_AddAsciiEntry(p, 'StimSize',    '2*p.trial.stim.DRIFTGABOR.radius',    '%.2f');
+    p = ND_AddAsciiEntry(p, 'ori',         'p.trial.stim.DRIFTGABOR.angle',       '%.2f');
     
     p = ND_AddAsciiEntry(p, 'Secs',        'p.trial.EV.DPX_TaskOn',               '%.5f');
     p = ND_AddAsciiEntry(p, 'FixSpotOn',   'p.trial.EV.FixOn',                    '%.5f');
@@ -175,21 +176,21 @@ p.trial.stim.fix = pds.stim.FixSpot(p);
 p.trial.stim.gratings = {};
 stimdef = p.trial.stim.(p.trial.stim.RFmeth);
 for ori = stimdef.ori
-    p.trial.stim.GRATING.ori = ori;
+    p.trial.stim.DRIFTGABOR.angle = ori;
     
     for radius = stimdef.radius
-        p.trial.stim.GRATING.radius = radius;
+        p.trial.stim.DRIFTGABOR.radius = radius;
         
         for sFreq = stimdef.sFreq
-            p.trial.stim.GRATING.sFreq = sFreq;
+            p.trial.stim.DRIFTGABOR.frequency = sFreq;
             
             for tFreq = stimdef.tFreq
-                p.trial.stim.GRATING.tFreq = tFreq;
+                p.trial.stim.DRIFTGABOR.speed = tFreq;
                 
                 for contr = stimdef.contrast
-                    p.trial.stim.GRATING.contrast = contr;
+                    p.trial.stim.DRIFTGABOR.contrast = contr;
                     
-                    p.trial.stim.gratings{end+1} = pds.stim.Grating(p);
+                    p.trial.stim.gratings{end+1} = pds.stim.DriftGabor(p);
                     
                 end
             end
