@@ -32,12 +32,12 @@ if nStims > 0
                 
             elseif iProp == 2
                 signalx = typecast(cast(round(property * 100), 'int16'), 'uint16');
-                %xpos = 24000 + signalx;
+                xpos = 24000 + signalx;
                 pds.datapixx.strobe(signalx);
                             
             elseif iProp == 3
                 signaly = typecast(cast(round(property * 100), 'int16'), 'uint16');
-                %ypos = 25000 + signaly;
+                ypos = 25000 + signaly;
                 pds.datapixx.strobe(signaly);
                
             elseif iProp == 4
