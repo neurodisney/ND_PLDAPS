@@ -38,7 +38,7 @@ p.trial.task.Timing.PullTimeOut =  2;     % Minimum time [s] passed before a tri
 % ------------------------------------------------------------------------%
 %% Reward
 p.trial.reward.Pull    = 0;          % If 1 then give reward for pulling the joystick
-p.trial.reward.PullRew = 0.3;        % reward amount for pulling joystick (if p.trial.reward.Pull == 1)
+p.trial.reward.PullRew = 0.05;        % reward amount for pulling joystick (if p.trial.reward.Pull == 1)
 
 p.trial.reward.IncrConsecutive = 1;  % increase reward for subsequent correct trials. Otherwise reward will increase with the number of hits
 
@@ -47,7 +47,7 @@ p.trial.reward.Dur  = [0.6];   % 8/7/25 - MJH - currently the above definition i
 
 p.trial.reward.Step = [1, 2];        % define the number of trials when to increase reward. CVector length can not be longer than p.trial.reward.Dur
 
-p.trial.reward.ManDur = 0.2;         % reward duration [s] for reward given by keyboard presses
+p.trial.reward.ManDur = 0.05;         % reward duration [s] for reward given by keyboard presses
 
 % ------------------------------------------------------------------------%
 

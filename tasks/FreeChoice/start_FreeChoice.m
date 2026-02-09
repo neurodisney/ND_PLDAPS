@@ -40,7 +40,10 @@ function p = start_FreeChoice(subjectname, rig)
     SS.datapixx.useAsEyepos = 1;
     %SS.pldaps.draw.joystick.use   = 0; % 9/19/2025 - MJH joystick drawing seems to be the default, need to suppress.
     SS.datapixx.adc.srate = 1000;
-    
+
+    SS.datapixx.TTL_trialOn       = 0; % 10/8/2025, MJH - w/o this flag, an error emerges due to missing Communications toolbox which our scripts are using a deprecated function that is no longer in the toolbox....this may require an update to the TTL script at some point in the future...
+
+
 
     % Creating pldaps object
     p = pldaps(subjectname, SS, exp_fun);

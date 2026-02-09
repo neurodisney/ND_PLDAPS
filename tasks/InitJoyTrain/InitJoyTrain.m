@@ -177,8 +177,10 @@ function TaskSetUp(p)
     
     % present joystick pointer on screen
     
-    %p.trial.stim.ringObj = pds.stim.Ring(p.trial.stim.RING);
-    p.trial.stim.ringObj = pds.stim.Ring(p,[0,0],0,4,[0.5,0.5],'blue',0); % somehow I need to have more control over these variables, currently just hardcoding them in here.
+    %make ringRad variable between an upper and lower value
+    p.trial.stim.ringRad = randi([6 15]);
+    
+    p.trial.stim.ringObj = pds.stim.Ring(p,[0,0],0,p.trial.stim.ringRad,[0.5,0.5],'blue',0); % somehow I need to have more control over these variables, currently just hardcoding them in here.
     %p.trial.stim.ringObj.on = true; % << this line I should try only within a specific part of TaskDesign...
     p.trial.stim.allStims{end+1} = p.trial.stim.ringObj;
    
@@ -359,7 +361,7 @@ function AltTaskDesign(p) %this entire alternate trial progression is based on w
             p.trial.stim.ringObj.on = true;
             %if(p.trial.CurTime > p.trial.Timer.Wait)
             %    Task_NoStart(p); % no trial initiated in given time window, go directly to TaskEnd, do not start task, do not reward
-            if p.trial.joyDist >= double(4)
+            if p.trial.joyDist >= double(p.trial.stim.ringRad) %variable to maintain ring radius size)
                 Task_CorrectReward(p);
             end
             %elseif(p.trial.JoyState.Current == p.trial.JoyState.JoyHold)
@@ -377,7 +379,7 @@ function AltTaskDesign(p) %this entire alternate trial progression is based on w
                        
                 %disp('move joystick')
                     
-                if p.trial.joyDist >= double(4)%(4/p.trial.pldaps.draw.joystick.sclfac);
+                if p.trial.joyDist >= double(p.trial.stim.ringRad)%(4/p.trial.pldaps.draw.joystick.sclfac);
                     
                     %pds.reward.give(p,p.trial.reward.PullRew);
                     %Task_CorrectReward(p)

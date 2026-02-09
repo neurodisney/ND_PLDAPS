@@ -77,8 +77,8 @@ if(p.defaultParameters.pldaps.draw.joystick.use && p.defaultParameters.datapixx.
     p.defaultParameters.pldaps.draw.joystick.pos     = [0,0]; %<< changed so position starts at center of screen.
     
     
-    p.defaultParameters.pldaps.draw.joystick.sclfac  = p.defaultParameters.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
-
+    %p.defaultParameters.pldaps.draw.joystick.sclfac  = p.defaultParameters.pldaps.draw.joystick.size(2) / 2.6; % scaling factor to get joystick signal within the range of the representation area.
+    p.defaultParameters.pldaps.draw.joystick.sclfac  = p.defaultParameters.pldaps.draw.joystick.size(2) / 1.8;
     %p.defaultParameters.pldaps.draw.joystick.rect    = ND_GetRect(p.defaultParameters.pldaps.draw.joystick.pos, ...
     %                                                           p.defaultParameters.pldaps.draw.joystick.size); 
     p.defaultParameters.pldaps.draw.joystick.rect    = [0 0 0 0]; %dummy rectangle that doesn't get drawn. For now wanting to keep the option of a slider bar...hoping to make this all conditional. either "rect" meter or just single 2d point on screen. MJH

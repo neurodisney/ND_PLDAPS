@@ -22,15 +22,15 @@ if(p.trial.datapixx.adc.dataSampleCount > p.trial.behavior.joystick.Sample)
         (p.trial.AI.Joy.Y(sIdx) - p.trial.behavior.joystick.Zero(2)).^2);
     
     % calculate a moving average of the joystick position for display reasons
-    p.trial.joyX   = mean(p.trial.AI.Joy.X(sIdx) - p.trial.behavior.joystick.Zero(1));
-    p.trial.joyY   = mean(p.trial.AI.Joy.Y(sIdx) - p.trial.behavior.joystick.Zero(2));
+    p.trial.joyX   = mean(p.trial.AI.Joy.X(sIdx) - p.trial.behavior.joystick.Zero(1)); 
+    p.trial.joyY   = mean(p.trial.AI.Joy.Y(sIdx) - p.trial.behavior.joystick.Zero(2))*-1;%10/29/25 quick inverse for Y position since the projector is mirrored and I want joystick connector to be on the left.
     p.trial.joyAmp = mean(p.trial.AI.Joy.Amp(sIdx));
     
     
     % create a distance variable to be used for measuring position from center w/ euclidean distance (dist. = sqrt(x^2 + y^2))
     %p.trial.joyDist = (sqrt((p.trial.joyX)^2 + (p.trial.joyY)^2))*p.trial.pldaps.draw.joystick.sclfac;
     %p.trial.joyDist = (sqrt((p.trial.joyX)^2 + (p.trial.joyY)^2));
-    %p.trial.joyDist = sqrt((p.trial.joyX*p.trial.pldaps.draw.joystick.sclfac)^2 + (p.trial.joyY*p.trial.pldaps.draw.joystick.sclfac)^2);
+    p.trial.joyDist = sqrt((p.trial.joyX*p.trial.pldaps.draw.joystick.sclfac)^2 + (p.trial.joyY*p.trial.pldaps.draw.joystick.sclfac)^2);
     % 9/10/2025 >> COMMENT OUT ABOVE LINE TO GET FIXTRAIN TO WORK. HAVENT LOOKED INTO THIS BUG YET. ND_CheckJoystick SHOULD NOT BE CALLED SINCE JOYSTICK TO SELECTED TO BE OFF IN start_InitFixTrain
 %     p.trial.joyXScale = p.trial.joyX * p.trial.pldaps.draw.joystick.sclfac;
 %     p.trial.joyYScale = p.trial.joyY * p.trial.pldaps.draw.joystick.sclfac;

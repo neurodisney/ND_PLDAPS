@@ -57,7 +57,8 @@ SS.pldaps.draw.eyepos.use     = 0; % enable drawing of the eye position.
 SS.pldaps.draw.photodiode.use = 0; % enable drawing the photo diode square
 SS.datapixx.useForReward      = 1; % use datapixx analog output for reward
 
-SS.pldaps.draw.grid.use       = 1;
+
+SS.pldaps.draw.grid.use       = 0;
 
 SS.datapixx.useAsEyepos       = 0;
 SS.datapixx.useJoystick       = 1;
@@ -65,6 +66,7 @@ SS.datapixx.TTL_trialOn       = 0;
 
 % Creating a stim field in the p struct so that a ring stimulus object can be invoked
 SS.stim.fix.on = 0; %MJH 8/29/2025
+SS.stim.ringRad = 11; %variable to maintain ring radius size
 
 % switch here to get calibration functionality
 SS.behavior.fixation.useCalibration = 0;

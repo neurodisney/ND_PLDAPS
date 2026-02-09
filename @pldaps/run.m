@@ -69,7 +69,7 @@ try
     p = ND_BeginExperiment(p);
 
     % disable keyboard
-    ListenChar(2)
+    ListenChar(2)    
     HideCursor
 
     p.trial.flagNextTrial  = 0; % flag for ending the trial

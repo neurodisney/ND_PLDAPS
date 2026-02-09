@@ -169,7 +169,7 @@ function TaskDesign(p)
             case p.trial.epoch.TrialStart
 
                 % Turning task on
-                Task_ON(p);
+                %Task_ON(p); %10/8/2025, MJH
 
                 % Presenting fix point
                 ND_FixSpot(p, 1);
