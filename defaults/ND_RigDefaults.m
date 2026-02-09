@@ -252,6 +252,7 @@ SS.Block.BlockList      = [];
 
 % Typify tasks
 SS.Block.locIdx             = 1;
+SS.Block.blankFlag          = 0;
 
 % AttendGrat
 SS.Block.missLog            = 0;
@@ -445,7 +446,7 @@ SS.stim.GRATING.cued     = 0;
 SS.stim.GRATING.ori      = 1;
 
 % Drifting sine Wave Grating stimlui
-SS.stim.DRIFTGABOR.fixWin = 3;
+SS.stim.DRIFTGABOR.fixWin = 4;
 SS.stim.DRIFTGABOR.size = [5, 5]; % This controls stim texture size, not size of stim shown on screen
 SS.stim.DRIFTGABOR.frequency = 3;
 SS.stim.DRIFTGABOR.angle = 45;

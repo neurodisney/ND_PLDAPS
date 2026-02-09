@@ -9,7 +9,7 @@ function p = ReportChange_taskdef(p)
     p.trial.task.sequence = 1;
 
     % Setting time window for fixation before trial marked as 'NoStart'
-    p.trial.task.Timing.WaitFix = 2;
+    p.trial.task.Timing.WaitFix = 4;
 
     % Storing expected latency of stim presentation to use for trial timing calculations
     p.trial.task.stimLatency = ND_GetITI(0.75, 1.5);
@@ -26,13 +26,11 @@ function p = ReportChange_taskdef(p)
     % Setting number of trials per block
     p.trial.Block.maxBlockTrials = 5;
 
-
-
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.4;
-    p.trial.stim.FIXSPOT.fixWin = 2.30;
+    p.trial.stim.FIXSPOT.fixWin = 2.0;
     
     % Storing position of mapped receptive field collected from user or assigning default values
     if isempty(p.trial.task.RFpos)
@@ -44,7 +42,7 @@ function p = ReportChange_taskdef(p)
     target_posX = p.trial.task.RFpos(1);
     target_posY = p.trial.task.RFpos(2);
     p.trial.task.posList = {[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
-    %p.trial.task.posList = {[target_posX, target_posY, 1],[target_posX, target_posY, 1], [-1*target_posX, -1*target_posY, 0], [-1*target_posX, target_posY, 0], [-1*target_posX, target_posY, 0], [target_posX, -1*target_posY, 1]}; 
+    %p.trial.task.posList = {[target_posX, target_posY, 1],[-target_posX, target_posY, 1], [-target_posX, -target_posY, 1]};
     %p.trial.task.posList = {[target_posX, target_posY, 1], [-1 * target_posX, target_posY, 1]};
     
 
@@ -66,14 +64,14 @@ function p = ReportChange_taskdef(p)
 
 
     % Creating flat-hazard function from which to pull out time of wait before stim change
-    num_range = [1, 100];
-    mean = 2;
-    bound1 = 0.08;
-    bound2 = 0.90;
+    num_range = [1, 5];
+    mean = 0.75;
+    bound1 = 0.2;
+    bound2 = 1.0;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
-    function r = exprnBounded(mean, num_range, bound1, bound2);
+    function r = exprnBounded(mean, num_range, bound1, bound2)
     
     minE = exp(-bound1 / mean);
     maxE = exp(-bound2 / mean);
@@ -83,7 +81,7 @@ function p = ReportChange_taskdef(p)
     
     end
 
-    p.trial.task.flatHazard = 100; %r;
+    p.trial.task.flatHazard = r;
     
 
 
@@ -91,8 +89,8 @@ function p = ReportChange_taskdef(p)
     p.trial.task.breakFixCheck = 0.2;
     
     % Setting time window in which response saccade allowed
-    p.trial.task.Timing.saccadeStart = 0.03;
-    p.trial.task.saccadeTimeout = 0.7;
+    p.trial.task.Timing.saccadeStart = 0.100;
+    p.trial.task.saccadeTimeout = 0.500;
     
     % Setting time for which target must be fixed on before trial marked correct
     p.trial.task.minTargetFixTime = 0.3; % Changed from 0.1

@@ -40,16 +40,25 @@ function TaskSetUp(p)
 
         % Creating gabor
         oriRange = p.trial.task.oriRange;
+        ori = oriRange(p.trial.Block.locIdx);
 
         p.trial.stim.DRIFTGABOR.pos = [0, 0];
         p.trial.stim.DRIFTGABOR.size = [100, 100];
         p.trial.stim.DRIFTGABOR.radius = 500;
         disp(p.trial.Block.locIdx)
-        p.trial.stim.DRIFTGABOR.angle = oriRange(p.trial.Block.locIdx);
+        p.trial.stim.DRIFTGABOR.angle = ori;
         p.trial.stim.DRIFTGABOR.speed = 5;
         p.trial.stim.DRIFTGABOR.frequency = 1.5;
         p.trial.stim.DRIFTGABOR.contrast = 0.65;
         p.trial.stim.gabor = pds.stim.DriftGabor(p);
+        
+        
+        if (ori == 50)
+            p.trial.Block.blankFlag = 1;
+        else
+            p.trial.Block.blankFlag = 0;
+        end
+
 
         if (p.trial.Block.locIdx == length(oriRange))
             p.trial.Block.locIdx = 1;
@@ -89,7 +98,11 @@ function TaskDesign(p)
             case p.trial.epoch.Fixating
                 if(p.trial.stim.fix.fixating) 
                     if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
-                        presentStim(p, 2);
+
+                        if ~p.trial.Block.blankFlag 
+                            presentStim(p, 2);
+                        end
+
                         p.trial.task.SRT_StimOn = p.trial.CurTime;
                         ND_SwitchEpoch(p, 'WaitReward')  
                     end   
@@ -116,7 +129,7 @@ function TaskDesign(p)
                         % Reward if reward period has elapsed
                         if p.trial.CurTime >= p.trial.EV.nextReward
                             % Give reward
-                            pds.reward.give(p, p.trial.reward.duration);
+                            % pds.reward.give(p, p.trial.reward.duration);
                             % Reset the reward timer
                             p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
                         end                            
@@ -136,6 +149,7 @@ function TaskDesign(p)
                 Task_OFF(p);
                 % Flagging completion of current trial so ITI is run before next trial
                 p.trial.flagNextTrial = 1;
+                p.defaultParameters.breakFlag = 1;
         end
 
 

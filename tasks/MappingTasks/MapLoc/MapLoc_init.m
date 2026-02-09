@@ -9,6 +9,7 @@ function p = MapLoc_init(p)
     p = ND_AddAsciiEntry(p, 'Subject',        'p.trial.session.subject',             '%s');
     p = ND_AddAsciiEntry(p, 'Experiment',     'p.trial.session.experimentSetupFile', '%s');
     p = ND_AddAsciiEntry(p, 'Tcnt',           'p.trial.pldaps.iTrial',               '%d');
+    p = ND_AddAsciiEntry(p, 'TrialID',        'p.trial.task.trialID',                '%d');
     p = ND_AddAsciiEntry(p, 'Outcome',        'p.trial.outcome.CurrOutcomeStr',      '%s');
     p = ND_AddAsciiEntry(p, 'TargPosX',       'p.trial.stim.gabor.pos(1)',           '%d');
     p = ND_AddAsciiEntry(p, 'TargPosY',       'p.trial.stim.gabor.pos(2)',           '%d');

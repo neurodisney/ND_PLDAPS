@@ -36,6 +36,8 @@ function TaskSetUp(p)
         p.trial.task.stimState = 0;
         % Creating space to save time when gratings presented
         p.trial.task.gaborOnsetTm = NaN;
+        % Creating trial ID
+        p.trial.task.trialID = 20000 + p.trial.pldaps.iTrial;
 
         % Creating fix spot
         p.trial.stim.fix = pds.stim.FixSpot(p);
@@ -88,7 +90,9 @@ function TaskDesign(p)
             case p.trial.epoch.Fixating
                 if(p.trial.stim.fix.fixating) 
                     if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
+                        ND_AddScreenEvent(p, p.trial.event.GRAT_PRES, 'GratPres');
                         presentStim(p, 2);
+                        ND_AddScreenEvent(p, p.trial.task.trialID);
                         p.trial.task.SRT_StimOn = p.trial.CurTime;
                         ND_SwitchEpoch(p, 'WaitReward')  
                     end   

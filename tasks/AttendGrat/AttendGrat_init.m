@@ -8,6 +8,7 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'Experiment',        'p.trial.session.experimentSetupFile',      '%s');
     
     p = ND_AddAsciiEntry(p, 'Tcnt',              'p.trial.pldaps.iTrial',                    '%d');
+    p = ND_AddAsciiEntry(p, 'TrialID',           'p.trial.task.trialID',                     '%d');
     p = ND_AddAsciiEntry(p, 'Cued',              'p.trial.task.cued',                        '%d');
     p = ND_AddAsciiEntry(p, 'FlightTm',          'p.trial.task.FlightTime',                  '%d');
     p = ND_AddAsciiEntry(p, 'ResponseTm',        'p.trial.task.SRT_StimOn',                  '%d');
@@ -56,6 +57,9 @@ function p = AttendGrat_init(p)
     p = ND_AddAsciiEntry(p, 'Dis3PosX',          'p.trial.stim.gabors.distractor3.pos(1)',   '%d');
     p = ND_AddAsciiEntry(p, 'Dis3PosY',          'p.trial.stim.gabors.distractor3.pos(2)',   '%d');
 
+    p = ND_AddAsciiEntry(p, 'ChoicePosX',        'p.trial.task.StimSel(1)',                  '%d');
+    p = ND_AddAsciiEntry(p, 'ChoicePosY',        'p.trial.task.StimSel(2)',                  '%d');
+
     p = ND_AddAsciiEntry(p, 'ResponseWin',       'p.trial.task.saccadeTimeout',              '%d');
     p = ND_AddAsciiEntry(p, 'RewardDur',         'p.trial.reward.Dur',                       '%d');
     
@@ -66,6 +70,3 @@ function p = AttendGrat_init(p)
 
     % Ensuring output directory above exists
     ND_Trial2Ascii(p, 'init');
-
-    %p = ND_AddAsciiEntry(p, 'ChoicePosX',   'p.trial.task.StimSel(1)',                  '%d');
-    %p = ND_AddAsciiEntry(p, 'ChoicePosY',   'p.trial.task.StimSel(2)',                  '%d');

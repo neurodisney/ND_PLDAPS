@@ -88,30 +88,27 @@ function TaskSetUp(p)
         % Manipulating specific trial parameters for training purposes
         %p.trial.stim.gratingParameters.contrast(1) = datasample([0.85, 0.87, 0.90, 0.93, 0.95],1);
         %p.trial.task.sequence = datasample([0,1,1,1], 1);
-        
-        % Creating target grating pre-orientation change by assigning
-        % values to grating properties in pldaps struct
+
         pos = cell2mat(p.trial.stim.posList(1));
-        p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(1);
-        p.trial.stim.GRATING.sFreq = p.trial.stim.gratingParameters.sFreq;
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori;
+        targOri = 45;
 
-        %p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
-        
-        % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.gratings.preTarget = pds.stim.Grating(p);
+        p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
+        p.trial.stim.DRIFTGABOR.angle = targOri;
+        p.trial.stim.DRIFTGABOR.speed = 5;
+        p.trial.stim.DRIFTGABOR.frequency = 1.5;
+        p.trial.stim.DRIFTGABOR.contrast = 0.80;
+        p.trial.stim.DRIFTGABOR.radius = 1.25;
+        p.trial.stim.gabors.preTarget = pds.stim.DriftGabor(p);
 
-        % Creating target grating post-orientation change by assigning
-        % values to grating properties in pldaps struct
-        p.trial.stim.GRATING.pos = pos([1 2]);
-        p.trial.stim.GRATING.contrast = p.trial.stim.gratingParameters.contrast(2);
-        p.trial.stim.GRATING.ori = p.trial.stim.gratingParameters.ori + p.trial.Block.changeMag;
+        % Creating target grating post-orientation change by assigning values to grating properties in p object
         % Compiling properties into pldaps struct to present grating on screen
-        p.trial.stim.gratings.postTarget = pds.stim.Grating(p);
+        p.trial.stim.DRIFTGABOR.pos = pos([1 2]);
+        p.trial.stim.DRIFTGABOR.contrast = 0.80;
+        p.trial.stim.DRIFTGABOR.angle = targOri + 96;
+        p.trial.stim.gabors.postTarget = pds.stim.DriftGabor(p);
 
         % Setting wait before presenting fix point if trial presentation sequence is grat first and fix point second
-        p.trial.task.StartWait.duration = 1;
+        p.trial.task.StartWait.duration = 100;
         p.trial.task.StartWait.counter = 0;
         
         % Selecting time of wait before traget stimulus change from flat hazard function
@@ -174,10 +171,11 @@ function TaskDesign(p)
 
                     % Checking if wait period before fix point presentation
                     % is complete
-                    if p.trial.task.StartWait.counter == p.trial.task.StartWait.duration
+                    if p.trial.task.StartWait.counter > p.trial.task.StartWait.duration
 
                         % Presenting fix spot
                         ND_FixSpot(p, 1);
+                    % hazard function
                         p.trial.task.stimState = 0;
 
                         % Recording start time of task
@@ -211,13 +209,12 @@ function TaskDesign(p)
                     if(p.trial.task.stimState == 0)
                         % Checking if current time is after point at which 
                         % fixation started
-                        if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
+                        if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + 1)
                             % Presenting grating if task sequence 1 (fix
                             % point then grat)
                             if p.trial.task.sequence == 1
                                 stimPreGratOriChange(p, 2);
-                                % Marking time stimulus was presented
-                                p.trial.Timer.stimOn = p.trial.CurTime;
+                            p.trial.Timer.stimOn = p.trial.CurTime;
                             % If task squence 0, stimulus state is updated
                             % to allow task to advance to next epoch
                             elseif p.trial.task.sequence == 0
@@ -251,17 +248,14 @@ function TaskDesign(p)
                 if(p.trial.stim.fix.fixating)
                     % Checking fixation time against value selected from flat
                     % hazard function
-                    if p.trial.task.GratWait.counter == p.trial.task.GratWait.duration
+                    WaitSecs = datasample([0.7, 1, 1.25, 1.5, 1.75, 2, 2.75], 1);
+                    if(p.trial.CurTime > p.trial.Timer.stimOn + WaitSecs)
                         % Presenting stimulus change
                         stimPostGratOriChange(p, 3);
                         % Marking time of stimulus change
                         p.trial.Timer.stimChange = p.trial.CurTime;
                         % Switching task epoch to wait for response
                         ND_SwitchEpoch(p, 'WaitSaccade')
-                    % Adding unit to counter tracking wait period before 
-                    % stimulus change is presented
-                    else
-                        p.trial.task.GratWait.counter = p.trial.task.GratWait.counter + 1; 
                     end
                    
                 % Checking if fixation has been broken    
@@ -289,7 +283,7 @@ function TaskDesign(p)
                         ND_SwitchEpoch(p, 'CheckResponse');
                     
                     % If fix held, checking time against pre-set response window before ending trial due to time-out    
-                    elseif(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.saccadeTimeout)
+                    elseif(p.trial.CurTime > p.trial.Timer.stimChange + p.trial.task.saccadeTimeout)
                         % Marking trial outcome as 'Miss' trial
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
                         % Play noise signaling response period time-out
@@ -300,7 +294,7 @@ function TaskDesign(p)
                 elseif (~p.trial.stim.fix.looking)
                     % If fix broken, play noise signaling fix break
                     pds.audio.playDP(p, 'breakfix', 'left'); 
-                    % Calculating and storing time from fix start to fix leave
+                    % Calculating and storing time from fix start to fix leaveflatHazard
                     p.trial.task.SRT_FixStart = p.trial.EV.FixLeave - p.trial.stim.fix.EV.FixStart;
                     % Calculating and storing time from presenting fix point to fix leave
                     p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - (p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency);
@@ -314,7 +308,7 @@ function TaskDesign(p)
                 % Confirming current gaze shift is first response made
                 if(~p.trial.task.stimFix)
                     % Checking if gaze specifically within target grating fix window
-                    if(p.trial.stim.gratings.postTarget.fixating)
+                    if(p.trial.stim.gabors.postTarget.fixating)
                         % Logging correct selection of grating (target)
                         p.trial.task.stimFix = 1;
                         p.trial.task.TargetSel = 1;
@@ -341,18 +335,18 @@ function TaskDesign(p)
                     % Checking if gaze returned to fix point in time to be considered 'no response yet'    
                     elseif(p.trial.stim.fix.looking)
                         % Switch back to task epoch checking for response
-                        ND_SwitchEpoch(p, 'WaitSaccade');
+                        ND_SwitchEpoch(p, 'WaitSaccade');flatHazard
                     end
                     
                 else
                     % Checking if fix on target held for pre-set amount of time 
-                    if(p.trial.CurTime > p.trial.stim.gratings.postTarget.EV.FixStart + p.trial.task.minTargetFixTime)
+                    if(p.trial.CurTime > p.trial.stim.gabors.postTarget.EV.FixStart + p.trial.task.minTargetFixTime)
                         % If so, marking trial as correct and dispensing
                         % reward
                         Task_CorrectReward(p);
                     
                     % Checking if gaze leaves target grating fix window
-                    elseif(~p.trial.stim.gratings.postTarget.fixating)
+                    elseif(~p.trial.stim.gabors.postTarget.fixating)
                         % Marking trial as 'Target Break'
                         p.trial.outcome.CurrOutcome = p.trial.outcome.TargetBreak;
                         % Playing noise signaling breaking fix from target
@@ -383,7 +377,7 @@ function TaskDesign(p)
                     medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
                     
                     % Checking if median eye position is in fixation window of target 
-                    if(inFixWin(p.trial.stim.gratings.postTarget, medPos))
+                    if(inFixWin(p.trial.stim.gabors.postTarget, medPos))
                         % Marking trial as "hit" but early if eye position is in target fix window
                         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
                         % Flagging trial if early response made, which in turn
@@ -456,13 +450,13 @@ function stimPreGratOriChange(p, val)
                 
                 % Implementing no stimulus (grat) presentation
                 case 0
-                    p.trial.stim.gratings.preTarget.on = 0;
+                    p.trial.stim.gabors.preTarget.on = 0;
                 
                 % Implementing stimulus (grat) presentation, both object on
                 % screen and fixation window around it
                 case 2
-                    p.trial.stim.gratings.preTarget.on = 1;                  
-                    p.trial.stim.gratings.preTarget.fixActive = 1;
+                    p.trial.stim.gabors.preTarget.on = 1;                  
+                    p.trial.stim.gabors.preTarget.fixActive = 1;
                 
                 % Error thrown if neither case designated
                 otherwise
@@ -494,17 +488,17 @@ function stimPostGratOriChange(p, val)
             switch val
                 % Implementing no stimulus (grat) change presentation
                 case 0
-                    p.trial.stim.gratings.postTarget.on = 0;
+                    p.trial.stim.gabors.postTarget.on = 0;
                 
                 % Implementing stimulus (grat) change presentation, both 
                 % object on screen and fixation window around it
                 case 3
                     % Turning pre-change version off
-                    p.trial.stim.gratings.preTarget.on = 0;
+                    p.trial.stim.gabors.preTarget.on = 0;
     
                     % Turning post-change verion on
-                    p.trial.stim.gratings.postTarget.on = 1;
-                    p.trial.stim.gratings.postTarget.fixActive = 1;
+                    p.trial.stim.gabors.postTarget.on = 1;
+                    p.trial.stim.gabors.postTarget.fixActive = 1;
 
                 % Error thrown if neither case designated
                 otherwise
@@ -529,7 +523,7 @@ function p = Task_CorrectReward(p)
     p.trial.task.Good = 1;
 
     % Dispensing reward
-    pds.reward.give(p, p.trial.reward.Dur);
+    pds.reward.give(p, 0.12);
 
     % Playing audio signaling correct trial
     pds.audio.playDP(p, 'reward', 'left');

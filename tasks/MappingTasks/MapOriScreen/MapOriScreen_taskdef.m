@@ -17,7 +17,7 @@ p.trial.task.Timing.ITI = ND_GetITI(1.25, 1.75, [], [], 1, 0.10);
 p.trial.task.Timing.TimeOut = 1;   
 
 % Creating duration for stimulus presentation
-p.trial.task.presDur = 1;
+p.trial.task.presDur = 30;
 
 % Reward parameters
 p.trial.reward.Continuous = 1;
@@ -33,5 +33,5 @@ p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
 p.trial.stim.FIXSPOT.fixWin = 1.75;
 
 % Gabor parameters
-p.trial.task.oriRange = 0:20:340;
+p.trial.task.oriRange = [0, 90, 180, 270, 50];
 

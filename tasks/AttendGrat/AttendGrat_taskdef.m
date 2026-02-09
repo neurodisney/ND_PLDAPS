@@ -5,7 +5,7 @@
 function p = AttendGrat_taskdef(p)
 
     % Setting time window for fixation before trial marked as 'NoStart'
-    p.trial.task.Timing.WaitFix = 2;
+    p.trial.task.Timing.WaitFix = 4;
 
     % Storing expected latency of stim presentation to use for trial timing calculations
     p.trial.task.stimLatency = ND_GetITI(0.75, 1.5);
@@ -24,14 +24,14 @@ function p = AttendGrat_taskdef(p)
 
 
     % Setting RF properties
-    RfPos = [3, -3];
+    RfPos = [4, 4];
     p.trial.task.RfPos = RfPos;
 
-    RfOri = 0;
+    RfOri = 135;
     p.trial.task.RfOri = RfOri;
-    p.trial.task.RfOriCurve = [340, 0, 20]; %[RfOri - 20, RfOri, RfOri + 20];
+    p.trial.task.RfOriCurve = [RfOri - 30, RfOri, RfOri + 30];
 
-    RfRadius = 0.75; 
+    RfRadius = 1.25;
     p.trial.task.RfSize = RfRadius;
     p.trial.stim.DRIFTGABOR.radius = RfRadius;
 
@@ -43,23 +43,24 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.ringSize = ringRadius;
     p.trial.stim.RING.radius = ringRadius;
 
-    cueRingDelta = 10;
+    cueRingDelta = 8; %10;
     p.trial.task.cueRingDelta = cueRingDelta;
     p.trial.stim.ringParameters.cueCon = sprintf('down%d', cueRingDelta);
 
-    baseRingDelta = 6;
+    baseRingDelta = 8; %8;
     p.trial.task.baseRingDelta = baseRingDelta;
     p.trial.stim.ringParameters.distCon = sprintf('up%d', baseRingDelta);
 
     p.trial.task.ringFlash = 0.200;
     p.trial.stim.ringParameters.cue2Con =  sprintf('down%d', 6);
 
+    % Assigning lineweight (thickness) to rings
+    p.trial.stim.RING.lineWeight = [0.35, 0.35];
+
     % Setting gabor properties
     p.trial.stim.gaborParameters.sFreq = 1.5;
     p.trial.stim.gaborParameters.tFreq = 5;
     p.trial.stim.gaborParameters.contrast = 0.80;
-
-    p.trial.stim.DRIFTGABOR.size = [3, 3];
 
     % Calculating points along line of is eccentricity
     targ_x = RfPos(1);
@@ -71,7 +72,7 @@ function p = AttendGrat_taskdef(p)
 
     % Angle (degrees) between line connecting origin (0, 0) and
     % preceeding point and line connecting origin and succeeding point.
-    angular_offset = 7.94;
+    angular_offset = 5;
     p.trial.task.stimOffset = angular_offset;
 
     p.trial.task.posList = {};
@@ -105,23 +106,20 @@ function p = AttendGrat_taskdef(p)
 
     
     % Setting amount of time rings are presented before grats come on
-    p.trial.task.CueWait = 1.25;
-    
-    % Assigning lineweight (thickness) to rings
-    p.trial.stim.RING.lineWeight = [0.3, 0.3];
+    p.trial.task.CueWait = 1.0; %1.25;
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'green';
     p.trial.stim.FIXSPOT.size = 0.25;
-    p.trial.stim.FIXSPOT.fixWin = 1.75;
+    p.trial.stim.FIXSPOT.fixWin = 2; %1.75;
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
-    num_range = [1, 5];
+    num_range = [1, 8];
     mean = 1.5;
     bound1 = 1.25;
-    bound2 = 3.25;
+    bound2 = 2.75; %3.25;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     

@@ -59,6 +59,7 @@ function TaskSetUp(p)
 
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
+        p.trial.task.Valid = 0;
         % Creating spot to store selection of target stimulus
         p.trial.task.StimSel = [NaN, NaN];
         % Fixation has not yet been achieved(1), till then is marked as absent(0)
@@ -82,11 +83,14 @@ function TaskSetUp(p)
         p.trial.task.changeMag = NaN;
         % Creating space to save task condition (cued = 1, uncued = 0)
         p.trial.task.cued = NaN;
+        % Setting cue ring flash timer
+        p.trial.stim.flashStart = NaN;
+        % Creating trial ID
+        p.trial.task.trialID = 40000 + p.trial.pldaps.iTrial;
+
+
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
-
-        % Setting cue ring flash timer
-        p.trial.stim.flashClock = 0;
 
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
@@ -117,10 +121,10 @@ function TaskSetUp(p)
                     rng('shuffle');
                     listIndices = [1, 2, 3, 4];
                     quadArray = {
-                        [1, 2, 3, 4]
-                        [1, 3, 2, 4]
-                        [2, 3, 1, 4]
                         [1, 2, 4, 3]
+                        [1, 4, 2, 3]
+                        [1, 3, 2, 4]
+                        [1, 3, 4, 2]
                     };
                     listIndex = datasample(listIndices, 1);
                     quadList = quadArray{listIndex};
@@ -131,8 +135,8 @@ function TaskSetUp(p)
             else
                 quadList = p.trial.Block.uncuedQuadList;
                 if isempty(quadList)
-                    quadList = [4, 1, 3, 2];
-                end
+                    quadList = [2, 4, 3, 1];
+                end            
                 quadIndex = quadList(1);
                 quadList(1) = [];
                 p.trial.Block.uncuedQuadList = quadList;
@@ -216,7 +220,7 @@ function TaskSetUp(p)
         if p.trial.task.cued
             if isempty(p.trial.Block.cuedMagList)
                 rng('shuffle');
-                magList = [0, 6, 12, 24, 48, 48, 48, 48, 96, 96, 96, 96];
+                magList = [96, 96, 96]; %[0, 6, 12, 12, 12, 24, 24, 24, 48, 48, 48, 96]; 
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.cuedMagList;
@@ -227,7 +231,7 @@ function TaskSetUp(p)
         else
             if isempty(p.trial.Block.uncuedMagList)
                 rng('shuffle');
-                magList = [0, 6, 12, 12, 24, 24, 24, 48, 48, 48, 96, 96];
+                magList = [96, 96, 96]; %[0, 6, 12, 12, 12, 24, 24, 24, 48, 48, 48, 96];
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.uncuedMagList;
@@ -290,6 +294,7 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.DRIFTGABOR.pos = Dis1Pos([1 2]);
         p.trial.stim.DRIFTGABOR.angle = targOri;
+        p.trial.stim.DRIFTGABOR.contrast = 0.80;
         p.trial.stim.gabors.distractor1 = pds.stim.DriftGabor(p);
 
         % Creating distractor grating 2 by assigning values to grating properties in p object
@@ -336,7 +341,8 @@ function TaskDesign(p)
             % Starting trial by presenting fix point
             case p.trial.epoch.TrialStart
                 % Logging start time
-                p.trial.EV.TaskStartTime = datestr(now, 'HH:MM:SS:FFF');
+                timeStr = datestr(now, 'HH:MM:SS:FFF');
+                p.trial.EV.TaskStartTime = timeStr;
                 p.trial.EV.TaskStart = p.trial.CurTime;
                 % Turning task on
                 Task_ON(p);
@@ -374,17 +380,24 @@ function TaskDesign(p)
                 if(p.trial.stim.fix.fixating)
 
                     if p.trial.task.cued
-                        flashCue(p);
+                        if isnan(p.trial.stim.flashStart)
+                            if p.trial.task.CueOn + 0.2 < p.trial.CurTime
+                                p.trial.stim.flashStart = p.trial.CurTime;
+                                flashCueOn(p);
+                            end
+                        end
+                        if p.trial.stim.flashStart + 0.2 < p.trial.CurTime
+                            flashCueOff(p);
+                        end
                     end
 
                     if(p.trial.CurTime > p.trial.task.CueOn + p.trial.task.CueWait)
                         ND_AddScreenEvent(p, p.trial.event.GRAT_PRES, 'GratPres');
-                        p.trial.task.GaborOn = p.trial.CurTime;
                         stimPreGratOriChange(p, 2);
+                        ND_AddScreenEvent(p, p.trial.task.trialID);
+                        p.trial.task.GaborOn = p.trial.CurTime;
                         ND_SwitchEpoch(p, 'WaitChange')   
                     end
-
-                    p.trial.stim.flashClock = p.trial.stim.flashClock + 1;
 
                 elseif(~p.trial.stim.fix.fixating)
                     Fix_Broken(p);
@@ -402,7 +415,7 @@ function TaskDesign(p)
                 elseif(~p.trial.stim.fix.fixating)   
                     Fix_Broken(p);
                 end
-               
+               p.trial.stim.gaborParameters.contrast
             % Beginning time period in which saccade to target must be performed
             case p.trial.epoch.WaitSaccade
                 if(p.trial.CurTime > p.trial.EV.StimOn + p.trial.task.Timing.saccadeStart)
@@ -429,6 +442,7 @@ function TaskDesign(p)
                 if(~p.trial.task.stimFix)
                     % Checking if gaze specifically within target grating fix window
                     if(p.trial.stim.gabors.postTarget.fixating)
+                        p.trial.task.StimSel = p.trial.stim.gabors.postTarget.pos;
                         Task_Hit(p);
                     % Checking if gaze specifically within distractor 1 grating fix window
                     elseif(p.trial.stim.gabors.distractor1.fixating)
@@ -438,6 +452,7 @@ function TaskDesign(p)
                     % Checking if gaze specifically within distractor 2 grating fix window   
                     elseif(p.trial.stim.gabors.distractor2.fixating)
                         % Logging incorrect selection of grating (distractor)
+                        p.trial.task.StimSel = p.trial.stim.gabors.distractor2.pos;
                         Task_False(p);  
                     % Checking if gaze specifically within distractor 3 grating fix window   
                     elseif(p.trial.stim.gabors.distractor3.fixating)
@@ -471,15 +486,19 @@ function TaskDesign(p)
                     medPos = prctile([p.trial.eyeX_hist(1:frames)', p.trial.eyeY_hist(1:frames)'], 50);
                     % Checking if median eye position is in fixation window of target 
                     if(inFixWin(p.trial.stim.gabors.postTarget, medPos))
+                        p.trial.task.StimSel = p.trial.stim.gabors.postTarget.pos;
                         Handle_Early(p, 'Early');
                     % Checking if median eye position is in fixation window of distractor 1
                     elseif(inFixWin(p.trial.stim.gabors.distractor1, medPos))
+                        p.trial.task.StimSel = p.trial.stim.gabors.distractor1.pos;
                         Handle_Early(p, 'EarlyFalse');
                     % Checking if median eye position is in fixation window of distractor 2
                     elseif(inFixWin(p.trial.stim.gabors.distractor2, medPos))
+                        p.trial.task.StimSel = p.trial.stim.gabors.distractor2.pos;
                         Handle_Early(p, 'EarlyFalse');
                     % Checking if median eye position is in fixation window of distractor 3
                     elseif(inFixWin(p.trial.stim.gabors.distractor3, medPos))
+                        p.trial.task.StimSel = p.trial.stim.gabors.distractor3.pos;
                         Handle_Early(p, 'EarlyFalse');
                     else
                         Handle_Early(p, 'StimBreak');
@@ -488,6 +507,18 @@ function TaskDesign(p)
                 
             % Ending task
             case p.trial.epoch.TaskEnd
+                change = p.trial.task.changeMag;
+                if ~p.trial.task.Valid
+                    if p.trial.task.cued
+                        magList = p.trial.Block.cuedMagList;
+                        p.trial.Block.cuedMagList = [change, magList];
+                        disp('Repeating cued change')
+                    else
+                        magList = p.trial.Block.uncuedMagList;
+                        p.trial.Block.uncuedMagList = [change, magList];
+                        disp('Repeating uncued change')
+                    end
+                end
                 Close_Task(p);
                 Task_OFF(p);
         end
@@ -519,13 +550,11 @@ function stimRings(p, val)
         end
     end
 
-function flashCue(p)
-    if p.trial.stim.flashClock > 20 && p.trial.stim.flashClock < 40
-        p.trial.stim.rings.cue2.on = 1; 
-    elseif p.trial.stim.flashClock > 40
-        p.trial.stim.rings.cue3.on = 0;
-        p.trial.stim.rings.cue2.on = 0;
-    end  
+function flashCueOn(p)
+    p.trial.stim.rings.cue2.on = 1;
+
+function flashCueOff(p)
+    p.trial.stim.rings.cue2.on = 0;
            
 % Function to present stimuli on screen before orientation change
 function stimPreGratOriChange(p, val)
@@ -633,7 +662,6 @@ function p = No_Selection(p)
     p.trial.task.SRT_StimOn = p.trial.EV.FixLeave - p.trial.EV.StimOn;
     % Logging flight time
     p.trial.task.FlightTime = p.trial.CurTime - p.trial.EV.FixLeave;
-    p.trial.Block.missLog = p.trial.Block.missLog + 1;
     p.defaultParameters.earlyFlag = 1;
     p.trial.Block.repeatFlag = 1;
     % Switching epoch to end task
@@ -658,6 +686,25 @@ function p = Task_Miss(p)
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
     p.defaultParameters.earlyFlag = 1;
     p.trial.Block.repeatFlag = 1;
+    p.trial.task.Valid = 1;
+    p.trial.Block.missLog = p.trial.Block.missLog + 1;
+
+    cued = p.trial.Block.repeatConfig(1);
+    change = 110;
+    if cued
+        if p.trial.Block.missLog > 5
+            magList = p.trial.Block.cuedMagList;
+            magList = [change, magList];
+            p.trial.Block.cuedMagList = magList;
+        end
+    else
+        if p.trial.Block.missLog > 15
+            magList = p.trial.Block.uncuedMagList;
+            magList = [change, magList];
+            p.trial.Block.uncuedMagList = magList;
+        end
+    end
+
     % Switching epoch to end task
     ND_SwitchEpoch(p, 'TaskEnd');
 
@@ -685,13 +732,17 @@ function p = Task_Correct(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
     p.trial.task.Good = 1;
     % Dispensing reward
-    pds.reward.give(p, p.trial.reward.Dur);
+    pds.reward.give(p, 0.17); %p.trial.reward.Dur
     % Record time at which reward given
     p.trial.EV.Reward = p.trial.CurTime;
     p.trial.Block.repeatFlag = 0;
     if p.trial.task.changeMag == 0
         p.trial.Block.repeatFlag = 1;
     end
+    if ~p.trial.task.changeMag == 0
+        p.trial.Block.missLog = 0;
+    end
+    p.trial.task.Valid = 1;
     % Switching epoch to end task
     ND_SwitchEpoch(p, 'TaskEnd');
 
