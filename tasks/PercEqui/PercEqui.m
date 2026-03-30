@@ -121,8 +121,8 @@ function TaskSetUp(p)
     end
 
     % define both gratings
-   p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1); 
-    %p.trial.stim.Trgt.Contrast = datasample([.35, .40, .45, .50],1); 
+   %p.trial.stim.Trgt.Contrast = datasample(p.trial.stim.trgtconts,1); 
+    p.trial.stim.Trgt.Contrast = datasample([.35, .40, .45, .50],1); 
 
     % pick the higher contrast item as saccade target and make sure it is on the specified hemifield
     if(p.trial.stim.Trgt.Contrast >= p.trial.stim.Ref.Contrast)
@@ -130,21 +130,12 @@ function TaskSetUp(p)
         p.trial.stim.SaccadeDistractor = 'reference';
 
         if(p.trial.stim.Hemi == 'r')
-<<<<<<< HEAD
            p.trial.stim.Ref.Pos  = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
            p.trial.stim.Trgt.Pos = [ p.trial.stim.PosX, p.trial.stim.PosY];
           
         else
             p.trial.stim.Ref.Pos  = [ p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
-            
-=======
-            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
-        else
-            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
         end
 
     else
@@ -152,21 +143,12 @@ function TaskSetUp(p)
         p.trial.stim.SaccadeDistractor = 'target';
 
         if(p.trial.stim.Hemi == 'l')
-<<<<<<< HEAD
             p.trial.stim.Ref.Pos  = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ p.trial.stim.PosX, p.trial.stim.PosY];
             
         else
             p.trial.stim.Ref.Pos  = [ p.trial.stim.PosX, p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ -1*p.trial.stim.PosX, p.trial.stim.PosY];
-            
-=======
-            p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
-        else
-            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
-            p.trial.stim.Trgt.Pos = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
->>>>>>> 0333d34f2df2261fa12f7105b68e50363d9d3c0f
         end
     end
 
@@ -237,8 +219,11 @@ function TaskDesign(p)
         case p.trial.epoch.Fixating
         %% check fixation until target stimulus will appear
             if(p.trial.stim.fix.fixating)
+                disp('hey')
                 if(p.trial.task.stimState == 0)
-                    if(p.trial.CurTime > p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
+                    disp('hey')
+                    if(p.trial.CurTime > 0) %p.trial.stim.fix.EV.FixStart + p.trial.task.stimLatency)
+                        disp('hey')
                         stim(p, 1); % Turn on stim
                         ND_SwitchEpoch(p, 'WaitSaccade');
                     end

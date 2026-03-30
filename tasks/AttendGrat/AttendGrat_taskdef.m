@@ -24,14 +24,14 @@ function p = AttendGrat_taskdef(p)
 
 
     % Setting RF properties
-    RfPos = [4, 4];
+    RfPos = [1.5, -3.5];
     p.trial.task.RfPos = RfPos;
 
     RfOri = 135;
     p.trial.task.RfOri = RfOri;
     p.trial.task.RfOriCurve = [RfOri - 30, RfOri, RfOri + 30];
 
-    RfRadius = 1.25;
+    RfRadius = 0.75;
     p.trial.task.RfSize = RfRadius;
     p.trial.stim.DRIFTGABOR.radius = RfRadius;
 
@@ -47,7 +47,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.cueRingDelta = cueRingDelta;
     p.trial.stim.ringParameters.cueCon = sprintf('down%d', cueRingDelta);
 
-    baseRingDelta = 8; %8;
+    baseRingDelta = 8;
     p.trial.task.baseRingDelta = baseRingDelta;
     p.trial.stim.ringParameters.distCon = sprintf('up%d', baseRingDelta);
 
@@ -148,11 +148,15 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.minTargetFixTime = 0.20; 
     
     % Creating trial increments to scale size of reward based on good performance
-    p.trial.reward.IncrementTrial = 40:40:2000;
+    trialStep = 20;
+    trialMax = 1000;
+    p.trial.reward.IncrementTrial = 1:trialStep:trialMax;
     p.trial.reward.penalty = 0.005;
     
     % List of increasing durations of juice flow for reward
-    p.trial.reward.IncrementDur = 0.15:0.001:(0.15 + 0.001*(length(p.trial.reward.IncrementTrial) - 1));
+    rewardStart = 0.05;
+    rewardStep = 0.005;
+    p.trial.reward.IncrementDur = rewardStart:rewardStep:(rewardStart + rewardStep*(trialMax - 1));
 
     % Setting rig equipment distances (inches)
     p.trial.task.VPixx2ScreenDis = 60;

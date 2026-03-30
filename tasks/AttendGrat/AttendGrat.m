@@ -135,7 +135,16 @@ function TaskSetUp(p)
             else
                 quadList = p.trial.Block.uncuedQuadList;
                 if isempty(quadList)
-                    quadList = [2, 4, 3, 1];
+                    rng('shuffle');
+                    listIndices = [1, 2, 3, 4];
+                    quadArray = {
+                        [1, 2, 4, 3]
+                        [1, 4, 2, 3]
+                        [1, 3, 2, 4]
+                        [1, 3, 4, 2]
+                    };
+                    listIndex = datasample(listIndices, 1);
+                    quadList = quadArray{listIndex};
                 end            
                 quadIndex = quadList(1);
                 quadList(1) = [];
@@ -220,7 +229,7 @@ function TaskSetUp(p)
         if p.trial.task.cued
             if isempty(p.trial.Block.cuedMagList)
                 rng('shuffle');
-                magList = [96, 96, 96]; %[0, 6, 12, 12, 12, 24, 24, 24, 48, 48, 48, 96]; 
+                magList = [0, 6, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 48, 48, 96]; 
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.cuedMagList;
@@ -231,7 +240,7 @@ function TaskSetUp(p)
         else
             if isempty(p.trial.Block.uncuedMagList)
                 rng('shuffle');
-                magList = [96, 96, 96]; %[0, 6, 12, 12, 12, 24, 24, 24, 48, 48, 48, 96];
+                magList = [0, 6, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 48, 48, 96];
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.uncuedMagList;
@@ -692,13 +701,13 @@ function p = Task_Miss(p)
     cued = p.trial.Block.repeatConfig(1);
     change = 110;
     if cued
-        if p.trial.Block.missLog > 5
+        if p.trial.Block.missLog > 1
             magList = p.trial.Block.cuedMagList;
             magList = [change, magList];
             p.trial.Block.cuedMagList = magList;
         end
     else
-        if p.trial.Block.missLog > 15
+        if p.trial.Block.missLog > 10
             magList = p.trial.Block.uncuedMagList;
             magList = [change, magList];
             p.trial.Block.uncuedMagList = magList;

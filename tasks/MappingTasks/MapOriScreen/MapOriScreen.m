@@ -149,7 +149,6 @@ function TaskDesign(p)
                 Task_OFF(p);
                 % Flagging completion of current trial so ITI is run before next trial
                 p.trial.flagNextTrial = 1;
-                p.defaultParameters.breakFlag = 1;
         end
 
 
