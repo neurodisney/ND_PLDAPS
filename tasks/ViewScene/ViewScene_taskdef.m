@@ -13,14 +13,14 @@ function p = ViewScene_taskdef(p)
 
     % Setting scene configs
     p.trial.task.stim.sceneType = 'image'; % options: 'video' or 'image'
-    %p.trial.task.stim.sceneDir = '/home/rig1-user/MatlabFiles/Videos/HierarchyVideos';
+    %p.trial.task.stim.sceneDir = '/home/rig2-user/Documents/MATLAB/Images/Videos/';
     p.trial.task.stim.sceneDir = '/home/rig2-user/Documents/MATLAB/Images/FaceImages/';
 
     scenes = dir(p.trial.task.stim.sceneDir);
     p.trial.task.stim.sceneNames = {scenes(~[scenes.isdir]).name};
 
     % Setting image props
-    p.trial.stim.IMAGE.sizeGain = 2.1;
+    p.trial.stim.IMAGE.sizeGain = 1.1;
     p.trial.stim.IMAGE.fixWin   = 80;
     p.trial.stim.IMAGE.duration = 5;
     p.trial.stim.IMAGE.pos = [0, 0];

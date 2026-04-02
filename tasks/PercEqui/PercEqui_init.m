@@ -17,12 +17,12 @@ p = ND_AddAsciiEntry(p, 'Result',      'p.trial.outcome.CurrOutcome',         '%
 p = ND_AddAsciiEntry(p, 'Outcome',     'p.trial.outcome.CurrOutcomeStr',      '%s');
 p = ND_AddAsciiEntry(p, 'Good',        'p.trial.task.Good',                   '%d');
 
-p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.Hemi',                     '%s');
+p = ND_AddAsciiEntry(p, 'Hemi',        'p.trial.stim.Hemi',                   '%s');
 p = ND_AddAsciiEntry(p, 'RefSpFreq',   'p.trial.stim.Ref.sFreq',              '%.4f');
-p = ND_AddAsciiEntry(p, 'RefOri',      'p.trial.stim.Ref.ori',              '%.4f');
+p = ND_AddAsciiEntry(p, 'RefOri',      'p.trial.stim.Ref.ori',                '%.4f');
 p = ND_AddAsciiEntry(p, 'RefContr',    'p.trial.stim.Ref.Contrast',           '%.4f');
 p = ND_AddAsciiEntry(p, 'TargetSpFreq','p.trial.stim.Trgt.sFreq',             '%.4f');
-p = ND_AddAsciiEntry(p, 'TargetOri',   'p.trial.stim.Trgt.ori',             '%.4f');
+p = ND_AddAsciiEntry(p, 'TargetOri',   'p.trial.stim.Trgt.ori',               '%.4f');
 p = ND_AddAsciiEntry(p, 'TargetContr', 'p.trial.stim.Trgt.Contrast',          '%.4f');
 p = ND_AddAsciiEntry(p, 'RefX',        'p.trial.stim.Ref.Pos(1)',             '%.2f');
 p = ND_AddAsciiEntry(p, 'RefY',        'p.trial.stim.Ref.Pos(2)',             '%.2f');

@@ -62,6 +62,7 @@ function TaskDesign(p)
             Task_ON(p);
             ND_FixSpot(p, 1);
             p.trial.EV.TaskStart = p.trial.CurTime;
+            p.trial.EV.TaskStartTime = datestr(now,'HH:MM:SS:FFF');
             ND_SwitchEpoch(p,'WaitFix')
         case p.trial.epoch.WaitFix
             Task_WaitFixStart(p);
@@ -76,6 +77,7 @@ function TaskDesign(p)
                 dur = p.trial.stim.scene.duration + p.trial.task.durOffset;
                 if (p.trial.EV.TaskStart + dur) < p.trial.CurTime
                     Task_Correct(p)
+                    showScene(p, 0)
                 end
             end
             if(~p.trial.stim.scene.fixating)         

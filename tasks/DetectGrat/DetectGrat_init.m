@@ -87,8 +87,6 @@ p.defaultParameters.stim.PosX = -3; % to get hardcoded single position
 
 
 p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
-%p.defaultParameters.stim.OriLst     = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];  % orientation of grating
-%p.defaultParameters.stim.OriLst     = [45, 45, 45, 45, 45, 45, 45, 45, 45];  % orientation of grating
 p.defaultParameters.stim.OriLst     = [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180];  % orientation of grating
 
 
