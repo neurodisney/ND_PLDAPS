@@ -32,8 +32,8 @@ p.trial.behavior.fixation.MinFixStart = ND_GetFixDur(.15, 0.15, [],[],0.1,.10); 
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.10, 0.10, [], [], 0.1, 0.10); % Time from fixation onset to stim appearing
-p.trial.task.saccadeTimeout   = 1.5;   % Time allowed to make the saccade to the stim before error
+p.trial.task.stimLatency      = ND_GetITI(0.10, 0.30, [], [], 0.1, 0.10); % Time from fixation onset to stim appearing
+p.trial.task.saccadeTimeout   = 1.25;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
 p.trial.task.minTargetFixTime = .1;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
@@ -61,40 +61,16 @@ p.trial.stim.PosX = 3.0;
 p.trial.stim.PosY = 0;
 
 % grating contrast
-%cCtr = datasample([0.03, 0.06, 0.09, 0.12], 1);
-cCtr = 0.3;
+%cCtr = datasample([0.2, 0.4], 1);
+cCtr = 0.5;
 
 %ctrng = ND_HalfSpace(0, 5, 8);
-%ctrng = ND_HalfSpace(0, 8, 9);
-ScaleCtr = round (cCtr*100);
-ctrng = ND_HalfSpace(0,ScaleCtr,5);
-%p.trial.stim.PosY = datasample([-2, 0, 2], 1);
-p.trial.stim.PosY = 0;
+ScaleCtr = round(cCtr*100);
+ctrng = ND_HalfSpace(0,ScaleCtr,4);
 
 % grating contrast
-
-%cCtr = datasample([0.2, 0.3, 0.5, 0.75], 1);
-cCtr =  0.25;
-ScaleCtr = round(cCtr*100);
-
-% ctrng = ND_HalfSpace(0, 5, 8);
-ctrng = ND_HalfSpace(0, ScaleCtr, 5);
-
 %ctrng = unique(cCtr * [0, fliplr(1 - ctrng(2:end)), 1 + ctrng]);
 ctrng = unique(cat(2,(cCtr+ctrng./100),(cCtr-ctrng./100)));
-
-% ctrngP = ctrng * 0.5;
-% plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
-% hold on
-% xlim([0,]);
-% ctrngP = ctrng * 0.2;
-% plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
-% ctrngP = ctrng * 0.75;
-% plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
-% ctrngP = ctrng * 0.1;
-% plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
-% ctrngP = ctrng * 0.3;
-% plot(ctrngP, (1:length(ctrngP))./length(ctrngP), '.-')
 
 ctrng(ctrng<0 | ctrng>1)  = [];
 p.trial.stim.Ref.Contrast = cCtr;
@@ -105,7 +81,7 @@ p.trial.stim.trgtconts    = ctrng;
 p.trial.stim.FIXSPOT.pos    = [0,0];
 p.trial.stim.FIXSPOT.type   = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color  = 'dGreen';   % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size   = 0.35;    % size of the fixation spot
+p.trial.stim.FIXSPOT.size   = 0.25;    % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

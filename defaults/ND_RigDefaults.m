@@ -259,13 +259,13 @@ SS.datapixx.useAsEyepos        = 0;
 % Default ADC channels to use (set up later in ND_InitSession)
 switch rig
     case 1
-        SS.datapixx.adc.XEyeposChannel = 0;
-        SS.datapixx.adc.YEyeposChannel = 1;
-        SS.datapixx.adc.PupilChannel   = 2;
+        SS.datapixx.adc.XEyeposChannel = 8;
+        SS.datapixx.adc.YEyeposChannel = 9;
+        SS.datapixx.adc.PupilChannel   = 10;
     case 2
-        SS.datapixx.adc.XEyeposChannel = 3;
-        SS.datapixx.adc.YEyeposChannel = 4;
-        SS.datapixx.adc.PupilChannel   = 5;
+        SS.datapixx.adc.XEyeposChannel = 8;
+        SS.datapixx.adc.YEyeposChannel = 9;
+        SS.datapixx.adc.PupilChannel   = 10;
 end
 
 % Saccade parameters

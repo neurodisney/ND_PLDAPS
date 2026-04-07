@@ -63,12 +63,12 @@ ND_Trial2Ascii(p, 'init');
 p.defaultParameters.stim.FIXSPOT.fixWin = 2;
 
 p.defaultParameters.task.RandomHemi = 1; % if 1, randomly pick left or right hemifield
-p.defaultParameters.task.RandomPar  = 1; % if 1, randomly change orientation and spatial frequency of the grating each trial
+p.defaultParameters.task.RandomPar  = 0; % if 1, randomly change orientation and spatial frequency of the grating each trial
 
 p.defaultParameters.task.EqualStim  = 1; % both gratings have the same spatial frequency and orientation
 
 % define random grating parameters for each session
-p.defaultParameters.stim.sFreqLst   = [2 3 4]; % spatial frequency as cycles per degree
+p.defaultParameters.stim.sFreqLst   = [2]; % spatial frequency as cycles per degree
 p.defaultParameters.stim.OriLst     = 0:15:179;  % orientation of grating
 
 p.defaultParameters.stim.Hemi       = datasample(['l', 'r'], 1);
