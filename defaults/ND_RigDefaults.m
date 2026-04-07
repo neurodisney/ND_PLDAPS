@@ -254,9 +254,9 @@ SS.Block.BlockList      = [];
 SS.datapixx.useAsEyepos        = 1;
 
 % Default ADC channels to use (set up later in ND_InitSession)
-SS.datapixx.adc.XEyeposChannel = 3;
-SS.datapixx.adc.YEyeposChannel = 4;
-SS.datapixx.adc.PupilChannel   = 5;
+SS.datapixx.adc.XEyeposChannel = 0;
+SS.datapixx.adc.YEyeposChannel = 1;
+SS.datapixx.adc.PupilChannel   = 2;
 
 % Saccade parameters
 SS.behavior.fixation.use       = 1;       % does this task require control of eye position

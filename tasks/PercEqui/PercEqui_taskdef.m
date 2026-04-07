@@ -27,16 +27,13 @@ p.trial.behavior.fixation.MinFixStart = 0.1; % minimum time to wait for robust f
 p.trial.task.Timing.WaitFix = 2;    % Time to fixate before NoStart
 
 % Main trial timings
-p.trial.task.stimLatency      = ND_GetITI(0.10); % Time from fixation onset to stim appearing
+p.trial.task.stimLatency      = ND_GetITI(0.20,0.60); % Time from fixation onset to stim appearing
 
 p.trial.task.saccadeTimeout   = 1.5;   % Time allowed to make the saccade to the stim before error
 p.trial.task.minSaccReactTime = 0.025; % If saccade to target occurs before this, it was just a lucky precocious saccade, mark trial Early.
-p.trial.task.minTargetFixTime = 0.35;  % Must fixate on target for at least this time before it counts
 p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
 p.trial.task.Timing.TimeOut   =  0.25;  % Time-out[s]  for incorrect responses
 p.trial.task.minTargetFixTime = .1;  % Must fixate on target for at least this time before it counts
-p.trial.task.Timing.WaitEnd   = 0.25;  % ad short delay after correct response before turning stimuli off
-p.trial.task.Timing.TimeOut   =  1;  % Time-out[s]  for incorrect responses
 p.trial.task.Timing.ITI       = ND_GetITI(1.25,  1.75,  [], [], 1, 0.10);
 
 % ----------------------------------- -------------------------------------%
@@ -55,18 +52,18 @@ p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 % p.trial.stim.AngLst = [45, 0, -45];
 % 
 
-p.trial.stim.PosX = 2.5;
+p.trial.stim.PosX = 4.0;
 %p.trial.stim.PosY = datasample([-2, 0, 2], 1);
 p.trial.stim.PosY = 0;
 
 % grating contrast
 
 %cCtr = datasample([0.2, 0.3, 0.5, 0.75], 1);
-cCtr =  0.25;
+cCtr =  0.5;
 ScaleCtr = round(cCtr*100);
 
-% ctrng = ND_HalfSpace(0, 5, 8);
-ctrng = ND_HalfSpace(0, ScaleCtr, 5);
+%ctrng = ND_HalfSpace(0, 100, 2);
+ctrng = ND_HalfSpace(25, ScaleCtr, 2);
 
 %ctrng = unique(cCtr * [0, fliplr(1 - ctrng(2:end)), 1 + ctrng]);
 ctrng = unique(cat(2,(cCtr+ctrng./100),(cCtr-ctrng./100)));
