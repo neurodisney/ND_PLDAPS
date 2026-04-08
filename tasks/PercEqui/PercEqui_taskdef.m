@@ -14,7 +14,7 @@ function p = PercEqui_taskdef(p)
 % manual reward from experimenter
 p.trial.reward.ManDur         = 0.2;  % reward duration [s] for reward given by keyboard presses
 p.trial.reward.IncrementTrial = [50, 150, 300,  400, 500,  600, 650]; % increase number of pulses with this trial number
-p.trial.reward.IncrementDur   = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]; % increase number of pulses with this trial number
+p.trial.reward.IncrementDur   = [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]; % increase number of pulses with this trial number
 p.trial.reward.DiscourageProp = 1.0;  % proportion of reward given if previous trial was an error
 
 %%p.trial.reward.IncrementTrial = [150,  250,   350, 450,   550,  650, 750]; % increase number of pulses with this trial number
@@ -58,15 +58,15 @@ p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 p.trial.stim.PosX = 3.0;
 %p.trial.stim.PosX = datasample([-2.5, 2.5], 1);
 %p.trial.stim.PosY = datasample([-4, 4], 1);
-p.trial.stim.PosY = 0;
+p.trial.stim.PosY = -2;
 
 % grating contrast
-%cCtr = datasample([0.2, 0.4], 1);
-cCtr = 0.5;
+cCtr = datasample([0.2, 0.4], 1);
+%cCtr = 0.5;
 
 %ctrng = ND_HalfSpace(0, 5, 8);
 ScaleCtr = round(cCtr*100);
-ctrng = ND_HalfSpace(0,ScaleCtr,4);
+ctrng = ND_HalfSpace(10,ScaleCtr,3);
 
 % grating contrast
 %ctrng = unique(cCtr * [0, fliplr(1 - ctrng(2:end)), 1 + ctrng]);
