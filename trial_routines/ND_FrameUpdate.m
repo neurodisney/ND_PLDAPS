@@ -33,7 +33,7 @@ end
 %% check joystick state
 % needs to be called after pds.datapixx.adc.getData
 if(p.trial.datapixx.useJoystick)
-    ND_CheckJoystick(p);
+    %ND_CheckJoystick(p);
 end
 
 % ------------------------------------------------------------------------%
