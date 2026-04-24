@@ -18,15 +18,15 @@ p.trial.stim.RFmeth = 'coarse';
 % define grating parameters depending on mapping approach.
 switch p.trial.stim.RFmeth
     case 'coarse'
-        p.trial.stim.coarse.ori      = 138;          % orient of grating
+        p.trial.stim.coarse.ori      = 0;          % orient of grating
         p.trial.stim.coarse.radius   = 50.0;        % size of grating 
         p.trial.stim.coarse.contrast = 0.95;           % intensity contrast
         p.trial.stim.coarse.sFreq    = 1.5;         % spatial frequency 
         p.trial.stim.coarse.tFreq    = 0;           % temporal frequency (0 means static grating) 
         p.trial.stim.coarse.grdStp   = 0.5;         % spacing of grating centers       
         
-        p.trial.stim.coarse.xRange   = [-0.0, -0.0];
-        p.trial.stim.coarse.yRange   = [-0.0, -0.0];
+        p.trial.stim.coarse.xRange   = [ 0.0,  0.0];
+        p.trial.stim.coarse.yRange   = [0.0, 0.0];
 
         % do not change below
         p.trial.stim.LocCtr   = [mean(p.trial.stim.coarse.xRange),    ...
@@ -52,7 +52,7 @@ p.trial.stim.GRATING.res    = 300;
 p.trial.stim.GRATING.fixWin = 0;
 
 p.trial.stim.OnTime  = 0.5;   % How long each stimulus is presented
-p.trial.stim.OffTime = 5.0;   % Gaps between succesive stimuli
+p.trial.stim.OffTime = 3.0;   % Gaps between succesive stimuli
 p.trial.stim.Period  = p.trial.stim.OnTime + p.trial.stim.OffTime;
 
 % ------------------------------------------------------------------------%
@@ -103,7 +103,7 @@ p.trial.task.Timing.TimeOut =  0;   % Time [s] out for incorrect responses
 p.trial.stim.FIXSPOT.pos   = [0,0];
 p.trial.stim.FIXSPOT.type  = 'rect';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
 p.trial.stim.FIXSPOT.color = 'white';  % color of fixation spot (as defined in the lookup tables)
-p.trial.stim.FIXSPOT.size  = 0.0001;     % size of the fixation spot
+p.trial.stim.FIXSPOT.size  = 0.01;     % size of the fixation spot
 
 % ------------------------------------------------------------------------%
 %% Fixation parameters

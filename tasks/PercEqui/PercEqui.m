@@ -128,12 +128,12 @@ function TaskSetUp(p)
             p.trial.stim.Ref.Pos  = [-1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.reward.Dur = p.trial.reward.Dur + p.trial.reward.boost;
-        else
-            p.trial.stim.Ref.Pos  = [  1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
+        elseif(p.trial.stim.Hemi == 'l')
+            p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ -1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         end
 
-    else
+    elseif(p.trial.stim.Trgt.Contrast < p.trial.stim.Ref.Contrast)
         p.trial.stim.SaccadeTarget     = 'reference';
         p.trial.stim.SaccadeDistractor = 'target';
 
@@ -141,7 +141,7 @@ function TaskSetUp(p)
             p.trial.stim.Ref.Pos  = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ -1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.reward.Dur = p.trial.reward.Dur + p.trial.reward.boost;
-        else
+        elseif(p.trial.stim.Hemi == 'l')
             p.trial.stim.Ref.Pos  = [ -1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
             p.trial.stim.Trgt.Pos = [ 1* p.trial.stim.PosX, -1* p.trial.stim.PosY];
         end
