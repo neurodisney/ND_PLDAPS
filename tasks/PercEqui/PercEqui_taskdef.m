@@ -51,13 +51,13 @@ p.trial.stim.GRATING.radius = 0.75;  % radius of grating patch
 %p.trial.stim.AngLst = [45, 0, -45];
 % 
 p.trial.stim.EccLst =  [2];
-p.trial.stim.AngLst = [60];
+p.trial.stim.AngLst = [0];
 % 
 
 p.trial.stim.PosX = 2.0;
 %p.trial.stim.PosY = datasample([-1.5, 1.5], 1);
 %p.trial.stim.PosX = datasample([-1.5, 1.5], 1);
-p.trial.stim.PosY = 2.0;
+p.trial.stim.PosY = 0.0;
 
 % grating contrast
 cCtr = datasample([0.2, 0.4], 1);
