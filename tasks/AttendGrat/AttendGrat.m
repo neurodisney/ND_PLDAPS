@@ -98,7 +98,7 @@ function TaskSetUp(p)
             p.trial.task.cued = p.trial.Block.repeatConfig(1);
         else
             if isempty(p.trial.Block.cuedRatio)
-                staticSet = [1, 1, 0, 1, 1];
+                staticSet = [1, 1, 0, 1];
                 dynamicSet = staticSet(randperm(length(staticSet)));
                 cuedRatio = [staticSet, dynamicSet];
             else
@@ -229,7 +229,7 @@ function TaskSetUp(p)
         if p.trial.task.cued
             if isempty(p.trial.Block.cuedMagList)
                 rng('shuffle');
-                magList = [0, 6, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 48, 48, 96]; 
+                magList = [0, 6, 6, 12, 12, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 6, 6, 12, 12, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 96]; 
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.cuedMagList;
@@ -240,7 +240,7 @@ function TaskSetUp(p)
         else
             if isempty(p.trial.Block.uncuedMagList)
                 rng('shuffle');
-                magList = [0, 6, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 48, 48, 96];
+                magList = [0, 6, 6, 12, 12, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 6, 6, 12, 12, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 96];
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.uncuedMagList;
@@ -693,14 +693,14 @@ function p = Task_Miss(p)
     % Marking trial outcome as 'Miss' trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
-    p.defaultParameters.earlyFlag = 1;
     p.trial.Block.repeatFlag = 1;
     p.trial.task.Valid = 1;
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
 
     cued = p.trial.Block.repeatConfig(1);
-    change = 110;
+    change = 96;
     if cued
+        p.defaultParameters.earlyFlag = 1;
         if p.trial.Block.missLog > 1
             magList = p.trial.Block.cuedMagList;
             magList = [change, magList];
@@ -741,7 +741,7 @@ function p = Task_Correct(p)
     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
     p.trial.task.Good = 1;
     % Dispensing reward
-    pds.reward.give(p, 0.17); %p.trial.reward.Dur
+    pds.reward.give(p, p.trial.reward.Dur); % fixed at 0.17
     % Record time at which reward given
     p.trial.EV.Reward = p.trial.CurTime;
     p.trial.Block.repeatFlag = 0;

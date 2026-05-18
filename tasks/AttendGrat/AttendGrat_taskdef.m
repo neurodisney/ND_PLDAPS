@@ -24,12 +24,12 @@ function p = AttendGrat_taskdef(p)
 
 
     % Setting RF properties
-    RfPos = [1.5, -3.5];
+    RfPos = [0.5, -5];
     p.trial.task.RfPos = RfPos;
 
-    RfOri = 135;
+    RfOri = 80;
     p.trial.task.RfOri = RfOri;
-    p.trial.task.RfOriCurve = [RfOri - 30, RfOri, RfOri + 30];
+    p.trial.task.RfOriCurve = [RfOri, RfOri]; % [RfOri - 20, RfOri, RfOri + 20];
 
     RfRadius = 0.75;
     p.trial.task.RfSize = RfRadius;
@@ -72,7 +72,7 @@ function p = AttendGrat_taskdef(p)
 
     % Angle (degrees) between line connecting origin (0, 0) and
     % preceeding point and line connecting origin and succeeding point.
-    angular_offset = 5;
+    angular_offset = 3.51;
     p.trial.task.stimOffset = angular_offset;
 
     p.trial.task.posList = {};
@@ -82,18 +82,19 @@ function p = AttendGrat_taskdef(p)
         p.trial.task.posList = [p.trial.task.posList [x, y, 1]];
     end
 
+    % In 'i = 1:n', n is number of locs right/left of RF-centered loc
     for i = 1:2
         offsets_up = {};
         offsets_down = {};
 
         for q = 1:4
-            % Upward
+            % Up in polar position
             theta_up = angle_arr(q) + i * angular_offset;
             x_up = cosd(theta_up) * radius;
             y_up = sind(theta_up) * radius;
             offsets_up = [offsets_up [x_up, y_up, 1]];
 
-            % Downward
+            % Down in polar position
             theta_down = angle_arr(q) - i * angular_offset;
             x_down = cosd(theta_down) * radius;
             y_down = sind(theta_down) * radius;
@@ -148,14 +149,14 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.minTargetFixTime = 0.20; 
     
     % Creating trial increments to scale size of reward based on good performance
-    trialStep = 20;
+    trialStep = 250;
     trialMax = 1000;
     p.trial.reward.IncrementTrial = 1:trialStep:trialMax;
     p.trial.reward.penalty = 0.005;
     
     % List of increasing durations of juice flow for reward
-    rewardStart = 0.05;
-    rewardStep = 0.005;
+    rewardStart = 0.16;
+    rewardStep = 0.01;
     p.trial.reward.IncrementDur = rewardStart:rewardStep:(rewardStart + rewardStep*(trialMax - 1));
 
     % Setting rig equipment distances (inches)

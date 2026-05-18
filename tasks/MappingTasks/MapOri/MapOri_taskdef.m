@@ -21,9 +21,7 @@ p.trial.task.presDur = 1;
 
 % Reward parameters
 p.trial.reward.Continuous = 1;
-p.trial.reward.duration = 0.015;
 p.trial.reward.Period = 0.5;
-p.trial.reward.jackpotnPulse = 1;
 
 % Fixation spot parameters
 p.trial.stim.FIXSPOT.pos   = [0,0];
@@ -33,5 +31,5 @@ p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
 
 % Gabor parameters
 p.trial.task.oriRange = 0:20:340;
-p.trial.task.pos = [3, -3];
-p.trial.task.radius = 5;
+p.trial.task.pos = [0.5, -5];
+p.trial.task.radius = 0.75;

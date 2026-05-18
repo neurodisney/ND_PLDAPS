@@ -119,7 +119,7 @@ function TaskDesign(p)
                         % Reward if reward period has elapsed
                         if p.trial.CurTime >= p.trial.EV.nextReward
                             % Give reward
-                            pds.reward.give(p, p.trial.reward.duration);
+                            pds.reward.give(p, 0.03);
                             % Reset the reward timer
                             p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
                         end                            
@@ -185,7 +185,7 @@ function p = Task_CorrectReward(p)
     ND_FixSpot(p, 0);
     pds.audio.playDP(p,'jackpot','left');
     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
-    pds.reward.give(p, p.trial.reward.duration, p.trial.reward.jackpotnPulse);
+    pds.reward.give(p, 0.05);
     p.trial.EV.Reward = p.trial.CurTime;
     ND_SwitchEpoch(p, 'TaskEnd');
 

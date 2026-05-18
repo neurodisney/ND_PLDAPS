@@ -21,10 +21,10 @@ p.trial.task.presDur = 1;
 
 % Build grid of absolute value x,y coordinates
 % Scale coorindates up by 10
-xRange = [0, 10];
-yRange = [1, 10];
+xRange = [0, 2];
+yRange = [3, 6];
 
-scaler = 1;
+scaler = 2;
 xRange = xRange * scaler;
 yRange = yRange * scaler;
 
@@ -40,9 +40,7 @@ p.trial.task.xyGrid = xyGrid;
 
 % Reward parameters
 p.trial.reward.Continuous = 1;
-p.trial.reward.duration = 0.015;
 p.trial.reward.Period = 0.5;
-p.trial.reward.jackpotnPulse = 1;
 
 % Fixation spot parameters
 p.trial.stim.FIXSPOT.pos   = [0,0];
@@ -52,5 +50,5 @@ p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
 p.trial.stim.FIXSPOT.fixWin = 1.75;
 
 % Gabor parameters
-p.trial.task.orientation = 90;
-p.trial.task.radius = 5; % DVA
+p.trial.task.orientation = 45;
+p.trial.task.radius = 0.75; % DVA
