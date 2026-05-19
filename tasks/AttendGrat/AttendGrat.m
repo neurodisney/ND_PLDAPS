@@ -47,6 +47,13 @@ function p = AttendGrat(p, state)
 % This function loads info specific to this task in p struct
 function TaskSetUp(p)
 
+        quadTailLen = 4;
+
+        if ~isfield(p.trial.Block, 'initialRngState') || isempty(p.trial.Block.initialRngState)
+            rng('shuffle');
+            p.trial.Block.initialRngState = rng;
+        end
+
         % Adding trial to running total for block
         p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
 
@@ -98,9 +105,7 @@ function TaskSetUp(p)
             p.trial.task.cued = p.trial.Block.repeatConfig(1);
         else
             if isempty(p.trial.Block.cuedRatio)
-                staticSet = [1, 1, 0, 1];
-                dynamicSet = staticSet(randperm(length(staticSet)));
-                cuedRatio = [staticSet, dynamicSet];
+                cuedRatio = makeBalancedCueList(24, 8, 4);
             else
                 cuedRatio = p.trial.Block.cuedRatio;
             end
@@ -108,6 +113,14 @@ function TaskSetUp(p)
             cuedRatio(1) = [];
             p.trial.Block.cuedRatio = cuedRatio;
             p.trial.Block.repeatConfig = [p.trial.task.cued];
+        end
+
+        if ~isfield(p.trial.Block, 'prevCuedQuadTail')
+            p.trial.Block.prevCuedQuadTail = [];
+        end
+
+        if ~isfield(p.trial.Block, 'prevUncuedQuadTail')
+            p.trial.Block.prevUncuedQuadTail = [];
         end
 
         % Randomly selecting stimulus arrangement
@@ -118,16 +131,8 @@ function TaskSetUp(p)
             if p.trial.task.cued
                 quadList = p.trial.Block.cuedQuadList;
                 if isempty(quadList)
-                    rng('shuffle');
-                    listIndices = [1, 2, 3, 4];
-                    quadArray = {
-                        [1, 2, 4, 3]
-                        [1, 4, 2, 3]
-                        [1, 3, 2, 4]
-                        [1, 3, 4, 2]
-                    };
-                    listIndex = datasample(listIndices, 1);
-                    quadList = quadArray{listIndex};
+                    previousTail = p.trial.Block.prevCuedQuadTail;
+                    quadList = makeBalancedQuadList(12, previousTail);
                 end
                 quadIndex = quadList(1);
                 quadList(1) = [];
@@ -135,21 +140,22 @@ function TaskSetUp(p)
             else
                 quadList = p.trial.Block.uncuedQuadList;
                 if isempty(quadList)
-                    rng('shuffle');
-                    listIndices = [1, 2, 3, 4];
-                    quadArray = {
-                        [1, 2, 4, 3]
-                        [1, 4, 2, 3]
-                        [1, 3, 2, 4]
-                        [1, 3, 4, 2]
-                    };
-                    listIndex = datasample(listIndices, 1);
-                    quadList = quadArray{listIndex};
+                    previousTail = p.trial.Block.prevUncuedQuadTail;
+                    quadList = makeBalancedQuadList(12, previousTail);
                 end            
                 quadIndex = quadList(1);
                 quadList(1) = [];
                 p.trial.Block.uncuedQuadList = quadList;
             end
+
+            if p.trial.task.cued
+                p.trial.Block.prevCuedQuadTail = [p.trial.Block.prevCuedQuadTail, quadIndex];
+                p.trial.Block.prevCuedQuadTail = p.trial.Block.prevCuedQuadTail(max(1, end-quadTailLen+1):end);
+            else
+                p.trial.Block.prevUncuedQuadTail = [p.trial.Block.prevUncuedQuadTail, quadIndex];
+                p.trial.Block.prevUncuedQuadTail = p.trial.Block.prevUncuedQuadTail(max(1, end-quadTailLen+1):end);
+            end
+
             p.trial.Block.repeatConfig = [p.trial.Block.repeatConfig, quadIndex];
         end
 
@@ -791,3 +797,84 @@ function TaskCleanAndSave(p)
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
     % Loading data into ascii table for plotting
     ND_Trial2Ascii(p, 'save');
+
+
+function quadList = makeBalancedQuadList(nRepeats, previousTail)
+
+    if nargin < 2
+        previousTail = [];
+    end
+
+    base = repmat(1:4, 1, nRepeats);
+
+    maxShuffleTries = getShuffleMaxTries();
+    for i = 1:maxShuffleTries
+        candidate = base(randperm(numel(base)));
+        testSeq = [previousTail, candidate];
+
+        if isGoodQuadSequence(testSeq)
+            quadList = candidate;
+            return
+        end
+    end
+    % Fallback: return a balanced shuffled list even if pattern filters were too strict.
+    quadList = base(randperm(numel(base)));
+
+
+function ok = isGoodQuadSequence(seq)
+
+    ok = true;
+
+    for i = 3:numel(seq)
+        if seq(i) == seq(i-1) && seq(i-1) == seq(i-2)
+            ok = false;
+            return
+        end
+    end
+
+    for i = 4:numel(seq)
+        if seq(i) == seq(i-2) && seq(i-1) == seq(i-3) && seq(i) ~= seq(i-1)
+            ok = false;
+            return
+        end
+    end
+
+
+function cueList = makeBalancedCueList(nCued, nUncued, maxCuedRun)
+
+    base = [ones(1, nCued), zeros(1, nUncued)];
+
+    maxShuffleTries = getShuffleMaxTries();
+    for i = 1:maxShuffleTries
+        candidate = base(randperm(numel(base)));
+        if isGoodCueSequence(candidate, maxCuedRun)
+            cueList = candidate;
+            return
+        end
+    end
+    % Fallback: preserve 3:1 balance even if run-length filtering cannot be satisfied.
+    cueList = base(randperm(numel(base)));
+
+
+function maxShuffleTries = getShuffleMaxTries()
+
+    % High retry cap keeps constrained shuffles robust while staying fast.
+    maxShuffleTries = 1000;
+
+
+function ok = isGoodCueSequence(seq, maxCuedRun)
+
+    ok = true;
+    runLength = 1;
+    for i = 2:numel(seq)
+        if seq(i) == seq(i-1)
+            runLength = runLength + 1;
+        else
+            runLength = 1;
+        end
+
+        if seq(i) == 1 && runLength > maxCuedRun
+            ok = false;
+            return
+        end
+    end
