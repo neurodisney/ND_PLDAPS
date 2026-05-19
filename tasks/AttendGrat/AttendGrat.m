@@ -858,6 +858,7 @@ function cueList = makeBalancedCueList(nCued, nUncued, maxCuedRun)
 
 function maxShuffleTries = getShuffleMaxTries()
 
+    % High retry cap keeps constrained shuffles robust while staying fast.
     maxShuffleTries = 1000;
 
 
