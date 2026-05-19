@@ -146,13 +146,13 @@ function TaskSetUp(p)
                 p.trial.Block.uncuedQuadList = quadList;
             end
 
-            tailLen = 4;
+            quadTailLen = 4;
             if p.trial.task.cued
                 p.trial.Block.prevCuedQuadTail = [p.trial.Block.prevCuedQuadTail, quadIndex];
-                p.trial.Block.prevCuedQuadTail = p.trial.Block.prevCuedQuadTail(max(1, end-tailLen+1):end);
+                p.trial.Block.prevCuedQuadTail = p.trial.Block.prevCuedQuadTail(max(1, end-quadTailLen+1):end);
             else
                 p.trial.Block.prevUncuedQuadTail = [p.trial.Block.prevUncuedQuadTail, quadIndex];
-                p.trial.Block.prevUncuedQuadTail = p.trial.Block.prevUncuedQuadTail(max(1, end-tailLen+1):end);
+                p.trial.Block.prevUncuedQuadTail = p.trial.Block.prevUncuedQuadTail(max(1, end-quadTailLen+1):end);
             end
 
             p.trial.Block.repeatConfig = [p.trial.Block.repeatConfig, quadIndex];
@@ -806,8 +806,8 @@ function quadList = makeBalancedQuadList(nRepeats, previousTail)
 
     base = repmat(1:4, 1, nRepeats);
 
-    maxTries = 1000;
-    for i = 1:maxTries
+    maxShuffleTries = 1000;
+    for i = 1:maxShuffleTries
         candidate = base(randperm(numel(base)));
         testSeq = [previousTail, candidate];
 
@@ -843,8 +843,8 @@ function cueList = makeBalancedCueList(nCued, nUncued, maxCuedRun)
 
     base = [ones(1, nCued), zeros(1, nUncued)];
 
-    maxTries = 1000;
-    for i = 1:maxTries
+    maxShuffleTries = 1000;
+    for i = 1:maxShuffleTries
         candidate = base(randperm(numel(base)));
         if isGoodCueSequence(candidate, maxCuedRun)
             cueList = candidate;
