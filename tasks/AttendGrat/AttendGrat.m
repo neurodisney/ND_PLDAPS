@@ -47,6 +47,8 @@ function p = AttendGrat(p, state)
 % This function loads info specific to this task in p struct
 function TaskSetUp(p)
 
+        quadTailLen = 4;
+
         if ~isfield(p.trial.Block, 'initialRngState') || isempty(p.trial.Block.initialRngState)
             rng('shuffle');
             p.trial.Block.initialRngState = rng;
@@ -146,7 +148,6 @@ function TaskSetUp(p)
                 p.trial.Block.uncuedQuadList = quadList;
             end
 
-            quadTailLen = 4;
             if p.trial.task.cued
                 p.trial.Block.prevCuedQuadTail = [p.trial.Block.prevCuedQuadTail, quadIndex];
                 p.trial.Block.prevCuedQuadTail = p.trial.Block.prevCuedQuadTail(max(1, end-quadTailLen+1):end);
@@ -806,7 +807,7 @@ function quadList = makeBalancedQuadList(nRepeats, previousTail)
 
     base = repmat(1:4, 1, nRepeats);
 
-    maxShuffleTries = 1000;
+    maxShuffleTries = getShuffleMaxTries();
     for i = 1:maxShuffleTries
         candidate = base(randperm(numel(base)));
         testSeq = [previousTail, candidate];
@@ -816,7 +817,7 @@ function quadList = makeBalancedQuadList(nRepeats, previousTail)
             return
         end
     end
-
+    % Fallback: return a balanced shuffled list even if pattern filters were too strict.
     quadList = base(randperm(numel(base)));
 
 
@@ -843,7 +844,7 @@ function cueList = makeBalancedCueList(nCued, nUncued, maxCuedRun)
 
     base = [ones(1, nCued), zeros(1, nUncued)];
 
-    maxShuffleTries = 1000;
+    maxShuffleTries = getShuffleMaxTries();
     for i = 1:maxShuffleTries
         candidate = base(randperm(numel(base)));
         if isGoodCueSequence(candidate, maxCuedRun)
@@ -851,8 +852,13 @@ function cueList = makeBalancedCueList(nCued, nUncued, maxCuedRun)
             return
         end
     end
-
+    % Fallback: preserve 3:1 balance even if run-length filtering cannot be satisfied.
     cueList = base(randperm(numel(base)));
+
+
+function maxShuffleTries = getShuffleMaxTries()
+
+    maxShuffleTries = 1000;
 
 
 function ok = isGoodCueSequence(seq, maxCuedRun)
