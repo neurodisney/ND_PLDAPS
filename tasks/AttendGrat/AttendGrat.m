@@ -105,7 +105,8 @@ function TaskSetUp(p)
             p.trial.task.cued = p.trial.Block.repeatConfig(1);
         else
             if isempty(p.trial.Block.cuedRatio)
-                cuedRatio = makeBalancedCueList(24, 8, 4);
+                cuedRatio = [1, 1, 1, 0, 1];
+                cuedRatio = cuedRatio(randperm(length(cuedRatio)));
             else
                 cuedRatio = p.trial.Block.cuedRatio;
             end
@@ -840,41 +841,8 @@ function ok = isGoodQuadSequence(seq)
     end
 
 
-function cueList = makeBalancedCueList(nCued, nUncued, maxCuedRun)
-
-    base = [ones(1, nCued), zeros(1, nUncued)];
-
-    maxShuffleTries = getShuffleMaxTries();
-    for i = 1:maxShuffleTries
-        candidate = base(randperm(numel(base)));
-        if isGoodCueSequence(candidate, maxCuedRun)
-            cueList = candidate;
-            return
-        end
-    end
-    % Fallback: preserve 3:1 balance even if run-length filtering cannot be satisfied.
-    cueList = base(randperm(numel(base)));
-
-
 function maxShuffleTries = getShuffleMaxTries()
 
     % High retry cap keeps constrained shuffles robust while staying fast.
     maxShuffleTries = 1000;
 
-
-function ok = isGoodCueSequence(seq, maxCuedRun)
-
-    ok = true;
-    runLength = 1;
-    for i = 2:numel(seq)
-        if seq(i) == seq(i-1)
-            runLength = runLength + 1;
-        else
-            runLength = 1;
-        end
-
-        if seq(i) == 1 && runLength > maxCuedRun
-            ok = false;
-            return
-        end
-    end
