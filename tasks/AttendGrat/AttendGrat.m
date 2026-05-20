@@ -105,7 +105,7 @@ function TaskSetUp(p)
             p.trial.task.cued = p.trial.Block.repeatConfig(1);
         else
             if isempty(p.trial.Block.cuedRatio)
-                cuedRatio = makeBalancedCueList(24, 8, 4);
+                cuedRatio = makeBalancedCueList(16, 2, 20);
             else
                 cuedRatio = p.trial.Block.cuedRatio;
             end
@@ -171,7 +171,6 @@ function TaskSetUp(p)
             if p.trial.task.cued
                 stimConfigs = p.trial.Block.(['cuedConfigs' num2str(quadIndex)]);
                 if isempty(stimConfigs)
-                    rng('shuffle');
                     stimConfigs = [1, 2, 3, 4, 5];
                     stimConfigs = stimConfigs(randperm(length(stimConfigs)));
                 end
@@ -184,7 +183,6 @@ function TaskSetUp(p)
             else
                 stimConfigs = p.trial.Block.(['uncuedConfigs' num2str(quadIndex)]);
                 if isempty(stimConfigs)
-                    rng('shuffle');
                     stimConfigs = [2, 1, 5, 3, 4];
                     stimConfigs = stimConfigs(randperm(length(stimConfigs)));
                 end
@@ -234,8 +232,7 @@ function TaskSetUp(p)
         % Randomly selecting orientation change magnitudes
         if p.trial.task.cued
             if isempty(p.trial.Block.cuedMagList)
-                rng('shuffle');
-                magList = [0, 6, 6, 12, 12, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 6, 6, 12, 12, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 96]; 
+                magList = [3, 6, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 24]; 
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.cuedMagList;
@@ -245,8 +242,7 @@ function TaskSetUp(p)
             p.trial.Block.cuedMagList = magList;
         else
             if isempty(p.trial.Block.uncuedMagList)
-                rng('shuffle');
-                magList = [0, 6, 6, 12, 12, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 6, 6, 12, 12, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 48, 48, 96];
+                magList = [3, 6, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 24];
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.uncuedMagList;
@@ -323,10 +319,10 @@ function TaskSetUp(p)
         p.trial.stim.gabors.distractor3 = pds.stim.DriftGabor(p);
          
         % Selecting time of wait before target grating change from flat hazard function
-        r = java.security.SecureRandom();
-        seed = double(r.nextInt() + double(r.nextInt()*2^16));
-        seed = mod(seed, 2^32);
-        rng(seed);
+%         r = java.security.SecureRandom();
+%         seed = double(r.nextInt() + double(r.nextInt()*2^16));
+%         seed = mod(seed, 2^32);
+%         rng(seed);
 
         p.trial.task.GratWait = datasample(p.trial.task.flatHazard, 1);
         
@@ -584,6 +580,7 @@ function stimPreGratOriChange(p, val)
                 p.trial.stim.gabors.distractor1.fixActive = 0;
                 p.trial.stim.gabors.distractor2.fixActive = 0;
                 p.trial.stim.gabors.distractor3.fixActive = 0;
+
                 p.trial.stim.gabors.preTarget.on = 0;
                 p.trial.stim.gabors.distractor1.on = 0;
                 p.trial.stim.gabors.distractor2.on = 0;
@@ -699,15 +696,15 @@ function p = Task_Miss(p)
     % Marking trial outcome as 'Miss' trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
-    p.trial.Block.repeatFlag = 1;
     p.trial.task.Valid = 1;
     p.trial.Block.missLog = p.trial.Block.missLog + 1;
 
     cued = p.trial.Block.repeatConfig(1);
-    change = 96;
+    change = 24;
     if cued
+        p.trial.Block.repeatFlag = 1;
         p.defaultParameters.earlyFlag = 1;
-        if p.trial.Block.missLog > 1
+        if p.trial.Block.missLog > 3
             magList = p.trial.Block.cuedMagList;
             magList = [change, magList];
             p.trial.Block.cuedMagList = magList;
