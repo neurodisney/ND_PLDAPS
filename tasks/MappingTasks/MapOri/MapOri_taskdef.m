@@ -31,5 +31,5 @@ p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
 
 % Gabor parameters
 p.trial.task.oriRange = 0:20:340;
-p.trial.task.pos = [0.5, -5];
+p.trial.task.pos = [1, -5];
 p.trial.task.radius = 0.75;

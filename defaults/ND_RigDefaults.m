@@ -256,10 +256,12 @@ SS.Block.blankFlag          = 0;
 
 % AttendGrat
 SS.Block.missLog            = 0;
+SS.Block.repeatFlag         = 0;
+SS.Block.falseFlag          = 0;
+
 SS.Block.cuedRatio          = [];
 SS.Block.cuedMagList        = [];
 SS.Block.uncuedMagList      = [];
-SS.Block.repeatFlag         = 0;
 SS.Block.repeatConfig       = [];
 
 SS.Block.cuedQuadList       = [];

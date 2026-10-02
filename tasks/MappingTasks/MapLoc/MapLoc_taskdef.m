@@ -22,7 +22,7 @@ p.trial.task.presDur = 1;
 % Build grid of absolute value x,y coordinates
 % Scale coorindates up by 10
 xRange = [0, 2];
-yRange = [3, 6];
+yRange = [4, 6];
 
 scaler = 2;
 xRange = xRange * scaler;

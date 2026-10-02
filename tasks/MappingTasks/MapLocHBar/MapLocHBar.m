@@ -119,7 +119,7 @@ function TaskDesign(p)
                         % Reward if reward period has elapsed
                         if p.trial.CurTime >= p.trial.EV.nextReward
                             % Give reward
-                            pds.reward.give(p, 0.03);
+                            pds.reward.give(p, 0.015);
                             % Reset the reward timer
                             p.trial.EV.nextReward = p.trial.CurTime + p.trial.reward.Period;
                         end                            

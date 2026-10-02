@@ -5,11 +5,14 @@ function p = Task_WaitITI(p)
 % wolf zinke, Oct 2017
 
 if (p.defaultParameters.earlyFlag == 1)
-    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 4; %10
+    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 4; %6, 10
     p.defaultParameters.earlyFlag = 0;
 elseif (p.defaultParameters.breakFlag == 1)
-    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 1; %8
+    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 2; %3, 8
     p.defaultParameters.breakFlag = 0;
+elseif (p.trial.Block.falseFlag == 1)
+    p.trial.EV.PlanStart = p.trial.EV.PlanStart + 6;
+    p.trial.Block.falseFlag = 0;
 end
 
 if(p.trial.CurTime >= p.trial.EV.PlanStart || isnan(p.trial.EV.PlanStart))

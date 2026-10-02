@@ -24,12 +24,12 @@ function p = AttendGrat_taskdef(p)
 
 
     % Setting RF properties
-    RfPos = [0.5, -5];
+    RfPos = [1, -5]; %[0.5, -5];
     p.trial.task.RfPos = RfPos;
 
-    RfOri = 80;
+    RfOri = 0;
     p.trial.task.RfOri = RfOri;
-    p.trial.task.RfOriCurve = [RfOri, RfOri]; % [RfOri - 20, RfOri, RfOri + 20];
+    p.trial.task.RfOriCurve = [RfOri, RfOri + 20]; % [RfOri - 20, RfOri, RfOri + 20];
 
     RfRadius = 0.75;
     p.trial.task.RfSize = RfRadius;
@@ -50,8 +50,9 @@ function p = AttendGrat_taskdef(p)
     baseRingDelta = 8;
     p.trial.task.baseRingDelta = baseRingDelta;
     p.trial.stim.ringParameters.distCon = sprintf('up%d', baseRingDelta);
+    p.trial.stim.ringParameters.targCon = sprintf('up%d', baseRingDelta + 0);
 
-    p.trial.task.ringFlash = 0.200;
+    p.trial.task.ringFlash = 0.4;
     p.trial.stim.ringParameters.cue2Con =  sprintf('down%d', 6);
 
     % Assigning lineweight (thickness) to rings
@@ -72,7 +73,7 @@ function p = AttendGrat_taskdef(p)
 
     % Angle (degrees) between line connecting origin (0, 0) and
     % preceeding point and line connecting origin and succeeding point.
-    angular_offset = 3.51;
+    angular_offset = 4;
     p.trial.task.stimOffset = angular_offset;
 
     p.trial.task.posList = {};
@@ -117,10 +118,10 @@ function p = AttendGrat_taskdef(p)
 
     
     % Creating flat-hazard function from which to pull out time of wait before stim change
-    num_range = [1, 8];
-    mean = 1.5;
-    bound1 = 1.25;
-    bound2 = 2.75; %3.25;
+    num_range = [1, 10];
+    mean = 1.4; %1.5
+    bound1 = 1.25; %1.25
+    bound2 = 2.75; %2.75;
     
     r = exprnBounded(mean, num_range, bound1, bound2);
     
@@ -134,9 +135,10 @@ function p = AttendGrat_taskdef(p)
     
     end
 
+%     r1 = [0.0, 0.0, 0.0];
+%     r = [r, r1];
     p.trial.task.flatHazard = r;
 
-    
     % Setting time that must transpire before saccade can be made without
     % being marked as fix break
     p.trial.task.breakFixCheck = 0.010;
@@ -149,14 +151,14 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.minTargetFixTime = 0.20; 
     
     % Creating trial increments to scale size of reward based on good performance
-    trialStep = 250;
+    trialStep = 15;
     trialMax = 1000;
     p.trial.reward.IncrementTrial = 1:trialStep:trialMax;
     p.trial.reward.penalty = 0.005;
     
     % List of increasing durations of juice flow for reward
-    rewardStart = 0.16;
-    rewardStep = 0.01;
+    rewardStart = 0.1;
+    rewardStep = 0.002;
     p.trial.reward.IncrementDur = rewardStart:rewardStep:(rewardStart + rewardStep*(trialMax - 1));
 
     % Setting rig equipment distances (inches)

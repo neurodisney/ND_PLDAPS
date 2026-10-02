@@ -56,13 +56,17 @@ function TaskSetUp(p)
 
         % Adding trial to running total for block
         p.trial.Block.trialCount = p.trial.Block.trialCount + 1;
+        p.trial.Block.lastCuedQuad = 0;
 
         % Flagging next block if max trial count reached
         if p.trial.Block.trialCount == p.trial.Block.maxBlockTrials
             p.trial.Block.flagNextBlock = 1;
             p.trial.Block.trialCount = 0;
             p.trial.Block.blockCount = p.trial.Block.blockCount + 1;
-        end 
+        end
+
+        % Initializing wait period range
+        p.trial.Block.waitRange = [];
 
         % Trial marked as incorrect(0) until it is done successfully(1)
         p.trial.task.Good = 0;
@@ -95,18 +99,15 @@ function TaskSetUp(p)
         % Creating trial ID
         p.trial.task.trialID = 40000 + p.trial.pldaps.iTrial;
 
-
         % Generating fixation spot stimulus
         p.trial.stim.fix = pds.stim.FixSpot(p);
-
 
         % Randomly selecting task condition (cued = 1 or uncued = 0)
         if p.trial.Block.repeatFlag
             p.trial.task.cued = p.trial.Block.repeatConfig(1);
         else
             if isempty(p.trial.Block.cuedRatio)
-                cuedRatio = [1, 1, 1, 0, 1];
-                cuedRatio = cuedRatio(randperm(length(cuedRatio)));
+                cuedRatio = [1, 1, 1, 1, 0];
             else
                 cuedRatio = p.trial.Block.cuedRatio;
             end
@@ -116,6 +117,10 @@ function TaskSetUp(p)
             p.trial.Block.repeatConfig = [p.trial.task.cued];
         end
 
+        disp('Current cue condition:');
+        disp(p.trial.task.cued);
+
+        % Randomly selecting target quadrant
         if ~isfield(p.trial.Block, 'prevCuedQuadTail')
             p.trial.Block.prevCuedQuadTail = [];
         end
@@ -124,8 +129,6 @@ function TaskSetUp(p)
             p.trial.Block.prevUncuedQuadTail = [];
         end
 
-        % Randomly selecting stimulus arrangement
-        % Shuffling stim positions for certain arrangements
         if p.trial.Block.repeatFlag
             quadIndex = p.trial.Block.repeatConfig(2);   
         else
@@ -133,7 +136,7 @@ function TaskSetUp(p)
                 quadList = p.trial.Block.cuedQuadList;
                 if isempty(quadList)
                     previousTail = p.trial.Block.prevCuedQuadTail;
-                    quadList = makeBalancedQuadList(12, previousTail);
+                    quadList = makeBalancedQuadList(3, previousTail);
                 end
                 quadIndex = quadList(1);
                 quadList(1) = [];
@@ -143,8 +146,14 @@ function TaskSetUp(p)
                 if isempty(quadList)
                     previousTail = p.trial.Block.prevUncuedQuadTail;
                     quadList = makeBalancedQuadList(12, previousTail);
-                end            
+                end
+
                 quadIndex = quadList(1);
+                while quadIndex == p.trial.Block.lastCuedQuad
+                    quadList = quadList(randperm(length(quadList)));
+                    quadIndex = quadList(1);
+                end
+
                 quadList(1) = [];
                 p.trial.Block.uncuedQuadList = quadList;
             end
@@ -160,9 +169,10 @@ function TaskSetUp(p)
             p.trial.Block.repeatConfig = [p.trial.Block.repeatConfig, quadIndex];
         end
 
-        %disp(quadList);
-        %disp(quadIndex);
+        disp('Current TargQuad:');
+        disp(quadIndex);
 
+        % Randomly selecting gabor configuration
         if p.trial.Block.repeatFlag
             configIndex = p.trial.Block.repeatConfig(3);
             posList = p.trial.task.posList(configIndex, :);
@@ -233,7 +243,7 @@ function TaskSetUp(p)
         % Randomly selecting orientation change magnitudes
         if p.trial.task.cued
             if isempty(p.trial.Block.cuedMagList)
-                magList = [3, 6, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 24]; 
+                magList = [0, 4, 8, 8, 8, 8, 16, 16, 16, 16, 16, 32, 32];
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.cuedMagList;
@@ -243,7 +253,7 @@ function TaskSetUp(p)
             p.trial.Block.cuedMagList = magList;
         else
             if isempty(p.trial.Block.uncuedMagList)
-                magList = [3, 6, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 24];
+                magList = [0, 4, 8, 8, 8, 8, 16, 16, 16, 16, 16, 32, 3];
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.uncuedMagList;
@@ -253,11 +263,29 @@ function TaskSetUp(p)
             p.trial.Block.uncuedMagList = magList;
         end
         p.trial.task.changeMag = changeMag;
-          
 
+        disp('Current changMag:');
+        disp(changeMag);
+
+        % Selecting wait time before target change from flat hazard function
+        if isempty(p.trial.Block.waitRange)
+             waitRange = p.trial.task.flatHazard;
+             waitRange = waitRange(randperm(length(waitRange)));
+             p.trial.Block.waitRange = waitRange;
+        end
+        
+        waitRange = p.trial.Block.waitRange;
+        waitTime = waitRange(1);
+        waitRange(1) = [];
+        p.trial.Block.waitRange = waitRange;
+        p.trial.task.GratWait = waitTime;
+
+        disp('Current waitTime:');
+        disp(waitTime);
+          
         % Creating cue ring by assigning values to ring properties in p object
         % Compiling properties into pldaps struct to present ring on screen
-        p.trial.stim.RING.color = p.trial.stim.ringParameters.distCon;
+        p.trial.stim.RING.color = p.trial.stim.ringParameters.targCon;
         TargPos = cell2mat(posList(1));
         p.trial.stim.RING.pos = TargPos([1 2]);
         p.trial.stim.rings.cue1 = pds.stim.Ring(p);
@@ -318,14 +346,6 @@ function TaskSetUp(p)
         % Compiling properties into pldaps struct to present grating on screen
         p.trial.stim.DRIFTGABOR.pos = Dis3Pos([1 2]);
         p.trial.stim.gabors.distractor3 = pds.stim.DriftGabor(p);
-         
-        % Selecting time of wait before target grating change from flat hazard function
-%         r = java.security.SecureRandom();
-%         seed = double(r.nextInt() + double(r.nextInt()*2^16));
-%         seed = mod(seed, 2^32);
-%         rng(seed);
-
-        p.trial.task.GratWait = datasample(p.trial.task.flatHazard, 1);
         
         % Taking control of activation of grating fix windows
         p.trial.stim.gratingParameters.targetAutoFixWin = 0;
@@ -335,7 +355,11 @@ function TaskSetUp(p)
         reward_duration = find(p.trial.reward.IncrementTrial > p.trial.NHits + 1, 1, 'first');
         p.trial.reward.Dur = p.trial.reward.IncrementDur(reward_duration);
 
+        disp('Current rewardDur:')
         disp(p.trial.reward.Dur)
+
+%         p.trial.task.ringFlash = datasample([0.4, 0.42, 0.44, 0.46], 1);
+%         disp(p.trial.task.ringFlash)
 
         % Moving task from step-up stage to wait period before launching
         ND_SwitchEpoch(p, 'ITI');
@@ -393,12 +417,12 @@ function TaskDesign(p)
 
                     if p.trial.task.cued
                         if isnan(p.trial.stim.flashStart)
-                            if p.trial.task.CueOn + 0.2 < p.trial.CurTime
+                            if p.trial.task.CueOn + 0.1 < p.trial.CurTime
                                 p.trial.stim.flashStart = p.trial.CurTime;
                                 flashCueOn(p);
                             end
                         end
-                        if p.trial.stim.flashStart + 0.2 < p.trial.CurTime
+                        if p.trial.stim.flashStart + p.trial.task.ringFlash < p.trial.CurTime
                             flashCueOff(p);
                         end
                     end
@@ -455,7 +479,11 @@ function TaskDesign(p)
                     % Checking if gaze specifically within target grating fix window
                     if(p.trial.stim.gabors.postTarget.fixating)
                         p.trial.task.StimSel = p.trial.stim.gabors.postTarget.pos;
-                        Task_Hit(p);
+                        if p.trial.task.changeMag == 0
+                            Task_False(p);
+                        else
+                            Task_Hit(p);
+                        end
                     % Checking if gaze specifically within distractor 1 grating fix window
                     elseif(p.trial.stim.gabors.distractor1.fixating)
                         % Logging incorrect selection of grating (distractor)
@@ -647,13 +675,15 @@ function p = Handle_Early(p, type)
         p.trial.outcome.CurrOutcome = p.trial.outcome.Early;
         % Flagging trial as early
         if p.trial.task.cued
-            p.defaultParameters.breakFlag = 1;
+            p.defaultParameters.breakFlag = 0;
+        else
+            p.trial.Block.falseFlag = 1;
         end
     elseif strcmp(type, 'EarlyFalse')
         % Marking trial as "miss" but early if eye position is in distractor fix window
         p.trial.outcome.CurrOutcome = p.trial.outcome.EarlyFalse;
         % Flagging trial as early
-        p.defaultParameters.earlyFlag = 1;
+        p.trial.Block.falseFlag = 1;
     elseif strcmp(type, 'StimBreak')
         % Marking trial as fix break without relevance to task
         p.trial.outcome.CurrOutcome = p.trial.outcome.StimBreak;
@@ -696,26 +726,38 @@ function p = Task_Miss(p)
     pds.audio.playDP(p, 'incorrect', 'left');
     % Marking trial outcome as 'Miss' trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.Miss;
-    p.trial.Block.missLog = p.trial.Block.missLog + 1;
+    p.defaultParameters.breakFlag = 0;
     p.trial.task.Valid = 1;
-    p.trial.Block.missLog = p.trial.Block.missLog + 1;
 
+    p.trial.Block.missLog = p.trial.Block.missLog + 1;
     cued = p.trial.Block.repeatConfig(1);
-    change = 24;
+
     if cued
         p.trial.Block.repeatFlag = 1;
-        p.defaultParameters.earlyFlag = 1;
-        if p.trial.Block.missLog > 3
+        misses = p.trial.Block.missLog + 1;
+        if misses > 3
+            rescueMag = 64;
+
             magList = p.trial.Block.cuedMagList;
-            magList = [change, magList];
-            p.trial.Block.cuedMagList = magList;
+            if isempty(magList)
+                firstMag = 0;
+            else
+                firstMag = magList(1);
+            end
+            if firstMag ~= rescueMag
+                p.trial.Block.cuedMagList = [rescueMag, magList];
+            end
+
         end
+
     else
-        if p.trial.Block.missLog > 10
-            magList = p.trial.Block.uncuedMagList;
-            magList = [change, magList];
-            p.trial.Block.uncuedMagList = magList;
-        end
+        p.trial.Block.repeatFlag = 0;
+%         if p.trial.Block.missLog > 2
+%             p.trial.Block.missLog = 0;
+%         else
+%             cuedRatio = p.trial.Block.cuedRatio;
+%             p.trial.Block.cuedRatio = [0, cuedRatio];
+%         end
     end
 
     % Switching epoch to end task
@@ -732,9 +774,39 @@ function p = Task_False(p)
     p.trial.task.FlightTime = p.trial.CurTime - p.trial.EV.FixLeave;
     % Marking trial as false and ending trial
     p.trial.outcome.CurrOutcome = p.trial.outcome.False;
-    p.trial.Block.missLog = p.trial.Block.missLog + 1;
-    p.defaultParameters.earlyFlag = 1;
-    p.trial.Block.repeatFlag = 1;
+    p.trial.Block.falseFlag = 1;
+    p.trial.task.Valid = 1;
+    
+    cued = p.trial.Block.repeatConfig(1);
+
+    if cued
+        p.trial.Block.repeatFlag = 1;
+        misses = p.trial.Block.missLog + 1;
+        if misses > 3
+            rescueMag = 64;
+
+            magList = p.trial.Block.cuedMagList;
+            if isempty(magList)
+                firstMag = 0;
+            else
+                firstMag = magList(1);
+            end
+            if firstMag ~= rescueMag
+                p.trial.Block.cuedMagList = [rescueMag, magList];
+            end
+
+        end
+
+    else
+        p.trial.Block.repeatFlag = 0;
+%         if p.trial.Block.missLog > 2
+%             p.trial.Block.missLog = 0;
+%         else
+%             cuedRatio = p.trial.Block.cuedRatio;
+%             p.trial.Block.cuedRatio = [0, cuedRatio];
+%         end
+    end
+
     % Switching epoch to end task
     ND_SwitchEpoch(p, 'TaskEnd');
 
@@ -748,14 +820,10 @@ function p = Task_Correct(p)
     pds.reward.give(p, p.trial.reward.Dur); % fixed at 0.17
     % Record time at which reward given
     p.trial.EV.Reward = p.trial.CurTime;
-    p.trial.Block.repeatFlag = 0;
-    if p.trial.task.changeMag == 0
-        p.trial.Block.repeatFlag = 1;
-    end
-    if ~p.trial.task.changeMag == 0
-        p.trial.Block.missLog = 0;
-    end
     p.trial.task.Valid = 1;
+    p.trial.Block.repeatFlag = 0;
+    p.trial.Block.missLog = 0;
+
     % Switching epoch to end task
     ND_SwitchEpoch(p, 'TaskEnd');
 
