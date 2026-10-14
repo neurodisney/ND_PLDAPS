@@ -16,13 +16,13 @@ function p = start_ViewScene(subjectname, rig)
     % default rig settings
     SS = ND_RigDefaults(rig); 
 
-    % Specifying task: calling AttendGrat.m file
+    % Specifying task: calling ViewScene.m file
     exp_fun = 'ViewScene'; 
 
     % Loading task information into pldaps matrix
     SS.pladaps.trialFunction = exp_fun; 
 
-    % Loading task-specific parameters: calling AttendGrat_taskdef.m file 
+    % Loading task-specific parameters: calling ViewScene_taskdef.m file 
     SS.task.TaskDef = 'ViewScene_taskdef';
     
     % Specifying which matrix variables can be edited for future trials

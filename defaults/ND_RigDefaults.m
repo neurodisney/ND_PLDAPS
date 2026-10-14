@@ -249,6 +249,7 @@ SS.Block.flagNextBlock  =  0;
 c1.Nr = 1;
 SS.Block.Conditions     = {c1}; % as default only one condition
 SS.Block.BlockList      = [];
+SS.Block.imageset       = [];
 
 % ------------------------------------------------------------------------%
 %% Eye tracking
@@ -299,17 +300,17 @@ switch rig
     case 1
         % defaults before Screen Resize 6/22/20
         SS.eyeCalib.defaultGain      = [-15.2816 -14.4106];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.4092, -1.1330];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [0.4721, -1.1208];    % default offset, used if no calibration points are entered
      
     case 2
         % defaults before Screen Resize 
         SS.eyeCalib.defaultGain      = [-15.2816 -14.4106];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.4092, -1.1330];  % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [0.4721, -1.1208];  % default offset, used if no calibration points are entered
         
     otherwise
         % defaults before Screen Resize 
         SS.eyeCalib.defaultGain      = [-15.2816 -14.4106];  % default gain, used if no calibration points are entered
-        SS.eyeCalib.defaultOffset    = [-0.4092, -1.1330];    % default offset, used if no calibration points are entered
+        SS.eyeCalib.defaultOffset    = [0.4721, -1.1208];    % default offset, used if no calibration points are entered
 end
 
 % Define fixation states

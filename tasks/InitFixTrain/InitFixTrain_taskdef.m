@@ -25,8 +25,8 @@ p.trial.reward.Period       = [0.5 0.4 0.3 0.2]; % the period between one reward
 
 p.trial.reward.ManDur       = 0.1; % reward duration [s] for reward given by keyboard presses
 
-p.trial.reward.jackpotTime  = 0.25;     % total time required to fixate to get full reward
-p.trial.reward.jackpotDur   = 0.1;  % final reward after keeping fixation for the complete time
+p.trial.reward.jackpotTime  = 0.075;     % total time required to fixate to get full reward
+p.trial.reward.jackpotDur   = 0.3;  % final reward after keeping fixation for the complete time
 
 % ------------------------------------------------------------------------%
 %% Timing
@@ -102,13 +102,13 @@ p.trial.Block.maxBlockTrials =  [1];
 % ------------------------------------------------------------------------%
 %% fixation spot parameters
 p.trial.stim.FIXSPOT.type = 'disc';   % shape of fixation target, options implemented atm are 'disc' and 'rect', or 'off'
-p.trial.stim.FIXSPOT.size = 0.15;     % size of the fixation spot
+p.trial.stim.FIXSPOT.size = 0.25;     % size of the fixation spot
 p.trial.stim.FIXSPOT.color  = 'dRed';  % color of fixation spot (as defined in the lookup tables)
 p.trial.behavior.fixation.FixWinStp = 0.2;  % refine resizing of fixation step for this task only(modify default rig settings)
 
 % color options (make sure colors are defined!)
-%p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
-p.trial.task.Color_list = {'dRed'};
+p.trial.task.Color_list = Shuffle({'white', 'dRed', 'lRed', 'dGreen', 'orange', 'cyan'});
+%p.trial.task.Color_list = {'dRed'};
 
 % Enable random positions
 % p.trial.task.RandomPos = 0;

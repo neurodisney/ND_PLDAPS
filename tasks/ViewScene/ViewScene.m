@@ -38,9 +38,18 @@ function TaskSetUp(p)
     p.trial.task.SRT_FixStart = NaN;
     p.trial.stim.fix = pds.stim.FixSpot(p);
     p.trial.stim.IMAGE.pos = [0 0];
-
-    rng('shuffle');
-    scene = datasample(p.trial.task.stim.sceneNames, 1);
+    if isempty(p.trial.Block.imageset)
+        p.trial.Block.imageset = 1:length(p.trial.task.stim.sceneNames);
+        p.trial.Block.imagenames = p.trial.task.stim.sceneNames;
+    end
+    %rng('shuffle');
+    %scene = datasample(p.trial.task.stim.sceneNames, 1);
+    val = datasample(p.trial.Block.imageset, 1);
+    scene = p.trial.task.stim.sceneNames(val);
+    sceneName = string(scene{1});
+    findval = strfind(p.trial.Block.imagenames,sceneName);
+    imageval = find([findval{:}]==1);
+    p.trial.task.stim.val = imageval;
     p.trial.stim.sceneName = scene{1};
 
     if strcmp(p.trial.task.stim.sceneType, 'image')
@@ -123,4 +132,7 @@ function p = Task_Incorrect(p)
 function TaskCleanAndSave(p)
     Task_Finish(p);
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
+    val = p.trial.task.stim.val;
+    p.trial.Block.imagenames(val) = [];
+    p.trial.Block.imageset(val) = [];
     ND_Trial2Ascii(p, 'save');

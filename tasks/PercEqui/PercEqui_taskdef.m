@@ -19,8 +19,8 @@ p.trial.reward.DiscourageProp = 1.0;  % proportion of reward given if previous t
 p.trial.reward.Dur            = 0.22; %initial reward duration
 p.trial.reward.boost          = 0.0;
 p.trial.stim.tardiffthresh    = 0.01; %if target and reference within 3% contrast of each other, use random reward probability
-p.trial.reward.useProb        = 0;
-p.trial.reward.probabilities  = [0.25, 0.75]; %probability for will NOT or WILL be rewarded
+p.trial.reward.useProb        = 1;
+p.trial.reward.probabilities  = [0.5, 0.5]; %probability for will NOT or WILL be rewarded
 
 % ------------------------------------------------------------------------%
 %% Timing
