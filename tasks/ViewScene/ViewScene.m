@@ -7,7 +7,7 @@ function p = ViewScene(p, state)
     if(~exist('state','var'))
         state = [];
     end
-    
+
      % Initializing task
     if(isempty(state))
         p = ViewScene_init(p);
