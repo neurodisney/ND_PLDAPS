@@ -94,6 +94,7 @@ SS.display.widthcm                              = 53.5;     % width  of the visi
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
 SS.display.useOverlay                           = 1;      % create an overlay pointer
+SS.display.useC48                               = 0;
 SS.display.colorclamp                           = 1;      % clamp colors to [0-1] range. Typically not necessary
 SS.display.normalizeColor                       = 1;      % use colors in [0-1] normalized color range on PTB screen. Often implied by other setting anyway
 SS.display.switchOverlayCLUTs                   = false;  % switch overlay colors between experimenter and subject view

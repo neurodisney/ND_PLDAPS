@@ -14,7 +14,7 @@ function p = ViewScene_taskdef(p)
     % Setting scene configs
     p.trial.task.stim.sceneType = 'image'; % options: 'video' or 'image'
     %p.trial.task.stim.sceneDir = '/home/rig2-user/Documents/MATLAB/Images/Videos/';
-    p.trial.task.stim.sceneDir = '/home/rig2-user/Documents/MATLAB/Images/pareidolia/set_1/';
+    p.trial.task.stim.sceneDir = '/home/rig2-user/Documents/MATLAB/Images/random_test/';
 
     scenes = dir(p.trial.task.stim.sceneDir);
     p.trial.task.stim.sceneNames = {scenes(~[scenes.isdir]).name};
@@ -35,7 +35,7 @@ function p = ViewScene_taskdef(p)
     p.trial.stim.FIXSPOT.type = 'rect';    
     p.trial.stim.FIXSPOT.color = 'red';
     p.trial.stim.FIXSPOT.size = 0.4;
-    p.trial.stim.FIXSPOT.fixWin = 1.5;
+    p.trial.stim.FIXSPOT.fixWin = 5.5;
 
     
 end

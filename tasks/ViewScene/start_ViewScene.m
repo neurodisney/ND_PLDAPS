@@ -15,6 +15,8 @@ function p = start_ViewScene(subjectname, rig)
     % Creating pldaps matrix to store task information, and loading it with 
     % default rig settings
     SS = ND_RigDefaults(rig); 
+    SS.display.useC48        = 1; %TEST: color output via C48
+    SS.display.useOverlay    = 0; %no overlay in C48 test mode
 
     % Specifying task: calling ViewScene.m file
     exp_fun = 'ViewScene'; 
@@ -30,7 +32,7 @@ function p = start_ViewScene(subjectname, rig)
 
     % Loading non-default rig settings into pldaps matrix
     SS.pldaps.draw.eyepos.use = 1;
-    SS.pldaps.draw.grid.use = 1;
+    SS.pldaps.draw.grid.use = 0;
     SS.datapixx.useAsEyepos = 1;
     SS.datapixx.adc.srate = 1000;
 

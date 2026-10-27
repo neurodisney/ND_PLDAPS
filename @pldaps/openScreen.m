@@ -79,7 +79,10 @@ if p.defaultParameters.datapixx.use
     PsychImaging('AddTask', 'General', 'UseDataPixx');
     PsychImaging('AddTask', 'General', 'FloatingPoint32Bit','disableDithering',1);
     
-    if p.defaultParameters.display.useOverlay==1
+    if p.defaultParameters.display.useC48==1
+        disp('Using C48 color output (no overlay!)');
+        PsychImaging('AddTask','General','EnableDataPixxC48Output',2);
+    elseif p.defaultParameters.display.useOverlay==1
         % Turn on the overlay
         disp('Using overlay window (EnableDataPixxM16OutputWithOverlay)')
         disp('****************************************************************')
