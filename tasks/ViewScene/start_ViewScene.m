@@ -22,7 +22,7 @@ function p = start_ViewScene(subjectname, rig)
     SS.display.useC48      = 0;
     SS.display.useOverlay  = 3;
     SS.display.expScrnNum  = 0;  % <-- screen of the experimenter task monitor
-    SS.display.expWinRect  = []; % <-- e.g. [1920 0 3840 1080] if it shares an X screen with the matlab desktop
+    SS.display.expWinRect  = [0 0 960 540]; % <-- e.g. [1920 0 3840 1080] if it shares an X screen with the matlab desktop
 
     % Specifying task: calling ViewScene.m file
     exp_fun = 'ViewScene'; 

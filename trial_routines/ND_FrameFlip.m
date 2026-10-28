@@ -22,6 +22,10 @@ if(p.trial.pldaps.draw.photodiode.use)
     end
 end
 
+if (p.trial.display.useOverlay == 3)
+    Screen('CopyWindow', p.trial.display.ptr, p.trial.display.mirrortex);
+    %ND_MirrorDebug(p, 'copy');
+end
 %-------------------------------------------------------------------------%
 %% Flip the screen and keep track of frame timings
 if(p.trial.pldaps.GetScreenFlipTimes) % debug mode, keep all times
@@ -92,10 +96,41 @@ if(any(p.trial.pldaps.lastBgColor ~= p.trial.display.bgColor))
     p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
 end
 
+if (p.trial.display.useOverlay == 3 && mod(p.trial.iFrame, p.trial.display.expEveryNFrames) == 0);
+    %compose the experimenter view (mirror image, overlay on top) in the
+    %subject window's context, then copy it over to the experimenter window
+    sm = p.trial.display.expSmall;
+    Screen('glPushMatrix', sm);
+    Screen('glLoadIdentity', sm); % ignore the defree-unit transform for this copy
+    Screen('FillRect', sm, [0 0 0 1]);
+    Screen('BlendFunction', sm, 'GL_ONE', 'GL_ZERO');
+    Screen('DrawTexture', sm, p.trial.display.mirrortex, [], p.trial.display.expRect);
+    %ND_MirrorDebug(p, 'compose', sm);
+    Screen('BlendFunction', sm, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
+    Screen('DrawTexture', sm, p.trial.display.overlayptr, [], p.trial.display.expRect);
+    Screen('glPopMatrix', sm);
+    
+    img = Screen('GetImage', sm);
+    tex = Screen('MakeTexture', p.trial.display.expptr, img);
+    Screen('DrawTexture', p.trial.display.expptr, tex);
+    Screen('Close', tex);
+    
+    %dontsync = 2; no waiting for vsync, so the subject display is not
+    %slowed
+    Screen('Flip', p.trial.display.expptr, 0, 0, 2);
+end
+
 if(p.trial.display.overlayptr ~= p.trial.display.ptr)
     if(p.trial.display.useOverlay==3)
-        % alpha must be 0 (transparent); a scalar 0 would be opaque black
-        Screen('FillRect', p.trial.display.overlayptr, 0, p.trial.display.winRect);
+        % Reset the overlay to fully transparent. On offscreen windows FillRect
+        % draws a blended rectangle, so blending must be off or alpha stays put.
+        ov = p.trial.display.overlayptr;
+        Screen('BlendFunction', ov, 'GL_ONE', 'GL_ZERO');
+        Screen('glPushMatrix', ov);
+        Screen('glLoadIdentity', ov); % cover the whole window, not a degree-scaled rect
+        Screen('FillRect', ov, [0 0 0 0]);
+        Screen('glPopMatrix', ov);
+        Screen('BlendFunction', ov, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
     end
 end
 

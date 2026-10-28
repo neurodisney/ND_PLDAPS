@@ -96,6 +96,7 @@ SS.display.screenSize                           = [];     % size of the window t
 SS.display.useOverlay                           = 1;      % 0 none (use with C48), 1 Datapixx M16 overlay, 2 software split overlay, 3 GPU mirror+experiment-only overlay (works with color)
 SS.display.expScrnNum                           = 0;      % useOverlay==3; screen that shows the experimenter mirrow
 SS.display.expWinRect                           = [];     % useOverlay==3; rect on expScrnNum for the mirrow window ([] = whole screen)
+SS.display.expEveryNFrames                      = 4;      % update the experimenter view every N subject frames
 SS.display.useC48                               = 0;
 SS.display.colorclamp                           = 1;      % clamp colors to [0-1] range. Typically not necessary
 SS.display.normalizeColor                       = 1;      % use colors in [0-1] normalized color range on PTB screen. Often implied by other setting anyway

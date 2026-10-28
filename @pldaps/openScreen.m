@@ -100,19 +100,6 @@ else
     PsychImaging('AddTask', 'General', 'FloatingPoint32BitIfPossible');
 end
 
-% Experimenter-only overlay on a GPU-driven mirrow of the subject display. 
-% Works in C24 (plain RGB) mode; the ViewPixx console outpu tcan NOT be
-% used for this, because the hardware overlay only exists in M16 mode.
-if p.defaultParameters.display.useOverlay==3
-    disp('****************************************************************')
-    fprintf('Mirroring subject display to screen %d with experimenter-only overlay/n',...
-        p.defaultParameters.display.expScrnNum);
-    disp('****************************************************************')
-    PsychImaging('AddTask','General','MirrowDisplayTo2ndOutputHead',...
-        p.defaultParameters.display.expScrnNum,...
-        p.defaultParameters.display.expWinRect,[],1);
-end
-
 if strcmp(p.defaultParameters.display.stereoFlip,'right');
     disp('****************************************************************')
     disp('****************************************************************')
@@ -325,9 +312,31 @@ elseif p.defaultParameters.display.useOverlay==2
     Screen('HookFunction', p.defaultParameters.display.ptr, 'AppendShader', 'FinalOutputFormattingBlit', idString, p.defaultParameters.display.shader, pString);
     PsychColorCorrection('ApplyPostGLSLLinkSetup', p.defaultParameters.display.ptr, 'FinalFormatting');
 elseif p.defaultParameters.display.useOverlay==3
-    %RGBA offscreen windowcomposited (alpha>0 only) onto the mirror window.
-    %Never reaches teh subject display
-    p.defaultParameters.display.overlayptr = PsychImaging('GetMirrorOverlayWindow',p.defaultParameters.display.ptr);
+    % Experimenter mirror + experimenter-only overlay, built by hand
+    % (works with older psychtookbox, no 'GetMirrorOverlayWindow' needed)
+    disp('****************************************************************')
+    fprintf('Opening experimenter mirror window on screen %d\n', p.defaultParameters.display.expWinRect);
+    disp('****************************************************************')
+    ptr = p.defaultParameters.display.ptr;
+    [ww, wh] = Screen('WindowSize', ptr);
+    
+    oldskip = Screen('Preference', 'SkipSyncTests', 2); %mirror timing does not matter
+    expptr = Screen('OpenWindow', p.defaultParameters.display.expScrnNum, 0, p.defaultParameters.display.expWinRect);
+    Screen('ColorRange', expptr, 1);
+    Screen('FillRect', expptr, p.defaultParameters.display.bgColor);
+    Screen('BlendFunction', expptr, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
+    Screen('Flip', expptr, 0, 0, 2);
+    
+    p.defaultParameters.display.expptr        = expptr;
+    p.defaultParameters.display.expRect       = Screen('Rect', expptr);
+    p.defaultParameters.display.mirrortex     = Screen('OpenOffscreenWindow',ptr,[0 0 0 0], [0 0 ww wh]);
+    % small window (experimenter-window size) where mirror+overlay are
+    % combined; read back and re-uploaded into expptr, because windows on
+    % different X screens cannot share textures
+    p.defaultParameters.display.expSmall      = Screen('OpenOffscreenWindow', ptr, [0 0 0 1], p.defaultParameters.display.expRect);
+    Screen('BlendFunction', p.defaultParameters.display.expSmall, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
+    p.defaultParameters.display.overlayptr    = Screen('OpenOffscreenWindow',ptr,[0 0 0 0], [0 0 ww wh]);
+    Screen('BlendFunction', p.defaultParameters.display.overlayptr, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
 else
     p.defaultParameters.display.overlayptr = p.defaultParameters.display.ptr;
 end
