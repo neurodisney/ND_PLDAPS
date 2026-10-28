@@ -93,7 +93,10 @@ if(any(p.trial.pldaps.lastBgColor ~= p.trial.display.bgColor))
 end
 
 if(p.trial.display.overlayptr ~= p.trial.display.ptr)
-    Screen('FillRect', p.trial.display.overlayptr, 0, p.trial.display.winRect);
+    if(p.trial.display.useOverlay==3)
+        % alpha must be 0 (transparent); a scalar 0 would be opaque black
+        Screen('FillRect', p.trial.display.overlayptr, 0, p.trial.display.winRect);
+    end
 end
 
 %-------------------------------------------------------------------------%

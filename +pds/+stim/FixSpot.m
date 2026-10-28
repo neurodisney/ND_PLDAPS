@@ -59,8 +59,7 @@ methods
     
     function draw(obj,p)
         if obj.on
-            Window = p.trial.display.overlayptr;
-            Color  = p.trial.display.clut.(obj.color);
+            [Window, Color] = ND_DrawTarget(p,obj.color);
             
             switch  obj.type
                 case 'disc'

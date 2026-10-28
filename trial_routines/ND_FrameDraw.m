@@ -18,6 +18,9 @@ function ND_FrameDraw(p)
 if( any(p.trial.pldaps.lastBgColor ~= p.trial.display.bgColor) )
     Screen('FillRect', p.trial.display.ptr, p.trial.display.bgColor);
     Screen('FillRect', p.trial.display.overlayptr, p.trial.display.bgColor);
+    if(p.trial.display.useOverlay==3) % an opaque fill wuld hide the mirrored stimulus
+        Screen('Fillrect', p.trial.display.overlayptr, p.trial.display.bgColor);
+    end
     p.trial.pldaps.lastBgColor = p.trial.display.bgColor;
 end
 

@@ -4,4 +4,5 @@ function ND_TrialOn(p)
 % TODO: make more options available
 
 
-Screen('FrameRect', p.trial.display.overlayptr, p.trial.display.clut.TrialStart, p.trial.(task).FrameRect , p.trial.(task).FrameWdth);
+[win,col] = ND_DrawTarget(p, 'TrialStart');
+Screen('FrameRect', win, col, p.trial.(task).FrameRect, p.trial.(task).FramwWidth);

@@ -39,7 +39,17 @@ end
 p.defaultParameters.display.humanCLUT( pos+1,:) = hCol;
 p.defaultParameters.display.monkeyCLUT(pos+1,:) = mCol;
 
-if(p.defaultParameters.display.useOverlay)  % apparently, both, datapixx and software overlays use indexed colors
+% Monkey-screen RGB and whether the monkey can see this color at all (i.e.
+% it differs from the background). Used with useOverlay==3, see
+% ND_DrawTarget.
+p.defaultParameters.display.mclut.(colname) = mCol(:);
+p.defaultParameters.display.mvis.(colname)  = any(abs(mCol(:) - p.defaultParameters.display.bgColor(:)) > 1e-6);
+
+if(p.defaultParameters.display.useOverlay==3)
+    % mirror overlay is a plain RGBA window; use the experimenter color
+    % directly
+    p.defaultParameters.display.clut.(colname) = hCol(:);
+elseif(p.defaultParameters.display.useOverlay) %apparently both datapixx and software overlays use indexed colors
     % check if the clut index is already in use
     if(isfield(p.defaultParameters.display,'clut'))
         fldnms = fieldnames(p.defaultParameters.display.clut);

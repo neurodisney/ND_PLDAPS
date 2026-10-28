@@ -167,16 +167,15 @@ try
                 
             elseif(p.trial.pldaps.pause == 2)
                 % set screen to break color
-                Screen('FillRect', p.trial.display.overlayptr, ...
-                       p.trial.display.clut.(p.trial.display.breakColor), ...
-                       p.defaultParameters.display.winRect);
+                [win, col] = ND_DrawTarget(p, p.trial.display.breakColor);
+                Screen('FillRect',win,col,p.defaultParameters.display.winRect);
                    
                 Screen('Flip', p.trial.display.ptr, 0);
                 
                 pds.datapixx.strobe(p.trial.event.BREAK);
             end
         
-            KbQueueStart;ND_reset; p=start_Attention('mouse')
+            KbQueueStart;
 
             % check for keyboard actions while pausing
             while(p.trial.pldaps.pause > 0 && p.trial.pldaps.quit < 1)

@@ -93,7 +93,9 @@ SS.display.heightcm                             = 30.0;     % height of the visi
 SS.display.widthcm                              = 53.5;     % width  of the visible screen in cm
 SS.display.screenSize                           = [];     % size of the window to create pixels in, leave empty for full screen
 
-SS.display.useOverlay                           = 1;      % create an overlay pointer
+SS.display.useOverlay                           = 1;      % 0 none (use with C48), 1 Datapixx M16 overlay, 2 software split overlay, 3 GPU mirror+experiment-only overlay (works with color)
+SS.display.expScrnNum                           = 0;      % useOverlay==3; screen that shows the experimenter mirrow
+SS.display.expWinRect                           = [];     % useOverlay==3; rect on expScrnNum for the mirrow window ([] = whole screen)
 SS.display.useC48                               = 0;
 SS.display.colorclamp                           = 1;      % clamp colors to [0-1] range. Typically not necessary
 SS.display.normalizeColor                       = 1;      % use colors in [0-1] normalized color range on PTB screen. Often implied by other setting anyway

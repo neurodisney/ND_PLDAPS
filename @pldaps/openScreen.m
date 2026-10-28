@@ -81,6 +81,10 @@ if p.defaultParameters.datapixx.use
     
     if p.defaultParameters.display.useC48==1
         disp('Using C48 color output (no overlay!)');
+        if p.defaultParameters.display.useOverlay==3
+            warning('pldaps:openScreen',['useC48 with useOverlay==3: the experimenter mirror ','is copied AFTER C48 packing, so it will show a striped/garbled image. ',...
+                'Use C24 (useC48=0) for 8-bit color images with a clean mirrow.']);
+        end
         PsychImaging('AddTask','General','EnableDataPixxC48Output',2);
     elseif p.defaultParameters.display.useOverlay==1
         % Turn on the overlay
@@ -94,6 +98,19 @@ else
 %     disp('No overlay window')
 %     disp('****************************************************************')
     PsychImaging('AddTask', 'General', 'FloatingPoint32BitIfPossible');
+end
+
+% Experimenter-only overlay on a GPU-driven mirrow of the subject display. 
+% Works in C24 (plain RGB) mode; the ViewPixx console outpu tcan NOT be
+% used for this, because the hardware overlay only exists in M16 mode.
+if p.defaultParameters.display.useOverlay==3
+    disp('****************************************************************')
+    fprintf('Mirroring subject display to screen %d with experimenter-only overlay/n',...
+        p.defaultParameters.display.expScrnNum);
+    disp('****************************************************************')
+    PsychImaging('AddTask','General','MirrowDisplayTo2ndOutputHead',...
+        p.defaultParameters.display.expScrnNum,...
+        p.defaultParameters.display.expWinRect,[],1);
 end
 
 if strcmp(p.defaultParameters.display.stereoFlip,'right');
@@ -307,6 +324,10 @@ elseif p.defaultParameters.display.useOverlay==2
     Screen('HookFunction', p.defaultParameters.display.ptr, 'Reset', 'FinalOutputFormattingBlit');
     Screen('HookFunction', p.defaultParameters.display.ptr, 'AppendShader', 'FinalOutputFormattingBlit', idString, p.defaultParameters.display.shader, pString);
     PsychColorCorrection('ApplyPostGLSLLinkSetup', p.defaultParameters.display.ptr, 'FinalFormatting');
+elseif p.defaultParameters.display.useOverlay==3
+    %RGBA offscreen windowcomposited (alpha>0 only) onto the mirror window.
+    %Never reaches teh subject display
+    p.defaultParameters.display.overlayptr = PsychImaging('GetMirrorOverlayWindow',p.defaultParameters.display.ptr);
 else
     p.defaultParameters.display.overlayptr = p.defaultParameters.display.ptr;
 end
