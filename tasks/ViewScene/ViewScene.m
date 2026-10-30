@@ -38,18 +38,16 @@ function TaskSetUp(p)
     p.trial.task.SRT_FixStart = NaN;
     p.trial.stim.fix = pds.stim.FixSpot(p);
     p.trial.stim.IMAGE.pos = [0 0];
+    %sampling without replacement: Block imageset is a shuffled queue of
+    %image numbers still to be shown this round. Wehn all images presented,
+    %start a new round with a fresh random order of all images
+    p.trial.task.sceneShown = 0;
     if isempty(p.trial.Block.imageset)
-        p.trial.Block.imageset = 1:length(p.trial.task.stim.sceneNames);
-        p.trial.Block.imagenames = p.trial.task.stim.sceneNames;
+        p.trial.Block.imageset = randperm(length(p.trial.task.stim.sceneNames));
     end
-    %rng('shuffle');
-    %scene = datasample(p.trial.task.stim.sceneNames, 1);
-    val = datasample(p.trial.Block.imageset, 1);
+    val = p.trial.Block.imageset(1); %next image in the queue
     scene = p.trial.task.stim.sceneNames(val);
-    sceneName = string(scene{1});
-    findval = strfind(p.trial.Block.imagenames,sceneName);
-    imageval = find([findval{:}]==1);
-    p.trial.task.stim.val = imageval;
+    p.trial.task.stim.val = val;
     p.trial.stim.sceneName = scene{1};
 
     if strcmp(p.trial.task.stim.sceneType, 'image')
@@ -109,6 +107,7 @@ function showScene(p, display_val)
             case 1
                 p.trial.stim.scene.on = 1;
                 p.trial.stim.scene.fixActive = 1;
+                p.trial.task.sceneShown = 1; %the image actually reached the screen
                 ND_AddScreenEvent(p, p.trial.event.STIM_ON, 'StimOn');
             otherwise
                 error('Unusable stimulus or display value')
@@ -132,7 +131,9 @@ function p = Task_Incorrect(p)
 function TaskCleanAndSave(p)
     Task_Finish(p);
     p.trial.outcome.CurrOutcomeStr = p.trial.outcome.codenames{p.trial.outcome.codes == p.trial.outcome.CurrOutcome};
-    val = p.trial.task.stim.val;
-    p.trial.Block.imagenames(val) = [];
-    p.trial.Block.imageset(val) = [];
+    %take the image off the queue only if it was actually shown. If monkey
+    %never fixated image stays first in line
+    if p.trial.task.sceneShown
+        p.trial.Block.imageset(1) = [];
+    end
     ND_Trial2Ascii(p, 'save');
