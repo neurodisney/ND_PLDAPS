@@ -316,7 +316,7 @@ end
 % Define fixation states
 SS.FixState.Current     = NaN;
 SS.FixState.FixOut      =    0;  % Gaze out of fixation window
-SS.FixState.startingFix = 0.25;  % Gaze has momentarily entered fixation window
+SS.FixState.startingFix = 0.15;  % Gaze has momentarily entered fixation window
 SS.FixState.FixIn       =    1;  % Gaze robustly within fixation window
 SS.FixState.breakingFix = 0.75;  % Gaze has momentarily left fixation window
 
