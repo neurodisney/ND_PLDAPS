@@ -5,4 +5,4 @@ function ND_TrialOn(p)
 
 
 [win,col] = ND_DrawTarget(p, 'TrialStart');
-Screen('FrameRect', win, col, p.trial.(task).FrameRect, p.trial.(task).FramwWidth);
+Screen('FrameRect', win, col, p.trial.(task).FrameRect, p.trial.(task).FramwWdth);

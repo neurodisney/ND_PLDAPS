@@ -131,9 +131,9 @@ if(p.trial.display.overlayptr ~= p.trial.display.ptr)
         Screen('FillRect', ov, [0 0 0 0]);
         Screen('glPopMatrix', ov);
         Screen('BlendFunction', ov, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
+    else
+        Screen('FillRect',p.trial.display.overlayptr,0,p.trial.display.winRect);
     end
-else
-    Screen('FillRect',p.trial.display.overlayptr,0,p.trial.display.winRect);
 end
 
 %-------------------------------------------------------------------------%
