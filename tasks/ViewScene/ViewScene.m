@@ -80,15 +80,10 @@ function TaskDesign(p)
             end
         case p.trial.epoch.WaitResponse
             ND_FixSpot(p, 0);
-            if(p.trial.stim.scene.fixating)
-                dur = p.trial.stim.scene.duration + p.trial.task.durOffset;
-                if (p.trial.EV.TaskStart + dur) < p.trial.CurTime
-                    Task_Correct(p)
-                    showScene(p, 0)
-                end
-            end
-            if(~p.trial.stim.scene.fixating)         
-                Task_Incorrect(p)
+            dur = p.trial.stim.scene.duration + p.trial.task.durOffset;
+            if ~isnan(p.trial.EV.StimOn) && p.trial.CurTime >= p.trial.EV.StimOn + dur
+                Task_Correct(p)
+                showScene(p, 0)
             end
         case p.trial.epoch.TaskEnd
             p.trial.flagNextTrial = 1;

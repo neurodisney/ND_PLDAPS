@@ -82,8 +82,8 @@ if p.defaultParameters.datapixx.use
     if p.defaultParameters.display.useC48==1
         disp('Using C48 color output (no overlay!)');
         if p.defaultParameters.display.useOverlay==3
-            warning('pldaps:openScreen',['useC48 with useOverlay==3: the experimenter mirror ','is copied AFTER C48 packing, so it will show a striped/garbled image. ',...
-                'Use C24 (useC48=0) for 8-bit color images with a clean mirrow.']);
+            warning('pldaps:openScreen',['useC48 with useOverlay==3',...
+                'Use C24 (useC48=0) for 8-bit color images with a clean mirror.']);
         end
         PsychImaging('AddTask','General','EnableDataPixxC48Output',2);
     elseif p.defaultParameters.display.useOverlay==1
@@ -315,13 +315,14 @@ elseif p.defaultParameters.display.useOverlay==3
     % Experimenter mirror + experimenter-only overlay, built by hand
     % (works with older psychtookbox, no 'GetMirrorOverlayWindow' needed)
     disp('****************************************************************')
-    fprintf('Opening experimenter mirror window on screen %d\n', p.defaultParameters.display.expWinRect);
+    fprintf('Opening experimenter mirror window on screen %d\n', p.defaultParameters.display.expScrnNum);
     disp('****************************************************************')
     ptr = p.defaultParameters.display.ptr;
     [ww, wh] = Screen('WindowSize', ptr);
     
     oldskip = Screen('Preference', 'SkipSyncTests', 2); %mirror timing does not matter
     expptr = Screen('OpenWindow', p.defaultParameters.display.expScrnNum, 0, p.defaultParameters.display.expWinRect);
+    Screen('Preference','SkipSyncTests', oldskip);
     Screen('ColorRange', expptr, 1);
     Screen('FillRect', expptr, p.defaultParameters.display.bgColor);
     Screen('BlendFunction', expptr, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
