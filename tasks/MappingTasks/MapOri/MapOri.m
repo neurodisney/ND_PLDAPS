@@ -185,7 +185,7 @@ function p = Task_CorrectReward(p)
     ND_FixSpot(p, 0);
     pds.audio.playDP(p,'jackpot','left');
     p.trial.outcome.CurrOutcome = p.trial.outcome.Correct;
-    pds.reward.give(p, 0.05);
+    pds.reward.give(p, 0.07);
     p.trial.EV.Reward = p.trial.CurTime;
     ND_SwitchEpoch(p, 'TaskEnd');
 

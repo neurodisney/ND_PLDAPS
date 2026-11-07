@@ -253,7 +253,7 @@ function TaskSetUp(p)
             p.trial.Block.cuedMagList = magList;
         else
             if isempty(p.trial.Block.uncuedMagList)
-                magList = [0, 4, 8, 8, 8, 8, 16, 16, 16, 16, 16, 32, 3];
+                magList = [0, 4, 8, 8, 8, 8, 8, 8, 16, 16, 16, 16, 32];
                 magList = magList(randperm(length(magList)));
             else
                 magList = p.trial.Block.uncuedMagList;
@@ -751,13 +751,18 @@ function p = Task_Miss(p)
         end
 
     else
-        p.trial.Block.repeatFlag = 0;
-%         if p.trial.Block.missLog > 2
-%             p.trial.Block.missLog = 0;
-%         else
-%             cuedRatio = p.trial.Block.cuedRatio;
-%             p.trial.Block.cuedRatio = [0, cuedRatio];
-%         end
+        p.trial.Block.repeatFlag = 1;
+        if p.trial.Block.missLog > 2
+            p.trial.Block.repeatFlag = 0;
+        else
+            repeat_trial = datasample([0,1], 1);
+            if repeat_trial
+                newIndex = datasample([1,2,3,4], 1);
+                p.trial.Block.repeatConfig(2) = newIndex;
+            else
+                p.trial.Block.repeatFlag = 0;
+            end
+        end
     end
 
     % Switching epoch to end task
@@ -798,13 +803,15 @@ function p = Task_False(p)
         end
 
     else
-        p.trial.Block.repeatFlag = 0;
-%         if p.trial.Block.missLog > 2
-%             p.trial.Block.missLog = 0;
-%         else
-%             cuedRatio = p.trial.Block.cuedRatio;
-%             p.trial.Block.cuedRatio = [0, cuedRatio];
-%         end
+        p.trial.Block.repeatFlag = 1;
+        if p.trial.Block.missLog > 2
+            p.trial.Block.repeatFlag = 0;
+        else
+            repeat_trial = datasample([0,1,1], 1);
+            if ~repeat_trial
+                p.trial.Block.repeatFlag = 0;
+            end
+        end
     end
 
     % Switching epoch to end task
@@ -823,6 +830,35 @@ function p = Task_Correct(p)
     p.trial.task.Valid = 1;
     p.trial.Block.repeatFlag = 0;
     p.trial.Block.missLog = 0;
+
+    cued = p.trial.Block.repeatConfig(1);
+    quadList = p.trial.Block.uncuedQuadList;
+    quadIndex = p.trial.Block.repeatConfig(2);
+
+    if ~cued
+        changeMag = p.trial.task.changeMag + 0.000000000000000000000000001;
+        uncuedQuadScores = p.trial.Block.uncuedQuadScores;
+        quadScore = uncuedQuadScores(quadIndex) + (1 / changeMag);
+        uncuedQuadScores(quadIndex) = quadScore;
+        p.trial.Block.uncuedQuadScores = uncuedQuadScores;
+    end
+
+    cuedRatio = p.trial.Block.cuedRatio;
+    if ~isempty(cuedRatio)
+        isCued = cuedRatio(1);
+
+        if ~isCued && ~isempty(quadList)
+            uncuedQuadScores = p.trial.Block.uncuedQuadScores;
+            availableScores = uncuedQuadScores(quadList);
+            [minValue, minIndex] = min(availableScores);
+    
+            currentIndex = find(quadList == minIndex, 1);
+            splicedList = quadList([1:currentIndex-1, currentIndex+1:end]);
+            newList = [minIndex, splicedList];
+            p.trial.Block.uncuedQuadList = newList;
+        end
+        
+    end
 
     % Switching epoch to end task
     ND_SwitchEpoch(p, 'TaskEnd');

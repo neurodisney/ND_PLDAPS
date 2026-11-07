@@ -24,16 +24,16 @@ function p = AttendGrat_taskdef(p)
 
 
     % Setting RF properties
-    RfPos = [1, -5]; %[0.5, -5];
+    RfPos = [2.25, -2.5]; %[0.5, -5];
     p.trial.task.RfPos = RfPos;
 
-    RfOri = 0;
-    p.trial.task.RfOri = RfOri;
-    p.trial.task.RfOriCurve = [RfOri, RfOri + 20]; % [RfOri - 20, RfOri, RfOri + 20];
-
-    RfRadius = 0.75;
+    RfRadius = 0.65;
     p.trial.task.RfSize = RfRadius;
     p.trial.stim.DRIFTGABOR.radius = RfRadius;
+
+    RfOri = 140;
+    p.trial.task.RfOri = RfOri;
+    p.trial.task.RfOriCurve = [RfOri, RfOri + 20]; % [RfOri - 20, RfOri, RfOri + 20];
 
     % Setting ring properties
     ringPos = RfPos;
@@ -43,7 +43,7 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.ringSize = ringRadius;
     p.trial.stim.RING.radius = ringRadius;
 
-    cueRingDelta = 8; %10;
+    cueRingDelta = 10;
     p.trial.task.cueRingDelta = cueRingDelta;
     p.trial.stim.ringParameters.cueCon = sprintf('down%d', cueRingDelta);
 
@@ -73,7 +73,7 @@ function p = AttendGrat_taskdef(p)
 
     % Angle (degrees) between line connecting origin (0, 0) and
     % preceeding point and line connecting origin and succeeding point.
-    angular_offset = 4;
+    angular_offset = 4.63;
     p.trial.task.stimOffset = angular_offset;
 
     p.trial.task.posList = {};
@@ -108,7 +108,7 @@ function p = AttendGrat_taskdef(p)
 
     
     % Setting amount of time rings are presented before grats come on
-    p.trial.task.CueWait = 1.0; %1.25;
+    p.trial.task.CueWait = 1.00; %1.25
 
     % Setting properties for fixation point
     p.trial.stim.FIXSPOT.type = 'rect';    
@@ -151,13 +151,13 @@ function p = AttendGrat_taskdef(p)
     p.trial.task.minTargetFixTime = 0.20; 
     
     % Creating trial increments to scale size of reward based on good performance
-    trialStep = 15;
+    trialStep = 20;
     trialMax = 1000;
     p.trial.reward.IncrementTrial = 1:trialStep:trialMax;
     p.trial.reward.penalty = 0.005;
     
     % List of increasing durations of juice flow for reward
-    rewardStart = 0.1;
+    rewardStart = 0.108;
     rewardStep = 0.002;
     p.trial.reward.IncrementDur = rewardStart:rewardStep:(rewardStart + rewardStep*(trialMax - 1));
 

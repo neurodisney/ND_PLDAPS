@@ -259,6 +259,8 @@ SS.Block.missLog            = 0;
 SS.Block.repeatFlag         = 0;
 SS.Block.falseFlag          = 0;
 
+SS.Block.uncuedQuadScores   = [0, 0, 0, 0];
+
 SS.Block.cuedRatio          = [];
 SS.Block.cuedMagList        = [];
 SS.Block.uncuedMagList      = [];
@@ -270,6 +272,7 @@ SS.Block.cuedConfigs1       = [];
 SS.Block.cuedConfigs2       = [];
 SS.Block.cuedConfigs3       = [];
 SS.Block.cuedConfigs4       = [];
+SS.Block.cuedConfigs5       = [];
 
 SS.Block.cuedOriList11      = [];
 SS.Block.cuedOriList12      = [];
@@ -301,6 +304,7 @@ SS.Block.uncuedConfigs1     = [];
 SS.Block.uncuedConfigs2     = [];
 SS.Block.uncuedConfigs3     = [];
 SS.Block.uncuedConfigs4     = [];
+SS.Block.uncuedConfigs5     = [];
 
 SS.Block.uncuedOriList11    = [];
 SS.Block.uncuedOriList12    = [];

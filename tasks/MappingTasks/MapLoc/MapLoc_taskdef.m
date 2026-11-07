@@ -21,8 +21,8 @@ p.trial.task.presDur = 1;
 
 % Build grid of absolute value x,y coordinates
 % Scale coorindates up by 10
-xRange = [0, 2];
-yRange = [4, 6];
+xRange = [1.5, 3.5];
+yRange = [2, 4];
 
 scaler = 2;
 xRange = xRange * scaler;
@@ -50,5 +50,5 @@ p.trial.stim.FIXSPOT.size  = 0.25;    % size of the fixation spot
 p.trial.stim.FIXSPOT.fixWin = 1.75;
 
 % Gabor parameters
-p.trial.task.orientation = 45;
+p.trial.task.orientation = 135;
 p.trial.task.radius = 0.75; % DVA
