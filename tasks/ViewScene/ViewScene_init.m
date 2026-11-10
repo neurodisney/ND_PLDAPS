@@ -13,9 +13,13 @@ function p = ViewScene_init(p)
     p = ND_AddAsciiEntry(p, 'SceneDur',     'p.trial.stim.scene.duration',         '%d');
     p = ND_AddAsciiEntry(p, 'StimOn',       'p.trial.EV.StimOn',                   '%.5f');
     p = ND_AddAsciiEntry(p, 'StimOff',      'p.trial.EV.StimOff',                  '%.5f');   
-    p = ND_AddAsciiEntry(p, 'sizeGain',      'p.trial.stim.IMAGE.sizeGain',         '%.3f');
-    p = ND_AddAsciiEntry(p, 'ImageSizeX',    'p.trial.stim.scene.dispSize(1)',      '%.3f');
-    p = ND_AddAsciiEntry(p, 'ImageSizeY',    'p.trial.stim.scene.dispSize(2)',      '%.3f');
+    p = ND_AddAsciiEntry(p, 'sizeGain',      'p.trial.stim.IMAGE.sizeGain',        '%.3f');
+    p = ND_AddAsciiEntry(p, 'ImageSizeX',    'p.trial.stim.scene.dispSize(1)',     '%.3f');
+    p = ND_AddAsciiEntry(p, 'ImageSizeY',    'p.trial.stim.scene.dispSize(2)',     '%.3f');
+    p = ND_AddAsciiEntry(p, 'FixWin','p.trial.stim.FIXSPOT.fixWin',                '%.3f');
   
     % Ensuring output directory above exists
+    %setting starting fixation window size (dva). Set once per session
+    %here, not in taskdef where it resets every trial
+    p.defaultParameters.stim.FIXSPOT.fixWin = 7.0;
     ND_Trial2Ascii(p, 'init');
