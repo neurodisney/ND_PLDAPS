@@ -38,6 +38,7 @@ function TaskSetUp(p)
     p.trial.task.SRT_FixStart = NaN;
     p.trial.stim.fix = pds.stim.FixSpot(p);
     p.trial.stim.IMAGE.pos = [0 0];
+    p.trial.stim.VIDEO.pos = [0,0];
     %sampling without replacement: Block imageset is a shuffled queue of
     %image numbers still to be shown this round. Wehn all images presented,
     %start a new round with a fresh random order of all images

@@ -12,9 +12,9 @@ function p = ViewScene_taskdef(p)
     p.trial.task.durOffset = 0;
 
     % Setting scene configs
-    p.trial.task.stim.sceneType = 'image'; % options: 'video' or 'image'
-    %p.trial.task.stim.sceneDir = '/home/rig2-user/Documents/MATLAB/Images/Videos/';
-    p.trial.task.stim.sceneDir = '/home/rig2-user/Documents/MATLAB/Images/pareidolia/set 2/';
+    p.trial.task.stim.sceneType = 'video'; % options: 'video' or 'image'
+    p.trial.task.stim.sceneDir = '/home/rig2-user/Documents/MATLAB/Images/random_videos/pexels_hikingVideos/';
+    %p.trial.task.stim.sceneDir = '/home/rig2-user/Documents/MATLAB/Images/pareidolia/set 3/';
 
     scenes = dir(p.trial.task.stim.sceneDir);
     p.trial.task.stim.sceneNames = {scenes(~[scenes.isdir]).name};
@@ -27,7 +27,7 @@ function p = ViewScene_taskdef(p)
     p.trial.stim.IMAGE.pos = [0, 0];
 
     % Setting video props
-    p.trial.stim.VIDEO.sizeGain = 2.1;
+    p.trial.stim.VIDEO.sizeGain = 0.25;
     p.trial.stim.VIDEO.fixWin   = 80;
     p.trial.stim.VIDEO.playRate = 1;
 

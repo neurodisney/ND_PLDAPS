@@ -91,18 +91,22 @@ if ~isempty(medRawEye)
     nPoints = size(calibPoints,1);
     
     
-    % Get the colors
+    % Get the colors (one column per dot, 3 rows)
+    % A color is either a CLUT index (useOverlay=1 or 2, scalar) or an RGB
+    % triplet (useOverlay=3, 3x1); toCol turns both into a 3x1 column
+    toCol = @(c) repmat(c(:), 3/numel(c),1);
     % Most are dark red so start with that
-    dotColors = repmat(otherPointsCol,nPoints,3);
+    dotColors = repmat(toCol(otherPointsCol),1,nPoints);
     % Make the ones corresponding to the current fixPos dark green
-    dotColors(ismember(allFixPos,currFixPos,'rows'),:) = currPointsCol;
+    isCurr = ismember(allFixPos,currFixPos,'rows');
+    dotColors(:, isCurr) = repmat(toCol(currPointsCol), 1, nnz(isCurr));
     % Make the most recent calibration point yellow
-    dotColors(end,:) = recentPointCol;
+    dotColors(:,end) = toCol(recentPointCol);
     
     % Make the last dot bigger for visibility
     dotSizes = repmat(dotSize,1,nPoints);
     dotSizes(end) = dotSize + 4;
     
     % Draw the dots
-    Screen('DrawDots', window, calibPoints', dotSizes, dotColors');
+    Screen('DrawDots', window, calibPoints', dotSizes, dotColors);
 end
