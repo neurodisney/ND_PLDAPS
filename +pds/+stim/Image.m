@@ -8,7 +8,7 @@ classdef Image < pds.stim.BaseStim
         duration
     end
 
-    properties (SetAccess = private, Hidden = true)
+    properties (SetAccess = private, Hidden = true, Transient = true) %do not write whole image file to trial.pds, image is on disk already
         imageMatrix
         texturePtr
     end
@@ -41,6 +41,7 @@ classdef Image < pds.stim.BaseStim
             if obj.imagePath
                 obj.imageMatrix = imread(obj.imagePath);
                 obj.texturePtr = Screen('MakeTexture', p.trial.display.ptr, obj.imageMatrix);
+                obj.imageMatrix = []; %pixels live in GPU texture, free the memory by not saving
             else
                 error('Image not found: %s', obj.imagePath);
             end

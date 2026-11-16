@@ -11,10 +11,10 @@ function p = FixCalibScene_taskdef(p)
 % The animal must hold fixation this long (counted from fixation start)
 % before the image appears. Calibration points can be added during this
 % period. Set MaxFixDur > MinFixDur to draw a random duration each trial.
-p.trial.task.Timing.MinFixDur = 0.10;   % [s]
-p.trial.task.Timing.MaxFixDur = 0.30;   % [s]
+p.trial.task.Timing.MinFixDur = 0.45;   % [s]
+p.trial.task.Timing.MaxFixDur = 0.45;   % [s]
 
-p.trial.behavior.fixation.MinFixStart = 0.05;   % [s] gaze held before fixation counts as started
+p.trial.behavior.fixation.MinFixStart = 0.1;   % [s] gaze held before fixation counts as started
 p.trial.task.Timing.WaitFix           = 2.0;   % [s] time allowed to acquire fixation (else NoStart)
 
 % inter-trial interval
@@ -28,14 +28,14 @@ p.trial.reward.GiveInitial = 0;       % 1 = reward when fixation starts
 p.trial.reward.InitialRew  = 0.05;    % duration of that initial reward
 
 p.trial.reward.GiveSeries  = 0;       % 1 = reward pulses while fixation is held (before the image)
-p.trial.reward.Dur         = 0.35;    % duration of each pulse
+p.trial.reward.Dur         = 0.3;    % duration of each pulse
 p.trial.reward.Step        = [0, 4, 8, 12];      % after this many pulses, move to the next Period
 p.trial.reward.Period      = [0.5 0.4 0.3 0.2];  % time between pulses, must be > Dur
 
-p.trial.reward.ManDur      = 0.1;     % reward given with the keyboard
+p.trial.reward.ManDur      = 0.3;     % reward given with the keyboard
 
 p.trial.reward.jackpotDur  = 0.3;     % reward when the fixation hold is completed (image appears); 0 = none
-p.trial.reward.SceneRew    = 0.2;     % reward when the image ends; 0 = none
+p.trial.reward.SceneRew    = 0.3;     % reward when the image ends; 0 = none
 
 % ------------------------------------------------------------------------%
 %% Image / video
@@ -74,8 +74,8 @@ p.trial.Block.maxBlockTrials = 1;
 
 % ------------------------------------------------------------------------%
 %% Fixation spot (as in InitFixTrain)
-p.trial.stim.FIXSPOT.type  = 'disc';
-p.trial.stim.FIXSPOT.size  = 0.2;
+p.trial.stim.FIXSPOT.type  = 'rect';
+p.trial.stim.FIXSPOT.size  = 0.4;
 p.trial.stim.FIXSPOT.color = 'dRed';
 p.trial.behavior.fixation.FixWinStp = 0.2;   % step for fixation window size keys
 
